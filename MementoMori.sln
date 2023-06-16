@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MementoMori", "MementoMori\MementoMori.csproj", "{CF2E1235-C802-4BB9-9CD8-254985060003}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MementoMori.WebUI", "MementoMori.WebUI\MementoMori.WebUI.csproj", "{472819B5-0D5F-475E-8C28-1835E6CFE6A4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF2E1235-C802-4BB9-9CD8-254985060003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF2E1235-C802-4BB9-9CD8-254985060003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF2E1235-C802-4BB9-9CD8-254985060003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF2E1235-C802-4BB9-9CD8-254985060003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{472819B5-0D5F-475E-8C28-1835E6CFE6A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{472819B5-0D5F-475E-8C28-1835E6CFE6A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{472819B5-0D5F-475E-8C28-1835E6CFE6A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{472819B5-0D5F-475E-8C28-1835E6CFE6A4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
