@@ -1,0 +1,113 @@
+﻿@inject IJSRuntime JsRuntime
+@inject MementoMoriFuncs moriFuncs
+
+@page "/"
+@using MementoMori.Common
+@using MementoMori.LoginBonus
+@using MementoMori.Vip
+@using System.Text
+
+<PageTitle>Index</PageTitle>
+
+
+<div class="row">
+    <div class="col-3">
+        <button class="btn btn-primary" @onclick="@Login">登陆</button>
+
+        <p role="status">Api Host: @apiHost</p>
+        <p role="status">Access Token: @accessToken</p>
+
+
+        <p>User Info</p>
+        <ul>
+            <li>ID: @_userSyncData?.UserStatusDtoInfo?.PlayerId</li>
+            <li>用户名: @_userSyncData?.UserStatusDtoInfo?.Name</li>
+            <li>等级: @_userSyncData?.UserStatusDtoInfo?.Rank</li>
+            <li>留言: @_userSyncData?.UserStatusDtoInfo?.Comment</li>
+        </ul>
+
+    </div>
+    <div class="col-3">
+        <button class="btn btn-primary" @onclick="@GetLoginBonus">领取每日登录奖励</button>
+        <button class="btn btn-primary" @onclick="@GetVipGift">领取每日VIP礼物</button>
+        <button class="btn btn-primary" @onclick="@GetAutoBattleReward">领取自动战斗奖励</button>
+        <button class="btn btn-primary" @onclick="@BulkTransferFriendPoint">一键赠送/接受友情点</button>
+    </div>
+</div>
+
+@code {
+    private string accessToken;
+    private string apiHost;
+    private UserSyncData? _userSyncData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        moriFuncs.ConfigSubject.Subscribe(c =>
+        {
+            InvokeAsync(() =>
+            {
+                accessToken = c.OrtegaAccessToken;
+                apiHost = c.ApiHost;
+                StateHasChanged();
+            });
+        });
+        moriFuncs.UserSyncData.Subscribe(data =>
+        {
+            _userSyncData = data;
+        });
+    }
+
+
+    private async Task Login()
+    {
+        await moriFuncs.AuthLogin();
+        var userData = await moriFuncs.UserGetUserData();
+    }
+
+    private async Task GetLoginBonus()
+    {
+        var bonus = await moriFuncs.LoginBonusReceiveDailyLoginBonus(DateTime.Now.Day);
+        var msg = new StringBuilder("领取的奖励：\n");
+
+        foreach (var item in bonus.RewardItemList ?? Array.Empty<ReceiveDailyLoginBonus.RewardItemList>())
+        {
+            msg.Append($"Item Type: {item.ItemType}, Item Id: {item.ItemId}, Item Count: {item.ItemCount}\n");
+        }
+
+        await JsRuntime.InvokeVoidAsync("alert", msg.ToString());
+    }
+
+    private async Task GetVipGift()
+    {
+        var bonus = await moriFuncs.VipGetDailyGift();
+        var msg = new StringBuilder("领取的奖励：\n");
+
+        foreach (var item in bonus.ItemList ?? Array.Empty<GetDailyGift.ItemList>())
+        {
+            msg.Append($"Item Type: {item.ItemType}, Item Id: {item.ItemId}, Item Count: {item.ItemCount}\n");
+        }
+
+        await JsRuntime.InvokeVoidAsync("alert", msg.ToString());
+    }
+    private async Task GetAutoBattleReward()
+    {
+        var bonus = await moriFuncs.BattleRewardAutoBattle();
+        var msg = new StringBuilder("领取的奖励：\n");
+
+        msg.AppendLine($"战斗次数 {bonus.AutoBattleRewardResult.BattleCountAll}");
+        msg.AppendLine($"胜利次数 {bonus.AutoBattleRewardResult.BattleCountWin}");
+        msg.AppendLine($"总时间 {TimeSpan.FromMilliseconds(bonus.AutoBattleRewardResult.BattleTotalTime)}");
+        msg.AppendLine($"领民金币 {bonus.AutoBattleRewardResult.GoldByPopulation}");
+        msg.AppendLine($"领民潜能珠宝 {bonus.AutoBattleRewardResult.PotentialJewelByPopulation}");
+
+        await JsRuntime.InvokeVoidAsync("alert", msg.ToString());
+    }
+
+    private async Task BulkTransferFriendPoint()
+    {
+        var resp = await moriFuncs.FriendBulkTransferFriendPoint();
+        await JsRuntime.InvokeVoidAsync("alert", "成功");
+    }
+
+
+}
