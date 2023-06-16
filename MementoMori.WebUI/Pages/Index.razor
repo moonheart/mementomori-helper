@@ -11,29 +11,67 @@
 
 <PageTitle>主页</PageTitle>
 
-
 <div class="row">
-    <div class="col-3">
-        <button class="btn btn-primary" @onclick="@Login">登陆</button>
-
-        <p role="status">Api Host: @apiHost</p>
-        <p role="status">Access Token: @accessToken</p>
-
-
-        <p>User Info</p>
-        <ul>
-            <li>ID: @_userSyncData?.UserStatusDtoInfo?.PlayerId</li>
-            <li>用户名: @_userSyncData?.UserStatusDtoInfo?.Name</li>
-            <li>等级: @_userSyncData?.UserStatusDtoInfo?.Rank</li>
-            <li>留言: @_userSyncData?.UserStatusDtoInfo?.Comment</li>
-        </ul>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <span class="fs-4">角色信息</span>
+                <button class="btn btn-sm btn-secondary float-end" disabled="@_logining" @onclick="@Login">登录 
+                    @if (_logining)
+                    {
+                        <div class="spinner-border spinner-border-sm" role="status"></div>
+                    }
+                    </button>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tbody>
+                    <tr><td>用户名</td><td>@_userSyncData?.UserStatusDtoInfo?.Name</td></tr>
+                    <tr><td>玩家ID</td><td>@_userSyncData?.UserStatusDtoInfo?.PlayerId</td></tr>
+                    <tr><td>加入时间</td><td>@_userSyncData?.UserStatusDtoInfo?.CreateAt.ToDateTimeOffset()</td></tr>
+                    <tr><td>等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Rank</td></tr>
+                    <tr><td>VIP 等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Vip</td></tr>
+                    <tr><td>留言</td><td>@_userSyncData?.UserStatusDtoInfo?.Comment</td></tr>
+                    <tr><td>经验值</td><td>@_userSyncData?.UserStatusDtoInfo?.Exp</td></tr>
+                    <tr><td>上次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLoginTime.ToDateTimeOffset()</td></tr>
+                    <tr><td>前次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.PreviousLoginTime.ToDateTimeOffset()</td></tr>
+                    <tr><td>上次升级</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLvUpTime.ToDateTimeOffset()</td></tr>
+                    <tr><td>用户名已更改</td><td>@_userSyncData?.UserStatusDtoInfo?.IsAlreadyChangedName</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="col-3">
-        <button class="btn btn-primary" @onclick="@GetLoginBonus">领取每日登录奖励</button>
-        <button class="btn btn-primary" @onclick="@GetVipGift">领取每日VIP礼物</button>
-        <button class="btn btn-primary" @onclick="@GetAutoBattleReward">领取自动战斗奖励</button>
-        <button class="btn btn-primary" @onclick="@BulkTransferFriendPoint">一键赠送/接受友情点</button>
-        <button class="btn btn-primary" @onclick="@PresentReceiveItem">一键领取礼物箱</button>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-header">快捷操作</div>
+            <div class="card-body">
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetLoginBonus">领取每日登录奖励</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetVipGift">领取每日VIP礼物</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetAutoBattleReward">领取自动战斗奖励</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BulkTransferFriendPoint">一键赠送/接受友情点</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@PresentReceiveItem">一键领取礼物箱</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">执行结果</div>
+            <div class="card-body">
+                <pre>
+                @_quickActionResult
+</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+        <pre>
+        Api Host: @apiHost
+        Access Token: @accessToken
+        </pre>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -41,6 +79,10 @@
     private string accessToken;
     private string apiHost;
     private UserSyncData? _userSyncData;
+
+    private bool _logining;
+    private bool _isQuickActionExecuting;
+    private string _quickActionResult;
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,74 +95,97 @@
                 StateHasChanged();
             });
         });
-        moriFuncs.UserSyncData.Subscribe(data =>
-        {
-            _userSyncData = data;
-        });
+        moriFuncs.UserSyncData.Subscribe(data => { _userSyncData = data; });
     }
 
 
     private async Task Login()
     {
+        _logining = true;
         await moriFuncs.AuthLogin();
         var userData = await moriFuncs.UserGetUserData();
+        _logining = false;
+    }
+
+    private async Task ExecuteQuickAction(Func<Task> func)
+    {
+        _isQuickActionExecuting = true;
+        await func();
+        _isQuickActionExecuting = false;
+        StateHasChanged();
     }
 
     private async Task GetLoginBonus()
     {
-        var bonus = await moriFuncs.LoginBonusReceiveDailyLoginBonus(DateTime.Now.Day);
-        var msg = new StringBuilder("领取的奖励：\n");
-
-        foreach (var item in bonus.RewardItemList ?? Array.Empty<ReceiveDailyLoginBonus.RewardItemList>())
+        await ExecuteQuickAction(async () =>
         {
-            msg.Append($"Item Type: {item.ItemType}, Item Id: {item.ItemId}, Item Count: {item.ItemCount}\n");
-        }
+            var bonus = await moriFuncs.LoginBonusReceiveDailyLoginBonus(DateTime.Now.Day);
+            var msg = new StringBuilder("领取的奖励：\n");
 
-        await JsRuntime.InvokeVoidAsync("alert", msg.ToString());
+            foreach (var item in bonus.RewardItemList ?? Array.Empty<ReceiveDailyLoginBonus.RewardItemList>())
+            {
+                msg.Append($"Item Type: {item.ItemType}, Item Id: {item.ItemId}, Item Count: {item.ItemCount}\n");
+            }
+
+            _quickActionResult = msg.ToString();
+        });
     }
 
     private async Task GetVipGift()
     {
-        var bonus = await moriFuncs.VipGetDailyGift();
-        var msg = new StringBuilder("领取的奖励：\n");
-
-        foreach (var item in bonus.ItemList ?? Array.Empty<GetDailyGift.ItemList>())
+        await ExecuteQuickAction(async () =>
         {
-            msg.Append($"Item Type: {item.ItemType}, Item Id: {item.ItemId}, Item Count: {item.ItemCount}\n");
-        }
+            var bonus = await moriFuncs.VipGetDailyGift();
+            var msg = new StringBuilder("领取的奖励：\n");
 
-        await JsRuntime.InvokeVoidAsync("alert", msg.ToString());
+            foreach (var item in bonus.ItemList ?? Array.Empty<GetDailyGift.ItemList>())
+            {
+                msg.Append($"Item Type: {item.ItemType}, Item Id: {item.ItemId}, Item Count: {item.ItemCount}\n");
+            }
+
+            _quickActionResult = msg.ToString();
+        });
     }
+
     private async Task GetAutoBattleReward()
     {
-        var bonus = await moriFuncs.BattleRewardAutoBattle();
-        var msg = new StringBuilder("领取的奖励：\n");
+        await ExecuteQuickAction(async () =>
+        {
+            var bonus = await moriFuncs.BattleRewardAutoBattle();
+            var msg = new StringBuilder("领取的奖励：\n");
 
-        msg.AppendLine($"战斗次数 {bonus.AutoBattleRewardResult.BattleCountAll}");
-        msg.AppendLine($"胜利次数 {bonus.AutoBattleRewardResult.BattleCountWin}");
-        msg.AppendLine($"总时间 {TimeSpan.FromMilliseconds(bonus.AutoBattleRewardResult.BattleTotalTime)}");
-        msg.AppendLine($"领民金币 {bonus.AutoBattleRewardResult.GoldByPopulation}");
-        msg.AppendLine($"领民潜能珠宝 {bonus.AutoBattleRewardResult.PotentialJewelByPopulation}");
+            msg.AppendLine($"战斗次数 {bonus.AutoBattleRewardResult.BattleCountAll}");
+            msg.AppendLine($"胜利次数 {bonus.AutoBattleRewardResult.BattleCountWin}");
+            msg.AppendLine($"总时间 {TimeSpan.FromMilliseconds(bonus.AutoBattleRewardResult.BattleTotalTime)}");
+            msg.AppendLine($"领民金币 {bonus.AutoBattleRewardResult.GoldByPopulation}");
+            msg.AppendLine($"领民潜能珠宝 {bonus.AutoBattleRewardResult.PotentialJewelByPopulation}");
 
-        await JsRuntime.InvokeVoidAsync("alert", msg.ToString());
+            _quickActionResult = msg.ToString();
+        });
     }
 
     private async Task BulkTransferFriendPoint()
     {
-        var resp = await moriFuncs.FriendBulkTransferFriendPoint();
-        await JsRuntime.InvokeVoidAsync("alert", "成功");
+        await ExecuteQuickAction(async () =>
+        {
+            var resp = await moriFuncs.FriendBulkTransferFriendPoint();
+            _quickActionResult = "成功";
+        });
     }
 
     private async Task PresentReceiveItem()
     {
-        var resp = await moriFuncs.PresentReceiveItem();
-        var msg = new StringBuilder("领取的奖励：\n");
-        foreach (var respResultItem in resp.ResultItems?? Array.Empty<ReceiveItem.ResultItems>())
+        await ExecuteQuickAction(async () =>
         {
-            msg.AppendLine($"稀有度 {respResultItem.RarityFlags} {respResultItem.Item.ToJson()}\n");
-        }
+            var resp = await moriFuncs.PresentReceiveItem();
+            var msg = new StringBuilder("领取的奖励：\n");
+            foreach (var respResultItem in resp.ResultItems ?? Array.Empty<ReceiveItem.ResultItems>())
+            {
+                msg.AppendLine($"稀有度 {respResultItem.RarityFlags} {respResultItem.Item.ToJson()}\n");
+            }
 
-        await JsRuntime.InvokeVoidAsync("alert", msg.ToString());
+            _quickActionResult = msg.ToString();
+        });
     }
 
 
