@@ -6,6 +6,8 @@
 @using MementoMori.LoginBonus
 @using MementoMori.Vip
 @using System.Text
+@using MementoMori.Present
+@using MementoMori.WebUI.Extensions
 
 <PageTitle>Index</PageTitle>
 
@@ -31,6 +33,7 @@
         <button class="btn btn-primary" @onclick="@GetVipGift">领取每日VIP礼物</button>
         <button class="btn btn-primary" @onclick="@GetAutoBattleReward">领取自动战斗奖励</button>
         <button class="btn btn-primary" @onclick="@BulkTransferFriendPoint">一键赠送/接受友情点</button>
+        <button class="btn btn-primary" @onclick="@PresentReceiveItem">一键领取礼物箱</button>
     </div>
 </div>
 
@@ -106,6 +109,18 @@
     {
         var resp = await moriFuncs.FriendBulkTransferFriendPoint();
         await JsRuntime.InvokeVoidAsync("alert", "成功");
+    }
+
+    private async Task PresentReceiveItem()
+    {
+        var resp = await moriFuncs.PresentReceiveItem();
+        var msg = new StringBuilder("领取的奖励：\n");
+        foreach (var respResultItem in resp.ResultItems?? Array.Empty<ReceiveItem.ResultItems>())
+        {
+            msg.AppendLine($"稀有度 {respResultItem.RarityFlags} {respResultItem.Item.ToJson()}\n");
+        }
+
+        await JsRuntime.InvokeVoidAsync("alert", msg.ToString());
     }
 
 

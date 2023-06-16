@@ -3,6 +3,7 @@ using MementoMori.Battle;
 using MementoMori.Common;
 using MementoMori.Friend;
 using MementoMori.LoginBonus;
+using MementoMori.Present;
 using MementoMori.User;
 using MementoMori.Vip;
 using MessagePack;
@@ -24,6 +25,7 @@ public class MementoMoriFuncs
     private const string URL_BATTLE_REWARDAUTOBATTLE = "battle/rewardAutoBattle";
     private const string URL_BATTLE_BOSSQUICK = "battle/bossQuick";
     private const string URL_BATTLE_QUICK = "battle/quick";
+    private const string URL_PRESENT_RECEIVEITEM = "present/receiveItem";
 
     private Uri _apiHost;
 
@@ -174,8 +176,13 @@ public class MementoMoriFuncs
         var req = new Quick.Req(){QuestQuickExecuteType = questQuickExecuteType, QuickCount = quickCount};
         return await GetResponse<Quick.Req, Quick.Resp>(reqUri, req);
     }
-    
-    
+
+    public async Task<ReceiveItem.Resp> PresentReceiveItem()
+    {
+        var uri = new Uri(_apiHost, URL_PRESENT_RECEIVEITEM);
+        var req = new ReceiveItem.Req();
+        return await GetResponse<ReceiveItem.Req, ReceiveItem.Resp>(uri, req);
+    } 
 
     private async Task<TResp> GetResponse<TReq, TResp>(string url, TReq req)
     {
