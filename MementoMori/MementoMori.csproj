@@ -15,5 +15,8 @@
         <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\6.0.16\Microsoft.Extensions.Options.dll</HintPath>
       </Reference>
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\MementoMori.Ortega\MementoMori.Ortega.csproj" />
+    </ItemGroup>
 
 </Project>

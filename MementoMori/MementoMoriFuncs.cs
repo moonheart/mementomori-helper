@@ -1,8 +1,8 @@
 ﻿using System.Reactive.Subjects;
 using MementoMori.Battle;
-using MementoMori.Common;
 using MementoMori.Friend;
 using MementoMori.LoginBonus;
+using MementoMori.Ortega.Share.Data;
 using MementoMori.Present;
 using MementoMori.User;
 using MementoMori.Vip;
@@ -16,6 +16,7 @@ public class MementoMoriFuncs
 {
     private const string URL_AUTH_LOGIN = "https://prd1-auth.mememori-boi.com/api/auth/login";
     private const string URL_AUTH_GETSERVERHOST = "https://prd1-auth.mememori-boi.com/api/auth/getServerHost";
+    private const string URL_AUTH_GETDATAURI = "https://prd1-auth.mememori-boi.com/api/auth/getDataUri";
     private const string URL_USER_LOGINPLAYER = "user/loginPlayer";
     private const string URL_USER_GETUSERDATA = "user/getUserData";
     private const string URL_LOGINBONUS_GETMONTHLYLOGINBONUSINFO = "loginBonus/getMonthlyLoginBonusInfo";
@@ -87,6 +88,11 @@ public class MementoMoriFuncs
         _apiHost = new Uri(resp.ApiHost);
         _runtimeInfo.ApiHost = resp.ApiHost;
         _configSubject.OnNext(_runtimeInfo);
+    }
+    public async Task<GetDataUri.Resp> AuthGetDataUri(string countryCode, long userId)
+    {
+        var req = new GetDataUri.Req() {CountryCode = countryCode, UserId = userId};
+        return await GetResponse<GetDataUri.Req, GetDataUri.Resp>(URL_AUTH_GETDATAURI, req);
     }
 
     private async Task<LoginPlayer.Resp> UserLoginPlayer(long playerId, string password)
@@ -183,6 +189,8 @@ public class MementoMoriFuncs
         var req = new ReceiveItem.Req();
         return await GetResponse<ReceiveItem.Req, ReceiveItem.Resp>(uri, req);
     } 
+    
+    
 
     private async Task<TResp> GetResponse<TReq, TResp>(string url, TReq req)
     {

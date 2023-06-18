@@ -1,4 +1,4 @@
-﻿using MementoMori.Common;
+﻿using MementoMori.Ortega.Share.Data;
 using MementoMori.User;
 using MessagePack;
 
