@@ -4,6 +4,9 @@
 @page "/"
 @using System.Text
 @using MementoMori.Ortega.Share.Data
+@using MementoMori.Ortega.Share.Data.ApiInterface.Battle
+@using MementoMori.Ortega.Share.Data.ApiInterface.Quest
+@using MementoMori.Ortega.Share.Data.Battle.Result
 @using MementoMori.Ortega.Share.Data.Item
 @using MementoMori.Ortega.Share.Data.Present
 @using MementoMori.WebUI.Extensions
@@ -50,6 +53,7 @@
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetAutoBattleReward">领取自动战斗奖励</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BulkTransferFriendPoint">一键赠送/接受友情点</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@PresentReceiveItem">一键领取礼物箱</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BattleBossQuick">主线boss扫荡3次</button>
             </div>
         </div>
         <div class="card">
@@ -68,6 +72,15 @@
         <pre>
         Api Host: @apiHost
         Access Token: @accessToken
+        </pre>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+        <pre>
+        @_userSyncData.ToJson(true)
         </pre>
             </div>
         </div>
@@ -181,6 +194,33 @@
             foreach (var respResultItem in resp.ResultItems ?? new List<PresentItem>())
             {
                 msg.AppendLine($"稀有度 {respResultItem.RarityFlags} {respResultItem.Item.ToJson()}\n");
+            }
+
+            _quickActionResult = msg.ToString();
+        });
+    }
+
+    private async Task BattleBossQuick()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            var msg = new StringBuilder("领取的奖励：\n");
+            for (int i = 0; i < 3; i++)
+            {
+                var bossQuickResponse = await moriFuncs.GetResponse<BossQuickRequest, BossQuickResponse>(
+                    new BossQuickRequest()
+                    {
+                        QuestId = _userSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId
+                    });
+                if (bossQuickResponse.BattleRewardResult == null) continue;
+                foreach (var userItem in bossQuickResponse.BattleRewardResult.FixedItemList)
+                {
+                    msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
+                }
+                foreach (var userItem in bossQuickResponse.BattleRewardResult.DropItemList)
+                {
+                    msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
+                }
             }
 
             _quickActionResult = msg.ToString();

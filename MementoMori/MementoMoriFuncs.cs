@@ -185,14 +185,7 @@ public class MementoMoriFuncs
         return await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(req);
     } 
     
-    
-
-    // private async Task<TResp> GetResponse<TReq, TResp>(string url, TReq req)
-    // {
-    //     return await GetResponse<TReq, TResp>(new Uri(url), req);
-    // }
-
-    private async Task<TResp> GetResponse<TReq, TResp>(TReq req) 
+    public async Task<TResp> GetResponse<TReq, TResp>(TReq req) 
         where TReq: ApiRequestBase 
         where TResp: ApiResponseBase
     {
