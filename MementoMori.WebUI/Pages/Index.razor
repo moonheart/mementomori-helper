@@ -2,11 +2,10 @@
 @inject MementoMoriFuncs moriFuncs
 
 @page "/"
-@using MementoMori.LoginBonus
-@using MementoMori.Vip
 @using System.Text
 @using MementoMori.Ortega.Share.Data
-@using MementoMori.Present
+@using MementoMori.Ortega.Share.Data.Item
+@using MementoMori.Ortega.Share.Data.Present
 @using MementoMori.WebUI.Extensions
 
 <PageTitle>主页</PageTitle>
@@ -122,7 +121,7 @@
             var bonus = await moriFuncs.LoginBonusReceiveDailyLoginBonus(DateTime.Now.Day);
             var msg = new StringBuilder("领取的奖励：\n");
 
-            foreach (var item in bonus.RewardItemList ?? Array.Empty<ReceiveDailyLoginBonus.RewardItemList>())
+            foreach (var item in bonus.RewardItemList ?? new List<UserItem>())
             {
                 msg.Append($"Item Type: {item.ItemType}, Item Id: {item.ItemId}, Item Count: {item.ItemCount}\n");
             }
@@ -138,7 +137,7 @@
             var bonus = await moriFuncs.VipGetDailyGift();
             var msg = new StringBuilder("领取的奖励：\n");
 
-            foreach (var item in bonus.ItemList ?? Array.Empty<GetDailyGift.ItemList>())
+            foreach (var item in bonus.ItemList ?? new List<UserItem>())
             {
                 msg.Append($"Item Type: {item.ItemType}, Item Id: {item.ItemId}, Item Count: {item.ItemCount}\n");
             }
@@ -179,7 +178,7 @@
         {
             var resp = await moriFuncs.PresentReceiveItem();
             var msg = new StringBuilder("领取的奖励：\n");
-            foreach (var respResultItem in resp.ResultItems ?? Array.Empty<ReceiveItem.ResultItems>())
+            foreach (var respResultItem in resp.ResultItems ?? new List<PresentItem>())
             {
                 msg.AppendLine($"稀有度 {respResultItem.RarityFlags} {respResultItem.Item.ToJson()}\n");
             }

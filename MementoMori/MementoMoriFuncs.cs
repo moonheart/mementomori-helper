@@ -1,11 +1,15 @@
 ﻿using System.Reactive.Subjects;
-using MementoMori.Battle;
-using MementoMori.Friend;
-using MementoMori.LoginBonus;
+using System.Reflection;
 using MementoMori.Ortega.Share.Data;
-using MementoMori.Present;
-using MementoMori.User;
-using MementoMori.Vip;
+using MementoMori.Ortega.Share.Data.ApiInterface;
+using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
+using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
+using MementoMori.Ortega.Share.Data.ApiInterface.Friend;
+using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
+using MementoMori.Ortega.Share.Data.ApiInterface.Present;
+using MementoMori.Ortega.Share.Data.ApiInterface.User;
+using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
+using MementoMori.Ortega.Share.Enums;
 using MessagePack;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -29,6 +33,7 @@ public class MementoMoriFuncs
     private const string URL_PRESENT_RECEIVEITEM = "present/receiveItem";
 
     private Uri _apiHost;
+    private Uri _apiAuth = new Uri("https://prd1-auth.mememori-boi.com/api/");
 
     private readonly BehaviorSubject<RuntimeInfo> _configSubject = new(new RuntimeInfo());
     public IObservable<RuntimeInfo> ConfigSubject => _configSubject;
@@ -57,7 +62,7 @@ public class MementoMoriFuncs
 
     public async Task AuthLogin()
     {
-        var reqBody = new AuthLoginReq
+        var reqBody = new LoginRequest()
         {
             ClientKey = _authOption.ClientKey,
             DeviceToken = _authOption.DeviceToken,
@@ -67,7 +72,7 @@ public class MementoMoriFuncs
             AdverisementId = _authOption.AdverisementId,
             UserId = _authOption.UserId
         };
-        var authLoginResp = await GetResponse<AuthLoginReq, AuthLoginResp>(URL_AUTH_LOGIN, reqBody);
+        var authLoginResp = await GetResponse<LoginRequest, LoginResponse>(reqBody);
         var playerDataInfo = authLoginResp.PlayerDataInfoList.FirstOrDefault();
         if (playerDataInfo == null) throw new Exception("playerDataInfo is null");
 
@@ -81,39 +86,36 @@ public class MementoMoriFuncs
         _userSyncDataSubject.OnNext(userSyncData);
     }
 
-    private async Task AuthGetServerHost(int worldId)
+    private async Task AuthGetServerHost(long worldId)
     {
-        var req = new GetServerHost.Req {WorldId = worldId};
-        var resp = await GetResponse<GetServerHost.Req, GetServerHost.Resp>(URL_AUTH_GETSERVERHOST, req);
+        var req = new GetServerHostRequest() {WorldId = worldId};
+        var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(req);
         _apiHost = new Uri(resp.ApiHost);
         _runtimeInfo.ApiHost = resp.ApiHost;
         _configSubject.OnNext(_runtimeInfo);
     }
-    public async Task<GetDataUri.Resp> AuthGetDataUri(string countryCode, long userId)
+    public async Task<GetDataUriResponse> AuthGetDataUri(string countryCode, long userId)
     {
-        var req = new GetDataUri.Req() {CountryCode = countryCode, UserId = userId};
-        return await GetResponse<GetDataUri.Req, GetDataUri.Resp>(URL_AUTH_GETDATAURI, req);
+        var req = new GetDataUriRequest() {CountryCode = countryCode, UserId = userId};
+        return await GetResponse<GetDataUriRequest, GetDataUriResponse>(req);
     }
 
-    private async Task<LoginPlayer.Resp> UserLoginPlayer(long playerId, string password)
+    private async Task<LoginPlayerResponse> UserLoginPlayer(long playerId, string password)
     {
-        var loginUri = new Uri(_apiHost, URL_USER_LOGINPLAYER);
-        var req = new LoginPlayer.Req {PlayerId = playerId, Password = password};
-        return await GetResponse<LoginPlayer.Req, LoginPlayer.Resp>(loginUri, req);
+        var req = new LoginPlayerRequest{PlayerId = playerId, Password = password};
+        return await GetResponse<LoginPlayerRequest, LoginPlayerResponse>(req);
     }
 
-    public async Task<GetUserData.Resp> UserGetUserData()
+    public async Task<GetUserDataResponse> UserGetUserData()
     {
-        var loginUri = new Uri(_apiHost, URL_USER_GETUSERDATA);
-        var req = new GetUserData.Req { };
-        return await GetResponse<GetUserData.Req, GetUserData.Resp>(loginUri, req);
+        var req = new GetUserDataRequest { };
+        return await GetResponse<GetUserDataRequest, GetUserDataResponse>(req);
     }
 
-    public async Task<GetMonthlyLoginBonusInfo.Resp> LoginBonusGetMonthlyLoginBonusInfo()
+    public async Task<GetMonthlyLoginBonusInfoResponse> LoginBonusGetMonthlyLoginBonusInfo()
     {
-        var loginUri = new Uri(_apiHost, URL_LOGINBONUS_GETMONTHLYLOGINBONUSINFO);
-        var req = new GetMonthlyLoginBonusInfo.Req();
-        return await GetResponse<GetMonthlyLoginBonusInfo.Req, GetMonthlyLoginBonusInfo.Resp>(loginUri, req);
+        var req = new GetMonthlyLoginBonusInfoRequest();
+        return await GetResponse<GetMonthlyLoginBonusInfoRequest, GetMonthlyLoginBonusInfoResponse>(req);
     }
 
     /// <summary>
@@ -121,90 +123,101 @@ public class MementoMoriFuncs
     /// </summary>
     /// <param name="receiveDay"></param>
     /// <returns></returns>
-    public async Task<ReceiveDailyLoginBonus.Resp> LoginBonusReceiveDailyLoginBonus(int receiveDay)
+    public async Task<ReceiveDailyLoginBonusResponse> LoginBonusReceiveDailyLoginBonus(int receiveDay)
     {
-        var loginUri = new Uri(_apiHost, URL_LOGINBONUS_RECEIVEDAILYLOGINBONUS);
-        var req = new ReceiveDailyLoginBonus.Req() {ReceiveDay = receiveDay};
-        return await GetResponse<ReceiveDailyLoginBonus.Req, ReceiveDailyLoginBonus.Resp>(loginUri, req);
+        var req = new ReceiveDailyLoginBonusRequest() {ReceiveDay = receiveDay};
+        return await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(req);
     }
     
     /// <summary>
     /// 获取VIP每日奖励
     /// </summary>
     /// <returns></returns>
-    public async Task<GetDailyGift.Resp> VipGetDailyGift()
+    public async Task<GetDailyGiftResponse> VipGetDailyGift()
     {
-        var loginUri = new Uri(_apiHost, URL_VIP_GETDAILYGIFT);
-        var req = new GetDailyGift.Req();
-        return await GetResponse<GetDailyGift.Req, GetDailyGift.Resp>(loginUri, req);
+        var req = new GetDailyGiftRequest();
+        return await GetResponse<GetDailyGiftRequest, GetDailyGiftResponse>(req);
     }
     
     /// <summary>
     /// 一键发送、接收友情点
     /// </summary>
     /// <returns></returns>
-    public async Task<BulkTransferFriendPoint.Resp> FriendBulkTransferFriendPoint()
+    public async Task<BulkTransferFriendPointResponse> FriendBulkTransferFriendPoint()
     {
-        var loginUri = new Uri(_apiHost, URL_FRIEND_BULKTRANSFERFRIENDPOINT);
-        var req = new BulkTransferFriendPoint.Req();
-        return await GetResponse<BulkTransferFriendPoint.Req, BulkTransferFriendPoint.Resp>(loginUri, req);
+        var req = new BulkTransferFriendPointRequest();
+        return await GetResponse<BulkTransferFriendPointRequest, BulkTransferFriendPointResponse>(req);
     }
     
     /// <summary>
     /// 获取自动战斗的奖励
     /// </summary>
     /// <returns></returns>
-    public async Task<RewardAutoBattle.Resp> BattleRewardAutoBattle()
+    public async Task<RewardAutoBattleResponse> BattleRewardAutoBattle()
     {
-        var loginUri = new Uri(_apiHost, URL_BATTLE_REWARDAUTOBATTLE);
-        var req = new RewardAutoBattle.Req();
-        return await GetResponse<RewardAutoBattle.Req, RewardAutoBattle.Resp>(loginUri, req);
+        var req = new RewardAutoBattleRequest();
+        return await GetResponse<RewardAutoBattleRequest, RewardAutoBattleResponse>(req);
     }
     
     /// <summary>
     /// 战斗扫荡
     /// </summary>
     /// <returns></returns>
-    public async Task<BossQuick.Resp> BattleBossQuick(int questId)
+    public async Task<BossQuickResponse> BattleBossQuick(int questId)
     {
-        var loginUri = new Uri(_apiHost, URL_BATTLE_BOSSQUICK);
-        var req = new BossQuick.Req(){QuestId = questId};
-        return await GetResponse<BossQuick.Req, BossQuick.Resp>(loginUri, req);
+        var req = new BossQuickRequest(){QuestId = questId};
+        return await GetResponse<BossQuickRequest, BossQuickResponse>(req);
     }
 
     /// <summary>
     /// 高速战斗
     /// </summary>
     /// <returns></returns>
-    public async Task<Quick.Resp> BattleQuick(int questQuickExecuteType, int quickCount)
+    public async Task<QuickResponse> BattleQuick(QuestQuickExecuteType questQuickExecuteType, int quickCount)
     {
-        var reqUri = new Uri(_apiHost, URL_BATTLE_QUICK);
-        var req = new Quick.Req(){QuestQuickExecuteType = questQuickExecuteType, QuickCount = quickCount};
-        return await GetResponse<Quick.Req, Quick.Resp>(reqUri, req);
+        var req = new QuickRequest(){QuestQuickExecuteType = questQuickExecuteType, QuickCount = quickCount};
+        return await GetResponse<QuickRequest, QuickResponse>(req);
     }
 
-    public async Task<ReceiveItem.Resp> PresentReceiveItem()
+    public async Task<ReceiveItemResponse> PresentReceiveItem()
     {
-        var uri = new Uri(_apiHost, URL_PRESENT_RECEIVEITEM);
-        var req = new ReceiveItem.Req();
-        return await GetResponse<ReceiveItem.Req, ReceiveItem.Resp>(uri, req);
+        var req = new ReceiveItemRequest();
+        return await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(req);
     } 
     
     
 
-    private async Task<TResp> GetResponse<TReq, TResp>(string url, TReq req)
-    {
-        return await GetResponse<TReq, TResp>(new Uri(url), req);
-    }
+    // private async Task<TResp> GetResponse<TReq, TResp>(string url, TReq req)
+    // {
+    //     return await GetResponse<TReq, TResp>(new Uri(url), req);
+    // }
 
-    private async Task<TResp> GetResponse<TReq, TResp>(Uri url, TReq req)
+    private async Task<TResp> GetResponse<TReq, TResp>(TReq req) 
+        where TReq: ApiRequestBase 
+        where TResp: ApiResponseBase
     {
-        var reqMap = JsonConvert.DeserializeObject<Dictionary<object, object>>(JsonConvert.SerializeObject(req));
-        var bytes = MessagePackSerializer.Serialize(reqMap);
-        var respMsg = await _httpClient.PostAsync(url,
+        var authAttr = typeof(TReq).GetCustomAttribute<OrtegaAuthAttribute>();
+        var apiAttr = typeof(TReq).GetCustomAttribute<OrtegaApiAttribute>();
+        Uri uri;
+        if (authAttr != null)
+        {
+            uri = new Uri(_apiAuth, authAttr.Uri);
+        }
+        else if (apiAttr != null)
+        {
+            uri = new Uri(_apiHost, apiAttr.Uri);
+        }
+        else
+        {
+            throw new NotSupportedException();
+        }
+
+        // var reqMap = JsonConvert.DeserializeObject<Dictionary<object, object>>(JsonConvert.SerializeObject(req));
+        var bytes = MessagePackSerializer.Serialize(req);
+        var respMsg = await _httpClient.PostAsync(uri,
             new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json"}}});
         var respBytes = await respMsg.Content.ReadAsByteArrayAsync();
-        var tmp = MessagePackSerializer.Deserialize<object>(respBytes);
-        return JsonConvert.DeserializeObject<TResp>(JsonConvert.SerializeObject(tmp));
+        return MessagePackSerializer.Deserialize<TResp>(respBytes);
+        // return JsonConvert.DeserializeObject<TResp>(JsonConvert.SerializeObject(tmp));
     }
 }
