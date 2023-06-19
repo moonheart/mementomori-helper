@@ -5,13 +5,15 @@
 @using System.Text
 @using MementoMori.Ortega.Share.Data
 @using MementoMori.Ortega.Share.Data.ApiInterface.Battle
+@using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest
 @using MementoMori.Ortega.Share.Data.ApiInterface.Quest
-@using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle
 @using MementoMori.Ortega.Share.Data.Battle.Result
 @using MementoMori.Ortega.Share.Data.Item
 @using MementoMori.Ortega.Share.Data.Present
 @using MementoMori.Ortega.Share.Enums
 @using MementoMori.WebUI.Extensions
+@using StartRequest = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartRequest
+@using StartResponse = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartResponse
 
 <PageTitle>主页</PageTitle>
 
@@ -20,27 +22,50 @@
         <div class="card">
             <div class="card-header">
                 <span class="fs-4">角色信息</span>
-                <button class="btn btn-sm btn-secondary float-end" disabled="@_logining" @onclick="@Login">登录 
+                <button class="btn btn-sm btn-secondary float-end" disabled="@_logining" @onclick="@Login">
+                    登录
                     @if (_logining)
                     {
                         <div class="spinner-border spinner-border-sm" role="status"></div>
                     }
-                    </button>
+                </button>
             </div>
             <div class="card-body">
                 <table class="table">
                     <tbody>
-                    <tr><td>用户名</td><td>@_userSyncData?.UserStatusDtoInfo?.Name</td></tr>
-                    <tr><td>玩家ID</td><td>@_userSyncData?.UserStatusDtoInfo?.PlayerId</td></tr>
-                    <tr><td>加入时间</td><td>@_userSyncData?.UserStatusDtoInfo?.CreateAt.ToDateTimeOffset()</td></tr>
-                    <tr><td>等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Rank</td></tr>
-                    <tr><td>VIP 等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Vip</td></tr>
-                    <tr><td>留言</td><td>@_userSyncData?.UserStatusDtoInfo?.Comment</td></tr>
-                    <tr><td>经验值</td><td>@_userSyncData?.UserStatusDtoInfo?.Exp</td></tr>
-                    <tr><td>上次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLoginTime.ToDateTimeOffset()</td></tr>
-                    <tr><td>前次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.PreviousLoginTime.ToDateTimeOffset()</td></tr>
-                    <tr><td>上次升级</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLvUpTime.ToDateTimeOffset()</td></tr>
-                    <tr><td>用户名已更改</td><td>@_userSyncData?.UserStatusDtoInfo?.IsAlreadyChangedName</td></tr>
+                    <tr>
+                        <td>用户名</td><td>@_userSyncData?.UserStatusDtoInfo?.Name</td>
+                    </tr>
+                    <tr>
+                        <td>玩家ID</td><td>@_userSyncData?.UserStatusDtoInfo?.PlayerId</td>
+                    </tr>
+                    <tr>
+                        <td>加入时间</td><td>@_userSyncData?.UserStatusDtoInfo?.CreateAt.ToDateTimeOffset()</td>
+                    </tr>
+                    <tr>
+                        <td>等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Rank</td>
+                    </tr>
+                    <tr>
+                        <td>VIP 等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Vip</td>
+                    </tr>
+                    <tr>
+                        <td>留言</td><td>@_userSyncData?.UserStatusDtoInfo?.Comment</td>
+                    </tr>
+                    <tr>
+                        <td>经验值</td><td>@_userSyncData?.UserStatusDtoInfo?.Exp</td>
+                    </tr>
+                    <tr>
+                        <td>上次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLoginTime.ToDateTimeOffset()</td>
+                    </tr>
+                    <tr>
+                        <td>前次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.PreviousLoginTime.ToDateTimeOffset()</td>
+                    </tr>
+                    <tr>
+                        <td>上次升级</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLvUpTime.ToDateTimeOffset()</td>
+                    </tr>
+                    <tr>
+                        <td>用户名已更改</td><td>@_userSyncData?.UserStatusDtoInfo?.IsAlreadyChangedName</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -58,6 +83,8 @@
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BattleBossQuick">主线boss扫荡3次</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@InfiniteTowerQuick">无穷之塔扫荡3次</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@PvpAuto">PVP自动战斗5次</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BountyQuestRewardAuto">祈愿之泉一键领取</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BountyQuestStartAuto">祈愿之泉一键开始</button>
             </div>
         </div>
         <div class="card">
@@ -73,7 +100,7 @@
     <div class="col-6">
         <div class="card">
             <div class="card-body">
-        <pre>
+                <pre>
         Api Host: @apiHost
         Access Token: @accessToken
         </pre>
@@ -83,7 +110,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-        <pre>
+                <pre>
         @_userSyncData.ToJson(true)
         </pre>
             </div>
@@ -258,6 +285,7 @@
             _quickActionResult = msg.ToString();
         });
     }
+
     private async Task PvpAuto()
     {
         await ExecuteQuickAction(async () =>
@@ -287,6 +315,53 @@
             }
 
             _quickActionResult = msg.ToString();
+        });
+    }
+
+    private async Task BountyQuestRewardAuto()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            var msg = new StringBuilder("领取的奖励：\n");
+            var getListResponse = await moriFuncs.GetResponse<GetListRequest, GetListResponse>(
+                new GetListRequest());
+
+            var questIds = getListResponse.UserBountyQuestDtoInfos
+                .Where(d=>d.BountyQuestEndTime > 0)
+                .Select(d=>d.BountyQuestId).ToList();
+
+            if (questIds.Count > 0)
+            {
+                var rewardResponse = await moriFuncs.GetResponse<RewardRequest, RewardResponse>(new RewardRequest(){BountyQuestIds = questIds, IsQuick = false});
+
+                foreach (var item in rewardResponse.RewardItems)
+                {
+                    msg.AppendLine($"ItemType: {item.ItemType}, ItemId: {item.ItemId}, Count: {item.ItemCount}\n");
+                }
+            }
+           
+            _quickActionResult = msg.ToString();
+        });
+    }
+    private async Task BountyQuestStartAuto()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            _quickActionResult = "还未实现";
+            // var msg = new StringBuilder();
+            // var getListResponse = await moriFuncs.GetResponse<GetListRequest, GetListResponse>(
+            //     new GetListRequest());
+
+            
+            // foreach (var bountyQuestInfo in getListResponse.BountyQuestInfos)
+            // {
+            //     foreach (var userCharacterDtoInfo in _userSyncData.UserCharacterDtoInfos)
+            //     {
+            //     }
+            // }
+           
+           
+            // _quickActionResult = msg.ToString();
         });
     }
 
