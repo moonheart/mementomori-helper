@@ -57,6 +57,7 @@
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@PresentReceiveItem">一键领取礼物箱</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BattleBossQuick">主线boss扫荡3次</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@InfiniteTowerQuick">无穷之塔扫荡3次</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@PvpAuto">PVP自动战斗5次</button>
             </div>
         </div>
         <div class="card">
@@ -249,6 +250,37 @@
                     msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
                 }
                 foreach (var userItem in bossQuickResponse.BattleRewardResult.DropItemList)
+                {
+                    msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
+                }
+            }
+
+            _quickActionResult = msg.ToString();
+        });
+    }
+    private async Task PvpAuto()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            var msg = new StringBuilder("领取的奖励：\n");
+            for (int i = 0; i < 5; i++)
+            {
+                var pvpInfoResponse = await moriFuncs.GetResponse<GetPvpInfoRequest, GetPvpInfoResponse>(
+                    new GetPvpInfoRequest());
+
+                var pvpRankingPlayerInfo = pvpInfoResponse.MatchingRivalList.OrderBy(d => d.DefenseBattlePower).First();
+
+                var pvpStartResponse = await moriFuncs.GetResponse<PvpStartRequest, PvpStartResponse>(new PvpStartRequest()
+                {
+                    RivalPlayerRank = pvpRankingPlayerInfo.CurrentRank,
+                    RivalPlayerId = pvpRankingPlayerInfo.PlayerInfo.PlayerId
+                });
+
+                foreach (var userItem in pvpStartResponse.BattleRewardResult.FixedItemList)
+                {
+                    msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
+                }
+                foreach (var userItem in pvpStartResponse.BattleRewardResult.DropItemList)
                 {
                     msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
                 }
