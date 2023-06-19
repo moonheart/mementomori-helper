@@ -6,9 +6,11 @@
 @using MementoMori.Ortega.Share.Data
 @using MementoMori.Ortega.Share.Data.ApiInterface.Battle
 @using MementoMori.Ortega.Share.Data.ApiInterface.Quest
+@using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle
 @using MementoMori.Ortega.Share.Data.Battle.Result
 @using MementoMori.Ortega.Share.Data.Item
 @using MementoMori.Ortega.Share.Data.Present
+@using MementoMori.Ortega.Share.Enums
 @using MementoMori.WebUI.Extensions
 
 <PageTitle>主页</PageTitle>
@@ -54,6 +56,7 @@
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BulkTransferFriendPoint">一键赠送/接受友情点</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@PresentReceiveItem">一键领取礼物箱</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BattleBossQuick">主线boss扫荡3次</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@InfiniteTowerQuick">无穷之塔扫荡3次</button>
             </div>
         </div>
         <div class="card">
@@ -211,6 +214,34 @@
                     new BossQuickRequest()
                     {
                         QuestId = _userSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId
+                    });
+                if (bossQuickResponse.BattleRewardResult == null) continue;
+                foreach (var userItem in bossQuickResponse.BattleRewardResult.FixedItemList)
+                {
+                    msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
+                }
+                foreach (var userItem in bossQuickResponse.BattleRewardResult.DropItemList)
+                {
+                    msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
+                }
+            }
+
+            _quickActionResult = msg.ToString();
+        });
+    }
+
+    private async Task InfiniteTowerQuick()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            var tower = _userSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
+            var msg = new StringBuilder("领取的奖励：\n");
+            for (int i = 0; i < 3; i++)
+            {
+                var bossQuickResponse = await moriFuncs.GetResponse<StartRequest, StartResponse>(
+                    new StartRequest()
+                    {
+                        IsQuick = true, TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId
                     });
                 if (bossQuickResponse.BattleRewardResult == null) continue;
                 foreach (var userItem in bossQuickResponse.BattleRewardResult.FixedItemList)
