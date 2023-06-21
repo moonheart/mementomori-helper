@@ -1,24 +1,30 @@
-﻿namespace MementoMori.Ortega.Share.Master.Table
+﻿using MessagePack;
+
+namespace MementoMori.Ortega.Share.Master.Table
 {
 	public abstract class TableBase<TM> where TM : MasterBookBase
 	{
 		public TM GetById(long id)
 		{
-			throw new NotImplementedException();
+			return _datas.FirstOrDefault(d => d.Id == id);
 		}
 
 		public TM[] GetArray()
 		{
-			throw new NotImplementedException();
+			return _datas;
 		}
 
 		public int Count()
 		{
-			throw new NotImplementedException();
+			return _datas.Length;
 		}
 
 		public bool Load()
 		{
+			var filePath = GetMasterDataPath(typeof(TM).Name);
+			var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+			_datas = MessagePackSerializer.Deserialize<TM[]>(fileStream);
+			return true;
 			// string name;
 			// string text;
 			// int num4;
@@ -84,13 +90,13 @@
 			// throw new NullReferenceException();
 			// IL_193:
 			// throw new NullReferenceException();
-			throw new NotImplementedException();
+			// throw new NotImplementedException();
 		}
 
 		protected static string GetMasterDataPath(string masterBookName)
 		{
-			// return Application.persistentDataPath + "/Master/" + masterBookName;
-			throw new NotImplementedException();
+			return "./Master/" + masterBookName;
+			// throw new NotImplementedException();
 		}
 
 		protected TableBase()

@@ -1,5 +1,8 @@
 ﻿using System.Reactive.Subjects;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
+using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.ApiInterface;
 using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
@@ -10,6 +13,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Present;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using MementoMori.Ortega.Share.Enums;
+using MementoMori.Ortega.Share.Master;
 using MessagePack;
 using Microsoft.Extensions.Options;
 
@@ -29,9 +33,11 @@ public class MementoMoriFuncs
     private readonly RuntimeInfo _runtimeInfo = new();
     private readonly MeMoriHttpClientHandler _meMoriHttpClientHandler;
     private readonly HttpClient _httpClient;
+    private readonly HttpClient _unityHttpClient;
 
 
     private readonly AuthOption _authOption;
+
     public MementoMoriFuncs(IOptions<AuthOption> authOption)
     {
         _authOption = authOption.Value;
@@ -48,6 +54,9 @@ public class MementoMoriFuncs
         });
 
         _httpClient = new HttpClient(_meMoriHttpClientHandler);
+        _unityHttpClient = new HttpClient();
+        _unityHttpClient.DefaultRequestHeaders.Add("User-Agent", new []{"UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)"});
+        _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", new []{"2021.3.10f1"});
     }
 
     public async Task AuthLogin()
@@ -68,7 +77,7 @@ public class MementoMoriFuncs
 
         // get server host
         await AuthGetServerHost(playerDataInfo.WorldId);
-        
+
         // do login
         var loginPlayerResp = await UserLoginPlayer(playerDataInfo.PlayerId, playerDataInfo.Password);
 
@@ -84,6 +93,50 @@ public class MementoMoriFuncs
         _runtimeInfo.ApiHost = resp.ApiHost;
         _runtimeInfoSubject.OnNext(_runtimeInfo);
     }
+
+    public async Task DownloadMasterCatalog()
+    {
+        var url = $"https://cdn-mememori.akamaized.net/master/prd1/version/{_runtimeInfo.OrtegaMasterVersion}/master-catalog";
+        var bytes = await _unityHttpClient.GetByteArrayAsync(url);
+        var masterBookCatalog = MessagePackSerializer.Deserialize<MasterBookCatalog>(bytes);
+        Directory.CreateDirectory("./Master");
+        foreach (var (name, info) in masterBookCatalog.MasterBookInfoMap)
+        {
+            var localPath = $"./Master/{name}";
+            if (File.Exists(localPath))
+            {
+                var md5 = await CalcFileMd5(localPath);
+                if (md5 == info.Hash) continue;
+                File.Delete( localPath);
+            }
+
+            var mbUrl = $"https://cdn-mememori.akamaized.net/master/prd1/version/{_runtimeInfo.OrtegaMasterVersion}/{name}";
+            var fileBytes = await _unityHttpClient.GetByteArrayAsync(mbUrl);
+            await File.WriteAllBytesAsync(localPath, fileBytes);
+        }
+
+        Masters.ItemTable.Load();
+        Masters.CharacterTable.Load();
+        Masters.TextResourceTable.Load(LanguageType.zhTW);
+    }
+
+    private async Task<string> CalcFileMd5(string path)
+    {
+        FileStream file = new FileStream(path, FileMode.Open);
+        
+        MD5 md5 = MD5.Create();
+        byte[] retVal = await md5.ComputeHashAsync(file);
+        file.Close();
+        StringBuilder sb = new StringBuilder();
+        foreach (byte t in retVal)
+        {
+            sb.Append(t.ToString("x2"));
+        }
+
+        return sb.ToString();
+    }
+
+
     public async Task<GetDataUriResponse> AuthGetDataUri(string countryCode, long userId)
     {
         var req = new GetDataUriRequest() {CountryCode = countryCode, UserId = userId};
@@ -92,7 +145,7 @@ public class MementoMoriFuncs
 
     private async Task<LoginPlayerResponse> UserLoginPlayer(long playerId, string password)
     {
-        var req = new LoginPlayerRequest{PlayerId = playerId, Password = password};
+        var req = new LoginPlayerRequest {PlayerId = playerId, Password = password};
         return await GetResponse<LoginPlayerRequest, LoginPlayerResponse>(req);
     }
 
@@ -118,7 +171,7 @@ public class MementoMoriFuncs
         var req = new ReceiveDailyLoginBonusRequest() {ReceiveDay = receiveDay};
         return await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(req);
     }
-    
+
     /// <summary>
     /// 获取VIP每日奖励
     /// </summary>
@@ -128,7 +181,7 @@ public class MementoMoriFuncs
         var req = new GetDailyGiftRequest();
         return await GetResponse<GetDailyGiftRequest, GetDailyGiftResponse>(req);
     }
-    
+
     /// <summary>
     /// 一键发送、接收友情点
     /// </summary>
@@ -138,7 +191,7 @@ public class MementoMoriFuncs
         var req = new BulkTransferFriendPointRequest();
         return await GetResponse<BulkTransferFriendPointRequest, BulkTransferFriendPointResponse>(req);
     }
-    
+
     /// <summary>
     /// 获取自动战斗的奖励
     /// </summary>
@@ -148,14 +201,14 @@ public class MementoMoriFuncs
         var req = new RewardAutoBattleRequest();
         return await GetResponse<RewardAutoBattleRequest, RewardAutoBattleResponse>(req);
     }
-    
+
     /// <summary>
     /// 战斗扫荡
     /// </summary>
     /// <returns></returns>
     public async Task<BossQuickResponse> BattleBossQuick(int questId)
     {
-        var req = new BossQuickRequest(){QuestId = questId};
+        var req = new BossQuickRequest() {QuestId = questId};
         return await GetResponse<BossQuickRequest, BossQuickResponse>(req);
     }
 
@@ -165,19 +218,19 @@ public class MementoMoriFuncs
     /// <returns></returns>
     public async Task<QuickResponse> BattleQuick(QuestQuickExecuteType questQuickExecuteType, int quickCount)
     {
-        var req = new QuickRequest(){QuestQuickExecuteType = questQuickExecuteType, QuickCount = quickCount};
+        var req = new QuickRequest() {QuestQuickExecuteType = questQuickExecuteType, QuickCount = quickCount};
         return await GetResponse<QuickRequest, QuickResponse>(req);
     }
 
     public async Task<ReceiveItemResponse> PresentReceiveItem()
     {
-        var req = new ReceiveItemRequest(){LanguageType = LanguageType.zhTW};
+        var req = new ReceiveItemRequest() {LanguageType = LanguageType.zhTW};
         return await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(req);
-    } 
-    
-    public async Task<TResp> GetResponse<TReq, TResp>(TReq req) 
-        where TReq: ApiRequestBase 
-        where TResp: ApiResponseBase
+    }
+
+    public async Task<TResp> GetResponse<TReq, TResp>(TReq req)
+        where TReq : ApiRequestBase
+        where TResp : ApiResponseBase
     {
         var authAttr = typeof(TReq).GetCustomAttribute<OrtegaAuthAttribute>();
         var apiAttr = typeof(TReq).GetCustomAttribute<OrtegaApiAttribute>();

@@ -9,6 +9,31 @@ namespace MementoMori.Ortega.Share.Master.Table
 	{
 		public bool Load(LanguageType languageType)
 		{
+			base.Load();
+			foreach (var textResourceMb in _datas)
+			{
+				switch (languageType)
+				{
+					case LanguageType.None:
+						break;
+					case LanguageType.jaJP:
+						_cached[textResourceMb.StringKey] = textResourceMb.jaJP;
+						break;
+					case LanguageType.enUS:
+						_cached[textResourceMb.StringKey] = textResourceMb.enUS;
+						break;
+					case LanguageType.koKR:
+						_cached[textResourceMb.StringKey] = textResourceMb.koKR;
+						break;
+					case LanguageType.zhTW:
+						_cached[textResourceMb.StringKey] = textResourceMb.zhTW;
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(languageType), languageType, null);
+				}
+			}
+
+			return true;
 			// TextResourceMB textResourceMB;
 			// string[] array3;
 			// for (;;)
@@ -136,11 +161,12 @@ namespace MementoMori.Ortega.Share.Master.Table
 			// throw new NullReferenceException();
 			// IL_306:
 			// throw new NullReferenceException();
-			throw new NotImplementedException();
+			// throw new NotImplementedException();
 		}
 
 		public string Get(string key)
 		{
+			return _cached.TryGetValue(key, out var value) ? value : "未知";
 			// if (this._cached != (ulong)0L)
 			// {
 			// 	if (string.IsNullOrEmpty(key))
@@ -323,6 +349,6 @@ namespace MementoMori.Ortega.Share.Master.Table
 		}
 
 		// [FieldOffset(Offset = "0x18")]
-		private Dictionary<string, string> _cached;
+		private Dictionary<string, string> _cached = new Dictionary<string, string>();
 	}
 }

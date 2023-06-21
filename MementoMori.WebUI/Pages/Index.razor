@@ -3,6 +3,7 @@
 
 @page "/"
 @using System.Text
+@using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Data
 @using MementoMori.Ortega.Share.Data.ApiInterface.Battle
 @using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest
@@ -75,6 +76,7 @@
         <div class="card">
             <div class="card-header">快捷操作</div>
             <div class="card-body">
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@DownloadMasterData">下载Master目录数据</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetLoginBonus">领取每日登录奖励</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetVipGift">领取每日VIP礼物</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetAutoBattleReward">领取自动战斗奖励</button>
@@ -85,6 +87,7 @@
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@PvpAuto">PVP自动战斗5次</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BountyQuestRewardAuto">祈愿之泉一键领取</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BountyQuestStartAuto">祈愿之泉一键开始</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@QueryCharacterList">查询角色列表</button>
             </div>
         </div>
         <div class="card">
@@ -359,6 +362,30 @@
            
            
             // _quickActionResult = msg.ToString();
+        });
+    }
+
+    private async Task DownloadMasterData()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            await moriFuncs.DownloadMasterCatalog();
+        });
+    }
+
+    private async Task QueryCharacterList()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            var msg = new StringBuilder("角色列表：\n");
+    
+            foreach (var userCharacterDtoInfo in _userSyncData.UserCharacterDtoInfos)
+            {
+                var characterMb = Masters.CharacterTable.GetById(userCharacterDtoInfo.CharacterId);
+                var name = Masters.TextResourceTable.Get(characterMb.NameKey);
+                msg.AppendLine($"名称：{name} 等级： {userCharacterDtoInfo.Level} 稀有度：{characterMb.RarityFlags}");
+            }
+            _quickActionResult = msg.ToString();
         });
     }
 
