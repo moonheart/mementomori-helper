@@ -101,8 +101,7 @@
         <div class="card">
             <div class="card-body">
                 <pre>
-        Api Host: @apiHost
-        Access Token: @accessToken
+        @_runtimeInfo.ToJson(true)
         </pre>
             </div>
         </div>
@@ -119,8 +118,7 @@
 </div>
 
 @code {
-    private string accessToken;
-    private string apiHost;
+    private RuntimeInfo _runtimeInfo;
     private UserSyncData? _userSyncData;
 
     private bool _logining;
@@ -129,12 +127,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        moriFuncs.ConfigSubject.Subscribe(c =>
+        moriFuncs.RuntimeInfoSubject.Subscribe(c =>
         {
             InvokeAsync(() =>
             {
-                accessToken = c.OrtegaAccessToken;
-                apiHost = c.ApiHost;
+                _runtimeInfo = c;
                 StateHasChanged();
             });
         });

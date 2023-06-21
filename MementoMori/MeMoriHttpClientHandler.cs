@@ -7,7 +7,9 @@ namespace MementoMori;
 public class MeMoriHttpClientHandler : HttpClientHandler
 {
     private readonly Subject<string> _ortegaaccessToken = new();
+    private readonly Subject<string> _ortegaMasterVersion = new();
     public IObservable<string> OrtegaAccessToken => _ortegaaccessToken;
+    public IObservable<string> OrtegaMasterVersion => _ortegaMasterVersion;
 
     public MeMoriHttpClientHandler(Dictionary<string, string> headers)
     {
@@ -32,6 +34,11 @@ public class MeMoriHttpClientHandler : HttpClientHandler
         {
             _managedHeaders["ortegaaccesstoken"] = headers.FirstOrDefault() ?? "";
             _ortegaaccessToken.OnNext(_managedHeaders["ortegaaccesstoken"]);
+        }
+        if (response.Headers.TryGetValues("ortegamasterversion", out var headers1))
+        {
+            var masterVersion = headers1.FirstOrDefault() ?? "";
+            _ortegaMasterVersion.OnNext(masterVersion);
         }
 
         return response;

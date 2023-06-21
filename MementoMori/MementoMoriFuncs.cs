@@ -12,31 +12,16 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace MementoMori;
 
 public class MementoMoriFuncs
 {
-    private const string URL_AUTH_LOGIN = "https://prd1-auth.mememori-boi.com/api/auth/login";
-    private const string URL_AUTH_GETSERVERHOST = "https://prd1-auth.mememori-boi.com/api/auth/getServerHost";
-    private const string URL_AUTH_GETDATAURI = "https://prd1-auth.mememori-boi.com/api/auth/getDataUri";
-    private const string URL_USER_LOGINPLAYER = "user/loginPlayer";
-    private const string URL_USER_GETUSERDATA = "user/getUserData";
-    private const string URL_LOGINBONUS_GETMONTHLYLOGINBONUSINFO = "loginBonus/getMonthlyLoginBonusInfo";
-    private const string URL_LOGINBONUS_RECEIVEDAILYLOGINBONUS = "loginBonus/receiveDailyLoginBonus";
-    private const string URL_VIP_GETDAILYGIFT = "vip/getDailyGift";
-    private const string URL_FRIEND_BULKTRANSFERFRIENDPOINT = "friend/bulkTransferFriendPoint";
-    private const string URL_BATTLE_REWARDAUTOBATTLE = "battle/rewardAutoBattle";
-    private const string URL_BATTLE_BOSSQUICK = "battle/bossQuick";
-    private const string URL_BATTLE_QUICK = "battle/quick";
-    private const string URL_PRESENT_RECEIVEITEM = "present/receiveItem";
-
     private Uri _apiHost;
-    private Uri _apiAuth = new Uri("https://prd1-auth.mememori-boi.com/api/");
+    private Uri _apiAuth = new("https://prd1-auth.mememori-boi.com/api/");
 
-    private readonly BehaviorSubject<RuntimeInfo> _configSubject = new(new RuntimeInfo());
-    public IObservable<RuntimeInfo> ConfigSubject => _configSubject;
+    private readonly BehaviorSubject<RuntimeInfo> _runtimeInfoSubject = new(new RuntimeInfo());
+    public IObservable<RuntimeInfo> RuntimeInfoSubject => _runtimeInfoSubject;
 
     private readonly BehaviorSubject<UserSyncData> _userSyncDataSubject = new(new UserSyncData());
     public IObservable<UserSyncData> UserSyncData => _userSyncDataSubject;
@@ -54,7 +39,12 @@ public class MementoMoriFuncs
         _meMoriHttpClientHandler.OrtegaAccessToken.Subscribe(token =>
         {
             _runtimeInfo.OrtegaAccessToken = token;
-            _configSubject.OnNext(_runtimeInfo);
+            _runtimeInfoSubject.OnNext(_runtimeInfo);
+        });
+        _meMoriHttpClientHandler.OrtegaMasterVersion.Subscribe(version =>
+        {
+            _runtimeInfo.OrtegaMasterVersion = version;
+            _runtimeInfoSubject.OnNext(_runtimeInfo);
         });
 
         _httpClient = new HttpClient(_meMoriHttpClientHandler);
@@ -92,7 +82,7 @@ public class MementoMoriFuncs
         var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(req);
         _apiHost = new Uri(resp.ApiHost);
         _runtimeInfo.ApiHost = resp.ApiHost;
-        _configSubject.OnNext(_runtimeInfo);
+        _runtimeInfoSubject.OnNext(_runtimeInfo);
     }
     public async Task<GetDataUriResponse> AuthGetDataUri(string countryCode, long userId)
     {
@@ -181,7 +171,7 @@ public class MementoMoriFuncs
 
     public async Task<ReceiveItemResponse> PresentReceiveItem()
     {
-        var req = new ReceiveItemRequest();
+        var req = new ReceiveItemRequest(){LanguageType = LanguageType.zhTW};
         return await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(req);
     } 
     
