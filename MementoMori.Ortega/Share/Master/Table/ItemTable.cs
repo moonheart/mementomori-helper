@@ -7,9 +7,10 @@ namespace MementoMori.Ortega.Share.Master.Table
 	{
 		public ItemMB GetByItemTypeAndItemId(ItemType itemType, long itemId)
 		{
-			int num = 0;
-			num++;
-			throw new NullReferenceException();
+			return _datas.FirstOrDefault(d => d.ItemType == itemType && d.ItemId == itemId);
+			// int num = 0;
+			// num++;
+			// throw new NullReferenceException();
 		}
 
 		public ItemTable()

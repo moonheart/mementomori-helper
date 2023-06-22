@@ -118,6 +118,7 @@ public class MementoMoriFuncs
         Masters.ItemTable.Load();
         Masters.CharacterTable.Load();
         Masters.TextResourceTable.Load(LanguageType.zhTW);
+        Masters.EquipmentTable.Load();
     }
 
     private async Task<string> CalcFileMd5(string path)

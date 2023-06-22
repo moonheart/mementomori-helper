@@ -165,10 +165,7 @@
             var bonus = await moriFuncs.LoginBonusReceiveDailyLoginBonus(DateTime.Now.Day);
             var msg = new StringBuilder("领取的奖励：\n");
 
-            foreach (var item in bonus.RewardItemList ?? new List<UserItem>())
-            {
-                msg.Append($"Item Type: {item.ItemType}, Item Id: {item.ItemId}, Item Count: {item.ItemCount}\n");
-            }
+            bonus.RewardItemList.PrintUserItems(msg);
 
             _quickActionResult = msg.ToString();
         });
@@ -181,11 +178,8 @@
             var bonus = await moriFuncs.VipGetDailyGift();
             var msg = new StringBuilder("领取的奖励：\n");
 
-            foreach (var item in bonus.ItemList ?? new List<UserItem>())
-            {
-                msg.Append($"Item Type: {item.ItemType}, Item Id: {item.ItemId}, Item Count: {item.ItemCount}\n");
-            }
-
+            bonus.ItemList.PrintUserItems(msg);
+            
             _quickActionResult = msg.ToString();
         });
     }
@@ -222,10 +216,8 @@
         {
             var resp = await moriFuncs.PresentReceiveItem();
             var msg = new StringBuilder("领取的奖励：\n");
-            foreach (var respResultItem in resp.ResultItems ?? new List<PresentItem>())
-            {
-                msg.AppendLine($"稀有度 {respResultItem.RarityFlags} {respResultItem.Item.ToJson()}\n");
-            }
+            
+            resp.ResultItems.Select(d=>d.Item).PrintUserItems(msg);
 
             _quickActionResult = msg.ToString();
         });
@@ -244,14 +236,10 @@
                         QuestId = _userSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId
                     });
                 if (bossQuickResponse.BattleRewardResult == null) continue;
-                foreach (var userItem in bossQuickResponse.BattleRewardResult.FixedItemList)
-                {
-                    msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
-                }
-                foreach (var userItem in bossQuickResponse.BattleRewardResult.DropItemList)
-                {
-                    msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
-                }
+                
+                
+                bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(msg);
+                bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(msg);
             }
 
             _quickActionResult = msg.ToString();
@@ -272,14 +260,9 @@
                         IsQuick = true, TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId
                     });
                 if (bossQuickResponse.BattleRewardResult == null) continue;
-                foreach (var userItem in bossQuickResponse.BattleRewardResult.FixedItemList)
-                {
-                    msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
-                }
-                foreach (var userItem in bossQuickResponse.BattleRewardResult.DropItemList)
-                {
-                    msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
-                }
+
+                bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(msg);
+                bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(msg);
             }
 
             _quickActionResult = msg.ToString();
@@ -304,14 +287,8 @@
                     RivalPlayerId = pvpRankingPlayerInfo.PlayerInfo.PlayerId
                 });
 
-                foreach (var userItem in pvpStartResponse.BattleRewardResult.FixedItemList)
-                {
-                    msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
-                }
-                foreach (var userItem in pvpStartResponse.BattleRewardResult.DropItemList)
-                {
-                    msg.AppendLine($"ItemType: {userItem.ItemType}, ItemId: {userItem.ItemId}, Count: {userItem.ItemCount}\n");
-                }
+                pvpStartResponse.BattleRewardResult.FixedItemList.PrintUserItems(msg);
+                pvpStartResponse.BattleRewardResult.DropItemList.PrintUserItems(msg);
             }
 
             _quickActionResult = msg.ToString();
@@ -333,11 +310,7 @@
             if (questIds.Count > 0)
             {
                 var rewardResponse = await moriFuncs.GetResponse<RewardRequest, RewardResponse>(new RewardRequest(){BountyQuestIds = questIds, IsQuick = false});
-
-                foreach (var item in rewardResponse.RewardItems)
-                {
-                    msg.AppendLine($"ItemType: {item.ItemType}, ItemId: {item.ItemId}, Count: {item.ItemCount}\n");
-                }
+                rewardResponse.RewardItems.PrintUserItems(msg);
             }
            
             _quickActionResult = msg.ToString();
