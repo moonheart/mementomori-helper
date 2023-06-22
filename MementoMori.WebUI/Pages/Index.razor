@@ -146,7 +146,7 @@
         moriFuncs.UserSyncData.Subscribe(data =>
         {
             _userSyncData = data;
-            _friendPoint = _userSyncData?.UserItemDtoInfo.First(d => d.ItemType == ItemType.FriendPoint).ItemCount ?? 0;
+            _friendPoint = _userSyncData?.UserItemDtoInfo?.First(d => d.ItemType == ItemType.FriendPoint).ItemCount ?? 0;
         });
     }
 
