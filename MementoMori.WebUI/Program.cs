@@ -13,6 +13,7 @@ builder.Services.AddSingleton<MementoMoriFuncs>();
 
 builder.Services.AddOptions();
 builder.Services.Configure<AuthOption>(builder.Configuration.GetSection("AuthOption"));
+builder.Services.Configure<GameConfig>(builder.Configuration.GetSection("GameConfig"));
 
 var app = builder.Build();
 

@@ -7,6 +7,7 @@ using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.ApiInterface;
 using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
 using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
+using MementoMori.Ortega.Share.Data.ApiInterface.DungeonBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.ApiInterface.Friend;
 using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
@@ -41,10 +42,12 @@ public class MementoMoriFuncs
 
 
     private readonly AuthOption _authOption;
+    private readonly GameConfig _gameConfig;
 
-    public MementoMoriFuncs(IOptions<AuthOption> authOption)
+    public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig)
     {
         _authOption = authOption.Value;
+        _gameConfig = gameConfig.Value;
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler(_authOption.Headers);
         _meMoriHttpClientHandler.OrtegaAccessToken.Subscribe(token =>
         {
@@ -130,6 +133,7 @@ public class MementoMoriFuncs
         Masters.EquipmentSetMaterialTable.Load();
         Masters.TreasureChestTable.Load();
         Masters.LevelLinkTable.Load();
+        Masters.DungeonBattleGridTable.Load();
     }
 
     private async Task<string> CalcFileMd5(string path)
@@ -298,6 +302,182 @@ public class MementoMoriFuncs
     }
 
 
+    public async Task AutoDungeonBattle()
+    {
+        while (true)
+        {
+            // 获取副本信息
+            var battleInfoResponse = await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(new GetDungeonBattleInfoRequest());
+            var grids = battleInfoResponse.CurrentDungeonBattleLayer.DungeonGrids.Select(d =>
+            {
+                var dungeonBattleGridMb = Masters.DungeonBattleGridTable.GetById(d.DungeonGridId);
+                var power = battleInfoResponse.GridBattlePowerDict.TryGetValue(d.DungeonGridGuid, out var n) ? n : 0;
+                return new
+                {
+                    Grid = d, GridMb = dungeonBattleGridMb, Power = power
+                };
+            }).ToList();
+            // 当前节点状态
+            var currentGrid = grids.First(d => d.Grid.DungeonGridGuid == battleInfoResponse.UserDungeonDtoInfo.CurrentGridGuid);
+            Console.WriteLine($"{battleInfoResponse.UserDungeonDtoInfo.CurrentGridState},{currentGrid.Grid.X},{currentGrid.Grid.Y} {currentGrid.GridMb.Memo} {currentGrid.GridMb.DungeonGridType} {currentGrid.Power}");
+            switch (battleInfoResponse.UserDungeonDtoInfo.CurrentGridState)
+            {
+                case DungeonBattleGridState.Done:
+                    // 当前已完成，选择下一个节点
+                    var nextGrid = grids.Where(d=> d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
+                                                   && (d.GridMb.DungeonGridType == DungeonBattleGridType.BattleNormal ||
+                                                       d.GridMb.DungeonGridType == DungeonBattleGridType.BattleElite ||
+                                                       d.GridMb.DungeonGridType == DungeonBattleGridType.BattleBoss ||
+                                                       d.GridMb.DungeonGridType == DungeonBattleGridType.BattleBossNoRelic ||
+                                                       d.GridMb.DungeonGridType == DungeonBattleGridType.BattleAndRelicReinforce 
+                                                   ) // 战斗类型的
+                    ).MinBy(d=>d.Power);
+                    if (nextGrid == null)
+                    {
+                        // 没有战斗类型的节点
+                        nextGrid = grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1);
+                    }
+
+                    if (nextGrid == null)
+                    {
+                        // 获取当前层奖励
+                        var rewardClearLayerResponse = await GetResponse<RewardClearLayerRequest, RewardClearLayerResponse>(new RewardClearLayerRequest()
+                        {
+                            ClearedLayer = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount,
+                            CurrentTermId = battleInfoResponse.CurrentTermId,
+                            DungeonBattleDifficultyType = battleInfoResponse.CurrentDungeonBattleLayer.DungeonDifficultyType,
+                        });
+                        if (battleInfoResponse.CurrentDungeonBattleLayer.LayerCount == 3)
+                        {
+                            // 结束
+                            return;
+                        }
+                        else
+                        {
+                            var diff = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount == 2
+                                ? DungeonBattleDifficultyType.Hard
+                                : DungeonBattleDifficultyType.Normal;
+                            var proceedLayerResponse = await GetResponse<ProceedLayerRequest, ProceedLayerResponse>(new ProceedLayerRequest()
+                            {
+                                CurrentTermId = battleInfoResponse.CurrentTermId,
+                                DungeonDifficultyType = diff,
+                            });
+                        }
+                    }
+                    else
+                    {
+                        var selectGridResponse = await GetResponse<SelectGridRequest, SelectGridResponse>(new SelectGridRequest()
+                        {
+                            CurrentTermId = battleInfoResponse.CurrentTermId, DungeonGridGuid = nextGrid.Grid.DungeonGridGuid
+                        });
+                    }
+
+                    break;
+                case DungeonBattleGridState.Selected:
+                    switch (currentGrid.GridMb.DungeonGridType)
+                    {
+                        case DungeonBattleGridType.Start:
+                            break;
+                        case DungeonBattleGridType.BattleNormal:
+                        case DungeonBattleGridType.BattleElite:
+                        case DungeonBattleGridType.BattleBoss:
+                        case DungeonBattleGridType.BattleBossNoRelic:
+                            var userSyncData = (await UserGetUserData()).UserSyncData;
+                            // battleInfoResponse.UserDungeonBattleCharacterDtoInfos.Select(d =>
+                            // {
+                            //     userSyncData.UserCharacterDtoInfos.First(x=>x.gui)
+                            //     Masters.CharacterTable.GetById(d.CharacterId)
+                            // })
+                            var userDeckDtoInfo = userSyncData.UserDeckDtoInfos.First(d=>d.DeckUseContentType == DeckUseContentType.DungeonBattle);
+                            // todo 处理角色挂掉的情况
+                            var execBattleResponse = await GetResponse<ExecBattleRequest, ExecBattleResponse>(new ExecBattleRequest()
+                            {
+                                CurrentTermId = battleInfoResponse.CurrentTermId,
+                                DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                CharacterGuids = new List<string>()
+                                {
+                                    userDeckDtoInfo.UserCharacterGuid1,
+                                    userDeckDtoInfo.UserCharacterGuid2,
+                                    userDeckDtoInfo.UserCharacterGuid3,
+                                    userDeckDtoInfo.UserCharacterGuid4,
+                                    userDeckDtoInfo.UserCharacterGuid5,
+                                }
+                            });
+                            var finishBattleResponse = await GetResponse<FinishBattleRequest, FinishBattleResponse>(new FinishBattleRequest()
+                            {
+                                DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                CurrentTermId = battleInfoResponse.CurrentTermId,
+                                VisitDungeonCount = 0
+                            });
+                            break;
+                        case DungeonBattleGridType.Recovery:
+                            var execRecoveryResponse = await GetResponse<ExecRecoveryRequest, ExecRecoveryResponse>(new ExecRecoveryRequest()
+                            {
+                                CurrentTermId = battleInfoResponse.CurrentTermId,
+                                DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                IsHealed = true
+                            });
+                            break;
+                        case DungeonBattleGridType.JoinCharacter:
+                            break;
+                        case DungeonBattleGridType.Shop:
+                            var leaveShopResponse = await GetResponse<LeaveShopRequest, LeaveShopResponse>(new LeaveShopRequest()
+                            {
+                                CurrentTermId = battleInfoResponse.CurrentTermId,
+                                DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                            });
+                            break;
+                        case DungeonBattleGridType.RelicReinforce:
+                            break;
+                        case DungeonBattleGridType.BattleAndRelicReinforce:
+                            break;
+                        case DungeonBattleGridType.TreasureChest:
+                            break;
+                        case DungeonBattleGridType.Revival:
+                            var execReviveResponse = await GetResponse<ExecReviveRequest, ExecReviveResponse>(new ExecReviveRequest()
+                            {
+                                CurrentTermId = battleInfoResponse.CurrentTermId,
+                                DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                IsRevived = true
+                            });
+                            break;
+                        case DungeonBattleGridType.EventBattleNormal:
+                            break;
+                        case DungeonBattleGridType.EventBattleElite:
+                            break;
+                        case DungeonBattleGridType.EventBattleSpecial:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    break;
+                case DungeonBattleGridState.Reward:
+                    // 选择加成奖励
+                    var relicId = 0L;
+                    foreach (var info in _gameConfig.DungeonBattleRelicSort)
+                    {
+                        if (battleInfoResponse.RewardRelicIds.Contains(info.Id))
+                        {
+                            relicId = info.Id;
+                            break;
+                        }
+                    }
+                    
+                    var rewardBattleReceiveRelicResponse = await GetResponse<RewardBattleReceiveRelicRequest, RewardBattleReceiveRelicResponse>(new RewardBattleReceiveRelicRequest()
+                    {
+                        CurrentTermId = battleInfoResponse.CurrentTermId,
+                        DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                        SelectedRelicId = relicId,
+                    });
+                    
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+    }
+    
     public async Task<GetDataUriResponse> AuthGetDataUri(string countryCode, long userId)
     {
         var req = new GetDataUriRequest() {CountryCode = countryCode, UserId = userId};

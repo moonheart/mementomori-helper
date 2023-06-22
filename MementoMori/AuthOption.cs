@@ -12,3 +12,13 @@ public class AuthOption
 
     public Dictionary<string, string> Headers { get; set; }
 }
+
+public class GameConfig
+{
+    public class DungeonBattleRelicSortInfo
+    {
+        public long Id { get; set; }
+        public string Desc { get; set; }
+    }
+    public DungeonBattleRelicSortInfo[] DungeonBattleRelicSort { get; set; }
+}

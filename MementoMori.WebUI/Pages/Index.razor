@@ -3,6 +3,7 @@
 
 @page "/"
 @using System.Text
+@using System.Text.RegularExpressions
 @using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Data
 @using MementoMori.Ortega.Share.Data.ApiInterface.Battle
@@ -92,6 +93,8 @@
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BountyQuestRewardAuto">祈愿之泉一键领取</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BountyQuestStartAuto">祈愿之泉一键开始</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentInheritance">自动精炼SABC、继承魔装到D装</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoDungeonBattle">时空洞窟自动战斗</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetDungeonBattleRelic">输出时空洞窟加护</button>
             </div>
         </div>
         <div class="card">
@@ -392,5 +395,61 @@
         });
     }
 
+    private async Task AutoDungeonBattle()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            var msg = new StringBuilder("领取的奖励：\n");
+            
+            await moriFuncs.AutoDungeonBattle();
+            
+            _quickActionResult = msg.ToString();
+        });
+    }
+
+    
+    private async Task GetDungeonBattleRelic()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            var list = Masters.DungeonBattleRelicTable.GetArray().Select(d =>
+            {
+                return $"\"{d.Id}\": \"{d.DungeonRelicRarityType}:{Masters.TextResourceTable.Get(d.NameKey)}:{Masters.TextResourceTable.Get(d.DescriptionKey)}\",";
+                return new
+                {
+                    Id = d.Id,
+                    Name = $"{d.DungeonRelicRarityType}:{Masters.TextResourceTable.Get(d.NameKey)}:{Masters.TextResourceTable.Get(d.DescriptionKey)}",
+                }.ToJson();
+            });
+
+            // var strings = string.Join("\n", list.Select(d => $"{d.Id}\t{d.Name}\t{d.RarityType}\t{d.Desc}"));
+
+            // var strings = list.GroupBy(d => d.Name).Select(d =>
+            // {
+            //     if (d.Count() == 1)
+            //     {
+            //         return $"{d.First().Id}\t{d.Key}\t{d.First().RarityType}\t{d.First().Desc}";
+            //     }
+            //
+            //     var percentsList = new List<List<string>>();
+            //     foreach (var x1 in d)
+            //     {
+            //         percentsList.Add(Regex.Matches(x1.Desc, @"[\d\.]+\%").Select(d => d.Value).ToList());
+            //     }
+            //     var index = 0;
+            //     var desc = Regex.Replace(d.First().Desc, @"[\d\.]+\%", m =>
+            //     {
+            //         var join = string.Join("/", percentsList.Select(d => d[index]));
+            //         index++;
+            //         return join;
+            //     });
+            //     return $"{d.First().Id}\t{d.Key}\t{d.First().RarityType}\t{desc}";
+            // });
+
+            _quickActionResult = string.Join("\n", list);
+        });
+    }
+
+    
 
 }

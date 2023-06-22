@@ -2,30 +2,20 @@
 
 namespace MementoMori.Ortega.Share.Master.Table
 {
-	public class DungeonBattleRelicTable : TableBase<DungeonBattleRelicMB>
-	{
-		public DungeonBattleRelicMB GetByReinforceFrom(long reinforceFrom)
-		{
-			int num = 0;
-			num++;
-			throw new NullReferenceException();
-		}
+    public class DungeonBattleRelicTable : TableBase<DungeonBattleRelicMB>
+    {
+        public DungeonBattleRelicMB GetByReinforceFrom(long reinforceFrom)
+        {
+            return _datas.FirstOrDefault(d => d.ReinforceFrom == reinforceFrom);
+        }
 
-		public List<DungeonBattleRelicMB> GetByRelicIds(List<long> relicIds)
-		{
-			// List<DungeonBattleRelicMB> list = new List();
-			// int num = 0;
-			// bool flag;
-			// if (flag)
-			// {
-			// }
-			// num++;
-			// return list;
-			throw new NotImplementedException();
-		}
+        public List<DungeonBattleRelicMB> GetByRelicIds(List<long> relicIds)
+        {
+            return _datas.Where(d => relicIds.Contains(d.Id)).ToList();
+        }
 
-		public DungeonBattleRelicTable()
-		{
-		}
-	}
+        public DungeonBattleRelicTable()
+        {
+        }
+    }
 }
