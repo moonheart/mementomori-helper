@@ -1,9 +1,113 @@
-﻿@page "/Items"
+﻿@inject MementoMoriFuncs moriFuncs
+
+@page "/Items"
+@using MementoMori.Ortega.Share.Data
+@using MementoMori.Ortega.Share.Data.DtoInfo
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Data.Item
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.WebUI.Extensions
+@using MementoMori.Ortega.Common.Utils
 
 <PageTitle>储物箱</PageTitle>
 
 <h3>储物箱</h3>
+<div class="row">
+    <div class="col-4">
+        <h4>物品</h4>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>名称</th>
+                <th>类型</th>
+                <th>稀有度</th>
+                <th>数量</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in _userSyncData?.UserItemDtoInfo ?? new List<UserItemDtoInfo>())
+            {
+                var cmb = Masters.ItemTable.GetByItemTypeAndItemId(item.ItemType, item.ItemId);
+                var name = ItemUtil.GetItemName(item);
+
+                <tr>
+                    <td>@item.ItemId</td>
+                    <td>@name</td>
+                    <td>@item.ItemType</td>
+                    <td>@(cmb?.ItemRarityFlags ?? ItemRarityFlags.None)</td>
+                    <td>@item.ItemCount</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>   
+    <div class="col-8">
+        <h4>装备</h4>
+        <table class="table" id="equipmentTable">
+            <thead>
+            <tr>
+                <th>名称</th>
+                <th>获得时间</th>
+                <th>耐力</th>
+                <th>魔力</th>
+                <th>力量</th>
+                <th>战技</th>
+                <th>符石等级</th>
+                <th>镶嵌孔数量</th>
+                <th>神装等级/经验</th>
+                <th>魔装等级/经验</th>
+                <th>强化等级</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in _userSyncData?.UserEquipmentDtoInfos ?? new List<UserEquipmentDtoInfo>())
+            {
+                var cmb = Masters.EquipmentTable.GetById(item.EquipmentId);
+                var name = Masters.TextResourceTable.Get(cmb.NameKey);
+                
+                <tr>
+                    <td>@name</td>
+                   <td>@item.CreateAt.ToDateTimeOffset()</td>
+                   <td>@item.AdditionalParameterHealth</td>
+                   <td>@item.AdditionalParameterIntelligence</td>
+                   <td>@item.AdditionalParameterMuscle</td>
+                   <td>@item.AdditionalParameterEnergy</td>
+                   <td>@($"{item.SphereId1},{item.SphereId2},{item.SphereId3},{item.SphereId4}")</td>
+                   <td>@item.SphereUnlockedCount</td>
+                   <td>@($"{item.LegendSacredTreasureLv}/{item.LegendSacredTreasureExp}")</td>
+                   <td>@($"{item.MatchlessSacredTreasureLv}/{item.MatchlessSacredTreasureExp}")</td>
+                   <td>@item.ReinforcementLv</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
 
 @code {
+    
+    private RuntimeInfo _runtimeInfo;
+    private UserSyncData? _userSyncData;
+
+    private bool _logining;
+    private bool _isQuickActionExecuting;
+    private string _quickActionResult;
+
+    protected override async Task OnInitializedAsync()
+    {
+        moriFuncs.RuntimeInfoSubject.Subscribe(c =>
+        {
+            InvokeAsync(() =>
+            {
+                _runtimeInfo = c;
+                StateHasChanged();
+            });
+        });
+        moriFuncs.UserSyncData.Subscribe(data => { _userSyncData = data; });
+    }
+
     
 }

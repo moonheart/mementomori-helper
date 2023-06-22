@@ -614,6 +614,8 @@ namespace MementoMori.Ortega.Share
 		// Note: this type is marked as 'beforefieldinit'.
 		static Masters()
 		{
+			SphereTable = new SphereTable();
+			EquipmentTable = new EquipmentTable();
 			ItemTable = new ItemTable();
 			CharacterProfileTable = new CharacterProfileTable();
 			CharacterDetailVoiceTable = new CharacterDetailVoiceTable();
@@ -660,6 +662,9 @@ namespace MementoMori.Ortega.Share
 			DungeonBattleRelicTable = new DungeonBattleRelicTable();
 			ElementBonusTable = new ElementBonusTable();
 			EquipmentCompositeTable = new EquipmentCompositeTable();
+			EquipmentSetMaterialTable = new EquipmentSetMaterialTable();
+			TreasureChestTable = new TreasureChestTable();
+			LevelLinkTable = new LevelLinkTable();
 		}
 
 		public static EffectGroupTable EffectGroupTable;

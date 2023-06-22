@@ -1,9 +1,65 @@
-﻿@page "/Character"
+﻿@inject MementoMoriFuncs moriFuncs
+
+@page "/Character"
+@using MementoMori.Ortega.Share.Data
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Data.DtoInfo
 
 <PageTitle>角色</PageTitle>
 
 <h3>角色</h3>
 
+<table class="table">
+    <thead>
+    <tr>
+        <th>GUID</th>
+        <th>名称</th>
+        <th>等级</th>
+        <th>稀有度</th>
+        <th>属性</th>
+        <th>职业</th>
+        <th>锁定</th>
+        <th>经验值</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var character in _userSyncData?.UserCharacterDtoInfos ?? new List<UserCharacterDtoInfo>())
+    {
+        var cmb = Masters.CharacterTable.GetById(character.CharacterId);
+        var name = Masters.TextResourceTable.Get(cmb.NameKey);
+        
+        <tr>
+            <td>@character.Guid</td>
+            <td>@name</td>
+            <td>@character.Level</td>
+            <td>@character.RarityFlags</td>
+            <td>@cmb.ElementType</td>
+            <td>@cmb.JobFlags</td>
+            <td>@character.IsLocked</td>
+            <td>@character.Exp</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
 @code {
-    
+    private RuntimeInfo _runtimeInfo;
+    private UserSyncData? _userSyncData;
+
+    private bool _logining;
+    private bool _isQuickActionExecuting;
+    private string _quickActionResult;
+
+    protected override async Task OnInitializedAsync()
+    {
+        moriFuncs.RuntimeInfoSubject.Subscribe(c =>
+        {
+            InvokeAsync(() =>
+            {
+                _runtimeInfo = c;
+                StateHasChanged();
+            });
+        });
+        moriFuncs.UserSyncData.Subscribe(data => { _userSyncData = data; });
+    }
 }

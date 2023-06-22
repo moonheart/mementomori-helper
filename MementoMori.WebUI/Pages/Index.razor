@@ -76,7 +76,6 @@
         <div class="card">
             <div class="card-header">快捷操作</div>
             <div class="card-body">
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@DownloadMasterData">下载Master目录数据</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetLoginBonus">领取每日登录奖励</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetVipGift">领取每日VIP礼物</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetAutoBattleReward">领取自动战斗奖励</button>
@@ -335,14 +334,6 @@
            
            
             // _quickActionResult = msg.ToString();
-        });
-    }
-
-    private async Task DownloadMasterData()
-    {
-        await ExecuteQuickAction(async () =>
-        {
-            await moriFuncs.DownloadMasterCatalog();
         });
     }
 

@@ -81,6 +81,8 @@ public class MementoMoriFuncs
         // do login
         var loginPlayerResp = await UserLoginPlayer(playerDataInfo.PlayerId, playerDataInfo.Password);
 
+        await DownloadMasterCatalog(); 
+        
         var userSyncData = (await UserGetUserData()).UserSyncData;
         _userSyncDataSubject.OnNext(userSyncData);
     }
@@ -94,7 +96,7 @@ public class MementoMoriFuncs
         _runtimeInfoSubject.OnNext(_runtimeInfo);
     }
 
-    public async Task DownloadMasterCatalog()
+    private async Task DownloadMasterCatalog()
     {
         var url = $"https://cdn-mememori.akamaized.net/master/prd1/version/{_runtimeInfo.OrtegaMasterVersion}/master-catalog";
         var bytes = await _unityHttpClient.GetByteArrayAsync(url);
@@ -119,6 +121,11 @@ public class MementoMoriFuncs
         Masters.CharacterTable.Load();
         Masters.TextResourceTable.Load(LanguageType.zhTW);
         Masters.EquipmentTable.Load();
+        Masters.SphereTable.Load();
+        Masters.DungeonBattleRelicTable.Load();
+        Masters.EquipmentSetMaterialTable.Load();
+        Masters.TreasureChestTable.Load();
+        Masters.LevelLinkTable.Load();
     }
 
     private async Task<string> CalcFileMd5(string path)
