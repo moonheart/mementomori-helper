@@ -7,13 +7,17 @@ using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.ApiInterface;
 using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
 using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
+using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.ApiInterface.Friend;
 using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
 using MementoMori.Ortega.Share.Data.ApiInterface.Present;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
+using MementoMori.Ortega.Share.Data.DtoInfo;
+using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master;
+using MementoMori.Ortega.Share.Master.Data;
 using MessagePack;
 using Microsoft.Extensions.Options;
 
@@ -55,8 +59,8 @@ public class MementoMoriFuncs
 
         _httpClient = new HttpClient(_meMoriHttpClientHandler);
         _unityHttpClient = new HttpClient();
-        _unityHttpClient.DefaultRequestHeaders.Add("User-Agent", new []{"UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)"});
-        _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", new []{"2021.3.10f1"});
+        _unityHttpClient.DefaultRequestHeaders.Add("User-Agent", new[] {"UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)"});
+        _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", new[] {"2021.3.10f1"});
     }
 
     public async Task AuthLogin()
@@ -81,8 +85,8 @@ public class MementoMoriFuncs
         // do login
         var loginPlayerResp = await UserLoginPlayer(playerDataInfo.PlayerId, playerDataInfo.Password);
 
-        await DownloadMasterCatalog(); 
-        
+        await DownloadMasterCatalog();
+
         var userSyncData = (await UserGetUserData()).UserSyncData;
         _userSyncDataSubject.OnNext(userSyncData);
     }
@@ -109,7 +113,7 @@ public class MementoMoriFuncs
             {
                 var md5 = await CalcFileMd5(localPath);
                 if (md5 == info.Hash) continue;
-                File.Delete( localPath);
+                File.Delete(localPath);
             }
 
             var mbUrl = $"https://cdn-mememori.akamaized.net/master/prd1/version/{_runtimeInfo.OrtegaMasterVersion}/{name}";
@@ -131,7 +135,7 @@ public class MementoMoriFuncs
     private async Task<string> CalcFileMd5(string path)
     {
         FileStream file = new FileStream(path, FileMode.Open);
-        
+
         MD5 md5 = MD5.Create();
         byte[] retVal = await md5.ComputeHashAsync(file);
         file.Close();
@@ -142,6 +146,155 @@ public class MementoMoriFuncs
         }
 
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// 自动精炼非D级别装备，然后将所有魔装继承到D级别装备
+    /// </summary>
+    public async Task AutoEquipmentInheritance()
+    {
+        while (true)
+        {
+            // 批量精炼
+            var castManyResponse = await GetResponse<CastManyRequest, CastManyResponse>(new CastManyRequest()
+            {
+                RarityFlags = EquipmentRarityFlags.S | EquipmentRarityFlags.A | EquipmentRarityFlags.B | EquipmentRarityFlags.C
+            });
+            var usersyncData = await UserGetUserData();
+            // 找到所有 等级为S、魔装、未装备 的装备
+            var equipments = usersyncData.UserSyncData.UserEquipmentDtoInfos.Select(d => new
+            {
+                Equipment = d, EquipmentMB = Masters.EquipmentTable.GetById(d.EquipmentId)
+            });
+
+            var sEquipments = equipments.Where(d =>
+                    d.Equipment.CharacterGuid == "" && // 未装备
+                    d.Equipment.MatchlessSacredTreasureLv == 1 && // 魔装等级为 1
+                    (d.EquipmentMB.RarityFlags & EquipmentRarityFlags.S) != 0 // 稀有度为 S
+            );
+
+            if (sEquipments.Count() == 0) break;
+
+            foreach (var grouping in sEquipments.GroupBy(d => d.EquipmentMB.SlotType))
+            {
+                // 当前能够接受继承的 D 级别装备
+                var currentTypeEquips = equipments.Where(d =>
+                {
+                    return (d.EquipmentMB.RarityFlags & EquipmentRarityFlags.D) != 0 && d.EquipmentMB.SlotType == grouping.Key && d.Equipment.MatchlessSacredTreasureLv == 0;
+                });
+                var processedDEquips = new List<UserItemDtoInfo>();
+
+                // 还缺多少装备
+                var needMoreCount = grouping.Count() - currentTypeEquips.Count();
+                if (needMoreCount > 0)
+                {
+                    // 找到未解封的装备物品
+                    var equipItems = usersyncData.UserSyncData.UserItemDtoInfo.Where(d =>
+                    {
+                        if (d.ItemType != ItemType.Equipment) return false;
+                        var equipmentMb = Masters.EquipmentTable.GetById(d.ItemId);
+                        if (equipmentMb.SlotType != grouping.Key) return false;
+                        if ((equipmentMb.RarityFlags & EquipmentRarityFlags.D) == 0) return false;
+                        return true;
+                    });
+                    foreach (var equipItem in equipItems)
+                    {
+                        if (needMoreCount <= 0) break;
+
+                        var equipmentMb = Masters.EquipmentTable.GetById(equipItem.ItemId);
+                        Console.WriteLine(equipmentMb.Memo);
+                        // 找到可以装备的一个角色
+                        var userCharacterDtoInfo = usersyncData.UserSyncData.UserCharacterDtoInfos.Where(d =>
+                        {
+                            var characterMb = Masters.CharacterTable.GetById(d.CharacterId);
+                            if ((characterMb.JobFlags & equipmentMb.EquippedJobFlags) == 0) return false; // 装备职业
+
+                            if (d.Level >= equipmentMb.EquipmentLv) return true; // 装备等级
+
+                            if (usersyncData.UserSyncData.UserLevelLinkMemberDtoInfos.Exists(x => d.Guid == x.UserCharacterGuid)
+                                && usersyncData.UserSyncData.UserLevelLinkDtoInfo.PartyLevel >= equipmentMb.EquipmentLv) // 角色在等级链接里面并且等级链接大于装备等级
+                            {
+                                return true;
+                            }
+
+                            return false;
+                        }).First();
+
+
+                        // 获取角色某个位置的准备
+
+                        var replacedEquip = usersyncData.UserSyncData.UserEquipmentDtoInfos.Where(d =>
+                        {
+                            var byId = Masters.EquipmentTable.GetById(d.EquipmentId);
+                            return d.CharacterGuid == userCharacterDtoInfo.Guid && byId.SlotType == equipmentMb.SlotType;
+                        }).First();
+
+                        // 替换装备
+                        var changeEquipmentResponse = await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(new ChangeEquipmentRequest()
+                        {
+                            UserCharacterGuid = userCharacterDtoInfo.Guid,
+                            EquipmentChangeInfos = new List<EquipmentChangeInfo>()
+                            {
+                                new()
+                                {
+                                    EquipmentId = equipItem.ItemId,
+                                    EquipmentSlotType = equipmentMb.SlotType,
+                                    IsInherit = false
+                                }
+                            }
+                        });
+
+                        // 恢复装备
+                        var changeEquipmentResponse1 = await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(new ChangeEquipmentRequest()
+                        {
+                            UserCharacterGuid = userCharacterDtoInfo.Guid,
+                            EquipmentChangeInfos = new List<EquipmentChangeInfo>()
+                            {
+                                new()
+                                {
+                                    EquipmentGuid = replacedEquip.Guid,
+                                    EquipmentId = replacedEquip.EquipmentId,
+                                    EquipmentSlotType = equipmentMb.SlotType,
+                                    IsInherit = false
+                                }
+                            }
+                        });
+
+                        needMoreCount--;
+                        processedDEquips.Add(equipItem);
+                    }
+                }
+
+
+                // 继承            
+                foreach (var x1 in grouping)
+                {
+                    // 同步数据
+                    usersyncData = await UserGetUserData();
+
+                    var userEquipmentDtoInfo = usersyncData.UserSyncData.UserEquipmentDtoInfos.Where(d =>
+                    {
+                        var equipmentMb = Masters.EquipmentTable.GetById(d.EquipmentId);
+                        if (d.MatchlessSacredTreasureLv == 0 // 未被继承的装备 
+                            && equipmentMb.SlotType == x1.EquipmentMB.SlotType // 同一个位置 
+                            && (equipmentMb.RarityFlags & EquipmentRarityFlags.D) != 0 // 稀有度为 D
+                           )
+                        {
+                            return true;
+                        }
+
+                        return false;
+                    }).First();
+
+                    var inheritanceEquipmentResponse = await GetResponse<InheritanceEquipmentRequest, InheritanceEquipmentResponse>(new InheritanceEquipmentRequest()
+                    {
+                        InheritanceEquipmentGuid = userEquipmentDtoInfo.Guid,
+                        SourceEquipmentGuid = x1.Equipment.Guid
+                    });
+                    Console.WriteLine($"继承完成 {x1.EquipmentMB.Memo}=>{userEquipmentDtoInfo.Guid}");
+                }
+            }
+        }
     }
 
 

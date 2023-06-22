@@ -130,8 +130,8 @@ namespace MementoMori.Ortega.Share.Master.Data
             this.PerformancePoint = performancePoint;
             this.EquipmentForgeId = equipmentForgeId;
             this.QualityLv = qualityLv;
-            this.RarityFlags = RarityFlags;
-            this.SlotType = SlotType;
+            this.RarityFlags = rarityFlags;
+            this.SlotType = slotType;
         }
 
         public EquipmentMB() : base(0L, false, "")

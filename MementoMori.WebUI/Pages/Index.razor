@@ -30,6 +30,7 @@
                         <div class="spinner-border spinner-border-sm" role="status"></div>
                     }
                 </button>
+                <button class="btn btn-sm btn-secondary float-end" @onclick="@SyncUserData">同步用户信息</button>
             </div>
             <div class="card-body">
                 <table class="table">
@@ -39,6 +40,9 @@
                     </tr>
                     <tr>
                         <td>玩家ID</td><td>@_userSyncData?.UserStatusDtoInfo?.PlayerId</td>
+                    </tr>
+                    <tr>
+                        <td>友情点</td><td>@_friendPoint</td>
                     </tr>
                     <tr>
                         <td>加入时间</td><td>@_userSyncData?.UserStatusDtoInfo?.CreateAt.ToDateTimeOffset()</td>
@@ -84,9 +88,10 @@
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BattleBossQuick">主线boss扫荡3次</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@InfiniteTowerQuick">无穷之塔扫荡3次</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@PvpAuto">PVP自动战斗5次</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BossHishSpeedBattle">冒险一次高速战斗</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BountyQuestRewardAuto">祈愿之泉一键领取</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BountyQuestStartAuto">祈愿之泉一键开始</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@QueryCharacterList">查询角色列表</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentInheritance">自动精炼SABC、继承魔装到D装</button>
             </div>
         </div>
         <div class="card">
@@ -126,6 +131,7 @@
     private bool _logining;
     private bool _isQuickActionExecuting;
     private string _quickActionResult;
+    private long _friendPoint;
 
     protected override async Task OnInitializedAsync()
     {
@@ -137,7 +143,11 @@
                 StateHasChanged();
             });
         });
-        moriFuncs.UserSyncData.Subscribe(data => { _userSyncData = data; });
+        moriFuncs.UserSyncData.Subscribe(data =>
+        {
+            _userSyncData = data;
+            _friendPoint = _userSyncData?.UserItemDtoInfo.First(d => d.ItemType == ItemType.FriendPoint).ItemCount ?? 0;
+        });
     }
 
 
@@ -147,6 +157,11 @@
         await moriFuncs.AuthLogin();
         var userData = await moriFuncs.UserGetUserData();
         _logining = false;
+    }
+
+    private async Task SyncUserData()
+    {
+        await moriFuncs.UserGetUserData();
     }
 
     private async Task ExecuteQuickAction(Func<Task> func)
@@ -337,18 +352,42 @@
         });
     }
 
-    private async Task QueryCharacterList()
+    private async Task AutoEquipmentInheritance()
     {
         await ExecuteQuickAction(async () =>
         {
-            var msg = new StringBuilder("角色列表：\n");
-    
-            foreach (var userCharacterDtoInfo in _userSyncData.UserCharacterDtoInfos)
-            {
-                var characterMb = Masters.CharacterTable.GetById(userCharacterDtoInfo.CharacterId);
-                var name = Masters.TextResourceTable.Get(characterMb.NameKey);
-                msg.AppendLine($"名称：{name} 等级： {userCharacterDtoInfo.Level} 稀有度：{characterMb.RarityFlags}");
-            }
+            await moriFuncs.AutoEquipmentInheritance();
+            // var msg = new StringBuilder("角色列表：\n");
+            //
+            // foreach (var userCharacterDtoInfo in _userSyncData.UserCharacterDtoInfos)
+            // {
+            //     var characterMb = Masters.CharacterTable.GetById(userCharacterDtoInfo.CharacterId);
+            //     var name = Masters.TextResourceTable.Get(characterMb.NameKey);
+            //     msg.AppendLine($"名称：{name} 等级： {userCharacterDtoInfo.Level} 稀有度：{characterMb.RarityFlags}");
+            // }
+            _quickActionResult = "完成";
+        });
+    }
+
+    private async Task BossHishSpeedBattle()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            var msg = new StringBuilder("领取的奖励：\n");
+            
+            var req = new QuickRequest() {QuestQuickExecuteType = QuestQuickExecuteType.Currency, QuickCount = 1};
+            var quickResponse = await moriFuncs.GetResponse<QuickRequest, QuickResponse>(req);
+
+            msg.AppendLine($"金币 {quickResponse.AutoBattleRewardResult.GoldByPopulation}");
+            msg.AppendLine($"潜能宝珠 {quickResponse.AutoBattleRewardResult.PotentialJewelByPopulation}");
+            msg.AppendLine($"角色经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.CharacterExp}");
+            msg.AppendLine($"额外金币 {quickResponse.AutoBattleRewardResult.BattleRewardResult.ExtraGold}");
+            msg.AppendLine($"用户经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.PlayerExp}");
+            msg.AppendLine($"升级 {quickResponse.AutoBattleRewardResult.BattleRewardResult.RankUp}");
+            
+            quickResponse.AutoBattleRewardResult.BattleRewardResult.FixedItemList.PrintUserItems(msg);
+            quickResponse.AutoBattleRewardResult.BattleRewardResult.DropItemList.PrintUserItems(msg);
+
             _quickActionResult = msg.ToString();
         });
     }
