@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using MementoMori.Ortega.Common.Utils;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.Item;
 
@@ -15,17 +16,9 @@ public static class GameExtensions
 
         foreach (var userItem in userItems)
         {
-            var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(userItem.ItemType, userItem.ItemId);
-            if (itemMb == null)
-            {
-                stringBuilder.AppendLine($"ID：{userItem.ItemId}, 类型: {userItem.ItemType}, 数量： {userItem.ItemCount}");
-            }
-            else
-            {
-                var name = Masters.TextResourceTable.Get(itemMb.NameKey);
-                var displayName = Masters.TextResourceTable.Get(itemMb.DisplayName);
-                stringBuilder.AppendLine($"名称：{displayName}, 稀有度: {itemMb.ItemRarityFlags}, 数量： {userItem.ItemCount}");
-            }
+            var itemName = ItemUtil.GetItemName(userItem.ItemType, userItem.ItemId);
+            var itemRarity = ItemUtil.GetItemRarity(userItem.ItemType, userItem.ItemId);
+            stringBuilder.AppendLine($"名称：{itemName}, 稀有度: {itemRarity}, 数量： {userItem.ItemCount}");
         }
     }
 }

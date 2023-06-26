@@ -100,6 +100,75 @@ namespace MementoMori.Ortega.Common.Utils
 			// }
 			// return string.Empty;
 		}
+		public static string GetItemRarity(ItemType itemType, long itemId)
+		{
+			switch (itemType)
+			{
+				case ItemType.None:
+					break;
+				case ItemType.CurrencyFree:
+				case ItemType.CurrencyPaid:
+				case ItemType.Gold:
+				case ItemType.QuestQuickTicket:
+				case ItemType.CharacterTrainingMaterial:
+				case ItemType.EquipmentReinforcementItem:
+				case ItemType.ExchangePlaceItem:
+				case ItemType.MatchlessSacredTreasureExpItem:
+				case ItemType.GachaTicket:
+				case ItemType.TreasureChestKey:
+				case ItemType.BossChallengeTicket:
+				case ItemType.TowerBattleTicket:
+				case ItemType.DungeonRecoveryItem:
+				case ItemType.PlayerExp:
+				case ItemType.FriendPoint:
+				case ItemType.EquipmentRarityCrystal:
+				case ItemType.GuildFame:
+				case ItemType.GuildExp:
+				case ItemType.ActivityMedal:
+				case ItemType.EventExchangePlaceItem:
+					var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(itemType, itemId);
+					return itemMb.ItemRarityFlags.ToString();
+				case ItemType.Equipment:
+					var equipmentMb = Masters.EquipmentTable.GetById(itemId);
+					return equipmentMb.RarityFlags.ToString();
+				case ItemType.EquipmentFragment:
+					var equipmentFragmentMb = Masters.EquipmentTable.GetById(itemId);
+					return equipmentFragmentMb.RarityFlags.ToString();
+					break;
+				case ItemType.Character:
+					var characterMb = Masters.CharacterTable.GetById(itemId);
+					return characterMb.RarityFlags.ToString();
+					break;
+				case ItemType.CharacterFragment:
+					var characterFragmentMb = Masters.CharacterTable.GetById(itemId);
+					return characterFragmentMb.RarityFlags.ToString();
+					break;
+				case ItemType.DungeonBattleRelic:
+					var dungeonBattleRelicMb = Masters.DungeonBattleRelicTable.GetById(itemId);
+					return dungeonBattleRelicMb.DungeonRelicRarityType.ToString();
+					break;
+				case ItemType.EquipmentSetMaterial:
+					var equipmentSetMaterialMb = Masters.EquipmentSetMaterialTable.GetById(itemId);
+					return equipmentSetMaterialMb.ItemRarityFlags.ToString();
+					break;
+				case ItemType.Sphere:
+					var sphereMb = Masters.SphereTable.GetById(itemId);
+					return sphereMb.RarityFlags.ToString();
+					break;
+				case ItemType.TreasureChest:
+					var treasureChestMb = Masters.TreasureChestTable.GetById(itemId);
+					return treasureChestMb.ItemRarityFlags.ToString();
+					break;
+				case ItemType.LevelLinkExp:
+					var levelLinkExpMb = Masters.LevelLinkTable.GetById(itemId);
+					return "无";
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(itemType), itemType, null);
+			}
+
+			return "未知";
+		}
 
 		public static string GetItemDescription(ItemType itemType, long itemId)
 		{
