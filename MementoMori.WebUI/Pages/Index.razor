@@ -8,6 +8,7 @@
 @using MementoMori.Ortega.Share.Data
 @using MementoMori.Ortega.Share.Data.ApiInterface.Battle
 @using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest
+@using MementoMori.Ortega.Share.Data.ApiInterface.Debug
 @using MementoMori.Ortega.Share.Data.ApiInterface.Quest
 @using MementoMori.Ortega.Share.Data.Battle.Result
 @using MementoMori.Ortega.Share.Data.Item
@@ -95,6 +96,7 @@
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentInheritance">自动精炼SABC、继承魔装到D装</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoDungeonBattle">时空洞窟自动战斗</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetDungeonBattleRelic">输出时空洞窟加护</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@Debug">Debug</button>
             </div>
         </div>
         <div class="card">
@@ -245,19 +247,17 @@
         await ExecuteQuickAction(async () =>
         {
             var msg = new StringBuilder("领取的奖励：\n");
-            for (int i = 0; i < 3; i++)
-            {
-                var bossQuickResponse = await moriFuncs.GetResponse<BossQuickRequest, BossQuickResponse>(
-                    new BossQuickRequest()
-                    {
-                        QuestId = _userSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId
-                    });
-                if (bossQuickResponse.BattleRewardResult == null) continue;
+            var bossQuickResponse = await moriFuncs.GetResponse<BossQuickRequest, BossQuickResponse>(
+                new BossQuickRequest()
+                {
+                    QuestId = _userSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId,
+                    QuickCount = 3
+                });
+            if (bossQuickResponse.BattleRewardResult == null) return;
                 
                 
-                bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(msg);
-                bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(msg);
-            }
+            bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(msg);
+            bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(msg);
 
             _quickActionResult = msg.ToString();
         });
@@ -404,6 +404,18 @@
             await moriFuncs.AutoDungeonBattle();
             
             _quickActionResult = msg.ToString();
+        });
+    }
+
+    private async Task Debug()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            var msg = new StringBuilder("领取的奖励：\n");
+
+            var giveAllSrCharacterResponse = await moriFuncs.GetResponse<SetVipLevelRequest, SetVipLevelResponse>(new SetVipLevelRequest(){VipLevel = 8});
+
+            _quickActionResult = giveAllSrCharacterResponse.ToJson(true);
         });
     }
 

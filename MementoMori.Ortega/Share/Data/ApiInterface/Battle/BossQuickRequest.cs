@@ -6,14 +6,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Battle
 	[OrtegaApi("battle/bossQuick", true, false)]
 	public class BossQuickRequest : ApiRequestBase
 	{
-		public long QuestId
-		{
-			get;
-			set;
-		}
+		public long QuestId { get; set; }
 
-		public BossQuickRequest()
-		{
-		}
+		public int QuickCount { get; set; }
 	}
 }

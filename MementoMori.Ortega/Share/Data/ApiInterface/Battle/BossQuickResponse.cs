@@ -7,6 +7,7 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Battle
 	[MessagePackObject(true)]
 	public class BossQuickResponse : ApiResponseBase, IUserSyncApiResponse
 	{
+		public List<BattleReward> BattleRewardList { get; set; }
 		public BattleRewardResult BattleRewardResult { get; set; }
 
 		public UserSyncData UserSyncData { get; set; }

@@ -304,6 +304,9 @@ public class MementoMoriFuncs
 
     public async Task AutoDungeonBattle()
     {
+        // todo 脱装备进副本，然后穿装备
+        
+        
         while (true)
         {
             // 获取副本信息
@@ -323,6 +326,21 @@ public class MementoMoriFuncs
             switch (battleInfoResponse.UserDungeonDtoInfo.CurrentGridState)
             {
                 case DungeonBattleGridState.Done:
+                    switch (currentGrid.GridMb.DungeonGridType)
+                    {
+                        case DungeonBattleGridType.JoinCharacter:
+                        {
+                            var info = battleInfoResponse.UserDungeonBattleGuestCharacterDtoInfos.First();
+                            var execGuestResponse = await GetResponse<ExecGuestRequest, ExecGuestResponse>(new ExecGuestRequest()
+                            {
+                                DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                GuestMBId = info.CharacterId,
+                                CurrentTermId = battleInfoResponse.CurrentTermId
+                            });
+                            continue;
+                        }
+                            
+                    }
                     // 当前已完成，选择下一个节点
                     var nextGrid = grids.Where(d=> d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
                                                    && (d.GridMb.DungeonGridType == DungeonBattleGridType.BattleNormal ||
@@ -383,10 +401,11 @@ public class MementoMoriFuncs
                         case DungeonBattleGridType.BattleBoss:
                         case DungeonBattleGridType.BattleBossNoRelic:
                             var userSyncData = (await UserGetUserData()).UserSyncData;
-                            // battleInfoResponse.UserDungeonBattleCharacterDtoInfos.Select(d =>
+                            // battleInfoResponse.UserDungeonBattleCharacterDtoInfos.Where(d =>
                             // {
-                            //     userSyncData.UserCharacterDtoInfos.First(x=>x.gui)
-                            //     Masters.CharacterTable.GetById(d.CharacterId)
+                            //     // todo 选择出战斗力最高的5个角色
+                            //     var characterMb = Masters.CharacterTable.GetById(d.CharacterId);
+                            //     return d.CurrentHpPerMill>0 && characterMb.
                             // })
                             var userDeckDtoInfo = userSyncData.UserDeckDtoInfos.First(d=>d.DeckUseContentType == DeckUseContentType.DungeonBattle);
                             // todo 处理角色挂掉的情况
@@ -428,6 +447,11 @@ public class MementoMoriFuncs
                             });
                             break;
                         case DungeonBattleGridType.RelicReinforce:
+                            var execReinforceRelicResponse = await GetResponse<ExecReinforceRelicRequest, ExecReinforceRelicResponse>(new ExecReinforceRelicRequest()
+                            {
+                                CurrentTermId = battleInfoResponse.CurrentTermId,
+                                DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                            });
                             break;
                         case DungeonBattleGridType.BattleAndRelicReinforce:
                             break;
@@ -543,15 +567,6 @@ public class MementoMoriFuncs
         return await GetResponse<RewardAutoBattleRequest, RewardAutoBattleResponse>(req);
     }
 
-    /// <summary>
-    /// 战斗扫荡
-    /// </summary>
-    /// <returns></returns>
-    public async Task<BossQuickResponse> BattleBossQuick(int questId)
-    {
-        var req = new BossQuickRequest() {QuestId = questId};
-        return await GetResponse<BossQuickRequest, BossQuickResponse>(req);
-    }
 
     /// <summary>
     /// 高速战斗
