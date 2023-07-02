@@ -24,7 +24,6 @@ namespace MementoMori.Ortega.Share.Data
         public List<string> DeletedEquipmentGuidList { get; set; }
 
         public bool? ExistVipDailyGift { get; set; }
-
         public List<IUserItem> GivenItemCountInfoList { get; set; }
 
         public int? GuildJoinLimitCount { get; set; }
@@ -113,12 +112,7 @@ namespace MementoMori.Ortega.Share.Data
 
         public void UserItemEditorMergeUserSyncData(UserSyncData userSyncData)
         {
-            UserItemDtoInfo.AddRange(userSyncData.UserItemDtoInfo);
-            UserEquipmentDtoInfos.AddRange(userSyncData.UserEquipmentDtoInfos);
-            DeletedEquipmentGuidList.AddRange(userSyncData.DeletedEquipmentGuidList);
-            UserCharacterDtoInfos.AddRange(userSyncData.UserCharacterDtoInfos);
-            DeletedCharacterGuidList.AddRange(userSyncData.DeletedCharacterGuidList);
-            GivenItemCountInfoList.AddRange(userSyncData.GivenItemCountInfoList);
+            
         }
 
         public UserSyncData()

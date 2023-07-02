@@ -7,13 +7,10 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="MessagePack" Version="2.5.108" />
+        <PackageReference Include="morelinq" Version="3.4.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="System.Reactive" Version="6.0.0" />
-    </ItemGroup>
-    <ItemGroup>
-      <Reference Include="Microsoft.Extensions.Options">
-        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\6.0.16\Microsoft.Extensions.Options.dll</HintPath>
-      </Reference>
+        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\MementoMori.Ortega\MementoMori.Ortega.csproj" />

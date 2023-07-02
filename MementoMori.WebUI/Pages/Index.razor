@@ -9,12 +9,14 @@
 @using MementoMori.Ortega.Share.Data.ApiInterface.Battle
 @using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest
 @using MementoMori.Ortega.Share.Data.ApiInterface.Debug
+@using MementoMori.Ortega.Share.Data.ApiInterface.Equipment
 @using MementoMori.Ortega.Share.Data.ApiInterface.Quest
 @using MementoMori.Ortega.Share.Data.Battle.Result
 @using MementoMori.Ortega.Share.Data.Item
 @using MementoMori.Ortega.Share.Data.Present
 @using MementoMori.Ortega.Share.Enums
 @using MementoMori.WebUI.Extensions
+@using MementoMori.WebUI.Models
 @using StartRequest = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartRequest
 @using StartResponse = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartResponse
 
@@ -96,12 +98,31 @@
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentInheritance">自动精炼SABC、继承魔装到D装</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoDungeonBattle">时空洞窟自动战斗</button>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetDungeonBattleRelic">输出时空洞窟加护</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoBossRequest">自动刷Boss</button>
+                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentTraning">装备打磨</button>
+                <label>装备<select @bind="_equipmentId">
+                    @foreach (var e in _characterEquipments)
+                    {
+                        <option value="@e.EquipmentGuid">@($"{e.EquipmentName}/{e.UserEquipmentDtoInfo.ReinforcementLv} {e.CharacterName}")</option>
+                    }
+                </select></label>
+                <label>装备Id<input @bind="_equipmentId"></label>
+                <label>
+                    类型
+                    <select @bind="_equipmentTrainingTargetType">
+                        <option value="Health">耐力</option>
+                        <option value="Intelligence">魔力</option>
+                        <option value="Muscle">力量</option>
+                        <option value="Energy">战技</option>
+                    </select>
+                </label>
+                <label>目标值<input @bind="_equipmentTrainingTargetValue"/></label>
                 <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@Debug">Debug</button>
             </div>
         </div>
         <div class="card">
             <div class="card-header">执行结果</div>
-            <div class="card-body">
+            <div class="card-body" style="max-height: 400px; flex-direction: column-reverse;display: flex;">
                 <pre>
                 @_quickActionResult
 </pre>
@@ -111,7 +132,7 @@
 
     <div class="col-6">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body" style="max-height: 400px; overflow: scroll">
                 <pre>
         @_runtimeInfo.ToJson(true)
         </pre>
@@ -120,7 +141,7 @@
     </div>
     <div class="col-12">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body" style="max-height: 400px; overflow: scroll">
                 <pre>
         @_userSyncData.ToJson(true)
         </pre>
@@ -137,6 +158,10 @@
     private bool _isQuickActionExecuting;
     private string _quickActionResult;
     private long _friendPoint;
+    private string _equipmentId;
+    private string _equipmentTrainingTargetType;
+    private long _equipmentTrainingTargetValue;
+    private List<CharacterEquipment> _characterEquipments = new List<CharacterEquipment>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -152,6 +177,20 @@
         {
             _userSyncData = data;
             _friendPoint = _userSyncData?.UserItemDtoInfo?.First(d => d.ItemType == ItemType.FriendPoint).ItemCount ?? 0;
+            _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>
+            {
+                if (d == null) throw new ArgumentNullException(nameof(d));
+                var cha = data.UserCharacterDtoInfos.First(x => x.Guid == d.CharacterGuid);
+                var chaMb = Masters.CharacterTable.GetById(cha.CharacterId);
+                var name = Masters.TextResourceTable.Get(chaMb.NameKey);
+                var equipmentMb = Masters.EquipmentTable.GetById(d.EquipmentId);
+                var equipmentName = Masters.TextResourceTable.Get(equipmentMb.NameKey);
+                equipmentName = $"{equipmentName}/耐力{d.AdditionalParameterHealth}/魔力{d.AdditionalParameterIntelligence}/力量{d.AdditionalParameterMuscle}/战技{d.AdditionalParameterEnergy} ";
+                return new CharacterEquipment()
+                {
+                    CharacterGuid = d.CharacterGuid, CharacterName = name, EquipmentGuid = d.Guid, EquipmentName = equipmentName, UserEquipmentDtoInfo = d
+                };
+            }).OrderBy(d=>d.CharacterGuid).ToList() ?? new List<CharacterEquipment>();
         });
     }
 
@@ -198,7 +237,7 @@
             var msg = new StringBuilder("领取的奖励：\n");
 
             bonus.ItemList.PrintUserItems(msg);
-            
+
             _quickActionResult = msg.ToString();
         });
     }
@@ -235,8 +274,8 @@
         {
             var resp = await moriFuncs.PresentReceiveItem();
             var msg = new StringBuilder("领取的奖励：\n");
-            
-            resp.ResultItems.Select(d=>d.Item).PrintUserItems(msg);
+
+            resp.ResultItems.Select(d => d.Item).PrintUserItems(msg);
 
             _quickActionResult = msg.ToString();
         });
@@ -254,8 +293,8 @@
                     QuickCount = 3
                 });
             if (bossQuickResponse.BattleRewardResult == null) return;
-                
-                
+
+
             bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(msg);
             bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(msg);
 
@@ -321,37 +360,38 @@
                 new GetListRequest());
 
             var questIds = getListResponse.UserBountyQuestDtoInfos
-                .Where(d=>d.BountyQuestEndTime > 0)
-                .Select(d=>d.BountyQuestId).ToList();
+                .Where(d => d.BountyQuestEndTime > 0)
+                .Select(d => d.BountyQuestId).ToList();
 
             if (questIds.Count > 0)
             {
-                var rewardResponse = await moriFuncs.GetResponse<RewardRequest, RewardResponse>(new RewardRequest(){BountyQuestIds = questIds, IsQuick = false});
+                var rewardResponse = await moriFuncs.GetResponse<RewardRequest, RewardResponse>(new RewardRequest() {BountyQuestIds = questIds, IsQuick = false});
                 rewardResponse.RewardItems.PrintUserItems(msg);
             }
-           
+
             _quickActionResult = msg.ToString();
         });
     }
+
     private async Task BountyQuestStartAuto()
     {
         await ExecuteQuickAction(async () =>
         {
             _quickActionResult = "还未实现";
-            // var msg = new StringBuilder();
-            // var getListResponse = await moriFuncs.GetResponse<GetListRequest, GetListResponse>(
-            //     new GetListRequest());
+    // var msg = new StringBuilder();
+    // var getListResponse = await moriFuncs.GetResponse<GetListRequest, GetListResponse>(
+    //     new GetListRequest());
 
-            
-            // foreach (var bountyQuestInfo in getListResponse.BountyQuestInfos)
-            // {
-            //     foreach (var userCharacterDtoInfo in _userSyncData.UserCharacterDtoInfos)
-            //     {
-            //     }
-            // }
-           
-           
-            // _quickActionResult = msg.ToString();
+
+    // foreach (var bountyQuestInfo in getListResponse.BountyQuestInfos)
+    // {
+    //     foreach (var userCharacterDtoInfo in _userSyncData.UserCharacterDtoInfos)
+    //     {
+    //     }
+    // }
+
+
+    // _quickActionResult = msg.ToString();
         });
     }
 
@@ -360,14 +400,14 @@
         await ExecuteQuickAction(async () =>
         {
             await moriFuncs.AutoEquipmentInheritance();
-            // var msg = new StringBuilder("角色列表：\n");
-            //
-            // foreach (var userCharacterDtoInfo in _userSyncData.UserCharacterDtoInfos)
-            // {
-            //     var characterMb = Masters.CharacterTable.GetById(userCharacterDtoInfo.CharacterId);
-            //     var name = Masters.TextResourceTable.Get(characterMb.NameKey);
-            //     msg.AppendLine($"名称：{name} 等级： {userCharacterDtoInfo.Level} 稀有度：{characterMb.RarityFlags}");
-            // }
+    // var msg = new StringBuilder("角色列表：\n");
+    //
+    // foreach (var userCharacterDtoInfo in _userSyncData.UserCharacterDtoInfos)
+    // {
+    //     var characterMb = Masters.CharacterTable.GetById(userCharacterDtoInfo.CharacterId);
+    //     var name = Masters.TextResourceTable.Get(characterMb.NameKey);
+    //     msg.AppendLine($"名称：{name} 等级： {userCharacterDtoInfo.Level} 稀有度：{characterMb.RarityFlags}");
+    // }
             _quickActionResult = "完成";
         });
     }
@@ -377,7 +417,7 @@
         await ExecuteQuickAction(async () =>
         {
             var msg = new StringBuilder("领取的奖励：\n");
-            
+
             var req = new QuickRequest() {QuestQuickExecuteType = QuestQuickExecuteType.Currency, QuickCount = 1};
             var quickResponse = await moriFuncs.GetResponse<QuickRequest, QuickResponse>(req);
 
@@ -387,7 +427,7 @@
             msg.AppendLine($"额外金币 {quickResponse.AutoBattleRewardResult.BattleRewardResult.ExtraGold}");
             msg.AppendLine($"用户经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.PlayerExp}");
             msg.AppendLine($"升级 {quickResponse.AutoBattleRewardResult.BattleRewardResult.RankUp}");
-            
+
             quickResponse.AutoBattleRewardResult.BattleRewardResult.FixedItemList.PrintUserItems(msg);
             quickResponse.AutoBattleRewardResult.BattleRewardResult.DropItemList.PrintUserItems(msg);
 
@@ -400,9 +440,9 @@
         await ExecuteQuickAction(async () =>
         {
             var msg = new StringBuilder("领取的奖励：\n");
-            
+
             await moriFuncs.AutoDungeonBattle();
-            
+
             _quickActionResult = msg.ToString();
         });
     }
@@ -413,13 +453,74 @@
         {
             var msg = new StringBuilder("领取的奖励：\n");
 
-            var giveAllSrCharacterResponse = await moriFuncs.GetResponse<SetVipLevelRequest, SetVipLevelResponse>(new SetVipLevelRequest(){VipLevel = 8});
+            var giveAllSrCharacterResponse = await moriFuncs.GetResponse<SetVipLevelRequest, SetVipLevelResponse>(new SetVipLevelRequest() {VipLevel = 8});
 
             _quickActionResult = giveAllSrCharacterResponse.ToJson(true);
         });
     }
 
-    
+    private async Task AutoBossRequest()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            StringBuilder msg = new StringBuilder();
+            int totalCount = 0;
+            int winCount = 0;
+            while (true)
+    // for (int i = 0; i < 3; i++)
+            {
+                await moriFuncs.UserGetUserData();
+                var bossResponse = await moriFuncs.GetResponse<BossRequest, BossResponse>(new BossRequest() {QuestId = _userSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1});
+                var win = bossResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
+                totalCount++;
+                if (win) winCount++;
+                var m = $"挑战 boss 一次：{win} 总次数：{totalCount} 胜利次数：{winCount}";
+                Console.WriteLine(m);
+                _quickActionResult = msg.AppendLine(m).ToString();
+                StateHasChanged();
+    // var t = Random.Shared.Next(1000, 3000);
+                var t = 1;
+                await Task.Delay(t);
+            }
+        });
+    }
+
+    private async Task AutoEquipmentTraning()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            StringBuilder msg = new StringBuilder();
+            int totalCount = 0;
+            int winCount = 0;
+    while (true)
+    // for (int i = 0; i < 3; i++)
+            {
+                var equipment = _userSyncData.UserEquipmentDtoInfos.First(d=>d.Guid == _equipmentId);
+                switch (_equipmentTrainingTargetType)
+                {
+                    case "Health" when equipment.AdditionalParameterHealth >= _equipmentTrainingTargetValue:
+                        return;
+                    case "Energy" when equipment.AdditionalParameterEnergy >= _equipmentTrainingTargetValue:
+                        return;
+                    case "Intelligence" when equipment.AdditionalParameterIntelligence >= _equipmentTrainingTargetValue:
+                        return;
+                    case "Muscle" when equipment.AdditionalParameterMuscle >= _equipmentTrainingTargetValue:
+                        return;
+                }
+                await moriFuncs.UserGetUserData();
+                var response = await moriFuncs.GetResponse<TrainingRequest, TrainingResponse>(new TrainingRequest() {EquipmentGuid = _equipmentId, ParameterLockedList = new List<BaseParameterType>()});
+                await moriFuncs.UserGetUserData();
+                var m = $"打磨装备 耐力 {equipment.AdditionalParameterEnergy} 魔力 {equipment.AdditionalParameterIntelligence} 力量 {equipment.AdditionalParameterMuscle} 战技 {equipment.AdditionalParameterEnergy}";
+                Console.WriteLine(m);
+                _quickActionResult = msg.AppendLine(m).ToString();
+                StateHasChanged();
+                var t = 1;
+                await Task.Delay(t);
+            }
+        });
+    }
+
+
     private async Task GetDungeonBattleRelic()
     {
         await ExecuteQuickAction(async () =>
@@ -434,34 +535,34 @@
                 }.ToJson();
             });
 
-            // var strings = string.Join("\n", list.Select(d => $"{d.Id}\t{d.Name}\t{d.RarityType}\t{d.Desc}"));
+    // var strings = string.Join("\n", list.Select(d => $"{d.Id}\t{d.Name}\t{d.RarityType}\t{d.Desc}"));
 
-            // var strings = list.GroupBy(d => d.Name).Select(d =>
-            // {
-            //     if (d.Count() == 1)
-            //     {
-            //         return $"{d.First().Id}\t{d.Key}\t{d.First().RarityType}\t{d.First().Desc}";
-            //     }
-            //
-            //     var percentsList = new List<List<string>>();
-            //     foreach (var x1 in d)
-            //     {
-            //         percentsList.Add(Regex.Matches(x1.Desc, @"[\d\.]+\%").Select(d => d.Value).ToList());
-            //     }
-            //     var index = 0;
-            //     var desc = Regex.Replace(d.First().Desc, @"[\d\.]+\%", m =>
-            //     {
-            //         var join = string.Join("/", percentsList.Select(d => d[index]));
-            //         index++;
-            //         return join;
-            //     });
-            //     return $"{d.First().Id}\t{d.Key}\t{d.First().RarityType}\t{desc}";
-            // });
+    // var strings = list.GroupBy(d => d.Name).Select(d =>
+    // {
+    //     if (d.Count() == 1)
+    //     {
+    //         return $"{d.First().Id}\t{d.Key}\t{d.First().RarityType}\t{d.First().Desc}";
+    //     }
+    //
+    //     var percentsList = new List<List<string>>();
+    //     foreach (var x1 in d)
+    //     {
+    //         percentsList.Add(Regex.Matches(x1.Desc, @"[\d\.]+\%").Select(d => d.Value).ToList());
+    //     }
+    //     var index = 0;
+    //     var desc = Regex.Replace(d.First().Desc, @"[\d\.]+\%", m =>
+    //     {
+    //         var join = string.Join("/", percentsList.Select(d => d[index]));
+    //         index++;
+    //         return join;
+    //     });
+    //     return $"{d.First().Id}\t{d.Key}\t{d.First().RarityType}\t{desc}";
+    // });
 
             _quickActionResult = string.Join("\n", list);
         });
     }
 
-    
+
 
 }
