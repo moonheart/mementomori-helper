@@ -4,11 +4,37 @@
 @using MementoMori.Ortega.Share.Data
 @using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Data.DtoInfo
+@using MementoMori.Ortega.Share.Enums
 
 <PageTitle>角色</PageTitle>
 
 <h3>角色</h3>
 
+<Row>
+    @foreach(var character in (_userSyncData?.UserCharacterDtoInfos ?? new List<UserCharacterDtoInfo>()).OrderByDescending(d=>d.RarityFlags))
+    {
+        
+        var cmb = Masters.CharacterTable.GetById(character.CharacterId);
+        var name = Masters.TextResourceTable.Get(cmb.NameKey);
+        
+        
+        <Column ColumnSize="ColumnSize.Is1">
+            <Card >
+                <CardHeader>
+                   <Label>@cmb.ElementType</Label>
+                    <Text>@name</Text>
+                    <Icon Name="@(character.IsLocked ? IconName.Lock : IconName.LockOpen)"></Icon>
+                </CardHeader>
+                <CardBody>
+                    <CardTitle>等级: @character.Level</CardTitle>
+                    <CardSubtitle>稀有度: @character.RarityFlags</CardSubtitle>
+                    <CardText>职业: @cmb.JobFlags</CardText>
+                    <CardText>经验值: @character.Exp</CardText>
+                </CardBody>
+            </Card>
+        </Column>
+    }
+</Row>
 <table class="table">
     <thead>
     <tr>

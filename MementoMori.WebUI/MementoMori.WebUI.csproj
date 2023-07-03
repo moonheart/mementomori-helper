@@ -10,4 +10,10 @@
       <ProjectReference Include="..\MementoMori\MementoMori.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Blazorise.Bootstrap" Version="1.2.4" />
+      <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.2.4" />
+      <PackageReference Include="ReactiveUI.Blazor" Version="19.2.1" />
+    </ItemGroup>
+
 </Project>
