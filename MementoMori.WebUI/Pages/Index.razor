@@ -22,133 +22,131 @@
 
 <PageTitle>主页</PageTitle>
 
-<div class="row">
-    <div class="col-6">
-        <div class="card">
-            <div class="card-header">
-                <span class="fs-4">角色信息</span>
-                <button class="btn btn-sm btn-secondary float-end" disabled="@_logining" @onclick="@Login">
+<MudGrid>
+    <MudItem xs="6">
+        <MudCard>
+            <MudCardHeader>
+                <MudText>角色信息</MudText>
+                <MudButton Disabled="_logining" @onclick="Login">
                     登录
                     @if (_logining)
                     {
-                        <div class="spinner-border spinner-border-sm" role="status"></div>
+                        <MudProgressCircular Size="Size.Small"/>
                     }
-                </button>
-                <button class="btn btn-sm btn-secondary float-end" @onclick="@SyncUserData">同步用户信息</button>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <tbody>
-                    <tr>
-                        <td>用户名</td><td>@_userSyncData?.UserStatusDtoInfo?.Name</td>
-                    </tr>
-                    <tr>
-                        <td>玩家ID</td><td>@_userSyncData?.UserStatusDtoInfo?.PlayerId</td>
-                    </tr>
-                    <tr>
-                        <td>友情点</td><td>@_friendPoint</td>
-                    </tr>
-                    <tr>
-                        <td>加入时间</td><td>@_userSyncData?.UserStatusDtoInfo?.CreateAt.ToDateTimeOffset()</td>
-                    </tr>
-                    <tr>
-                        <td>等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Rank</td>
-                    </tr>
-                    <tr>
-                        <td>VIP 等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Vip</td>
-                    </tr>
-                    <tr>
-                        <td>留言</td><td>@_userSyncData?.UserStatusDtoInfo?.Comment</td>
-                    </tr>
-                    <tr>
-                        <td>经验值</td><td>@_userSyncData?.UserStatusDtoInfo?.Exp</td>
-                    </tr>
-                    <tr>
-                        <td>上次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLoginTime.ToDateTimeOffset()</td>
-                    </tr>
-                    <tr>
-                        <td>前次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.PreviousLoginTime.ToDateTimeOffset()</td>
-                    </tr>
-                    <tr>
-                        <td>上次升级</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLvUpTime.ToDateTimeOffset()</td>
-                    </tr>
-                    <tr>
-                        <td>用户名已更改</td><td>@_userSyncData?.UserStatusDtoInfo?.IsAlreadyChangedName</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="col-4">
-        <div class="card">
-            <div class="card-header">快捷操作</div>
-            <div class="card-body">
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetLoginBonus">领取每日登录奖励</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetVipGift">领取每日VIP礼物</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetAutoBattleReward">领取自动战斗奖励</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BulkTransferFriendPoint">一键赠送/接受友情点</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@PresentReceiveItem">一键领取礼物箱</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BattleBossQuick">主线boss扫荡3次</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@InfiniteTowerQuick">无穷之塔扫荡3次</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@PvpAuto">PVP自动战斗5次</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BossHishSpeedBattle">冒险一次高速战斗</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BountyQuestRewardAuto">祈愿之泉一键领取</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@BountyQuestStartAuto">祈愿之泉一键开始</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentInheritance">自动精炼SABC、继承魔装到D装</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoDungeonBattle">时空洞窟自动战斗</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@GetDungeonBattleRelic">输出时空洞窟加护</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoBossRequest">自动刷Boss</button>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentTraning">装备打磨</button>
-                <label>装备<select @bind="_equipmentId">
-                    @foreach (var e in _characterEquipments)
+                </MudButton>
+                <MudButton Disabled="_logining" @onclick="SyncUserData">同步用户信息</MudButton>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudSimpleTable>
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>用户名</td><td>@_userSyncData?.UserStatusDtoInfo?.Name</td>
+                        </tr>
+                        <tr>
+                            <td>玩家ID</td><td>@_userSyncData?.UserStatusDtoInfo?.PlayerId</td>
+                        </tr>
+                        <tr>
+                            <td>友情点</td><td>@_friendPoint</td>
+                        </tr>
+                        <tr>
+                            <td>加入时间</td><td>@_userSyncData?.UserStatusDtoInfo?.CreateAt.ToDateTimeOffset()</td>
+                        </tr>
+                        <tr>
+                            <td>等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Rank</td>
+                        </tr>
+                        <tr>
+                            <td>VIP 等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Vip</td>
+                        </tr>
+                        <tr>
+                            <td>留言</td><td>@_userSyncData?.UserStatusDtoInfo?.Comment</td>
+                        </tr>
+                        <tr>
+                            <td>经验值</td><td>@_userSyncData?.UserStatusDtoInfo?.Exp</td>
+                        </tr>
+                        <tr>
+                            <td>上次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLoginTime.ToDateTimeOffset()</td>
+                        </tr>
+                        <tr>
+                            <td>前次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.PreviousLoginTime.ToDateTimeOffset()</td>
+                        </tr>
+                        <tr>
+                            <td>上次升级</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLvUpTime.ToDateTimeOffset()</td>
+                        </tr>
+                        <tr>
+                            <td>用户名已更改</td><td>@_userSyncData?.UserStatusDtoInfo?.IsAlreadyChangedName</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </MudSimpleTable>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="6">
+        <MudCard>
+            <MudCardHeader>快捷操作</MudCardHeader>
+            <MudCardContent>
+                <MudButton Variant="Variant.Filled" Disabled="_isQuickActionExecuting" @onclick="GetLoginBonus">领取每日登录奖励</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@GetVipGift">领取每日VIP礼物</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@GetAutoBattleReward">领取自动战斗奖励</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BulkTransferFriendPoint">一键赠送/接受友情点</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@PresentReceiveItem">一键领取礼物箱</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BattleBossQuick">主线boss扫荡3次</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@InfiniteTowerQuick">无穷之塔扫荡3次</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@PvpAuto">PVP自动战斗5次</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BossHishSpeedBattle">冒险一次高速战斗</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BountyQuestRewardAuto">祈愿之泉一键领取</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BountyQuestStartAuto">祈愿之泉一键开始</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentInheritance">自动精炼SABC、继承魔装到D装</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoDungeonBattle">时空洞窟自动战斗</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@GetDungeonBattleRelic">输出时空洞窟加护</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoBossRequest">自动刷Boss</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentTraning">装备打磨</MudButton>
+                <MudSelect T="string" Label="装备ID" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="_equipmentId">
+                     @foreach (var e in _characterEquipments)
                     {
-                        <option value="@e.EquipmentGuid">@($"{e.EquipmentName}/{e.UserEquipmentDtoInfo.ReinforcementLv} {e.CharacterName}")</option>
+                        <MudSelectItem T="string" Value="e.EquipmentGuid">@($"{e.EquipmentName}/{e.UserEquipmentDtoInfo.ReinforcementLv} {e.CharacterName}")</MudSelectItem>
                     }
-                </select></label>
-                <label>装备Id<input @bind="_equipmentId"></label>
-                <label>
-                    类型
-                    <select @bind="_equipmentTrainingTargetType">
-                        <option value="Health">耐力</option>
-                        <option value="Intelligence">魔力</option>
-                        <option value="Muscle">力量</option>
-                        <option value="Energy">战技</option>
-                    </select>
-                </label>
-                <label>目标值<input @bind="_equipmentTrainingTargetValue"/></label>
-                <button class="btn btn-sm btn-primary mb-1" disabled="@_isQuickActionExecuting" @onclick="@Debug">Debug</button>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">执行结果</div>
-            <div class="card-body" style="max-height: 400px; flex-direction: column-reverse;display: flex;">
+                </MudSelect>
+                <MudTextField @bind-Value="_equipmentId" Label="装备Id" Variant="Variant.Text"></MudTextField>
+                <MudSelect T="string" @bind-Value="_equipmentTrainingTargetType" Label="类型" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                    <MudSelectItem T="string" Value="@("Health")">耐力</MudSelectItem>
+                    <MudSelectItem T="string" Value="@("Intelligence")">魔力</MudSelectItem>
+                    <MudSelectItem T="string" Value="@("Muscle")">力量</MudSelectItem>
+                    <MudSelectItem T="string" Value="@("Energy")">战技</MudSelectItem>
+                </MudSelect>
+                <MudTextField T="long" @bind-Value="_equipmentTrainingTargetValue" Label="目标值" Variant="Variant.Text"></MudTextField>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@Debug">Debug</MudButton>
+            </MudCardContent>
+        </MudCard>
+        <MudCard>
+            <MudCardHeader>执行结果</MudCardHeader>
+            <MudCardContent Style="max-height: 400px; overflow: scroll">
                 <pre>
-                @_quickActionResult
-</pre>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-6">
-        <div class="card">
-            <div class="card-body" style="max-height: 400px; overflow: scroll">
+                                @_quickActionResult
+                </pre>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="6">
+        <MudCard>
+            <MudCardContent Style="max-height: 300px; overflow: scroll">
                 <pre>
-        @_runtimeInfo.ToJson(true)
-        </pre>
-            </div>
-        </div>
-    </div>
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body" style="max-height: 400px; overflow: scroll">
+                        @_runtimeInfo.ToJson(true)
+                        </pre>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12">
+        <MudCard>
+            <MudCardContent Style="max-height: 400px; overflow: scroll">
                 <pre>
-        @_userSyncData.ToJson(true)
-        </pre>
-            </div>
-        </div>
-    </div>
-</div>
+                         @_userSyncData.ToJson(true)
+                         </pre>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
 
 @code {
     private RuntimeInfo _runtimeInfo;
@@ -190,7 +188,7 @@
                 {
                     CharacterGuid = d.CharacterGuid, CharacterName = name, EquipmentGuid = d.Guid, EquipmentName = equipmentName, UserEquipmentDtoInfo = d
                 };
-            }).OrderBy(d=>d.CharacterGuid).ToList() ?? new List<CharacterEquipment>();
+            }).OrderBy(d => d.CharacterGuid).ToList() ?? new List<CharacterEquipment>();
         });
     }
 
@@ -492,10 +490,10 @@
             StringBuilder msg = new StringBuilder();
             int totalCount = 0;
             int winCount = 0;
-    while (true)
+            while (true)
     // for (int i = 0; i < 3; i++)
             {
-                var equipment = _userSyncData.UserEquipmentDtoInfos.First(d=>d.Guid == _equipmentId);
+                var equipment = _userSyncData.UserEquipmentDtoInfos.First(d => d.Guid == _equipmentId);
                 switch (_equipmentTrainingTargetType)
                 {
                     case "Health" when equipment.AdditionalParameterHealth >= _equipmentTrainingTargetValue:

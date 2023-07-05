@@ -1,9 +1,7 @@
-using Blazorise;
-using Blazorise.Bootstrap;
-using Blazorise.Icons.FontAwesome;
 using MementoMori;
 using MementoMori.WebUI.Data;
 using MementoMori.WebUI.ViewModels;
+using MudBlazor.Services;
 
 internal class Program
 {
@@ -13,9 +11,7 @@ internal class Program
 
         builder.Configuration.AddJsonFile("appsettings.dev.json", true, true);
 
-        builder.Services.AddBlazorise(opt => { })
-            .AddBootstrapProviders()
-            .AddFontAwesomeIcons();
+        builder.Services.AddMudServices();
 
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();

@@ -1,18 +1,40 @@
 ﻿@inherits LayoutComponentBase
 
-<PageTitle>MementoMori.WebUI</PageTitle>
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
-<Layout>
-    <Layout Sider>
-        <LayoutSider>
-            <LayoutSiderContent>
-                <NavMenu/>
-            </LayoutSiderContent>
-        </LayoutSider>
-        <Layout>
-            <LayoutContent>
-                @Body
-            </LayoutContent>
-        </Layout>
-    </Layout>
-</Layout>
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton
+            Icon="@Icons.Material.Filled.Menu"
+            Color="Color.Inherit"
+            Edge="Edge.Start"
+            @onclick="e => DrawerToggle()">
+        </MudIconButton>
+        My Application
+        <MudSpacer/>
+        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+    </MudAppBar>
+    <MudDrawer Open="_drawerOpen">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h5" Class="mt-1">数据库</MudText>
+        </MudDrawerHeader>
+        <NavMenu/>
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+}

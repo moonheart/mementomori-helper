@@ -10,31 +10,44 @@
 
 <h3>角色</h3>
 
-<Row>
-    @foreach(var character in (_userSyncData?.UserCharacterDtoInfos ?? new List<UserCharacterDtoInfo>()).OrderByDescending(d=>d.RarityFlags))
+<MudGrid>
+    @foreach (var character in (_userSyncData?.UserCharacterDtoInfos ?? new List<UserCharacterDtoInfo>()).OrderByDescending(d => d.RarityFlags))
     {
-        
         var cmb = Masters.CharacterTable.GetById(character.CharacterId);
         var name = Masters.TextResourceTable.Get(cmb.NameKey);
-        
-        
-        <Column ColumnSize="ColumnSize.Is1">
-            <Card >
-                <CardHeader>
-                   <Label>@cmb.ElementType</Label>
-                    <Text>@name</Text>
-                    <Icon Name="@(character.IsLocked ? IconName.Lock : IconName.LockOpen)"></Icon>
-                </CardHeader>
-                <CardBody>
-                    <CardTitle>等级: @character.Level</CardTitle>
-                    <CardSubtitle>稀有度: @character.RarityFlags</CardSubtitle>
-                    <CardText>职业: @cmb.JobFlags</CardText>
-                    <CardText>经验值: @character.Exp</CardText>
-                </CardBody>
-            </Card>
-        </Column>
+
+        <MudItem xs="1">
+            <MudCard>
+                <MudCardHeader>
+                    <MudText>@cmb.ElementType</MudText>
+                    <MudText>@name</MudText>
+                    <MudIcon Icon="@(character.IsLocked ? Icons.Material.Filled.Lock : Icons.Material.Filled.LockOpen)"></MudIcon>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText>等级: @character.Level</MudText>
+                    <MudText>稀有度: @character.RarityFlags</MudText>
+                    <MudText>职业: @cmb.JobFlags</MudText>
+                    <MudText>经验值: @character.Exp</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        @* <Column ColumnSize="ColumnSize.Is1"> *@
+        @*     <Card > *@
+        @*         <CardHeader> *@
+        @*             <Label>@cmb.ElementType</Label> *@
+        @*             <Text>@name</Text> *@
+        @*             <Icon Name="@(character.IsLocked ? IconName.Lock : IconName.LockOpen)"></Icon> *@
+        @*         </CardHeader> *@
+        @*         <CardBody> *@
+        @*             <CardTitle>等级: @character.Level</CardTitle> *@
+        @*             <CardSubtitle>稀有度: @character.RarityFlags</CardSubtitle> *@
+        @*             <CardText>职业: @cmb.JobFlags</CardText> *@
+        @*             <CardText>经验值: @character.Exp</CardText> *@
+        @*         </CardBody> *@
+        @*     </Card> *@
+        @* </Column> *@
     }
-</Row>
+</MudGrid>
 <table class="table">
     <thead>
     <tr>
@@ -53,7 +66,7 @@
     {
         var cmb = Masters.CharacterTable.GetById(character.CharacterId);
         var name = Masters.TextResourceTable.Get(cmb.NameKey);
-        
+
         <tr>
             <td>@character.Guid</td>
             <td>@name</td>
@@ -88,4 +101,5 @@
         });
         moriFuncs.UserSyncData.Subscribe(data => { _userSyncData = data; });
     }
+
 }

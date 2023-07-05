@@ -1,56 +1,13 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <span class="navbar-brand">MementoMori 游戏助手</span>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> 主页
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Character">
-                <span class="oi oi-people" aria-hidden="true"></span> 角色
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Items">
-                <span class="oi oi-box" aria-hidden="true"></span> 储物箱
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Adventure">
-                <span class="oi oi-fire" aria-hidden="true"></span> 冒险
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Trial">
-                <span class="oi oi-flag" aria-hidden="true"></span> 试炼
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Gacha">
-                <span class="oi oi-random" aria-hidden="true"></span> 召唤
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Chat">
-                <span class="oi oi-chat" aria-hidden="true"></span> 聊天
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Guild">
-                <span class="oi oi-globe" aria-hidden="true"></span> 公会
-            </NavLink>
-        </div>
-    </nav>
-</div>NavMenu
+﻿<MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All"><MudIcon Icon="@Icons.Material.Filled.Home"/>主页</MudNavLink>
+    <MudNavLink Href="/Character" Match="NavLinkMatch.Prefix"><MudIcon Icon="@Icons.Material.Filled.People"/>角色</MudNavLink>
+    <MudNavLink Href="/Items" Match="NavLinkMatch.Prefix"><MudIcon Icon="@Icons.Material.Filled.AllInbox"/>储物箱</MudNavLink>
+    <MudNavLink Href="/Adventure" Match="NavLinkMatch.Prefix"><MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment"/>冒险</MudNavLink>
+    <MudNavLink Href="/Trial" Match="NavLinkMatch.Prefix"><MudIcon Icon="@Icons.Material.Filled.Flag"/>试炼</MudNavLink>
+    <MudNavLink Href="/Gacha" Match="NavLinkMatch.Prefix"><MudIcon Icon="@Icons.Material.Filled.ChangeCircle"/>召唤</MudNavLink>
+    <MudNavLink Href="/Chat" Match="NavLinkMatch.Prefix"><MudIcon Icon="@Icons.Material.Filled.Chat"/>聊天</MudNavLink>
+    <MudNavLink Href="/Guild" Match="NavLinkMatch.Prefix"><MudIcon Icon="@Icons.Material.Filled.NaturePeople"/>公会</MudNavLink>
+</MudNavMenu>
 
 @code {
     private bool collapseNavMenu = true;
