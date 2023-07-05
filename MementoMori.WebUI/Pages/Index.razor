@@ -451,7 +451,7 @@
         {
             var msg = new StringBuilder("领取的奖励：\n");
 
-            var giveAllSrCharacterResponse = await moriFuncs.GetResponse<SetVipLevelRequest, SetVipLevelResponse>(new SetVipLevelRequest() {VipLevel = 8});
+            var giveAllSrCharacterResponse = await moriFuncs.GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
 
             _quickActionResult = giveAllSrCharacterResponse.ToJson(true);
         });

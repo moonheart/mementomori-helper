@@ -16,12 +16,22 @@
         var cmb = Masters.CharacterTable.GetById(character.CharacterId);
         var name = Masters.TextResourceTable.Get(cmb.NameKey);
 
-        <MudItem xs="1">
+        var elemntColor = cmb.ElementType switch{
+            ElementType.Blue=> Colors.Blue.Default,
+            ElementType.Red=>Colors.Red.Darken1,
+            ElementType.Green=> Colors.Green.Darken1,
+            ElementType.Yellow=> Colors.Yellow.Darken1,
+            ElementType.Light=> Colors.Yellow.Lighten4,
+            ElementType.Dark=> Colors.Purple.Darken3
+            };
+
+        <MudItem xs="6" sm="4" md="3" lg="2">
             <MudCard>
                 <MudCardHeader>
-                    <MudText>@cmb.ElementType</MudText>
+                    <MudPaper Style="@($"background: {elemntColor}")" Class="rounded-circle pa-2 mr-2"></MudPaper>
+                    @* <MudText>@cmb.ElementType</MudText> *@
                     <MudText>@name</MudText>
-                    <MudIcon Icon="@(character.IsLocked ? Icons.Material.Filled.Lock : Icons.Material.Filled.LockOpen)"></MudIcon>
+                    <MudIcon Class="ml-1" Size="Size.Small" Icon="@(character.IsLocked ? Icons.Material.Filled.Lock : Icons.Material.Filled.LockOpen)"></MudIcon>
                 </MudCardHeader>
                 <MudCardContent>
                     <MudText>等级: @character.Level</MudText>
@@ -31,21 +41,6 @@
                 </MudCardContent>
             </MudCard>
         </MudItem>
-        @* <Column ColumnSize="ColumnSize.Is1"> *@
-        @*     <Card > *@
-        @*         <CardHeader> *@
-        @*             <Label>@cmb.ElementType</Label> *@
-        @*             <Text>@name</Text> *@
-        @*             <Icon Name="@(character.IsLocked ? IconName.Lock : IconName.LockOpen)"></Icon> *@
-        @*         </CardHeader> *@
-        @*         <CardBody> *@
-        @*             <CardTitle>等级: @character.Level</CardTitle> *@
-        @*             <CardSubtitle>稀有度: @character.RarityFlags</CardSubtitle> *@
-        @*             <CardText>职业: @cmb.JobFlags</CardText> *@
-        @*             <CardText>经验值: @character.Exp</CardText> *@
-        @*         </CardBody> *@
-        @*     </Card> *@
-        @* </Column> *@
     }
 </MudGrid>
 <table class="table">
