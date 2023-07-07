@@ -101,6 +101,7 @@
                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoDungeonBattle">时空洞窟自动战斗</MudButton>
                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@GetDungeonBattleRelic">输出时空洞窟加护</MudButton>
                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoBossRequest">自动刷Boss</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoInfiniteTowerRequest">自动刷无穷之塔</MudButton>
                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentTraning">装备打磨</MudButton>
                 <MudSelect T="string" Label="装备ID" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="_equipmentId">
                      @foreach (var e in _characterEquipments)
@@ -471,12 +472,48 @@
                 var bossResponse = await moriFuncs.GetResponse<BossRequest, BossResponse>(new BossRequest() {QuestId = _userSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1});
                 var win = bossResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                 totalCount++;
-                if (win) winCount++;
+                if (win)
+                {
+                    var nextQuestResponse = await moriFuncs.GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
+                    winCount++;
+                }
                 var m = $"挑战 boss 一次：{win} 总次数：{totalCount} 胜利次数：{winCount}";
                 Console.WriteLine(m);
                 _quickActionResult = msg.AppendLine(m).ToString();
                 StateHasChanged();
     // var t = Random.Shared.Next(1000, 3000);
+                var t = 1;
+                await Task.Delay(t);
+            }
+        });
+    }
+    private async Task AutoInfiniteTowerRequest()
+    {
+        await ExecuteQuickAction(async () =>
+        {
+            StringBuilder msg = new StringBuilder();
+            int totalCount = 0;
+            int winCount = 0;
+            while (true)
+    // for (int i = 0; i < 3; i++)
+            {
+                await moriFuncs.UserGetUserData();
+                var tower = _userSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
+                var bossQuickResponse = await moriFuncs.GetResponse<StartRequest, StartResponse>(
+                    new StartRequest()
+                    {
+                        IsQuick = true, TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId + 1
+                    });
+                var win = bossQuickResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
+                totalCount++;
+                if (win)
+                {
+                    winCount++;
+                }
+                var m = $"挑战无穷之塔一次：{win} 总次数：{totalCount} 胜利次数：{winCount}";
+                Console.WriteLine(m);
+                _quickActionResult = msg.AppendLine(m).ToString();
+                StateHasChanged();
                 var t = 1;
                 await Task.Delay(t);
             }
