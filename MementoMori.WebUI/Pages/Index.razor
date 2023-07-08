@@ -3,17 +3,12 @@
 
 @page "/"
 @using System.Text
-@using System.Text.RegularExpressions
 @using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Data
 @using MementoMori.Ortega.Share.Data.ApiInterface.Battle
 @using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest
-@using MementoMori.Ortega.Share.Data.ApiInterface.Debug
 @using MementoMori.Ortega.Share.Data.ApiInterface.Equipment
-@using MementoMori.Ortega.Share.Data.ApiInterface.Quest
-@using MementoMori.Ortega.Share.Data.Battle.Result
-@using MementoMori.Ortega.Share.Data.Item
-@using MementoMori.Ortega.Share.Data.Present
+@using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle
 @using MementoMori.Ortega.Share.Enums
 @using MementoMori.WebUI.Extensions
 @using MementoMori.WebUI.Models
@@ -316,18 +311,17 @@
         {
             var tower = _userSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
             var msg = new StringBuilder("领取的奖励：\n");
-            for (int i = 0; i < 3; i++)
-            {
-                var bossQuickResponse = await moriFuncs.GetResponse<StartRequest, StartResponse>(
-                    new StartRequest()
-                    {
-                        IsQuick = true, TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId
-                    });
-                if (bossQuickResponse.BattleRewardResult == null) continue;
 
+            var bossQuickResponse = await moriFuncs.GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
+                new TowerBattleQuickRequest()
+                {
+                    TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId, QuickCount = 3
+                });
+            if (bossQuickResponse.BattleRewardResult != null)
+            {
                 bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(msg);
                 bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(msg);
-            }
+            };
 
             _quickActionResult = msg.ToString();
         });
@@ -522,7 +516,7 @@
                 var bossQuickResponse = await moriFuncs.GetResponse<StartRequest, StartResponse>(
                     new StartRequest()
                     {
-                        IsQuick = true, TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId + 1
+                        TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId + 1
                     });
                 var win = bossQuickResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                 totalCount++;
