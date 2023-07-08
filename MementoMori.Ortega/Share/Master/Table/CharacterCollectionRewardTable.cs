@@ -13,6 +13,17 @@ namespace MementoMori.Ortega.Share.Master.Table
 
 		public CharacterCollectionRewardTable()
 		{
+			// Dictionary<int, List<CharacterCollectionRewardMB>> dictionary = new ();
+			// int num = 0;
+			// bool flag;
+			// if (!flag)
+			// {
+			// 	List<CharacterCollectionRewardMB> list = new List();
+			// 	num++;
+			// }
+			// num++;
+			// return dictionary;
+			throw new NotImplementedException();
 		}
 	}
 }

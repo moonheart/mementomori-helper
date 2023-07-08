@@ -42,11 +42,17 @@ namespace MementoMori.Ortega.Share.Data
 
         public int? LocalRaidChallengeCount { get; set; }
 
+        public Dictionary<LockEquipmentDeckType, List<string>> LockedEquipmentCharacterGuidListMap { get; set; }
+
+        public Dictionary<LockEquipmentDeckType, List<UserEquipmentDtoInfo>> LockedUserEquipmentDtoInfoListMap { get; set; }
+
         public long? PresentCount { get; set; }
 
         public PrivacySettingsType? PrivacySettingsType { get; set; }
 
         public long? ReceivedAutoBattleRewardLastTime { get; set; }
+
+        public Dictionary<LockEquipmentDeckType, long> ReleaseLockEquipmentCooldownTimeStampMap { get; set; }
 
         public Dictionary<string, long> ShopCurrencyMissionProgressMap { get; set; }
 
@@ -112,7 +118,6 @@ namespace MementoMori.Ortega.Share.Data
 
         public void UserItemEditorMergeUserSyncData(UserSyncData userSyncData)
         {
-            
         }
 
         public UserSyncData()

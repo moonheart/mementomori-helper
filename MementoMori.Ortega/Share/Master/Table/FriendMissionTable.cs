@@ -11,7 +11,7 @@ namespace MementoMori.Ortega.Share.Master.Table
 			// int num = 0;
 			// DateTime dateTime;
 			// DateTime dateTime2;
-			// if (num.IsNullOrEmpty<char>() || num.IsNullOrEmpty<char>() || dateTime > localDateTime || !(dateTime2 < localDateTime))
+			// if (string.IsNullOrEmpty(num) || string.IsNullOrEmpty(num) || dateTime > localDateTime || !(dateTime2 < localDateTime))
 			// {
 			// }
 			// num++;

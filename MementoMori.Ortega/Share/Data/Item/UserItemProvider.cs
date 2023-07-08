@@ -80,6 +80,8 @@ namespace MementoMori.Ortega.Share.Data.Item
 		// 		Type typeFromHandle5 = typeof(ActivityMedalType);
 		// 		UserActivityMedal userActivityMedal;
 		// 		userActivityMedal.ItemType = (ItemType)((ulong)28L);
+			// UserVipExp userVipExp;
+			// userVipExp.<ItemType>k__BackingField = (ItemType)((ulong)29L);
 		// 		UserEventExchangePlaceItem userEventExchangePlaceItem;
 		// 		userEventExchangePlaceItem.ItemType = (ItemType)((ulong)50L);
 		// 		userEventExchangePlaceItem.ItemId = userActivityMedal;
@@ -153,6 +155,7 @@ namespace MementoMori.Ortega.Share.Data.Item
 
 		public static List<IUserItem> MergeSameItem(IEnumerable<IUserItem> itemList)
 		{
+			throw new NotImplementedException();
 			return itemList.ToList();
 			// int num = 0;
 			// Dictionary<ItemType, Dictionary<long, long>> dictionary = new Dictionary();

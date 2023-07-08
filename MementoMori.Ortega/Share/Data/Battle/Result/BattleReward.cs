@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using MementoMori.Ortega.Share.Data.Item;
+using MementoMori.Ortega.Share.Extensions;
 using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.Battle.Result
@@ -50,6 +51,25 @@ namespace MementoMori.Ortega.Share.Data.Battle.Result
         // 	battleReward.FixedItemList = list3;
         // 	return battleReward;
         // }
+        
+        public List<IUserItem> GetRewards()
+        {
+            List<IUserItem> list = new();
+            if (!this.DropItemList.IsNullOrEmpty<UserItem>())
+            {
+                List<UserItem> list2 = this.DropItemList;
+                list.AddRange(list2);
+            }
+            if (!this.FixedItemList.IsNullOrEmpty<UserItem>())
+            {
+                List<UserItem> list3 = this.FixedItemList;
+                list.AddRange(list3);
+            }
+            List<IUserItem> list4 = UserItemProvider.MergeSameItem(list);
+            
+            list4.Sort((a, b) => a.ItemId > b.ItemId ? 1 : -1);
+            return list4;
+        }
 
         public BattleReward()
         {

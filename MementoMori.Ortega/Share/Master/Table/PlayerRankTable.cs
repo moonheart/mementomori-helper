@@ -15,9 +15,11 @@ namespace MementoMori.Ortega.Share.Master.Table
 		{
 			// List<PlayerRankMB> list = new List();
 			// int num = 0;
+			// int num2 = 0;
 			// DateTime dateTime;
-			// if (num.IsNullOrEmpty<char>() || dateTime <= nowDateTime)
+			// if (string.IsNullOrEmpty(num) || dateTime <= nowDateTime)
 			// {
+			// 	list.Add(num2);
 			// }
 			// num++;
 			// return list;

@@ -6,63 +6,44 @@ using MessagePack;
 
 namespace MementoMori.Ortega.Share.Master.Data
 {
-	[Description("ワールドグループ")]
 	[MessagePackObject(true)]
+	[Description("ワールドグループ")]
 	public class WorldGroupMB : MasterBookBase, IHasStartEndTime
 	{
-		[Description("終了日時")]
 		[PropertyOrder(5)]
-		public string EndTime
-		{
-			get;
-		}
+		[Description("終了日時")]
+		public string EndTime { get; }
 
 		[PropertyOrder(9)]
+		[DateTimeString]
 		[Description("レジェンドリーグ終了日時")]
-		public string EndLegendLeagueDateTime
-		{
-			get;
-		}
+		public string EndLegendLeagueDateTime { get; }
 
 		[PropertyOrder(1)]
 		[Description("タイムサーバー")]
-		public long TimeServerId
-		{
-			get;
-		}
+		public long TimeServerId { get; }
 
 		[PropertyOrder(4)]
 		[Description("開始日時")]
-		public string StartTime
-		{
-			get;
-		}
+		public string StartTime { get; }
 
-		[Description("グランドバトル開始日時")]
 		[PropertyOrder(6)]
+		[Description("グランドバトル開始日時")]
 		[Nest(false, 0)]
-		public IReadOnlyList<StartEndTime> GrandBattleDateTimeList
-		{
-			get;
-		}
+		public IReadOnlyList<StartEndTime> GrandBattleDateTimeList { get; }
 
-		[Description("レジェンドリーグ開始日時")]
+		[DateTimeString]
 		[PropertyOrder(8)]
-		public string StartLegendLeagueDateTime
-		{
-			get;
-		}
+		[Description("レジェンドリーグ開始日時")]
+		public string StartLegendLeagueDateTime { get; }
 
 		[PropertyOrder(3)]
 		[Description("WorldIdのリスト")]
-		public IReadOnlyList<long> WorldIdList
-		{
-			get;
-		}
+		public IReadOnlyList<long> WorldIdList { get; }
 
 		[SerializationConstructor]
 		public WorldGroupMB(long id, bool? isIgnore, string memo, string endTime, long timeServerId, string startTime, IReadOnlyList<long> worldIdList, IReadOnlyList<StartEndTime> grandBattleDateTimeList, string startLegendLeagueDateTime, string endLegendLeagueDateTime)
-			:base(id, isIgnore, memo)
+		:base( id, isIgnore, memo)
 		{
 			EndTime = endTime;
 			TimeServerId = timeServerId;
@@ -90,7 +71,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 		{
 			// for (;;)
 			// {
-			// 	IReadOnlyList<StartEndTime> readOnlyList = this.GrandBattleDateTimeList;
+			// 	IReadOnlyList<StartEndTime> readOnlyList = this.<GrandBattleDateTimeList>k__BackingField;
 			// 	if (typeof(StringExtension).TypeHandle != 0)
 			// 	{
 			// 		DateTime dateTime;
@@ -120,20 +101,21 @@ namespace MementoMori.Ortega.Share.Master.Data
 
 		public bool IsOpenedLegendLeague(DateTime localDateTime)
 		{
-			bool flag = this.StartLegendLeagueDateTime.ToDateTime() <= localDateTime;
-			if (!flag)
-			{
-				return flag;
-			}
-			DateTime dateTime = this.EndLegendLeagueDateTime.ToDateTime();
-			return localDateTime < dateTime;
+			// bool flag = this.<StartLegendLeagueDateTime>k__BackingField.ToDateTime() <= localDateTime;
+			// if (!flag)
+			// {
+			// 	return flag;
+			// }
+			// DateTime dateTime = this.<EndLegendLeagueDateTime>k__BackingField.ToDateTime();
+			// return localDateTime < dateTime;
+			throw new NotImplementedException();
 		}
 
 		public bool IsAfterStartGrandBattle(DateTime localDateTime)
 		{
 			// for (;;)
 			// {
-			// 	IReadOnlyList<StartEndTime> readOnlyList = this.GrandBattleDateTimeList;
+			// 	IReadOnlyList<StartEndTime> readOnlyList = this.<GrandBattleDateTimeList>k__BackingField;
 			// 	if (typeof(StringExtension).TypeHandle != 0)
 			// 	{
 			// 		DateTime dateTime;
