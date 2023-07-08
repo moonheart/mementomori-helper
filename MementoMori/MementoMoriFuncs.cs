@@ -65,6 +65,7 @@ public class MementoMoriFuncs
         _unityHttpClient.DefaultRequestHeaders.Add("User-Agent",
             new[] {"UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)"});
         _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", new[] {"2021.3.10f1"});
+
     }
 
     public async Task AuthLogin()
@@ -372,8 +373,11 @@ public class MementoMoriFuncs
             // 当前节点状态
             var currentGrid = grids.First(d =>
                 d.Grid.DungeonGridGuid == battleInfoResponse.UserDungeonDtoInfo.CurrentGridGuid);
-            Console.WriteLine(
-                $"{battleInfoResponse.UserDungeonDtoInfo.CurrentGridState},{currentGrid.Grid.X},{currentGrid.Grid.Y} {currentGrid.GridMb.Memo} {currentGrid.GridMb.DungeonGridType} {currentGrid.Power}");
+            var layer = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount;
+            var state = battleInfoResponse.UserDungeonDtoInfo.CurrentGridState;
+            var memo = currentGrid.GridMb.Memo;
+            var type = currentGrid.GridMb.DungeonGridType;
+            Console.WriteLine($"当前第 {layer}层，坐标 {currentGrid.Grid.X},{currentGrid.Grid.Y}，状态 {state}, {memo} {type} 敌人战斗力 {currentGrid.Power}");
 
             async Task DoBattle()
             {
@@ -410,7 +414,7 @@ public class MementoMoriFuncs
                     });
             }
 
-            switch (battleInfoResponse.UserDungeonDtoInfo.CurrentGridState)
+            switch (state)
             {
                 case DungeonBattleGridState.Done:
 
@@ -493,7 +497,7 @@ public class MementoMoriFuncs
 
                     break;
                 case DungeonBattleGridState.Selected:
-                    switch (currentGrid.GridMb.DungeonGridType)
+                    switch (type)
                     {
                         case DungeonBattleGridType.Start:
                             break;

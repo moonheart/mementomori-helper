@@ -84,7 +84,7 @@
     </MudItem>
     <MudItem xs="6">
         <MudCard>
-            <MudCardHeader>快捷操作</MudCardHeader>
+            <MudCardHeader>快捷操作 <MudButton Disabled="!_isQuickActionExecuting" @onclick="CancelQuickAction">取消操作</MudButton></MudCardHeader>
             <MudCardContent>
                 <MudButton Variant="Variant.Filled" Disabled="_isQuickActionExecuting" @onclick="GetLoginBonus">领取每日登录奖励</MudButton>
                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@GetVipGift">领取每日VIP礼物</MudButton>
@@ -162,6 +162,8 @@
     private long _equipmentTrainingTargetValue;
     private List<CharacterEquipment> _characterEquipments = new List<CharacterEquipment>();
 
+    private CancellationTokenSource _cancellationTokenSource;
+
     protected override async Task OnInitializedAsync()
     {
         moriFuncs.RuntimeInfoSubject.Subscribe(c =>
@@ -207,17 +209,24 @@
         await moriFuncs.UserGetUserData();
     }
 
-    private async Task ExecuteQuickAction(Func<Task> func)
+    private async Task ExecuteQuickAction(Func<CancellationToken,Task> func)
     {
         _isQuickActionExecuting = true;
-        await func();
+        _cancellationTokenSource = new CancellationTokenSource();
+        await func(_cancellationTokenSource.Token);
         _isQuickActionExecuting = false;
         StateHasChanged();
     }
 
+    private void CancelQuickAction()
+    {
+        if (_cancellationTokenSource == null) return;
+        _cancellationTokenSource.Cancel();
+    }
+
     private async Task GetLoginBonus()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var bonus = await moriFuncs.LoginBonusReceiveDailyLoginBonus(DateTime.Now.Day);
             var msg = new StringBuilder("领取的奖励：\n");
@@ -230,7 +239,7 @@
 
     private async Task GetVipGift()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var bonus = await moriFuncs.VipGetDailyGift();
             var msg = new StringBuilder("领取的奖励：\n");
@@ -243,7 +252,7 @@
 
     private async Task GetAutoBattleReward()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var bonus = await moriFuncs.BattleRewardAutoBattle();
             var msg = new StringBuilder("领取的奖励：\n");
@@ -260,7 +269,7 @@
 
     private async Task BulkTransferFriendPoint()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var resp = await moriFuncs.FriendBulkTransferFriendPoint();
             _quickActionResult = "成功";
@@ -269,7 +278,7 @@
 
     private async Task PresentReceiveItem()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var resp = await moriFuncs.PresentReceiveItem();
             var msg = new StringBuilder("领取的奖励：\n");
@@ -282,7 +291,7 @@
 
     private async Task BattleBossQuick()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var msg = new StringBuilder("领取的奖励：\n");
             var bossQuickResponse = await moriFuncs.GetResponse<BossQuickRequest, BossQuickResponse>(
@@ -303,7 +312,7 @@
 
     private async Task InfiniteTowerQuick()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var tower = _userSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
             var msg = new StringBuilder("领取的奖励：\n");
@@ -326,7 +335,7 @@
 
     private async Task PvpAuto()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var msg = new StringBuilder("领取的奖励：\n");
             for (int i = 0; i < 5; i++)
@@ -352,7 +361,7 @@
 
     private async Task BountyQuestRewardAuto()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var msg = new StringBuilder("领取的奖励：\n");
             var getListResponse = await moriFuncs.GetResponse<GetListRequest, GetListResponse>(
@@ -374,7 +383,7 @@
 
     private async Task BountyQuestStartAuto()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             _quickActionResult = "还未实现";
     // var msg = new StringBuilder();
@@ -396,7 +405,7 @@
 
     private async Task AutoEquipmentInheritance()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             await moriFuncs.AutoEquipmentInheritance();
     // var msg = new StringBuilder("角色列表：\n");
@@ -413,7 +422,7 @@
 
     private async Task BossHishSpeedBattle()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var msg = new StringBuilder("领取的奖励：\n");
 
@@ -436,7 +445,7 @@
 
     private async Task AutoDungeonBattle()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var msg = new StringBuilder("领取的奖励：\n");
 
@@ -448,7 +457,7 @@
 
     private async Task Debug()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var msg = new StringBuilder("领取的奖励：\n");
 
@@ -460,36 +469,47 @@
 
     private async Task AutoBossRequest()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             StringBuilder msg = new StringBuilder();
             int totalCount = 0;
             int winCount = 0;
-            while (true)
-    // for (int i = 0; i < 3; i++)
+            int errCount = 0;
+            while (!token.IsCancellationRequested)
             {
-                await moriFuncs.UserGetUserData();
-                var bossResponse = await moriFuncs.GetResponse<BossRequest, BossResponse>(new BossRequest() {QuestId = _userSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1});
-                var win = bossResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
-                totalCount++;
-                if (win)
+                try
                 {
-                    var nextQuestResponse = await moriFuncs.GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
-                    winCount++;
+                    await moriFuncs.UserGetUserData();
+                    var bossResponse = await moriFuncs.GetResponse<BossRequest, BossResponse>(new BossRequest() {QuestId = _userSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1});
+                    var win = bossResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
+                    totalCount++;
+                    if (win)
+                    {
+                        var nextQuestResponse = await moriFuncs.GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
+                        winCount++;
+                    }
+                    var m = $"挑战 boss 一次：{win} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}";
+                    Console.WriteLine(m);
+                    _quickActionResult = msg.AppendLine(m).ToString();
+                    StateHasChanged();
+                    var t = 1;
+                    await Task.Delay(t);
                 }
-                var m = $"挑战 boss 一次：{win} 总次数：{totalCount} 胜利次数：{winCount}";
-                Console.WriteLine(m);
-                _quickActionResult = msg.AppendLine(m).ToString();
-                StateHasChanged();
-    // var t = Random.Shared.Next(1000, 3000);
-                var t = 1;
-                await Task.Delay(t);
+                catch (Exception e)
+                {
+                    errCount++;
+                    if (errCount > 10)
+                    {
+                        return;
+                    }
+                    await moriFuncs.AuthLogin();
+                }
             }
         });
     }
     private async Task AutoInfiniteTowerRequest()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             StringBuilder msg = new StringBuilder();
             int totalCount = 0;
@@ -522,7 +542,7 @@
 
     private async Task AutoEquipmentTraning()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             StringBuilder msg = new StringBuilder();
             int totalCount = 0;
@@ -558,7 +578,7 @@
 
     private async Task GetDungeonBattleRelic()
     {
-        await ExecuteQuickAction(async () =>
+        await ExecuteQuickAction(async (token) =>
         {
             var list = Masters.DungeonBattleRelicTable.GetArray().Select(d =>
             {
