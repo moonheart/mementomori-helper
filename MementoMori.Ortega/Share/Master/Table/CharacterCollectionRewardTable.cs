@@ -11,7 +11,7 @@ namespace MementoMori.Ortega.Share.Master.Table
 			throw new NullReferenceException();
 		}
 
-		public CharacterCollectionRewardTable()
+		public Dictionary<int, List<CharacterCollectionRewardMB>> GetDictionaryGroupByCharacterCount()
 		{
 			// Dictionary<int, List<CharacterCollectionRewardMB>> dictionary = new ();
 			// int num = 0;

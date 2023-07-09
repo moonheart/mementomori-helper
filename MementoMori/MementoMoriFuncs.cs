@@ -142,11 +142,14 @@ public class MementoMoriFuncs
 
     private async Task<string> CalcFileMd5(string path)
     {
-        FileStream file = new FileStream(path, FileMode.Open);
+        byte[] retVal;
+        using (FileStream file = new FileStream(path, FileMode.Open))
+        {
+            MD5 md5 = MD5.Create();
+            retVal = await md5.ComputeHashAsync(file);
+            file.Close();
+        }
 
-        MD5 md5 = MD5.Create();
-        byte[] retVal = await md5.ComputeHashAsync(file);
-        file.Close();
         StringBuilder sb = new StringBuilder();
         foreach (byte t in retVal)
         {

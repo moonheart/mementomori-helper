@@ -22,8 +22,11 @@ namespace MementoMori.Ortega.Share.Master.Table
 		public bool Load()
 		{
 			var filePath = GetMasterDataPath(typeof(TM).Name);
-			var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-			_datas = MessagePackSerializer.Deserialize<TM[]>(fileStream);
+			using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+			{
+				_datas = MessagePackSerializer.Deserialize<TM[]>(fileStream);
+			}
+
 			return true;
 			// string name;
 			// string text;

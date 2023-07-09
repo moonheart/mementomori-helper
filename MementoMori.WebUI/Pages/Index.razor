@@ -508,28 +508,40 @@
             StringBuilder msg = new StringBuilder();
             int totalCount = 0;
             int winCount = 0;
-            while (true)
-    // for (int i = 0; i < 3; i++)
+            int errCount = 0;
+            while (!token.IsCancellationRequested)
             {
-                await moriFuncs.UserGetUserData();
-                var tower = _userSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
-                var bossQuickResponse = await moriFuncs.GetResponse<StartRequest, StartResponse>(
-                    new StartRequest()
-                    {
-                        TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId + 1
-                    });
-                var win = bossQuickResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
-                totalCount++;
-                if (win)
+                try
                 {
-                    winCount++;
+                    await moriFuncs.UserGetUserData();
+                    var tower = _userSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
+                    var bossQuickResponse = await moriFuncs.GetResponse<StartRequest, StartResponse>(
+                        new StartRequest()
+                        {
+                            TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId + 1
+                        });
+                    var win = bossQuickResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
+                    totalCount++;
+                    if (win)
+                    {
+                        winCount++;
+                    }
+                    var m = $"挑战无穷之塔一次：{win} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}";
+                    Console.WriteLine(m);
+                    _quickActionResult = msg.AppendLine(m).ToString();
+                    StateHasChanged();
+                    var t = 1;
+                    await Task.Delay(t);
                 }
-                var m = $"挑战无穷之塔一次：{win} 总次数：{totalCount} 胜利次数：{winCount}";
-                Console.WriteLine(m);
-                _quickActionResult = msg.AppendLine(m).ToString();
-                StateHasChanged();
-                var t = 1;
-                await Task.Delay(t);
+                catch (Exception e)
+                {
+                    errCount++;
+                    if (errCount > 10)
+                    {
+                        return;
+                    }
+                    await moriFuncs.AuthLogin();
+                }
             }
         });
     }
