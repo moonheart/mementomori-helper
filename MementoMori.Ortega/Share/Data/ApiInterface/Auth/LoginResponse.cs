@@ -12,6 +12,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Auth
 
         public bool IsReservedAccountDeletion { get; set; }
 
+        public List<RemoteNotificationType> IgnoreTypes { get; set; }
+
         public List<PlayerDataInfo> PlayerDataInfoList { get; set; }
 
         public long RecommendWorldId { get; set; }

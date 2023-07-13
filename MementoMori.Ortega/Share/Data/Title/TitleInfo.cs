@@ -12,11 +12,21 @@ namespace MementoMori.Ortega.Share.Data.Title
 
         public int MovieNumber { get; set; }
 
+        public int LogoNumber { get; set; }
+
         public float X { get; set; }
 
         public float Y { get; set; }
 
         public float Scale { get; set; }
+
+        public float AnchorMinX { get; set; }
+
+        public float AnchorMinY { get; set; }
+
+        public float AnchorMaxX { get; set; }
+
+        public float AnchorMaxY { get; set; }
 
         public int GetBgmNumber(LanguageType languageType)
         {
@@ -26,10 +36,6 @@ namespace MementoMori.Ortega.Share.Data.Title
             }
 
             return this.BgmNumberUS;
-        }
-
-        public TitleInfo()
-        {
         }
     }
 }

@@ -33,7 +33,6 @@
             </MudCardHeader>
             <MudCardContent>
                 <MudSimpleTable>
-                    <table class="table">
                         <tbody>
                         <tr>
                             <td>用户名</td><td>@_userSyncData?.UserStatusDtoInfo?.Name</td>
@@ -72,7 +71,6 @@
                             <td>用户名已更改</td><td>@_userSyncData?.UserStatusDtoInfo?.IsAlreadyChangedName</td>
                         </tr>
                         </tbody>
-                    </table>
                 </MudSimpleTable>
             </MudCardContent>
         </MudCard>
@@ -496,7 +494,19 @@
                     {
                         return;
                     }
-                    await moriFuncs.AuthLogin();
+                    while (true)
+                    {
+                        try
+                        {
+                            await moriFuncs.AuthLogin();
+                            break;
+                        }
+                        catch (Exception)
+                        {
+                            await Task.Delay(1000);
+                        }
+                    }
+                   
                 }
             }
         });
@@ -540,7 +550,18 @@
                     {
                         return;
                     }
-                    await moriFuncs.AuthLogin();
+                    while (true)
+                    {
+                        try
+                        {
+                            await moriFuncs.AuthLogin();
+                            break;
+                        }
+                        catch (Exception)
+                        {
+                            await Task.Delay(1000);
+                        }
+                    }
                 }
             }
         });
@@ -553,7 +574,7 @@
             StringBuilder msg = new StringBuilder();
             int totalCount = 0;
             int winCount = 0;
-            while (true)
+            while (!token.IsCancellationRequested)
     // for (int i = 0; i < 3; i++)
             {
                 var equipment = _userSyncData.UserEquipmentDtoInfos.First(d => d.Guid == _equipmentId);

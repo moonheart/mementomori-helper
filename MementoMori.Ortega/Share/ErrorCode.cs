@@ -31,6 +31,8 @@ namespace MementoMori.Ortega.Share
 		CommonApiInvalidRequest = 301,
 		[Description("マスターデータが見つかりません。")]
 		CommonNotFoundMasterData = 401,
+		[Description("アプリアセットバージョンマスターデータが見つかりません。")]
+		CommonNotFoundAppAssetVersionMasterData,
 		[Description("新規ユーザー生成禁止")]
 		CommonUnableToCreateUser = 998,
 		[Description("新規プレイヤー生成禁止")]
@@ -117,6 +119,8 @@ namespace MementoMori.Ortega.Share
 		ItemEditorNotEnoughCurrency,
 		[Description("有償ダイヤが足りません。")]
 		ItemEditorNotEnoughPaidCurrency,
+		[Description("消費できないアイテムです。")]
+		ItemEditorNotConsumableItem,
 		[Description("ユーザのボックスデータが存在しません。")]
 		ItemEditorUserBoxSizeDtoNotFound = 82000,
 		[Description("ユーザーのステータスデータが存在しません。")]
@@ -313,6 +317,10 @@ namespace MementoMori.Ortega.Share
 		DungeonBattleNotLostBattleYet,
 		[Description("時空の洞窟のマップ情報を更新しています。")]
 		DungeonBattleUpdatingMap,
+		[Description("選択できないマスです。")]
+		DungeonBattleCanNotSelectGrid,
+		[Description("バトル報酬が存在しません。")]
+		DungeonBattleNotFoundBattleReward,
 		[Description("ユーザーのバトルリーグデータがありません")]
 		BattlePvpUserBattlePvpDtoNotFound = 131000,
 		[Description("ユーザーのステータスデータがありません")]
@@ -609,6 +617,8 @@ namespace MementoMori.Ortega.Share
 		EquipmentUserTutorialDtoNotFound,
 		[Description("ユーザーの放置バトルデータが存在しません。")]
 		EquipmentUserBattleAutoDtoNotFound,
+		[Description("ユーザーの固定キャラクターデータが存在しません。")]
+		EquipmentUserLockCharacterDtoNotFound,
 		[Description("同じ種類の宝石は装備できません。")]
 		EquipmentCanNotEquipSameKindSpheres = 232000,
 		[Description("その部位には装備できません。")]
@@ -687,6 +697,16 @@ namespace MementoMori.Ortega.Share
 		EquipmentNotEnoughMaxQuestIdStrength,
 		[Description("武具研磨機能の解放条件を満たしていません。")]
 		EquipmentNotEnoughMaxQuestIdRefine,
+		[Description("無効なデッキ保存種別です。")]
+		EquipmentInvalidLockEquipmentDeckType,
+		[Description("装備固定のクールダウン中です。")]
+		EquipmentLockEquipmentCooldownNow,
+		[Description("装備固定機能が解放されていません。")]
+		EquipmentLockEquipmentNotOpen,
+		[Description("装備固定された武具データが存在しません。")]
+		EquipmentLockEquipmentDtoNotFound,
+		[Description("装備固定されたキャラクターが存在しません。")]
+		EquipmentNotFoundLockCharacter,
 		[Description("ユーザのフレンドデータが存在しません。")]
 		FriendUserFriendDtoNotFound = 241000,
 		[Description("ユーザのステータスデータが存在しません。")]
