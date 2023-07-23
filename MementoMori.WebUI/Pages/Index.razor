@@ -18,7 +18,7 @@
 <PageTitle>主页</PageTitle>
 
 <MudGrid>
-    <MudItem xs="6">
+    <MudItem md="6" lg="4">
         <MudCard>
             <MudCardHeader>
                 <MudText>角色信息</MudText>
@@ -33,92 +33,137 @@
             </MudCardHeader>
             <MudCardContent>
                 <MudSimpleTable>
-                        <tbody>
-                        <tr>
-                            <td>用户名</td><td>@_userSyncData?.UserStatusDtoInfo?.Name</td>
-                        </tr>
-                        <tr>
-                            <td>玩家ID</td><td>@_userSyncData?.UserStatusDtoInfo?.PlayerId</td>
-                        </tr>
-                        <tr>
-                            <td>友情点</td><td>@_friendPoint</td>
-                        </tr>
-                        <tr>
-                            <td>加入时间</td><td>@_userSyncData?.UserStatusDtoInfo?.CreateAt.ToDateTimeOffset()</td>
-                        </tr>
-                        <tr>
-                            <td>等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Rank</td>
-                        </tr>
-                        <tr>
-                            <td>VIP 等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Vip</td>
-                        </tr>
-                        <tr>
-                            <td>留言</td><td>@_userSyncData?.UserStatusDtoInfo?.Comment</td>
-                        </tr>
-                        <tr>
-                            <td>经验值</td><td>@_userSyncData?.UserStatusDtoInfo?.Exp</td>
-                        </tr>
-                        <tr>
-                            <td>上次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLoginTime.ToDateTimeOffset()</td>
-                        </tr>
-                        <tr>
-                            <td>前次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.PreviousLoginTime.ToDateTimeOffset()</td>
-                        </tr>
-                        <tr>
-                            <td>上次升级</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLvUpTime.ToDateTimeOffset()</td>
-                        </tr>
-                        <tr>
-                            <td>用户名已更改</td><td>@_userSyncData?.UserStatusDtoInfo?.IsAlreadyChangedName</td>
-                        </tr>
-                        </tbody>
+                    <tbody>
+                    <tr>
+                        <td>用户名</td><td>@_userSyncData?.UserStatusDtoInfo?.Name</td>
+                    </tr>
+                    <tr>
+                        <td>玩家ID</td><td>@_userSyncData?.UserStatusDtoInfo?.PlayerId</td>
+                    </tr>
+                    <tr>
+                        <td>友情点</td><td>@_friendPoint</td>
+                    </tr>
+                    <tr>
+                        <td>加入时间</td><td>@_userSyncData?.UserStatusDtoInfo?.CreateAt.ToDateTimeOffset()</td>
+                    </tr>
+                    <tr>
+                        <td>等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Rank</td>
+                    </tr>
+                    <tr>
+                        <td>VIP 等级</td><td>@_userSyncData?.UserStatusDtoInfo?.Vip</td>
+                    </tr>
+                    <tr>
+                        <td>留言</td><td>@_userSyncData?.UserStatusDtoInfo?.Comment</td>
+                    </tr>
+                    <tr>
+                        <td>经验值</td><td>@_userSyncData?.UserStatusDtoInfo?.Exp</td>
+                    </tr>
+                    <tr>
+                        <td>上次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLoginTime.ToDateTimeOffset()</td>
+                    </tr>
+                    <tr>
+                        <td>前次登录</td><td>@_userSyncData?.UserStatusDtoInfo?.PreviousLoginTime.ToDateTimeOffset()</td>
+                    </tr>
+                    <tr>
+                        <td>上次升级</td><td>@_userSyncData?.UserStatusDtoInfo?.LastLvUpTime.ToDateTimeOffset()</td>
+                    </tr>
+                    <tr>
+                        <td>用户名已更改</td><td>@_userSyncData?.UserStatusDtoInfo?.IsAlreadyChangedName</td>
+                    </tr>
+                    </tbody>
                 </MudSimpleTable>
             </MudCardContent>
         </MudCard>
     </MudItem>
-    <MudItem xs="6">
+    <MudItem md="6" lg="8">
         <MudCard>
             <MudCardHeader>快捷操作 <MudButton Disabled="!_isQuickActionExecuting" @onclick="CancelQuickAction">取消操作</MudButton></MudCardHeader>
             <MudCardContent>
-                <MudButton Variant="Variant.Filled" Disabled="_isQuickActionExecuting" @onclick="GetLoginBonus">领取每日登录奖励</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@GetVipGift">领取每日VIP礼物</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@GetAutoBattleReward">领取自动战斗奖励</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BulkTransferFriendPoint">一键赠送/接受友情点</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@PresentReceiveItem">一键领取礼物箱</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BattleBossQuick">主线boss扫荡3次</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@InfiniteTowerQuick">无穷之塔扫荡3次</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@PvpAuto">PVP自动战斗5次</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BossHishSpeedBattle">冒险一次高速战斗</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BountyQuestRewardAuto">祈愿之泉一键领取</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BountyQuestStartAuto">祈愿之泉一键开始</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentInheritance">自动精炼SABC、继承魔装到D装</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoDungeonBattle">时空洞窟自动战斗</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@GetDungeonBattleRelic">输出时空洞窟加护</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoBossRequest">自动刷Boss</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoInfiniteTowerRequest">自动刷无穷之塔</MudButton>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentTraning">装备打磨</MudButton>
-                <MudSelect T="string" Label="装备ID" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="_equipmentId">
-                     @foreach (var e in _characterEquipments)
-                    {
-                        <MudSelectItem T="string" Value="e.EquipmentGuid">@($"{e.EquipmentName}/{e.UserEquipmentDtoInfo.ReinforcementLv} {e.CharacterName}")</MudSelectItem>
-                    }
-                </MudSelect>
-                <MudTextField @bind-Value="_equipmentId" Label="装备Id" Variant="Variant.Text"></MudTextField>
-                <MudSelect T="string" @bind-Value="_equipmentTrainingTargetType" Label="类型" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
-                    <MudSelectItem T="string" Value="@("Health")">耐力</MudSelectItem>
-                    <MudSelectItem T="string" Value="@("Intelligence")">魔力</MudSelectItem>
-                    <MudSelectItem T="string" Value="@("Muscle")">力量</MudSelectItem>
-                    <MudSelectItem T="string" Value="@("Energy")">战技</MudSelectItem>
-                </MudSelect>
-                <MudTextField T="long" @bind-Value="_equipmentTrainingTargetValue" Label="目标值" Variant="Variant.Text"></MudTextField>
-                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@Debug">Debug</MudButton>
+                <MudTabs Position="Position.Left">
+                    <MudTabPanel Text="一键操作">
+                        <MudCard>
+                            <MudCardContent>
+                                <MudButton Variant="Variant.Filled" Disabled="_isQuickActionExecuting" @onclick="GetLoginBonus">领取每日登录奖励</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@GetVipGift">领取每日VIP礼物</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@GetAutoBattleReward">领取自动战斗奖励</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BulkTransferFriendPoint">一键赠送/接受友情点</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@PresentReceiveItem">一键领取礼物箱</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BattleBossQuick">主线boss扫荡3次</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@InfiniteTowerQuick">无穷之塔扫荡3次</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@PvpAuto">PVP自动战斗5次</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BossHishSpeedBattle">冒险一次高速战斗</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BountyQuestRewardAuto">祈愿之泉一键领取</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BountyQuestStartAuto">祈愿之泉一键开始</MudButton>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudTabPanel>
+                    <MudTabPanel Text="装备精炼">
+                        <MudCard>
+                            <MudCardContent>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentInheritance">自动精炼SABC、继承魔装到D装</MudButton>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudTabPanel>
+                    <MudTabPanel Text="冒险战斗">
+                        <MudCard>
+                            <MudCardContent>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoBossRequest">自动刷Boss</MudButton>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudTabPanel>
+                    <MudTabPanel Text="时空洞窟">
+                        <MudCard>
+                            <MudCardContent>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoDungeonBattle">时空洞窟自动战斗</MudButton>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudTabPanel>
+                    <MudTabPanel Text="无穷之塔">
+                        <MudCard>
+                            <MudCardContent>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoInfiniteTowerRequest">自动刷无穷之塔</MudButton>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudTabPanel>
+                    <MudTabPanel Text="装备打磨">
+                        <MudCard>
+                            <MudCardContent>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@AutoEquipmentTraning">装备打磨</MudButton>
+                                <MudSelect T="string" Label="装备ID" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="_equipmentId">
+                                    @foreach (var e in _characterEquipments)
+                                    {
+                                        <MudSelectItem T="string" Value="e.EquipmentGuid">@($"{e.EquipmentName}/{e.UserEquipmentDtoInfo.ReinforcementLv} {e.CharacterName}")</MudSelectItem>
+                                    }
+                                </MudSelect>
+                                <MudTextField @bind-Value="_equipmentId" Label="装备Id" Variant="Variant.Text"></MudTextField>
+                                <MudSelect T="string" @bind-Value="_equipmentTrainingTargetType" Label="类型" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                                    <MudSelectItem T="string" Value="@("Health")">耐力</MudSelectItem>
+                                    <MudSelectItem T="string" Value="@("Intelligence")">魔力</MudSelectItem>
+                                    <MudSelectItem T="string" Value="@("Muscle")">力量</MudSelectItem>
+                                    <MudSelectItem T="string" Value="@("Energy")">战技</MudSelectItem>
+                                </MudSelect>
+                                <MudTextField T="long" @bind-Value="_equipmentTrainingTargetValue" Label="目标值" Variant="Variant.Text"></MudTextField>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudTabPanel>
+                    <MudTabPanel Text="调试">
+                        <MudCard>
+                            <MudCardContent>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@Debug">Debug</MudButton>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudTabPanel>
+                </MudTabs>
             </MudCardContent>
         </MudCard>
         <MudCard>
             <MudCardHeader>执行结果</MudCardHeader>
-            <MudCardContent Style="max-height: 400px; overflow: scroll">
-                <pre>
-                                @_quickActionResult
-                </pre>
+            <MudCardContent>
+                <MudTable T="string" Items="_messsageList" Virtualize="true" Dense="true" Height="400px" Style="display: flex; flex-direction: column-reverse;">
+                    <RowTemplate>
+                        <MudTd>@context</MudTd>
+                    </RowTemplate>
+                </MudTable>
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -148,12 +193,13 @@
 
     private bool _logining;
     private bool _isQuickActionExecuting;
-    private string _quickActionResult;
     private long _friendPoint;
     private string _equipmentId;
     private string _equipmentTrainingTargetType;
     private long _equipmentTrainingTargetValue;
-    private List<CharacterEquipment> _characterEquipments = new List<CharacterEquipment>();
+    private List<CharacterEquipment> _characterEquipments = new();
+
+    private List<string> _messsageList = new();
 
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -202,11 +248,21 @@
         await moriFuncs.UserGetUserData();
     }
 
-    private async Task ExecuteQuickAction(Func<CancellationToken,Task> func)
+    private void AddLog(string message)
+    {
+        _messsageList.Add(message);
+        if (_messsageList.Count > 10000)
+        {
+            _messsageList.RemoveAt(0);
+        }
+    }
+    
+    private async Task ExecuteQuickAction(Func<Action<string>,CancellationToken, Task> func)
     {
         _isQuickActionExecuting = true;
         _cancellationTokenSource = new CancellationTokenSource();
-        await func(_cancellationTokenSource.Token);
+        _messsageList.Clear();
+        await func(AddLog, _cancellationTokenSource.Token);
         _isQuickActionExecuting = false;
         StateHasChanged();
     }
@@ -219,74 +275,63 @@
 
     private async Task GetLoginBonus()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
             var bonus = await moriFuncs.LoginBonusReceiveDailyLoginBonus(DateTime.Now.Day);
-            var msg = new StringBuilder("领取的奖励：\n");
-
-            bonus.RewardItemList.PrintUserItems(msg);
-
-            _quickActionResult = msg.ToString();
+            log("领取的奖励：\n");
+            bonus.RewardItemList.PrintUserItems(log);
         });
     }
 
     private async Task GetVipGift()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
             var bonus = await moriFuncs.VipGetDailyGift();
-            var msg = new StringBuilder("领取的奖励：\n");
-
-            bonus.ItemList.PrintUserItems(msg);
-
-            _quickActionResult = msg.ToString();
+            log("领取的奖励：");
+            bonus.ItemList.PrintUserItems(log);
         });
     }
 
     private async Task GetAutoBattleReward()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
             var bonus = await moriFuncs.BattleRewardAutoBattle();
-            var msg = new StringBuilder("领取的奖励：\n");
+            log("领取的奖励：");
 
-            msg.AppendLine($"战斗次数 {bonus.AutoBattleRewardResult.BattleCountAll}");
-            msg.AppendLine($"胜利次数 {bonus.AutoBattleRewardResult.BattleCountWin}");
-            msg.AppendLine($"总时间 {TimeSpan.FromMilliseconds(bonus.AutoBattleRewardResult.BattleTotalTime)}");
-            msg.AppendLine($"领民金币 {bonus.AutoBattleRewardResult.GoldByPopulation}");
-            msg.AppendLine($"领民潜能珠宝 {bonus.AutoBattleRewardResult.PotentialJewelByPopulation}");
-
-            _quickActionResult = msg.ToString();
+            log($"战斗次数 {bonus.AutoBattleRewardResult.BattleCountAll}");
+            log($"胜利次数 {bonus.AutoBattleRewardResult.BattleCountWin}");
+            log($"总时间 {TimeSpan.FromMilliseconds(bonus.AutoBattleRewardResult.BattleTotalTime)}");
+            log($"领民金币 {bonus.AutoBattleRewardResult.GoldByPopulation}");
+            log($"领民潜能珠宝 {bonus.AutoBattleRewardResult.PotentialJewelByPopulation}");
         });
     }
 
     private async Task BulkTransferFriendPoint()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
             var resp = await moriFuncs.FriendBulkTransferFriendPoint();
-            _quickActionResult = "成功";
+            log("成功");
         });
     }
 
     private async Task PresentReceiveItem()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
             var resp = await moriFuncs.PresentReceiveItem();
-            var msg = new StringBuilder("领取的奖励：\n");
-
-            resp.ResultItems.Select(d => d.Item).PrintUserItems(msg);
-
-            _quickActionResult = msg.ToString();
+            log("领取的奖励：");
+            resp.ResultItems.Select(d => d.Item).PrintUserItems(log);
         });
     }
 
     private async Task BattleBossQuick()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
-            var msg = new StringBuilder("领取的奖励：\n");
+            log("领取的奖励：\n");
             var bossQuickResponse = await moriFuncs.GetResponse<BossQuickRequest, BossQuickResponse>(
                 new BossQuickRequest()
                 {
@@ -296,19 +341,17 @@
             if (bossQuickResponse.BattleRewardResult == null) return;
 
 
-            bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(msg);
-            bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(msg);
-
-            _quickActionResult = msg.ToString();
+            bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+            bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
         });
     }
 
     private async Task InfiniteTowerQuick()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
             var tower = _userSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
-            var msg = new StringBuilder("领取的奖励：\n");
+            log("领取的奖励：\n");
 
             var bossQuickResponse = await moriFuncs.GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
                 new TowerBattleQuickRequest()
@@ -317,19 +360,17 @@
                 });
             if (bossQuickResponse.BattleRewardResult != null)
             {
-                bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(msg);
-                bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(msg);
-            };
-
-            _quickActionResult = msg.ToString();
+                bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+            }
         });
     }
 
     private async Task PvpAuto()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
-            var msg = new StringBuilder("领取的奖励：\n");
+            log("领取的奖励：\n");
             for (int i = 0; i < 5; i++)
             {
                 var pvpInfoResponse = await moriFuncs.GetResponse<GetPvpInfoRequest, GetPvpInfoResponse>(
@@ -343,19 +384,17 @@
                     RivalPlayerId = pvpRankingPlayerInfo.PlayerInfo.PlayerId
                 });
 
-                pvpStartResponse.BattleRewardResult.FixedItemList.PrintUserItems(msg);
-                pvpStartResponse.BattleRewardResult.DropItemList.PrintUserItems(msg);
+                pvpStartResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                pvpStartResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
             }
-
-            _quickActionResult = msg.ToString();
         });
     }
 
     private async Task BountyQuestRewardAuto()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
-            var msg = new StringBuilder("领取的奖励：\n");
+            log("领取的奖励：\n");
             var getListResponse = await moriFuncs.GetResponse<GetListRequest, GetListResponse>(
                 new GetListRequest());
 
@@ -366,38 +405,22 @@
             if (questIds.Count > 0)
             {
                 var rewardResponse = await moriFuncs.GetResponse<RewardRequest, RewardResponse>(new RewardRequest() {BountyQuestIds = questIds, IsQuick = false});
-                rewardResponse.RewardItems.PrintUserItems(msg);
+                rewardResponse.RewardItems.PrintUserItems(log);
             }
-
-            _quickActionResult = msg.ToString();
         });
     }
 
     private async Task BountyQuestStartAuto()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
-            _quickActionResult = "还未实现";
-    // var msg = new StringBuilder();
-    // var getListResponse = await moriFuncs.GetResponse<GetListRequest, GetListResponse>(
-    //     new GetListRequest());
-
-
-    // foreach (var bountyQuestInfo in getListResponse.BountyQuestInfos)
-    // {
-    //     foreach (var userCharacterDtoInfo in _userSyncData.UserCharacterDtoInfos)
-    //     {
-    //     }
-    // }
-
-
-    // _quickActionResult = msg.ToString();
+            log("还未实现");
         });
     }
 
     private async Task AutoEquipmentInheritance()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
             await moriFuncs.AutoEquipmentInheritance();
     // var msg = new StringBuilder("角色列表：\n");
@@ -408,62 +431,53 @@
     //     var name = Masters.TextResourceTable.Get(characterMb.NameKey);
     //     msg.AppendLine($"名称：{name} 等级： {userCharacterDtoInfo.Level} 稀有度：{characterMb.RarityFlags}");
     // }
-            _quickActionResult = "完成";
+            log("完成");
         });
     }
 
     private async Task BossHishSpeedBattle()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
-            var msg = new StringBuilder("领取的奖励：\n");
+            log("领取的奖励：\n");
 
             var req = new QuickRequest() {QuestQuickExecuteType = QuestQuickExecuteType.Currency, QuickCount = 1};
             var quickResponse = await moriFuncs.GetResponse<QuickRequest, QuickResponse>(req);
 
-            msg.AppendLine($"金币 {quickResponse.AutoBattleRewardResult.GoldByPopulation}");
-            msg.AppendLine($"潜能宝珠 {quickResponse.AutoBattleRewardResult.PotentialJewelByPopulation}");
-            msg.AppendLine($"角色经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.CharacterExp}");
-            msg.AppendLine($"额外金币 {quickResponse.AutoBattleRewardResult.BattleRewardResult.ExtraGold}");
-            msg.AppendLine($"用户经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.PlayerExp}");
-            msg.AppendLine($"升级 {quickResponse.AutoBattleRewardResult.BattleRewardResult.RankUp}");
+            log($"金币 {quickResponse.AutoBattleRewardResult.GoldByPopulation}");
+            log($"潜能宝珠 {quickResponse.AutoBattleRewardResult.PotentialJewelByPopulation}");
+            log($"角色经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.CharacterExp}");
+            log($"额外金币 {quickResponse.AutoBattleRewardResult.BattleRewardResult.ExtraGold}");
+            log($"用户经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.PlayerExp}");
+            log($"升级 {quickResponse.AutoBattleRewardResult.BattleRewardResult.RankUp}");
 
-            quickResponse.AutoBattleRewardResult.BattleRewardResult.FixedItemList.PrintUserItems(msg);
-            quickResponse.AutoBattleRewardResult.BattleRewardResult.DropItemList.PrintUserItems(msg);
-
-            _quickActionResult = msg.ToString();
+            quickResponse.AutoBattleRewardResult.BattleRewardResult.FixedItemList.PrintUserItems(log);
+            quickResponse.AutoBattleRewardResult.BattleRewardResult.DropItemList.PrintUserItems(log);
         });
     }
 
     private async Task AutoDungeonBattle()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
-            var msg = new StringBuilder("领取的奖励：\n");
-
             await moriFuncs.AutoDungeonBattle();
-
-            _quickActionResult = msg.ToString();
+            log("完成");
         });
     }
 
     private async Task Debug()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
-            var msg = new StringBuilder("领取的奖励：\n");
-
             var giveAllSrCharacterResponse = await moriFuncs.GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
-
-            _quickActionResult = giveAllSrCharacterResponse.ToJson(true);
+            log(giveAllSrCharacterResponse.ToJson(true));
         });
     }
 
     private async Task AutoBossRequest()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
-            StringBuilder msg = new StringBuilder();
             int totalCount = 0;
             int winCount = 0;
             int errCount = 0;
@@ -482,7 +496,7 @@
                     }
                     var m = $"挑战 boss 一次：{win} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}";
                     Console.WriteLine(m);
-                    _quickActionResult = msg.AppendLine(m).ToString();
+                    log(m);
                     StateHasChanged();
                     var t = 1;
                     await Task.Delay(t);
@@ -506,16 +520,15 @@
                             await Task.Delay(1000);
                         }
                     }
-                   
                 }
             }
         });
     }
+
     private async Task AutoInfiniteTowerRequest()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
-            StringBuilder msg = new StringBuilder();
             int totalCount = 0;
             int winCount = 0;
             int errCount = 0;
@@ -538,7 +551,7 @@
                     }
                     var m = $"挑战无穷之塔一次：{win} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}";
                     Console.WriteLine(m);
-                    _quickActionResult = msg.AppendLine(m).ToString();
+                    log(m);
                     StateHasChanged();
                     var t = 1;
                     await Task.Delay(t);
@@ -569,13 +582,11 @@
 
     private async Task AutoEquipmentTraning()
     {
-        await ExecuteQuickAction(async (token) =>
+        await ExecuteQuickAction(async (log, token) =>
         {
-            StringBuilder msg = new StringBuilder();
             int totalCount = 0;
             int winCount = 0;
             while (!token.IsCancellationRequested)
-    // for (int i = 0; i < 3; i++)
             {
                 var equipment = _userSyncData.UserEquipmentDtoInfos.First(d => d.Guid == _equipmentId);
                 switch (_equipmentTrainingTargetType)
@@ -594,57 +605,12 @@
                 await moriFuncs.UserGetUserData();
                 var m = $"打磨装备 耐力 {equipment.AdditionalParameterEnergy} 魔力 {equipment.AdditionalParameterIntelligence} 力量 {equipment.AdditionalParameterMuscle} 战技 {equipment.AdditionalParameterEnergy}";
                 Console.WriteLine(m);
-                _quickActionResult = msg.AppendLine(m).ToString();
+                log(m);
                 StateHasChanged();
                 var t = 1;
                 await Task.Delay(t);
             }
         });
     }
-
-
-    private async Task GetDungeonBattleRelic()
-    {
-        await ExecuteQuickAction(async (token) =>
-        {
-            var list = Masters.DungeonBattleRelicTable.GetArray().Select(d =>
-            {
-                return $"\"{d.Id}\": \"{d.DungeonRelicRarityType}:{Masters.TextResourceTable.Get(d.NameKey)}:{Masters.TextResourceTable.Get(d.DescriptionKey)}\",";
-                return new
-                {
-                    Id = d.Id,
-                    Name = $"{d.DungeonRelicRarityType}:{Masters.TextResourceTable.Get(d.NameKey)}:{Masters.TextResourceTable.Get(d.DescriptionKey)}",
-                }.ToJson();
-            });
-
-    // var strings = string.Join("\n", list.Select(d => $"{d.Id}\t{d.Name}\t{d.RarityType}\t{d.Desc}"));
-
-    // var strings = list.GroupBy(d => d.Name).Select(d =>
-    // {
-    //     if (d.Count() == 1)
-    //     {
-    //         return $"{d.First().Id}\t{d.Key}\t{d.First().RarityType}\t{d.First().Desc}";
-    //     }
-    //
-    //     var percentsList = new List<List<string>>();
-    //     foreach (var x1 in d)
-    //     {
-    //         percentsList.Add(Regex.Matches(x1.Desc, @"[\d\.]+\%").Select(d => d.Value).ToList());
-    //     }
-    //     var index = 0;
-    //     var desc = Regex.Replace(d.First().Desc, @"[\d\.]+\%", m =>
-    //     {
-    //         var join = string.Join("/", percentsList.Select(d => d[index]));
-    //         index++;
-    //         return join;
-    //     });
-    //     return $"{d.First().Id}\t{d.Key}\t{d.First().RarityType}\t{desc}";
-    // });
-
-            _quickActionResult = string.Join("\n", list);
-        });
-    }
-
-
 
 }

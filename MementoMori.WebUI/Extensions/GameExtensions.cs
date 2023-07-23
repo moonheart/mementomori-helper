@@ -7,7 +7,7 @@ namespace MementoMori.WebUI.Extensions;
 
 public static class GameExtensions
 {
-    public static void PrintUserItems(this IEnumerable<IUserItem> userItems, StringBuilder stringBuilder)
+    public static void PrintUserItems(this IEnumerable<IUserItem> userItems, Action<string> log)
     {
         if (userItems == null)
         {
@@ -18,7 +18,7 @@ public static class GameExtensions
         {
             var itemName = ItemUtil.GetItemName(userItem.ItemType, userItem.ItemId);
             var itemRarity = ItemUtil.GetItemRarity(userItem.ItemType, userItem.ItemId);
-            stringBuilder.AppendLine($"名称：{itemName}, 稀有度: {itemRarity}, 数量： {userItem.ItemCount}");
+            log($"名称：{itemName}, 稀有度: {itemRarity}, 数量： {userItem.ItemCount}");
         }
     }
 }

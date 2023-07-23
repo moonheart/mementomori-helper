@@ -1,25 +1,11 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:11294",
-      "sslPort": 44330
-    }
-  },
   "profiles": {
     "MementoMori.WebUI": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5290",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
+      "launchUrl": "http://127.0.0.1:5290",
+      "applicationUrl": "http://0.0.0.0:5290",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

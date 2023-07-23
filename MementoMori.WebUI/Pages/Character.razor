@@ -5,10 +5,24 @@
 @using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Data.DtoInfo
 @using MementoMori.Ortega.Share.Enums
+@using System.Collections.ObjectModel
+@using System.Reactive.Linq
+@using DynamicData
 
 <PageTitle>角色</PageTitle>
 
 <h3>角色</h3>
+
+<MudDataGrid Items="_userCharacters">
+    <Columns>
+        <PropertyColumn Property="x=>x.Name"></PropertyColumn>
+        <PropertyColumn Property="x=>x.ElementType"></PropertyColumn>
+        <PropertyColumn Property="x=>x.Level"></PropertyColumn>
+        <PropertyColumn Property="x=>x.Exp"></PropertyColumn>
+        <PropertyColumn Property="x=>x.RarityFlags"></PropertyColumn>
+        <PropertyColumn Property="x=>x.IsLocked"></PropertyColumn>
+    </Columns>
+</MudDataGrid>
 
 <MudGrid>
     @foreach (var character in (_userSyncData?.UserCharacterDtoInfos ?? new List<UserCharacterDtoInfo>()).OrderByDescending(d => d.RarityFlags))
@@ -83,6 +97,7 @@
     private bool _logining;
     private bool _isQuickActionExecuting;
     private string _quickActionResult;
+    private ObservableCollection<UserCharacter> _userCharacters = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -94,7 +109,56 @@
                 StateHasChanged();
             });
         });
+        moriFuncs.UserSyncData.SelectMany(d => d.UserCharacterDtoInfos)
+            .Subscribe(info =>
+            {
+                var character = _userCharacters.FirstOrDefault(d => d.Guid == info.Guid);
+                if (character == null)
+                {
+                    var characterMb = Masters.CharacterTable.GetById(info.CharacterId);
+                    var name = Masters.TextResourceTable.Get(characterMb.NameKey);
+                    character = new UserCharacter
+                    {
+                        Guid = info.Guid,
+                        Name = name,
+                        ElementType = characterMb.ElementType,
+                        CharacterId = info.CharacterId,
+                        Level = info.Level,
+                        Exp = info.Exp,
+                        RarityFlags = info.RarityFlags,
+                        IsLocked = info.IsLocked
+                    };
+                    _userCharacters.Add(character);
+                }
+                else
+                {
+                    character.Level = info.Level;
+                    character.Exp = info.Exp;
+                    character.RarityFlags = info.RarityFlags;
+                    character.IsLocked = info.IsLocked;
+                }
+            });
+
         moriFuncs.UserSyncData.Subscribe(data => { _userSyncData = data; });
+    }
+
+    public class UserCharacter
+    {
+        public string Guid { get; set; }
+
+        public string Name { get; set; }
+
+        public ElementType ElementType { get; set; }
+
+        public long CharacterId { get; set; }
+
+        public long Level { get; set; }
+
+        public long Exp { get; set; }
+
+        public CharacterRarityFlags RarityFlags { get; set; }
+
+        public bool IsLocked { get; set; }
     }
 
 }
