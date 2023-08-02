@@ -13,6 +13,8 @@ namespace MementoMori.Ortega.Share.Data.Battle.Result
 		public List<SubSkillResult> PassiveSubSkillResults { get; set; }
 
 		public List<SubSkillResult> TempSubSkillResults { get; set; }
+		
+		public List<SubSkillResult> SubSkillResults { get; set; }
 
 		public SubSetType SubSetType
 		{

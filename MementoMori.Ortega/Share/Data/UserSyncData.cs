@@ -13,6 +13,8 @@ namespace MementoMori.Ortega.Share.Data
     {
         public List<long> BlockPlayerIdList { get; set; }
 
+        public bool? CanJoinTodayLegendLeague { get; set; }
+
         public List<long> ClearedTutorialIdList { get; set; }
 
         public long? CreateUserIdTimestamp { get; set; }

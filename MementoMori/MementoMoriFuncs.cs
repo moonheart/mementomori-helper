@@ -320,25 +320,29 @@ public class MementoMoriFuncs
     }
 
 
-    public async Task AutoDungeonBattle()
+    public async Task AutoDungeonBattle(Action<string> log)
     {
         // todo 脱装备进副本，然后穿装备
         var deckDtoInfo = _userSyncDataSubject.Value.UserDeckDtoInfos.First(d=>d.DeckUseContentType == DeckUseContentType.DungeonBattle).GetUserCharacterGuids();
-        var equips = _userSyncDataSubject.Value.UserEquipmentDtoInfos.Where(d=>deckDtoInfo.Contains(d.CharacterGuid)).GroupBy(d=>d.CharacterGuid);
+        var equips = _userSyncDataSubject.Value.UserEquipmentDtoInfos.Where(d=>!string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d=>d.CharacterGuid);
         foreach (var g in equips)
         {
+            log($"脱下装备 {g.Key}");
             // 脱装备
             var removeEquipmentResponse = await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
             {
                 UserCharacterGuid = g.Key, EquipmentSlotTypes = new List<EquipmentSlotType>(){EquipmentSlotType.Armor, EquipmentSlotType.Gauntlet, EquipmentSlotType.Helmet, EquipmentSlotType.Shoes, EquipmentSlotType.Sub, EquipmentSlotType.Weapon}
             });
         }
+
+        log("进入副本");
         // 进副本
         var battleInfoResponse1 =
             await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(
                 new GetDungeonBattleInfoRequest());
         foreach (var g in equips)
         {
+            log($"穿上装备 {g.Key}");
             // 穿装备
             var changeInfos = g.Select(d =>
             {
@@ -380,6 +384,7 @@ public class MementoMoriFuncs
             var state = battleInfoResponse.UserDungeonDtoInfo.CurrentGridState;
             var memo = currentGrid.GridMb.Memo;
             var type = currentGrid.GridMb.DungeonGridType;
+            log($"当前第 {layer}层，坐标 {currentGrid.Grid.X},{currentGrid.Grid.Y}，状态 {state}, {memo} {type} 敌人战斗力 {currentGrid.Power}");
             Console.WriteLine($"当前第 {layer}层，坐标 {currentGrid.Grid.X},{currentGrid.Grid.Y}，状态 {state}, {memo} {type} 敌人战斗力 {currentGrid.Power}");
 
             async Task DoBattle()

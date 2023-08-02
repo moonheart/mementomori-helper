@@ -12,6 +12,26 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("韓国")]
 		Korea,
 		[Description("台湾")]
-		Taiwan
+		Taiwan,
+		[Description("フランス")]
+		France,
+		[Description("中国")]
+		China,
+		[Description("メキシコ")]
+		Mexico,
+		[Description("ブラジル")]
+		Brazil,
+		[Description("タイ")]
+		Thailand,
+		[Description("インドネシア")]
+		Indonesia,
+		[Description("ベトナム")]
+		Vietnam,
+		[Description("ロシア")]
+		Russia,
+		[Description("ドイツ")]
+		Germany,
+		[Description("エジプト")]
+		Egypt
 	}
 }

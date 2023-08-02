@@ -20,6 +20,8 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		[Description("正面")]
 		Front,
 		[Description("正面と隣接の中でランダム")]
-		RandomFrontAndNeighbor
+		RandomFrontAndNeighbor,
+		[Description("正面を確定し、さらに両隣からランダムで選ぶ")]
+		FrontAndRandomNeighbor
 	}
 }

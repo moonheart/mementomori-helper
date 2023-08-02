@@ -8,6 +8,7 @@
 @using MementoMori.Ortega.Share.Data.ApiInterface.Battle
 @using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest
 @using MementoMori.Ortega.Share.Data.ApiInterface.Equipment
+@using MementoMori.Ortega.Share.Data.ApiInterface.Friend
 @using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle
 @using MementoMori.Ortega.Share.Enums
 @using MementoMori.WebUI.Extensions
@@ -94,6 +95,7 @@
                                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BossHishSpeedBattle">冒险一次高速战斗</MudButton>
                                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BountyQuestRewardAuto">祈愿之泉一键领取</MudButton>
                                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BountyQuestStartAuto">祈愿之泉一键开始</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@UseFriendCode">邀请码</MudButton>
                             </MudCardContent>
                         </MudCard>
                     </MudTabPanel>
@@ -150,6 +152,7 @@
                         <MudCard>
                             <MudCardContent>
                                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@Debug">Debug</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@LogDebug">LogTest</MudButton>
                             </MudCardContent>
                         </MudCard>
                     </MudTabPanel>
@@ -159,7 +162,7 @@
         <MudCard>
             <MudCardHeader>执行结果</MudCardHeader>
             <MudCardContent>
-                <MudTable T="string" Items="_messsageList" Virtualize="true" Dense="true" Height="400px" Style="display: flex; flex-direction: column-reverse;">
+                <MudTable T="string" Items="_messsageList" Virtualize="true" Dense="true" Height="400px">
                     <RowTemplate>
                         <MudTd>@context</MudTd>
                     </RowTemplate>
@@ -216,7 +219,7 @@
         moriFuncs.UserSyncData.Subscribe(data =>
         {
             _userSyncData = data;
-            _friendPoint = _userSyncData?.UserItemDtoInfo?.First(d => d.ItemType == ItemType.FriendPoint).ItemCount ?? 0;
+            _friendPoint = _userSyncData?.UserItemDtoInfo?.FirstOrDefault(d => d.ItemType == ItemType.FriendPoint)?.ItemCount ?? 0;
             _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>
             {
                 if (d == null) throw new ArgumentNullException(nameof(d));
@@ -250,11 +253,12 @@
 
     private void AddLog(string message)
     {
-        _messsageList.Add(message);
+        _messsageList.Insert(0, message);
         if (_messsageList.Count > 10000)
         {
-            _messsageList.RemoveAt(0);
+            _messsageList.RemoveAt(_messsageList.Count - 1);
         }
+        StateHasChanged();
     }
     
     private async Task ExecuteQuickAction(Func<Action<string>,CancellationToken, Task> func)
@@ -460,7 +464,7 @@
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            await moriFuncs.AutoDungeonBattle();
+            await moriFuncs.AutoDungeonBattle(log);
             log("完成");
         });
     }
@@ -471,6 +475,25 @@
         {
             var giveAllSrCharacterResponse = await moriFuncs.GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
             log(giveAllSrCharacterResponse.ToJson(true));
+        });
+    }
+    private async Task LogDebug()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var counter = 0;
+            while (!token.IsCancellationRequested)
+            {
+                log($"Message {counter++}");
+                await Task.Delay(TimeSpan.FromMilliseconds(500), token);
+            }
+        });
+    }
+    private async Task UseFriendCode()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var useFriendCodeResponse = await moriFuncs.GetResponse<UseFriendCodeRequest, UseFriendCodeResponse>(new UseFriendCodeRequest(){FriendCode = ""});
         });
     }
 

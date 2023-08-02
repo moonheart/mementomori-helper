@@ -22,6 +22,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("キャンペーン")]
 		Campaign,
 		[Description("その他")]
-		Other
+		Other,
+		[Description("アンケート")]
+		Survey
 	}
 }

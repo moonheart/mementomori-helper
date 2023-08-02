@@ -66,6 +66,8 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		[Description("被ダメージ量判定(自分の情報だけ参照)")]
 		CheckReceiveDamageSelf = 41,
 		[Description("被ダメージ量判定")]
-		CheckReceiveDamage
+		CheckReceiveDamage,
+		[Description("特殊ダメージ死亡(毒、共鳴など)")]
+		SpecialDamageDead = 62
 	}
 }

@@ -35,12 +35,18 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		Resurrection = 50,
 		[Description("ステータス吸収")]
 		StatusDrain = 100,
+		[Description("印の効果")]
+		SkillMark = 200,
 		[Description("バフ効果削除")]
 		RemoveBuffEffect = 500,
 		[Description("デバフ効果削除")]
 		RemoveDebuffEffect,
 		[Description("効果削除(エフェクトなし)")]
 		RemoveOtherEffect,
+		[Description("バフ移動")]
+		BuffTransfer = 600,
+		[Description("デバフ移動")]
+		DeBuffTransfer,
 		[Description("即時発動(バフ用)")]
 		BurstBuffEffect = 1000,
 		[Description("即時発動(デバフ用)")]

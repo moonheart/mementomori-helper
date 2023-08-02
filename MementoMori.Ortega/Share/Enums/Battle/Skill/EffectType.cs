@@ -295,9 +295,9 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		LockOnAttack3Ally,
 		[Description("毒")]
 		Poison = 8001,
-		[Description("流血")]
+		[Description("出血")]
 		Bleeding,
-		[Description("燃焼")]
+		[Description("浸食")]
 		Combustion,
 		[Description("火傷")]
 		Burn,
@@ -313,6 +313,14 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		DamageResonanceFromLowDefenseEnemy,
 		[Description("ダメージ連携25")]
 		DamageResonanceFromRandomEnemy,
+		[Description("ダメージ連携26")]
+		DamageResonanceFromHighBaseMaxHpEnemy,
+		[Description("ダメージ連携27")]
+		DamageResonanceFromLowBaseMaxHpEnemy,
+		[Description("ダメージ連携28")]
+		DamageResonanceFromHighBaseDefenseEnemy,
+		[Description("ダメージ連携29")]
+		DamageResonanceFromLowBaseDefenseEnemy,
 		[Description("ダメージ連携31")]
 		DamageResonanceFromAllEnemy = 8131,
 		[Description("ダメージ連携41")]
