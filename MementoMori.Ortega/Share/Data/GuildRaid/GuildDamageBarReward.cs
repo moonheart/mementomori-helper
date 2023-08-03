@@ -8,21 +8,9 @@ namespace MementoMori.Ortega.Share.Data.GuildRaid
 	[MessagePackObject(true)]
 	public class GuildDamageBarReward
 	{
-		public int DamageBarCount
-		{
-			get;
-			set;
-		}
+		public int DamageBarCount { get; set; }
 
 		[Nest(true, 1)]
-		public List<UserItem> GuildRewardItems
-		{
-			get;
-			set;
-		}
-
-		public GuildDamageBarReward()
-		{
-		}
+		public List<UserItem> GuildRewardItems{ get; set; }
 	}
 }

@@ -9,27 +9,11 @@ namespace MementoMori.Ortega.Share.Data.GuildRaid
 	public class NormalDamageBarReward
 	{
 		[Nest(true, 1)]
-		public GuildRaidGoldCoefficientInfo NormalRewardGoldCoefficientInfo
-		{
-			get;
-			set;
-		}
+		public GuildRaidGoldCoefficientInfo NormalRewardGoldCoefficientInfo{ get; set; }
 
-		public int DamageBarCount
-		{
-			get;
-			set;
-		}
+		public int DamageBarCount { get; set; }
 
 		[Nest(true, 1)]
-		public List<UserItem> NormalRewardItems
-		{
-			get;
-			set;
-		}
-
-		public NormalDamageBarReward()
-		{
-		}
+		public List<UserItem> NormalRewardItems{ get; set; }
 	}
 }

@@ -3,10 +3,10 @@
 namespace MementoMori.Ortega.Share.Data.GuildRaid
 {
 	[MessagePackObject(true)]
-	public class GuildRaidDamageBar
+	public class GuildRaidDamageBarReward
 	{
 		public int DamageBarCount { get; set; }
 
-		public long DamageBarMaxValue { get; set; }
+		public int HolySteelCount { get; set; }
 	}
 }

@@ -1,16 +1,14 @@
 ﻿using System.Runtime.CompilerServices;
-using MementoMori.Ortega.Share.Data.Item;
 using MementoMori.Ortega.Share.Master.Attributes;
 using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.GuildRaid
 {
 	[MessagePackObject(true)]
-	public class WorldDamageBarReward
+	[Obsolete("1.2.9で削除予定")]
+	public class GuildRaidNormalDamageBarReward : GuildRaidDamageBarReward
 	{
-		public long GoalDamage { get; set; }
-
 		[Nest(true, 1)]
-		public List<UserItem> WorldRewardItems{ get; set; }
+		public GuildRaidGoldCoefficientInfo RewardGoldCoefficientInfo{ get; set; }
 	}
 }
