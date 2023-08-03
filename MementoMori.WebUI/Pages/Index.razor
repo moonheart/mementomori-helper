@@ -9,6 +9,9 @@
 @using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest
 @using MementoMori.Ortega.Share.Data.ApiInterface.Equipment
 @using MementoMori.Ortega.Share.Data.ApiInterface.Friend
+@using MementoMori.Ortega.Share.Data.ApiInterface.Gacha
+@using MementoMori.Ortega.Share.Data.ApiInterface.Guild
+@using MementoMori.Ortega.Share.Data.ApiInterface.GuildRaid
 @using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle
 @using MementoMori.Ortega.Share.Enums
 @using MementoMori.WebUI.Extensions
@@ -93,6 +96,9 @@
                                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@InfiniteTowerQuick">无穷之塔扫荡3次</MudButton>
                                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@PvpAuto">PVP自动战斗5次</MudButton>
                                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BossHishSpeedBattle">冒险一次高速战斗</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@FreeGacha">每日免费一键抽卡</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@GuildCheckin">公会签到</MudButton>
+                                <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@GuildRaid">公会讨伐战</MudButton>
                                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BountyQuestRewardAuto">祈愿之泉一键领取</MudButton>
                                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@BountyQuestStartAuto">祈愿之泉一键开始</MudButton>
                                 <MudButton Variant="Variant.Filled" Disabled="@_isQuickActionExecuting" @onclick="@UseFriendCode">邀请码</MudButton>
@@ -494,6 +500,67 @@
         await ExecuteQuickAction(async (log, token) =>
         {
             var useFriendCodeResponse = await moriFuncs.GetResponse<UseFriendCodeRequest, UseFriendCodeResponse>(new UseFriendCodeRequest(){FriendCode = ""});
+        });
+    }
+
+    private async Task FreeGacha()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            log("每日免费五次 R 装备抽卡");
+            var response1 = await moriFuncs.GetResponse<DrawRequest, DrawResponse>(new DrawRequest(){GachaButtonId = 18});
+            response1.GachaRewardItemList.PrintUserItems(log);
+            response1.BonusRewardItemList.PrintUserItems(log);
+            log("每日免费一次圣遗物抽卡");
+            var response2 = await moriFuncs.GetResponse<DrawRequest, DrawResponse>(new DrawRequest(){GachaButtonId = 37});
+            response2.GachaRewardItemList.PrintUserItems(log);
+            response2.BonusRewardItemList.PrintUserItems(log);
+            log("每日免费一次魔水晶抽卡");
+            var response3 = await moriFuncs.GetResponse<DrawRequest, DrawResponse>(new DrawRequest(){GachaButtonId = 41});
+            response3.GachaRewardItemList.PrintUserItems(log);
+            response3.BonusRewardItemList.PrintUserItems(log);
+        });
+    }
+
+    private async Task GuildCheckin()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var response1 = await moriFuncs.GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
+            log($"公会 Id {response1.GuildId}");
+            var response2 = await moriFuncs.GetResponse<GetGuildBaseInfoRequest, GetGuildBaseInfoResponse>(new GetGuildBaseInfoRequest(){BelongGuildId = response1.GuildId});
+            log("签到成功");
+            response2.UserSyncData.GivenItemCountInfoList.PrintUserItems(log);
+        });
+    }
+
+    private async Task GuildRaid()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var response1 = await moriFuncs.GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
+            log($"公会 Id {response1.GuildId}");
+            while (true)
+            {
+                var response2 = await moriFuncs.GetResponse<GetGuildRaidInfoRequest, GetGuildRaidInfoResponse>(new GetGuildRaidInfoRequest(){BelongGuildId = response1.GuildId});
+                if (response2.GuildRaidInfos.All(d=>!d.IsOpen || d.UserGuildRaidDtoInfo is {ChallengeCount: >= 2 }))
+                {
+                    log("没有可扫荡的讨伐战");
+                    break;
+                }
+                foreach (var info in response2.GuildRaidInfos)
+                {
+                    if (info.IsOpen && info.UserGuildRaidDtoInfo is {ChallengeCount: < 2 })
+                    {
+                        var response3 = await moriFuncs.GetResponse<QuickStartGuildRaidRequest, QuickStartGuildRaidResponse>(new QuickStartGuildRaidRequest(){BelongGuildId = response1.GuildId, GuildRaidBossType = info.GuildRaidDtoInfo.BossType});
+                        log($"战斗结果: {response3.BattleSimulationResult.BattleEndInfo.IsWinAttacker()}");
+                        log("固定掉落");
+                        response3.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                        log("随机掉落");
+                        response3.BattleRewardResult.DropItemList.PrintUserItems(log);
+                    }
+                }
+            }
         });
     }
 
