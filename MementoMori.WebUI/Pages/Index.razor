@@ -550,7 +550,7 @@
                 }
                 foreach (var info in response2.GuildRaidInfos)
                 {
-                    if (info.IsOpen && info.UserGuildRaidDtoInfo is {ChallengeCount: < 2 })
+                    if (info.IsOpen && (info.UserGuildRaidDtoInfo == null || info.UserGuildRaidDtoInfo is {ChallengeCount: < 2 }))
                     {
                         var response3 = await moriFuncs.GetResponse<QuickStartGuildRaidRequest, QuickStartGuildRaidResponse>(new QuickStartGuildRaidRequest(){BelongGuildId = response1.GuildId, GuildRaidBossType = info.GuildRaidDtoInfo.BossType});
                         log($"战斗结果: {response3.BattleSimulationResult.BattleEndInfo.IsWinAttacker()}");
