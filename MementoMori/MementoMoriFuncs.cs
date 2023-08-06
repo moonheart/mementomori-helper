@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.ApiInterface;
@@ -48,6 +50,7 @@ public class MementoMoriFuncs
     {
         _authOption = authOption.Value;
         _gameConfig = gameConfig.Value;
+        AccountXml();
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler(_authOption.Headers);
         _meMoriHttpClientHandler.OrtegaAccessToken.Subscribe(token =>
         {
@@ -66,6 +69,18 @@ public class MementoMoriFuncs
             new[] {"UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)"});
         _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", new[] {"2021.3.10f1"});
 
+    }
+
+    private void AccountXml()
+    {
+        XmlDocument doc = new XmlDocument();
+        doc.Load("account.xml");
+        var userId = doc.SelectSingleNode("/map/string[@name='0_Userid']").FirstChild.Value;
+        var clientKey = doc.SelectSingleNode("/map/string[@name='0_ClientKey']").FirstChild.Value.Replace("%22", "");
+        var deviceToken = doc.SelectSingleNode("/map/string[@name='KeyPrefix_0_NotificationDeviceToken']").FirstChild.Value.Replace("%22", "").Replace("%3A", ":");
+        _authOption.UserId = long.Parse(userId);
+        _authOption.ClientKey = clientKey;
+        _authOption.DeviceToken = deviceToken;
     }
 
     public async Task AuthLogin()
