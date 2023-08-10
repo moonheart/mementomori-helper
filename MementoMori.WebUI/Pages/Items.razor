@@ -1,4 +1,4 @@
-﻿@inject MementoMoriFuncs moriFuncs
+﻿@inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
 
 @page "/Items"
 @using MementoMori.Ortega.Share.Data
@@ -8,6 +8,8 @@
 @using MementoMori.Ortega.Share.Enums
 @using MementoMori.WebUI.Extensions
 @using MementoMori.Ortega.Common.Utils
+@using DynamicData.Binding
+@using ReactiveUI
 
 <PageTitle>储物箱</PageTitle>
 
@@ -26,7 +28,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var item in _userSyncData?.UserItemDtoInfo ?? new List<UserItemDtoInfo>())
+            @foreach (var item in ViewModel.UserSyncData?.UserItemDtoInfo ?? new List<UserItemDtoInfo>())
             {
                 var cmb = Masters.ItemTable.GetByItemTypeAndItemId(item.ItemType, item.ItemId);
                 var name = ItemUtil.GetItemName(item);
@@ -61,7 +63,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var item in _userSyncData?.UserEquipmentDtoInfos ?? new List<UserEquipmentDtoInfo>())
+            @foreach (var item in ViewModel.UserSyncData?.UserEquipmentDtoInfos ?? new List<UserEquipmentDtoInfo>())
             {
                 var cmb = Masters.EquipmentTable.GetById(item.EquipmentId);
                 var name = Masters.TextResourceTable.Get(cmb.NameKey);
@@ -88,25 +90,9 @@
 
 
 @code {
-    
-    private RuntimeInfo _runtimeInfo;
-    private UserSyncData? _userSyncData;
-
-    private bool _logining;
-    private bool _isQuickActionExecuting;
-    private string _quickActionResult;
-
     protected override async Task OnInitializedAsync()
     {
-        moriFuncs.RuntimeInfoSubject.Subscribe(c =>
-        {
-            InvokeAsync(() =>
-            {
-                _runtimeInfo = c;
-                StateHasChanged();
-            });
-        });
-        moriFuncs.UserSyncData.Subscribe(data => { _userSyncData = data; });
+        this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
     }
 
     

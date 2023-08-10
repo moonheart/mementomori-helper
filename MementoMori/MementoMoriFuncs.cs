@@ -1,43 +1,35 @@
-﻿using System.Reactive.Subjects;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
-using System.Xml.Serialization;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.ApiInterface;
 using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
-using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
 using MementoMori.Ortega.Share.Data.ApiInterface.DungeonBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
-using MementoMori.Ortega.Share.Data.ApiInterface.Friend;
-using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
-using MementoMori.Ortega.Share.Data.ApiInterface.Present;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
-using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master;
-using MementoMori.Ortega.Share.Master.Data;
 using MessagePack;
 using Microsoft.Extensions.Options;
+using ReactiveUI.Fody.Helpers;
 
 namespace MementoMori;
 
-public class MementoMoriFuncs
+public partial class MementoMoriFuncs
 {
     private Uri _apiHost;
     private Uri _apiAuth = new("https://prd1-auth.mememori-boi.com/api/");
 
-    private readonly BehaviorSubject<RuntimeInfo> _runtimeInfoSubject = new(new RuntimeInfo());
-    public IObservable<RuntimeInfo> RuntimeInfoSubject => _runtimeInfoSubject;
+    [Reactive]
+    public RuntimeInfo RuntimeInfo { get; private set; } = new();
 
-    private readonly BehaviorSubject<UserSyncData> _userSyncDataSubject = new(new UserSyncData());
-    public IObservable<UserSyncData> UserSyncData => _userSyncDataSubject;
+    [Reactive]
+    public UserSyncData UserSyncData { get; private set; } = new();
 
-    private readonly RuntimeInfo _runtimeInfo = new();
     private readonly MeMoriHttpClientHandler _meMoriHttpClientHandler;
     private readonly HttpClient _httpClient;
     private readonly HttpClient _unityHttpClient;
@@ -54,13 +46,11 @@ public class MementoMoriFuncs
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler(_authOption.Headers);
         _meMoriHttpClientHandler.OrtegaAccessToken.Subscribe(token =>
         {
-            _runtimeInfo.OrtegaAccessToken = token;
-            _runtimeInfoSubject.OnNext(_runtimeInfo);
+            RuntimeInfo.OrtegaAccessToken = token;
         });
         _meMoriHttpClientHandler.OrtegaMasterVersion.Subscribe(version =>
         {
-            _runtimeInfo.OrtegaMasterVersion = version;
-            _runtimeInfoSubject.OnNext(_runtimeInfo);
+            RuntimeInfo.OrtegaMasterVersion = version;
         });
 
         _httpClient = new HttpClient(_meMoriHttpClientHandler);
@@ -110,8 +100,7 @@ public class MementoMoriFuncs
 
         await DownloadMasterCatalog();
 
-        var userSyncData = (await UserGetUserData()).UserSyncData;
-        _userSyncDataSubject.OnNext(userSyncData);
+        UserSyncData = (await UserGetUserData()).UserSyncData;
     }
 
     private async Task AuthGetServerHost(long worldId)
@@ -119,14 +108,13 @@ public class MementoMoriFuncs
         var req = new GetServerHostRequest() {WorldId = worldId};
         var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(req);
         _apiHost = new Uri(resp.ApiHost);
-        _runtimeInfo.ApiHost = resp.ApiHost;
-        _runtimeInfoSubject.OnNext(_runtimeInfo);
+        RuntimeInfo.ApiHost = resp.ApiHost;
     }
 
     private async Task DownloadMasterCatalog()
     {
         var url =
-            $"https://cdn-mememori.akamaized.net/master/prd1/version/{_runtimeInfo.OrtegaMasterVersion}/master-catalog";
+            $"https://cdn-mememori.akamaized.net/master/prd1/version/{RuntimeInfo.OrtegaMasterVersion}/master-catalog";
         var bytes = await _unityHttpClient.GetByteArrayAsync(url);
         var masterBookCatalog = MessagePackSerializer.Deserialize<MasterBookCatalog>(bytes);
         Directory.CreateDirectory("./Master");
@@ -141,7 +129,7 @@ public class MementoMoriFuncs
             }
 
             var mbUrl =
-                $"https://cdn-mememori.akamaized.net/master/prd1/version/{_runtimeInfo.OrtegaMasterVersion}/{name}";
+                $"https://cdn-mememori.akamaized.net/master/prd1/version/{RuntimeInfo.OrtegaMasterVersion}/{name}";
             var fileBytes = await _unityHttpClient.GetByteArrayAsync(mbUrl);
             await File.WriteAllBytesAsync(localPath, fileBytes);
         }
@@ -367,8 +355,8 @@ public class MementoMoriFuncs
     public async Task AutoDungeonBattle(Action<string> log)
     {
         // todo 脱装备进副本，然后穿装备
-        var deckDtoInfo = _userSyncDataSubject.Value.UserDeckDtoInfos.First(d=>d.DeckUseContentType == DeckUseContentType.DungeonBattle).GetUserCharacterGuids();
-        var equips = _userSyncDataSubject.Value.UserEquipmentDtoInfos.Where(d=>!string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d=>d.CharacterGuid);
+        var deckDtoInfo = UserSyncData.UserDeckDtoInfos.First(d=>d.DeckUseContentType == DeckUseContentType.DungeonBattle).GetUserCharacterGuids();
+        var equips = UserSyncData.UserEquipmentDtoInfos.Where(d=>!string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d=>d.CharacterGuid);
         foreach (var g in equips)
         {
             log($"脱下装备 {g.Key}");
@@ -666,7 +654,7 @@ public class MementoMoriFuncs
     {
         var req = new GetUserDataRequest { };
         var data = await GetResponse<GetUserDataRequest, GetUserDataResponse>(req);
-        _userSyncDataSubject.OnNext(data.UserSyncData);
+        UserSyncData = data.UserSyncData;
         return data;
     }
 

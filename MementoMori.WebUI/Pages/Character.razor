@@ -1,4 +1,4 @@
-﻿@inject MementoMoriFuncs moriFuncs
+﻿@inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
 
 @page "/Character"
 @using MementoMori.Ortega.Share.Data
@@ -8,6 +8,8 @@
 @using System.Collections.ObjectModel
 @using System.Reactive.Linq
 @using DynamicData
+@using DynamicData.Binding
+@using ReactiveUI
 
 <PageTitle>角色</PageTitle>
 
@@ -101,15 +103,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        moriFuncs.RuntimeInfoSubject.Subscribe(c =>
-        {
-            InvokeAsync(() =>
-            {
-                _runtimeInfo = c;
-                StateHasChanged();
-            });
-        });
-        moriFuncs.UserSyncData.SelectMany(d => d.UserCharacterDtoInfos)
+        this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
+        ViewModel.WhenAnyValue(d=>d.UserSyncData).SelectMany(d => d.UserCharacterDtoInfos)
             .Subscribe(info =>
             {
                 var character = _userCharacters.FirstOrDefault(d => d.Guid == info.Guid);
@@ -138,8 +133,6 @@
                     character.IsLocked = info.IsLocked;
                 }
             });
-
-        moriFuncs.UserSyncData.Subscribe(data => { _userSyncData = data; });
     }
 
     public class UserCharacter
