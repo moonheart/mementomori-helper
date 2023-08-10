@@ -103,7 +103,10 @@ public class MementoMoriFuncs
         await AuthGetServerHost(playerDataInfo.WorldId);
 
         // do login
-        var loginPlayerResp = await UserLoginPlayer(playerDataInfo.PlayerId, playerDataInfo.Password);
+        var loginPlayerResp = await GetResponse<LoginPlayerRequest, LoginPlayerResponse>(new LoginPlayerRequest
+        {
+            PlayerId = playerDataInfo.PlayerId, Password = playerDataInfo.Password
+        });
 
         await DownloadMasterCatalog();
 
@@ -177,11 +180,12 @@ public class MementoMoriFuncs
     /// <summary>
     /// 自动精炼非D级别装备，然后将所有魔装继承到D级别装备
     /// </summary>
-    public async Task AutoEquipmentInheritance()
+    public async Task AutoEquipmentInheritance(Action<string> log)
     {
         while (true)
         {
             // 批量精炼
+            log("批量精炼");
             var castManyResponse = await GetResponse<CastManyRequest, CastManyResponse>(new CastManyRequest()
             {
                 RarityFlags = EquipmentRarityFlags.S | EquipmentRarityFlags.A | EquipmentRarityFlags.B |
@@ -198,10 +202,15 @@ public class MementoMoriFuncs
                     d.Equipment.CharacterGuid == "" && // 未装备
                     d.Equipment.MatchlessSacredTreasureLv == 1 && // 魔装等级为 1
                     (d.EquipmentMB.RarityFlags & EquipmentRarityFlags.S) != 0 // 稀有度为 S
-            );
+            ).ToList();
 
-            if (sEquipments.Count() == 0) break;
+            if (sEquipments.Count == 0)
+            {
+                log("没有可以精炼的装备了");
+                break;
+            }
 
+            // 按照装备位置进行分组
             foreach (var grouping in sEquipments.GroupBy(d => d.EquipmentMB.SlotType))
             {
                 // 当前能够接受继承的 D 级别装备
@@ -230,6 +239,7 @@ public class MementoMoriFuncs
                         if (needMoreCount <= 0) break;
 
                         var equipmentMb = Masters.EquipmentTable.GetById(equipItem.ItemId);
+                        log($"为装备找可穿戴的角色, 脱穿一次 {equipmentMb.Memo}");
                         Console.WriteLine(equipmentMb.Memo);
                         // 找到可以装备的一个角色
                         var userCharacterDtoInfo = usersyncData.UserSyncData.UserCharacterDtoInfos.Where(d =>
@@ -251,14 +261,13 @@ public class MementoMoriFuncs
                         }).First();
 
 
-                        // 获取角色某个位置的准备
-
+                        // 获取角色某个位置的装备, 可能没有装备
                         var replacedEquip = usersyncData.UserSyncData.UserEquipmentDtoInfos.Where(d =>
                         {
                             var byId = Masters.EquipmentTable.GetById(d.EquipmentId);
                             return d.CharacterGuid == userCharacterDtoInfo.Guid &&
                                    byId.SlotType == equipmentMb.SlotType;
-                        }).First();
+                        }).FirstOrDefault();
 
                         // 替换装备
                         var changeEquipmentResponse =
@@ -278,23 +287,34 @@ public class MementoMoriFuncs
                                 });
 
                         // 恢复装备
-                        var changeEquipmentResponse1 =
-                            await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(
-                                new ChangeEquipmentRequest()
-                                {
-                                    UserCharacterGuid = userCharacterDtoInfo.Guid,
-                                    EquipmentChangeInfos = new List<EquipmentChangeInfo>()
+                        if (replacedEquip == null)
+                        {
+                            await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
+                            {
+                                EquipmentSlotTypes = new List<EquipmentSlotType>() {equipmentMb.SlotType},
+                                UserCharacterGuid = userCharacterDtoInfo.Guid
+                            });
+                        }
+                        else
+                        {
+                            var changeEquipmentResponse1 =
+                                await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(
+                                    new ChangeEquipmentRequest()
                                     {
-                                        new()
+                                        UserCharacterGuid = userCharacterDtoInfo.Guid,
+                                        EquipmentChangeInfos = new List<EquipmentChangeInfo>()
                                         {
-                                            EquipmentGuid = replacedEquip.Guid,
-                                            EquipmentId = replacedEquip.EquipmentId,
-                                            EquipmentSlotType = equipmentMb.SlotType,
-                                            IsInherit = false
+                                            new()
+                                            {
+                                                EquipmentGuid = replacedEquip.Guid,
+                                                EquipmentId = replacedEquip.EquipmentId,
+                                                EquipmentSlotType = equipmentMb.SlotType,
+                                                IsInherit = false,
+                                            }
                                         }
-                                    }
-                                });
-
+                                    });
+                        }
+                        
                         needMoreCount--;
                         processedDEquips.Add(equipItem);
                     }
@@ -319,16 +339,25 @@ public class MementoMoriFuncs
                         }
 
                         return false;
-                    }).First();
+                    }).FirstOrDefault();
 
-                    var inheritanceEquipmentResponse =
-                        await GetResponse<InheritanceEquipmentRequest, InheritanceEquipmentResponse>(
-                            new InheritanceEquipmentRequest()
-                            {
-                                InheritanceEquipmentGuid = userEquipmentDtoInfo.Guid,
-                                SourceEquipmentGuid = x1.Equipment.Guid
-                            });
-                    Console.WriteLine($"继承完成 {x1.EquipmentMB.Memo}=>{userEquipmentDtoInfo.Guid}");
+                    if (userEquipmentDtoInfo != null)
+                    {
+                        var inheritanceEquipmentResponse =
+                            await GetResponse<InheritanceEquipmentRequest, InheritanceEquipmentResponse>(
+                                new InheritanceEquipmentRequest()
+                                {
+                                    InheritanceEquipmentGuid = userEquipmentDtoInfo.Guid,
+                                    SourceEquipmentGuid = x1.Equipment.Guid
+                                });
+                        log($"继承完成 {x1.EquipmentMB.Memo}=>{userEquipmentDtoInfo.Guid}");
+                        Console.WriteLine($"继承完成 {x1.EquipmentMB.Memo}=>{userEquipmentDtoInfo.Guid}");
+                    }
+                    else
+                    {
+                        log("没有找到可被继承的D装");
+                    }
+                    
                 }
             }
         }
@@ -633,18 +662,6 @@ public class MementoMoriFuncs
         }
     }
 
-    public async Task<GetDataUriResponse> AuthGetDataUri(string countryCode, long userId)
-    {
-        var req = new GetDataUriRequest() {CountryCode = countryCode, UserId = userId};
-        return await GetResponse<GetDataUriRequest, GetDataUriResponse>(req);
-    }
-
-    private async Task<LoginPlayerResponse> UserLoginPlayer(long playerId, string password)
-    {
-        var req = new LoginPlayerRequest {PlayerId = playerId, Password = password};
-        return await GetResponse<LoginPlayerRequest, LoginPlayerResponse>(req);
-    }
-
     public async Task<GetUserDataResponse> UserGetUserData()
     {
         var req = new GetUserDataRequest { };
@@ -653,69 +670,6 @@ public class MementoMoriFuncs
         return data;
     }
 
-    public async Task<GetMonthlyLoginBonusInfoResponse> LoginBonusGetMonthlyLoginBonusInfo()
-    {
-        var req = new GetMonthlyLoginBonusInfoRequest();
-        return await GetResponse<GetMonthlyLoginBonusInfoRequest, GetMonthlyLoginBonusInfoResponse>(req);
-    }
-
-    /// <summary>
-    /// 获取每日登陆奖励
-    /// </summary>
-    /// <param name="receiveDay"></param>
-    /// <returns></returns>
-    public async Task<ReceiveDailyLoginBonusResponse> LoginBonusReceiveDailyLoginBonus(int receiveDay)
-    {
-        var req = new ReceiveDailyLoginBonusRequest() {ReceiveDay = receiveDay};
-        return await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(req);
-    }
-
-    /// <summary>
-    /// 获取VIP每日奖励
-    /// </summary>
-    /// <returns></returns>
-    public async Task<GetDailyGiftResponse> VipGetDailyGift()
-    {
-        var req = new GetDailyGiftRequest();
-        return await GetResponse<GetDailyGiftRequest, GetDailyGiftResponse>(req);
-    }
-
-    /// <summary>
-    /// 一键发送、接收友情点
-    /// </summary>
-    /// <returns></returns>
-    public async Task<BulkTransferFriendPointResponse> FriendBulkTransferFriendPoint()
-    {
-        var req = new BulkTransferFriendPointRequest();
-        return await GetResponse<BulkTransferFriendPointRequest, BulkTransferFriendPointResponse>(req);
-    }
-
-    /// <summary>
-    /// 获取自动战斗的奖励
-    /// </summary>
-    /// <returns></returns>
-    public async Task<RewardAutoBattleResponse> BattleRewardAutoBattle()
-    {
-        var req = new RewardAutoBattleRequest();
-        return await GetResponse<RewardAutoBattleRequest, RewardAutoBattleResponse>(req);
-    }
-
-
-    /// <summary>
-    /// 高速战斗
-    /// </summary>
-    /// <returns></returns>
-    public async Task<QuickResponse> BattleQuick(QuestQuickExecuteType questQuickExecuteType, int quickCount)
-    {
-        var req = new QuickRequest() {QuestQuickExecuteType = questQuickExecuteType, QuickCount = quickCount};
-        return await GetResponse<QuickRequest, QuickResponse>(req);
-    }
-
-    public async Task<ReceiveItemResponse> PresentReceiveItem()
-    {
-        var req = new ReceiveItemRequest() {LanguageType = LanguageType.zhTW};
-        return await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(req);
-    }
 
     public async Task<TResp> GetResponse<TReq, TResp>(TReq req)
         where TReq : ApiRequestBase
