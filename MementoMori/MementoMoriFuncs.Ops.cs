@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using MementoMori.Extensions;
+using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
 using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
@@ -16,6 +17,10 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using StartRequest = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartRequest;
 using StartResponse = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartResponse;
+using BountyQuestGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.GetListRequest;
+using BountyQuestGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.GetListResponse;
+using GachaGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Gacha.GetListRequest;
+using GachaGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Gacha.GetListResponse;
 
 namespace MementoMori;
 
@@ -196,8 +201,8 @@ public partial class MementoMoriFuncs: ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             log("领取的奖励：\n");
-            var getListResponse = await GetResponse<GetListRequest, GetListResponse>(
-                new GetListRequest());
+            var getListResponse = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(
+                new BountyQuestGetListRequest());
 
             var questIds = getListResponse.UserBountyQuestDtoInfos
                 .Where(d => d.BountyQuestEndTime > 0)
@@ -298,18 +303,23 @@ public partial class MementoMoriFuncs: ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log("每日免费五次 R 装备抽卡");
-            var response1 = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = 18});
-            response1.GachaRewardItemList.PrintUserItems(log);
-            response1.BonusRewardItemList.PrintUserItems(log);
-            log("每日免费一次圣遗物抽卡");
-            var response2 = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = 37});
-            response2.GachaRewardItemList.PrintUserItems(log);
-            response2.BonusRewardItemList.PrintUserItems(log);
-            log("每日免费一次魔水晶抽卡");
-            var response3 = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = 41});
-            response3.GachaRewardItemList.PrintUserItems(log);
-            response3.BonusRewardItemList.PrintUserItems(log);
+            log("获取卡池列表");
+            var gachaListResponse = await GetResponse<GachaGetListRequest, GachaGetListResponse>(new GachaGetListRequest());
+            foreach (var gachaCaseInfo in gachaListResponse.GachaCaseInfoList)
+            {
+                var gachaCaseMb = Masters.GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
+                foreach (var gachaButtonInfo in gachaCaseInfo.GachaButtonInfoList)
+                {
+                    if (gachaButtonInfo.ConsumeUserItem == null || gachaButtonInfo.ConsumeUserItem.ItemCount == 0)
+                    {
+                        // 免费抽卡
+                        log($"免费抽卡 {gachaCaseMb.Memo} {gachaButtonInfo.LotteryCount}次");
+                        var response = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = gachaButtonInfo.GachaButtonId});
+                        response.GachaRewardItemList.PrintUserItems(log);
+                        response.BonusRewardItemList.PrintUserItems(log);
+                    }
+                }
+            }
         });
     }
 

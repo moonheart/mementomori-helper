@@ -45,7 +45,8 @@ namespace MementoMori.Ortega.Share
                    EquipmentTable.Load() &&
                    ErrorCodeTable.Load() &&
                    FriendCampaignTable.Load() &&
-                   FriendMissionTable.Load();
+                   FriendMissionTable.Load() &&
+                   GachaCaseTable.Load();
         }
 
         public static bool LoadAllClientMasters(LanguageType languageType)
@@ -343,6 +344,7 @@ namespace MementoMori.Ortega.Share
             EquipmentCompositeTable = new EquipmentCompositeTable();
             EquipmentSetMaterialTable = new EquipmentSetMaterialTable();
             TreasureChestTable = new TreasureChestTable();
+            GachaCaseTable = new GachaCaseTable();
             LevelLinkTable = new LevelLinkTable();
         }
 
