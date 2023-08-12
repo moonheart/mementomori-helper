@@ -472,10 +472,14 @@ public partial class MementoMoriFuncs: ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             int totalCount = 0;
-            int winCount = 0;
             while (!token.IsCancellationRequested)
             {
+                await UserGetUserData();
                 var equipment = UserSyncData.UserEquipmentDtoInfos.First(d => d.Guid == EquipmentId);
+                var m =
+                    $"打磨装备 {totalCount} 耐力 {equipment.AdditionalParameterEnergy} 魔力 {equipment.AdditionalParameterIntelligence} 力量 {equipment.AdditionalParameterMuscle} 战技 {equipment.AdditionalParameterEnergy}";
+                Console.WriteLine(m);
+                log(m);
                 switch (EquipmentTrainingTargetType)
                 {
                     case "Health" when equipment.AdditionalParameterHealth >= EquipmentTrainingTargetValue:
@@ -488,14 +492,8 @@ public partial class MementoMoriFuncs: ReactiveObject
                         return;
                 }
 
-                await UserGetUserData();
                 var response = await GetResponse<TrainingRequest, TrainingResponse>(new TrainingRequest() {EquipmentGuid = EquipmentId, ParameterLockedList = new List<BaseParameterType>()});
-                await UserGetUserData();
-                var m =
-                    $"打磨装备 耐力 {equipment.AdditionalParameterEnergy} 魔力 {equipment.AdditionalParameterIntelligence} 力量 {equipment.AdditionalParameterMuscle} 战技 {equipment.AdditionalParameterEnergy}";
-                Console.WriteLine(m);
-                log(m);
-
+                totalCount++;
                 var t = 1;
                 await Task.Delay(t);
             }
