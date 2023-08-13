@@ -152,6 +152,7 @@ public partial class MementoMoriFuncs
         Masters.DungeonBattleGridTable.Load();
         Masters.GachaCaseTable.Load();
         Masters.MissionTable.Load();
+        Masters.TotalActivityMedalRewardTable.Load();
     }
 
     private async Task<string> CalcFileMd5(string path)

@@ -56,17 +56,21 @@
                     </tr>
                     <tr>
                         <td>钻石</td>@{
-                                        var free = ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.CurrencyFree)?.ItemCount ?? 0;
-                                        var paid = ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.CurrencyPaid)?.ItemCount ?? 0;
-                                        <td> @($"{free + paid}, 免费 {free}, 付费 {paid}") </td>
-                                    }
+                                       var free = ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.CurrencyFree)?.ItemCount ?? 0;
+                                       var paid = ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.CurrencyPaid)?.ItemCount ?? 0;
+                                       <td> @($"{free + paid}, 免费 {free}, 付费 {paid}") </td>
+                                   }
                     </tr>
                     <tr>
                         <td>金币</td><td>@((ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.Gold)?.ItemCount ?? 0).ToString("N0"))</td>
                     </tr>
                     </tbody>
                 </MudSimpleTable>
-                <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.GetMissionInfo">同步任务信息</MudButton>
+                <MudStack Row="true">
+                    <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.GetMissionInfo">同步任务信息</MudButton>
+                    <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.CompleteMissions">完成任务</MudButton>
+                    <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.RewardMissonActivity">领取任务奖章奖励</MudButton>
+                </MudStack>
                 <MudSimpleTable Dense="true" Style="height: 400px; overflow: auto">
                     <tbody>
                     @foreach (var missionInfo in ViewModel?.MissionInfoDict?.Values.SelectMany(d=>d.UserMissionDtoInfoDict?.Values.SelectMany(x=>x) ?? Array.Empty<UserMissionDtoInfo>()) ?? Array.Empty<UserMissionDtoInfo>())
@@ -138,6 +142,7 @@
                                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetAutoBattleReward">领取自动战斗奖励</MudButton>
                                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BulkTransferFriendPoint">一键赠送/接受友情点</MudButton>
                                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.PresentReceiveItem">一键领取礼物箱</MudButton>
+                                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.ReinforcementEquipmentOneTime">强化一次装备</MudButton>
                                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BattleBossQuick">主线boss扫荡3次</MudButton>
                                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.InfiniteTowerQuick">无穷之塔扫荡3次</MudButton>
                                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.PvpAuto">PVP自动战斗5次</MudButton>

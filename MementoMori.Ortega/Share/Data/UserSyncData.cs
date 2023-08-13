@@ -123,6 +123,7 @@ namespace MementoMori.Ortega.Share.Data
 
         public void UserItemEditorMergeUserSyncData(UserSyncData userSyncData)
         {
+            if (userSyncData == null) return;
             if (userSyncData.BlockPlayerIdList.IsNotNullOrEmpty()) BlockPlayerIdList = BlockPlayerIdList.Merge(userSyncData.BlockPlayerIdList);
             if (userSyncData.CanJoinTodayLegendLeague != null) CanJoinTodayLegendLeague = userSyncData.CanJoinTodayLegendLeague;
             if (userSyncData.ClearedTutorialIdList.IsNotNullOrEmpty()) ClearedTutorialIdList = ClearedTutorialIdList.Merge(userSyncData.ClearedTutorialIdList);
@@ -138,7 +139,7 @@ namespace MementoMori.Ortega.Share.Data
                     var userItemDtoInfo = UserItemDtoInfo.FirstOrDefault(d => d.ItemId == userItem.ItemId && d.ItemType == userItem.ItemType);
                     if (userItemDtoInfo != null)
                     {
-                        userItemDtoInfo.ItemCount = userItem.ItemCount;
+                        userItemDtoInfo.ItemCount += userItem.ItemCount;
                     }
                     else
                     {

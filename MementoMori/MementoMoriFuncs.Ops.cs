@@ -17,6 +17,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Utils;
+using MoreLinq;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using TowerBattleStartRequest = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartRequest;
@@ -74,8 +75,19 @@ public partial class MementoMoriFuncs: ReactiveObject
         IsQuickActionExecuting = true;
         _cancellationTokenSource = new CancellationTokenSource();
         MesssageList.Clear();
-        await func(AddLog, _cancellationTokenSource.Token);
-        IsQuickActionExecuting = false;
+        try
+        {
+            await func(AddLog, _cancellationTokenSource.Token);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            AddLog(e.ToString());
+        }
+        finally
+        {
+            IsQuickActionExecuting = false;
+        }
     }
 
     public void CancelQuickAction()
@@ -538,9 +550,62 @@ public partial class MementoMoriFuncs: ReactiveObject
         MissionInfoDict = response.MissionInfoDict;
     }
 
+    public async Task ReinforcementEquipmentOneTime()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var equipmentDtoInfo = UserSyncData.UserEquipmentDtoInfos.OrderBy(d=>d.ReinforcementLv)
+                .FirstOrDefault(d=>!string.IsNullOrEmpty(d.CharacterGuid) && Masters.EquipmentTable.GetById(d.EquipmentId).EquipmentLv > d.ReinforcementLv);
+            if (equipmentDtoInfo != null)
+            {
+                var response = await GetResponse<ReinforcementRequest, ReinforcementResponse>(new ReinforcementRequest(){EquipmentGuid = equipmentDtoInfo.Guid, NumberOfTimes = 1});
+                log($"强化一次完成");
+            }
+        });
+    }
+
     public async Task CompleteMissions()
     {
-        // await GetMissionInfo();
-        // MissionInfoDict.Values
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            await GetMissionInfo();
+            var missionIds = MissionInfoDict.Values.SelectMany(d=>
+                d.UserMissionDtoInfoDict.Values.SelectMany(x=>
+                    x.SelectMany(f=>
+                        f.MissionStatusHistory[MissionStatusType.NotReceived]))).ToList();
+            var rewardMissionResponse = await GetResponse<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest(){TargetMissionIdList = missionIds});
+            rewardMissionResponse.RewardInfo.ItemList.PrintUserItems(log);
+            rewardMissionResponse.RewardInfo.CharacterList.PrintCharacterDtos(log);
+        });
+    }
+
+    public async Task RewardMissonActivity()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            await GetMissionInfo();
+            foreach (var pair in MissionInfoDict)
+            {
+                if (pair.Value.UserMissionActivityDtoInfo == null)
+                {
+                    continue;
+                }
+
+                foreach (var (rewardId, statusType) in pair.Value.UserMissionActivityDtoInfo.RewardStatusDict)
+                {
+                    if (statusType == MissionActivityRewardStatusType.NotReceived)
+                    {
+                        var rewardMb = Masters.TotalActivityMedalRewardTable.GetById(rewardId);
+                        log($"领取 {pair.Key} 的 {rewardMb.RequiredActivityMedalCount} 奖励");
+                        var response = await GetResponse<RewardMissionActivityRequest, RewardMissionActivityResponse>(
+                            new RewardMissionActivityRequest(){MissionGroupType = pair.Key, RequiredCount = rewardMb.RequiredActivityMedalCount});
+                        response.RewardInfo.ItemList.PrintUserItems(log);
+                        response.RewardInfo.CharacterList.PrintCharacterDtos(log);
+                    }
+                }
+                
+            }
+            
+        });
     }
 }
