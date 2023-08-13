@@ -13,6 +13,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
 using MementoMori.Ortega.Share.Data.ApiInterface.Mission;
 using MementoMori.Ortega.Share.Data.ApiInterface.Present;
 using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle;
+using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using MementoMori.Ortega.Share.Enums;
 using ReactiveUI;
@@ -270,11 +271,20 @@ public partial class MementoMoriFuncs: ReactiveObject
         });
     }
 
+    public async Task GetMyPage()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var giveAllSrCharacterResponse = await GetResponse<GetMypageRequest, GetMypageResponse>(new GetMypageRequest());
+            log(giveAllSrCharacterResponse.ToJson(true));
+        });
+    }
+
     public async Task Debug()
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var giveAllSrCharacterResponse = await GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
+            var giveAllSrCharacterResponse = await GetResponse<GetMypageRequest, GetMypageResponse>(new GetMypageRequest());
             log(giveAllSrCharacterResponse.ToJson(true));
         });
     }
@@ -517,5 +527,11 @@ public partial class MementoMoriFuncs: ReactiveObject
         var response = await GetResponse<GetMissionInfoRequest, GetMissionInfoResponse>(new GetMissionInfoRequest()
             {TargetMissionGroupList = new List<MissionGroupType>() {MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main}});
         MissionInfoDict = response.MissionInfoDict;
+    }
+
+    public async Task CompleteMissions()
+    {
+        // await GetMissionInfo();
+        // MissionInfoDict.Values
     }
 }

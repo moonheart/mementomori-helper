@@ -132,6 +132,7 @@
                     <MudTabPanel Text="一键操作">
                         <MudCard>
                             <MudCardContent>
+                                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetMyPage">登录一次</MudButton>
                                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetLoginBonus">领取每日登录奖励</MudButton>
                                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetVipGift">领取每日VIP礼物</MudButton>
                                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetAutoBattleReward">领取自动战斗奖励</MudButton>
