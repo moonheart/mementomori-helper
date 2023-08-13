@@ -9,6 +9,7 @@
 @using MementoMori.WebUI.Models
 @using ReactiveUI
 @using DynamicData.Binding
+@using MementoMori.Ortega.Share.Data.DtoInfo
 
 <PageTitle>主页</PageTitle>
 
@@ -17,17 +18,17 @@
         <MudCard>
             <MudCardHeader>
                 <MudText>角色信息</MudText>
-                <MudButton Disabled="ViewModel.Logining" @onclick="ViewModel.Login">
+                <MudButton Variant="Variant.Filled" Disabled="ViewModel.Logining" @onclick="ViewModel.Login">
                     登录
                     @if (ViewModel.Logining)
                     {
                         <MudProgressCircular Size="Size.Small"/>
                     }
                 </MudButton>
-                <MudButton Disabled="ViewModel.Logining" @onclick="ViewModel.SyncUserData">同步用户信息</MudButton>
+                <MudButton Variant="Variant.Filled" Disabled="ViewModel.Logining" @onclick="ViewModel.SyncUserData">同步用户信息</MudButton>
             </MudCardHeader>
             <MudCardContent>
-                <MudSimpleTable>
+                <MudSimpleTable Dense="true">
                     <tbody>
                     <tr>
                         <td>用户名</td><td>@ViewModel.UserSyncData?.UserStatusDtoInfo?.Name</td>
@@ -62,9 +63,61 @@
                     <tr>
                         <td>上次升级</td><td>@ViewModel.UserSyncData?.UserStatusDtoInfo?.LastLvUpTime.ToDateTimeOffset()</td>
                     </tr>
-                    <tr>
-                        <td>用户名已更改</td><td>@ViewModel.UserSyncData?.UserStatusDtoInfo?.IsAlreadyChangedName</td>
-                    </tr>
+                    </tbody>
+                </MudSimpleTable>
+                <MudButton Variant="Variant.Filled" @onclick="@ViewModel.GetMissionInfo">同步任务信息</MudButton>
+                <MudSimpleTable Dense="true" Style="height: 400px; overflow: auto">
+                    <tbody>
+                    @foreach (var missionInfo in ViewModel?.MissionInfoDict?.Values.SelectMany(d=>d.UserMissionDtoInfoDict?.Values.SelectMany(x=>x) ?? Array.Empty<UserMissionDtoInfo>()) ?? Array.Empty<UserMissionDtoInfo>())
+                    {
+                            @if (missionInfo.MissionStatusHistory[MissionStatusType.Progress].Any())
+                            {
+                                var missionId = missionInfo.MissionStatusHistory[MissionStatusType.Progress].Last();
+                                var missionMb = Masters.MissionTable.GetById(missionId);
+                                var name = Masters.TextResourceTable.Get(missionMb.NameKey);
+                                var info = $"{missionInfo.ProgressCount}/{missionMb.RequireValue}";
+                                
+                                <tr>
+                                    <td>@missionInfo.MissionType</td>
+                                    <td>@name</td>
+                                    <td>@info</td>
+                                </tr>
+                            }
+                            else if(missionInfo.MissionStatusHistory[MissionStatusType.NotReceived].Any())
+                            {
+                                var missionId = missionInfo.MissionStatusHistory[MissionStatusType.NotReceived].Last();
+                                var missionMb = Masters.MissionTable.GetById(missionId);
+                                var name = Masters.TextResourceTable.Get(missionMb.NameKey);
+                                
+                                <tr>
+                                    <td>@missionInfo.MissionType</td>
+                                    <td>@name</td>
+                                    <td>未领取</td>
+                                </tr>
+                            }else if (missionInfo.MissionStatusHistory[MissionStatusType.Locked].Any())
+                            {
+                                var missionId = missionInfo.MissionStatusHistory[MissionStatusType.Locked].Last();
+                                var missionMb = Masters.MissionTable.GetById(missionId);
+                                var name = Masters.TextResourceTable.Get(missionMb.NameKey);
+                                
+                                <tr>
+                                    <td>@missionInfo.MissionType</td>
+                                    <td>@name</td>
+                                    <td>未解锁</td>
+                                </tr>
+                            }
+                            else if (missionInfo.MissionType != MissionType.Main)
+                            {
+                                var missionId = missionInfo.MissionStatusHistory[MissionStatusType.Received].Last();
+                                var missionMb = Masters.MissionTable.GetById(missionId);
+                                var name = Masters.TextResourceTable.Get(missionMb.NameKey);
+                                <tr>
+                                    <td>@missionInfo.MissionType</td>
+                                    <td>@name</td>
+                                    <td>已完成</td>
+                                </tr>
+                            }
+                    }
                     </tbody>
                 </MudSimpleTable>
             </MudCardContent>
@@ -72,7 +125,7 @@
     </MudItem>
     <MudItem md="6" lg="8">
         <MudCard>
-            <MudCardHeader>快捷操作 <MudButton Disabled="!ViewModel.IsQuickActionExecuting" @onclick="ViewModel.CancelQuickAction">取消操作</MudButton></MudCardHeader>
+            <MudCardHeader>快捷操作 <MudButton Variant="Variant.Filled" Disabled="!ViewModel.IsQuickActionExecuting" @onclick="ViewModel.CancelQuickAction">取消操作</MudButton></MudCardHeader>
             <MudCardContent>
                 <MudTabs Position="Position.Left">
                     <MudTabPanel Text="一键操作">

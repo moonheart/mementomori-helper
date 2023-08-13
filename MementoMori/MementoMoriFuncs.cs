@@ -11,6 +11,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Equipment;
+using MementoMori.Ortega.Share.Data.Mission;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master;
 using MessagePack;
@@ -25,11 +26,14 @@ public partial class MementoMoriFuncs
     private Uri _apiAuth = new("https://prd1-auth.mememori-boi.com/api/");
 
     [Reactive]
-    public RuntimeInfo RuntimeInfo { get; private set; } = new();
+    public RuntimeInfo RuntimeInfo { get; private set; }
 
     [Reactive]
-    public UserSyncData UserSyncData { get; private set; } = new();
+    public UserSyncData UserSyncData { get; private set; }
 
+    [Reactive]
+    public Dictionary<MissionGroupType, MissionInfo> MissionInfoDict { get; set; }
+    
     private readonly MeMoriHttpClientHandler _meMoriHttpClientHandler;
     private readonly HttpClient _httpClient;
     private readonly HttpClient _unityHttpClient;
@@ -40,6 +44,8 @@ public partial class MementoMoriFuncs
 
     public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig)
     {
+        RuntimeInfo = new RuntimeInfo();
+        UserSyncData = new UserSyncData();
         _authOption = authOption.Value;
         _gameConfig = gameConfig.Value;
         AccountXml();
@@ -145,6 +151,7 @@ public partial class MementoMoriFuncs
         Masters.LevelLinkTable.Load();
         Masters.DungeonBattleGridTable.Load();
         Masters.GachaCaseTable.Load();
+        Masters.MissionTable.Load();
     }
 
     private async Task<string> CalcFileMd5(string path)
@@ -685,7 +692,12 @@ public partial class MementoMoriFuncs
         var respMsg = await _httpClient.PostAsync(uri,
             new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json"}}});
         var respBytes = await respMsg.Content.ReadAsByteArrayAsync();
-        return MessagePackSerializer.Deserialize<TResp>(respBytes);
+        var response = MessagePackSerializer.Deserialize<TResp>(respBytes);
+        if (response is IUserSyncApiResponse userSyncApiResponse)
+        {
+            UserSyncData.UserItemEditorMergeUserSyncData(userSyncApiResponse.UserSyncData);
+        }
+        return response;
         // return JsonConvert.DeserializeObject<TResp>(JsonConvert.SerializeObject(tmp));
     }
 }

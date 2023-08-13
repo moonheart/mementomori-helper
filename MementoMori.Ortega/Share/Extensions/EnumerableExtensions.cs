@@ -63,15 +63,15 @@ namespace MementoMori.Ortega.Share.Extensions
 		// {
 		// 	throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
 		// }
-		//
-		// public static Task WhenAll(this IEnumerable<Task> tasks)
-		// {
-		// 	return Task.WhenAll(tasks);
-		// }
-		//
-		// public static Task<T[]> WhenAll<T>(this IEnumerable<Task<T>> tasks)
-		// {
-		// 	throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
-		// }
+		
+		public static Task WhenAll(this IEnumerable<Task> tasks)
+		{
+			return Task.WhenAll(tasks);
+		}
+		
+		public static Task<T[]> WhenAll<T>(this IEnumerable<Task<T>> tasks)
+		{
+			return Task.WhenAll(tasks);
+		}
 	}
 }

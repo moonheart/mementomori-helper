@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MessagePack" Version="2.5.108" />
-      <PackageReference Include="MessagePack.Annotations" Version="2.5.108" />
+      <PackageReference Include="MessagePack" Version="2.5.124" />
+      <PackageReference Include="MessagePack.Annotations" Version="2.5.124" />
       <PackageReference Include="morelinq" Version="3.4.2" />
     </ItemGroup>
 

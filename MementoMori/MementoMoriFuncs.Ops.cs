@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using MementoMori.Extensions;
+using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
 using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest;
@@ -9,6 +10,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Gacha;
 using MementoMori.Ortega.Share.Data.ApiInterface.Guild;
 using MementoMori.Ortega.Share.Data.ApiInterface.GuildRaid;
 using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
+using MementoMori.Ortega.Share.Data.ApiInterface.Mission;
 using MementoMori.Ortega.Share.Data.ApiInterface.Present;
 using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
@@ -508,5 +510,12 @@ public partial class MementoMoriFuncs: ReactiveObject
                 await Task.Delay(t);
             }
         });
+    }
+
+    public async Task GetMissionInfo()
+    {
+        var response = await GetResponse<GetMissionInfoRequest, GetMissionInfoResponse>(new GetMissionInfoRequest()
+            {TargetMissionGroupList = new List<MissionGroupType>() {MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main}});
+        MissionInfoDict = response.MissionInfoDict;
     }
 }
