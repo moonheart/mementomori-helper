@@ -16,10 +16,13 @@ using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using MementoMori.Ortega.Share.Enums;
+using MementoMori.Utils;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using StartRequest = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartRequest;
-using StartResponse = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartResponse;
+using TowerBattleStartRequest = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartRequest;
+using TowerBattleStartResponse = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartResponse;
+using BountyQuestStartRequest = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.StartRequest;
+using BountyQuestStartResponse = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.StartResponse;
 using BountyQuestGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.GetListRequest;
 using BountyQuestGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.GetListResponse;
 using GachaGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Gacha.GetListRequest;
@@ -221,7 +224,13 @@ public partial class MementoMoriFuncs: ReactiveObject
 
     public async Task BountyQuestStartAuto()
     {
-        await ExecuteQuickAction(async (log, token) => { log("还未实现"); });
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var response1 = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new());
+            var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData);
+            var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(new(){BountyQuestStartInfos = bountyQuestStartInfos});
+            log(startResponse.ToJson());
+        });
     }
 
     public async Task AutoEquipmentInheritance()
@@ -445,8 +454,8 @@ public partial class MementoMoriFuncs: ReactiveObject
                 {
                     await UserGetUserData();
                     var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
-                    var bossQuickResponse = await GetResponse<StartRequest, StartResponse>(
-                        new StartRequest()
+                    var bossQuickResponse = await GetResponse<TowerBattleStartRequest, TowerBattleStartResponse>(
+                        new TowerBattleStartRequest()
                         {
                             TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId + 1
                         });

@@ -21,9 +21,5 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest
         public List<UserBountyQuestMemberDtoInfo> SelfUserBountyQuestMemberDtoInfos { get; set; }
 
         public List<UserBountyQuestMemberDtoInfo> FriendAndGuildMemberUserBountyQuestMemberDtoInfos { get; set; }
-
-        public GetListResponse()
-        {
-        }
     }
 }

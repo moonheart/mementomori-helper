@@ -12,9 +12,5 @@ namespace MementoMori.Ortega.Share.Data.BountyQuest
 
         [Description("懸賞カウンタークエスト派遣メンバー情報")]
         public List<BountyQuestMemberInfo> BountyQuestMemberInfos { get; set; }
-
-        public BountyQuestStartInfo()
-        {
-        }
     }
 }
