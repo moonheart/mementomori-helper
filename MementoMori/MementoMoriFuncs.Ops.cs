@@ -18,6 +18,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Utils;
 using MoreLinq;
+using MoreLinq.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using TowerBattleStartRequest = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartRequest;
@@ -336,24 +337,36 @@ public partial class MementoMoriFuncs: ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log("获取卡池列表");
-            var gachaListResponse = await GetResponse<GachaGetListRequest, GachaGetListResponse>(new GachaGetListRequest());
-            foreach (var gachaCaseInfo in gachaListResponse.GachaCaseInfoList)
+            while (await DoFreeGacha())
             {
-                var gachaCaseMb = Masters.GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
-                foreach (var gachaButtonInfo in gachaCaseInfo.GachaButtonInfoList)
+            }
+            
+            async Task<bool> DoFreeGacha()
+            {
+                var gachaListResponse = await GetResponse<GachaGetListRequest, GachaGetListResponse>(new GachaGetListRequest());
+                foreach (var gachaCaseInfo in gachaListResponse.GachaCaseInfoList)
                 {
-                    if (gachaButtonInfo.ConsumeUserItem == null || gachaButtonInfo.ConsumeUserItem.ItemCount == 0)
+                    var buttonInfo = gachaCaseInfo.GachaButtonInfoList.OrderByDescending(d => d.LotteryCount).FirstOrDefault(d =>
+                        d.ConsumeUserItem == null ||
+                        ((d.ConsumeUserItem.ItemType == ItemType.CurrencyFree || d.ConsumeUserItem.ItemType == ItemType.CurrencyPaid) && d.ConsumeUserItem.ItemCount == 0) ||
+                        d.ConsumeUserItem.ItemType == ItemType.Gold);
+                    if (buttonInfo == null)
                     {
-                        // 免费抽卡
-                        log($"免费抽卡 {gachaCaseMb.Memo} {gachaButtonInfo.LotteryCount}次");
-                        var response = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = gachaButtonInfo.GachaButtonId});
-                        response.GachaRewardItemList.PrintUserItems(log);
-                        response.BonusRewardItemList.PrintUserItems(log);
+                        continue;
                     }
+                    var gachaCaseMb = Masters.GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
+                    log($"抽卡 {gachaCaseMb.Memo} {buttonInfo.LotteryCount}次 消耗 {buttonInfo.ConsumeUserItem.ItemCount}个 {buttonInfo.ConsumeUserItem.ItemType}");
+                    var response = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = buttonInfo.GachaButtonId});
+                    response.GachaRewardItemList.PrintUserItems(log);
+                    response.BonusRewardItemList.PrintUserItems(log);
+                    return true;
                 }
+
+                return false;
             }
         });
+
+        
     }
 
     public async Task GuildCheckin()
