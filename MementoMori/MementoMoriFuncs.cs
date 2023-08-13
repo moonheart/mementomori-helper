@@ -34,6 +34,9 @@ public partial class MementoMoriFuncs
     [Reactive]
     public Dictionary<MissionGroupType, MissionInfo> MissionInfoDict { get; set; }
     
+    [Reactive]
+    public GetMypageResponse Mypage { get; set; }
+    
     private readonly MeMoriHttpClientHandler _meMoriHttpClientHandler;
     private readonly HttpClient _httpClient;
     private readonly HttpClient _unityHttpClient;
@@ -46,6 +49,7 @@ public partial class MementoMoriFuncs
     {
         RuntimeInfo = new RuntimeInfo();
         UserSyncData = new UserSyncData();
+        Mypage = new GetMypageResponse();
         _authOption = authOption.Value;
         _gameConfig = gameConfig.Value;
         AccountXml();

@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using MementoMori.Extensions;
-using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
 using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest;
@@ -17,8 +16,6 @@ using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Utils;
-using MoreLinq;
-using MoreLinq.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using TowerBattleStartRequest = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartRequest;
@@ -297,8 +294,8 @@ public partial class MementoMoriFuncs: ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var giveAllSrCharacterResponse = await GetResponse<GetMypageRequest, GetMypageResponse>(new GetMypageRequest());
-            log(giveAllSrCharacterResponse.ToJson(true));
+            Mypage = await GetResponse<GetMypageRequest, GetMypageResponse>(new GetMypageRequest());
+            log("完成");
         });
     }
 
