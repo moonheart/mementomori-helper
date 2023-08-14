@@ -18,10 +18,11 @@ public static class Extensions
         
         foreach (var item in list2)
         {
-            if (!list1.Exists(x=>comparer?.Invoke(x, item) ?? x.Equals(item)))
+            if (list1.Exists(x=>comparer?.Invoke(x, item) ?? x.Equals(item)))
             {
-                list1.Add(item);
+                list1.RemoveAll(x => comparer?.Invoke(x, item) ?? x.Equals(item));
             }
+            list1.Add(item);
         }
 
         return list1;

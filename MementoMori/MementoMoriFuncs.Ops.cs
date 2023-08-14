@@ -44,6 +44,9 @@ public partial class MementoMoriFuncs: ReactiveObject
     [Reactive]
     public long EquipmentTrainingTargetValue { get; set; }
 
+    [Reactive]
+    public TowerType SelectedAutoTowerType { get; set; }
+
     private CancellationTokenSource _cancellationTokenSource;
 
     public ObservableCollection<string> MesssageList { get; } = new();
@@ -443,7 +446,7 @@ public partial class MementoMoriFuncs: ReactiveObject
             {
                 try
                 {
-                    await UserGetUserData();
+                    // await UserGetUserData();
                     var bossResponse = await GetResponse<BossRequest, BossResponse>(new BossRequest() {QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1});
                     var win = bossResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                     totalCount++;
@@ -489,6 +492,10 @@ public partial class MementoMoriFuncs: ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
+            if (SelectedAutoTowerType == TowerType.None)
+            {
+                return;
+            }
             int totalCount = 0;
             int winCount = 0;
             int errCount = 0;
@@ -496,12 +503,17 @@ public partial class MementoMoriFuncs: ReactiveObject
             {
                 try
                 {
-                    await UserGetUserData();
-                    var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
-                    var bossQuickResponse = await GetResponse<TowerBattleStartRequest, TowerBattleStartResponse>(
-                        new TowerBattleStartRequest()
+                    // await UserGetUserData();
+                    var towerBattleDtoInfo = UserSyncData.UserTowerBattleDtoInfos.First(d=>d.TowerType == SelectedAutoTowerType);
+                    if (SelectedAutoTowerType!= TowerType.Infinite && towerBattleDtoInfo.TodayClearNewFloorCount >= 10)
+                    {
+                        log($"{SelectedAutoTowerType} 塔挑战次数达到上限");
+                        break;
+                    }
+                    var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == SelectedAutoTowerType);
+                    var bossQuickResponse = await GetResponse<TowerBattleStartRequest, TowerBattleStartResponse>(new TowerBattleStartRequest()
                         {
-                            TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId + 1
+                            TargetTowerType = SelectedAutoTowerType, TowerBattleQuestId = tower.MaxTowerBattleId + 1
                         });
                     var win = bossQuickResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                     totalCount++;
@@ -510,10 +522,14 @@ public partial class MementoMoriFuncs: ReactiveObject
                         winCount++;
                     }
 
-                    var m = $"挑战无穷之塔一次：{win} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}";
-                    Console.WriteLine(m);
-                    log(m);
-
+                    if (SelectedAutoTowerType == TowerType.Infinite)
+                    {
+                        log($"挑战 {SelectedAutoTowerType} 塔一次：{win} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}");
+                    }
+                    else
+                    {
+                        log($"挑战 {SelectedAutoTowerType} 塔一次：{win} {towerBattleDtoInfo.TodayClearNewFloorCount}/10 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}");
+                    }
                     var t = 1;
                     await Task.Delay(t);
                 }
@@ -601,6 +617,23 @@ public partial class MementoMoriFuncs: ReactiveObject
         NoticeInfoList = response.NoticeInfoList;
     }
 
+    public TowerType[] GetAvailableTower()
+    {
+        var dayOfWeek = DateTimeOffset.Now.ToOffset(TimeSpan.FromHours(1)).DayOfWeek;
+        // SelectedAutoTowerType = TowerType.Infinite;
+        return dayOfWeek switch
+        {
+            DayOfWeek.Sunday => new[] {TowerType.Infinite, TowerType.Blue, TowerType.Green, TowerType.Red, TowerType.Yellow},
+            DayOfWeek.Monday => new[] {TowerType.Infinite, TowerType.Blue},
+            DayOfWeek.Tuesday => new[] {TowerType.Infinite, TowerType.Red},
+            DayOfWeek.Wednesday => new[] {TowerType.Infinite, TowerType.Green},
+            DayOfWeek.Thursday => new[] {TowerType.Infinite, TowerType.Yellow},
+            DayOfWeek.Friday => new[] {TowerType.Infinite, TowerType.Blue, TowerType.Red},
+            DayOfWeek.Saturday => new[] {TowerType.Infinite, TowerType.Yellow, TowerType.Green},
+            _ => new[] {TowerType.Infinite}
+        };
+    }
+    
     public async Task ReinforcementEquipmentOneTime()
     {
         await ExecuteQuickAction(async (log, token) =>

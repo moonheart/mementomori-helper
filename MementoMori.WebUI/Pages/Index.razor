@@ -245,8 +245,14 @@
                         <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoDungeonBattle">时空洞窟自动战斗</MudButton>
                     </MudPaper>
                 </MudTabPanel>
-                <MudTabPanel Text="无穷之塔">
+                <MudTabPanel Text="试炼之塔">
                     <MudPaper Elevation="0" Class="pa-2">
+                        <MudSelect T="TowerType" Label="塔类型" Variant="Variant.Filled" @bind-Value="@ViewModel.SelectedAutoTowerType">
+                            @foreach (var type in ViewModel.GetAvailableTower())
+                            {
+                                <MudSelectItem T="TowerType" Value="@type">@(type)</MudSelectItem>
+                            }
+                        </MudSelect>
                         <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoInfiniteTowerRequest">自动刷无穷之塔</MudButton>
                     </MudPaper>
                 </MudTabPanel>
