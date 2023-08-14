@@ -13,9 +13,15 @@ public static class BountyQuestAutoFormationUtil
     public static List<BountyQuestStartInfo> CalcAutoFormation(GetListResponse getlistResponse, UserSyncData userSyncData)
     {
         var bountyQuestStartInfos = new List<BountyQuestStartInfo>();
-        foreach (var bountyQuestInfos in getlistResponse.BountyQuestInfos.GroupBy(d=>d.BountyQuestType))
+        // 正在执行中的任务
+        var ongoingQuest = getlistResponse.UserBountyQuestDtoInfos.Where(d=>d.BountyQuestEndTime > 0).Select(d=>d.BountyQuestId).ToList();
+        foreach (var bountyQuestInfos in getlistResponse.BountyQuestInfos.Where(d=>!ongoingQuest.Contains(d.BountyQuestId)).GroupBy(d=>d.BountyQuestType))
         {
-            var userCharacterDtoInfos = userSyncData.UserCharacterDtoInfos.OrderBy(d=>d.RarityFlags).ToList();
+            // 已经使用的卡片
+            var usedCharacterGuids = getlistResponse.UserBountyQuestDtoInfos.SelectMany(d =>
+                d.StartMembers.Where(x => x.PlayerId == userSyncData.UserStatusDtoInfo.PlayerId).Select(x => x.UserCharacterGuid));
+            // 用于当前任务类型的角色列表
+            var userCharacterDtoInfos = userSyncData.UserCharacterDtoInfos.Where(d=>!usedCharacterGuids.Contains(d.Guid)).OrderBy(d=>d.RarityFlags).ToList();
             var selectedCharacterGuids = new List<string>();
             foreach (var getlistResponseBountyQuestInfo in bountyQuestInfos)
             {
@@ -41,12 +47,19 @@ public static class BountyQuestAutoFormationUtil
                     });
                 }
 
-                // 所有符合稀有度条件的角色
-                var charactersByRarity = GetCharactersByRarity(userCharacterDtoInfos, selectedCharacterGuids, selectedCharacterId, bountyQuestData.Rarity);
                 // 匹配元素类型
                 do
                 {
-                    var target = charactersByRarity.FirstOrDefault(d => elementTypes.Contains(Masters.CharacterTable.GetById(d.CharacterId).ElementType));
+                    UserCharacterDtoInfo target = null;
+                    if (rarityRequireCount > 0)
+                    {
+                        target = GetCharacterByRarity(userCharacterDtoInfos, selectedCharacterGuids, selectedCharacterId, bountyQuestData.Rarity, elementTypes);
+                    }
+                    else
+                    {
+                        target = GetCharacterByRarity(userCharacterDtoInfos, selectedCharacterGuids, selectedCharacterId, CharacterRarityFlags.None, elementTypes);
+                    }
+
                     if (target == null)
                     {
                         break;
@@ -54,7 +67,8 @@ public static class BountyQuestAutoFormationUtil
                     // 从待匹配元素中移除该元素
                     elementTypes.Remove(Masters.CharacterTable.GetById(target.CharacterId).ElementType);
                     // 从候选卡片里面移除该角色
-                    charactersByRarity.RemoveAll(d => d.CharacterId == target.CharacterId);
+                    if (rarityRequireCount > 0) rarityRequireCount--;
+                    selectedCharacterId.Add(target.CharacterId);
                     questMemberInfos.Add(new BountyQuestMemberInfo()
                     {
                         CharacterId = target.CharacterId, CharacterRarityFlags = target.RarityFlags, UserCharacterGuid = target.Guid, PlayerId = target.PlayerId
@@ -62,7 +76,25 @@ public static class BountyQuestAutoFormationUtil
                    
                 } while (elementTypes.Count > 0);
 
-                if (elementTypes.Count > 0)
+                while (rarityRequireCount > 0)
+                {
+                    var target = GetCharacterByRarity(userCharacterDtoInfos, selectedCharacterGuids, selectedCharacterId, bountyQuestData.Rarity);
+                    if (target != null)
+                    {
+                        selectedCharacterId.Add(target.CharacterId);
+                        questMemberInfos.Add(new BountyQuestMemberInfo()
+                        {
+                            CharacterId = target.CharacterId, CharacterRarityFlags = target.RarityFlags, UserCharacterGuid = target.Guid, PlayerId = target.PlayerId
+                        });
+                        rarityRequireCount--;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                if (elementTypes.Count > 0 || rarityRequireCount > 0)
                 {
                     continue;
                 }
@@ -76,9 +108,13 @@ public static class BountyQuestAutoFormationUtil
         return bountyQuestStartInfos;
     }
 
-    public static List<UserCharacterDtoInfo> GetCharactersByRarity(List<UserCharacterDtoInfo> userCharacterDtoInfos, List<string> guids, List<long> characterIds, CharacterRarityFlags rarityFlags)
+    public static UserCharacterDtoInfo GetCharacterByRarity(
+        List<UserCharacterDtoInfo> userCharacterDtoInfos, 
+        List<string> guids, 
+        List<long> characterIds, 
+        CharacterRarityFlags rarityFlags = CharacterRarityFlags.None,
+        List<ElementType>? elementTypes = null)
     {
-        var characterDtoInfos = new List<UserCharacterDtoInfo>();
         foreach (var dtoInfo in userCharacterDtoInfos)
         {
             // 每种类型的赏金任务组, 不能包含同一张卡
@@ -87,11 +123,13 @@ public static class BountyQuestAutoFormationUtil
             if (characterIds.Contains(dtoInfo.CharacterId)) continue;
             // 稀有度要求
             if (rarityFlags > dtoInfo.RarityFlags) continue;
-            
-            characterDtoInfos.Add(dtoInfo);
+            // 元素要求
+            if (elementTypes != null && !elementTypes.Contains(Masters.CharacterTable.GetById(dtoInfo.CharacterId).ElementType)) continue;
+
+            return dtoInfo;
         }
 
-        return characterDtoInfos;
+        return null;
     }
 
     public static List<UserBountyQuestMemberDtoInfo> GetReadySupportMemberDtoInfos(List<UserBountyQuestMemberDtoInfo> memberDtoInfos)

@@ -14,6 +14,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Present;
 using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
+using MementoMori.Ortega.Share.Data.BountyQuest;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Utils;
 using ReactiveUI;
@@ -52,6 +53,8 @@ public partial class MementoMoriFuncs: ReactiveObject
         await AuthLogin();
         var userData = await UserGetUserData();
         Logining = false;
+        await GetMyPage();
+        await GetMissionInfo();
     }
 
     public async Task SyncUserData()
@@ -221,7 +224,7 @@ public partial class MementoMoriFuncs: ReactiveObject
                 new BountyQuestGetListRequest());
 
             var questIds = getListResponse.UserBountyQuestDtoInfos
-                .Where(d => d.BountyQuestEndTime > 0)
+                .Where(d => !d.IsReward && d.BountyQuestEndTime > 0)
                 .Select(d => d.BountyQuestId).ToList();
 
             if (questIds.Count > 0)
@@ -237,9 +240,16 @@ public partial class MementoMoriFuncs: ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var response1 = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new());
+            log(response1.ToJson());
             var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData);
-            var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(new(){BountyQuestStartInfos = bountyQuestStartInfos});
-            log(startResponse.ToJson());
+            foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
+            {
+                log(bountyQuestStartInfo.ToJson());
+                var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
+                    new(){BountyQuestStartInfos = new List<BountyQuestStartInfo>(){bountyQuestStartInfo}});
+                log(startResponse.ToJson());    
+            }
+            
         });
     }
 
