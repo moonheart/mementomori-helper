@@ -1,4 +1,5 @@
 ﻿@inject IJSRuntime JsRuntime
+@inject IDialogService DialogService
 
 @page "/"
 @inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
@@ -11,11 +12,12 @@
 @using DynamicData.Binding
 @using MementoMori.Ortega.Share.Data.DtoInfo
 @using MementoMori.Ortega.Share.Data.MyPage
+@using MementoMori.Ortega.Share.Data.Notice
 
 <PageTitle>主页</PageTitle>
 
 <MudGrid>
-    <MudItem md="6">
+    <MudItem md="4">
         <MudCard>
             <MudCardHeader Class="justify-space-between">
                 <MudText >角色信息</MudText>
@@ -70,27 +72,57 @@
             </MudCardContent>
         </MudCard>
     </MudItem>
-     <MudItem md="6">
-         <MudCard>
-             <MudCardHeader>
-                 主页信息
-                 <MudSpacer />
-                 <MudButton @onclick="ViewModel.GetMyPage" StartIcon="@Icons.Material.Filled.Sync">同步</MudButton>
-             </MudCardHeader>
-             <MudCardContent>
-                 <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNewFriendPointTransfer"><MudChip>友情点</MudChip></MudBadge>
-                 <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNewPrivateChat"><MudChip>私信</MudChip></MudBadge>
-                 <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNotReceivedBountyQuestReward"><MudChip>祈愿之泉</MudChip></MudBadge>
-                 <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNotReceivedMissionReward"><MudChip>任务奖励</MudChip></MudBadge>
-                 @foreach(var info in ViewModel.Mypage?.MypageInfo?.MypageIconInfos ?? new List<MypageIconInfo>())
+<MudItem md="4">
+    <MudPaper Class="pa-4">
+        <MudPaper Elevation="0" Class="d-flex">
+            <MudText>主页信息</MudText>
+            <MudSpacer/>
+            <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.GetMyPage" StartIcon="@Icons.Material.Filled.Sync">同步</MudButton>
+        </MudPaper>
+        <MudPaper Elevation="0">
+            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNewFriendPointTransfer"><MudChip>友情点</MudChip></MudBadge>
+            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNewPrivateChat"><MudChip>私信</MudChip></MudBadge>
+            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNotReceivedBountyQuestReward"><MudChip>祈愿之泉</MudChip></MudBadge>
+            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNotReceivedMissionReward"><MudChip>任务奖励</MudChip></MudBadge>
+            @foreach (var info in ViewModel.Mypage?.MypageInfo?.MypageIconInfos ?? new List<MypageIconInfo>())
+            {
+                var name = Masters.TextResourceTable.Get(info.IconNameKey);
+                <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@info.IsDisplayBadge"><MudChip>@((MarkupString) name)</MudChip></MudBadge>
+            }
+        </MudPaper>
+        <MudDivider Class="my-2" />
+        <MudPaper Elevation="0" Class="d-flex">
+            <MudText>祈愿之泉</MudText>
+            <MudSpacer />
+            <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.GetBountyRequestInfo" StartIcon="@Icons.Material.Filled.Sync">同步</MudButton>
+        </MudPaper>
+        <MudPaper Elevation="0">
+                 @foreach(var info in ViewModel.BountyQuestResponseInfo?.UserBountyQuestDtoInfos ?? new List<UserBountyQuestDtoInfo>())
                  {
-                     var name = Masters.TextResourceTable.Get(info.IconNameKey);
-                     <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@info.IsDisplayBadge"><MudChip>@((MarkupString)name)</MudChip></MudBadge>
+                     var bountyQuestInfo = ViewModel.BountyQuestResponseInfo.BountyQuestInfos.First(d=>d.BountyQuestId == info.BountyQuestId);
+                     var name = Masters.TextResourceTable.Get(bountyQuestInfo.BountyQuestNameKey);
+                     string status = "未开始";
+                     if (info.BountyQuestEndTime > 0)
+                     {
+                         if (DateTimeOffset.Now.Millisecond < info.BountyQuestEndTime)
+                         {
+                             status = "进行中 "+TimeSpan.FromMilliseconds(info.BountyQuestEndTime- DateTimeOffset.Now.ToUnixTimeMilliseconds()).ToString(@"hh\:mm\:ss");
+                         }
+                         else if (!info.IsReward)
+                         {
+                             status = "待领取" + TimeSpan.FromMilliseconds(info.RewardEndTime - DateTimeOffset.Now.ToUnixTimeMilliseconds()).ToString(@"hh\:mm\:ss");
+                         }
+                         else
+                         {
+                             status = "已领取";
+                         }
+                     }
+                     <MudChip>@name @status</MudChip>
                  }
-             </MudCardContent>
-         </MudCard>
-     </MudItem>
-   <MudItem md="6">
+        </MudPaper>
+    </MudPaper>
+</MudItem>
+   <MudItem md="4">
         <MudCard>
             <MudCardHeader Class="justify-space-between">
                 <MudText>任务信息</MudText>
@@ -159,7 +191,7 @@
             </MudCardContent>
         </MudCard>
     </MudItem>
-    <MudItem md="6">
+    <MudItem md="4">
         <MudCard>
             <MudCardHeader Class="justify-space-between">
                 <MudText>快捷操作</MudText>
@@ -237,13 +269,32 @@
             </MudCardContent>
         </MudCard>
     </MudItem>
-    <MudItem md="6">
+    <MudItem md="4">
         <MudCard>
             <MudCardHeader>执行结果</MudCardHeader>
             <MudCardContent>
                 <MudTable Elevation="0" T="string" Items="@ViewModel.MesssageList" Virtualize="true" Dense="true" Height="400px">
                     <RowTemplate>
                         <MudTd>@context</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem md="4">
+        <MudCard>
+            <MudCardHeader>
+                <MudText>公告</MudText>
+                <MudSpacer />
+                <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.GetNoticeInfoList">同步信息</MudButton>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTable Elevation="0" T="NoticeInfo" Items="@ViewModel.NoticeInfoList" Virtualize="true" Dense="true" Height="400px">
+                    <RowTemplate>
+                        <MudTd>@(context.Title)</MudTd>
+                        <MudTd>
+                            <MudButton Size="Size.Small" @onclick="()=> ShowNotice(context)" StartIcon="@Icons.Material.Filled.ZoomIn" />
+                        </MudTd>
                     </RowTemplate>
                 </MudTable>
             </MudCardContent>
@@ -299,4 +350,14 @@
         }).OrderBy(d => d.CharacterGuid).ToList() ?? new List<CharacterEquipment>();
     });
     }
+
+    private void ShowNotice(NoticeInfo context)
+    {
+        var options = new DialogOptions()
+        {
+            CloseOnEscapeKey = true
+        };
+        DialogService.ShowMessageBox(context.Title, (MarkupString)context.MainText);
+    }
+
 }

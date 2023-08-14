@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Net;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -12,11 +13,14 @@ using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Data.Mission;
+using MementoMori.Ortega.Share.Data.Notice;
 using MementoMori.Ortega.Share.Enums;
+using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master;
 using MessagePack;
 using Microsoft.Extensions.Options;
 using ReactiveUI.Fody.Helpers;
+using BountyQuestGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.GetListResponse;
 
 namespace MementoMori;
 
@@ -35,7 +39,13 @@ public partial class MementoMoriFuncs
     public Dictionary<MissionGroupType, MissionInfo> MissionInfoDict { get; set; }
     
     [Reactive]
-    public GetMypageResponse Mypage { get; set; }
+    public GetMypageResponse Mypage { get; private set; }
+    
+    [Reactive]
+    public BountyQuestGetListResponse BountyQuestResponseInfo { get; private set; }
+    
+    [Reactive]
+    public List<NoticeInfo> NoticeInfoList { get; set; }
     
     private readonly MeMoriHttpClientHandler _meMoriHttpClientHandler;
     private readonly HttpClient _httpClient;
@@ -50,6 +60,7 @@ public partial class MementoMoriFuncs
         RuntimeInfo = new RuntimeInfo();
         UserSyncData = new UserSyncData();
         Mypage = new GetMypageResponse();
+        NoticeInfoList = new List<NoticeInfo>();
         _authOption = authOption.Value;
         _gameConfig = gameConfig.Value;
         AccountXml();
@@ -686,17 +697,47 @@ public partial class MementoMoriFuncs
         else if (apiAttr != null)
         {
             uri = new Uri(_apiHost, apiAttr.Uri);
+            
+            if (RuntimeInfo.OrtegaAccessToken.IsNullOrEmpty())
+            {
+                await AuthLogin();
+            }
         }
         else
         {
             throw new NotSupportedException();
         }
 
+
         // var reqMap = JsonConvert.DeserializeObject<Dictionary<object, object>>(JsonConvert.SerializeObject(req));
         var bytes = MessagePackSerializer.Serialize(req);
         var respMsg = await _httpClient.PostAsync(uri,
             new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json"}}});
+        if (!respMsg.IsSuccessStatusCode)
+        {
+            throw new InvalidOperationException(respMsg.ToString());
+        }
         var respBytes = await respMsg.Content.ReadAsByteArrayAsync();
+        if (respMsg.Headers.TryGetValues("ortegastatuscode", out var headers2))
+        {
+            var ortegastatuscode = headers2.FirstOrDefault() ?? "";
+            if (ortegastatuscode != "0")
+            {
+                AddLog(uri.ToString());
+                var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(respBytes);
+                AddLog($"{apiErrResponse.Message} {apiErrResponse.ErrorCode}");
+                if (apiErrResponse.ErrorCode == ErrorCode.CommonRequireClientUpdate)
+                {
+                    AddLog("请更新客户端版本");
+                }
+                else if (apiErrResponse.ErrorCode == ErrorCode.CommonMaintenance)
+                {
+                    await GetNoticeInfoList();
+                }
+                throw new InvalidOperationException($"{apiErrResponse.Message} {apiErrResponse.ErrorCode}");
+            }
+        }
+
         var response = MessagePackSerializer.Deserialize<TResp>(respBytes);
         if (response is IUserSyncApiResponse userSyncApiResponse)
         {

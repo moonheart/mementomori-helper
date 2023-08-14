@@ -10,6 +10,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Guild;
 using MementoMori.Ortega.Share.Data.ApiInterface.GuildRaid;
 using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
 using MementoMori.Ortega.Share.Data.ApiInterface.Mission;
+using MementoMori.Ortega.Share.Data.ApiInterface.Notice;
 using MementoMori.Ortega.Share.Data.ApiInterface.Present;
 using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
@@ -50,11 +51,18 @@ public partial class MementoMoriFuncs: ReactiveObject
     public async Task Login()
     {
         Logining = true;
-        await AuthLogin();
-        var userData = await UserGetUserData();
+        try
+        {
+            await AuthLogin();
+            await UserGetUserData();
+            await GetMyPage();
+            await GetMissionInfo();
+            await GetBountyRequestInfo(); }
+        catch (Exception e)
+        {
+            AddLog(e.ToString());
+        }
         Logining = false;
-        await GetMyPage();
-        await GetMissionInfo();
     }
 
     public async Task SyncUserData()
@@ -224,13 +232,17 @@ public partial class MementoMoriFuncs: ReactiveObject
                 new BountyQuestGetListRequest());
 
             var questIds = getListResponse.UserBountyQuestDtoInfos
-                .Where(d => !d.IsReward && d.BountyQuestEndTime > 0)
+                .Where(d => !d.IsReward && DateTimeOffset.Now.ToUnixTimeMilliseconds() > d.BountyQuestEndTime)
                 .Select(d => d.BountyQuestId).ToList();
 
             if (questIds.Count > 0)
             {
-                var rewardResponse = await GetResponse<RewardRequest, RewardResponse>(new RewardRequest() {BountyQuestIds = questIds, IsQuick = false});
+                var rewardResponse = await GetResponse<RewardRequest, RewardResponse>(new RewardRequest() {BountyQuestIds = questIds, ConsumeCurrency = 0, IsQuick = false});
                 rewardResponse.RewardItems.PrintUserItems(log);
+            }
+            else
+            {
+                log("没有可以领取的");
             }
         });
     }
@@ -568,6 +580,25 @@ public partial class MementoMoriFuncs: ReactiveObject
         var response = await GetResponse<GetMissionInfoRequest, GetMissionInfoResponse>(new GetMissionInfoRequest()
             {TargetMissionGroupList = new List<MissionGroupType>() {MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main}});
         MissionInfoDict = response.MissionInfoDict;
+    }
+
+    public async Task GetBountyRequestInfo()
+    {
+        var response = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new BountyQuestGetListRequest());
+        BountyQuestResponseInfo = response;
+    }
+
+    public async Task GetNoticeInfoList()
+    {
+        var response = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()
+        {
+            AccessType = NoticeAccessType.Title,
+            CategoryType = NoticeCategoryType.NoticeTab,
+            CountryCode = "CN",
+            LanguageType = LanguageType.zhTW,
+            UserId = _authOption.UserId
+        });
+        NoticeInfoList = response.NoticeInfoList;
     }
 
     public async Task ReinforcementEquipmentOneTime()
