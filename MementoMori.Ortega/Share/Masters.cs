@@ -230,6 +230,8 @@ namespace MementoMori.Ortega.Share
 
         public static LocalGvgCastleTable LocalGvgCastleTable { get; }
 
+        public static LocalRaidBonusScheduleTable LocalRaidBonusScheduleTable { get; }
+
         public static LocalRaidEnemyTable LocalRaidEnemyTable { get; }
 
         public static LocalRaidEventQuestGroupTable LocalRaidEventQuestGroupTable { get; }

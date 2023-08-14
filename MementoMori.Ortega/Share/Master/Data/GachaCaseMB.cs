@@ -38,7 +38,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 			get;
 		}
 
-		[Description("運命(運命ガチャ用)")]
+		[Description("運命(運命ガチャ、星の導きガチャ用)")]
 		[PropertyOrder(7)]
 		public GachaDestinyType GachaDestinyType
 		{

@@ -597,6 +597,10 @@ namespace MementoMori.Ortega.Share
 		GachaInvalidGachaTicketPeriod,
 		[Description("運命のガチャのセレクトリスト対象外のキャラクターが選択されています。")]
 		GachaOtherCharacterDestinySelectList,
+		[Description("運命のガチャのセレクトリスト対象外のキャラクターが選択されています。")]
+		GachaOtherCharacterStarsGuidanceSelectList,
+		[Description("星の導きガチャの解放条件を満たしていません。")]
+		GachaNotEnoughVipLevelOrMaxQuestIdStarsGuidanceGacha,
 		[Description("ユーザーのステータスデータが存在しません。")]
 		GachaUserStatusDtoNotFound = 200500,
 		[Description("ユーザーの放置バトルデータが存在しません。")]
