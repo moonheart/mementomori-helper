@@ -170,6 +170,10 @@ public partial class MementoMoriFuncs: ReactiveObject
             log($"总时间 {TimeSpan.FromMilliseconds(bonus.AutoBattleRewardResult.BattleTotalTime)}");
             log($"领民金币 {bonus.AutoBattleRewardResult.GoldByPopulation}");
             log($"领民潜能珠宝 {bonus.AutoBattleRewardResult.PotentialJewelByPopulation}");
+            log("固定掉落");
+            bonus.AutoBattleRewardResult.BattleRewardResult.FixedItemList.PrintUserItems(log);
+            log("随机掉落");
+            bonus.AutoBattleRewardResult.BattleRewardResult.DropItemList.PrintUserItems(log);
         });
     }
 
@@ -265,7 +269,7 @@ public partial class MementoMoriFuncs: ReactiveObject
                 new BountyQuestGetListRequest());
 
             var questIds = getListResponse.UserBountyQuestDtoInfos
-                .Where(d => !d.IsReward && DateTimeOffset.Now.ToUnixTimeMilliseconds() > d.BountyQuestEndTime)
+                .Where(d => !d.IsReward && DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds() > d.BountyQuestEndTime)
                 .Select(d => d.BountyQuestId).ToList();
 
             if (questIds.Count > 0)

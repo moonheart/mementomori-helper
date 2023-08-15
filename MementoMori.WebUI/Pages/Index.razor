@@ -54,7 +54,8 @@
                     <td>留言</td><td>@ViewModel.UserSyncData?.UserStatusDtoInfo?.Comment</td>
                 </tr>
                 <tr>
-                    <td>经验值</td><td>@ViewModel.UserSyncData?.UserStatusDtoInfo?.Exp</td>
+                    <td>潜能宝珠</td>
+                    <td>@(ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(d=>d.ItemType == ItemType.CharacterTrainingMaterial && d.ItemId == 2)?.ItemCount ?? 0)</td>
                 </tr>
                 <tr>
                     <td>钻石</td>
@@ -120,13 +121,14 @@
                 string status = "未开始";
                 if (info.BountyQuestEndTime > 0)
                 {
-                    if (DateTimeOffset.Now.Millisecond < info.BountyQuestEndTime)
+                    var nowMilli = DateTimeOffset.Now.Add(TimeSpan.FromHours(1)).ToUnixTimeMilliseconds();
+                    if (nowMilli < info.BountyQuestEndTime)
                     {
-                        status = "进行中 " + TimeSpan.FromMilliseconds(info.BountyQuestEndTime - DateTimeOffset.Now.ToUnixTimeMilliseconds()).ToString(@"hh\:mm\:ss");
+                        status = "进行中 " + TimeSpan.FromMilliseconds(info.BountyQuestEndTime - nowMilli).ToString(@"hh\:mm\:ss");
                     }
                     else if (!info.IsReward)
                     {
-                        status = "待领取" + TimeSpan.FromMilliseconds(info.RewardEndTime - DateTimeOffset.Now.ToUnixTimeMilliseconds()).ToString(@"hh\:mm\:ss");
+                        status = "待领取" + TimeSpan.FromMilliseconds(info.RewardEndTime - nowMilli).ToString(@"hh\:mm\:ss");
                     }
                     else
                     {
