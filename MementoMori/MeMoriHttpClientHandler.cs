@@ -1,6 +1,7 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Runtime.CompilerServices;
 
 namespace MementoMori;
 
@@ -20,27 +21,36 @@ public class MeMoriHttpClientHandler : HttpClientHandler
     }
 
     private readonly Dictionary<string, string> _managedHeaders = new();
-
+    private readonly SemaphoreSlim _semaphoreSlim = new(1);
+    
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        foreach (var pair in _managedHeaders)
+        await _semaphoreSlim.WaitAsync(cancellationToken);
+        try
         {
-            request.Headers.Add(pair.Key, pair.Value);
-        }
+            foreach (var pair in _managedHeaders)
+            {
+                request.Headers.Add(pair.Key, pair.Value);
+            }
 
-        var response = await base.SendAsync(request, cancellationToken);
-        if (response.Headers.TryGetValues("orteganextaccesstoken", out var headers))
-        {
-            _managedHeaders["ortegaaccesstoken"] = headers.FirstOrDefault() ?? "";
-            _ortegaaccessToken.OnNext(_managedHeaders["ortegaaccesstoken"]);
-        }
-        if (response.Headers.TryGetValues("ortegamasterversion", out var headers1))
-        {
-            var masterVersion = headers1.FirstOrDefault() ?? "";
-            _ortegaMasterVersion.OnNext(masterVersion);
-        }
+            var response = await base.SendAsync(request, cancellationToken);
+            if (response.Headers.TryGetValues("orteganextaccesstoken", out var headers))
+            {
+                _managedHeaders["ortegaaccesstoken"] = headers.FirstOrDefault() ?? "";
+                _ortegaaccessToken.OnNext(_managedHeaders["ortegaaccesstoken"]);
+            }
+            if (response.Headers.TryGetValues("ortegamasterversion", out var headers1))
+            {
+                var masterVersion = headers1.FirstOrDefault() ?? "";
+                _ortegaMasterVersion.OnNext(masterVersion);
+            }
 
-        return response;
+            return response;
+        }
+        finally
+        {
+            _semaphoreSlim.Release();
+        }
     }
 }
