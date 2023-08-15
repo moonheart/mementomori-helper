@@ -92,6 +92,12 @@
             <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNotReceivedMissionReward">
                 <MudChip>任务奖励</MudChip>
             </MudBadge>
+            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.IsNotClearDungeonBattleMap">
+                <MudChip>时空洞窟</MudChip>
+            </MudBadge>
+            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(ViewModel.UserSyncData.PresentCount > 0)">
+                <MudChip>礼物箱</MudChip>
+            </MudBadge>
             @foreach (var info in ViewModel.Mypage?.MypageInfo?.MypageIconInfos ?? new List<MypageIconInfo>())
             {
                 var name = Masters.TextResourceTable.Get(info.IconNameKey);

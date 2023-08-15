@@ -51,6 +51,9 @@ public partial class MementoMoriFuncs
     [Reactive]
     public List<NoticeInfo> NoticeInfoList { get; set; }
     
+    [Reactive]
+    public bool IsNotClearDungeonBattleMap { get; set; }
+    
     private readonly MeMoriHttpClientHandler _meMoriHttpClientHandler;
     private readonly HttpClient _httpClient;
     private readonly HttpClient _unityHttpClient;
@@ -386,7 +389,7 @@ public partial class MementoMoriFuncs
     {
         // todo 脱装备进副本，然后穿装备
         var deckDtoInfo = UserSyncData.UserDeckDtoInfos.First(d=>d.DeckUseContentType == DeckUseContentType.DungeonBattle).GetUserCharacterGuids();
-        var equips = UserSyncData.UserEquipmentDtoInfos.Where(d=>!string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d=>d.CharacterGuid);
+        var equips = UserSyncData.UserEquipmentDtoInfos.Where(d=>!string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d=>d.CharacterGuid).ToList();
         foreach (var g in equips)
         {
             log($"脱下装备 {g.Key}");
@@ -685,6 +688,7 @@ public partial class MementoMoriFuncs
         var req = new GetUserDataRequest { };
         var data = await GetResponse<GetUserDataRequest, GetUserDataResponse>(req);
         UserSyncData = data.UserSyncData;
+        IsNotClearDungeonBattleMap = data.IsNotClearDungeonBattleMap;
         return data;
     }
 
