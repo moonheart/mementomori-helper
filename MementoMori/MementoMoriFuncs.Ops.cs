@@ -57,15 +57,17 @@ public partial class MementoMoriFuncs: ReactiveObject
         try
         {
             await AuthLogin();
-            await UserGetUserData();
-            await GetMyPage();
-            await GetMissionInfo();
-            await GetBountyRequestInfo(); }
+        }
         catch (Exception e)
         {
             AddLog(e.ToString());
         }
         Logining = false;
+        await UserGetUserData();
+        await GetMyPage();
+        await GetMissionInfo();
+        await GetBountyRequestInfo(); 
+        // await GetMonthlyLoginBonusInfo(); 
     }
 
     public async Task SyncUserData()
@@ -112,9 +114,37 @@ public partial class MementoMoriFuncs: ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var bonus = await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(new ReceiveDailyLoginBonusRequest() {ReceiveDay = DateTime.Now.Day});
-            log("领取的奖励：\n");
-            bonus.RewardItemList.PrintUserItems(log);
+            await GetMonthlyLoginBonusInfo();
+            var day = DateTimeOffset.Now.ToOffset(TimeSpan.FromHours(1)).Day;
+            if (!MonthlyLoginBonusInfo.ReceivedDailyRewardDayList.Contains(day))
+            {
+                var bonus = await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(new ReceiveDailyLoginBonusRequest() {ReceiveDay = DateTime.Now.Day});
+                log("每日登录奖励：\n");
+                bonus.RewardItemList.PrintUserItems(log);
+                await GetMonthlyLoginBonusInfo();
+            }
+            else
+            {
+                log("每日登录奖励已领取过了");
+            }
+
+            var monthlyLoginBonusMb = Masters.MonthlyLoginBonusTable.GetById(MonthlyLoginBonusInfo.MonthlyLoginBonusId);
+            var monthlyLoginBonusRewardListMb = Masters.MonthlyLoginBonusRewardListTable.GetById(monthlyLoginBonusMb.RewardListId);
+            foreach (var loginCountRewardInfo in monthlyLoginBonusRewardListMb.LoginCountRewardList)
+            {
+                // 登录次数达到 && 没有领取过
+                if (loginCountRewardInfo.DayCount <= MonthlyLoginBonusInfo.ReceivedDailyRewardDayList.Count &&
+                    !MonthlyLoginBonusInfo.ReceivedLoginCountRewardDayList.Contains(loginCountRewardInfo.DayCount))
+                {
+                    var resp = await GetResponse<ReceiveLoginCountBonusRequest, ReceiveLoginCountBonusResponse>(new()
+                    {
+                        ReceiveDayCount = loginCountRewardInfo.DayCount
+                    });
+                    log($"领取的登录次数 {loginCountRewardInfo.DayCount} 奖励：\n");
+                    resp.RewardItemList.PrintUserItems(log);
+                }
+            }
+            await GetMonthlyLoginBonusInfo();
         });
     }
 
@@ -604,6 +634,12 @@ public partial class MementoMoriFuncs: ReactiveObject
         BountyQuestResponseInfo = response;
     }
 
+    public async Task GetMonthlyLoginBonusInfo()
+    {
+        var response = await GetResponse<GetMonthlyLoginBonusInfoRequest, GetMonthlyLoginBonusInfoResponse>(new GetMonthlyLoginBonusInfoRequest());
+        MonthlyLoginBonusInfo = response;
+    }
+    
     public async Task GetNoticeInfoList()
     {
         var response = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()

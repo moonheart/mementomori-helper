@@ -48,6 +48,8 @@ namespace MementoMori.Ortega.Share
                    FriendMissionTable.Load() &&
                    GachaCaseTable.Load() &&
                    TotalActivityMedalRewardTable.Load() &&
+                   MonthlyLoginBonusTable.Load() &&
+                   MonthlyLoginBonusRewardListTable.Load() &&
                    MissionTable.Load();
         }
 
@@ -352,6 +354,8 @@ namespace MementoMori.Ortega.Share
             LevelLinkTable = new LevelLinkTable();
             MissionTable = new MissionTable();
             TotalActivityMedalRewardTable = new TotalActivityMedalRewardTable();
+            MonthlyLoginBonusTable = new MonthlyLoginBonusTable();
+            MonthlyLoginBonusRewardListTable = new MonthlyLoginBonusRewardListTable();
         }
 
         public static EffectGroupTable EffectGroupTable;

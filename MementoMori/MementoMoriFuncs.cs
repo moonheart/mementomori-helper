@@ -9,6 +9,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface;
 using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
 using MementoMori.Ortega.Share.Data.ApiInterface.DungeonBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
+using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Equipment;
@@ -43,6 +44,9 @@ public partial class MementoMoriFuncs
     
     [Reactive]
     public BountyQuestGetListResponse BountyQuestResponseInfo { get; private set; }
+    
+    [Reactive]
+    public GetMonthlyLoginBonusInfoResponse MonthlyLoginBonusInfo { get; private set; }
     
     [Reactive]
     public List<NoticeInfo> NoticeInfoList { get; set; }
@@ -168,6 +172,8 @@ public partial class MementoMoriFuncs
         Masters.GachaCaseTable.Load();
         Masters.MissionTable.Load();
         Masters.TotalActivityMedalRewardTable.Load();
+        Masters.MonthlyLoginBonusTable.Load();
+        Masters.MonthlyLoginBonusRewardListTable.Load();
     }
 
     private async Task<string> CalcFileMd5(string path)
