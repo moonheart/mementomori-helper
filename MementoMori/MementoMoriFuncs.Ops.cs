@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using MementoMori.Extensions;
 using MementoMori.Ortega.Share;
@@ -31,16 +32,20 @@ using GachaGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Gacha.Ge
 
 namespace MementoMori;
 
-public partial class MementoMoriFuncs: ReactiveObject
+public partial class MementoMoriFuncs : ReactiveObject
 {
     [Reactive]
     public bool Logining { get; private set; }
+
     [Reactive]
     public bool IsQuickActionExecuting { get; private set; }
+
     [Reactive]
     public string EquipmentId { get; set; }
+
     [Reactive]
     public string EquipmentTrainingTargetType { get; set; }
+
     [Reactive]
     public long EquipmentTrainingTargetValue { get; set; }
 
@@ -62,11 +67,12 @@ public partial class MementoMoriFuncs: ReactiveObject
         {
             AddLog(e.ToString());
         }
+
         Logining = false;
         await UserGetUserData();
         await GetMyPage();
         await GetMissionInfo();
-        await GetBountyRequestInfo(); 
+        await GetBountyRequestInfo();
         // await GetMonthlyLoginBonusInfo(); 
     }
 
@@ -84,24 +90,48 @@ public partial class MementoMoriFuncs: ReactiveObject
         }
     }
 
+    private ConcurrentQueue<Func<Action<string>, CancellationToken, Task>> _funcs = new();
+
     public async Task ExecuteQuickAction(Func<Action<string>, CancellationToken, Task> func)
     {
-        IsQuickActionExecuting = true;
-        _cancellationTokenSource = new CancellationTokenSource();
-        MesssageList.Clear();
-        try
+        if (!IsQuickActionExecuting)
         {
-            await func(AddLog, _cancellationTokenSource.Token);
+            IsQuickActionExecuting = true;
+            _cancellationTokenSource = new CancellationTokenSource();
+            MesssageList.Clear();
+            _funcs.Clear();
+            _funcs.Enqueue(func);
         }
-        catch (Exception e)
+        else
         {
-            Console.WriteLine(e);
-            AddLog(e.ToString());
+            _funcs.Enqueue(func);
+            return;
         }
-        finally
+
+        _ = Task.Run(async () =>
         {
+            while (!_cancellationTokenSource.IsCancellationRequested)
+            {
+                if (_funcs.TryDequeue(out var func1))
+                {
+                    try
+                    {
+                        await func1(AddLog, _cancellationTokenSource.Token);
+                    }
+                    catch (Exception e)
+                    {
+                        AddLog(e.ToString());
+                        break;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
             IsQuickActionExecuting = false;
-        }
+        });
     }
 
     public void CancelQuickAction()
@@ -144,6 +174,7 @@ public partial class MementoMoriFuncs: ReactiveObject
                     resp.RewardItemList.PrintUserItems(log);
                 }
             }
+
             await GetMonthlyLoginBonusInfo();
         });
     }
@@ -295,10 +326,9 @@ public partial class MementoMoriFuncs: ReactiveObject
             {
                 log(bountyQuestStartInfo.ToJson());
                 var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
-                    new(){BountyQuestStartInfos = new List<BountyQuestStartInfo>(){bountyQuestStartInfo}});
-                log(startResponse.ToJson());    
+                    new() {BountyQuestStartInfos = new List<BountyQuestStartInfo>() {bountyQuestStartInfo}});
+                log(startResponse.ToJson());
             }
-            
         });
     }
 
@@ -377,6 +407,7 @@ public partial class MementoMoriFuncs: ReactiveObject
                 log($"Message {counter++}");
                 await Task.Delay(TimeSpan.FromMilliseconds(500));
             }
+
             Console.WriteLine("DDDDD");
         });
     }
@@ -396,7 +427,7 @@ public partial class MementoMoriFuncs: ReactiveObject
             while (await DoFreeGacha())
             {
             }
-            
+
             async Task<bool> DoFreeGacha()
             {
                 var gachaListResponse = await GetResponse<GachaGetListRequest, GachaGetListResponse>(new GachaGetListRequest());
@@ -410,6 +441,7 @@ public partial class MementoMoriFuncs: ReactiveObject
                     {
                         continue;
                     }
+
                     var gachaCaseMb = Masters.GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
                     log($"抽卡 {gachaCaseMb.Memo} {buttonInfo.LotteryCount}次 消耗 {buttonInfo.ConsumeUserItem.ItemCount}个 {buttonInfo.ConsumeUserItem.ItemType}");
                     var response = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = buttonInfo.GachaButtonId});
@@ -421,8 +453,6 @@ public partial class MementoMoriFuncs: ReactiveObject
                 return false;
             }
         });
-
-        
     }
 
     public async Task GuildCheckin()
@@ -530,6 +560,7 @@ public partial class MementoMoriFuncs: ReactiveObject
             {
                 return;
             }
+
             int totalCount = 0;
             int winCount = 0;
             int errCount = 0;
@@ -538,17 +569,18 @@ public partial class MementoMoriFuncs: ReactiveObject
                 try
                 {
                     // await UserGetUserData();
-                    var towerBattleDtoInfo = UserSyncData.UserTowerBattleDtoInfos.First(d=>d.TowerType == SelectedAutoTowerType);
-                    if (SelectedAutoTowerType!= TowerType.Infinite && towerBattleDtoInfo.TodayClearNewFloorCount >= 10)
+                    var towerBattleDtoInfo = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == SelectedAutoTowerType);
+                    if (SelectedAutoTowerType != TowerType.Infinite && towerBattleDtoInfo.TodayClearNewFloorCount >= 10)
                     {
                         log($"{SelectedAutoTowerType} 塔挑战次数达到上限");
                         break;
                     }
+
                     var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == SelectedAutoTowerType);
                     var bossQuickResponse = await GetResponse<TowerBattleStartRequest, TowerBattleStartResponse>(new TowerBattleStartRequest()
-                        {
-                            TargetTowerType = SelectedAutoTowerType, TowerBattleQuestId = tower.MaxTowerBattleId + 1
-                        });
+                    {
+                        TargetTowerType = SelectedAutoTowerType, TowerBattleQuestId = tower.MaxTowerBattleId + 1
+                    });
                     var win = bossQuickResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                     totalCount++;
                     if (win)
@@ -564,6 +596,7 @@ public partial class MementoMoriFuncs: ReactiveObject
                     {
                         log($"挑战 {SelectedAutoTowerType} 塔一次：{win} {towerBattleDtoInfo.TodayClearNewFloorCount}/10 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}");
                     }
+
                     var t = 1;
                     await Task.Delay(t);
                 }
@@ -643,7 +676,7 @@ public partial class MementoMoriFuncs: ReactiveObject
         var response = await GetResponse<GetMonthlyLoginBonusInfoRequest, GetMonthlyLoginBonusInfoResponse>(new GetMonthlyLoginBonusInfoRequest());
         MonthlyLoginBonusInfo = response;
     }
-    
+
     public async Task GetNoticeInfoList()
     {
         var response = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()
@@ -673,16 +706,16 @@ public partial class MementoMoriFuncs: ReactiveObject
             _ => new[] {TowerType.Infinite}
         };
     }
-    
+
     public async Task ReinforcementEquipmentOneTime()
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var equipmentDtoInfo = UserSyncData.UserEquipmentDtoInfos.OrderBy(d=>d.ReinforcementLv)
-                .FirstOrDefault(d=>!string.IsNullOrEmpty(d.CharacterGuid) && Masters.EquipmentTable.GetById(d.EquipmentId).EquipmentLv > d.ReinforcementLv);
+            var equipmentDtoInfo = UserSyncData.UserEquipmentDtoInfos.OrderBy(d => d.ReinforcementLv)
+                .FirstOrDefault(d => !string.IsNullOrEmpty(d.CharacterGuid) && Masters.EquipmentTable.GetById(d.EquipmentId).EquipmentLv > d.ReinforcementLv);
             if (equipmentDtoInfo != null)
             {
-                var response = await GetResponse<ReinforcementRequest, ReinforcementResponse>(new ReinforcementRequest(){EquipmentGuid = equipmentDtoInfo.Guid, NumberOfTimes = 1});
+                var response = await GetResponse<ReinforcementRequest, ReinforcementResponse>(new ReinforcementRequest() {EquipmentGuid = equipmentDtoInfo.Guid, NumberOfTimes = 1});
                 log($"强化一次完成");
             }
         });
@@ -693,11 +726,11 @@ public partial class MementoMoriFuncs: ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             await GetMissionInfo();
-            var missionIds = MissionInfoDict.Values.SelectMany(d=>
-                d.UserMissionDtoInfoDict.Values.SelectMany(x=>
-                    x.SelectMany(f=>
+            var missionIds = MissionInfoDict.Values.SelectMany(d =>
+                d.UserMissionDtoInfoDict.Values.SelectMany(x =>
+                    x.SelectMany(f =>
                         f.MissionStatusHistory[MissionStatusType.NotReceived]))).ToList();
-            var rewardMissionResponse = await GetResponse<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest(){TargetMissionIdList = missionIds});
+            var rewardMissionResponse = await GetResponse<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest() {TargetMissionIdList = missionIds});
             rewardMissionResponse.RewardInfo.ItemList.PrintUserItems(log);
             rewardMissionResponse.RewardInfo.CharacterList.PrintCharacterDtos(log);
         });
@@ -722,14 +755,34 @@ public partial class MementoMoriFuncs: ReactiveObject
                         var rewardMb = Masters.TotalActivityMedalRewardTable.GetById(rewardId);
                         log($"领取 {pair.Key} 的 {rewardMb.RequiredActivityMedalCount} 奖励");
                         var response = await GetResponse<RewardMissionActivityRequest, RewardMissionActivityResponse>(
-                            new RewardMissionActivityRequest(){MissionGroupType = pair.Key, RequiredCount = rewardMb.RequiredActivityMedalCount});
+                            new RewardMissionActivityRequest() {MissionGroupType = pair.Key, RequiredCount = rewardMb.RequiredActivityMedalCount});
                         response.RewardInfo.ItemList.PrintUserItems(log);
                         response.RewardInfo.CharacterList.PrintCharacterDtos(log);
                     }
                 }
-                
             }
-            
         });
+    }
+
+    public async Task ExecuteAllQuickAction()
+    {
+        await GetLoginBonus();
+        await GetVipGift();
+        await GetAutoBattleReward();
+        await BulkTransferFriendPoint();
+        await PresentReceiveItem();
+        await ReinforcementEquipmentOneTime();
+        await BattleBossQuick();
+        await InfiniteTowerQuick();
+        await PvpAuto();
+        await BossHishSpeedBattle();
+        await FreeGacha();
+        await GuildCheckin();
+        await GuildRaid();
+        await BountyQuestRewardAuto();
+        await BountyQuestStartAuto();
+        await AutoDungeonBattle();
+        await CompleteMissions();
+        await RewardMissonActivity();
     }
 }

@@ -211,30 +211,31 @@
 </MudItem>
 <MudItem sm="12" md="6" lg="4" xl="3">
     <MudCard>
-        <MudCardHeader Class="justify-space-between">
+        <MudCardHeader Class="">
             <MudText>快捷操作</MudText>
-            <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="!ViewModel.IsQuickActionExecuting" @onclick="ViewModel.CancelQuickAction">取消操作</MudButton>
+            <MudSpacer />
+            <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="ViewModel.IsQuickActionExecuting" @onclick="ViewModel.ExecuteAllQuickAction">一键执行所有</MudButton>
+            <MudButton Class="ml-2" Size="Size.Small" Variant="Variant.Filled" Disabled="!ViewModel.IsQuickActionExecuting" @onclick="ViewModel.CancelQuickAction">取消操作</MudButton>
         </MudCardHeader>
         <MudCardContent>
             <MudTabs Position="Position.Left" MinimumTabWidth="20px">
                 <MudTabPanel Text="一键操作">
                     <MudPaper Elevation="0" Class="pa-2">
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetMyPage">登录一次</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetLoginBonus">领取每日登录奖励</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetVipGift">领取每日VIP礼物</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetAutoBattleReward">领取自动战斗奖励</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BulkTransferFriendPoint">一键赠送/接受友情点</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.PresentReceiveItem">一键领取礼物箱</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetLoginBonus">每日奖励</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetVipGift">每日VIP礼物</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetAutoBattleReward">自动战斗奖励</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BulkTransferFriendPoint">友情点</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.PresentReceiveItem">礼物箱</MudButton>
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.ReinforcementEquipmentOneTime">强化一次装备</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BattleBossQuick">主线boss扫荡3次</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BattleBossQuick">Boss扫荡3次</MudButton>
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.InfiniteTowerQuick">无穷之塔扫荡3次</MudButton>
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.PvpAuto">PVP自动战斗5次</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BossHishSpeedBattle">冒险一次高速战斗</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.FreeGacha">每日免费一键抽卡</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BossHishSpeedBattle">高速战斗一次</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.FreeGacha">每日免费抽卡</MudButton>
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GuildCheckin">公会签到</MudButton>
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GuildRaid">公会讨伐战</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BountyQuestRewardAuto">祈愿之泉一键领取</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BountyQuestStartAuto">祈愿之泉一键开始</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BountyQuestRewardAuto">祈愿之泉领取</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BountyQuestStartAuto">祈愿之泉派遣</MudButton>
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.UseFriendCode">邀请码</MudButton>
                     </MudPaper>
                 </MudTabPanel>
