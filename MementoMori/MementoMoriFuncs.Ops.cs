@@ -13,6 +13,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
 using MementoMori.Ortega.Share.Data.ApiInterface.Mission;
 using MementoMori.Ortega.Share.Data.ApiInterface.Notice;
 using MementoMori.Ortega.Share.Data.ApiInterface.Present;
+using MementoMori.Ortega.Share.Data.ApiInterface.Quest;
 using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
@@ -193,6 +194,8 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
+            var mapInfoResponse = await GetResponse<MapInfoRequest, MapInfoResponse>(new(){IsUpdateOtherPlayerInfo = true});
+            var autoResponse = await GetResponse<AutoRequest, AutoResponse>(new());
             var bonus = await GetResponse<RewardAutoBattleRequest, RewardAutoBattleResponse>(new RewardAutoBattleRequest());
             log("领取的奖励：");
 
@@ -300,7 +303,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 new BountyQuestGetListRequest());
 
             var questIds = getListResponse.UserBountyQuestDtoInfos
-                .Where(d => !d.IsReward && DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds() > d.BountyQuestEndTime)
+                .Where(d => d.BountyQuestEndTime > 0 && !d.IsReward && DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds() > d.BountyQuestEndTime)
                 .Select(d => d.BountyQuestId).ToList();
 
             if (questIds.Count > 0)
@@ -320,13 +323,12 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var response1 = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new());
-            log(response1.ToJson());
             var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData);
             foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
             {
-                log(bountyQuestStartInfo.ToJson());
                 var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
                     new() {BountyQuestStartInfos = new List<BountyQuestStartInfo>() {bountyQuestStartInfo}});
+                log($"已派遣 {bountyQuestStartInfo.BountyQuestId}");
                 log(startResponse.ToJson());
             }
         });
@@ -433,10 +435,12 @@ public partial class MementoMoriFuncs : ReactiveObject
                 var gachaListResponse = await GetResponse<GachaGetListRequest, GachaGetListResponse>(new GachaGetListRequest());
                 foreach (var gachaCaseInfo in gachaListResponse.GachaCaseInfoList)
                 {
+                    var friendPoint = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == ItemType.FriendPoint)?.ItemCount ?? 0;
                     var buttonInfo = gachaCaseInfo.GachaButtonInfoList.OrderByDescending(d => d.LotteryCount).FirstOrDefault(d =>
                         d.ConsumeUserItem == null ||
-                        ((d.ConsumeUserItem.ItemType == ItemType.CurrencyFree || d.ConsumeUserItem.ItemType == ItemType.CurrencyPaid) && d.ConsumeUserItem.ItemCount == 0) ||
-                        d.ConsumeUserItem.ItemType == ItemType.Gold);
+                        (d.ConsumeUserItem.ItemType is ItemType.CurrencyFree or ItemType.CurrencyPaid && d.ConsumeUserItem.ItemCount == 0) ||
+                        d.ConsumeUserItem.ItemType == ItemType.Gold ||
+                        (d.ConsumeUserItem.ItemType == ItemType.FriendPoint && d.ConsumeUserItem.ItemCount <= friendPoint));
                     if (buttonInfo == null)
                     {
                         continue;

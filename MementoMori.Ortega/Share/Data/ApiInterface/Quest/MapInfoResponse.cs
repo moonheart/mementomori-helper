@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using MementoMori.Ortega.Share.Data.DtoInfo;
+﻿using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Player;
 using MessagePack;
 
@@ -17,9 +16,5 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Quest
         public List<MapPlayerInfo> MapPlayerInfos { get; set; }
 
         public List<UserMapBuildingDtoInfo> UserMapBuildingDtoInfos { get; set; }
-
-        public MapInfoResponse()
-        {
-        }
     }
 }

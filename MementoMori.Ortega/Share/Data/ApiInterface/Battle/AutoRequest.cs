@@ -6,8 +6,5 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Battle
 	[MessagePackObject(true)]
 	public class AutoRequest : ApiRequestBase
 	{
-		public AutoRequest()
-		{
-		}
 	}
 }
