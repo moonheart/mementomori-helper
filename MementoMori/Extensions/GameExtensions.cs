@@ -2,6 +2,8 @@
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Item;
+using MementoMori.Ortega.Share.Enums;
+using MementoMori.Ortega.Share.Extensions;
 
 namespace MementoMori.Extensions;
 
@@ -35,4 +37,15 @@ public static class GameExtensions
             log($"名称：{name}, 稀有度: {characterMb.RarityFlags}, 等级： {userItem.Level}");
         }
     }
+
+    public static long GetCount(this IEnumerable<IUserItem> userItems, ItemType itemType, long itemId = 1)
+    {
+        var items = userItems.ToList();
+        if (items.IsNullOrEmpty())
+        {
+            return 0;
+        }
+        return items.FirstOrDefault(d => d.ItemType == itemType && d.ItemId == itemId)?.ItemCount ?? 0;
+    }
+
 }

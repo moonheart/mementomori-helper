@@ -18,6 +18,9 @@ using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using MementoMori.Ortega.Share.Data.BountyQuest;
+using MementoMori.Ortega.Share.Data.DtoInfo;
+using MementoMori.Ortega.Share.Data.Gacha;
+using MementoMori.Ortega.Share.Data.Item;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Utils;
 using ReactiveUI;
@@ -194,7 +197,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var mapInfoResponse = await GetResponse<MapInfoRequest, MapInfoResponse>(new(){IsUpdateOtherPlayerInfo = true});
+            var mapInfoResponse = await GetResponse<MapInfoRequest, MapInfoResponse>(new() {IsUpdateOtherPlayerInfo = true});
             var autoResponse = await GetResponse<AutoRequest, AutoResponse>(new());
             var bonus = await GetResponse<RewardAutoBattleRequest, RewardAutoBattleResponse>(new RewardAutoBattleRequest());
             log("领取的奖励：");
@@ -435,19 +438,25 @@ public partial class MementoMoriFuncs : ReactiveObject
                 var gachaListResponse = await GetResponse<GachaGetListRequest, GachaGetListResponse>(new GachaGetListRequest());
                 foreach (var gachaCaseInfo in gachaListResponse.GachaCaseInfoList)
                 {
-                    var friendPoint = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == ItemType.FriendPoint)?.ItemCount ?? 0;
+                    var userItems = UserSyncData.UserItemDtoInfo.ToList();
                     var buttonInfo = gachaCaseInfo.GachaButtonInfoList.OrderByDescending(d => d.LotteryCount).FirstOrDefault(d =>
-                        d.ConsumeUserItem == null ||
-                        (d.ConsumeUserItem.ItemType is ItemType.CurrencyFree or ItemType.CurrencyPaid && d.ConsumeUserItem.ItemCount == 0) ||
-                        d.ConsumeUserItem.ItemType == ItemType.Gold ||
-                        (d.ConsumeUserItem.ItemType == ItemType.FriendPoint && d.ConsumeUserItem.ItemCount <= friendPoint));
+                        CheckCount(d, userItems, ItemType.Gold) ||
+                        CheckCount(d, userItems, ItemType.GachaTicket, 1) || // 聖天使的神諭召喚券
+                        CheckCount(d, userItems, ItemType.GachaTicket, 2) || // 白金召喚券
+                        CheckCount(d, userItems, ItemType.GachaTicket, 4) || // 命運召喚券
+                        CheckCount(d, userItems, ItemType.GachaTicket, 5) || // 黑葬武具召喚券
+                        CheckCount(d, userItems, ItemType.GachaTicket, 6) || // 天光武具召喚券
+                        CheckCount(d, userItems, ItemType.GachaTicket, 7) || // 禁忌武具召喚券
+                        CheckCount(d, userItems, ItemType.FriendPoint));
                     if (buttonInfo == null)
                     {
                         continue;
                     }
 
                     var gachaCaseMb = Masters.GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
-                    log($"抽卡 {gachaCaseMb.Memo} {buttonInfo.LotteryCount}次 消耗 {buttonInfo.ConsumeUserItem.ItemCount}个 {buttonInfo.ConsumeUserItem.ItemType}");
+                    var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(buttonInfo.ConsumeUserItem.ItemType, buttonInfo.ConsumeUserItem.ItemId);
+                    var name = Masters.TextResourceTable.Get(itemMb.NameKey);
+                    log($"抽卡 {gachaCaseMb.Memo} {buttonInfo.LotteryCount}次 消耗 {buttonInfo.ConsumeUserItem.ItemCount}个 {name}");
                     var response = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = buttonInfo.GachaButtonId});
                     response.GachaRewardItemList.PrintUserItems(log);
                     response.BonusRewardItemList.PrintUserItems(log);
@@ -455,6 +464,24 @@ public partial class MementoMoriFuncs : ReactiveObject
                 }
 
                 return false;
+            }
+
+            bool CheckCount(GachaButtonInfo buttonInfo, List<UserItemDtoInfo> userItems, ItemType itemType, long itemId = 1)
+            {
+                if (buttonInfo.ConsumeUserItem == null ||
+                    buttonInfo.ConsumeUserItem.ItemCount == 0)
+                {
+                    return true;
+                }
+
+                if (buttonInfo.ConsumeUserItem.ItemType != itemType ||
+                    buttonInfo.ConsumeUserItem.ItemId != itemId)
+                {
+                    return false;
+                }
+
+                var count = userItems.GetCount(itemType, itemId);
+                return buttonInfo.ConsumeUserItem.ItemCount <= count;
             }
         });
     }
