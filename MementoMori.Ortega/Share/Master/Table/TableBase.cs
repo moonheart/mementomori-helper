@@ -1,12 +1,18 @@
-﻿using MessagePack;
+﻿using MementoMori.Ortega.Share.Master.Interfaces;
+using MessagePack;
 
 namespace MementoMori.Ortega.Share.Master.Table
 {
-	public abstract class TableBase<TM> where TM : MasterBookBase
+	public abstract class TableBase<TM> : ITable where TM : MasterBookBase
 	{
 		public TM GetById(long id)
 		{
 			return _datas.FirstOrDefault(d => d.Id == id);
+		}
+
+		public string GetMasterBookName()
+		{
+			return nameof(TM);
 		}
 
 		public TM[] GetArray()

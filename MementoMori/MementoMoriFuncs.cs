@@ -164,7 +164,7 @@ public partial class MementoMoriFuncs
 
         Masters.ItemTable.Load();
         Masters.CharacterTable.Load();
-        Masters.TextResourceTable.Load(LanguageType.zhTW);
+        Masters.TextResourceTable.Load();
         Masters.EquipmentTable.Load();
         Masters.SphereTable.Load();
         Masters.DungeonBattleRelicTable.Load();
