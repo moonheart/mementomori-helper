@@ -207,11 +207,26 @@ public partial class MementoMoriFuncs
         {
             // 批量精炼
             log("批量精炼");
-            var castManyResponse = await GetResponse<CastManyRequest, CastManyResponse>(new CastManyRequest()
+            if (UserSyncData.UserItemDtoInfo.Any(d=>
+                {
+                    if (d.ItemType != ItemType.Equipment)
+                    {
+                        return false;
+                    }
+
+                    var flags = Masters.EquipmentTable.GetById(d.ItemId).RarityFlags;
+                    return (flags & EquipmentRarityFlags.A) != 0 || 
+                           (flags & EquipmentRarityFlags.B) != 0 || 
+                           (flags & EquipmentRarityFlags.C) != 0 || 
+                           (flags & EquipmentRarityFlags.S) != 0;
+                }))
             {
-                RarityFlags = EquipmentRarityFlags.S | EquipmentRarityFlags.A | EquipmentRarityFlags.B |
-                              EquipmentRarityFlags.C
-            });
+                var castManyResponse = await GetResponse<CastManyRequest, CastManyResponse>(new CastManyRequest()
+                {
+                    RarityFlags = EquipmentRarityFlags.S | EquipmentRarityFlags.A | EquipmentRarityFlags.B |
+                                  EquipmentRarityFlags.C
+                });
+            }
             var usersyncData = await UserGetUserData();
             // 找到所有 等级为S、魔装、未装备 的装备
             var equipments = usersyncData.UserSyncData.UserEquipmentDtoInfos.Select(d => new
@@ -254,7 +269,7 @@ public partial class MementoMoriFuncs
                         if (equipmentMb.SlotType != grouping.Key) return false;
                         if ((equipmentMb.RarityFlags & EquipmentRarityFlags.D) == 0) return false;
                         return true;
-                    });
+                    }).ToList();
                     foreach (var equipItem in equipItems)
                     {
                         if (needMoreCount <= 0) break;
