@@ -7,12 +7,21 @@ namespace MementoMori.Ortega.Share.Master.Table
 	{
 		public CharacterPotentialCoefficientMB GetByInitialRarityAndNowRarity(CharacterRarityFlags initialRarityFlags, CharacterRarityFlags nowRarityFlags)
 		{
+			foreach (var mb in _datas)
+			{
+				if (mb.InitialRarityFlags == initialRarityFlags && mb.RarityFlags == nowRarityFlags)
+				{
+					return mb;
+				}
+			}
+
+			string text = string.Format("CharacterPotentialCoefficientMB is null. initialRarity:{0} nowRarity:{1}", initialRarityFlags, nowRarityFlags);
+			throw new Exception(text);
 			// int num = 0;
 			// if (num < (int)nowRarityFlags)
 			// {
 			// 	num++;
 			// }
-			// string text = string.Format("CharacterPotentialCoefficientMB is null. initialRarity:{0} nowRarity:{1}", num, num);
 			// CharacterPotentialCoefficientMB characterPotentialCoefficientMB;
 			// return characterPotentialCoefficientMB;
 			throw new NotImplementedException();

@@ -15,9 +15,7 @@ namespace MementoMori.Ortega.Share.Master.Table
 
 		public EquipmentExclusiveEffectMB GetByIdAndCharacterId(long id, long characterId)
 		{
-			int num = 0;
-			num++;
-			throw new NullReferenceException();
+			return _datas.FirstOrDefault(d => d.Id == id && d.CharacterId == characterId);
 		}
 
 		public EquipmentExclusiveEffectTable()

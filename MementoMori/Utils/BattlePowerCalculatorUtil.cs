@@ -1,12 +1,17 @@
 ﻿using System.Runtime.InteropServices;
+using MementoMori.Common;
+using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.Share;
+using MementoMori.Ortega.Share.Calculators;
 using MementoMori.Ortega.Share.Data.Battle;
 using MementoMori.Ortega.Share.Data.Character;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Enums;
+using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master.Data;
 using MementoMori.Ortega.Share.Master.Table;
+using Newtonsoft.Json;
 
 namespace MementoMori.Ortega.Common.Utils
 {
@@ -14,57 +19,49 @@ namespace MementoMori.Ortega.Common.Utils
 	{
 		public static long GetCharacterBattlePower(long characterId)
 		{
-			// CharacterMB byId = Masters.CharacterTable.GetById(characterId);
-			// if (byId != 0)
-			// {
-			// 	BaseParameter BaseParameterCoefficient = byId.BaseParameterCoefficient;
-			// 	return BattlePowerCalculator.CalculateBattlePower(byId.InitialBattleParameter, BaseParameterCoefficient);
-			// }
-			// throw new NullReferenceException();
-			throw new NotImplementedException();
+			var characterMb = Masters.CharacterTable.GetById(characterId);
+			return BattlePowerCalculator.CalculateBattlePower(characterMb.InitialBattleParameter, characterMb.BaseParameterCoefficient);
 		}
 
 		public static long GetCharacterBattlePower(List<long> characterIds)
 		{
-			// int num;
-			// do
+			long result = 0;
+			foreach (var characterId in characterIds)
+			{
+				var characterMb = Masters.CharacterTable.GetById(characterId);
+				result += BattlePowerCalculator.CalculateBattlePower(characterMb.InitialBattleParameter, characterMb.BaseParameterCoefficient);
+			}
+
+			return result;
+		}
+
+		// public static long GetUserCharacterBattlePower(string userCharacterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
+		// {
+		// 	throw new NotImplementedException();
+		// }
+
+		// public static long GetUserCharacterBattlePower(UserCharacterDtoInfo userCharacterDtoInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
+		// {
+		// 	CalcCharacterBattleParameter(userCharacterDtoInfo, elementParameterBonusDict)
+		// }
+
+		public static long GetUserCharacterBattlePower(UserCharacterInfo userCharacterInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
+		{
+			var (baseParameter, battleParameter) = CalcCharacterBattleParameter(userCharacterInfo, lockEquipmentDeckType);
+			var battlePower = BattlePowerCalculator.CalculateBattlePower(battleParameter, baseParameter);
+			// var characterMb = Masters.CharacterTable.GetById(userCharacterInfo.CharacterId);
+			// var name = Masters.TextResourceTable.Get(characterMb.NameKey);
+			// Directory.CreateDirectory("./battlePowerDebug");
+			// File.WriteAllText($"./battlePowerDebug/{name}_{userCharacterInfo.RarityFlags}_{userCharacterInfo.Level}_{userCharacterInfo.Guid}.json",JsonConvert.SerializeObject(new
 			// {
-			// 	num = 0;
-			// 	bool flag;
-			// 	if (flag)
-			// 	{
-			// 		CharacterTable CharacterTable = Masters.CharacterTable;
-			// 		CharacterMB characterMB;
-			// 		while (characterMB == 0)
-			// 		{
-			// 		}
-			// 		BaseParameter BaseParameterCoefficient = characterMB.BaseParameterCoefficient;
-			// 		long num2 = BattlePowerCalculator.CalculateBattlePower(characterMB.InitialBattleParameter, BaseParameterCoefficient);
-			// 		num = (int)((long)num + num2);
-			// 	}
-			// }
-			// while (num != 0);
-			// throw new NullReferenceException();
-			throw new NotImplementedException();
-
+			// 	BattlePower = battlePower,
+			// 	BaseParameter = baseParameter,
+			// 	BattleParameter = battleParameter,
+			// }, Formatting.Indented));
+			return battlePower;
 		}
 
-		public static long GetUserCharacterBattlePower(string userCharacterGuid, [Optional] Dictionary<ElementType, List<BattleParameterChangeInfo>> elementParameterBonusDict)
-		{
-			throw new NotImplementedException();
-		}
-
-		public static long GetUserCharacterBattlePower(UserCharacterDtoInfo userCharacterDtoInfo, [Optional] Dictionary<ElementType, List<BattleParameterChangeInfo>> elementParameterBonusDict)
-		{
-			throw new NotImplementedException();
-		}
-
-		public static long GetUserCharacterBattlePower(UserCharacterInfo userCharacterInfo, [Optional] Dictionary<ElementType, List<BattleParameterChangeInfo>> elementParameterBonusDict)
-		{
-			throw new NotImplementedException();
-		}
-
-		public static long GetUserCharacterBattlePower(List<string> userCharacterGuids)
+		public static long GetUserCharacterBattlePower(List<string> userCharacterGuids, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
 		{
 			// int num3;
 			// do
@@ -138,7 +135,7 @@ namespace MementoMori.Ortega.Common.Utils
 
 		}
 
-		public static ValueTuple<BaseParameter, BattleParameter> CalcCharacterBattleParameter(string userCharacterGuid, [Optional] Dictionary<ElementType, List<BattleParameterChangeInfo>> elementParameterBonusDict)
+		public static ValueTuple<BaseParameter, BattleParameter> CalcCharacterBattleParameter(string userCharacterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
 		{
 			// UserDataManager instance = SingletonMonoBehaviour.Instance;
 			// throw new NullReferenceException();
@@ -146,14 +143,15 @@ namespace MementoMori.Ortega.Common.Utils
 
 		}
 
-		public static ValueTuple<BaseParameter, BattleParameter> CalcCharacterBattleParameter(UserCharacterInfo userCharacterInfo, [Optional] Dictionary<ElementType, List<BattleParameterChangeInfo>> elementParameterBonusDict)
+		public static ValueTuple<BaseParameter, BattleParameter> CalcCharacterBattleParameter(UserCharacterInfo userCharacterInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
 		{
-			// long rank = SingletonMonoBehaviour.Instance.Rank;
-			// UserDataManager instance = SingletonMonoBehaviour.Instance;
-			// CharacterCollectionParameterInfo characterCollectionParameterInfo = BattleParameterExtension.CalcCharacterCollectionParameterInfo(SingletonMonoBehaviour.Instance.UserCharacterCollectionDtoInfos);
-			// throw new NullReferenceException();
-			throw new NotImplementedException();
-
+			var syncData = Services.Get<MementoMoriFuncs>().UserSyncData;
+			var rank = syncData.UserStatusDtoInfo.Rank;
+			var userEquipmentDtoInfos = syncData.GetUserEquipmentDtoInfosByCharacterGuid(userCharacterInfo.Guid, lockEquipmentDeckType);
+			var characterCollectionDtoInfos = syncData.UserCharacterCollectionDtoInfos();
+			var characterCollectionParameterInfo = characterCollectionDtoInfos.CalcCharacterCollectionParameterInfo();
+			var parameter = userCharacterInfo.CalcCharacterBattleParameter(userEquipmentDtoInfos, characterCollectionParameterInfo, rank);
+			return parameter;
 		}
 
 		public static ValueTuple<BaseParameter, BattleParameter> CalcCharacterBattleParameterForPictureBook(long characterId, CharacterRarityFlags rarityFlags, long level)

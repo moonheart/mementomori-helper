@@ -57,4 +57,7 @@ public static class Extensions
     {
         return dict != null && dict.Count > 0;
     }
+
+    public static long DefaultIfInvalid(this long n) => n >= 0 ? n : 0;
+    public static int DefaultIfInvalid(this int n) => n >= 0 ? n : 0;
 }

@@ -6,8 +6,8 @@ namespace MementoMori.Ortega.Share.Enums
     public enum BaseParameterType
     {
         [Description("筋力")] Muscle = 1,
-        [Description("技力")] Energy,
-        [Description("魔力")] Intelligence,
-        [Description("耐久力")] Health
+        [Description("技力")] Energy = 2,
+        [Description("魔力")] Intelligence = 3,
+        [Description("耐久力")] Health = 4
     }
 }

@@ -1,12 +1,15 @@
 using MementoMori;
+using MementoMori.Common;
 using MementoMori.WebUI.Data;
 using MementoMori.WebUI.ViewModels;
 using MudBlazor.Services;
+using ReactiveUI;
 
 internal class Program
 {
     public static void Main(string[] args)
     {
+        ReactiveUI.PlatformRegistrationManager.SetRegistrationNamespaces(RegistrationNamespace.Blazor);
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Configuration.AddJsonFile("appsettings.dev.json", true, true);
@@ -24,6 +27,8 @@ internal class Program
         builder.Services.Configure<GameConfig>(builder.Configuration.GetSection("GameConfig"));
 
         var app = builder.Build();
+        
+        Services.Setup(app.Services);
 
 // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

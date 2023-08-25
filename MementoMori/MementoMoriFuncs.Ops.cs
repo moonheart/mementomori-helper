@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using MementoMori.Extensions;
+using MementoMori.Ortega.Common.Utils;
+using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
 using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest;
@@ -88,7 +90,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     private void AddLog(string message)
     {
         MesssageList.Insert(0, message);
-        if (MesssageList.Count > 10000)
+        if (MesssageList.Count > 1000)
         {
             MesssageList.RemoveAt(MesssageList.Count - 1);
         }

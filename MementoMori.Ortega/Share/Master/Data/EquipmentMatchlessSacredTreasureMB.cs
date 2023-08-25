@@ -86,15 +86,34 @@ namespace MementoMori.Ortega.Share.Master.Data
 
 		public BattleParameterChangeInfo GetValue(EquipmentSlotType slotType)
 		{
-			if (slotType - EquipmentSlotType.Weapon <= 5)
+			return slotType switch
 			{
-				return new BattleParameterChangeInfo
+				EquipmentSlotType.Weapon => new BattleParameterChangeInfo
 				{
-					BattleParameterType = (BattleParameterType)((ulong)2L),
-					ChangeParameterType = (ChangeParameterType)((ulong)1L)
-				};
-			}
-			throw new NullReferenceException();
+					BattleParameterType = BattleParameterType.AttackPower, ChangeParameterType = ChangeParameterType.Addition, Value = WeaponAttackPower
+				},
+				EquipmentSlotType.Sub => new BattleParameterChangeInfo
+				{
+					BattleParameterType = BattleParameterType.PhysicalDamageRelax, ChangeParameterType = ChangeParameterType.Addition, Value = SubPhysicalDamageRelax
+				},
+				EquipmentSlotType.Gauntlet => new BattleParameterChangeInfo
+				{
+					BattleParameterType = BattleParameterType.MagicDamageRelax, ChangeParameterType = ChangeParameterType.Addition, Value = GauntletMagicDamageRelax
+				},
+				EquipmentSlotType.Helmet => new BattleParameterChangeInfo
+				{
+					BattleParameterType = BattleParameterType.Critical, ChangeParameterType = ChangeParameterType.Addition, Value = HelmetCritical
+				},
+				EquipmentSlotType.Armor => new BattleParameterChangeInfo
+				{
+					BattleParameterType = BattleParameterType.DefensePenetration, ChangeParameterType = ChangeParameterType.Addition, Value = ArmorDefensePenetration
+				},
+				EquipmentSlotType.Shoes => new BattleParameterChangeInfo
+				{
+					BattleParameterType = BattleParameterType.Hp, ChangeParameterType = ChangeParameterType.Addition, Value = ShoesHp
+				},
+				_ => throw new ArgumentOutOfRangeException(nameof(slotType), slotType, null)
+			};
 		}
 	}
 }

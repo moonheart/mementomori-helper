@@ -298,11 +298,7 @@
     <MudCard>
         <MudCardHeader>执行结果</MudCardHeader>
         <MudCardContent>
-            <MudTable Elevation="0" T="string" Items="@ViewModel.MesssageList" Virtualize="true" Dense="true" Height="400px">
-                <RowTemplate>
-                    <MudTd>@context</MudTd>
-                </RowTemplate>
-            </MudTable>
+            <MessageList Messages="@ViewModel.MesssageList" />
         </MudCardContent>
     </MudCard>
 </MudItem>
@@ -341,9 +337,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        this.ViewModel.MesssageList.ToObservableChangeSet().Subscribe(set => InvokeAsync(StateHasChanged));
-        this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
-        this.ViewModel.RuntimeInfo.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
+        // this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
+        // this.ViewModel.RuntimeInfo.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
         ViewModel.WhenAnyValue(d => d.UserSyncData).Subscribe(data =>
         {
             _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>

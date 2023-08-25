@@ -69,16 +69,34 @@ namespace MementoMori.Ortega.Share.Master.Data
 
 		public BattleParameterChangeInfo GetValue(EquipmentSlotType slotType)
 		{
-			if (slotType - EquipmentSlotType.Weapon <= 5)
+			return slotType switch
 			{
-				BattleParameterChangeInfo battleParameterChangeInfo = new BattleParameterChangeInfo();
-				battleParameterChangeInfo.BattleParameterType = (BattleParameterType)((ulong)2L);
-				battleParameterChangeInfo.ChangeParameterType = (ChangeParameterType)((ulong)2L);
-				double num = this.WeaponAttackPowerPercent;
-				battleParameterChangeInfo.Value = num;
-				return battleParameterChangeInfo;
-			}
-			throw new NullReferenceException();
+				EquipmentSlotType.Weapon => new BattleParameterChangeInfo()
+				{
+					BattleParameterType = BattleParameterType.AttackPower, ChangeParameterType = ChangeParameterType.AdditionPercent, Value = WeaponAttackPowerPercent
+				},
+				EquipmentSlotType.Sub => new BattleParameterChangeInfo()
+				{
+					BattleParameterType = BattleParameterType.Hit, ChangeParameterType = ChangeParameterType.AdditionPercent, Value = SubHitPercent
+				},
+				EquipmentSlotType.Gauntlet => new BattleParameterChangeInfo()
+				{
+					BattleParameterType = BattleParameterType.CriticalDamageEnhance, ChangeParameterType = ChangeParameterType.Addition, Value = GauntletCriticalDamagePercent
+				},
+				EquipmentSlotType.Helmet => new BattleParameterChangeInfo()
+				{
+					BattleParameterType = BattleParameterType.PhysicalCriticalDamageRelax, ChangeParameterType = ChangeParameterType.Addition, Value = HelmetPhysicalCriticalDamageRelaxPercent
+				},
+				EquipmentSlotType.Armor => new BattleParameterChangeInfo()
+				{
+					BattleParameterType = BattleParameterType.MagicCriticalDamageRelax, ChangeParameterType = ChangeParameterType.Addition, Value = ArmorMagicCriticalDamageRelaxPercent
+				},
+				EquipmentSlotType.Shoes => new BattleParameterChangeInfo()
+				{
+					BattleParameterType = BattleParameterType.HpDrain, ChangeParameterType = ChangeParameterType.Addition, Value = ShoesHpDrainPercent
+				},
+				_ => throw new ArgumentOutOfRangeException(nameof(slotType), slotType, null)
+			};
 		}
 	}
 }

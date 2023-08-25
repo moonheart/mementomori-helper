@@ -20,6 +20,7 @@ using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master;
 using MessagePack;
 using Microsoft.Extensions.Options;
+using Ortega.Share;
 using ReactiveUI.Fody.Helpers;
 using BountyQuestGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.GetListResponse;
 
@@ -162,21 +163,8 @@ public partial class MementoMoriFuncs
             await File.WriteAllBytesAsync(localPath, fileBytes);
         }
 
-        Masters.ItemTable.Load();
-        Masters.CharacterTable.Load();
-        Masters.TextResourceTable.Load();
-        Masters.EquipmentTable.Load();
-        Masters.SphereTable.Load();
-        Masters.DungeonBattleRelicTable.Load();
-        Masters.EquipmentSetMaterialTable.Load();
-        Masters.TreasureChestTable.Load();
-        Masters.LevelLinkTable.Load();
-        Masters.DungeonBattleGridTable.Load();
-        Masters.GachaCaseTable.Load();
-        Masters.MissionTable.Load();
-        Masters.TotalActivityMedalRewardTable.Load();
-        Masters.MonthlyLoginBonusTable.Load();
-        Masters.MonthlyLoginBonusRewardListTable.Load();
+        Masters.TextResourceTable.SetLanguageType(LanguageType.zhTW);
+        Masters.LoadAllMasters();
     }
 
     private async Task<string> CalcFileMd5(string path)
@@ -440,7 +428,12 @@ public partial class MementoMoriFuncs
                 UserCharacterGuid = g.Key, EquipmentChangeInfos = changeInfos.ToList()
             });
         }
-        
+
+        if (battleInfoResponse1.UserDungeonDtoInfo.IsDoneRewardClearLayer(3))
+        {
+            log("时空洞窟已通关");
+            return;
+        }
         
         while (true)
         {

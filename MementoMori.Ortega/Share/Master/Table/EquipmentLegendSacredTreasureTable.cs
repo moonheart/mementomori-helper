@@ -6,9 +6,15 @@ namespace MementoMori.Ortega.Share.Master.Table
 	{
 		public EquipmentLegendSacredTreasureMB GetByLevel(long level)
 		{
-			int num = 0;
-			num++;
-			throw new NullReferenceException();
+			foreach (var data in _datas)
+			{
+				if (data.Lv == level)
+				{
+					return data;
+				}
+			}
+
+			return null;
 		}
 
 		public EquipmentLegendSacredTreasureTable()

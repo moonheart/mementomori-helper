@@ -7,8 +7,9 @@
 @using MementoMori.Ortega.Share.Enums
 @using System.Collections.ObjectModel
 @using System.Reactive.Linq
-@using DynamicData
 @using DynamicData.Binding
+@using MementoMori.Ortega.Common.Utils
+@using MementoMori.Ortega.Custom
 @using ReactiveUI
 
 <PageTitle>角色</PageTitle>
@@ -17,11 +18,13 @@
 
 <MudDataGrid Items="_userCharacters">
     <Columns>
+        <PropertyColumn Property="x=>x.Guid"></PropertyColumn>
         <PropertyColumn Property="x=>x.Name"></PropertyColumn>
         <PropertyColumn Property="x=>x.ElementType"></PropertyColumn>
         <PropertyColumn Property="x=>x.Level"></PropertyColumn>
         <PropertyColumn Property="x=>x.Exp"></PropertyColumn>
         <PropertyColumn Property="x=>x.RarityFlags"></PropertyColumn>
+        <PropertyColumn Property="x=>x.BattlePower"></PropertyColumn>
         <PropertyColumn Property="x=>x.IsLocked"></PropertyColumn>
     </Columns>
 </MudDataGrid>
@@ -104,7 +107,7 @@
     protected override async Task OnInitializedAsync()
     {
         this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
-        ViewModel.WhenAnyValue(d=>d.UserSyncData).SelectMany(d => d.UserCharacterDtoInfos)
+        ViewModel.WhenAnyValue(d=>d.UserSyncData).WhereNotNull().SelectMany(d => d.UserCharacterDtoInfos).WhereNotNull()
             .Subscribe(info =>
             {
                 var character = _userCharacters.FirstOrDefault(d => d.Guid == info.Guid);
@@ -121,7 +124,8 @@
                         Level = info.Level,
                         Exp = info.Exp,
                         RarityFlags = info.RarityFlags,
-                        IsLocked = info.IsLocked
+                        IsLocked = info.IsLocked,
+                        BattlePower = BattlePowerCalculatorUtil.GetUserCharacterBattlePower(ViewModel.UserSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(info))
                     };
                     _userCharacters.Add(character);
                 }
@@ -152,6 +156,7 @@
         public CharacterRarityFlags RarityFlags { get; set; }
 
         public bool IsLocked { get; set; }
+        public long BattlePower { get; set; }
     }
 
 }

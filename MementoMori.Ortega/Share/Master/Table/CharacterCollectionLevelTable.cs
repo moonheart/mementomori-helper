@@ -6,12 +6,7 @@ namespace MementoMori.Ortega.Share.Master.Table
 	{
 		public CharacterCollectionLevelMB GetByCollectionIdAndLevel(long collectionId, int collectionLevel)
 		{
-			int num = 0;
-			if ((long)num == collectionId)
-			{
-			}
-			num++;
-			throw new NullReferenceException();
+			return _datas.FirstOrDefault(d => d.CollectionId == collectionId && d.CollectionLevel == collectionLevel);
 		}
 
 		public List<CharacterCollectionLevelMB> GetByCollectionId(long collectionId)

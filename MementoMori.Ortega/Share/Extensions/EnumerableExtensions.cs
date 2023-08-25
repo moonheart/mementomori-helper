@@ -38,6 +38,10 @@ namespace MementoMori.Ortega.Share.Extensions
 		// 	throw new NullReferenceException();
 		// }
 
+		public static bool IsNullOrEmpty<T>(this string a0)
+		{
+			return string.IsNullOrEmpty(a0);
+		}
 		public static bool IsNullOrEmpty<T>(this IEnumerable<T> a0)
 		{
 			return a0 == null || !a0.Any();

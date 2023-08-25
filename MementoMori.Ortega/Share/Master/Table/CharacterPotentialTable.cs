@@ -6,12 +6,15 @@ namespace MementoMori.Ortega.Share.Master.Table
 	{
 		public CharacterPotentialMB GetByLevelAndSubLevel(long level, long subLevel)
 		{
-			int num = 0;
-			if ((long)num != level || (long)num != subLevel)
+			foreach (var data in _datas)
 			{
-				num++;
+				if (data.CharacterLevel == level && data.CharacterSubLevel == subLevel)
+				{
+					return data;
+				}
 			}
-			throw new NullReferenceException();
+
+			return null;
 		}
 
 		public CharacterPotentialTable()

@@ -8,9 +8,5 @@ namespace MementoMori.Ortega.Share.Data.DtoInfo
         public long CharacterCollectionId { get; set; }
 
         public int CollectionLevel { get; set; }
-
-        public UserCharacterCollectionDtoInfo()
-        {
-        }
     }
 }
