@@ -13,7 +13,7 @@ public static class UserSyncDataExtensions
 {
     public static UserCharacterInfo GetUserCharacterInfoByUserCharacterDtoInfo(this UserSyncData userSyncData, UserCharacterDtoInfo userCharacterDtoInfo)
     {
-        long levelLinkLevel = userSyncData.GetLevelLinkLevel(userCharacterDtoInfo.CharacterId);
+        long level = userSyncData.GetLevelLinkLevel(userCharacterDtoInfo.CharacterId);
         int subLevel = 0;
         if (userSyncData.IsLevelLinkMember(userCharacterDtoInfo.Guid))
         {
@@ -21,7 +21,7 @@ public static class UserSyncDataExtensions
         }
         else
         {
-            levelLinkLevel = userCharacterDtoInfo.Level;
+            level = userCharacterDtoInfo.Level;
         }
 
         UserCharacterInfo userCharacterInfo = new UserCharacterInfo
@@ -30,13 +30,25 @@ public static class UserSyncDataExtensions
             CharacterId = userCharacterDtoInfo.CharacterId,
             Exp = userCharacterDtoInfo.Exp,
             IsLocked = userCharacterDtoInfo.IsLocked,
-            Level = levelLinkLevel,
+            Level = level,
             SubLevel = subLevel,
             PlayerId = userCharacterDtoInfo.PlayerId,
             RarityFlags = userCharacterDtoInfo.RarityFlags
         };
         return userCharacterInfo;
     }
+    
+    public static UserCharacterInfo GetUserCharacterInfoByUserCharacterGuid(this UserSyncData userSyncData, string userCharacterGuid)
+    {
+        UserCharacterDtoInfo userCharacterDtoInfoByGuid = userSyncData.GetUserCharacterDtoInfoByGuid(userCharacterGuid);
+        return userSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(userCharacterDtoInfoByGuid);
+    }
+    
+    public static UserCharacterDtoInfo GetUserCharacterDtoInfoByGuid(this UserSyncData userSyncData, string userCharacterGuid)
+    {
+        return userSyncData.UserCharacterDtoInfos.FirstOrDefault(d => d.Guid == userCharacterGuid);
+    }
+
     
     public static bool IsLevelLinkMember(this UserSyncData userSyncData, string userCharacterGuid)
     {

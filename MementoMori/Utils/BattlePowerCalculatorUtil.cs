@@ -35,15 +35,17 @@ namespace MementoMori.Ortega.Common.Utils
 			return result;
 		}
 
-		// public static long GetUserCharacterBattlePower(string userCharacterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
-		// {
-		// 	throw new NotImplementedException();
-		// }
+		public static long GetUserCharacterBattlePower(string userCharacterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
+		{
+			var info = Services.Get<MementoMoriFuncs>().UserSyncData.GetUserCharacterInfoByUserCharacterGuid(userCharacterGuid);
+			return GetUserCharacterBattlePower(info, lockEquipmentDeckType);
+		}
 
-		// public static long GetUserCharacterBattlePower(UserCharacterDtoInfo userCharacterDtoInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
-		// {
-		// 	CalcCharacterBattleParameter(userCharacterDtoInfo, elementParameterBonusDict)
-		// }
+		public static long GetUserCharacterBattlePower(UserCharacterDtoInfo userCharacterDtoInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
+		{
+			var info = Services.Get<MementoMoriFuncs>().UserSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(userCharacterDtoInfo);
+			return GetUserCharacterBattlePower(info, lockEquipmentDeckType);
+		}
 
 		public static long GetUserCharacterBattlePower(UserCharacterInfo userCharacterInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
 		{
@@ -137,10 +139,9 @@ namespace MementoMori.Ortega.Common.Utils
 
 		public static ValueTuple<BaseParameter, BattleParameter> CalcCharacterBattleParameter(string userCharacterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
 		{
-			// UserDataManager instance = SingletonMonoBehaviour.Instance;
-			// throw new NullReferenceException();
-			throw new NotImplementedException();
-
+			var syncData = Services.Get<MementoMoriFuncs>().UserSyncData;
+			var userCharacterDtoInfo = syncData.GetUserCharacterInfoByUserCharacterGuid(userCharacterGuid);
+			return CalcCharacterBattleParameter(userCharacterDtoInfo, lockEquipmentDeckType);
 		}
 
 		public static ValueTuple<BaseParameter, BattleParameter> CalcCharacterBattleParameter(UserCharacterInfo userCharacterInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)

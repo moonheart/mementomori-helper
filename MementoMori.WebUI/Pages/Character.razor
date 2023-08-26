@@ -1,162 +1,130 @@
 ﻿@inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
 
 @page "/Character"
+@using MementoMori;
 @using MementoMori.Ortega.Share.Data
 @using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Data.DtoInfo
 @using MementoMori.Ortega.Share.Enums
 @using System.Collections.ObjectModel
-@using System.Reactive.Linq
-@using DynamicData.Binding
+@using global::Ortega.Share.Utils
 @using MementoMori.Ortega.Common.Utils
 @using MementoMori.Ortega.Custom
-@using ReactiveUI
+@using MementoMori.Ortega.Share.Calculators
+@using MementoMori.Ortega.Share.Data.Battle
+@using MementoMori.Ortega.Share.Data.Character
 
 <PageTitle>角色</PageTitle>
-
-<h3>角色</h3>
-
-<MudDataGrid Items="_userCharacters">
-    <Columns>
-        <PropertyColumn Property="x=>x.Guid"></PropertyColumn>
-        <PropertyColumn Property="x=>x.Name"></PropertyColumn>
-        <PropertyColumn Property="x=>x.ElementType"></PropertyColumn>
-        <PropertyColumn Property="x=>x.Level"></PropertyColumn>
-        <PropertyColumn Property="x=>x.Exp"></PropertyColumn>
-        <PropertyColumn Property="x=>x.RarityFlags"></PropertyColumn>
-        <PropertyColumn Property="x=>x.BattlePower"></PropertyColumn>
-        <PropertyColumn Property="x=>x.IsLocked"></PropertyColumn>
-    </Columns>
-</MudDataGrid>
-
 <MudGrid>
-    @foreach (var character in (_userSyncData?.UserCharacterDtoInfos ?? new List<UserCharacterDtoInfo>()).OrderByDescending(d => d.RarityFlags))
+    @if (_selectedCharactor != null)
     {
-        var cmb = Masters.CharacterTable.GetById(character.CharacterId);
+        var cmb = Masters.CharacterTable.GetById(_selectedCharactor.CharacterId);
         var name = Masters.TextResourceTable.Get(cmb.NameKey);
 
-        var elemntColor = cmb.ElementType switch{
-            ElementType.Blue=> Colors.Blue.Default,
-            ElementType.Red=>Colors.Red.Darken1,
-            ElementType.Green=> Colors.Green.Darken1,
-            ElementType.Yellow=> Colors.Yellow.Darken1,
-            ElementType.Light=> Colors.Yellow.Lighten4,
-            ElementType.Dark=> Colors.Purple.Darken3
-            };
-
-        <MudItem xs="6" sm="4" md="3" lg="2">
-            <MudCard>
-                <MudCardHeader>
-                    <MudPaper Style="@($"background: {elemntColor}")" Class="rounded-circle pa-2 mr-2"></MudPaper>
-                    @* <MudText>@cmb.ElementType</MudText> *@
-                    <MudText>@name</MudText>
-                    <MudIcon Class="ml-1" Size="Size.Small" Icon="@(character.IsLocked ? Icons.Material.Filled.Lock : Icons.Material.Filled.LockOpen)"></MudIcon>
-                </MudCardHeader>
-                <MudCardContent>
-                    <MudText>等级: @character.Level</MudText>
-                    <MudText>稀有度: @character.RarityFlags</MudText>
-                    <MudText>职业: @cmb.JobFlags</MudText>
-                    <MudText>经验值: @character.Exp</MudText>
-                </MudCardContent>
-            </MudCard>
+        <MudItem sm="12" md="4">
+            <MudTabs MinimumTabWidth="20" HeaderPosition="TabHeaderPosition.Before">
+                <Header>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
+                        <MudText Style="min-width: 100px">@name</MudText>
+                    </MudStack>
+                </Header>
+                <ChildContent>
+                    <MudTabPanel Text="属性">
+                        <MudStack Elevation="0" Class="d-flex gap-1 flex-wrap" Row="true">
+                            @foreach (var type in EnumUtil.GetValueList<BaseParameterType>())
+                            {
+                                var name = Masters.TextResourceTable.Get(type);
+                                var value = _baseParameter.GetValue(type);
+                                <MudField Label="@name" Variant="Variant.Outlined" Style="min-width: 60px">
+                                    @(value.ToString("N0"))
+                                </MudField>
+                                @* <MudStack Spacing="0" AlignItems="AlignItems.Start"> *@
+                                @*     <MudText Typo="Typo.subtitle2">@name</MudText> *@
+                                @*     <MudText>@value</MudText> *@
+                                @* </MudStack> *@
+                            }
+                        </MudStack>
+                        <MudStack Elevation="0" Class="d-flex gap-1 flex-wrap" Row="true">
+                            @foreach (var type in EnumUtil.GetValueList<BattleParameterType>())
+                            {
+                                var name = Masters.TextResourceTable.Get(type);
+                                var value = _battleParameter.GetParameter(type);
+                                <MudField Label="@name" Variant="Variant.Outlined" Style="min-width: 90px">
+                                    @(value.ToString("N0"))
+                                </MudField>
+                            }
+                        </MudStack>
+                    </MudTabPanel>
+                    <MudTabPanel Text="装备">
+                        
+                    </MudTabPanel>
+                    <MudTabPanel Text="详细"></MudTabPanel>
+                </ChildContent>
+            </MudTabs>
         </MudItem>
     }
-</MudGrid>
-<table class="table">
-    <thead>
-    <tr>
-        <th>GUID</th>
-        <th>名称</th>
-        <th>等级</th>
-        <th>稀有度</th>
-        <th>属性</th>
-        <th>职业</th>
-        <th>锁定</th>
-        <th>经验值</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var character in _userSyncData?.UserCharacterDtoInfos ?? new List<UserCharacterDtoInfo>())
-    {
-        var cmb = Masters.CharacterTable.GetById(character.CharacterId);
-        var name = Masters.TextResourceTable.Get(cmb.NameKey);
+    <MudItem sm="12" md="8">
+        <MudPaper Class="d-flex gap-2 flex-wrap" Elevation="0">
+            @foreach (var character in (_userSyncData?.UserCharacterDtoInfos ?? new List<UserCharacterDtoInfo>()).OrderByDescending(d => d.RarityFlags))
+            {
+                var cmb = Masters.CharacterTable.GetById(character.CharacterId);
+                var name = Masters.TextResourceTable.Get(cmb.NameKey);
 
-        <tr>
-            <td>@character.Guid</td>
-            <td>@name</td>
-            <td>@character.Level</td>
-            <td>@character.RarityFlags</td>
-            <td>@cmb.ElementType</td>
-            <td>@cmb.JobFlags</td>
-            <td>@character.IsLocked</td>
-            <td>@character.Exp</td>
-        </tr>
-    }
-    </tbody>
-</table>
+                var jobName = Masters.TextResourceTable.Get(cmb.JobFlags);
+                var rarity = Masters.TextResourceTable.Get(character.RarityFlags);
+
+                var elemntColor = cmb.ElementType switch{
+                    ElementType.Blue=> Colors.Blue.Default,
+                    ElementType.Red=>Colors.Red.Darken1,
+                    ElementType.Green=> Colors.Green.Darken1,
+                    ElementType.Yellow=> Colors.Yellow.Darken1,
+                    ElementType.Light=> Colors.Yellow.Lighten4,
+                    ElementType.Dark=> Colors.Purple.Darken3,
+                    _ => ""
+                    };
+                var battlePower = BattlePowerCalculatorUtil.GetUserCharacterBattlePower(character);
+
+                <MudPaper Width="120px" @onclick="()=>SelectCharacter(character)">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="0">
+                        <MudPaper Elevation="0" Style="@($"background: {elemntColor}")" Class="rounded-circle pa-2"/>
+                        <MudText>Lv@(character.Level)</MudText>
+                        <MudSpacer/>
+                        <MudIcon Class="ml-1" Size="Size.Small" Icon="@(character.IsLocked ? Icons.Material.Filled.Lock : Icons.Material.Filled.LockOpen)"/>
+                    </MudStack>
+                    <MudStack Row="true" AlignItems="AlignItems.Center">
+                        <MudText Typo="Typo.h6">@name</MudText>
+                    </MudStack>
+                    <MudStack Row="true" AlignItems="AlignItems.Center">
+                        <MudText>战力 @battlePower</MudText>
+                    </MudStack>
+                    <MudStack Row="true" AlignItems="AlignItems.Center">
+                        <MudText>@jobName</MudText>
+                        <MudText>@rarity</MudText>
+                    </MudStack>
+                </MudPaper>
+            }
+        </MudPaper>
+    </MudItem>
+</MudGrid>
 
 @code {
-    private RuntimeInfo _runtimeInfo;
     private UserSyncData? _userSyncData;
-
-    private bool _logining;
-    private bool _isQuickActionExecuting;
-    private string _quickActionResult;
-    private ObservableCollection<UserCharacter> _userCharacters = new();
+    private BaseParameter _baseParameter;
+    private BattleParameter _battleParameter;
+    private UserCharacterDtoInfo _selectedCharactor;
 
     protected override async Task OnInitializedAsync()
     {
-        this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
-        ViewModel.WhenAnyValue(d=>d.UserSyncData).WhereNotNull().SelectMany(d => d.UserCharacterDtoInfos).WhereNotNull()
-            .Subscribe(info =>
-            {
-                var character = _userCharacters.FirstOrDefault(d => d.Guid == info.Guid);
-                if (character == null)
-                {
-                    var characterMb = Masters.CharacterTable.GetById(info.CharacterId);
-                    var name = Masters.TextResourceTable.Get(characterMb.NameKey);
-                    character = new UserCharacter
-                    {
-                        Guid = info.Guid,
-                        Name = name,
-                        ElementType = characterMb.ElementType,
-                        CharacterId = info.CharacterId,
-                        Level = info.Level,
-                        Exp = info.Exp,
-                        RarityFlags = info.RarityFlags,
-                        IsLocked = info.IsLocked,
-                        BattlePower = BattlePowerCalculatorUtil.GetUserCharacterBattlePower(ViewModel.UserSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(info))
-                    };
-                    _userCharacters.Add(character);
-                }
-                else
-                {
-                    character.Level = info.Level;
-                    character.Exp = info.Exp;
-                    character.RarityFlags = info.RarityFlags;
-                    character.IsLocked = info.IsLocked;
-                }
-            });
+        _userSyncData = ViewModel.UserSyncData;
+        SelectCharacter(_userSyncData.UserCharacterDtoInfos.FirstOrDefault());
     }
 
-    public class UserCharacter
+    private void SelectCharacter(UserCharacterDtoInfo info)
     {
-        public string Guid { get; set; }
-
-        public string Name { get; set; }
-
-        public ElementType ElementType { get; set; }
-
-        public long CharacterId { get; set; }
-
-        public long Level { get; set; }
-
-        public long Exp { get; set; }
-
-        public CharacterRarityFlags RarityFlags { get; set; }
-
-        public bool IsLocked { get; set; }
-        public long BattlePower { get; set; }
+        _selectedCharactor = info;
+        var parameter = BattlePowerCalculatorUtil.CalcCharacterBattleParameter(info.Guid);
+        _baseParameter = parameter.Item1;
+        _battleParameter = parameter.Item2;
     }
 
 }

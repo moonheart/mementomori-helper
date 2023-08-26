@@ -7,7 +7,7 @@ namespace MementoMori.Ortega.Share.Master.Table
 	{
 		public TM GetById(long id)
 		{
-			return _datas.FirstOrDefault(d => d.Id == id);
+			return _datas?.FirstOrDefault(d => d.Id == id);
 		}
 
 		public string GetMasterBookName()

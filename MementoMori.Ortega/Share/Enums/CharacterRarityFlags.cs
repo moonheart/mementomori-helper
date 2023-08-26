@@ -23,6 +23,9 @@ namespace MementoMori.Ortega.Share.Enums
         [Description("LR+4")] LRPlus4 = 8192,
         [Description("LR+5")] LRPlus5 = 16384,
         [Description("LR+6")] LRPlus6 = 32768,
-        [Description("LR+7")] LRPlus7 = 65536
+        [Description("LR+7")] LRPlus7 = 65536,
+        [Description("LR+8")] LRPlus8 = 131072,
+        [Description("LR+9")] LRPlus9 = 262144,
+        [Description("LR+10")] LRPlus10 = 524288
     }
 }

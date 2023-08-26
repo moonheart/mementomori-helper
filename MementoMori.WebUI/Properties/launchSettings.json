@@ -3,7 +3,7 @@
     "MementoMori.WebUI": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "http://127.0.0.1:5290",
       "applicationUrl": "http://0.0.0.0:5290",
       "environmentVariables": {

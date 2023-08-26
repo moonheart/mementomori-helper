@@ -3,12 +3,9 @@ using ReactiveUI.Fody.Helpers;
 
 namespace MementoMori;
 
-public class RuntimeInfo : ReactiveObject
+public class RuntimeInfo
 {
-    [Reactive]
     public string OrtegaAccessToken { get; set; }
-    [Reactive]
     public string ApiHost { get; set; }
-    [Reactive]
     public string OrtegaMasterVersion { get; set; }
 }

@@ -24,11 +24,11 @@ namespace Ortega.Share.Utils
 			return Enum.GetValues(typeof(T)).Length;
 		}
 
-		// public static string GetKey<T>(T enumValue) where T : Enum
-		// {
-		// 	string name = typeof(Type).Name;
-		// 	string text;
-		// 	return "[" + name + text + "]";
-		// }
+		public static string GetKey<T>(T enumValue) where T : Enum
+		{
+			string name = typeof(Type).Name;
+			string text = enumValue.ToString();
+			return "[" + name + text + "]";
+		}
 	}
 }

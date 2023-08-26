@@ -399,8 +399,8 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var giveAllSrCharacterResponse = await GetResponse<GetMypageRequest, GetMypageResponse>(new GetMypageRequest());
-            log(giveAllSrCharacterResponse.ToJson(true));
+            var bossResponse = await GetResponse<BossRequest, BossResponse>(new BossRequest() {QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1});
+            log(bossResponse.ToJson(true));
         });
     }
 

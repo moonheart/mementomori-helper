@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -20,9 +21,10 @@ using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master;
 using MessagePack;
 using Microsoft.Extensions.Options;
-using Ortega.Share;
+using Newtonsoft.Json;
 using ReactiveUI.Fody.Helpers;
 using BountyQuestGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.GetListResponse;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace MementoMori;
 
@@ -63,15 +65,25 @@ public partial class MementoMoriFuncs
     private readonly AuthOption _authOption;
     private readonly GameConfig _gameConfig;
 
+    private T ReadFromJson<T>(string jsonPath) where T : new()
+    {
+        if (!File.Exists(jsonPath))
+        {
+            return new T();
+        }
+        var json = File.ReadAllText(jsonPath);
+        return JsonConvert.DeserializeObject<T>(json);
+    }
+
+    private void WriteToJson<T>(string jsonPath, T value)
+    {
+        File.WriteAllText(jsonPath, JsonConvert.SerializeObject(value, Formatting.Indented));
+    }
+    
     public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig)
     {
-        RuntimeInfo = new RuntimeInfo();
-        UserSyncData = new UserSyncData();
-        Mypage = new GetMypageResponse();
-        NoticeInfoList = new List<NoticeInfo>();
         _authOption = authOption.Value;
         _gameConfig = gameConfig.Value;
-        AccountXml();
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler(_authOption.Headers);
         _meMoriHttpClientHandler.OrtegaAccessToken.Subscribe(token =>
         {
@@ -81,12 +93,27 @@ public partial class MementoMoriFuncs
         {
             RuntimeInfo.OrtegaMasterVersion = version;
         });
-
         _httpClient = new HttpClient(_meMoriHttpClientHandler);
         _unityHttpClient = new HttpClient();
         _unityHttpClient.DefaultRequestHeaders.Add("User-Agent",
             new[] {"UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)"});
         _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", new[] {"2021.3.10f1"});
+        AccountXml();
+
+        Mypage = new GetMypageResponse();
+        NoticeInfoList = new List<NoticeInfo>();
+        
+        // RuntimeInfo = new RuntimeInfo();
+        RuntimeInfo = ReadFromJson<RuntimeInfo>("runtimeinfo.json");
+        DownloadMasterCatalog(true).ConfigureAwait(false).GetAwaiter().GetResult();
+        // UserSyncData = new UserSyncData();
+        UserSyncData = ReadFromJson<UserSyncData>("usersyncdata.json");
+
+        Observable.Timer(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10)).Subscribe(t =>
+        {
+            WriteToJson("runtimeinfo.json", RuntimeInfo);
+            WriteToJson("usersyncdata.json", UserSyncData);
+        });
 
     }
 
@@ -140,8 +167,14 @@ public partial class MementoMoriFuncs
         RuntimeInfo.ApiHost = resp.ApiHost;
     }
 
-    private async Task DownloadMasterCatalog()
+    private async Task DownloadMasterCatalog(bool useLocal = false)
     {
+        if (useLocal)
+        {
+            Masters.TextResourceTable.SetLanguageType(LanguageType.zhTW);
+            Masters.LoadAllMasters();
+            return;
+        }
         var url =
             $"https://cdn-mememori.akamaized.net/master/prd1/version/{RuntimeInfo.OrtegaMasterVersion}/master-catalog";
         var bytes = await _unityHttpClient.GetByteArrayAsync(url);
@@ -743,15 +776,7 @@ public partial class MementoMoriFuncs
             {
                 AddLog(uri.ToString());
                 var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(respBytes);
-                AddLog($"{apiErrResponse.Message} {apiErrResponse.ErrorCode}");
-                if (apiErrResponse.ErrorCode == ErrorCode.CommonRequireClientUpdate)
-                {
-                    AddLog("请更新客户端版本");
-                }
-                else if (apiErrResponse.ErrorCode == ErrorCode.CommonMaintenance)
-                {
-                    await GetNoticeInfoList();
-                }
+                AddLog($"{Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode)}");
                 throw new InvalidOperationException($"{apiErrResponse.Message} {apiErrResponse.ErrorCode}");
             }
         }
