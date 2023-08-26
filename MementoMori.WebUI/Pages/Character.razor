@@ -116,7 +116,7 @@
     protected override async Task OnInitializedAsync()
     {
         _userSyncData = ViewModel.UserSyncData;
-        SelectCharacter(_userSyncData.UserCharacterDtoInfos.FirstOrDefault());
+        SelectCharacter(_userSyncData.UserCharacterDtoInfos.MaxBy(d=>d.Level));
     }
 
     private void SelectCharacter(UserCharacterDtoInfo info)

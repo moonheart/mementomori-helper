@@ -30,7 +30,6 @@ namespace MementoMori;
 
 public partial class MementoMoriFuncs
 {
-    private Uri _apiHost;
     private Uri _apiAuth = new("https://prd1-auth.mememori-boi.com/api/");
 
     [Reactive]
@@ -163,7 +162,6 @@ public partial class MementoMoriFuncs
     {
         var req = new GetServerHostRequest() {WorldId = worldId};
         var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(req);
-        _apiHost = new Uri(resp.ApiHost);
         RuntimeInfo.ApiHost = resp.ApiHost;
     }
 
@@ -747,7 +745,7 @@ public partial class MementoMoriFuncs
         }
         else if (apiAttr != null)
         {
-            uri = new Uri(_apiHost, apiAttr.Uri);
+            uri = new Uri(new Uri(RuntimeInfo.ApiHost), apiAttr.Uri);
             
             if (RuntimeInfo.OrtegaAccessToken.IsNullOrEmpty())
             {
@@ -776,8 +774,9 @@ public partial class MementoMoriFuncs
             {
                 AddLog(uri.ToString());
                 var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(respBytes);
-                AddLog($"{Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode)}");
-                throw new InvalidOperationException($"{apiErrResponse.Message} {apiErrResponse.ErrorCode}");
+                var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
+                AddLog($"{errorCodeMessage}");
+                throw new InvalidOperationException($"{apiErrResponse.Message} {errorCodeMessage}");
             }
         }
 
