@@ -41,22 +41,22 @@ public partial class MementoMoriFuncs
 
     [Reactive]
     public Dictionary<MissionGroupType, MissionInfo> MissionInfoDict { get; set; }
-    
+
     [Reactive]
     public GetMypageResponse Mypage { get; private set; }
-    
+
     [Reactive]
     public BountyQuestGetListResponse BountyQuestResponseInfo { get; private set; }
-    
+
     [Reactive]
     public GetMonthlyLoginBonusInfoResponse MonthlyLoginBonusInfo { get; private set; }
-    
+
     [Reactive]
     public List<NoticeInfo> NoticeInfoList { get; set; }
-    
+
     [Reactive]
     public bool IsNotClearDungeonBattleMap { get; set; }
-    
+
     private readonly MeMoriHttpClientHandler _meMoriHttpClientHandler;
     private readonly HttpClient _httpClient;
     private readonly HttpClient _unityHttpClient;
@@ -71,6 +71,7 @@ public partial class MementoMoriFuncs
         {
             return new T();
         }
+
         var json = File.ReadAllText(jsonPath);
         return JsonConvert.DeserializeObject<T>(json);
     }
@@ -79,20 +80,14 @@ public partial class MementoMoriFuncs
     {
         File.WriteAllText(jsonPath, JsonConvert.SerializeObject(value, Formatting.Indented));
     }
-    
+
     public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig)
     {
         _authOption = authOption.Value;
         _gameConfig = gameConfig.Value;
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler(_authOption.Headers);
-        _meMoriHttpClientHandler.OrtegaAccessToken.Subscribe(token =>
-        {
-            RuntimeInfo.OrtegaAccessToken = token;
-        });
-        _meMoriHttpClientHandler.OrtegaMasterVersion.Subscribe(version =>
-        {
-            RuntimeInfo.OrtegaMasterVersion = version;
-        });
+        _meMoriHttpClientHandler.OrtegaAccessToken.Subscribe(token => { RuntimeInfo.OrtegaAccessToken = token; });
+        _meMoriHttpClientHandler.OrtegaMasterVersion.Subscribe(version => { RuntimeInfo.OrtegaMasterVersion = version; });
         _httpClient = new HttpClient(_meMoriHttpClientHandler);
         _unityHttpClient = new HttpClient();
         _unityHttpClient.DefaultRequestHeaders.Add("User-Agent",
@@ -102,7 +97,7 @@ public partial class MementoMoriFuncs
 
         Mypage = new GetMypageResponse();
         NoticeInfoList = new List<NoticeInfo>();
-        
+
         // RuntimeInfo = new RuntimeInfo();
         RuntimeInfo = ReadFromJson<RuntimeInfo>("runtimeinfo.json");
         DownloadMasterCatalog(true).ConfigureAwait(false).GetAwaiter().GetResult();
@@ -114,7 +109,6 @@ public partial class MementoMoriFuncs
             WriteToJson("runtimeinfo.json", RuntimeInfo);
             WriteToJson("usersyncdata.json", UserSyncData);
         });
-
     }
 
     private void AccountXml()
@@ -174,6 +168,7 @@ public partial class MementoMoriFuncs
             Masters.LoadAllMasters();
             return;
         }
+
         var url =
             $"https://cdn-mememori.akamaized.net/master/prd1/version/{RuntimeInfo.OrtegaMasterVersion}/master-catalog";
         var bytes = await _unityHttpClient.GetByteArrayAsync(url);
@@ -227,7 +222,7 @@ public partial class MementoMoriFuncs
         {
             // 批量精炼
             log("批量精炼");
-            if (UserSyncData.UserItemDtoInfo.Any(d=>
+            if (UserSyncData.UserItemDtoInfo.Any(d =>
                 {
                     if (d.ItemType != ItemType.Equipment)
                     {
@@ -235,9 +230,9 @@ public partial class MementoMoriFuncs
                     }
 
                     var flags = Masters.EquipmentTable.GetById(d.ItemId).RarityFlags;
-                    return (flags & EquipmentRarityFlags.A) != 0 || 
-                           (flags & EquipmentRarityFlags.B) != 0 || 
-                           (flags & EquipmentRarityFlags.C) != 0 || 
+                    return (flags & EquipmentRarityFlags.A) != 0 ||
+                           (flags & EquipmentRarityFlags.B) != 0 ||
+                           (flags & EquipmentRarityFlags.C) != 0 ||
                            (flags & EquipmentRarityFlags.S) != 0;
                 }))
             {
@@ -247,6 +242,7 @@ public partial class MementoMoriFuncs
                                   EquipmentRarityFlags.C
                 });
             }
+
             var usersyncData = await UserGetUserData();
             // 找到所有 等级为S、魔装、未装备 的装备
             var equipments = usersyncData.UserSyncData.UserEquipmentDtoInfos.Select(d => new
@@ -370,7 +366,7 @@ public partial class MementoMoriFuncs
                                         }
                                     });
                         }
-                        
+
                         needMoreCount--;
                         processedDEquips.Add(equipItem);
                     }
@@ -413,7 +409,6 @@ public partial class MementoMoriFuncs
                     {
                         log("没有找到可被继承的D装");
                     }
-                    
                 }
             }
         }
@@ -423,15 +418,17 @@ public partial class MementoMoriFuncs
     public async Task AutoDungeonBattle(Action<string> log)
     {
         // todo 脱装备进副本，然后穿装备
-        var deckDtoInfo = UserSyncData.UserDeckDtoInfos.First(d=>d.DeckUseContentType == DeckUseContentType.DungeonBattle).GetUserCharacterGuids();
-        var equips = UserSyncData.UserEquipmentDtoInfos.Where(d=>!string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d=>d.CharacterGuid).ToList();
+        var deckDtoInfo = UserSyncData.UserDeckDtoInfos.First(d => d.DeckUseContentType == DeckUseContentType.DungeonBattle).GetUserCharacterGuids();
+        var equips = UserSyncData.UserEquipmentDtoInfos.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d => d.CharacterGuid).ToList();
         foreach (var g in equips)
         {
             log($"脱下装备 {g.Key}");
             // 脱装备
             var removeEquipmentResponse = await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
             {
-                UserCharacterGuid = g.Key, EquipmentSlotTypes = new List<EquipmentSlotType>(){EquipmentSlotType.Armor, EquipmentSlotType.Gauntlet, EquipmentSlotType.Helmet, EquipmentSlotType.Shoes, EquipmentSlotType.Sub, EquipmentSlotType.Weapon}
+                UserCharacterGuid = g.Key,
+                EquipmentSlotTypes = new List<EquipmentSlotType>()
+                    {EquipmentSlotType.Armor, EquipmentSlotType.Gauntlet, EquipmentSlotType.Helmet, EquipmentSlotType.Shoes, EquipmentSlotType.Sub, EquipmentSlotType.Weapon}
             });
         }
 
@@ -466,7 +463,7 @@ public partial class MementoMoriFuncs
             log("时空洞窟已通关");
             return;
         }
-        
+
         while (true)
         {
             // 获取副本信息
@@ -516,7 +513,7 @@ public partial class MementoMoriFuncs
                             userDeckDtoInfo.UserCharacterGuid3,
                             userDeckDtoInfo.UserCharacterGuid4,
                             userDeckDtoInfo.UserCharacterGuid5,
-                        }
+                        }.Where(d => !d.IsNullOrEmpty()).ToList()
                     });
                 var finishBattleResponse = await GetResponse<FinishBattleRequest, FinishBattleResponse>(
                     new FinishBattleRequest()
@@ -649,10 +646,12 @@ public partial class MementoMoriFuncs
                                     });
                             break;
                         case DungeonBattleGridType.BattleAndRelicReinforce:
-                        {await DoBattle();
-                            
+                        {
+                            await DoBattle();
+
                             var relicId = 0L;
-                            var canUpgradeRelics = battleInfoResponse.UserDungeonDtoInfo.RelicIds.Where(d=>Masters.DungeonBattleRelicTable.GetById(d).DungeonRelicRarityType != DungeonBattleRelicRarityType.SSR).ToList();
+                            var canUpgradeRelics = battleInfoResponse.UserDungeonDtoInfo.RelicIds
+                                .Where(d => Masters.DungeonBattleRelicTable.GetById(d).DungeonRelicRarityType != DungeonBattleRelicRarityType.SSR).ToList();
                             foreach (var info in _gameConfig.DungeonBattleRelicSort)
                             {
                                 if (canUpgradeRelics.Contains(info.Id))
@@ -747,7 +746,7 @@ public partial class MementoMoriFuncs
         else if (apiAttr != null)
         {
             uri = new Uri(new Uri(RuntimeInfo.ApiHost), apiAttr.Uri);
-            
+
             if (RuntimeInfo.OrtegaAccessToken.IsNullOrEmpty())
             {
                 await AuthLogin();
@@ -767,6 +766,7 @@ public partial class MementoMoriFuncs
         {
             throw new InvalidOperationException(respMsg.ToString());
         }
+
         var respBytes = await respMsg.Content.ReadAsByteArrayAsync();
         if (respMsg.Headers.TryGetValues("ortegastatuscode", out var headers2))
         {
@@ -788,6 +788,7 @@ public partial class MementoMoriFuncs
         {
             UserSyncData.UserItemEditorMergeUserSyncData(userSyncApiResponse.UserSyncData);
         }
+
         return response;
         // return JsonConvert.DeserializeObject<TResp>(JsonConvert.SerializeObject(tmp));
     }
