@@ -6,9 +6,7 @@ namespace MementoMori.Ortega.Share.Master.Table
 	{
 		public EquipmentReinforcementParameterMB GetByLevel(long level)
 		{
-			int num = 0;
-			num++;
-			throw new NullReferenceException();
+			return _datas.FirstOrDefault(d => d.Id == level);
 		}
 
 		public EquipmentReinforcementParameterTable()

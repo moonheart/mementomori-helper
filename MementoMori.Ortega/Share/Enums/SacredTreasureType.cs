@@ -6,12 +6,12 @@ namespace MementoMori.Ortega.Share.Enums
 	public enum SacredTreasureType
 	{
 		[Description("神器ではない")]
-		None,
+		None = 0,
 		[Description("魔装")]
-		Matchless,
+		Matchless = 1,
 		[Description("聖装")]
-		Legend,
+		Legend = 2,
 		[Description("双ステータス神器")]
-		DualStatus
+		DualStatus = 3
 	}
 }

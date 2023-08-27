@@ -71,7 +71,7 @@ namespace MementoMori.Ortega.Share.Master.Table
         public string Get(string key, params object[] param)
         {
             var value = this.Get(key);
-            return string.Format(key, param).Replace("<br>", Environment.NewLine);
+            return string.Format(value, param).Replace("<br>", Environment.NewLine);
         }
 
         public string GetItemDescription<T>(T enumValue) where T : Enum

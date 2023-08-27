@@ -717,7 +717,7 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 				// throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
 			}
 
-			public static readonly List<EquipmentRarityFlags> ActiveExclusiveSkillRaritys;
+			public static readonly List<EquipmentRarityFlags> ActiveExclusiveSkillRaritys = new() {EquipmentRarityFlags.SSR, EquipmentRarityFlags.UR, EquipmentRarityFlags.LR};
 
 			public static long EquipmentComposeCountMissionEquipmentLv;
 

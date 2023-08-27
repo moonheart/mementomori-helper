@@ -6,6 +6,7 @@ using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master.Data;
 using Ortega.Share;
+using Ortega.Share.Utils;
 
 namespace MementoMori.Ortega.Custom;
 
@@ -71,7 +72,7 @@ public static class UserSyncDataExtensions
         return 0;
     }
 
-    public static List<UserEquipmentDtoInfo> GetUserEquipmentDtoInfosByCharacterGuid(this UserSyncData userSyncData, string characterGuid, LockEquipmentDeckType lockEquipmentDeckType)
+    public static List<UserEquipmentDtoInfo> GetUserEquipmentDtoInfosByCharacterGuid(this UserSyncData userSyncData, string characterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
     {
         if(userSyncData.LockedEquipmentCharacterGuidListMap.TryGetValue(lockEquipmentDeckType, out var guids) && !guids.IsNullOrEmpty())
         {
@@ -87,7 +88,7 @@ public static class UserSyncDataExtensions
         return userEquipmentDtoInfos;
     }
 
-    public static List<UserEquipmentDtoInfo> GetLockedUserEquipmentDtoInfosByCharacterGuid(this UserSyncData syncData, string characterGuid, LockEquipmentDeckType lockEquipmentDeckType)
+    public static List<UserEquipmentDtoInfo> GetLockedUserEquipmentDtoInfosByCharacterGuid(this UserSyncData syncData, string characterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
     {
         var userEquipmentDtoInfos = new List<UserEquipmentDtoInfo>();
         if (characterGuid.IsNullOrEmpty() || !syncData.LockedUserEquipmentDtoInfoListMap.TryGetValue(lockEquipmentDeckType, out var userEquipmentDtoInfos1))
@@ -102,5 +103,51 @@ public static class UserSyncDataExtensions
     {
         return syncData.UserCharacterCollectionDtoInfos;
     }
+
+    public static Dictionary<EquipmentSlotType, UserEquipmentDtoInfo> GetUserEquipmentDtoInfoSlotTypeDictionaryByCharacterGuid(this UserSyncData userSyncData, string characterGuid)
+    {
+        var equipmentSlotTypes = EnumUtil.GetValueList<EquipmentSlotType>();
+        var userEquipmentDtoInfos = new Dictionary<EquipmentSlotType, UserEquipmentDtoInfo>();
+        foreach (var equipmentSlotType in equipmentSlotTypes)
+        {
+            userEquipmentDtoInfos[equipmentSlotType] = null;
+        }
+        if (string.IsNullOrEmpty(characterGuid))
+        {
+            return userEquipmentDtoInfos;
+        }
+        foreach (var userEquipmentDtoInfo in userSyncData.UserEquipmentDtoInfos.Where(d=>d.CharacterGuid == characterGuid))
+        {
+            var equipmentMb = Masters.EquipmentTable.GetById(userEquipmentDtoInfo.EquipmentId);
+            userEquipmentDtoInfos[equipmentMb.SlotType] = userEquipmentDtoInfo;
+        }
+
+        return userEquipmentDtoInfos;
+    }
+    
+    public static int GetChangedSetEquipmentCount(this UserSyncData userSyncData, string userCharacterGuid, long equipmentSetId, EquipmentSlotType slotType)
+    {
+        if (userCharacterGuid.IsNullOrEmpty() || equipmentSetId <= 0)
+        {
+            return 0;
+        }
+
+        var dict = userSyncData.GetUserEquipmentDtoInfoSlotTypeDictionaryByCharacterGuid(userCharacterGuid);
+        int count = 0;
+        foreach (var (equipmentSlotType, userEquipmentDtoInfo) in dict)
+        {
+            if (equipmentSlotType != slotType)
+            {
+                if (Masters.EquipmentTable.GetById(userEquipmentDtoInfo.EquipmentId).EquipmentSetId != equipmentSetId)
+                {
+                    continue;
+                }
+            }
+
+            count++;
+        }
+        return count;
+    }
+
 
 }

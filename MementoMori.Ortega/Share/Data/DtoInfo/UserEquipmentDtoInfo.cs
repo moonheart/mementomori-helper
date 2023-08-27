@@ -24,25 +24,25 @@ namespace MementoMori.Ortega.Share.Data.DtoInfo
 
         public UserEquipmentDtoInfo(UserEquipmentDtoInfo userEquipmentDtoInfo)
         {
-            this.CreateAt = userEquipmentDtoInfo.CreateAt;
-            this.PlayerId = userEquipmentDtoInfo.PlayerId;
-            this.AdditionalParameterIntelligence = userEquipmentDtoInfo.AdditionalParameterIntelligence;
-            this.AdditionalParameterHealth = userEquipmentDtoInfo.AdditionalParameterHealth;
-            this.AdditionalParameterMuscle = userEquipmentDtoInfo.AdditionalParameterMuscle;
-            this.AdditionalParameterEnergy = userEquipmentDtoInfo.AdditionalParameterEnergy;
-            this.EquipmentId = userEquipmentDtoInfo.EquipmentId;
-            this.Guid = userEquipmentDtoInfo.Guid;
-            this.CharacterGuid = userEquipmentDtoInfo.CharacterGuid;
-            this.SphereId1 = userEquipmentDtoInfo.SphereId1;
-            this.SphereId2 = userEquipmentDtoInfo.SphereId2;
-            this.SphereId3 = userEquipmentDtoInfo.SphereId3;
-            this.SphereId4 = userEquipmentDtoInfo.SphereId4;
-            this.SphereUnlockedCount = userEquipmentDtoInfo.SphereUnlockedCount;
-            this.LegendSacredTreasureExp = userEquipmentDtoInfo.LegendSacredTreasureExp;
-            this.LegendSacredTreasureLv = userEquipmentDtoInfo.LegendSacredTreasureLv;
-            this.MatchlessSacredTreasureExp = userEquipmentDtoInfo.MatchlessSacredTreasureExp;
-            this.MatchlessSacredTreasureLv = userEquipmentDtoInfo.MatchlessSacredTreasureLv;
-            this.ReinforcementLv = userEquipmentDtoInfo.ReinforcementLv;
+            CreateAt = userEquipmentDtoInfo.CreateAt;
+            PlayerId = userEquipmentDtoInfo.PlayerId;
+            AdditionalParameterIntelligence = userEquipmentDtoInfo.AdditionalParameterIntelligence;
+            AdditionalParameterHealth = userEquipmentDtoInfo.AdditionalParameterHealth;
+            AdditionalParameterMuscle = userEquipmentDtoInfo.AdditionalParameterMuscle;
+            AdditionalParameterEnergy = userEquipmentDtoInfo.AdditionalParameterEnergy;
+            EquipmentId = userEquipmentDtoInfo.EquipmentId;
+            Guid = userEquipmentDtoInfo.Guid;
+            CharacterGuid = userEquipmentDtoInfo.CharacterGuid;
+            SphereId1 = userEquipmentDtoInfo.SphereId1;
+            SphereId2 = userEquipmentDtoInfo.SphereId2;
+            SphereId3 = userEquipmentDtoInfo.SphereId3;
+            SphereId4 = userEquipmentDtoInfo.SphereId4;
+            SphereUnlockedCount = userEquipmentDtoInfo.SphereUnlockedCount;
+            LegendSacredTreasureExp = userEquipmentDtoInfo.LegendSacredTreasureExp;
+            LegendSacredTreasureLv = userEquipmentDtoInfo.LegendSacredTreasureLv;
+            MatchlessSacredTreasureExp = userEquipmentDtoInfo.MatchlessSacredTreasureExp;
+            MatchlessSacredTreasureLv = userEquipmentDtoInfo.MatchlessSacredTreasureLv;
+            ReinforcementLv = userEquipmentDtoInfo.ReinforcementLv;
         }
 
         [Description("付与パラメータ(体力)")]
@@ -95,34 +95,36 @@ namespace MementoMori.Ortega.Share.Data.DtoInfo
 
         public long[] GetSphereIds()
         {
-            long[] array = new long[4];
-            long num = this.SphereId1;
-            array[0] = num;
-            long num2 = this.SphereId2;
-            array[1] = num2;
-            long num3 = this.SphereId3;
-            array[2] = num3;
-            long num4 = this.SphereId4;
-            array[3] = num4;
-            return array;
+            return new[]
+            {
+                SphereId1, SphereId2, SphereId3, SphereId4
+            };
         }
 
         public long GetAdditionalParameter(BaseParameterType baseParameterType)
         {
-            if (baseParameterType != BaseParameterType.Muscle)
+            return baseParameterType switch
             {
-            }
-
-            return this.AdditionalParameterHealth;
+                BaseParameterType.Energy => AdditionalParameterEnergy,
+                BaseParameterType.Muscle => AdditionalParameterMuscle,
+                BaseParameterType.Health => AdditionalParameterHealth,
+                BaseParameterType.Intelligence => AdditionalParameterIntelligence,
+                _ => 0
+            };
         }
 
         public void SetEquipmentMB(EquipmentMB equipmentMB)
         {
-            this.EquipmentId = equipmentMB.Id;
-            this.AdditionalParameterHealth += equipmentMB.AdditionalParameterTotal;
-            this.AdditionalParameterIntelligence += equipmentMB.AdditionalParameterTotal;
-            this.AdditionalParameterMuscle += equipmentMB.AdditionalParameterTotal;
-            this.AdditionalParameterEnergy += equipmentMB.AdditionalParameterTotal;
+            if (equipmentMB == null)
+            {
+                return;
+            }
+            EquipmentId = equipmentMB.Id;
+            var value = equipmentMB.AdditionalParameterTotal / 4;
+            AdditionalParameterHealth = value;
+            AdditionalParameterIntelligence = value;
+            AdditionalParameterMuscle = value;
+            AdditionalParameterEnergy = value;
         }
     }
 }
