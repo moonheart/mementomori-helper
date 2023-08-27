@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+using MementoMori.Extensions;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.ApiInterface;
@@ -776,6 +777,8 @@ public partial class MementoMoriFuncs
                 var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(respBytes);
                 var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
                 AddLog($"{errorCodeMessage}");
+                AddLog(req.ToJson());
+                AddLog(apiErrResponse.ToJson());
                 throw new InvalidOperationException($"{apiErrResponse.Message} {errorCodeMessage}");
             }
         }
