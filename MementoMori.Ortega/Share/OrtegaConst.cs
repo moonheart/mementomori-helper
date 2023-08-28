@@ -931,17 +931,17 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 
 		public static class Shop
 		{
-			public static int MonthlyBoostBattleQuickBonus { get; }
+			public static int MonthlyBoostBattleQuickBonus { get; } = 1;
 
-			public static int MonthlyBoostCharacterExpBonus { get; }
+			public static int MonthlyBoostCharacterExpBonus { get; } = 15;
 
-			public static int MonthlyBoostPlayerExpBonus { get; }
+			public static int MonthlyBoostPlayerExpBonus { get; } = 15;
 
-			public static int MonthlyBoostPopulationGoldGoldBonus { get; }
+			public static int MonthlyBoostPopulationGoldGoldBonus { get; } = 15;
 
-			public static int MonthlyBoostValidDays { get; }
+			public static int MonthlyBoostValidDays { get; } = 30;
 
-			public static long PaidDMMCurrencyLimitDateTime { get; }
+			public static long PaidDMMCurrencyLimitDateTime { get; } = 15552000000;
 
 			// public static UserExchangePlaceItem RequiredItemForExchangeInProduct { get; }
 

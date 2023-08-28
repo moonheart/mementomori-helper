@@ -31,6 +31,7 @@ using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master.Data;
 using MementoMori.Utils;
 using MoreLinq.Extensions;
+using Ortega.Share;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using TowerBattleStartRequest = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartRequest;
@@ -197,9 +198,17 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var bonus = await GetResponse<GetDailyGiftRequest, GetDailyGiftResponse>(new GetDailyGiftRequest());
-            log("领取每日VIP奖励：");
-            bonus.ItemList.PrintUserItems(log);
+            if (UserSyncData.ExistVipDailyGift == true)
+            {
+                var bonus = await GetResponse<GetDailyGiftRequest, GetDailyGiftResponse>(new GetDailyGiftRequest());
+                log("领取每日VIP奖励：");
+                bonus.ItemList.PrintUserItems(log);    
+            }
+            else
+            {
+                log("VIP 奖励领取过了");
+            }
+            
         });
     }
 
@@ -254,18 +263,22 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log("Boss 快速战斗奖励：\n");
             var bossQuickResponse = await GetResponse<BossQuickRequest, BossQuickResponse>(
                 new BossQuickRequest()
                 {
                     QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId,
                     QuickCount = 3
                 });
-            if (bossQuickResponse.BattleRewardResult == null) return;
-
-
+            if (bossQuickResponse.BattleRewardResult == null)
+            {
+                log("快速战斗奖励为空");
+                return;
+            }
+            log("Boss 快速战斗奖励：\n");
             bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
             bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+            
+
         });
     }
 
@@ -374,20 +387,28 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log("冒险高速战斗奖励：\n");
+            var autoResponse = await GetResponse<AutoRequest, AutoResponse>(new());
+            if (autoResponse.UserBattleAuto.QuickTodayUsePrivilegeCount < OrtegaConst.Shop.MonthlyBoostBattleQuickBonus && OrtegaConst.Shop.MonthlyBoostBattleQuickBonus > 0)
+            {
+                log("今日没有免费高速战斗次数了");
+            }
+            else
+            {
+                log("冒险高速战斗奖励：\n");
 
-            var req = new QuickRequest() {QuestQuickExecuteType = QuestQuickExecuteType.Currency, QuickCount = 1};
-            var quickResponse = await GetResponse<QuickRequest, QuickResponse>(req);
+                var req = new QuickRequest() {QuestQuickExecuteType = QuestQuickExecuteType.Currency, QuickCount = 1};
+                var quickResponse = await GetResponse<QuickRequest, QuickResponse>(req);
 
-            log($"金币 {quickResponse.AutoBattleRewardResult.GoldByPopulation}");
-            log($"潜能宝珠 {quickResponse.AutoBattleRewardResult.PotentialJewelByPopulation}");
-            log($"角色经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.CharacterExp}");
-            log($"额外金币 {quickResponse.AutoBattleRewardResult.BattleRewardResult.ExtraGold}");
-            log($"用户经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.PlayerExp}");
-            log($"升级 {quickResponse.AutoBattleRewardResult.BattleRewardResult.RankUp}");
+                log($"金币 {quickResponse.AutoBattleRewardResult.GoldByPopulation}");
+                log($"潜能宝珠 {quickResponse.AutoBattleRewardResult.PotentialJewelByPopulation}");
+                log($"角色经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.CharacterExp}");
+                log($"额外金币 {quickResponse.AutoBattleRewardResult.BattleRewardResult.ExtraGold}");
+                log($"用户经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.PlayerExp}");
+                log($"升级 {quickResponse.AutoBattleRewardResult.BattleRewardResult.RankUp}");
 
-            quickResponse.AutoBattleRewardResult.BattleRewardResult.FixedItemList.PrintUserItems(log);
-            quickResponse.AutoBattleRewardResult.BattleRewardResult.DropItemList.PrintUserItems(log);
+                quickResponse.AutoBattleRewardResult.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                quickResponse.AutoBattleRewardResult.BattleRewardResult.DropItemList.PrintUserItems(log);
+            }
         });
     }
 
