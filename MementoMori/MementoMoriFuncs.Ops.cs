@@ -11,6 +11,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Friend;
 using MementoMori.Ortega.Share.Data.ApiInterface.Gacha;
 using MementoMori.Ortega.Share.Data.ApiInterface.Guild;
 using MementoMori.Ortega.Share.Data.ApiInterface.GuildRaid;
+using MementoMori.Ortega.Share.Data.ApiInterface.Item;
 using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
 using MementoMori.Ortega.Share.Data.ApiInterface.Mission;
 using MementoMori.Ortega.Share.Data.ApiInterface.Notice;
@@ -24,6 +25,7 @@ using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Gacha;
 using MementoMori.Ortega.Share.Data.Item;
 using MementoMori.Ortega.Share.Enums;
+using MementoMori.Ortega.Share.Master.Data;
 using MementoMori.Utils;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -797,6 +799,61 @@ public partial class MementoMoriFuncs : ReactiveObject
         });
     }
 
+
+    public async Task AutoUseItems()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            bool successOpen;
+            do
+            {
+                successOpen = false;
+                await UserGetUserData();
+                foreach (var userItemDtoInfo in UserSyncData.UserItemDtoInfo.Where(d => d.ItemType == ItemType.TreasureChest).ToList())
+                {
+                    var treasureChestMb = Masters.TreasureChestTable.GetById(userItemDtoInfo.ItemId);
+                    if (treasureChestMb.TreasureChestLotteryType == TreasureChestLotteryType.Fix ||
+                        treasureChestMb.TreasureChestLotteryType == TreasureChestLotteryType.Random)
+                    {
+                        if (userItemDtoInfo.ItemCount > treasureChestMb.MinOpenCount)
+                        {
+                            if (treasureChestMb.ChestKeyItemId > 0)
+                            {
+                                var keyCount = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == ItemType.TreasureChestKey && d.ItemId == treasureChestMb.ChestKeyItemId)?.ItemCount ?? 0;
+                                var available = Math.Min(userItemDtoInfo.ItemCount, keyCount);
+                                if (available > 0)
+                                {
+                                    var openCount = available / treasureChestMb.MinOpenCount * treasureChestMb.MinOpenCount;
+                                    await OpenTreasure(openCount, treasureChestMb, log);
+                                    successOpen = true;
+                                }
+                            }
+                            else
+                            {
+                                var openCount = userItemDtoInfo.ItemCount / treasureChestMb.MinOpenCount * treasureChestMb.MinOpenCount;
+                                await OpenTreasure(openCount, treasureChestMb, log);
+                                successOpen = true;
+                            }
+                        }
+                    }
+                }
+            } while (successOpen);
+
+            log("没有可使用的物品了");
+        });
+
+        async Task OpenTreasure(long openCount, TreasureChestMB treasureChestMb, Action<string> log)
+        {
+            var response = await GetResponse<OpenTreasureChestRequest, OpenTreasureChestResponse>(new OpenTreasureChestRequest()
+            {
+                OpenCount = (int) openCount,
+                TreasureChestId = treasureChestMb.Id
+            });
+            log($"打开物品 {Masters.TextResourceTable.Get(treasureChestMb.NameKey)} x {openCount}");
+            response.RewardItems.PrintUserItems(log);
+        }
+    }
+
     public async Task ExecuteAllQuickAction()
     {
         await GetLoginBonus();
@@ -809,7 +866,6 @@ public partial class MementoMoriFuncs : ReactiveObject
         await InfiniteTowerQuick();
         await PvpAuto();
         await BossHishSpeedBattle();
-        await FreeGacha();
         await GuildCheckin();
         await GuildRaid();
         await BountyQuestRewardAuto();
@@ -817,5 +873,8 @@ public partial class MementoMoriFuncs : ReactiveObject
         await AutoDungeonBattle();
         await CompleteMissions();
         await RewardMissonActivity();
+        await AutoUseItems();
+        await FreeGacha();
+        await AutoUseItems();
     }
 }

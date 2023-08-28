@@ -163,7 +163,7 @@
                                     @if (equipmentMb.ExclusiveEffectId > 0)
                                     {
                                         var effectMb = Masters.EquipmentExclusiveEffectTable.GetById(equipmentMb.ExclusiveEffectId);
-                                        var skillDescriptionMb = Masters.EquipmentExclusiveSkillDescriptionTable.GetById(equipmentMb.ExclusiveEffectId);
+                                        var skillDescriptionMb = Masters.EquipmentExclusiveSkillDescriptionTable.GetById(equipmentMb.EquipmentExclusiveSkillDescriptionId);
                                         var desKeys = new[] {skillDescriptionMb.Description1Key, skillDescriptionMb.Description2Key, skillDescriptionMb.Description3Key};
 
                                         <MudField Label="@(Masters.TextResourceTable.Get("[CharacterEquipmentExclusiveSkillEffect]"))" Variant="Variant.Outlined">

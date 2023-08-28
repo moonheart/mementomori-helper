@@ -23,6 +23,20 @@ public static class GameExtensions
             log($"名称：{itemName}, 稀有度: {itemRarity}, 数量： {userItem.ItemCount}");
         }
     }
+    public static void PrintUserItems(this IEnumerable<IUserCharacterItem> userItems, Action<string> log)
+    {
+        if (userItems == null)
+        {
+            return ;
+        }
+
+        foreach (var userItem in userItems)
+        {
+            var itemName = ItemUtil.GetItemName(userItem.Item.ItemType, userItem.Item.ItemId);
+            var itemRarity = ItemUtil.GetItemRarity(userItem.Item.ItemType, userItem.Item.ItemId);
+            log($"名称：{itemName}, 稀有度: {itemRarity}, 数量： {userItem.Item.ItemCount}");
+        }
+    }
     public static void PrintCharacterDtos(this IEnumerable<UserCharacterDtoInfo> userItems, Action<string> log)
     {
         if (userItems == null)
