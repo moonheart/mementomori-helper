@@ -1,8 +1,12 @@
 using MementoMori;
 using MementoMori.Common;
 using MementoMori.WebUI.Data;
+using MementoMori.WebUI.Jobs;
 using MementoMori.WebUI.ViewModels;
 using MudBlazor.Services;
+using MementoMori.WebUI.Extensions;
+using Quartz;
+using Quartz.AspNetCore;
 using ReactiveUI;
 
 internal class Program
@@ -25,6 +29,13 @@ internal class Program
         builder.Services.AddOptions();
         builder.Services.Configure<AuthOption>(builder.Configuration.GetSection("AuthOption"));
         builder.Services.Configure<GameConfig>(builder.Configuration.GetSection("GameConfig"));
+        
+        builder.Services.AddQuartz(q =>
+        {
+            q.AddJob<DailyJob>();
+            q.AddJob<HourlyJob>();
+        });
+        builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
         var app = builder.Build();
         
