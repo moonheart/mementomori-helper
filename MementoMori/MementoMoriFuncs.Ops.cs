@@ -6,6 +6,7 @@ using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
 using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest;
+using MementoMori.Ortega.Share.Data.ApiInterface.Character;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.ApiInterface.Friend;
 using MementoMori.Ortega.Share.Data.ApiInterface.Gacha;
@@ -21,12 +22,15 @@ using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using MementoMori.Ortega.Share.Data.BountyQuest;
+using MementoMori.Ortega.Share.Data.Character;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Gacha;
 using MementoMori.Ortega.Share.Data.Item;
 using MementoMori.Ortega.Share.Enums;
+using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master.Data;
 using MementoMori.Utils;
+using MoreLinq.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using TowerBattleStartRequest = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartRequest;
@@ -854,6 +858,54 @@ public partial class MementoMoriFuncs : ReactiveObject
         }
     }
 
+    public async Task AutoRankUpCharacter()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            await RankUp(CharacterRarityFlags.R, 3, log);
+            await RankUp(CharacterRarityFlags.SR, 2, log);
+            log("角色合成完成");
+        });
+
+        async Task RankUp(CharacterRarityFlags rarityFlags, int count, Action<string> log)
+        {
+            var rGroup = UserSyncData.UserCharacterDtoInfos
+                .Where(d=>(d.RarityFlags & rarityFlags) != 0)
+                .GroupBy(d=>d.CharacterId)
+                .ToList();
+            foreach (var grouping in rGroup.Where(d=>d.Count() >= count))
+            {
+                var infos = grouping.OrderByDescending(d=>d.Level).ToList();
+                var main = infos.First();
+                var materials = new List<UserCharacterDtoInfo>();
+                infos.Remove(main);
+                var needCound = count - 1;
+                while (needCound > 0)
+                {
+                    var last = infos.Last();
+                    infos.Remove(last);
+                    materials.Add(last);
+                    needCound--;
+                }
+
+                var response = await GetResponse<RankUpRequest, RankUpResponse>(new RankUpRequest()
+                {
+                    RankUpList = new List<CharacterRankUpMaterialInfo>()
+                    {
+                        new(){TargetGuid = main.Guid, MaterialGuid1 = materials[0].Guid, MaterialGuid2 = materials.Count == 1? null:materials[1].Guid}
+                    }
+                });
+                Masters.CharacterTable.GetCharacterName(main.CharacterId, out var name1, out var name2);
+                if (!name2.IsNullOrEmpty())
+                {
+                    name1 = $"[{name2}] {name1}";
+                }
+
+                log($"消耗了角色 {name1} X {count}, {Masters.TextResourceTable.Get(main.RarityFlags)}");
+            }
+        }
+    }
+
     public async Task ExecuteAllQuickAction()
     {
         await GetLoginBonus();
@@ -876,5 +928,6 @@ public partial class MementoMoriFuncs : ReactiveObject
         await AutoUseItems();
         await FreeGacha();
         await AutoUseItems();
+        await AutoRankUpCharacter();
     }
 }

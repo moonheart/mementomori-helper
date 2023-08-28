@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using MementoMori.Ortega.Share.Data.Battle;
 using MementoMori.Ortega.Share.Data.Character;
 using MementoMori.Ortega.Share.Enums;
+using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master.Attributes;
 using MementoMori.Ortega.Share.Master.Table;
 using MementoMori.Ortega.Share.Utils;
@@ -108,36 +109,10 @@ namespace MementoMori.Ortega.Share.Master.Data
         {
         }
         
-        public void GetCharacterName([Out] string name, [Out] string name2)
+        public void GetCharacterName(out string name1, out string name2)
         {
-            // TextResourceTable TextResourceTable4;
-            // object[] array;
-            // do
-            // {
-            //     TextResourceTable TextResourceTable = Masters.TextResourceTable;
-            //     string text = this.NameKey;
-            //     string text2 = TextResourceTable.Get(text);
-            //     if (string.IsNullOrEmpty(this.Name2Key))
-            //     {
-            //         return;
-            //     }
-            //     TextResourceTable TextResourceTable2 = Masters.TextResourceTable;
-            //     string text3 = this.Name2Key;
-            //     string text4 = TextResourceTable2.Get(text3);
-            //     if (this.CharacterType != CharacterType.ColorChange)
-            //     {
-            //         TextResourceTable TextResourceTable3 = Masters.TextResourceTable;
-            //         if (new object[1] == 0)
-            //         {
-            //             continue;
-            //         }
-            //     }
-            //     TextResourceTable4 = Masters.TextResourceTable;
-            //     array = new object[1];
-            // }
-            // while (array == 0);
-            // string text5 = TextResourceTable4.Get("[CharacterTypeColorChangeAliasFormat]", array);
-            throw new NotImplementedException();
+            name1 = Masters.TextResourceTable.Get(this.NameKey);
+            name2 = Masters.TextResourceTable.Get(this.Name2Key);
         }
 
         public string GetCombinedName([Optional] string delimiter)
