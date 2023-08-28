@@ -312,6 +312,12 @@ public partial class MementoMoriFuncs : ReactiveObject
                 var pvpInfoResponse = await GetResponse<GetPvpInfoRequest, GetPvpInfoResponse>(
                     new GetPvpInfoRequest());
 
+                if (this.UserSyncData.UserBattlePvpDtoInfo.PvpTodayCount >= OrtegaConst.BattlePvp.MaxPvpBattleFreeCount)
+                {
+                    log("剩餘挑戰次數不足");
+                    return;
+                }
+                
                 var pvpRankingPlayerInfo = pvpInfoResponse.MatchingRivalList.OrderBy(d => d.DefenseBattlePower).First();
 
                 var pvpStartResponse = await GetResponse<PvpStartRequest, PvpStartResponse>(new PvpStartRequest()

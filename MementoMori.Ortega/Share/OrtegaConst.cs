@@ -515,7 +515,7 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 
 			public static long MaxLegendLeagueBuyChallengeCount { get; }
 
-			public static long MaxPvpBattleFreeCount { get; }
+			public static long MaxPvpBattleFreeCount { get; } = 5;
 
 			public static List<DayOfWeek> NotOpeningLegendLeagueDayOfWeeks { get; }
 
