@@ -41,6 +41,8 @@ using BountyQuestGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Bou
 using BountyQuestGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.GetListResponse;
 using GachaGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Gacha.GetListRequest;
 using GachaGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Gacha.GetListResponse;
+using PresentGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Present.GetListRequest;
+using PresentGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Present.GetListResponse;
 
 namespace MementoMori;
 
@@ -196,7 +198,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var bonus = await GetResponse<GetDailyGiftRequest, GetDailyGiftResponse>(new GetDailyGiftRequest());
-            log("领取的奖励：");
+            log("领取每日VIP奖励：");
             bonus.ItemList.PrintUserItems(log);
         });
     }
@@ -208,8 +210,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             var mapInfoResponse = await GetResponse<MapInfoRequest, MapInfoResponse>(new() {IsUpdateOtherPlayerInfo = true});
             var autoResponse = await GetResponse<AutoRequest, AutoResponse>(new());
             var bonus = await GetResponse<RewardAutoBattleRequest, RewardAutoBattleResponse>(new RewardAutoBattleRequest());
-            log("领取的奖励：");
-
+            log("领取自动战斗奖励奖励：");
             log($"战斗次数 {bonus.AutoBattleRewardResult.BattleCountAll}");
             log($"胜利次数 {bonus.AutoBattleRewardResult.BattleCountWin}");
             log($"总时间 {TimeSpan.FromMilliseconds(bonus.AutoBattleRewardResult.BattleTotalTime)}");
@@ -235,10 +236,17 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(new ReceiveItemRequest() {LanguageType = LanguageType.zhTW});
-            ;
-            log("领取的奖励：");
-            resp.ResultItems.Select(d => d.Item).PrintUserItems(log);
+            var getListResponse = await GetResponse<PresentGetListRequest, PresentGetListResponse>(new(){LanguageType = LanguageType.zhTW});
+            if (getListResponse.userPresentDtoInfos.Any(d=>!d.IsReceived))
+            {
+                var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(new ReceiveItemRequest() {LanguageType = LanguageType.zhTW});
+                log("领取礼物箱：");
+                resp.ResultItems.Select(d => d.Item).PrintUserItems(log);
+            }
+            else
+            {
+                log("礼物箱没有可领取的");
+            }
         });
     }
 
@@ -246,7 +254,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log("领取的奖励：\n");
+            log("Boss 快速战斗奖励：\n");
             var bossQuickResponse = await GetResponse<BossQuickRequest, BossQuickResponse>(
                 new BossQuickRequest()
                 {
@@ -266,7 +274,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
-            log("领取的奖励：\n");
+            log("无穷之塔战斗奖励：\n");
 
             var bossQuickResponse = await GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
                 new TowerBattleQuickRequest()
@@ -285,7 +293,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log("领取的奖励：\n");
+            log("竞技场战斗奖励：\n");
             for (int i = 0; i < 5; i++)
             {
                 var pvpInfoResponse = await GetResponse<GetPvpInfoRequest, GetPvpInfoResponse>(
@@ -309,7 +317,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log("领取的奖励：\n");
+            log("祈愿之泉完成奖励：\n");
             var getListResponse = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(
                 new BountyQuestGetListRequest());
 
@@ -366,7 +374,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log("领取的奖励：\n");
+            log("冒险高速战斗奖励：\n");
 
             var req = new QuickRequest() {QuestQuickExecuteType = QuestQuickExecuteType.Currency, QuickCount = 1};
             var quickResponse = await GetResponse<QuickRequest, QuickResponse>(req);
