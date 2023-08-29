@@ -237,7 +237,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var resp = await GetResponse<BulkTransferFriendPointRequest, BulkTransferFriendPointResponse>(new BulkTransferFriendPointRequest());
-            log("成功");
+            log("友情点发送接收成功");
         });
     }
 
@@ -348,6 +348,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             {
                 var rewardResponse = await GetResponse<RewardRequest, RewardResponse>(new RewardRequest() {BountyQuestIds = questIds, ConsumeCurrency = 0, IsQuick = false});
                 rewardResponse.RewardItems.PrintUserItems(log);
+                await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new());
             }
             else
             {
@@ -369,6 +370,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 log($"已派遣 {bountyQuestStartInfo.BountyQuestId}");
                 log(startResponse.ToJson());
             }
+            await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new());
         });
     }
 

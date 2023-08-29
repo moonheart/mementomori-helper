@@ -779,7 +779,7 @@ public partial class MementoMoriFuncs
                 AddLog($"{errorCodeMessage}");
                 AddLog(req.ToJson());
                 AddLog(apiErrResponse.ToJson());
-                throw new InvalidOperationException($"{apiErrResponse.Message} {errorCodeMessage}");
+                // throw new InvalidOperationException($"{apiErrResponse.Message} {errorCodeMessage}");
             }
         }
 

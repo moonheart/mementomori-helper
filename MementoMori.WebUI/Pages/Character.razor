@@ -199,6 +199,12 @@
                                             </MudStack>
                                         </MudField>
                                     }
+                                    @{
+                                        var sphereIds = new[] {equipmentDtoInfo.SphereId1, equipmentDtoInfo.SphereId2, equipmentDtoInfo.SphereId3, equipmentDtoInfo.SphereId4};
+                                        <MudField Label="@(Masters.TextResourceTable.Get("[CharacterEquipmentExclusivePassiveEffect]"))" Variant="Variant.Outlined">
+                                            
+                                        </MudField>
+                                    }
                                 </MudTabPanel>
                             }
                         </MudTabs>
