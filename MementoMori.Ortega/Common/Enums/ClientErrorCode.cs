@@ -149,6 +149,7 @@
 		GuildBattleCloseMessage,
 		GuildBattleOutOfSeason,
 		GuildMasterUnsubscribe,
+		GuildBattleOutOfTime,
 		GuildRaidNotEnoughGuildFrame = 600101,
 		GuildRaidNoAuthorities,
 		GuildRaidNotEnoughBattleCount,

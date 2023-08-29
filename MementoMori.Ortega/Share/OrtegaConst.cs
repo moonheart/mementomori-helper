@@ -495,6 +495,8 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 
 			public static long LegendLeagueStartTime { get; }
 
+			public static TimeSpan LegendLeagueStartTimeSpan { get; }
+
 			public static long LegendLeagueTopRankerMax { get; }
 
 			public static long LegendLeagueTopRankerMin { get; }
@@ -779,6 +781,14 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 			public static int StartMinute { get; }
 
 			public static int CanDeclareCount { get; }
+	
+			public static int StartCloseGuildBattleHour { get; }
+
+			public static int StartCloseGuildBattleMinute { get; }
+
+			public static int EndCloseGuildBattleHour { get; }
+
+			public static int EndCloseGuildBattleMinute { get; }
 		}
 
 		public static class GlobalGvg
@@ -791,11 +801,11 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 
 			public static int EndHour { get; }
 
+			public static int EndMinute { get; }
+
 			public static int EndMatchingHour { get; }
 
 			public static int EndMatchingMinute { get; }
-
-			public static int EndMinute { get; }
 
 			public static int MaxCharacterNum { get; }
 
@@ -868,23 +878,23 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 
 		public static class Friend
 		{
-			public static int AcquisitionFriendPointPerFriend { get; }
+			public static int AcquisitionFriendPointPerFriend { get; } = 5;
 
-			public static int MaxApplyingNum { get; }
+			public static int MaxApplyingNum { get; } = 1000;
 
-			public static int MaxApprovalPendingNum { get; }
+			public static int MaxApprovalPendingNum { get; } = 90;
 
-			public static int MaxBlockNum { get; }
+			public static int MaxBlockNum { get; } = 100;
 
-			public static int MaxDailyReceiveFriendPoint { get; }
+			public static int MaxDailyReceiveFriendPoint { get; } = 20;
 
-			public static int MaxFriendNum { get; }
+			public static int MaxFriendNum { get; } = 40;
 
-			public static int MaxFriendPoint { get; }
+			public static int MaxFriendPoint { get; } = 9999;
 
-			public static long UsableFriendCodeTime { get; }
+			public static long UsableFriendCodeTime { get; } = 604800000;
 
-			public static long RecommendFriendDisplayNum;
+			public static long RecommendFriendDisplayNum = 20;
 		}
 
 		public static class MyPageBanner
