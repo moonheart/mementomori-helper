@@ -368,7 +368,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
                     new() {BountyQuestStartInfos = new List<BountyQuestStartInfo>() {bountyQuestStartInfo}});
                 log($"已派遣 {bountyQuestStartInfo.BountyQuestId}");
-                log(startResponse.ToJson());
+                // log(startResponse.ToJson());
             }
             await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new());
         });
@@ -396,7 +396,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var autoResponse = await GetResponse<AutoRequest, AutoResponse>(new());
-            if (autoResponse.UserBattleAuto.QuickTodayUsePrivilegeCount < OrtegaConst.Shop.MonthlyBoostBattleQuickBonus && OrtegaConst.Shop.MonthlyBoostBattleQuickBonus > 0)
+            if (autoResponse.UserBattleAuto.QuickTodayUseCurrencyCount >= OrtegaConst.Shop.MonthlyBoostBattleQuickBonus)
             {
                 log("今日没有免费高速战斗次数了");
             }
