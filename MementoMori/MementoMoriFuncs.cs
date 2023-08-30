@@ -21,6 +21,7 @@ using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master;
 using MessagePack;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using ReactiveUI.Fody.Helpers;
@@ -64,6 +65,7 @@ public partial class MementoMoriFuncs
 
     private readonly AuthOption _authOption;
     private readonly GameConfig _gameConfig;
+    private readonly ILogger<MementoMoriFuncs> _logger;
 
     private T ReadFromJson<T>(string jsonPath) where T : new()
     {
@@ -81,8 +83,9 @@ public partial class MementoMoriFuncs
         File.WriteAllText(jsonPath, JsonConvert.SerializeObject(value, Formatting.Indented));
     }
 
-    public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig)
+    public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig, ILogger<MementoMoriFuncs> logger)
     {
+        _logger = logger;
         _authOption = authOption.Value;
         _gameConfig = gameConfig.Value;
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler(_authOption.Headers);
@@ -100,7 +103,6 @@ public partial class MementoMoriFuncs
 
         // RuntimeInfo = new RuntimeInfo();
         RuntimeInfo = ReadFromJson<RuntimeInfo>("runtimeinfo.json");
-        DownloadMasterCatalog(true).ConfigureAwait(false).GetAwaiter().GetResult();
         // UserSyncData = new UserSyncData();
         UserSyncData = ReadFromJson<UserSyncData>("usersyncdata.json");
 
@@ -148,8 +150,6 @@ public partial class MementoMoriFuncs
             PlayerId = playerDataInfo.PlayerId, Password = playerDataInfo.Password
         });
 
-        await DownloadMasterCatalog();
-
         UserSyncData = (await UserGetUserData()).UserSyncData;
     }
 
@@ -160,17 +160,12 @@ public partial class MementoMoriFuncs
         RuntimeInfo.ApiHost = resp.ApiHost;
     }
 
-    private async Task DownloadMasterCatalog(bool useLocal = false)
+    public async Task DownloadMasterCatalog()
     {
-        if (useLocal)
-        {
-            Masters.TextResourceTable.SetLanguageType(LanguageType.zhTW);
-            Masters.LoadAllMasters();
-            return;
-        }
+        _logger.LogInformation("下载 master 目录中...");
+        var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN", UserId = 0});
 
-        var url =
-            $"https://cdn-mememori.akamaized.net/master/prd1/version/{RuntimeInfo.OrtegaMasterVersion}/master-catalog";
+        var url = string.Format(dataUriResponse.MasterUriFormat, RuntimeInfo.OrtegaMasterVersion, "master-catalog");
         var bytes = await _unityHttpClient.GetByteArrayAsync(url);
         var masterBookCatalog = MessagePackSerializer.Deserialize<MasterBookCatalog>(bytes);
         Directory.CreateDirectory("./Master");
@@ -184,14 +179,14 @@ public partial class MementoMoriFuncs
                 File.Delete(localPath);
             }
 
-            var mbUrl =
-                $"https://cdn-mememori.akamaized.net/master/prd1/version/{RuntimeInfo.OrtegaMasterVersion}/{name}";
+            var mbUrl = string.Format(dataUriResponse.MasterUriFormat, RuntimeInfo.OrtegaMasterVersion, name);
             var fileBytes = await _unityHttpClient.GetByteArrayAsync(mbUrl);
             await File.WriteAllBytesAsync(localPath, fileBytes);
         }
 
         Masters.TextResourceTable.SetLanguageType(LanguageType.zhTW);
         Masters.LoadAllMasters();
+        _logger.LogInformation("下载 master 目录完成");
     }
 
     private async Task<string> CalcFileMd5(string path)

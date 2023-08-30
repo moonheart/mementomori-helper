@@ -39,6 +39,7 @@ internal class Program
 
         var app = builder.Build();
         
+        app.Services.GetService<MementoMoriFuncs>().DownloadMasterCatalog().ConfigureAwait(false).GetAwaiter().GetResult();
         Services.Setup(app.Services);
 
 // Configure the HTTP request pipeline.
