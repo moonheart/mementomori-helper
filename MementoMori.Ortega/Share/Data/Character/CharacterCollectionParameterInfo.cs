@@ -53,8 +53,8 @@ namespace MementoMori.Ortega.Share.Data.Character
 				{
 					if (collectionDtoInfo.CollectionLevel >= 3)
 					{
-						AllCharacterBaseParameterChangeInfos.AddRange(characterCollectionLevelMb.BaseParameterChangeInfos);
-						AllCharacterBattleParameterChangeInfos.AddRange(characterCollectionLevelMb.BattleParameterChangeInfos);
+						AllCharacterBaseParameterChangeInfos.AddRange(characterCollectionLevelMb.BaseParameterChangeInfos ?? Array.Empty<BaseParameterChangeInfo>());
+						AllCharacterBattleParameterChangeInfos.AddRange(characterCollectionLevelMb.BattleParameterChangeInfos ?? Array.Empty<BattleParameterChangeInfo>());
 					}
 					else
 					{
@@ -62,7 +62,7 @@ namespace MementoMori.Ortega.Share.Data.Character
 						{
 							if(EachCharacterBaseParameterChangeInfoDict.TryGetValue(requiredCharacterId, out var baseParameterChangeInfos))
 							{
-								baseParameterChangeInfos.AddRange(characterCollectionLevelMb.BaseParameterChangeInfos);
+								baseParameterChangeInfos.AddRange(characterCollectionLevelMb.BaseParameterChangeInfos ?? Array.Empty<BaseParameterChangeInfo>());
 							}
 							else if (!characterCollectionLevelMb.BaseParameterChangeInfos.IsNullOrEmpty())
 							{
@@ -71,7 +71,7 @@ namespace MementoMori.Ortega.Share.Data.Character
 
 							if (EachCharacterBattleParameterChangeInfoDict.TryGetValue(requiredCharacterId, out var battleParameterChangeInfos))
 							{
-								battleParameterChangeInfos.AddRange(characterCollectionLevelMb.BattleParameterChangeInfos);
+								battleParameterChangeInfos.AddRange(characterCollectionLevelMb.BattleParameterChangeInfos ?? Array.Empty<BattleParameterChangeInfo>());
 							}
 							else if (!characterCollectionLevelMb.BattleParameterChangeInfos.IsNullOrEmpty())
 							{
