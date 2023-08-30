@@ -201,8 +201,27 @@
                                     }
                                     @{
                                         var sphereIds = new[] {equipmentDtoInfo.SphereId1, equipmentDtoInfo.SphereId2, equipmentDtoInfo.SphereId3, equipmentDtoInfo.SphereId4};
-                                        <MudField Label="@(Masters.TextResourceTable.Get("[CharacterEquipmentExclusivePassiveEffect]"))" Variant="Variant.Outlined">
-                                            
+                                        <MudField Label="@(Masters.TextResourceTable.Get("[CommonSphereLabel]"))" Variant="Variant.Outlined">
+                                            <MudStack Row="true">
+                                                @foreach (var id in sphereIds.Where(d => d > 0))
+                                                {
+                                                    var sphereMb = Masters.SphereTable.GetById(id);
+                                                    string name = $"{Masters.TextResourceTable.Get(sphereMb.NameKey)} Lv{sphereMb.Lv}";
+                                                    string key ;
+                                                    string value;
+                                                    if (sphereMb.BattleParameterChangeInfo != null)
+                                                    {
+                                                        key = Masters.TextResourceTable.Get(sphereMb.BattleParameterChangeInfo.BattleParameterType);
+                                                        value = ParameterUtil.GetBaseParameterValueText(sphereMb.BattleParameterChangeInfo.ChangeParameterType, (long) sphereMb.BattleParameterChangeInfo.Value);
+                                                    }
+                                                    else
+                                                    {
+                                                        key = Masters.TextResourceTable.Get(sphereMb.BaseParameterChangeInfo.BaseParameterType);
+                                                        value = ParameterUtil.GetBaseParameterValueText(sphereMb.BaseParameterChangeInfo.ChangeParameterType, (long) sphereMb.BaseParameterChangeInfo.Value);
+                                                    }
+                                                    <MudField Label="@name">@key @value</MudField>
+                                                }
+                                            </MudStack>
                                         </MudField>
                                     }
                                 </MudTabPanel>
