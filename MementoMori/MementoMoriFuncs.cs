@@ -75,11 +75,15 @@ public partial class MementoMoriFuncs
         }
 
         var json = File.ReadAllText(jsonPath);
-        return JsonConvert.DeserializeObject<T>(json);
+        return JsonConvert.DeserializeObject<T>(json) ?? new T();
     }
 
     private void WriteToJson<T>(string jsonPath, T value)
     {
+        if (value == null)
+        {
+            return;
+        }
         File.WriteAllText(jsonPath, JsonConvert.SerializeObject(value, Formatting.Indented));
     }
 
@@ -610,6 +614,9 @@ public partial class MementoMoriFuncs
                         case DungeonBattleGridType.BattleElite:
                         case DungeonBattleGridType.BattleBoss:
                         case DungeonBattleGridType.BattleBossNoRelic:
+                        case DungeonBattleGridType.EventBattleNormal:
+                        case DungeonBattleGridType.EventBattleElite:
+                        case DungeonBattleGridType.EventBattleSpecial:
                             await DoBattle();
                             break;
                         case DungeonBattleGridType.Recovery:
@@ -675,12 +682,6 @@ public partial class MementoMoriFuncs
                                     DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
                                     IsRevived = true
                                 });
-                            break;
-                        case DungeonBattleGridType.EventBattleNormal:
-                            break;
-                        case DungeonBattleGridType.EventBattleElite:
-                            break;
-                        case DungeonBattleGridType.EventBattleSpecial:
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -771,9 +772,11 @@ public partial class MementoMoriFuncs
                 AddLog(uri.ToString());
                 var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(respBytes);
                 var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
+                Console.WriteLine(errorCodeMessage);
                 AddLog($"{errorCodeMessage}");
                 AddLog(req.ToJson());
                 AddLog(apiErrResponse.ToJson());
+                Console.WriteLine(apiErrResponse.ToJson());
                 // throw new InvalidOperationException($"{apiErrResponse.Message} {errorCodeMessage}");
             }
         }

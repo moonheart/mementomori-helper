@@ -81,22 +81,22 @@
             <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.GetMyPage" StartIcon="@Icons.Material.Filled.Sync">同步</MudButton>
         </MudPaper>
         <MudPaper Elevation="0">
-            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNewFriendPointTransfer">
+            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(ViewModel.Mypage?.ExistNewFriendPointTransfer ?? false)">
                 <MudChip>友情点</MudChip>
             </MudBadge>
-            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNewPrivateChat">
+            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(ViewModel.Mypage?.ExistNewPrivateChat ?? false)">
                 <MudChip>私信</MudChip>
             </MudBadge>
-            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNotReceivedBountyQuestReward">
+            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(ViewModel.Mypage?.ExistNotReceivedBountyQuestReward ?? false)">
                 <MudChip>祈愿之泉</MudChip>
             </MudBadge>
-            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.Mypage.ExistNotReceivedMissionReward">
+            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(ViewModel.Mypage?.ExistNotReceivedMissionReward ?? false)">
                 <MudChip>任务奖励</MudChip>
             </MudBadge>
             <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.IsNotClearDungeonBattleMap">
                 <MudChip>时空洞窟</MudChip>
             </MudBadge>
-            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(ViewModel.UserSyncData.PresentCount > 0)">
+            <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(ViewModel.UserSyncData?.PresentCount > 0)">
                 <MudChip>礼物箱</MudChip>
             </MudBadge>
             @foreach (var info in ViewModel.Mypage?.MypageInfo?.MypageIconInfos ?? new List<MypageIconInfo>())
