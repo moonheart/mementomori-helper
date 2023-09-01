@@ -764,6 +764,15 @@ public partial class MementoMoriFuncs : ReactiveObject
             UserId = _authOption.UserId
         });
         NoticeInfoList = response.NoticeInfoList;
+        var response2 = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()
+        {
+            AccessType = NoticeAccessType.MyPage,
+            CategoryType = NoticeCategoryType.EventTab,
+            CountryCode = "CN",
+            LanguageType = LanguageType.zhTW,
+            UserId = _authOption.UserId
+        });
+        EventInfoList = response2.NoticeInfoList;
     }
 
     public TowerType[] GetAvailableTower()

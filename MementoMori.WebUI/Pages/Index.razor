@@ -55,7 +55,7 @@
                 </tr>
                 <tr>
                     <td>潜能宝珠</td>
-                    <td>@(ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(d=>d.ItemType == ItemType.CharacterTrainingMaterial && d.ItemId == 2)?.ItemCount ?? 0)</td>
+                    <td>@(ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(d => d.ItemType == ItemType.CharacterTrainingMaterial && d.ItemId == 2)?.ItemCount ?? 0)</td>
                 </tr>
                 <tr>
                     <td>钻石</td>
@@ -213,7 +213,7 @@
     <MudCard>
         <MudCardHeader Class="">
             <MudText>快捷操作</MudText>
-            <MudSpacer />
+            <MudSpacer/>
             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="ViewModel.IsQuickActionExecuting" @onclick="ViewModel.ExecuteAllQuickAction">一键执行所有</MudButton>
             <MudButton Class="ml-2" Size="Size.Small" Variant="Variant.Filled" Disabled="!ViewModel.IsQuickActionExecuting" @onclick="ViewModel.CancelQuickAction">取消操作</MudButton>
         </MudCardHeader>
@@ -300,28 +300,43 @@
     <MudCard>
         <MudCardHeader>执行结果</MudCardHeader>
         <MudCardContent>
-            <MessageList Messages="@ViewModel.MesssageList" />
+            <MessageList Messages="@ViewModel.MesssageList"/>
         </MudCardContent>
     </MudCard>
 </MudItem>
 <MudItem sm="12" md="6" lg="4" xl="3">
-    <MudCard>
-        <MudCardHeader>
-            <MudText>公告</MudText>
-            <MudSpacer/>
-            <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.GetNoticeInfoList">同步信息</MudButton>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudTable Elevation="0" T="NoticeInfo" Items="@ViewModel.NoticeInfoList" Virtualize="true" Dense="true" Height="400px">
-                <RowTemplate>
-                    <MudTd>@(context.Title)</MudTd>
-                    <MudTd>
-                        <MudButton Size="Size.Small" @onclick="() => ShowNotice(context)" StartIcon="@Icons.Material.Filled.ZoomIn"/>
-                    </MudTd>
-                </RowTemplate>
-            </MudTable>
-        </MudCardContent>
-    </MudCard>
+    <MudPaper>
+        <MudTabs HeaderPosition="TabHeaderPosition.After" MinimumTabWidth="20px">
+            <Header>
+                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
+                    <MudSpacer/>
+                    <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.GetNoticeInfoList">同步</MudButton>
+                </MudStack>
+            </Header>
+            <ChildContent>
+                <MudTabPanel Text="活动">
+                    <MudTable Elevation="0" T="NoticeInfo" Items="@ViewModel.EventInfoList" Virtualize="true" Dense="true" Height="400px">
+                        <RowTemplate>
+                            <MudTd>@(context.Title)</MudTd>
+                            <MudTd>
+                                <MudButton Size="Size.Small" @onclick="() => ShowNotice(context)" StartIcon="@Icons.Material.Filled.ZoomIn"/>
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudTabPanel>
+                <MudTabPanel Text="通知">
+                    <MudTable Elevation="0" T="NoticeInfo" Items="@ViewModel.NoticeInfoList" Virtualize="true" Dense="true" Height="400px">
+                        <RowTemplate>
+                            <MudTd>@(context.Title)</MudTd>
+                            <MudTd>
+                                <MudButton Size="Size.Small" @onclick="() => ShowNotice(context)" StartIcon="@Icons.Material.Filled.ZoomIn"/>
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudTabPanel>
+            </ChildContent>
+        </MudTabs>
+    </MudPaper>
 </MudItem>
 <MudItem sm="12" md="6" lg="4" xl="3">
     <MudCard>
@@ -339,8 +354,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
-        // this.ViewModel.RuntimeInfo.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
+    // this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
+    // this.ViewModel.RuntimeInfo.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
         ViewModel.WhenAnyValue(d => d.UserSyncData).Subscribe(data =>
         {
             _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>

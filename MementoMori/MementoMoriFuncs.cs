@@ -54,6 +54,8 @@ public partial class MementoMoriFuncs
 
     [Reactive]
     public List<NoticeInfo> NoticeInfoList { get; set; }
+    [Reactive]
+    public List<NoticeInfo> EventInfoList { get; set; }
 
     [Reactive]
     public bool IsNotClearDungeonBattleMap { get; set; }
