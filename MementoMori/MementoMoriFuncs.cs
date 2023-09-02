@@ -54,6 +54,7 @@ public partial class MementoMoriFuncs
 
     [Reactive]
     public List<NoticeInfo> NoticeInfoList { get; set; }
+
     [Reactive]
     public List<NoticeInfo> EventInfoList { get; set; }
 
@@ -86,6 +87,7 @@ public partial class MementoMoriFuncs
         {
             return;
         }
+
         File.WriteAllText(jsonPath, JsonConvert.SerializeObject(value, Formatting.Indented));
     }
 
@@ -487,8 +489,8 @@ public partial class MementoMoriFuncs
             var state = battleInfoResponse.UserDungeonDtoInfo.CurrentGridState;
             var memo = currentGrid.GridMb.Memo;
             var type = currentGrid.GridMb.DungeonGridType;
-            log($"当前第 {layer}层，坐标 {currentGrid.Grid.X},{currentGrid.Grid.Y}，状态 {state}, {memo} {type} 敌人战斗力 {currentGrid.Power}");
-            Console.WriteLine($"当前第 {layer}层，坐标 {currentGrid.Grid.X},{currentGrid.Grid.Y}，状态 {state}, {memo} {type} 敌人战斗力 {currentGrid.Power}");
+            log($"当前第 {layer}层，坐标 {currentGrid.Grid.X},{currentGrid.Grid.Y}，状态 {state}, {Masters.TextResourceTable.Get(type)} 敌人战斗力 {currentGrid.Power}");
+            Console.WriteLine($"当前第 {layer}层，坐标 {currentGrid.Grid.X},{currentGrid.Grid.Y}，状态 {state}, {Masters.TextResourceTable.Get(type)} 敌人战斗力 {currentGrid.Power}");
 
             async Task DoBattle()
             {
@@ -531,14 +533,14 @@ public partial class MementoMoriFuncs
 
                     // 当前已完成，选择下一个节点
                     var nextGrid = grids.Where(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
-                                                    && (d.GridMb.DungeonGridType ==
-                                                        DungeonBattleGridType.BattleNormal ||
+                                                    && (d.GridMb.DungeonGridType == DungeonBattleGridType.BattleNormal ||
                                                         d.GridMb.DungeonGridType == DungeonBattleGridType.BattleElite ||
                                                         d.GridMb.DungeonGridType == DungeonBattleGridType.BattleBoss ||
-                                                        d.GridMb.DungeonGridType ==
-                                                        DungeonBattleGridType.BattleBossNoRelic ||
-                                                        d.GridMb.DungeonGridType ==
-                                                        DungeonBattleGridType.BattleAndRelicReinforce
+                                                        d.GridMb.DungeonGridType == DungeonBattleGridType.BattleBossNoRelic ||
+                                                        d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleElite ||
+                                                        d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleNormal ||
+                                                        d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleSpecial ||
+                                                        d.GridMb.DungeonGridType == DungeonBattleGridType.BattleAndRelicReinforce
                                                     ) // 战斗类型的
                     ).MinBy(d => d.Power);
                     if (nextGrid == null)
@@ -779,7 +781,7 @@ public partial class MementoMoriFuncs
                 AddLog(req.ToJson());
                 AddLog(apiErrResponse.ToJson());
                 Console.WriteLine(apiErrResponse.ToJson());
-                // throw new InvalidOperationException($"{apiErrResponse.Message} {errorCodeMessage}");
+                throw new InvalidOperationException($"{apiErrResponse.Message} {errorCodeMessage}");
             }
         }
 

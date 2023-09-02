@@ -202,13 +202,12 @@ public partial class MementoMoriFuncs : ReactiveObject
             {
                 var bonus = await GetResponse<GetDailyGiftRequest, GetDailyGiftResponse>(new GetDailyGiftRequest());
                 log("领取每日VIP奖励：");
-                bonus.ItemList.PrintUserItems(log);    
+                bonus.ItemList.PrintUserItems(log);
             }
             else
             {
                 log("VIP 奖励领取过了");
             }
-            
         });
     }
 
@@ -245,8 +244,8 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var getListResponse = await GetResponse<PresentGetListRequest, PresentGetListResponse>(new(){LanguageType = LanguageType.zhTW});
-            if (getListResponse.userPresentDtoInfos.Any(d=>!d.IsReceived))
+            var getListResponse = await GetResponse<PresentGetListRequest, PresentGetListResponse>(new() {LanguageType = LanguageType.zhTW});
+            if (getListResponse.userPresentDtoInfos.Any(d => !d.IsReceived))
             {
                 var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(new ReceiveItemRequest() {LanguageType = LanguageType.zhTW});
                 log("领取礼物箱：");
@@ -263,22 +262,29 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var bossQuickResponse = await GetResponse<BossQuickRequest, BossQuickResponse>(
-                new BossQuickRequest()
-                {
-                    QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId,
-                    QuickCount = 3
-                });
-            if (bossQuickResponse.BattleRewardResult == null)
+            var availableCount = 3 - (int) UserSyncData.UserBattleBossDtoInfo.BossTodayWinCount;
+            if (availableCount > 0)
             {
-                log("快速战斗奖励为空");
-                return;
-            }
-            log("Boss 快速战斗奖励：\n");
-            bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
-            bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
-            
+                var bossQuickResponse = await GetResponse<BossQuickRequest, BossQuickResponse>(
+                    new BossQuickRequest()
+                    {
+                        QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId,
+                        QuickCount = availableCount
+                    });
+                if (bossQuickResponse.BattleRewardResult == null)
+                {
+                    log("快速战斗奖励为空");
+                    return;
+                }
 
+                log("Boss 快速战斗奖励：\n");
+                bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+            }
+            else
+            {
+                log("今日没有快速战斗次数了");
+            }
         });
     }
 
@@ -286,18 +292,26 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
-            log("无穷之塔战斗奖励：\n");
-
-            var bossQuickResponse = await GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
-                new TowerBattleQuickRequest()
-                {
-                    TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId, QuickCount = 3
-                });
-            if (bossQuickResponse.BattleRewardResult != null)
+            var availableCount = 3 - UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite).TodayBattleCount;
+            if (availableCount > 0)
             {
-                bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
+                log("无穷之塔战斗奖励：\n");
+
+                var bossQuickResponse = await GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
+                    new TowerBattleQuickRequest()
+                    {
+                        TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId, QuickCount = 3
+                    });
+                if (bossQuickResponse.BattleRewardResult != null)
+                {
+                    bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                    bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                }
+            }
+            else
+            {
+                log("今日没有无穷之塔战斗次数了");
             }
         });
     }
@@ -317,7 +331,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     log("剩餘挑戰次數不足");
                     return;
                 }
-                
+
                 var pvpRankingPlayerInfo = pvpInfoResponse.MatchingRivalList.OrderBy(d => d.DefenseBattlePower).First();
 
                 var pvpStartResponse = await GetResponse<PvpStartRequest, PvpStartResponse>(new PvpStartRequest()
@@ -370,6 +384,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 log($"已派遣 {bountyQuestStartInfo.BountyQuestId}");
                 // log(startResponse.ToJson());
             }
+
             await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new());
         });
     }
@@ -916,12 +931,12 @@ public partial class MementoMoriFuncs : ReactiveObject
         async Task RankUp(CharacterRarityFlags rarityFlags, int count, Action<string> log)
         {
             var rGroup = UserSyncData.UserCharacterDtoInfos
-                .Where(d=>(d.RarityFlags & rarityFlags) != 0)
-                .GroupBy(d=>d.CharacterId)
+                .Where(d => (d.RarityFlags & rarityFlags) != 0)
+                .GroupBy(d => d.CharacterId)
                 .ToList();
-            foreach (var grouping in rGroup.Where(d=>d.Count() >= count))
+            foreach (var grouping in rGroup.Where(d => d.Count() >= count))
             {
-                var infos = grouping.OrderByDescending(d=>d.Level).ToList();
+                var infos = grouping.OrderByDescending(d => d.Level).ToList();
                 var main = infos.First();
                 var materials = new List<UserCharacterDtoInfo>();
                 infos.Remove(main);
@@ -938,7 +953,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 {
                     RankUpList = new List<CharacterRankUpMaterialInfo>()
                     {
-                        new(){TargetGuid = main.Guid, MaterialGuid1 = materials[0].Guid, MaterialGuid2 = materials.Count == 1? null:materials[1].Guid}
+                        new() {TargetGuid = main.Guid, MaterialGuid1 = materials[0].Guid, MaterialGuid2 = materials.Count == 1 ? null : materials[1].Guid}
                     }
                 });
                 Masters.CharacterTable.GetCharacterName(main.CharacterId, out var name1, out var name2);
