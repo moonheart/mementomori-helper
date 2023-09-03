@@ -737,7 +737,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             int totalCount = 0;
             while (!token.IsCancellationRequested)
             {
-                await UserGetUserData();
+                // await UserGetUserData();
                 var equipment = UserSyncData.UserEquipmentDtoInfos.First(d => d.Guid == EquipmentId);
                 var m =
                     $"打磨装备 {totalCount} 耐力 {equipment.AdditionalParameterHealth} 魔力 {equipment.AdditionalParameterIntelligence} 力量 {equipment.AdditionalParameterMuscle} 战技 {equipment.AdditionalParameterEnergy}";

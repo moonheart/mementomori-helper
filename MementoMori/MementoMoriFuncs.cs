@@ -25,6 +25,7 @@ using MessagePack;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using BountyQuestGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.GetListResponse;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -790,6 +791,7 @@ public partial class MementoMoriFuncs
         if (response is IUserSyncApiResponse userSyncApiResponse)
         {
             UserSyncData.UserItemEditorMergeUserSyncData(userSyncApiResponse.UserSyncData);
+            this.RaisePropertyChanged(nameof(UserSyncData));
         }
 
         return response;
