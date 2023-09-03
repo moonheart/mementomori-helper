@@ -16,15 +16,15 @@
 // using Ortega.Share.Utils;
 // using UnityEngine;
 //
-// namespace Ortega.Common.Manager
-// {
-// 	public class NetworkManager
-// 	{
-// 		public long DiffServerTimeMilliSeconds
-// 		{
-// 			get;
-// 			private set;
-// 		}
+namespace Ortega.Common.Manager
+{
+	public class NetworkManager
+	{
+		public long DiffServerTimeMilliSeconds
+		{
+			get;
+			private set;
+		}
 //
 // 		public void Init()
 // 		{
@@ -477,5 +477,5 @@
 // 			Failed,
 // 			ChangeDay
 // 		}
-// 	}
-// }
+	}
+}

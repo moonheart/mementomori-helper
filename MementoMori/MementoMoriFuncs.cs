@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+using MementoMori.Exceptions;
 using MementoMori.Extensions;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data;
@@ -114,7 +115,7 @@ public partial class MementoMoriFuncs
         // UserSyncData = new UserSyncData();
         UserSyncData = ReadFromJson<UserSyncData>("usersyncdata.json");
 
-        Observable.Timer(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10)).Subscribe(t =>
+        Observable.Timer(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10)).Where(_=> !IsQuickActionExecuting).Subscribe(t =>
         {
             WriteToJson("runtimeinfo.json", RuntimeInfo);
             WriteToJson("usersyncdata.json", UserSyncData);
@@ -781,7 +782,7 @@ public partial class MementoMoriFuncs
                 AddLog(req.ToJson());
                 AddLog(apiErrResponse.ToJson());
                 Console.WriteLine(apiErrResponse.ToJson());
-                throw new InvalidOperationException($"{apiErrResponse.Message} {errorCodeMessage}");
+                throw new ApiErrorException(apiErrResponse.ErrorCode);
             }
         }
 

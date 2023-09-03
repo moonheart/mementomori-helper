@@ -5,8 +5,7 @@ using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master.Data;
-using Ortega.Share;
-using Ortega.Share.Utils;
+using MementoMori.Ortega.Share.Utils;
 
 namespace MementoMori.Ortega.Custom;
 

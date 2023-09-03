@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using MementoMori.Ortega.Share.Data.Equipment;
+﻿using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Data.Item;
-using MementoMori.Ortega.Share.Data.Item.Model;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Enums.Battle.Skill;
-namespace Ortega.Share
+
+namespace MementoMori.Ortega.Share
 {
 	public static class OrtegaConst
 	{
@@ -450,7 +447,7 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 
 			public static long DefaultQuestId { get; }
 
-			public static long MaxBossBattleFreeCount { get; }
+			public static long MaxBossBattleFreeCount { get; } = 3;
 		}
 
 		public static class BattlePvp

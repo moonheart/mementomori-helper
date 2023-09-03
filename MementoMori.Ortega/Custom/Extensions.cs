@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Drawing;
 
 namespace MementoMori.Ortega.Custom;
 
@@ -60,4 +61,13 @@ public static class Extensions
 
     public static long DefaultIfInvalid(this long n) => n >= 0 ? n : 0;
     public static int DefaultIfInvalid(this int n) => n >= 0 ? n : 0;
+
+    // public static Color ToColor(this uint number)
+    // {
+    //     var a = number >> 24;
+    //     var r = number >> 16 & 0xFF;
+    //     var g = number >> 8 & 0xFF;
+    //     var b = number & 0xFF;
+    //     return Color.FromArgb(a, r, g, b);
+    // }
 }

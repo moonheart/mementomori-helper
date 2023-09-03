@@ -1,5 +1,4 @@
 ﻿using MementoMori.Ortega.Share.Enums;
-using Ortega.Share;
 
 namespace MementoMori.Ortega.Share.Extensions
 {

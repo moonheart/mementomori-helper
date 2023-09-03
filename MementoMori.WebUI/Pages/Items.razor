@@ -13,6 +13,36 @@
 
 <PageTitle>储物箱</PageTitle>
 
+@* <MudTabs MinimumTabWidth="20px"> *@
+@*     <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabEquipment]")"> *@
+@*         <MudPaper Class="d-flex gap-2 flex-wrap" Elevation="0"> *@
+@*         @foreach (var item in ViewModel.UserSyncData.UserItemDtoInfo *@
+@*             .Where(d=>d.ItemType == ItemType.Equipment) *@
+@*             .Select(d=>new {Info = d, Mb = Masters.EquipmentTable.GetById(d.ItemId)}) *@
+@*             .OrderByDescending(d=>d.Mb.RarityFlags).ThenByDescending(d=>d.Mb.EquipmentLv)) *@
+@*         { *@
+@*             <MudPaper Width="80px" @onclick="() => SelectItem(item.Info)" Style="cursor: pointer"> *@
+@*                 <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="0"> *@
+@*                     <MudText>Lv@(item.Mb.EquipmentLv)</MudText> *@
+@*                     <MudSpacer/> *@
+@*                     <MudText>@(Masters.TextResourceTable.Get(item.Mb.RarityFlags))</MudText> *@
+@*                 </MudStack> *@
+@*                 <MudStack Row="true" AlignItems="AlignItems.Center"> *@
+@*                     <MudText Typo="Typo.h6" Style="font-size: 1rem">@(Masters.TextResourceTable.Get(item.Mb.NameKey))</MudText> *@
+@*                 </MudStack> *@
+@*                 <MudStack Row="true" AlignItems="AlignItems.Center"> *@
+@*                     <MudSpacer /> *@
+@*                     <MudText>@(item.Info.ItemCount)</MudText> *@
+@*                 </MudStack> *@
+@*             </MudPaper> *@
+@*         } *@
+@*          </MudPaper> *@
+@*     </MudTabPanel> *@
+@*     <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabConsumption]")"></MudTabPanel> *@
+@*     <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabMaterial]")"></MudTabPanel> *@
+@*     <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabSphere]")"></MudTabPanel> *@
+@*     <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabSetPiece]")"></MudTabPanel> *@
+@* </MudTabs> *@
 <h3>储物箱</h3>
 <div class="row">
     <div class="col-4">
@@ -95,5 +125,8 @@
         this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
     }
 
-    
+    private void SelectItem(UserItemDtoInfo item)
+    {
+        
+    }
 }

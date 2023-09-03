@@ -6,7 +6,6 @@ using MementoMori.WebUI.ViewModels;
 using MudBlazor.Services;
 using MementoMori.WebUI.Extensions;
 using Quartz;
-using Quartz.AspNetCore;
 using ReactiveUI;
 
 internal class Program

@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
+using MementoMori.Exceptions;
 using MementoMori.Extensions;
 using MementoMori.Ortega.Common.Utils;
 using MementoMori.Ortega.Custom;
@@ -31,7 +32,6 @@ using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master.Data;
 using MementoMori.Utils;
 using MoreLinq.Extensions;
-using Ortega.Share;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using TowerBattleStartRequest = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle.StartRequest;
@@ -265,21 +265,28 @@ public partial class MementoMoriFuncs : ReactiveObject
             var availableCount = 3 - (int) UserSyncData.UserBattleBossDtoInfo.BossTodayWinCount;
             if (availableCount > 0)
             {
-                var bossQuickResponse = await GetResponse<BossQuickRequest, BossQuickResponse>(
-                    new BossQuickRequest()
-                    {
-                        QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId,
-                        QuickCount = availableCount
-                    });
-                if (bossQuickResponse.BattleRewardResult == null)
+                try
                 {
-                    log("快速战斗奖励为空");
-                    return;
-                }
+                    var bossQuickResponse = await GetResponse<BossQuickRequest, BossQuickResponse>(
+                        new BossQuickRequest()
+                        {
+                            QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId,
+                            QuickCount = (int) availableCount
+                        });
+                    if (bossQuickResponse.BattleRewardResult == null)
+                    {
+                        log("快速战斗奖励为空");
+                        return;
+                    }
 
-                log("Boss 快速战斗奖励：\n");
-                bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                    log("Boss 快速战斗奖励：\n");
+                    bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                    bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                }
+                catch (ApiErrorException e) when(e.ErrorCode == ErrorCode.BattleBossNotEnoughBossChallengeCount)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
             else
             {
@@ -295,18 +302,25 @@ public partial class MementoMoriFuncs : ReactiveObject
             var availableCount = 3 - UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite).TodayBattleCount;
             if (availableCount > 0)
             {
-                var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
-                log("无穷之塔战斗奖励：\n");
-
-                var bossQuickResponse = await GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
-                    new TowerBattleQuickRequest()
-                    {
-                        TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId, QuickCount = 3
-                    });
-                if (bossQuickResponse.BattleRewardResult != null)
+                try
                 {
-                    bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                    bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                    var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
+                    log("无穷之塔战斗奖励：\n");
+
+                    var bossQuickResponse = await GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
+                        new TowerBattleQuickRequest()
+                        {
+                            TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId, QuickCount = 3
+                        });
+                    if (bossQuickResponse.BattleRewardResult != null)
+                    {
+                        bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                        bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                    }
+                }
+                catch (ApiErrorException e) when(e.ErrorCode == ErrorCode.TowerBattleNotEnoughChallengeCount)
+                {
+                    Console.WriteLine(e.Message);
                 }
             }
             else
@@ -726,7 +740,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 await UserGetUserData();
                 var equipment = UserSyncData.UserEquipmentDtoInfos.First(d => d.Guid == EquipmentId);
                 var m =
-                    $"打磨装备 {totalCount} 耐力 {equipment.AdditionalParameterEnergy} 魔力 {equipment.AdditionalParameterIntelligence} 力量 {equipment.AdditionalParameterMuscle} 战技 {equipment.AdditionalParameterEnergy}";
+                    $"打磨装备 {totalCount} 耐力 {equipment.AdditionalParameterHealth} 魔力 {equipment.AdditionalParameterIntelligence} 力量 {equipment.AdditionalParameterMuscle} 战技 {equipment.AdditionalParameterEnergy}";
                 Console.WriteLine(m);
                 log(m);
                 switch (EquipmentTrainingTargetType)

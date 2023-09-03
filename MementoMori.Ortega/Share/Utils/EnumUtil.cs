@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Ortega.Share.Utils
+﻿namespace MementoMori.Ortega.Share.Utils
 {
 	public static class EnumUtil
 	{

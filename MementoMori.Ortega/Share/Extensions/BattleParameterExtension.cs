@@ -7,7 +7,7 @@ using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master.Data;
 using MementoMori.Ortega.Share.Master.Table;
-using Ortega.Share.Utils;
+using MementoMori.Ortega.Share.Utils;
 
 namespace MementoMori.Ortega.Share.Extensions
 {
