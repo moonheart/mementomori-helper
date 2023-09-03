@@ -1,0 +1,44 @@
+name: Publish dev Build
+  
+on: 
+  push:
+    branches:
+      - master
+  workflow_dispatch: 
+    
+jobs: 
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build ./MementoMori.WebUI/MementoMori.WebUI.csproj -c Release --no-restore
+      - name: Publish Win x64
+        run: dotnet publish ./MementoMori.WebUI/MementoMori.WebUI.csproj -c Release -r win-x64 -p:RunAOTCompilation=true -o publish-win-x64 --sc -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true  -p:PublishReadyToRun=true -p:DebugSymbols=false -p:DebugType=None
+      - name: Publish Linux x64
+        run: dotnet publish ./MementoMori.WebUI/MementoMori.WebUI.csproj -c Release -r linux-x64 -p:RunAOTCompilation=true -o publish-linux-x64 --sc -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true  -p:PublishReadyToRun=true -p:DebugSymbols=false -p:DebugType=None
+      - name: Archive Release Win x64
+        uses: thedoctor0/zip-release@0.7.1
+        with:
+          type: 'zip'
+          filename: 'publish-win-x64.zip'
+          path: './publish-win-x64/'
+      - name: Archive Release Linux x64
+        uses: thedoctor0/zip-release@0.7.1
+        with:
+          type: 'zip'
+          filename: 'publish-linux-x64.zip'
+          path: './publish-linux-x64/'
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./publish-win-x64.zip
+            ./publish-linux-x64.zip
+          tag_name: dev
