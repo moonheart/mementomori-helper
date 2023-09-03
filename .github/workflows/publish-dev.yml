@@ -42,3 +42,5 @@ jobs:
             ./publish-win-x64.zip
             ./publish-linux-x64.zip
           tag_name: dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
