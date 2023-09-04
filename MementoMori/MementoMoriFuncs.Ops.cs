@@ -25,6 +25,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using MementoMori.Ortega.Share.Data.BountyQuest;
 using MementoMori.Ortega.Share.Data.Character;
 using MementoMori.Ortega.Share.Data.DtoInfo;
+using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Data.Gacha;
 using MementoMori.Ortega.Share.Data.Item;
 using MementoMori.Ortega.Share.Enums;
@@ -235,8 +236,15 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var resp = await GetResponse<BulkTransferFriendPointRequest, BulkTransferFriendPointResponse>(new BulkTransferFriendPointRequest());
-            log("友情点发送接收成功");
+            try
+            {
+                var resp = await GetResponse<BulkTransferFriendPointRequest, BulkTransferFriendPointResponse>(new BulkTransferFriendPointRequest());
+                log("友情点发送接收成功");
+            }
+            catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.FriendAlreadyMaxReceived)
+            {
+                Console.WriteLine(e.Message);
+            }
         });
     }
 
@@ -262,35 +270,27 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var availableCount = 3 - (int) UserSyncData.UserBattleBossDtoInfo.BossTodayWinCount;
-            if (availableCount > 0)
+            try
             {
-                try
-                {
-                    var bossQuickResponse = await GetResponse<BossQuickRequest, BossQuickResponse>(
-                        new BossQuickRequest()
-                        {
-                            QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId,
-                            QuickCount = (int) availableCount
-                        });
-                    if (bossQuickResponse.BattleRewardResult == null)
+                var bossQuickResponse = await GetResponse<BossQuickRequest, BossQuickResponse>(
+                    new BossQuickRequest()
                     {
-                        log("快速战斗奖励为空");
-                        return;
-                    }
-
-                    log("Boss 快速战斗奖励：\n");
-                    bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                    bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
-                }
-                catch (ApiErrorException e) when(e.ErrorCode == ErrorCode.BattleBossNotEnoughBossChallengeCount)
+                        QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId,
+                        QuickCount = 3
+                    });
+                if (bossQuickResponse.BattleRewardResult == null)
                 {
-                    Console.WriteLine(e.Message);
+                    log("快速战斗奖励为空");
+                    return;
                 }
+
+                log("Boss 快速战斗奖励：\n");
+                bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
             }
-            else
+            catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.BattleBossNotEnoughBossChallengeCount)
             {
-                log("今日没有快速战斗次数了");
+                Console.WriteLine(e.Message);
             }
         });
     }
@@ -299,33 +299,25 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var availableCount = 3 - UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite).TodayBattleCount;
-            if (availableCount > 0)
+            try
             {
-                try
-                {
-                    var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
-                    log("无穷之塔战斗奖励：\n");
+                var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
+                log("无穷之塔战斗奖励：\n");
 
-                    var bossQuickResponse = await GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
-                        new TowerBattleQuickRequest()
-                        {
-                            TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId, QuickCount = 3
-                        });
-                    if (bossQuickResponse.BattleRewardResult != null)
+                var bossQuickResponse = await GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
+                    new TowerBattleQuickRequest()
                     {
-                        bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                        bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
-                    }
-                }
-                catch (ApiErrorException e) when(e.ErrorCode == ErrorCode.TowerBattleNotEnoughChallengeCount)
+                        TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId, QuickCount = 3
+                    });
+                if (bossQuickResponse.BattleRewardResult != null)
                 {
-                    Console.WriteLine(e.Message);
+                    bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                    bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
                 }
             }
-            else
+            catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.TowerBattleNotEnoughChallengeCount)
             {
-                log("今日没有无穷之塔战斗次数了");
+                Console.WriteLine(e.Message);
             }
         });
     }
@@ -403,21 +395,292 @@ public partial class MementoMoriFuncs : ReactiveObject
         });
     }
 
-    public async Task AutoEquipmentInheritance()
+    /// <summary>
+    /// 魔装继承
+    /// </summary>
+    public async Task AutoEquipmentMatchlessInheritance()
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            await AutoEquipmentInheritance(log);
-            // var msg = new StringBuilder("角色列表：\n");
-            //
-            // foreach (var userCharacterDtoInfo in _userSyncData.UserCharacterDtoInfos)
-            // {
-            //     var characterMb = Masters.CharacterTable.GetById(userCharacterDtoInfo.CharacterId);
-            //     var name = Masters.TextResourceTable.Get(characterMb.NameKey);
-            //     msg.AppendLine($"名称：{name} 等级： {userCharacterDtoInfo.Level} 稀有度：{characterMb.RarityFlags}");
-            // }
-            log("完成");
+            while (!token.IsCancellationRequested)
+            {
+                // 批量精炼
+                log("批量精炼");
+                if (UserSyncData.UserItemDtoInfo.Any(d =>
+                    {
+                        if (d.ItemType != ItemType.Equipment)
+                        {
+                            return false;
+                        }
+
+                        var flags = Masters.EquipmentTable.GetById(d.ItemId).RarityFlags;
+                        return (flags & EquipmentRarityFlags.A) != 0 ||
+                               (flags & EquipmentRarityFlags.B) != 0 ||
+                               (flags & EquipmentRarityFlags.C) != 0 ||
+                               (flags & EquipmentRarityFlags.S) != 0;
+                    }))
+                {
+                    var castManyResponse = await GetResponse<CastManyRequest, CastManyResponse>(new CastManyRequest()
+                    {
+                        RarityFlags = EquipmentRarityFlags.S | EquipmentRarityFlags.A | EquipmentRarityFlags.B |
+                                      EquipmentRarityFlags.C
+                    });
+                }
+
+                var usersyncData = await UserGetUserData();
+                // 找到所有 等级为S、魔装、未装备 的装备
+                var equipments = usersyncData.UserSyncData.UserEquipmentDtoInfos.Select(d => new
+                {
+                    Equipment = d, EquipmentMB = Masters.EquipmentTable.GetById(d.EquipmentId)
+                });
+
+                var sEquipments = equipments.Where(d =>
+                        d.Equipment.CharacterGuid == "" && // 未装备
+                        d.Equipment.MatchlessSacredTreasureLv == 1 && // 魔装等级为 1
+                        (d.EquipmentMB.RarityFlags & EquipmentRarityFlags.S) != 0 // 稀有度为 S
+                ).ToList();
+
+                if (sEquipments.Count == 0)
+                {
+                    log("没有可以精炼的装备了");
+                    break;
+                }
+
+                // 按照装备位置进行分组
+                foreach (var grouping in sEquipments.GroupBy(d => d.EquipmentMB.SlotType))
+                {
+                    // 当前能够接受继承的 D 级别装备
+                    var currentTypeEquips = equipments.Where(d =>
+                    {
+                        return (d.EquipmentMB.RarityFlags & EquipmentRarityFlags.D) != 0 &&
+                               d.EquipmentMB.EquipmentLv != 1 &&
+                               d.EquipmentMB.SlotType == grouping.Key && 
+                               d.Equipment.LegendSacredTreasureLv == 0 && 
+                               d.Equipment.MatchlessSacredTreasureLv == 0;
+                    });
+                    var processedDEquips = new List<UserItemDtoInfo>();
+
+                    // 还缺多少装备
+                    var needMoreCount = grouping.Count() - currentTypeEquips.Count();
+                    var slotType = grouping.Key;
+                    if (needMoreCount > 0)
+                    {
+                        await GetInheritatableEquipments(usersyncData, slotType, needMoreCount, log, processedDEquips);
+                    }
+
+                    // 继承            
+                    foreach (var x1 in grouping)
+                    {
+                        var mb = x1.EquipmentMB;
+                        var info = x1.Equipment;
+                        usersyncData = await InheritantEquipment(mb, info, log);
+                    }
+                }
+            }
         });
+    }
+
+    private async Task GetInheritatableEquipments(GetUserDataResponse usersyncData, EquipmentSlotType slotType, int needMoreCount, Action<string> log, List<UserItemDtoInfo> processedDEquips)
+    {
+        // 找到未解封的装备物品
+        var equipItems = usersyncData.UserSyncData.UserItemDtoInfo.Where(d =>
+        {
+            if (d.ItemType != ItemType.Equipment) return false;
+            var equipmentMb = Masters.EquipmentTable.GetById(d.ItemId);
+            if (equipmentMb.EquipmentLv == 1) return false;
+            if (equipmentMb.SlotType != slotType) return false;
+            if ((equipmentMb.RarityFlags & EquipmentRarityFlags.D) == 0) return false;
+            return true;
+        }).ToList();
+        foreach (var equipItem in equipItems)
+        {
+            if (needMoreCount <= 0) break;
+
+            for (int i = 0; i < equipItem.ItemCount; i++)
+            {
+                if (needMoreCount <= 0) break;
+                var equipmentMb = Masters.EquipmentTable.GetById(equipItem.ItemId);
+                log($"为装备找可穿戴的角色, 脱穿一次 {equipmentMb.Memo}");
+                Console.WriteLine(equipmentMb.Memo);
+                // 找到可以装备的一个角色
+                var userCharacterDtoInfo = usersyncData.UserSyncData.UserCharacterDtoInfos.Where(d =>
+                {
+                    var characterMb = Masters.CharacterTable.GetById(d.CharacterId);
+                    if ((characterMb.JobFlags & equipmentMb.EquippedJobFlags) == 0) return false; // 装备职业
+
+                    if (d.Level >= equipmentMb.EquipmentLv) return true; // 装备等级
+
+                    if (usersyncData.UserSyncData.UserLevelLinkMemberDtoInfos.Exists(x =>
+                            d.Guid == x.UserCharacterGuid)
+                        && usersyncData.UserSyncData.UserLevelLinkDtoInfo.PartyLevel >=
+                        equipmentMb.EquipmentLv) // 角色在等级链接里面并且等级链接大于装备等级
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }).First();
+
+
+                // 获取角色某个位置的装备, 可能没有装备
+                var replacedEquip = usersyncData.UserSyncData.UserEquipmentDtoInfos.Where(d =>
+                {
+                    var byId = Masters.EquipmentTable.GetById(d.EquipmentId);
+                    return d.CharacterGuid == userCharacterDtoInfo.Guid &&
+                           byId.SlotType == equipmentMb.SlotType;
+                }).FirstOrDefault();
+
+                // 替换装备
+                var changeEquipmentResponse =
+                    await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(
+                        new ChangeEquipmentRequest()
+                        {
+                            UserCharacterGuid = userCharacterDtoInfo.Guid,
+                            EquipmentChangeInfos = new List<EquipmentChangeInfo>()
+                            {
+                                new()
+                                {
+                                    EquipmentId = equipItem.ItemId,
+                                    EquipmentSlotType = equipmentMb.SlotType,
+                                    IsInherit = false
+                                }
+                            }
+                        });
+
+                // 恢复装备
+                if (replacedEquip == null)
+                {
+                    await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
+                    {
+                        EquipmentSlotTypes = new List<EquipmentSlotType>() {equipmentMb.SlotType},
+                        UserCharacterGuid = userCharacterDtoInfo.Guid
+                    });
+                }
+                else
+                {
+                    var changeEquipmentResponse1 =
+                        await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(
+                            new ChangeEquipmentRequest()
+                            {
+                                UserCharacterGuid = userCharacterDtoInfo.Guid,
+                                EquipmentChangeInfos = new List<EquipmentChangeInfo>()
+                                {
+                                    new()
+                                    {
+                                        EquipmentGuid = replacedEquip.Guid,
+                                        EquipmentId = replacedEquip.EquipmentId,
+                                        EquipmentSlotType = equipmentMb.SlotType,
+                                        IsInherit = false,
+                                    }
+                                }
+                            });
+                }
+
+                needMoreCount--;
+                processedDEquips.Add(equipItem);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 圣装继承
+    /// </summary>
+    public async Task AutoEquipmentLegendInheritance()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            while (!token.IsCancellationRequested)
+            {
+                var usersyncData = await UserGetUserData();
+                // 找到所有 等级为S、魔装、未装备 的装备
+                var equipments = usersyncData.UserSyncData.UserEquipmentDtoInfos.Select(d => new
+                {
+                    Equipment = d, EquipmentMB = Masters.EquipmentTable.GetById(d.EquipmentId)
+                });
+                var sEquipments = equipments.Where(d =>
+                        d.Equipment.CharacterGuid == "" && // 未装备
+                        d.Equipment.LegendSacredTreasureLv == 1 && // 圣装等级为 1
+                        (d.EquipmentMB.RarityFlags & EquipmentRarityFlags.S) != 0 // 稀有度为 S
+                ).ToList();
+
+                if (sEquipments.Count == 0)
+                {
+                    log("没有圣装了");
+                    break;
+                }
+
+                // 按照装备位置进行分组
+                foreach (var grouping in sEquipments.GroupBy(d => d.EquipmentMB.SlotType))
+                {
+                    // 当前能够接受继承的 D 级别装备
+                    var currentTypeEquips = equipments.Where(d =>
+                    {
+                        return (d.EquipmentMB.RarityFlags & EquipmentRarityFlags.D) != 0 &&
+                               d.EquipmentMB.EquipmentLv != 1 &&
+                               d.EquipmentMB.SlotType == grouping.Key && 
+                               d.Equipment.LegendSacredTreasureLv == 0 && 
+                               d.Equipment.MatchlessSacredTreasureLv == 0;
+                    });
+                    var processedDEquips = new List<UserItemDtoInfo>();
+
+                    // 还缺多少装备
+                    var needMoreCount = grouping.Count() - currentTypeEquips.Count();
+                    if (needMoreCount > 0)
+                    {
+                        await GetInheritatableEquipments(usersyncData, grouping.Key, needMoreCount, log, processedDEquips);
+                    }
+
+                    // 继承            
+                    foreach (var x1 in grouping)
+                    {
+                        var mb = x1.EquipmentMB;
+                        var info = x1.Equipment;
+                        usersyncData = await InheritantEquipment(mb, info, log);
+                    }
+                }
+            }
+        });
+    }
+
+    private async Task<GetUserDataResponse> InheritantEquipment(EquipmentMB mb, UserEquipmentDtoInfo info, Action<string> log)
+    {
+        GetUserDataResponse usersyncData;
+        // 同步数据
+        usersyncData = await UserGetUserData();
+
+        var userEquipmentDtoInfo = usersyncData.UserSyncData.UserEquipmentDtoInfos.Where(d =>
+        {
+            var equipmentMb = Masters.EquipmentTable.GetById(d.EquipmentId);
+            if (d.LegendSacredTreasureLv == 0 // 未被继承的装备
+                && d.MatchlessSacredTreasureLv == 0
+                && equipmentMb.EquipmentLv != 1
+                && equipmentMb.SlotType == mb.SlotType // 同一个位置 
+                && (equipmentMb.RarityFlags & EquipmentRarityFlags.D) != 0 // 稀有度为 D
+               )
+            {
+                return true;
+            }
+
+            return false;
+        }).FirstOrDefault();
+
+        if (userEquipmentDtoInfo != null)
+        {
+            var inheritanceEquipmentResponse = await GetResponse<InheritanceEquipmentRequest, InheritanceEquipmentResponse>(
+                new InheritanceEquipmentRequest()
+                {
+                    InheritanceEquipmentGuid = userEquipmentDtoInfo.Guid,
+                    SourceEquipmentGuid = info.Guid
+                });
+            log($"继承完成 {mb.Memo}=>{userEquipmentDtoInfo.Guid}");
+            Console.WriteLine($"继承完成 {mb.Memo}=>{userEquipmentDtoInfo.Guid}");
+        }
+        else
+        {
+            log("没有找到可被继承的D装");
+        }
+
+        return usersyncData;
     }
 
     public async Task BossHishSpeedBattle()

@@ -243,7 +243,8 @@
                 </MudTabPanel>
                 <MudTabPanel Text="装备精炼">
                     <MudPaper Elevation="0" Class="pa-2">
-                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoEquipmentInheritance">自动精炼SABC、继承魔装到D装</MudButton>
+                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoEquipmentMatchlessInheritance">自动精炼SABC、继承魔装到D装</MudButton>
+                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoEquipmentLegendInheritance">自动继承圣装到D装</MudButton>
                     </MudPaper>
                 </MudTabPanel>
                 <MudTabPanel Text="冒险战斗">

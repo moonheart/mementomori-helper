@@ -21,6 +21,7 @@ public class HourlyJob: IJob
             return;
         }
         await _mementoMoriFuncs.Login();
+        await _mementoMoriFuncs.BountyQuestStartAuto();
         await _mementoMoriFuncs.PresentReceiveItem();
         await _mementoMoriFuncs.GetAutoBattleReward();
         await _mementoMoriFuncs.GuildRaid();
