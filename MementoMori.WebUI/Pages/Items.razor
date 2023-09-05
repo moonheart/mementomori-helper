@@ -10,116 +10,230 @@
 @using MementoMori.Ortega.Common.Utils
 @using DynamicData.Binding
 @using ReactiveUI
+@using SortDirection = MudBlazor.SortDirection
 
 <PageTitle>储物箱</PageTitle>
 
-@* <MudTabs MinimumTabWidth="20px"> *@
-@*     <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabEquipment]")"> *@
-@*         <MudPaper Class="d-flex gap-2 flex-wrap" Elevation="0"> *@
-@*         @foreach (var item in ViewModel.UserSyncData.UserItemDtoInfo *@
-@*             .Where(d=>d.ItemType == ItemType.Equipment) *@
-@*             .Select(d=>new {Info = d, Mb = Masters.EquipmentTable.GetById(d.ItemId)}) *@
-@*             .OrderByDescending(d=>d.Mb.RarityFlags).ThenByDescending(d=>d.Mb.EquipmentLv)) *@
-@*         { *@
-@*             <MudPaper Width="80px" @onclick="() => SelectItem(item.Info)" Style="cursor: pointer"> *@
-@*                 <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="0"> *@
-@*                     <MudText>Lv@(item.Mb.EquipmentLv)</MudText> *@
-@*                     <MudSpacer/> *@
-@*                     <MudText>@(Masters.TextResourceTable.Get(item.Mb.RarityFlags))</MudText> *@
-@*                 </MudStack> *@
-@*                 <MudStack Row="true" AlignItems="AlignItems.Center"> *@
-@*                     <MudText Typo="Typo.h6" Style="font-size: 1rem">@(Masters.TextResourceTable.Get(item.Mb.NameKey))</MudText> *@
-@*                 </MudStack> *@
-@*                 <MudStack Row="true" AlignItems="AlignItems.Center"> *@
-@*                     <MudSpacer /> *@
-@*                     <MudText>@(item.Info.ItemCount)</MudText> *@
-@*                 </MudStack> *@
-@*             </MudPaper> *@
-@*         } *@
-@*          </MudPaper> *@
-@*     </MudTabPanel> *@
-@*     <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabConsumption]")"></MudTabPanel> *@
-@*     <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabMaterial]")"></MudTabPanel> *@
-@*     <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabSphere]")"></MudTabPanel> *@
-@*     <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabSetPiece]")"></MudTabPanel> *@
-@* </MudTabs> *@
-<h3>储物箱</h3>
-<div class="row">
-    <div class="col-4">
-        <h4>物品</h4>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>名称</th>
-                <th>类型</th>
-                <th>稀有度</th>
-                <th>数量</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var item in ViewModel.UserSyncData?.UserItemDtoInfo ?? new List<UserItemDtoInfo>())
-            {
-                var cmb = Masters.ItemTable.GetByItemTypeAndItemId(item.ItemType, item.ItemId);
-                var name = ItemUtil.GetItemName(item);
-
-                <tr>
-                    <td>@item.ItemId</td>
-                    <td>@name</td>
-                    <td>@item.ItemType</td>
-                    <td>@(cmb?.ItemRarityFlags ?? ItemRarityFlags.None)</td>
-                    <td>@item.ItemCount</td>
-                </tr>
-            }
-            </tbody>
-        </table>
-    </div>   
-    <div class="col-8">
-        <h4>装备</h4>
-        <table class="table" id="equipmentTable">
-            <thead>
-            <tr>
-                <th>名称</th>
-                <th>稀有度</th>
-                <th>耐力</th>
-                <th>魔力</th>
-                <th>力量</th>
-                <th>战技</th>
-                <th>符石等级</th>
-                <th>镶嵌孔数量</th>
-                <th>神装等级/经验</th>
-                <th>魔装等级/经验</th>
-                <th>强化等级</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var item in ViewModel.UserSyncData?.UserEquipmentDtoInfos ?? new List<UserEquipmentDtoInfo>())
-            {
-                var cmb = Masters.EquipmentTable.GetById(item.EquipmentId);
-                var name = Masters.TextResourceTable.Get(cmb.NameKey);
-                
-                <tr>
-                    <td>@name</td>
-                   <td>@cmb.RarityFlags</td>
-                   <td>@item.AdditionalParameterHealth</td>
-                   <td>@item.AdditionalParameterIntelligence</td>
-                   <td>@item.AdditionalParameterMuscle</td>
-                   <td>@item.AdditionalParameterEnergy</td>
-                   <td>@($"{item.SphereId1},{item.SphereId2},{item.SphereId3},{item.SphereId4}")</td>
-                   <td>@item.SphereUnlockedCount</td>
-                   <td>@($"{item.LegendSacredTreasureLv}/{item.LegendSacredTreasureExp}")</td>
-                   <td>@($"{item.MatchlessSacredTreasureLv}/{item.MatchlessSacredTreasureExp}")</td>
-                   <td>@item.ReinforcementLv</td>
-                </tr>
-            }
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
+<MudTabs MinimumTabWidth="20px">
+    <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabEquipment]")">
+        <MudTable Dense="true"
+                  Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => d.ItemType == ItemType.Equipment && d.ItemCount > 0).Select(d => d.ToEquipmentInfo()).Union(ViewModel.UserSyncData.UserEquipmentDtoInfos.Where(d => d.CharacterGuid == "").Select(x => x.ToEquipmentInfo())))">
+            <HeaderContent>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Name)">名称</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.SlotType)">位置</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.RarityFlags)">稀有度</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.EquipmentLv)">等级</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Count)">数量</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.PerformancePoint)">武具固有值</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.BattleParameterChangeInfo.BattleParameterType)">基础属性</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.BattleParameterChangeInfo.Value)">基础属性值</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.AdditionalParameterTotal)">附加属性合计</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterMuscle)">力量</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterEnergy)">魔力</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterIntelligence)">战技</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterHealth)">耐力</MudTableSortLabel>
+                </MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.Name</MudTd>
+                <MudTd>@(Masters.TextResourceTable.Get(context.EquipmentMb.SlotType))</MudTd>
+                <MudTd>@(Masters.TextResourceTable.Get(context.EquipmentMb.RarityFlags))</MudTd>
+                <MudTd>@context.EquipmentMb.EquipmentLv</MudTd>
+                <MudTd>@context.Count</MudTd>
+                <MudTd>@context.EquipmentMb.PerformancePoint</MudTd>
+                <MudTd>@(Masters.TextResourceTable.Get(context.EquipmentMb.BattleParameterChangeInfo.BattleParameterType))</MudTd>
+                <MudTd>@(ParameterUtil.GetBaseParameterValueText(context.EquipmentMb.BattleParameterChangeInfo.ChangeParameterType, context.EquipmentMb.BattleParameterChangeInfo.Value))</MudTd>
+                <MudTd>@context.EquipmentMb.AdditionalParameterTotal</MudTd>
+                <MudTd>@context.Info?.AdditionalParameterMuscle</MudTd>
+                <MudTd>@context.Info?.AdditionalParameterEnergy</MudTd>
+                <MudTd>@context.Info?.AdditionalParameterIntelligence</MudTd>
+                <MudTd>@context.Info?.AdditionalParameterHealth</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudTabPanel>
+    <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabConsumption]")">
+        @{ var types = new HashSet<ItemType>()
+           {
+               ItemType.QuestQuickTicket,
+               ItemType.TreasureChestKey,
+               ItemType.TreasureChest,
+               ItemType.CharacterFragment
+           }; }
+        <MudTable Dense="true"
+                  Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
+            <HeaderContent>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">名称</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">稀有度</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">持有上限</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">数量</MudTableSortLabel>
+                </MudTh>
+                <MudTh>描述</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.Name</MudTd>
+                <MudTd>@(context.ItemRarityFlags)</MudTd>
+                <MudTd>@(context.MaxItemCount)</MudTd>
+                <MudTd>@context.Count</MudTd>
+                <MudTd>@context.Description</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudTabPanel>
+    <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabMaterial]")">
+        @{ var types = new HashSet<ItemType>()
+           {
+               ItemType.CharacterTrainingMaterial,
+               ItemType.EquipmentReinforcementItem,
+               ItemType.MatchlessSacredTreasureExpItem,
+               ItemType.GachaTicket,
+               ItemType.BossChallengeTicket,
+               ItemType.TowerBattleTicket,
+               ItemType.DungeonRecoveryItem,
+               ItemType.FriendPoint,
+               ItemType.EquipmentRarityCrystal,
+               ItemType.ExchangePlaceItem,
+               ItemType.EventExchangePlaceItem,
+               ItemType.EquipmentSetMaterial
+           }; }
+        <MudTable Dense="true"
+                  Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
+            <HeaderContent>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">名称</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">稀有度</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">持有上限</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">数量</MudTableSortLabel>
+                </MudTh>
+                <MudTh>描述</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.Name</MudTd>
+                <MudTd>@(context.ItemRarityFlags)</MudTd>
+                <MudTd>@(context.MaxItemCount)</MudTd>
+                <MudTd>@context.Count</MudTd>
+                <MudTd>@context.Description</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudTabPanel>
+    <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabSphere]")">
+        @{ var types = new HashSet<ItemType>()
+           {
+               ItemType.Sphere
+           }; }
+        <MudTable Dense="true"
+                  Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToSphereInfo()))">
+            <HeaderContent>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.Name)">名称</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.RarityFlags)">稀有度</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.Lv)">等级</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BaseParameterChangeInfo?.BaseParameterType)">基础属性</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BaseParameterChangeInfo?.Value)">基础属性值</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BattleParameterChangeInfo?.BattleParameterType)">战斗属性</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BattleParameterChangeInfo?.Value)">战斗属性值</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.Count)">数量</MudTableSortLabel>
+                </MudTh>
+                <MudTh>描述</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.Name</MudTd>
+                <MudTd>@(context.SphereMB.RarityFlags)</MudTd>
+                <MudTd>@(context.SphereMB.Lv)</MudTd>
+                <MudTd>@(context.SphereMB.BaseParameterChangeInfo == null ? "" : Masters.TextResourceTable.Get(context.SphereMB.BaseParameterChangeInfo.BaseParameterType))</MudTd>
+                <MudTd>@(context.SphereMB.BaseParameterChangeInfo == null ? "" : ParameterUtil.GetBaseParameterValueText(context.SphereMB.BaseParameterChangeInfo.ChangeParameterType, context.SphereMB.BaseParameterChangeInfo.Value))</MudTd>
+                <MudTd>@(context.SphereMB.BattleParameterChangeInfo == null ? "" : Masters.TextResourceTable.Get(context.SphereMB.BattleParameterChangeInfo.BattleParameterType))</MudTd>
+                <MudTd>@(context.SphereMB.BattleParameterChangeInfo == null ? "" : ParameterUtil.GetBaseParameterValueText(context.SphereMB.BattleParameterChangeInfo.ChangeParameterType, context.SphereMB.BattleParameterChangeInfo.Value))</MudTd>
+                <MudTd>@context.Count</MudTd>
+                <MudTd>@context.Description</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudTabPanel>
+    <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabSetPiece]")">
+        @{ var types = new HashSet<ItemType>()
+           {
+               ItemType.EquipmentFragment
+           }; }
+        <MudTable Dense="true"
+                  Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
+            <HeaderContent>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">名称</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">稀有度</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">持有上限</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">数量</MudTableSortLabel>
+                </MudTh>
+                <MudTh>描述</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.Name</MudTd>
+                <MudTd>@(context.ItemRarityFlags)</MudTd>
+                <MudTd>@(context.MaxItemCount)</MudTd>
+                <MudTd>@context.Count</MudTd>
+                <MudTd>@context.Description</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudTabPanel>
+</MudTabs>
 
 @code {
+
     protected override async Task OnInitializedAsync()
     {
         this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
@@ -127,6 +241,6 @@
 
     private void SelectItem(UserItemDtoInfo item)
     {
-        
     }
+
 }
