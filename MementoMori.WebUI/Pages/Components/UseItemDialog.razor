@@ -1,0 +1,72 @@
+﻿@using MementoMori.Ortega.Share.Data.Item
+@using MementoMori.Extensions
+@using System.Text
+
+<MudCard Class="pa-6">
+    <MudGrid>
+        <MudItem md="12">
+            <MudText>@Name × @Count</MudText>
+        </MudItem>
+        <MudItem md="12">
+            <MudSlider T="long" Min="1L" Max="@Count" ValueLabel="true" @bind-Value="_useCount">
+                使用数量 @_useCount
+            </MudSlider>
+        </MudItem>
+        <MudItem md="12">
+            <pre>@message</pre>
+        </MudItem>
+        <MudItem md="12">
+            <MudButton OnClick="@Cancel">关闭</MudButton>
+            <MudButton Color="Color.Primary" OnClick="@UseItem" Disabled="_processing">
+                @if (_processing)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                    <MudText Class="ms-2">使用中</MudText>
+                }
+                else
+                {
+                    <MudText Class="ms-2">使用</MudText>
+                }
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+
+</MudCard>
+
+@code {
+
+    [Parameter]
+    public string Name { get; set; }
+    
+    [Parameter]
+    public long Count { get; set; }
+    
+    [Parameter]
+    public long ItemId { get; set; }
+    
+    [Parameter]
+    public Func<long, Task<IList<IUserItem>>> UseItemFunc { get; set; }
+    
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    private string message;
+
+    private long _useCount = 1;
+
+    private bool _processing;
+
+    private void Cancel()
+    {
+        MudDialog.Close();
+    }
+    private async Task UseItem()
+    {
+        _processing = true;
+        var items = await UseItemFunc(_useCount);
+        var msg = new StringBuilder();
+        items.PrintUserItems(s => msg.AppendLine(s));
+        message = msg.ToString();
+        _processing = false;
+    }
+    
+}

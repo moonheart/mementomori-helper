@@ -1,4 +1,5 @@
 ﻿@inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
+@inject IDialogService DialogService
 
 @page "/Items"
 @using MementoMori.Ortega.Share.Data
@@ -9,6 +10,8 @@
 @using MementoMori.WebUI.Extensions
 @using MementoMori.Ortega.Common.Utils
 @using DynamicData.Binding
+@using MementoMori.Ortega.Share.Data.ApiInterface.Item
+@using MementoMori.WebUI.Pages.Components
 @using ReactiveUI
 @using SortDirection = MudBlazor.SortDirection
 
@@ -16,7 +19,7 @@
 
 <MudTabs MinimumTabWidth="20px">
     <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabEquipment]")">
-        <MudTable Dense="true"
+        <MudTable Dense="true" HorizontalScrollbar="true"
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => d.ItemType == ItemType.Equipment && d.ItemCount > 0).Select(d => d.ToEquipmentInfo()).Union(ViewModel.UserSyncData.UserEquipmentDtoInfos.Where(d => d.CharacterGuid == "").Select(x => x.ToEquipmentInfo())))">
             <HeaderContent>
                 <MudTh>
@@ -84,17 +87,20 @@
                ItemType.TreasureChest,
                ItemType.CharacterFragment
            }; }
-        <MudTable Dense="true"
-                  Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
+        <MudTable Dense="true" HorizontalScrollbar="true"
+                  Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()).OrderBy(d=>d.Item.ItemType).ThenByDescending(d=>d.ItemRarityFlags))">
             <HeaderContent>
                 <MudTh>
                     <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">名称</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">稀有度</MudTableSortLabel>
+                    操作
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">持有上限</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">稀有度</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">持有上限</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
                     <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">数量</MudTableSortLabel>
@@ -103,6 +109,12 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd>@context.Name</MudTd>
+                <MudTd>
+                    @if (context.Item.ItemType == ItemType.QuestQuickTicket)
+                    {
+                        <MudButton OnClick="() => UseAutoBattleRewardItem(context.Name, context.Item)">使用</MudButton>
+                    }
+                </MudTd>
                 <MudTd>@(context.ItemRarityFlags)</MudTd>
                 <MudTd>@(context.MaxItemCount)</MudTd>
                 <MudTd>@context.Count</MudTd>
@@ -126,7 +138,7 @@
                ItemType.EventExchangePlaceItem,
                ItemType.EquipmentSetMaterial
            }; }
-        <MudTable Dense="true"
+        <MudTable Dense="true" HorizontalScrollbar="true"
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
             <HeaderContent>
                 <MudTh>
@@ -157,7 +169,7 @@
            {
                ItemType.Sphere
            }; }
-        <MudTable Dense="true"
+        <MudTable Dense="true" HorizontalScrollbar="true"
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToSphereInfo()))">
             <HeaderContent>
                 <MudTh>
@@ -204,7 +216,7 @@
            {
                ItemType.EquipmentFragment
            }; }
-        <MudTable Dense="true"
+        <MudTable Dense="true" HorizontalScrollbar="true"
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
             <HeaderContent>
                 <MudTh>
@@ -243,4 +255,25 @@
     {
     }
 
+    private void UseAutoBattleRewardItem(string name, IUserItem userItem)
+    {
+        if (userItem.ItemType != ItemType.QuestQuickTicket)
+        {
+            return;
+        }
+        var dialogParameters = new DialogParameters<UseItemDialog>();
+        dialogParameters.Add(d=>d.Count, userItem.ItemCount);
+        dialogParameters.Add(d=>d.Name, name);
+        dialogParameters.Add(d=>d.ItemId, userItem.ItemId);
+        dialogParameters.Add(d=>d.UseItemFunc, (async count =>
+        {
+            var useAutoBattleRewardItemResponse = await ViewModel.GetResponse<UseAutoBattleRewardItemRequest, UseAutoBattleRewardItemResponse>(
+                new UseAutoBattleRewardItemRequest() {ItemType = (QuestQuickTicketType) userItem.ItemId, UseCount = (int)count});
+            return useAutoBattleRewardItemResponse.RewardItemList.Cast<IUserItem>().ToList();
+        }));
+
+        DialogService.Show<UseItemDialog>("使用物品", dialogParameters);
+    }
+
+    
 }

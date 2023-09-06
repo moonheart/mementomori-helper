@@ -341,10 +341,16 @@
 </MudItem>
 <MudItem sm="12" md="6" lg="4" xl="3">
     <MudCard>
+        <MudCardHeader>
+            <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@ViewModel.ShowDebugInfo" Label="调试信息"></MudSwitch>
+        </MudCardHeader>
         <MudCardContent Style="max-height: 400px; overflow: scroll">
-            <pre>
-                         @ViewModel.UserSyncData.ToJson(true)
-                         </pre>
+            @if (ViewModel.ShowDebugInfo)
+            {
+                <pre>
+                 @ViewModel.UserSyncData.ToJson(true)
+                 </pre>
+            }
         </MudCardContent>
     </MudCard>
 </MudItem>

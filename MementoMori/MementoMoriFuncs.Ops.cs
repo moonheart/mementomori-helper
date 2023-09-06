@@ -67,6 +67,9 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     [Reactive]
     public TowerType SelectedAutoTowerType { get; set; }
+    
+    [Reactive]
+    public bool ShowDebugInfo { get; set; }
 
     private CancellationTokenSource _cancellationTokenSource;
 

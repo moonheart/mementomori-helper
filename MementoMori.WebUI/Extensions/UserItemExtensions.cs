@@ -47,6 +47,7 @@ public static class UserItemExtensions
         public long Count { get; set; }
         public ItemRarityFlags ItemRarityFlags { get; set; }
         public long MaxItemCount { get; set; }
+        public IUserItem Item { get; set; }
     }
 
     public static UserItemInfo ToUserItemInfo(this IUserItem userItem)
@@ -60,7 +61,8 @@ public static class UserItemExtensions
                 Description = Masters.TextResourceTable.Get(treasureChestMb.DescriptionKey),
                 Count = userItem.ItemCount,
                 ItemRarityFlags = treasureChestMb.ItemRarityFlags,
-                MaxItemCount = treasureChestMb.MaxItemCount
+                MaxItemCount = treasureChestMb.MaxItemCount,
+                Item = userItem
             };
         }
         else if (userItem.ItemType == ItemType.CharacterFragment)
@@ -73,7 +75,8 @@ public static class UserItemExtensions
                 Description = Masters.TextResourceTable.Get("[ItemTypeCharacterFragmentDescription]", characterName, 60),
                 Count = userItem.ItemCount,
                 ItemRarityFlags = characterMb.ItemRarityFlags,
-                MaxItemCount = 0
+                MaxItemCount = 0,
+                Item = userItem
             };
         }
         else if (userItem.ItemType == ItemType.EquipmentSetMaterial)
@@ -86,7 +89,8 @@ public static class UserItemExtensions
                 Description = Masters.TextResourceTable.Get(equipmentSetMaterialMb.DescriptionKey),
                 Count = userItem.ItemCount,
                 ItemRarityFlags = equipmentSetMaterialMb.ItemRarityFlags,
-                MaxItemCount = 0
+                MaxItemCount = 0,
+                Item = userItem
             };
         }
         else if (userItem.ItemType == ItemType.EquipmentFragment)
@@ -100,7 +104,8 @@ public static class UserItemExtensions
                 Description = Masters.TextResourceTable.Get("[ItemTypeEquipmentFragmentDescription]", equipmentName, equipmentCompositeMb!.RequiredFragmentCount),
                 Count = userItem.ItemCount,
                 ItemRarityFlags = (ItemRarityFlags) equipmentMb.RarityFlags,
-                MaxItemCount = 0
+                MaxItemCount = 0,
+                Item = userItem
             };
         }
         else
@@ -112,7 +117,8 @@ public static class UserItemExtensions
                 Description = Masters.TextResourceTable.Get(itemMb.DescriptionKey),
                 Count = userItem.ItemCount,
                 ItemRarityFlags = itemMb.ItemRarityFlags,
-                MaxItemCount = itemMb.MaxItemCount
+                MaxItemCount = itemMb.MaxItemCount,
+                Item = userItem
             };
         }
     }
