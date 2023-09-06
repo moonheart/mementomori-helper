@@ -1151,13 +1151,13 @@ public partial class MementoMoriFuncs : ReactiveObject
             {
                 successOpen = false;
                 await UserGetUserData();
-                foreach (var userItemDtoInfo in UserSyncData.UserItemDtoInfo.Where(d => d.ItemType == ItemType.TreasureChest).ToList())
+                foreach (var userItemDtoInfo in UserSyncData.UserItemDtoInfo.Where(d => d.ItemCount > 0 && d.ItemType == ItemType.TreasureChest).ToList())
                 {
                     var treasureChestMb = Masters.TreasureChestTable.GetById(userItemDtoInfo.ItemId);
                     if (treasureChestMb.TreasureChestLotteryType == TreasureChestLotteryType.Fix ||
                         treasureChestMb.TreasureChestLotteryType == TreasureChestLotteryType.Random)
                     {
-                        if (userItemDtoInfo.ItemCount > treasureChestMb.MinOpenCount)
+                        if (userItemDtoInfo.ItemCount >= treasureChestMb.MinOpenCount)
                         {
                             if (treasureChestMb.ChestKeyItemId > 0)
                             {
