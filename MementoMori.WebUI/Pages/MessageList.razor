@@ -1,18 +1,24 @@
 ﻿@using System.Collections.ObjectModel
 @using DynamicData.Binding
-<MudTable Elevation="0" T="string" Items="@Messages" Dense="true" Height="400px">
-                <RowTemplate>
-                    <MudTd>@context</MudTd>
-                </RowTemplate>
-            </MudTable>
+<MudSimpleTable Elevation="0" Dense="true">
+    <tbody style="height: 400px; overflow: auto" class="d-flex flex-column-reverse">
+    @foreach (var msg in Messages)
+    {
+        <tr>
+            <td>@msg</td>
+        </tr>
+    }
+    </tbody>
+</MudSimpleTable>
+
 @code {
+
     [Parameter]
     public ObservableCollection<string> Messages { get; set; }
 
     protected override void OnInitialized()
     {
         Messages.ToObservableChangeSet().Subscribe(set => InvokeAsync(StateHasChanged));
-
     }
 
 }
