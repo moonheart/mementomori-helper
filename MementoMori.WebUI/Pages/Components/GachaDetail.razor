@@ -1,0 +1,136 @@
+﻿@using MementoMori.Ortega.Share.Data.ApiInterface.Gacha
+@using MementoMori.Ortega.Share
+@using MementoMori.WebUI.Extensions
+@using MementoMori.Ortega.Custom
+
+<MudPaper Class="pa-6">
+    <MudGrid>
+        <MudItem md="12">
+            @((MarkupString) detailHeader)
+        </MudItem>
+        <MudItem md="12">
+            @((MarkupString) detailBody)
+        </MudItem>
+        <MudItem md="12">
+            @if (LotteryItemList.GachaBonusRateList.IsNotNullOrEmpty())
+            {
+                <MudField Label="次数奖励" Variant="Variant.Outlined">
+                    <MudSimpleTable Dense="true">
+                        <tbody>
+                        @foreach (var bonusRate in LotteryItemList.GachaBonusRateList)
+                        {
+                            <tr>
+                                <td>@bonusRate.GachaCount 次</td>
+                                <td>
+                                    @foreach (var item in bonusRate.GachaItemRateList)
+                                    {
+                                        <span>@item.Item.GetItemName() × @item.Item.ItemCount</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </MudSimpleTable>
+                </MudField>
+            }
+            @if (LotteryItemList.GachaRarityRateList.IsNotNullOrEmpty())
+            {
+                <MudField Label="出现几率" Variant="Variant.Outlined">
+                    <MudSimpleTable Dense="true">
+                        <tbody>
+                        @foreach (var rarityRate in LotteryItemList.GachaRarityRateList)
+                        {
+                            <tr>
+                                <td>@(Masters.TextResourceTable.Get(rarityRate.CharacterRarityFlags))</td>
+                                <td>@rarityRate.LotteryRate.ToString("P")</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </MudSimpleTable>
+                </MudField>
+            }
+            @if (LotteryItemList.GachaRarityRateSpecialList.IsNotNullOrEmpty())
+            {
+                <MudField Label="出现几率" Variant="Variant.Outlined">
+                    <MudSimpleTable Dense="true">
+                        <tbody>
+                        @foreach (var rarityRate in LotteryItemList.GachaRarityRateSpecialList)
+                        {
+                            <tr>
+                                <td>@(Masters.TextResourceTable.Get(rarityRate.CharacterRarityFlags))</td>
+                                <td>@rarityRate.LotteryRate.ToString("P")</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </MudSimpleTable>
+                </MudField>
+            }
+            @if (LotteryItemList.GachaItemRateList.IsNotNullOrEmpty())
+            {
+                <MudField Label="个别出现几率" Variant="Variant.Outlined">
+                    <MudSimpleTable Dense="true">
+                        <tbody>
+                        @foreach (var itemRate in LotteryItemList.GachaItemRateList)
+                        {
+                            <tr>
+                                <td>@itemRate.Item.GetItemName() × @itemRate.Item.ItemCount</td>
+                                <td>@(Masters.TextResourceTable.Get(itemRate.CharacterRarityFlags))</td>
+                                <td>@itemRate.LotteryRate.ToString("P")</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </MudSimpleTable>
+                </MudField>
+            }
+            @if (LotteryItemList.GachaItemRateSpecialList.IsNotNullOrEmpty())
+            {
+                <MudField Label="特殊个别出现几率" Variant="Variant.Outlined">
+                    <MudSimpleTable Dense="true">
+                        <tbody>
+                        @foreach (var itemRate in LotteryItemList.GachaItemRateSpecialList)
+                        {
+                            <tr>
+                                <td>@itemRate.Item.GetItemName() × @itemRate.Item.ItemCount</td>
+                                <td>@(Masters.TextResourceTable.Get(itemRate.CharacterRarityFlags))</td>
+                                <td>@itemRate.LotteryRate.ToString("P")</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </MudSimpleTable>
+                </MudField>
+            }
+        </MudItem>
+        <MudItem md="12">
+            @((MarkupString) detailFooter)
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+
+@code {
+
+    [Parameter]
+    public GetLotteryItemListResponse LotteryItemList { get; set; }
+
+    [Parameter]
+    public long GachaCaseUiId { get; set; }
+
+    private string detailHeader;
+    private string detailBody;
+    private string detailFooter;
+
+    protected async override Task OnInitializedAsync()
+    {
+        await GetGachaLottery();
+    }
+
+
+    private async Task GetGachaLottery()
+    {
+        var gachaCaseUiMb = Masters.GachaCaseUiTable.GetById(GachaCaseUiId);
+        detailHeader = Masters.TextResourceTable.Get(gachaCaseUiMb.DetailDialogHeadingKey);
+        detailBody = Masters.TextResourceTable.Get(gachaCaseUiMb.DetailDialogDetailKey);
+        detailFooter = Masters.TextResourceTable.Get(gachaCaseUiMb.DetailDialogNotesKey);
+    }
+
+}

@@ -144,4 +144,55 @@ public static class UserItemExtensions
             MaxItemCount = 0
         };
     }
+
+
+    public static string GetItemName(this IUserItem item)
+    {
+        if (item.ItemType == ItemType.Equipment)
+        {
+            var equipmentMb = Masters.EquipmentTable.GetById(item.ItemId);
+            return $"{Masters.TextResourceTable.Get(equipmentMb.NameKey)} Lv{equipmentMb.EquipmentLv}";
+        }
+        if (item.ItemType == ItemType.TreasureChest)
+        {
+            var treasureChestMb = Masters.TreasureChestTable.GetById(item.ItemId);
+            return Masters.TextResourceTable.Get(treasureChestMb.NameKey);
+        }
+
+        if (item.ItemType == ItemType.CharacterFragment)
+        {
+            var characterMb = Masters.CharacterTable.GetById(item.ItemId);
+            var characterName = Masters.TextResourceTable.Get(characterMb.NameKey);
+            return Masters.TextResourceTable.Get("[CommonItemCharacterFragment]", characterName);
+        }
+
+        if (item.ItemType == ItemType.EquipmentFragment)
+        {
+            var equipmentSetMaterialMb = Masters.EquipmentSetMaterialTable.GetById(item.ItemId);
+            var equipmentName = $"{Masters.TextResourceTable.Get(equipmentSetMaterialMb.NameKey)} Lv{equipmentSetMaterialMb.Lv}";
+            return Masters.TextResourceTable.Get("[CommonItemEquipmentFragmentFormat]", equipmentName);
+        }
+
+        if (item.ItemType == ItemType.EquipmentSetMaterial)
+        {
+            var equipmentSetMaterialMb = Masters.EquipmentSetMaterialTable.GetById(item.ItemId);
+            var name = $"{Masters.TextResourceTable.Get(equipmentSetMaterialMb.NameKey)} Lv{equipmentSetMaterialMb.Lv}";
+            return name;
+        }
+
+        if (item.ItemType == ItemType.Sphere)
+        {
+            var sphereMb = Masters.SphereTable.GetById(item.ItemId);
+            return $"{Masters.TextResourceTable.Get(sphereMb.NameKey)} Lv{sphereMb.Lv}";
+        }
+
+        if (item.ItemType == ItemType.Character)
+        {
+            var characterMb = Masters.CharacterTable.GetById(item.ItemId);
+            return Masters.TextResourceTable.Get(characterMb.NameKey);
+        }
+
+        var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(item.ItemType, item.ItemId);
+        return Masters.TextResourceTable.Get(itemMb.NameKey);
+    }
 }

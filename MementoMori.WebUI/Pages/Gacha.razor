@@ -1,7 +1,101 @@
-﻿@page "/Gacha"
+﻿@using MementoMori.Ortega.Share.Data.ApiInterface.Gacha
+@using MementoMori.Ortega.Share.Data.Gacha
+@using MementoMori.Ortega.Share
+@using System.Text
+@using MementoMori.Extensions
+@using MementoMori.WebUI.Extensions
+@using MementoMori.WebUI.Pages.Components
+@inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
+@inject IDialogService DialogService
+
+@page "/Gacha"
 <PageTitle>召唤</PageTitle>
 <h3>召唤</h3>
 
+<MudGrid>
+    @foreach (var gachaCaseInfo in gachaCaseInfos.OrderByDescending(d => d.DisplayOrder))
+    {
+        var gachaCaseMb = Masters.GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
+        var gachaCaseUiMb = Masters.GachaCaseUiTable.GetById(gachaCaseInfo.GachaCaseUiId);
+
+        <MudItem md="12" lg="6" xxl="2">
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">@(Masters.TextResourceTable.Get(gachaCaseUiMb.NameKey))</MudText>
+                        <MudText Typo="Typo.body2">@(Masters.TextResourceTable.Get(gachaCaseUiMb.ExplanationKey))</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="() => ShowDetail(gachaCaseInfo)">详细</MudButton>
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudField Label="持有资源" Variant="Variant.Outlined">
+                        @foreach (var userItem in gachaCaseInfo.GachaButtonInfoList.Select(d => d.ConsumeUserItem).DistinctBy(d=>new {d.ItemType, d.ItemId}))
+                        {
+                            var label = $"{userItem.GetItemName()} × {ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == userItem.ItemType && d.ItemId == userItem.ItemId)?.ItemCount ?? 0}";
+                            <MudChip>@label</MudChip>
+                        }
+                    </MudField>
+
+                </MudCardContent>
+                <MudCardActions>
+                    @foreach (var button in gachaCaseInfo.GachaButtonInfoList)
+                    {
+                        var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(button.ConsumeUserItem.ItemType, button.ConsumeUserItem.ItemId);
+                        var count = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == button.ConsumeUserItem.ItemType && d.ItemId == button.ConsumeUserItem.ItemId)?.ItemCount ?? 0;
+                        var disabled = count < button.ConsumeUserItem.ItemCount;
+
+                        <MudButton Disabled="disabled" Variant="Variant.Filled" Class="mr-2" Color="Color.Secondary" OnClick="() => DoGacha(button.GachaButtonId)">@(Masters.TextResourceTable.Get(itemMb.NameKey)) × @button.ConsumeUserItem.ItemCount</MudButton>
+                    }
+
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    }
+</MudGrid>
+
+
 @code {
-    
+    private List<GachaCaseInfo> gachaCaseInfos = new List<GachaCaseInfo>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetGachaList();
+    }
+
+    private async Task GetGachaList()
+    {
+        var listResponse = await ViewModel.GetResponse<GetListRequest, GetListResponse>(new GetListRequest());
+        gachaCaseInfos = listResponse.GachaCaseInfoList;
+    }
+
+    private async Task DoGacha(long buttonGachaButtonId)
+    {
+        var showMessageBox = await DialogService.ShowMessageBox("提示", "确定要抽卡吗", "我确定", "算了吧");
+        if (showMessageBox != true)
+        {
+            return;
+        }
+
+        var drawResponse = await ViewModel.GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = buttonGachaButtonId});
+        var msg = new StringBuilder();
+        gachaCaseInfos = drawResponse.GachaCaseInfoList;
+        drawResponse.GachaRewardItemList.PrintUserItems(s => msg.AppendLine(s));
+        drawResponse.GachaRewardAddItemList.PrintUserItems(s => msg.AppendLine(s));
+        drawResponse.BonusRewardItemList.PrintUserItems(s => msg.AppendLine(s));
+        drawResponse.CharacterReleaseItemList.PrintUserItems(s => msg.AppendLine(s));
+
+        await DialogService.ShowMessageBox("抽卡结果", msg.ToString());
+    }
+
+    private async Task ShowDetail(GachaCaseInfo gachaCaseInfo)
+    {
+        var lotteryItemListResponse = await ViewModel.GetResponse<GetLotteryItemListRequest, GetLotteryItemListResponse>(new() {GachaButtonId = gachaCaseInfo.GachaButtonInfoList.First().GachaButtonId});
+        var parameters = new DialogParameters<GachaDetail>();
+        parameters.Add(d => d.GachaCaseUiId, gachaCaseInfo.GachaCaseUiId);
+        parameters.Add(d => d.LotteryItemList, lotteryItemListResponse);
+        await DialogService.ShowAsync<GachaDetail>("抽卡详情", parameters, new DialogOptions() {CloseButton = true, CloseOnEscapeKey = true});
+    }
+
 }
