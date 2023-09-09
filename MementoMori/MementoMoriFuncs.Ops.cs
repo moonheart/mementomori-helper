@@ -67,7 +67,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     [Reactive]
     public TowerType SelectedAutoTowerType { get; set; }
-    
+
     [Reactive]
     public bool ShowDebugInfo { get; set; }
 
@@ -255,17 +255,47 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var getListResponse = await GetResponse<PresentGetListRequest, PresentGetListResponse>(new() {LanguageType = LanguageType.zhTW});
-            if (getListResponse.userPresentDtoInfos.Any(d => !d.IsReceived))
+            var usedItem = false;
+            do
             {
-                var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(new ReceiveItemRequest() {LanguageType = LanguageType.zhTW});
-                log("领取礼物箱：");
-                resp.ResultItems.Select(d => d.Item).PrintUserItems(log);
-            }
-            else
-            {
-                log("礼物箱没有可领取的");
-            }
+                var getListResponse = await GetResponse<PresentGetListRequest, PresentGetListResponse>(new() {LanguageType = LanguageType.zhTW});
+                if (getListResponse.userPresentDtoInfos.Any(d => !d.IsReceived))
+                {
+                    try
+                    {
+                        var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(new ReceiveItemRequest() {LanguageType = LanguageType.zhTW});
+                        log("领取礼物箱：");
+                        resp.ResultItems.Select(d => d.Item).PrintUserItems(log);
+                    }
+                    catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.PresentReceiveOverLimitCountPresent)
+                    {
+                        log(e.Message);
+                        foreach (var presentItem in getListResponse.userPresentDtoInfos.SelectMany(d => d.ItemList))
+                        {
+                            if (presentItem.Item.ItemType != ItemType.QuestQuickTicket) continue;
+                            var count = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == presentItem.Item.ItemType && d.ItemId == presentItem.Item.ItemId)?.ItemCount ?? 0;
+                            var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(presentItem.Item.ItemType, presentItem.Item.ItemId);
+                            var maxItemCount = itemMb.MaxItemCount;
+                            if (maxItemCount != count) continue;
+                            var name = Masters.TextResourceTable.Get(itemMb.NameKey);
+                            var useCount = (int) Math.Floor(maxItemCount * 0.1);
+                            log($"使用达到上限的物品: {name}×{useCount}, {count}/{maxItemCount}");
+                            var response = await GetResponse<UseAutoBattleRewardItemRequest, UseAutoBattleRewardItemResponse>(new UseAutoBattleRewardItemRequest()
+                            {
+                                ItemType = (QuestQuickTicketType) itemMb.ItemType,
+                                UseCount = useCount
+                            });
+                            response.RewardItemList.PrintUserItems(log);
+                            usedItem = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    log("礼物箱没有可领取的");
+                }
+            } while (usedItem);
         });
     }
 
@@ -457,8 +487,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                     {
                         return (d.EquipmentMB.RarityFlags & EquipmentRarityFlags.D) != 0 &&
                                d.EquipmentMB.EquipmentLv != 1 &&
-                               d.EquipmentMB.SlotType == grouping.Key && 
-                               d.Equipment.LegendSacredTreasureLv == 0 && 
+                               d.EquipmentMB.SlotType == grouping.Key &&
+                               d.Equipment.LegendSacredTreasureLv == 0 &&
                                d.Equipment.MatchlessSacredTreasureLv == 0;
                     });
                     var processedDEquips = new List<UserItemDtoInfo>();
@@ -620,8 +650,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                     {
                         return (d.EquipmentMB.RarityFlags & EquipmentRarityFlags.D) != 0 &&
                                d.EquipmentMB.EquipmentLv != 1 &&
-                               d.EquipmentMB.SlotType == grouping.Key && 
-                               d.Equipment.LegendSacredTreasureLv == 0 && 
+                               d.EquipmentMB.SlotType == grouping.Key &&
+                               d.Equipment.LegendSacredTreasureLv == 0 &&
                                d.Equipment.MatchlessSacredTreasureLv == 0;
                     });
                     var processedDEquips = new List<UserItemDtoInfo>();
