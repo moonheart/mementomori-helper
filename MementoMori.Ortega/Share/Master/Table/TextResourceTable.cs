@@ -19,7 +19,7 @@ namespace MementoMori.Ortega.Share.Master.Table
                 languageType = LanguageType.zhTW;
             }
 
-            var filePath = $"./Master/TextResource{languageType}MB";
+            var filePath = $"./Master/{GetMasterBookName()}";
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
                 var textResources = this.Deserialize(languageType, fileStream);
@@ -34,7 +34,7 @@ namespace MementoMori.Ortega.Share.Master.Table
 
         public string GetMasterBookName()
         {
-            return $"TextResource{_languageType}MB";
+            return GetMbName(_languageType);
         }
 
         public void SetLanguageType(LanguageType languageType)
@@ -214,6 +214,28 @@ namespace MementoMori.Ortega.Share.Master.Table
                 case LanguageType.deDE: return MessagePackSerializer.Deserialize<TextResourceDeDeMB[]>(data);
                 case LanguageType.arEG: return MessagePackSerializer.Deserialize<TextResourceArEgMB[]>(data);
                 default: return MessagePackSerializer.Deserialize<TextResourceZhTwMB[]>(data);
+            }
+        }
+        private string GetMbName(LanguageType languageType)
+        {
+            switch (languageType)
+            {
+                case LanguageType.None: return "TextResourceZhTwMB";
+                case LanguageType.jaJP: return "TextResourceJaJpMB";
+                case LanguageType.enUS: return "TextResourceEnUsMB";
+                case LanguageType.koKR: return "TextResourceKoKrMB";
+                case LanguageType.zhTW: return "TextResourceZhTwMB";
+                case LanguageType.frFR: return "TextResourceFrFrMB";
+                case LanguageType.zhCN: return "TextResourceZhCnMB";
+                case LanguageType.esMX: return "TextResourceEsMxMB";
+                case LanguageType.ptBR: return "TextResourcePtBrMB";
+                case LanguageType.thTH: return "TextResourceThThMB";
+                case LanguageType.idID: return "TextResourceIdIdMB";
+                case LanguageType.viVN: return "TextResourceViVnMB";
+                case LanguageType.ruRU: return "TextResourceRuRuMB";
+                case LanguageType.deDE: return "TextResourceDeDeMB";
+                case LanguageType.arEG: return "TextResourceArEgMB";
+                default: return "TextResourceZhTwMB";
             }
         }
 
