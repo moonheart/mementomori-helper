@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml;
 using MementoMori.Exceptions;
 using MementoMori.Extensions;
+using MementoMori.Ortega.Common.Utils;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.ApiInterface;
@@ -116,7 +117,7 @@ public partial class MementoMoriFuncs
         // UserSyncData = new UserSyncData();
         UserSyncData = ReadFromJson<UserSyncData>("usersyncdata.json");
 
-        Observable.Timer(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10)).Where(_=> !IsQuickActionExecuting).Subscribe(t =>
+        Observable.Timer(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10)).Where(_ => !IsQuickActionExecuting).Subscribe(t =>
         {
             WriteToJson("runtimeinfo.json", RuntimeInfo);
             WriteToJson("usersyncdata.json", UserSyncData);
@@ -294,15 +295,11 @@ public partial class MementoMoriFuncs
 
             async Task DoBattle()
             {
-                var userSyncData = (await UserGetUserData()).UserSyncData;
-                // battleInfoResponse.UserDungeonBattleCharacterDtoInfos.Where(d =>
-                // {
-                //     // todo 选择出战斗力最高的5个角色
-                //     var characterMb = Masters.CharacterTable.GetById(d.CharacterId);
-                //     return d.CurrentHpPerMill>0 && characterMb.
-                // })
-                var userDeckDtoInfo = userSyncData.UserDeckDtoInfos.First(d =>
-                    d.DeckUseContentType == DeckUseContentType.DungeonBattle);
+                // 选择出战斗力最高的5个角色
+                var characters = battleInfoResponse.UserDungeonBattleCharacterDtoInfos.Where(d => d.CurrentHpPerMill != 0).OrderByDescending(d =>
+                {
+                    return BattlePowerCalculatorUtil.GetUserCharacterBattlePower(d.Guid);
+                }).ToList();
                 // todo 处理角色挂掉的情况
                 var execBattleResponse = await GetResponse<ExecBattleRequest, ExecBattleResponse>(
                     new ExecBattleRequest()
@@ -311,11 +308,11 @@ public partial class MementoMoriFuncs
                         DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
                         CharacterGuids = new List<string>()
                         {
-                            userDeckDtoInfo.UserCharacterGuid1,
-                            userDeckDtoInfo.UserCharacterGuid2,
-                            userDeckDtoInfo.UserCharacterGuid3,
-                            userDeckDtoInfo.UserCharacterGuid4,
-                            userDeckDtoInfo.UserCharacterGuid5,
+                            characters[0].Guid,
+                            characters[1].Guid,
+                            characters[2].Guid,
+                            characters[3].Guid,
+                            characters[4].Guid,
                         }.Where(d => !d.IsNullOrEmpty()).ToList()
                     });
                 var finishBattleResponse = await GetResponse<FinishBattleRequest, FinishBattleResponse>(
@@ -494,25 +491,69 @@ public partial class MementoMoriFuncs
                     break;
                 case DungeonBattleGridState.Reward:
                 {
-                    // 选择加成奖励
-                    var relicId = 0L;
-                    foreach (var info in _gameConfig.DungeonBattleRelicSort)
+                    if (type == DungeonBattleGridType.BattleAndRelicReinforce)
                     {
-                        if (battleInfoResponse.RewardRelicIds.Contains(info.Id))
+                        // 选择加成奖励
+                        var relicId = 0L;
+                        var upgradableRelics = battleInfoResponse.UserDungeonDtoInfo.RelicIds.Where(d =>
                         {
-                            relicId = info.Id;
-                            break;
-                        }
-                    }
-
-                    var rewardBattleReceiveRelicResponse =
-                        await GetResponse<RewardBattleReceiveRelicRequest, RewardBattleReceiveRelicResponse>(
-                            new RewardBattleReceiveRelicRequest()
+                            var mb = Masters.DungeonBattleRelicTable.GetByReinforceFrom(d);
+                            if (mb == null)
                             {
-                                CurrentTermId = battleInfoResponse.CurrentTermId,
-                                DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
-                                SelectedRelicId = relicId,
-                            });
+                                // 不可升级
+                                return false;
+                            }
+
+                            if (battleInfoResponse.UserDungeonDtoInfo.RelicIds.Contains(mb.Id))
+                            {
+                                // 升级后的已经存在了
+                                return false;
+                            }
+
+                            return true;
+                        }).ToList();
+                        foreach (var info in _gameConfig.DungeonBattleRelicSort)
+                        {
+                            if (upgradableRelics.Contains(info.Id))
+                            {
+                                // relicId = Masters.DungeonBattleRelicTable.GetByReinforceFrom(info.Id).Id;
+                                relicId = info.Id;
+                                break;
+                            }
+                        }
+
+                        var rewardBattleReceiveRelicResponse =
+                            await GetResponse<RewardBattleReinforceRelicRequest, RewardBattleReinforceRelicResponse>(
+                                new RewardBattleReinforceRelicRequest()
+                                {
+                                    CurrentTermId = battleInfoResponse.CurrentTermId,
+                                    DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                    SelectedRelicId = relicId,
+                                });
+                    }
+                    else
+                    {
+                        // 选择加成奖励
+                        var relicId = 0L;
+
+                        foreach (var info in _gameConfig.DungeonBattleRelicSort)
+                        {
+                            if (battleInfoResponse.RewardRelicIds.Contains(info.Id))
+                            {
+                                relicId = info.Id;
+                                break;
+                            }
+                        }
+
+                        var rewardBattleReceiveRelicResponse =
+                            await GetResponse<RewardBattleReceiveRelicRequest, RewardBattleReceiveRelicResponse>(
+                                new RewardBattleReceiveRelicRequest()
+                                {
+                                    CurrentTermId = battleInfoResponse.CurrentTermId,
+                                    DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                    SelectedRelicId = relicId,
+                                });
+                    }
 
                     break;
                 }

@@ -38,6 +38,10 @@ namespace MementoMori.Ortega.Common.Utils
 		public static long GetUserCharacterBattlePower(string userCharacterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
 		{
 			var info = Services.Get<MementoMoriFuncs>().UserSyncData.GetUserCharacterInfoByUserCharacterGuid(userCharacterGuid);
+            if (info == null)
+            {
+                return 0;
+            }
 			return GetUserCharacterBattlePower(info, lockEquipmentDeckType);
 		}
 

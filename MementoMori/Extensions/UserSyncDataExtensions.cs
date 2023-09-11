@@ -41,6 +41,10 @@ public static class UserSyncDataExtensions
     public static UserCharacterInfo GetUserCharacterInfoByUserCharacterGuid(this UserSyncData userSyncData, string userCharacterGuid)
     {
         UserCharacterDtoInfo userCharacterDtoInfoByGuid = userSyncData.GetUserCharacterDtoInfoByGuid(userCharacterGuid);
+        if (userCharacterDtoInfoByGuid == null)
+        {
+            return null;
+        }
         return userSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(userCharacterDtoInfoByGuid);
     }
     
