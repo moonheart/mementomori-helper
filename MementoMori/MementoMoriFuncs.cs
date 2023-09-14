@@ -382,7 +382,7 @@ public partial class MementoMoriFuncs
                         {
                             case DungeonBattleGridType.JoinCharacter:
                             {
-                                var info = battleInfoResponse.UserDungeonBattleGuestCharacterDtoInfos.First();
+                                var info = battleInfoResponse.UserDungeonBattleGuestCharacterDtoInfos.OrderByDescending(d=>d.BattlePower).First();
                                 var execGuestResponse = await GetResponse<ExecGuestRequest, ExecGuestResponse>(
                                     new ExecGuestRequest()
                                     {
