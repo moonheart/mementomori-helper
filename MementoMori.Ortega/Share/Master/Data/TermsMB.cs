@@ -55,8 +55,13 @@ namespace MementoMori.Ortega.Share.Master.Data
 			get;
 		}
 
+        [DateTimeString]
+        [PropertyOrder(7)]
+        [Description("開始日時")]
+        public string StartTime { get; }
+
 		[SerializationConstructor]
-		public TermsMB(long id, bool? isIgnore, string memo, long timeServerId, bool isDmm, TermsButtonInfo terms, TermsButtonInfo privacyPolicy, TermsButtonInfo subscription, IReadOnlyList<TermsButtonInfo> termsButtonInfos)
+		public TermsMB(long id, bool? isIgnore, string memo, long timeServerId, bool isDmm, TermsButtonInfo terms, TermsButtonInfo privacyPolicy, TermsButtonInfo subscription, IReadOnlyList<TermsButtonInfo> termsButtonInfos, string startTime)
 			:base(id, isIgnore, memo)
 		{
 			TimeServerId = timeServerId;
@@ -65,7 +70,8 @@ namespace MementoMori.Ortega.Share.Master.Data
 			PrivacyPolicy = privacyPolicy;
 			Subscription = subscription;
 			TermsButtonInfos = termsButtonInfos;
-		}
+            StartTime = startTime;
+        }
 
 		public TermsMB() :base(0L, false, ""){}
 	}

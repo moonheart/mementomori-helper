@@ -111,7 +111,13 @@ namespace MementoMori.Ortega.Share.Master.Data
 			throw new NotImplementedException();
 		}
 
-		public bool IsAfterStartGrandBattle(DateTime localDateTime)
+        public bool IsAfterStartLegendLeague(DateTime localDateTime)
+		{
+			// return this.<StartLegendLeagueDateTime>k__BackingField.ToDateTime() <= localDateTime;
+            throw new NotImplementedException();
+		}
+
+        public bool IsAfterStartGrandBattle(DateTime localDateTime)
 		{
 			// for (;;)
 			// {

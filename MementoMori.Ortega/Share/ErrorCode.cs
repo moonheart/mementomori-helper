@@ -711,6 +711,8 @@ namespace MementoMori.Ortega.Share
 		EquipmentLockEquipmentDtoNotFound,
 		[Description("装備固定されたキャラクターが存在しません。")]
 		EquipmentNotFoundLockCharacter,
+        [Description("無効な装備固定誘導ダイアログ種別です。")]
+        EquipmentInvalidLeadLockEquipmentDialogType,
 		[Description("ユーザのフレンドデータが存在しません。")]
 		FriendUserFriendDtoNotFound = 241000,
 		[Description("ユーザのステータスデータが存在しません。")]

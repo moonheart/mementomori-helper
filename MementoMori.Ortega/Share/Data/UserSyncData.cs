@@ -2,6 +2,7 @@
 using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.ServerLib.Models.MySql.Dto;
 using MementoMori.Ortega.Share.Data.DtoInfo;
+using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Data.Item;
 using MementoMori.Ortega.Share.Data.Shop;
 using MementoMori.Ortega.Share.Enums;
@@ -42,6 +43,8 @@ namespace MementoMori.Ortega.Share.Data
         public bool? IsReceivedSnsShareReward { get; set; }
 
         public bool? IsValidContractPrivilege { get; set; }
+
+        public Dictionary<LockEquipmentDeckType, LeadLockEquipmentDialogInfo> LeadLockEquipmentDialogInfoMap { get; set; }
 
         public LegendLeagueClassType? LegendLeagueClassType { get; set; }
 
@@ -159,6 +162,7 @@ namespace MementoMori.Ortega.Share.Data
             if (userSyncData.IsJoinedLocalGvg != null) IsJoinedLocalGvg = userSyncData.IsJoinedLocalGvg;
             if (userSyncData.IsReceivedSnsShareReward != null) IsReceivedSnsShareReward = userSyncData.IsReceivedSnsShareReward;
             if (userSyncData.IsValidContractPrivilege != null) IsValidContractPrivilege = userSyncData.IsValidContractPrivilege;
+            if (userSyncData.LeadLockEquipmentDialogInfoMap != null) LeadLockEquipmentDialogInfoMap = LeadLockEquipmentDialogInfoMap.Merge(userSyncData.LeadLockEquipmentDialogInfoMap);
             if (userSyncData.LegendLeagueClassType != null) LegendLeagueClassType = userSyncData.LegendLeagueClassType;
             if (userSyncData.LocalRaidChallengeCount != null) LocalRaidChallengeCount = userSyncData.LocalRaidChallengeCount;
             if (userSyncData.LockedEquipmentCharacterGuidListMap.IsNotNullOrEmpty()) LockedEquipmentCharacterGuidListMap = LockedEquipmentCharacterGuidListMap.Merge(userSyncData.LockedEquipmentCharacterGuidListMap);
