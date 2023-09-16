@@ -264,7 +264,7 @@
         var dialogParameters = new DialogParameters<UseItemDialog>();
         dialogParameters.Add(d=>d.Count, userItem.ItemCount);
         dialogParameters.Add(d=>d.Name, name);
-        dialogParameters.Add(d=>d.ItemId, userItem.ItemId);
+        dialogParameters.Add(d=>d.ButtonText, "使用");
         dialogParameters.Add(d=>d.UseItemFunc, (async count =>
         {
             var useAutoBattleRewardItemResponse = await ViewModel.GetResponse<UseAutoBattleRewardItemRequest, UseAutoBattleRewardItemResponse>(

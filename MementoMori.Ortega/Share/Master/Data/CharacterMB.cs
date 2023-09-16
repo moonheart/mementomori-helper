@@ -117,19 +117,12 @@ namespace MementoMori.Ortega.Share.Master.Data
 
         public string GetCombinedName([Optional] string delimiter)
         {
-            // int num;
-            // do
-            // {
-            //     num = 0;
-            //     this.GetCharacterName(num, num);
-            // }
-            // while (string.IsNullOrEmpty(num));
-            // if (string.IsNullOrEmpty(delimiter))
-            // {
-            //     return num + num;
-            // }
-            // return num + delimiter + num;
-            throw new NotImplementedException();
+            GetCharacterName(out var name1, out var name2);
+            if (string.IsNullOrEmpty(name2))
+            {
+                return name1;
+            }
+            return $"{name1}{delimiter}{name2}";
         }
 
     }

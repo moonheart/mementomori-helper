@@ -168,8 +168,8 @@ public static class UserItemExtensions
 
         if (item.ItemType == ItemType.EquipmentFragment)
         {
-            var equipmentSetMaterialMb = Masters.EquipmentSetMaterialTable.GetById(item.ItemId);
-            var equipmentName = $"{Masters.TextResourceTable.Get(equipmentSetMaterialMb.NameKey)} Lv{equipmentSetMaterialMb.Lv}";
+            var equipmentMb = Masters.EquipmentTable.GetById(item.ItemId);
+            var equipmentName = $"{Masters.TextResourceTable.Get(equipmentMb.NameKey)} Lv{equipmentMb.EquipmentLv}";
             return Masters.TextResourceTable.Get("[CommonItemEquipmentFragmentFormat]", equipmentName);
         }
 

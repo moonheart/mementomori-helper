@@ -1,0 +1,164 @@
+﻿@using MementoMori.Ortega.Share.Data.ApiInterface.TradeShop
+@using MementoMori.Ortega.Share.Data.TradeShop
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Data.ApiInterface.Item
+@using MementoMori.Ortega.Share.Data.Item
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.WebUI.Extensions
+@using MementoMori.WebUI.Pages.Components
+@using MementoMori.Ortega.Common.Utils
+@inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
+@inject IDialogService DialogService
+
+@page "/Shop"
+
+<MudTabs MinimumTabWidth="20px">
+    <ChildContent>
+        @foreach (var tab in _tradeShopTabInfoList.OrderBy(d => Masters.TradeShopTabTable.GetById(d.TradeShopTabId).SortOrder))
+        {
+            var tradeShopTabMb = Masters.TradeShopTabTable.GetById(tab.TradeShopTabId);
+            <MudTabPanel Text="@(Masters.TextResourceTable.Get(tradeShopTabMb.TabNameKey))">
+                <MudPaper Elevation="0" Class="mb-4">
+                    @foreach (var item in tradeShopTabMb.ConsumeItemInfos)
+                    {
+                        var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(item.ItemType, item.ItemId);
+                        var count = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(x => x.ItemType == item.ItemType && x.ItemId == item.ItemId)?.ItemCount ?? 0;
+                        var text = $"{Masters.TextResourceTable.Get(itemMb.NameKey)} × {count}";
+                        <MudChip Text="@text"></MudChip>
+                    }
+
+                    @if (tab.ExpirationTimeStamp > 0)
+                    {
+                        var span = TimeSpan.FromMilliseconds(tab.ExpirationTimeStamp - DateTimeOffset.Now.ToUnixTimeMilliseconds());
+                        var refreshTime = $"刷新剩余: {(span.Days > 0 ? $"{span.Days}天" : "")} {span.Hours}小时 {span.Minutes}分钟 {span.Seconds}秒";
+
+                        <MudChip Text="@refreshTime"></MudChip>
+                    }
+                </MudPaper>
+                <MudGrid>
+                    @foreach (var item in tab.TradeShopItems?.OrderBy(d => d.SortOrder).ToArray() ?? Array.Empty<TradeShopItem>())
+                    {
+                        var (itemName, subName) = GetItemName(item.GiveItem);
+
+                        var consumeItemName1 = item.ConsumeItem1.GetItemName();
+                        var consumeText = $"{consumeItemName1} × {item.ConsumeItem1.ItemCount}";
+                        if (item.ConsumeItem2 != null)
+                        {
+                            var consumeItemName2 = item.ConsumeItem2.GetItemName();
+                            consumeText += $" {consumeItemName2} × {item.ConsumeItem2.ItemCount}";
+                        }
+
+                        var itemCount = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == item.ConsumeItem1.ItemType && d.ItemId == item.ConsumeItem1.ItemId)?.ItemCount ?? 0;
+                        var buyMaxCount = itemCount / item.ConsumeItem1.ItemCount;
+                        if (item.ConsumeItem2 != null)
+                        {
+                            itemCount = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == item.ConsumeItem2.ItemType && d.ItemId == item.ConsumeItem2.ItemId)?.ItemCount ?? 0;
+                            buyMaxCount = Math.Min(buyMaxCount, itemCount / item.ConsumeItem2.ItemCount);
+                        }
+
+                        var buyBtnDisabled = (item.LimitTradeCount > 0 && item.IsSoldOut()) || buyMaxCount == 0;
+
+
+                        <MudItem Class="pa-1">
+                            <MudCard Elevation="2">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText>@itemName</MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudText>@subName</MudText>
+                                    @if (item.LimitTradeCount > 0)
+                                    {
+                                        <MudText>限量 @item.TradeCount / @item.LimitTradeCount</MudText>
+                                    }
+                                    else
+                                    {
+                                        <MudText>不限量</MudText>
+                                    }
+                                </MudCardContent>
+                                <MudCardActions>
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Disabled="buyBtnDisabled" OnClick="() => BuyItem(tab, item)">@consumeText</MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+
+                </MudGrid>
+            </MudTabPanel>
+        }
+
+    </ChildContent>
+</MudTabs>
+
+@code {
+
+    private List<TradeShopTabInfo> _tradeShopTabInfoList = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetShopInfo();
+    }
+
+    private async Task GetShopInfo()
+    {
+        var listResponse = await ViewModel.GetResponse<GetListRequest, GetListResponse>(new GetListRequest());
+        _tradeShopTabInfoList = listResponse.TradeShopTabInfoList;
+    }
+
+    private void BuyItem(TradeShopTabInfo tab, TradeShopItem tradeShopItem)
+    {
+        var itemCount = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == tradeShopItem.ConsumeItem1.ItemType && d.ItemId == tradeShopItem.ConsumeItem1.ItemId)?.ItemCount ?? 0;
+        var buyMaxCount = itemCount / tradeShopItem.ConsumeItem1.ItemCount;
+        if (tradeShopItem.ConsumeItem2 != null)
+        {
+            itemCount = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == tradeShopItem.ConsumeItem2.ItemType && d.ItemId == tradeShopItem.ConsumeItem2.ItemId)?.ItemCount ?? 0;
+            buyMaxCount = Math.Min(buyMaxCount, itemCount / tradeShopItem.ConsumeItem2.ItemCount);
+        }
+        var availableCount = tradeShopItem.LimitTradeCount == 0 ? int.MaxValue : tradeShopItem.LimitTradeCount - tradeShopItem.TradeCount;
+        buyMaxCount = Math.Min(buyMaxCount, availableCount);
+
+        var dialogParameters = new DialogParameters<UseItemDialog>();
+        dialogParameters.Add(d => d.Count, buyMaxCount);
+        dialogParameters.Add(d => d.Name, GetItemName(tradeShopItem.GiveItem).name);
+        dialogParameters.Add(d => d.ButtonText, "购买");
+        dialogParameters.Add(d => d.UseItemFunc, async count =>
+        {
+            var response = await ViewModel.GetResponse<BuyItemRequest, BuyItemResponse>(
+                new BuyItemRequest {TradeShopTabId = tab.TradeShopTabId, TradeShopItemInfos = new List<TradeShopItemInfo>() {new() {TradeShopItemId = tradeShopItem.TradeShopItemId, TradeCount = (int) count}}});
+            return response.TradeShopItems.Select(d => d.GiveItem).Cast<IUserItem>().ToList();
+        });
+
+        DialogService.Show<UseItemDialog>("购买物品", dialogParameters);
+    }
+
+    private static (string name,string subName) GetItemName(UserItem item)
+    {
+        var itemName = "";
+        var subName = "";
+        if (item.ItemType == ItemType.CharacterFragment)
+        {
+            var characterMb = Masters.CharacterTable.GetById(item.ItemId);
+            characterMb.GetCharacterName(out var name1, out var name2);
+            itemName = Masters.TextResourceTable.Get("[CommonItemCharacterFragment]", name1);
+        }
+        else
+        {
+            itemName = ItemUtil.GetItemDisplayName(item);
+        }
+
+        if (item.ItemType == ItemType.EquipmentFragment)
+        {
+            var equipmentCompositeMb = Masters.EquipmentCompositeTable.GetById(item.ItemId);
+            var equipmentMb = Masters.EquipmentTable.GetById(equipmentCompositeMb.EquipmentId);
+            if (equipmentMb.ExclusiveEffectId > 0)
+            {
+                var equipmentExclusiveEffectMb = Masters.EquipmentExclusiveEffectTable.GetById(equipmentMb.ExclusiveEffectId);
+                subName = Masters.CharacterTable.GetById(equipmentExclusiveEffectMb.CharacterId).GetCombinedName("");
+            }
+        }
+
+        return (itemName, subName);
+    }
+
+}
