@@ -438,27 +438,6 @@ public partial class MementoMoriFuncs : ReactiveObject
             while (!token.IsCancellationRequested)
             {
                 // 批量精炼
-                log("批量精炼");
-                if (UserSyncData.UserItemDtoInfo.Any(d =>
-                    {
-                        if (d.ItemType != ItemType.Equipment)
-                        {
-                            return false;
-                        }
-
-                        var flags = Masters.EquipmentTable.GetById(d.ItemId).RarityFlags;
-                        return (flags & EquipmentRarityFlags.A) != 0 ||
-                               (flags & EquipmentRarityFlags.B) != 0 ||
-                               (flags & EquipmentRarityFlags.C) != 0 ||
-                               (flags & EquipmentRarityFlags.S) != 0;
-                    }))
-                {
-                    var castManyResponse = await GetResponse<CastManyRequest, CastManyResponse>(new CastManyRequest()
-                    {
-                        RarityFlags = EquipmentRarityFlags.S | EquipmentRarityFlags.A | EquipmentRarityFlags.B |
-                                      EquipmentRarityFlags.C
-                    });
-                }
 
                 var usersyncData = await UserGetUserData();
                 // 找到所有 等级为S、魔装、未装备 的装备
@@ -475,8 +454,27 @@ public partial class MementoMoriFuncs : ReactiveObject
 
                 if (sEquipments.Count == 0)
                 {
-                    log("没有可以精炼的装备了");
-                    break;
+                    log("批量精炼");
+
+                    try
+                    {
+                        var castManyResponse = await GetResponse<CastManyRequest, CastManyResponse>(new CastManyRequest()
+                        {
+                            RarityFlags = EquipmentRarityFlags.S | EquipmentRarityFlags.A | EquipmentRarityFlags.B |
+                                          EquipmentRarityFlags.C
+                        });
+                    }
+                    catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.EquipmentMissingEquipment)
+                    {
+                        // 没有可以精炼的装备了
+                        log("没有可以精炼的装备了");
+                        break;
+                    }
+                    sEquipments = equipments.Where(d =>
+                            d.Equipment.CharacterGuid == "" && // 未装备
+                            d.Equipment.MatchlessSacredTreasureLv == 1 && // 魔装等级为 1
+                            (d.EquipmentMB.RarityFlags & EquipmentRarityFlags.S) != 0 // 稀有度为 S
+                    ).ToList();
                 }
 
                 // 按照装备位置进行分组
