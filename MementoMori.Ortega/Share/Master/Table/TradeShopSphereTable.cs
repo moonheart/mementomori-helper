@@ -5,14 +5,9 @@ namespace MementoMori.Ortega.Share.Master.Table
 	public class TradeShopSphereTable : TableBase<TradeShopSphereMB>
 	{
 		public TradeShopSphereMB GetBySphereLevel(long sphereLevel)
-		{
-			int num = 0;
-			if ((long)num != sphereLevel)
-			{
-				num++;
-			}
-			throw new NullReferenceException();
-		}
+        {
+            return _datas.First(d => d.SphereLevel == sphereLevel);
+        }
 
 		public TradeShopSphereTable()
 		{

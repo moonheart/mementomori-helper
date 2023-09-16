@@ -12,11 +12,9 @@ namespace MementoMori.Ortega.Share.Master.Table
 		}
 
 		public SphereMB GetByCategoryIdAndLevel(long sphereCategoryId, long level)
-		{
-			int num = 0;
-			num++;
-			throw new NullReferenceException();
-		}
+        {
+            return _datas.First(d => d.CategoryId == sphereCategoryId && d.Lv == level);
+        }
 
 		public List<SphereMB> GetByCategoryIds(List<long> sphereCategoryIds)
 		{
@@ -40,13 +38,9 @@ namespace MementoMori.Ortega.Share.Master.Table
 		}
 
 		public List<SphereMB> GetListByLevel(long level)
-		{
-			// List<SphereMB> list = new List();
-			// int num = 0;
-			// num++;
-			// return list;
-			throw new NullReferenceException();
-		}
+        {
+            return _datas.Where(d => d.Lv == 1).ToList();
+        }
 
 		public SphereTable()
 		{

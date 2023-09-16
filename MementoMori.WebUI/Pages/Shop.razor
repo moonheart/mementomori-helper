@@ -35,56 +35,71 @@
                         <MudChip Text="@refreshTime"></MudChip>
                     }
                 </MudPaper>
-                <MudGrid>
-                    @foreach (var item in tab.TradeShopItems?.OrderBy(d => d.SortOrder).ToArray() ?? Array.Empty<TradeShopItem>())
-                    {
-                        var (itemName, subName) = GetItemName(item.GiveItem);
-
-                        var consumeItemName1 = item.ConsumeItem1.GetItemName();
-                        var consumeText = $"{consumeItemName1} × {item.ConsumeItem1.ItemCount}";
-                        if (item.ConsumeItem2 != null)
+                @if (tradeShopTabMb.TradeShopType != TradeShopType.Sphere)
+                {
+                    <MudGrid>
+                        @foreach (var item in tab.TradeShopItems?.OrderBy(d => d.SortOrder).ToArray() ?? Array.Empty<TradeShopItem>())
                         {
-                            var consumeItemName2 = item.ConsumeItem2.GetItemName();
-                            consumeText += $" {consumeItemName2} × {item.ConsumeItem2.ItemCount}";
-                        }
+                            var (itemName, subName) = GetItemName(item.GiveItem);
 
-                        var itemCount = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == item.ConsumeItem1.ItemType && d.ItemId == item.ConsumeItem1.ItemId)?.ItemCount ?? 0;
-                        var buyMaxCount = itemCount / item.ConsumeItem1.ItemCount;
-                        if (item.ConsumeItem2 != null)
+                            var consumeItemName1 = item.ConsumeItem1.GetItemName();
+                            var consumeText = $"{consumeItemName1} × {item.ConsumeItem1.ItemCount}";
+                            if (item.ConsumeItem2 != null)
+                            {
+                                var consumeItemName2 = item.ConsumeItem2.GetItemName();
+                                consumeText += $" {consumeItemName2} × {item.ConsumeItem2.ItemCount}";
+                            }
+
+                            var itemCount = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == item.ConsumeItem1.ItemType && d.ItemId == item.ConsumeItem1.ItemId)?.ItemCount ?? 0;
+                            var buyMaxCount = itemCount / item.ConsumeItem1.ItemCount;
+                            if (item.ConsumeItem2 != null)
+                            {
+                                itemCount = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == item.ConsumeItem2.ItemType && d.ItemId == item.ConsumeItem2.ItemId)?.ItemCount ?? 0;
+                                buyMaxCount = Math.Min(buyMaxCount, itemCount / item.ConsumeItem2.ItemCount);
+                            }
+
+                            var buyBtnDisabled = (item.LimitTradeCount > 0 && item.IsSoldOut()) || buyMaxCount == 0;
+
+
+                            <MudItem Class="pa-1">
+                                <MudCard Elevation="2">
+                                    <MudCardHeader>
+                                        <CardHeaderContent>
+                                            <MudText>@itemName</MudText>
+                                        </CardHeaderContent>
+                                    </MudCardHeader>
+                                    <MudCardContent>
+                                        <MudText>@subName</MudText>
+                                        @if (item.LimitTradeCount > 0)
+                                        {
+                                            <MudText>限量 @item.TradeCount / @item.LimitTradeCount</MudText>
+                                        }
+                                        else
+                                        {
+                                            <MudText>不限量</MudText>
+                                        }
+                                    </MudCardContent>
+                                    <MudCardActions>
+                                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Disabled="buyBtnDisabled" OnClick="() => BuyItem(tab, item)">@consumeText</MudButton>
+                                    </MudCardActions>
+                                </MudCard>
+                            </MudItem>
+                        }
+                    </MudGrid>
+                }
+                else
+                {
+                    var listByLevel = Masters.SphereTable.GetListByLevel(1);
+
+                    <MudGrid>
+                        @foreach (var sphere in listByLevel)
                         {
-                            itemCount = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == item.ConsumeItem2.ItemType && d.ItemId == item.ConsumeItem2.ItemId)?.ItemCount ?? 0;
-                            buyMaxCount = Math.Min(buyMaxCount, itemCount / item.ConsumeItem2.ItemCount);
+                            <MudItem>
+                                <ShopSphereItem SphereMb="sphere" Tab="tab"></ShopSphereItem>
+                            </MudItem>
                         }
-
-                        var buyBtnDisabled = (item.LimitTradeCount > 0 && item.IsSoldOut()) || buyMaxCount == 0;
-
-
-                        <MudItem Class="pa-1">
-                            <MudCard Elevation="2">
-                                <MudCardHeader>
-                                    <CardHeaderContent>
-                                        <MudText>@itemName</MudText>
-                                    </CardHeaderContent>
-                                </MudCardHeader>
-                                <MudCardContent>
-                                    <MudText>@subName</MudText>
-                                    @if (item.LimitTradeCount > 0)
-                                    {
-                                        <MudText>限量 @item.TradeCount / @item.LimitTradeCount</MudText>
-                                    }
-                                    else
-                                    {
-                                        <MudText>不限量</MudText>
-                                    }
-                                </MudCardContent>
-                                <MudCardActions>
-                                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Disabled="buyBtnDisabled" OnClick="() => BuyItem(tab, item)">@consumeText</MudButton>
-                                </MudCardActions>
-                            </MudCard>
-                        </MudItem>
-                    }
-
-                </MudGrid>
+                    </MudGrid>
+                }
             </MudTabPanel>
         }
 
