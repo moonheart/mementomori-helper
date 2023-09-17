@@ -1,8 +1,9 @@
 ﻿@using System.Collections.ObjectModel
+@using System.Reactive.Linq
 @using DynamicData.Binding
 <MudSimpleTable Elevation="0" Dense="true">
     <tbody style="height: 350px; overflow: auto" class="d-flex flex-column-reverse">
-    @foreach (var msg in Messages.ToList())
+        @foreach (var msg in _messageList)
     {
         <tr>
             <td>@msg</td>
@@ -16,9 +17,15 @@
     [Parameter]
     public ObservableCollection<string> Messages { get; set; }
 
+    private List<string> _messageList = new();
+
     protected override void OnInitialized()
     {
-        Messages.ToObservableChangeSet().Subscribe(set => InvokeAsync(StateHasChanged));
+        Messages.ToObservableChangeSet().Throttle(TimeSpan.FromMilliseconds(200)).Subscribe(set =>
+        {
+            _messageList = Messages.ToList();
+            InvokeAsync(StateHasChanged);
+        });
     }
 
 }

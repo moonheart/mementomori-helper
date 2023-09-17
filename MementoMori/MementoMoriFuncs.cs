@@ -126,14 +126,15 @@ public partial class MementoMoriFuncs
 
     private void AccountXml()
     {
-        XmlDocument doc = new XmlDocument();
-        doc.Load("account.xml");
-        var userId = doc.SelectSingleNode("/map/string[@name='0_Userid']").FirstChild.Value;
-        var clientKey = doc.SelectSingleNode("/map/string[@name='0_ClientKey']").FirstChild.Value.Replace("%22", "");
-        var deviceToken = doc.SelectSingleNode("/map/string[@name='KeyPrefix_0_NotificationDeviceToken']").FirstChild.Value.Replace("%22", "").Replace("%3A", ":");
-        _authOption.UserId = long.Parse(userId);
-        _authOption.ClientKey = clientKey;
-        _authOption.DeviceToken = deviceToken;
+        if (File.Exists("account.xml"))
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("account.xml");
+            var userId = doc.SelectSingleNode("/map/string[@name='0_Userid']").FirstChild.Value;
+            var clientKey = doc.SelectSingleNode("/map/string[@name='0_ClientKey']").FirstChild.Value.Replace("%22", "");
+            _authOption.UserId = long.Parse(userId);
+            _authOption.ClientKey = clientKey;
+        }
     }
 
     public async Task AuthLogin()
@@ -382,7 +383,7 @@ public partial class MementoMoriFuncs
                         {
                             case DungeonBattleGridType.JoinCharacter:
                             {
-                                var info = battleInfoResponse.UserDungeonBattleGuestCharacterDtoInfos.OrderByDescending(d=>d.BattlePower).First();
+                                var info = battleInfoResponse.UserDungeonBattleGuestCharacterDtoInfos.OrderByDescending(d => d.BattlePower).First();
                                 var execGuestResponse = await GetResponse<ExecGuestRequest, ExecGuestResponse>(
                                     new ExecGuestRequest()
                                     {
