@@ -69,7 +69,7 @@
 重命名为 `account.xml` 放到项目目录.
 
 ### 方法2
-在 Windows 上用 DMM 登录一次游戏, 然后找到注册表 `\HKEY_CURRENT_USER\Software\BankOfInnovation\MementoMori`, 拿到 UserId 和 C里恩特key
+在 Windows 上用 DMM 登录一次游戏, 然后找到注册表 `\HKEY_CURRENT_USER\Software\BankOfInnovation\MementoMori`, 拿到 UserId 和 Clientkey
 - UserId: xxxxxx_Userid_hxxxxxx
 - ClientKey: xxxxxx_ClientKey_hxxxxxx
 
