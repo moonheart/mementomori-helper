@@ -2,7 +2,7 @@
 @using DynamicData.Binding
 <MudSimpleTable Elevation="0" Dense="true">
     <tbody style="height: 350px; overflow: auto" class="d-flex flex-column-reverse">
-    @foreach (var msg in Messages)
+    @foreach (var msg in Messages.ToList())
     {
         <tr>
             <td>@msg</td>
