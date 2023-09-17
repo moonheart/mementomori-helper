@@ -15,7 +15,7 @@ internal class Program
         ReactiveUI.PlatformRegistrationManager.SetRegistrationNamespaces(RegistrationNamespace.Blazor);
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Configuration.AddJsonFile("appsettings.dev.json", true, true);
+        builder.Configuration.AddJsonFile("appsettings.user.json", true, true);
 
         builder.Services.AddMudServices();
 
