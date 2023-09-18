@@ -64,11 +64,14 @@
 
 ## 使用
 
-### 方法1
+下载：https://github.com/moonheart/mementomori-helper/releases 然后解压运行。
+
+### 如何获取账号信息：
+#### 方法1
 在 Android 手机上登录一次帐号, 然后获取配置文件 `/data/data/jp.boi.mementomori.android/shared_prefs/jp.boi.mementomori.android.v2.playerprefs.xml`,
 重命名为 `account.xml` 放到项目目录.
 
-### 方法2
+#### 方法2
 在 Windows 上用 DMM 登录一次游戏, 然后找到注册表 `\HKEY_CURRENT_USER\Software\BankOfInnovation\MementoMori`, 拿到 UserId 和 Clientkey
 - UserId: xxxxxx_Userid_hxxxxxx
 - ClientKey: xxxxxx_ClientKey_hxxxxxx
