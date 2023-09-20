@@ -9,8 +9,10 @@ public class MeMoriHttpClientHandler : HttpClientHandler
 {
     private readonly Subject<string> _ortegaaccessToken = new();
     private readonly Subject<string> _ortegaMasterVersion = new();
+    private readonly Subject<string> _ortegaAssetVersion = new();
     public IObservable<string> OrtegaAccessToken => _ortegaaccessToken;
     public IObservable<string> OrtegaMasterVersion => _ortegaMasterVersion;
+    public IObservable<string> OrtegaAssetVersion => _ortegaAssetVersion;
 
     public MeMoriHttpClientHandler(Dictionary<string, string> headers)
     {
@@ -44,6 +46,11 @@ public class MeMoriHttpClientHandler : HttpClientHandler
             {
                 var masterVersion = headers1.FirstOrDefault() ?? "";
                 _ortegaMasterVersion.OnNext(masterVersion);
+            }
+            if (response.Headers.TryGetValues("ortegaassetversion", out var headers2))
+            {
+                var assetVersion = headers2.FirstOrDefault() ?? "";
+                _ortegaAssetVersion.OnNext(assetVersion);
             }
 
             return response;

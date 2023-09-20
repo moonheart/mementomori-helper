@@ -102,6 +102,7 @@ public partial class MementoMoriFuncs
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler(_authOption.Headers);
         _meMoriHttpClientHandler.OrtegaAccessToken.Subscribe(token => { RuntimeInfo.OrtegaAccessToken = token; });
         _meMoriHttpClientHandler.OrtegaMasterVersion.Subscribe(version => { RuntimeInfo.OrtegaMasterVersion = version; });
+        _meMoriHttpClientHandler.OrtegaAssetVersion.Subscribe(version => { RuntimeInfo.OrtegaAssetVersion = version; });
         _httpClient = new HttpClient(_meMoriHttpClientHandler);
         _unityHttpClient = new HttpClient();
         _unityHttpClient.DefaultRequestHeaders.Add("User-Agent",
