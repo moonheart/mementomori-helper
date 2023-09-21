@@ -7,50 +7,54 @@ namespace MementoMori;
 
 public class MeMoriHttpClientHandler : HttpClientHandler
 {
-    private readonly Subject<string> _ortegaaccessToken = new();
-    private readonly Subject<string> _ortegaMasterVersion = new();
-    private readonly Subject<string> _ortegaAssetVersion = new();
-    public IObservable<string> OrtegaAccessToken => _ortegaaccessToken;
-    public IObservable<string> OrtegaMasterVersion => _ortegaMasterVersion;
-    public IObservable<string> OrtegaAssetVersion => _ortegaAssetVersion;
+    public string OrtegaAccessToken { get; private set; }
+    public string OrtegaMasterVersion { get; private set; }
+    public string OrtegaAssetVersion { get; private set; }
 
-    public MeMoriHttpClientHandler(Dictionary<string, string> headers)
+    public string AppVersion
     {
-        foreach (var (key, value) in headers)
-        {
-            _managedHeaders[key] = value;
-        }
+        get => _managedHeaders["ortegaappversion"];
+        set => _managedHeaders["ortegaappversion"] = value;
+    }
+
+    public MeMoriHttpClientHandler()
+    {
+        _managedHeaders["ortegaaccesstoken"] = "";
+        _managedHeaders["ortegaappversion"] = "1.4.4";
+        _managedHeaders["ortegadevicetype"] = "2";
+        _managedHeaders["ortegauuid"] = "f76b796dd77e417598415e2ebf7abd05";
+        _managedHeaders["accept-encoding"] = "gzip";
+        _managedHeaders["user-agent"] = "BestHTTP/2 v2.3.0";
     }
 
     private readonly Dictionary<string, string> _managedHeaders = new();
     private readonly SemaphoreSlim _semaphoreSlim = new(1);
-    
+
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
         await _semaphoreSlim.WaitAsync(cancellationToken);
         try
         {
-            foreach (var pair in _managedHeaders)
-            {
-                request.Headers.Add(pair.Key, pair.Value);
-            }
+            foreach (var pair in _managedHeaders) request.Headers.Add(pair.Key, pair.Value);
 
             var response = await base.SendAsync(request, cancellationToken);
             if (response.Headers.TryGetValues("orteganextaccesstoken", out var headers))
             {
                 _managedHeaders["ortegaaccesstoken"] = headers.FirstOrDefault() ?? "";
-                _ortegaaccessToken.OnNext(_managedHeaders["ortegaaccesstoken"]);
+                OrtegaAccessToken = _managedHeaders["ortegaaccesstoken"];
             }
+
             if (response.Headers.TryGetValues("ortegamasterversion", out var headers1))
             {
                 var masterVersion = headers1.FirstOrDefault() ?? "";
-                _ortegaMasterVersion.OnNext(masterVersion);
+                OrtegaMasterVersion = masterVersion;
             }
+
             if (response.Headers.TryGetValues("ortegaassetversion", out var headers2))
             {
                 var assetVersion = headers2.FirstOrDefault() ?? "";
-                _ortegaAssetVersion.OnNext(assetVersion);
+                OrtegaAssetVersion = assetVersion;
             }
 
             return response;

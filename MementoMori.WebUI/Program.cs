@@ -1,6 +1,5 @@
 using MementoMori;
 using MementoMori.Common;
-using MementoMori.WebUI.Data;
 using MementoMori.WebUI.Jobs;
 using MementoMori.WebUI.ViewModels;
 using MudBlazor.Services;
@@ -21,7 +20,7 @@ internal class Program
 
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();
-        builder.Services.AddSingleton<WeatherForecastService>();
+        builder.Services.AddSingleton<MementoNetworkManager>();
         builder.Services.AddSingleton<MementoMoriFuncs>();
         builder.Services.AddSingleton<CharactorUnitViewModel>();
 
@@ -38,7 +37,7 @@ internal class Program
 
         var app = builder.Build();
         
-        app.Services.GetService<MementoMoriFuncs>().DownloadMasterCatalog().ConfigureAwait(false).GetAwaiter().GetResult();
+        app.Services.GetService<MementoNetworkManager>().DownloadMasterCatalog().ConfigureAwait(false).GetAwaiter().GetResult();
         Services.Setup(app.Services);
 
 // Configure the HTTP request pipeline.

@@ -1,11 +1,5 @@
-﻿using System.Net;
-using System.Reactive.Linq;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
+﻿using System.Reactive.Linq;
 using System.Xml;
-using MementoMori.Exceptions;
-using MementoMori.Extensions;
 using MementoMori.Ortega.Common.Utils;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data;
@@ -15,14 +9,11 @@ using MementoMori.Ortega.Share.Data.ApiInterface.DungeonBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
-using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Data.Mission;
 using MementoMori.Ortega.Share.Data.Notice;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Extensions;
-using MementoMori.Ortega.Share.Master;
-using MessagePack;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -35,11 +26,6 @@ namespace MementoMori;
 
 public partial class MementoMoriFuncs
 {
-    private Uri _apiAuth = new("https://prd1-auth.mememori-boi.com/api/");
-
-    [Reactive]
-    public RuntimeInfo RuntimeInfo { get; private set; }
-
     [Reactive]
     public UserSyncData UserSyncData { get; private set; }
 
@@ -64,21 +50,15 @@ public partial class MementoMoriFuncs
     [Reactive]
     public bool IsNotClearDungeonBattleMap { get; set; }
 
-    private readonly MeMoriHttpClientHandler _meMoriHttpClientHandler;
-    private readonly HttpClient _httpClient;
-    private readonly HttpClient _unityHttpClient;
-
-
     private readonly AuthOption _authOption;
     private readonly GameConfig _gameConfig;
     private readonly ILogger<MementoMoriFuncs> _logger;
 
+    private readonly MementoNetworkManager _networkManager;
+
     private T ReadFromJson<T>(string jsonPath) where T : new()
     {
-        if (!File.Exists(jsonPath))
-        {
-            return new T();
-        }
+        if (!File.Exists(jsonPath)) return new T();
 
         var json = File.ReadAllText(jsonPath);
         return JsonConvert.DeserializeObject<T>(json) ?? new T();
@@ -86,50 +66,32 @@ public partial class MementoMoriFuncs
 
     private void WriteToJson<T>(string jsonPath, T value)
     {
-        if (value == null)
-        {
-            return;
-        }
+        if (value == null) return;
 
         File.WriteAllText(jsonPath, JsonConvert.SerializeObject(value, Formatting.Indented));
     }
 
-    public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig, ILogger<MementoMoriFuncs> logger)
+    public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig, ILogger<MementoMoriFuncs> logger, MementoNetworkManager networkManager)
     {
         _logger = logger;
+        _networkManager = networkManager;
         _authOption = authOption.Value;
         _gameConfig = gameConfig.Value;
-        _meMoriHttpClientHandler = new MeMoriHttpClientHandler(_authOption.Headers);
-        _meMoriHttpClientHandler.OrtegaAccessToken.Subscribe(token => { RuntimeInfo.OrtegaAccessToken = token; });
-        _meMoriHttpClientHandler.OrtegaMasterVersion.Subscribe(version => { RuntimeInfo.OrtegaMasterVersion = version; });
-        _meMoriHttpClientHandler.OrtegaAssetVersion.Subscribe(version => { RuntimeInfo.OrtegaAssetVersion = version; });
-        _httpClient = new HttpClient(_meMoriHttpClientHandler);
-        _unityHttpClient = new HttpClient();
-        _unityHttpClient.DefaultRequestHeaders.Add("User-Agent",
-            new[] {"UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)"});
-        _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", new[] {"2021.3.10f1"});
         AccountXml();
 
         Mypage = new GetMypageResponse();
         NoticeInfoList = new List<NoticeInfo>();
 
-        // RuntimeInfo = new RuntimeInfo();
-        RuntimeInfo = ReadFromJson<RuntimeInfo>("runtimeinfo.json");
-        // UserSyncData = new UserSyncData();
         UserSyncData = ReadFromJson<UserSyncData>("usersyncdata.json");
 
-        Observable.Timer(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10)).Where(_ => !IsQuickActionExecuting).Subscribe(t =>
-        {
-            WriteToJson("runtimeinfo.json", RuntimeInfo);
-            WriteToJson("usersyncdata.json", UserSyncData);
-        });
+        Observable.Timer(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10)).Where(_ => !IsQuickActionExecuting).Subscribe(t => { WriteToJson("usersyncdata.json", UserSyncData); });
     }
 
     private void AccountXml()
     {
         if (File.Exists("account.xml"))
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.Load("account.xml");
             var userId = doc.SelectSingleNode("/map/string[@name='0_Userid']").FirstChild.Value;
             var clientKey = doc.SelectSingleNode("/map/string[@name='0_ClientKey']").FirstChild.Value.Replace("%22", "");
@@ -150,75 +112,7 @@ public partial class MementoMoriFuncs
             AdverisementId = _authOption.AdverisementId,
             UserId = _authOption.UserId
         };
-        var authLoginResp = await GetResponse<LoginRequest, LoginResponse>(reqBody);
-        var playerDataInfo = authLoginResp.PlayerDataInfoList.FirstOrDefault();
-        if (playerDataInfo == null) throw new Exception("playerDataInfo is null");
-
-        // get server host
-        await AuthGetServerHost(playerDataInfo.WorldId);
-
-        // do login
-        var loginPlayerResp = await GetResponse<LoginPlayerRequest, LoginPlayerResponse>(new LoginPlayerRequest
-        {
-            PlayerId = playerDataInfo.PlayerId, Password = playerDataInfo.Password
-        });
-
-        UserSyncData = (await UserGetUserData()).UserSyncData;
-    }
-
-    private async Task AuthGetServerHost(long worldId)
-    {
-        var req = new GetServerHostRequest() {WorldId = worldId};
-        var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(req);
-        RuntimeInfo.ApiHost = resp.ApiHost;
-    }
-
-    public async Task DownloadMasterCatalog()
-    {
-        _logger.LogInformation("下载 master 目录中...");
-        var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN", UserId = 0});
-
-        var url = string.Format(dataUriResponse.MasterUriFormat, RuntimeInfo.OrtegaMasterVersion, "master-catalog");
-        var bytes = await _unityHttpClient.GetByteArrayAsync(url);
-        var masterBookCatalog = MessagePackSerializer.Deserialize<MasterBookCatalog>(bytes);
-        Directory.CreateDirectory("./Master");
-        foreach (var (name, info) in masterBookCatalog.MasterBookInfoMap)
-        {
-            var localPath = $"./Master/{name}";
-            if (File.Exists(localPath))
-            {
-                var md5 = await CalcFileMd5(localPath);
-                if (md5 == info.Hash) continue;
-                File.Delete(localPath);
-            }
-
-            var mbUrl = string.Format(dataUriResponse.MasterUriFormat, RuntimeInfo.OrtegaMasterVersion, name);
-            var fileBytes = await _unityHttpClient.GetByteArrayAsync(mbUrl);
-            await File.WriteAllBytesAsync(localPath, fileBytes);
-        }
-
-        Masters.TextResourceTable.SetLanguageType(LanguageType.zhTW);
-        Masters.LoadAllMasters();
-        _logger.LogInformation("下载 master 目录完成");
-    }
-
-    private async Task<string> CalcFileMd5(string path)
-    {
-        byte[] retVal;
-        using (FileStream file = new FileStream(path, FileMode.Open))
-        {
-            MD5 md5 = MD5.Create();
-            retVal = await md5.ComputeHashAsync(file);
-            file.Close();
-        }
-
-        StringBuilder sb = new StringBuilder();
-        foreach (byte t in retVal)
-        {
-            sb.Append(t.ToString("x2"));
-        }
-
-        return sb.ToString();
+        UserSyncData = await _networkManager.Login(reqBody);
     }
 
     public async Task AutoDungeonBattle(Action<string> log)
@@ -314,7 +208,7 @@ public partial class MementoMoriFuncs
                             characters[1].Guid,
                             characters[2].Guid,
                             characters[3].Guid,
-                            characters[4].Guid,
+                            characters[4].Guid
                         }.Where(d => !d.IsNullOrEmpty()).ToList()
                     });
                 var finishBattleResponse = await GetResponse<FinishBattleRequest, FinishBattleResponse>(
@@ -343,10 +237,8 @@ public partial class MementoMoriFuncs
                                                     ) // 战斗类型的
                     ).MinBy(d => d.Power);
                     if (nextGrid == null)
-                    {
                         // 没有战斗类型的节点
                         nextGrid = grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1);
-                    }
 
                     if (nextGrid == null)
                     {
@@ -358,7 +250,7 @@ public partial class MementoMoriFuncs
                                     ClearedLayer = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount,
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
                                     DungeonBattleDifficultyType = battleInfoResponse.CurrentDungeonBattleLayer
-                                        .DungeonDifficultyType,
+                                        .DungeonDifficultyType
                                 });
                         if (battleInfoResponse.CurrentDungeonBattleLayer.LayerCount == 3)
                         {
@@ -374,7 +266,7 @@ public partial class MementoMoriFuncs
                                 new ProceedLayerRequest()
                                 {
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
-                                    DungeonDifficultyType = diff,
+                                    DungeonDifficultyType = diff
                                 });
                         }
                     }
@@ -438,7 +330,7 @@ public partial class MementoMoriFuncs
                                 new LeaveShopRequest()
                                 {
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
-                                    DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                    DungeonGridGuid = currentGrid.Grid.DungeonGridGuid
                                 });
                             break;
                         case DungeonBattleGridType.RelicReinforce:
@@ -447,7 +339,7 @@ public partial class MementoMoriFuncs
                                     new ExecReinforceRelicRequest()
                                     {
                                         CurrentTermId = battleInfoResponse.CurrentTermId,
-                                        DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                        DungeonGridGuid = currentGrid.Grid.DungeonGridGuid
                                     });
                             break;
                         case DungeonBattleGridType.BattleAndRelicReinforce:
@@ -458,20 +350,18 @@ public partial class MementoMoriFuncs
                             var canUpgradeRelics = battleInfoResponse.UserDungeonDtoInfo.RelicIds
                                 .Where(d => Masters.DungeonBattleRelicTable.GetById(d).DungeonRelicRarityType != DungeonBattleRelicRarityType.SSR).ToList();
                             foreach (var info in _gameConfig.DungeonBattleRelicSort)
-                            {
                                 if (canUpgradeRelics.Contains(info.Id))
                                 {
                                     relicId = info.Id;
                                     break;
                                 }
-                            }
 
                             var response = await GetResponse<RewardBattleReinforceRelicRequest, RewardBattleReinforceRelicResponse>(
                                 new RewardBattleReinforceRelicRequest()
                                 {
                                     SelectedRelicId = relicId,
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
-                                    DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                    DungeonGridGuid = currentGrid.Grid.DungeonGridGuid
                                 });
                             break;
                         }
@@ -501,28 +391,22 @@ public partial class MementoMoriFuncs
                         {
                             var mb = Masters.DungeonBattleRelicTable.GetByReinforceFrom(d);
                             if (mb == null)
-                            {
                                 // 不可升级
                                 return false;
-                            }
 
                             if (battleInfoResponse.UserDungeonDtoInfo.RelicIds.Contains(mb.Id))
-                            {
                                 // 升级后的已经存在了
                                 return false;
-                            }
 
                             return true;
                         }).ToList();
                         foreach (var info in _gameConfig.DungeonBattleRelicSort)
-                        {
                             if (upgradableRelics.Contains(info.Id))
                             {
                                 // relicId = Masters.DungeonBattleRelicTable.GetByReinforceFrom(info.Id).Id;
                                 relicId = info.Id;
                                 break;
                             }
-                        }
 
                         var rewardBattleReceiveRelicResponse =
                             await GetResponse<RewardBattleReinforceRelicRequest, RewardBattleReinforceRelicResponse>(
@@ -530,7 +414,7 @@ public partial class MementoMoriFuncs
                                 {
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
                                     DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
-                                    SelectedRelicId = relicId,
+                                    SelectedRelicId = relicId
                                 });
                     }
                     else
@@ -539,13 +423,11 @@ public partial class MementoMoriFuncs
                         var relicId = 0L;
 
                         foreach (var info in _gameConfig.DungeonBattleRelicSort)
-                        {
                             if (battleInfoResponse.RewardRelicIds.Contains(info.Id))
                             {
                                 relicId = info.Id;
                                 break;
                             }
-                        }
 
                         var rewardBattleReceiveRelicResponse =
                             await GetResponse<RewardBattleReceiveRelicRequest, RewardBattleReceiveRelicResponse>(
@@ -553,7 +435,7 @@ public partial class MementoMoriFuncs
                                 {
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
                                     DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
-                                    SelectedRelicId = relicId,
+                                    SelectedRelicId = relicId
                                 });
                     }
 
@@ -579,63 +461,10 @@ public partial class MementoMoriFuncs
         where TReq : ApiRequestBase
         where TResp : ApiResponseBase
     {
-        var authAttr = typeof(TReq).GetCustomAttribute<OrtegaAuthAttribute>();
-        var apiAttr = typeof(TReq).GetCustomAttribute<OrtegaApiAttribute>();
-        Uri uri;
-        if (authAttr != null)
+        return await _networkManager.GetResponse<TReq, TResp>(req, AddLog, data =>
         {
-            uri = new Uri(_apiAuth, authAttr.Uri);
-        }
-        else if (apiAttr != null)
-        {
-            uri = new Uri(new Uri(RuntimeInfo.ApiHost), apiAttr.Uri);
-
-            if (RuntimeInfo.OrtegaAccessToken.IsNullOrEmpty())
-            {
-                await AuthLogin();
-            }
-        }
-        else
-        {
-            throw new NotSupportedException();
-        }
-
-
-        // var reqMap = JsonConvert.DeserializeObject<Dictionary<object, object>>(JsonConvert.SerializeObject(req));
-        var bytes = MessagePackSerializer.Serialize(req);
-        var respMsg = await _httpClient.PostAsync(uri,
-            new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json"}}});
-        if (!respMsg.IsSuccessStatusCode)
-        {
-            throw new InvalidOperationException(respMsg.ToString());
-        }
-
-        var respBytes = await respMsg.Content.ReadAsByteArrayAsync();
-        if (respMsg.Headers.TryGetValues("ortegastatuscode", out var headers2))
-        {
-            var ortegastatuscode = headers2.FirstOrDefault() ?? "";
-            if (ortegastatuscode != "0")
-            {
-                AddLog(uri.ToString());
-                var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(respBytes);
-                var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
-                Console.WriteLine(errorCodeMessage);
-                AddLog($"{errorCodeMessage}");
-                AddLog(req.ToJson());
-                AddLog(apiErrResponse.ToJson());
-                Console.WriteLine(apiErrResponse.ToJson());
-                throw new ApiErrorException(apiErrResponse.ErrorCode);
-            }
-        }
-
-        var response = MessagePackSerializer.Deserialize<TResp>(respBytes);
-        if (response is IUserSyncApiResponse userSyncApiResponse)
-        {
-            UserSyncData.UserItemEditorMergeUserSyncData(userSyncApiResponse.UserSyncData);
+            UserSyncData.UserItemEditorMergeUserSyncData(data);
             this.RaisePropertyChanged(nameof(UserSyncData));
-        }
-
-        return response;
-        // return JsonConvert.DeserializeObject<TResp>(JsonConvert.SerializeObject(tmp));
+        });
     }
 }
