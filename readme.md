@@ -5,6 +5,11 @@
 ![](images/intro1.png)
 ![](images/intro2.png)
 ![](images/intro3.png)
+![](images/intro4.png)
+![](images/intro5.png)
+![](images/intro6.png)
+![](images/intro7.png)
+![](images/intro8.png)
 
 ## Todos
 
@@ -64,9 +69,18 @@
 
 ## 使用
 
-下载：https://github.com/moonheart/mementomori-helper/releases 然后解压运行。
+进入到发布页面：https://github.com/moonheart/mementomori-helper/releases, 然后下载 `publish-win-x64.zip` 解压。
 
-### 如何获取账号信息：
+要运行的话,你需要配置好你的账号信息. 然后就可以运行 `MementoMori.WebUI.exe` 了, 找到类似 `Now listening on: http://0.0.0.0:5290` 的日志, 打开这个地址就可以了.
+
+进入网页之后, 先点击一次登录, 之后就可以随意操作了.
+
+## 配置
+
+配置文件是 `appsettings.user.json`, 你可以把 `appsettings.json` 中的配置复制到 `appsettings.user.json` 然后修改, 就可以覆盖默认配置了.
+
+### 帐号配置
+
 #### 方法1
 在 Android 手机上登录一次帐号, 然后获取配置文件 `/data/data/jp.boi.mementomori.android/shared_prefs/jp.boi.mementomori.android.v2.playerprefs.xml`,
 重命名为 `account.xml` 放到项目目录.
@@ -79,3 +93,52 @@
 双击名称, 会显示二进制数据, 把右侧的文本抄下来, 不包含引号.
 
 然后填写到 `appsettings.user.json` 文件中, AuthOption.ClientKey 和 AuthOption.UserId.
+
+### 时空洞窟
+
+配置路径 `GameConfig.DungeonBattleRelicSort`
+
+时空洞窟自动执行的时候, 会需要选择各种加成效果, 这个配置用来设置优先选择哪些加成效果, 靠前的会优先选择.
+
+Id 是加成效果的编号, 具体哪个加成效果对应哪个 Id 可以在 [这里看](https://www.moonheartmoon.com/mementomori-masterbook/?lang=ZhTw&mb=DungeonBattleRelicMB) 
+
+### 抽卡
+
+配置路径 `GameConfig.GachaConfig`
+
+在执行自动抽卡的时候, 会消耗道具, 这个配置可以指定能够消耗哪些道具来抽卡.
+
+具体的道具类型和Id可以在 [这里看](https://www.moonheartmoon.com/mementomori-masterbook/?lang=ZhTw&mb=ItemMB) 
+
+``` json
+{
+      "AutoGachaConsumeUserItems": [
+        { "ItemType": "Gold", "ItemId": 1}, // 金幣
+        {
+          "ItemType": "GachaTicket",
+          "ItemId": 1 // 聖天使的神諭召喚券
+        },
+        {
+          "ItemType": "GachaTicket",
+          "ItemId": 2 //白金召喚券
+        },
+        {
+          "ItemType": "GachaTicket",
+          "ItemId": 4 // 命運召喚券
+        },
+        {
+          "ItemType": "GachaTicket",
+          "ItemId": 5 // 黑葬武具召喚券
+        },
+        {
+          "ItemType": "GachaTicket",
+          "ItemId": 6 // 天光武具召喚券
+        },
+        {
+          "ItemType": "GachaTicket",
+          "ItemId": 7 // 禁忌武具召喚券
+        },
+        { "ItemType": "FriendPoint", "ItemId": 1 } // 好友點數
+      ]
+    }
+```
