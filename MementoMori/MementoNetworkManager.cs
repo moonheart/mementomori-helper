@@ -32,7 +32,6 @@ public class MementoNetworkManager
     private readonly MeMoriHttpClientHandler _meMoriHttpClientHandler;
     private readonly HttpClient _httpClient;
     private readonly HttpClient _unityHttpClient;
-    private readonly HttpClient _assetHttpClient;
 
 
     public string OrtegaAccessToken => _meMoriHttpClientHandler.OrtegaAccessToken;
@@ -70,11 +69,6 @@ public class MementoNetworkManager
         _unityHttpClient = new HttpClient() {Timeout = TimeSpan.FromSeconds(30)};
         _unityHttpClient.DefaultRequestHeaders.Add("User-Agent", "UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)");
         _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", "2021.3.10f1");
-
-        _assetHttpClient = new HttpClient() {Timeout = TimeSpan.FromSeconds(30)};
-        _assetHttpClient.DefaultRequestHeaders.Add("User-Agent", "BestHTTP/2 v2.3.0");
-        _assetHttpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, identity");
-        // _unityHttpClient.DefaultRequestHeaders.Add("Content-Length", "0");
     }
 
 
@@ -98,7 +92,7 @@ public class MementoNetworkManager
             }
 
             var mbUrl = string.Format(dataUriResponse.MasterUriFormat, _meMoriHttpClientHandler.OrtegaMasterVersion, name);
-            var fileBytes = await _assetHttpClient.GetByteArrayAsync(mbUrl);
+            var fileBytes = await _unityHttpClient.GetByteArrayAsync(mbUrl);
             await File.WriteAllBytesAsync(localPath, fileBytes);
         }
 
