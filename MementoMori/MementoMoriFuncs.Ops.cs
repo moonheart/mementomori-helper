@@ -392,6 +392,8 @@ public partial class MementoMoriFuncs : ReactiveObject
             {
                 log("没有可以领取的");
             }
+
+            await GetBountyRequestInfo();
         });
     }
 
@@ -409,7 +411,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 // log(startResponse.ToJson());
             }
 
-            await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new BountyQuestGetListRequest());
+            await GetBountyRequestInfo();
         });
     }
 
@@ -998,7 +1000,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     public async Task GetMissionInfo()
     {
         var response = await GetResponse<GetMissionInfoRequest, GetMissionInfoResponse>(new GetMissionInfoRequest()
-            {TargetMissionGroupList = new List<MissionGroupType>() {MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main}});
+            {TargetMissionGroupList = new List<MissionGroupType>() {MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main, MissionGroupType.NewCharacter, MissionGroupType.Limited}});
         MissionInfoDict = response.MissionInfoDict;
     }
 

@@ -193,7 +193,7 @@
                             <td>未解锁</td>
                         </tr>
                     }
-                    else if (missionInfo.MissionType != MissionType.Main)
+                    else if (missionInfo.MissionType == MissionType.Daily || missionInfo.MissionType == MissionType.Weekly)
                     {
                         var missionId = missionInfo.MissionStatusHistory[MissionStatusType.Received].Last();
                         var missionMb = Masters.MissionTable.GetById(missionId);
