@@ -1,4 +1,6 @@
-﻿namespace MementoMori;
+﻿using MementoMori.Ortega.Share.Data.Item;
+
+namespace MementoMori;
 
 public class AuthOption
 {
@@ -20,5 +22,12 @@ public class GameConfig
         public long Id { get; set; }
         public string Desc { get; set; }
     }
+
+    public class GachaConfigModel
+    {
+        public List<UserItem> AutoGachaConsumeUserItems { get; set; } = new();
+    }
+
+    public GachaConfigModel GachaConfig { get; set; }
     public DungeonBattleRelicSortInfo[] DungeonBattleRelicSort { get; set; }
 }
