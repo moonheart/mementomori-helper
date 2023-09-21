@@ -9,3 +9,8 @@ riderModule.iml
 /MementoMori.WebUI/account.xml
 /MementoMori.WebUI/battlePowerDebug/
 .vs
+runtimeinfo.json
+usersyncdata.json
+*.csproj.user
+*.DotSettings.user
+Assets
