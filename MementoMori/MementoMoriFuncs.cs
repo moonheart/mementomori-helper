@@ -123,12 +123,12 @@ public partial class MementoMoriFuncs
         foreach (var g in equips)
         {
             log($"脱下装备 {g.Key}");
+
             // 脱装备
             var removeEquipmentResponse = await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
             {
                 UserCharacterGuid = g.Key,
-                EquipmentSlotTypes = new List<EquipmentSlotType>()
-                    {EquipmentSlotType.Armor, EquipmentSlotType.Gauntlet, EquipmentSlotType.Helmet, EquipmentSlotType.Shoes, EquipmentSlotType.Sub, EquipmentSlotType.Weapon}
+                EquipmentSlotTypes = g.Select(d => Masters.EquipmentTable.GetById(d.EquipmentId).SlotType).ToList()
             });
         }
 
