@@ -115,9 +115,9 @@ public partial class MementoMoriFuncs
         UserSyncData = await _networkManager.Login(reqBody);
     }
 
-    public async Task AutoDungeonBattle(Action<string> log)
+    public async Task AutoDungeonBattle(Action<string> log, CancellationToken cancellationToken)
     {
-        // todo 脱装备进副本，然后穿装备
+        // 脱装备进副本，然后穿装备
         var deckDtoInfo = UserSyncData.UserDeckDtoInfos.First(d => d.DeckUseContentType == DeckUseContentType.DungeonBattle).GetUserCharacterGuids();
         var equips = UserSyncData.UserEquipmentDtoInfos.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d => d.CharacterGuid).ToList();
         foreach (var g in equips)
@@ -164,7 +164,7 @@ public partial class MementoMoriFuncs
             return;
         }
 
-        while (true)
+        while (!cancellationToken.IsCancellationRequested)
         {
             // 获取副本信息
             var battleInfoResponse =

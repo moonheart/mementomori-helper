@@ -12,6 +12,11 @@ namespace MementoMori.Ortega.Share.Master.Table
 				{
 					return data;
 				}
+
+                if (data.CharacterLevel == level && data.CharacterSubLevel == 0)
+                {
+                    return data;
+                }
 			}
 
 			return null;

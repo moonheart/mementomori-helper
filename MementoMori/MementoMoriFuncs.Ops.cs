@@ -746,7 +746,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            await AutoDungeonBattle(log);
+            await AutoDungeonBattle(log, token);
             log("完成");
         });
     }
