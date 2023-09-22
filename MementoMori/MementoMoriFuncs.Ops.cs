@@ -28,6 +28,7 @@ using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Data.Gacha;
 using MementoMori.Ortega.Share.Data.Item;
+using MementoMori.Ortega.Share.Data.Item.Model;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master.Data;
@@ -45,6 +46,7 @@ using GachaGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Gacha.Get
 using GachaGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Gacha.GetListResponse;
 using PresentGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Present.GetListRequest;
 using PresentGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Present.GetListResponse;
+using System.Xml.Linq;
 
 namespace MementoMori;
 
@@ -252,6 +254,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     try
                     {
                         var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(new ReceiveItemRequest() {LanguageType = LanguageType.zhTW});
+                        usedItem = false;
                         log("领取礼物箱：");
                         resp.ResultItems.Select(d => d.Item).PrintUserItems(log);
                     }
@@ -260,22 +263,40 @@ public partial class MementoMoriFuncs : ReactiveObject
                         log(e.Message);
                         foreach (var presentItem in getListResponse.userPresentDtoInfos.SelectMany(d => d.ItemList))
                         {
-                            if (presentItem.Item.ItemType != ItemType.QuestQuickTicket) continue;
-                            var count = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == presentItem.Item.ItemType && d.ItemId == presentItem.Item.ItemId)?.ItemCount ?? 0;
-                            var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(presentItem.Item.ItemType, presentItem.Item.ItemId);
-                            var maxItemCount = itemMb.MaxItemCount;
-                            if (maxItemCount != count) continue;
-                            var name = Masters.TextResourceTable.Get(itemMb.NameKey);
-                            var useCount = (int) Math.Floor(maxItemCount * 0.1);
-                            log($"使用达到上限的物品: {name}×{useCount}, {count}/{maxItemCount}");
-                            var response = await GetResponse<UseAutoBattleRewardItemRequest, UseAutoBattleRewardItemResponse>(new UseAutoBattleRewardItemRequest()
+                            if (presentItem.Item.ItemType == ItemType.QuestQuickTicket)
                             {
-                                ItemType = (QuestQuickTicketType) itemMb.ItemType,
-                                UseCount = useCount
-                            });
-                            response.RewardItemList.PrintUserItems(log);
-                            usedItem = true;
-                            break;
+                                var count = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == presentItem.Item.ItemType && d.ItemId == presentItem.Item.ItemId)?.ItemCount ?? 0;
+                                var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(presentItem.Item.ItemType, presentItem.Item.ItemId);
+                                var maxItemCount = itemMb.MaxItemCount;
+                                if (maxItemCount != count) continue;
+
+                                var name = Masters.TextResourceTable.Get(itemMb.NameKey);
+                                var useCount = (int) Math.Floor(maxItemCount * 0.1);
+                                log($"使用达到上限的物品: {name}×{useCount}, {count}/{maxItemCount}");
+                                var response = await GetResponse<UseAutoBattleRewardItemRequest, UseAutoBattleRewardItemResponse>(new UseAutoBattleRewardItemRequest()
+                                {
+                                    ItemType = (QuestQuickTicketType) itemMb.ItemType,
+                                    UseCount = useCount
+                                });
+                                response.RewardItemList.PrintUserItems(log);
+                                usedItem = true;
+                                break;
+                            }
+
+                            if (presentItem.Item.ItemType == ItemType.Equipment)
+                            {
+                                var count = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == presentItem.Item.ItemType && d.ItemId == presentItem.Item.ItemId)?.ItemCount ?? 0;
+                                var maxItemCount = 999;
+                                if (maxItemCount != count) continue;
+
+                                var name = Masters.TextResourceTable.Get(Masters.EquipmentTable.GetById(presentItem.Item.ItemId).NameKey);
+                                var useCount = (int) Math.Floor(maxItemCount * 0.1);
+                                log($"使用达到上限的物品: {name}×{useCount}, {count}/{maxItemCount}");
+                                var response = await GetResponse<CastRequest, CastResponse>(new CastRequest {UserEquipment = new UserEquipment(presentItem.Item.ItemId, useCount)});
+                                response.ResultItemList.PrintUserItems(log);
+                                usedItem = true;
+                                break;
+                            }
                         }
                     }
                 else
