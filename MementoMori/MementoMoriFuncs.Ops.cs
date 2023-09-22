@@ -806,6 +806,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
             bool CheckCount(GachaButtonInfo buttonInfo, List<UserItemDtoInfo> userItems, ItemType itemType, long itemId = 1)
             {
+                if (itemId == 0) itemId = 1;
                 if (buttonInfo.ConsumeUserItem == null ||
                     buttonInfo.ConsumeUserItem.ItemCount == 0)
                     return true;
