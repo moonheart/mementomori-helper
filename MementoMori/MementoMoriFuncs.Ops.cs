@@ -920,25 +920,20 @@ public partial class MementoMoriFuncs : ReactiveObject
 
                     var m = $"挑战 boss 一次：{win} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}";
                     log(m);
-
-                    var t = 1;
-                    await Task.Delay(t);
                 }
                 catch (Exception e)
                 {
                     errCount++;
-                    if (errCount > 10) return;
+                    if (errCount > 10)
+                    {
+                        log("错误达到了 10 次, 中断");
+                        return;
+                    }
 
-                    while (true)
-                        try
-                        {
-                            await AuthLogin();
-                            break;
-                        }
-                        catch (Exception)
-                        {
-                            await Task.Delay(1000);
-                        }
+                    if (e is ApiErrorException)
+                    {
+                        await AuthLogin();
+                    }
                 }
         });
     }

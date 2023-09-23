@@ -109,7 +109,7 @@ public partial class MementoMoriFuncs
             AppVersion = _authOption.AppVersion,
             OSVersion = _authOption.OSVersion,
             ModelName = _authOption.ModelName,
-            AdverisementId = _authOption.AdverisementId,
+            AdverisementId = Guid.NewGuid().ToString("D"),
             UserId = _authOption.UserId
         };
         UserSyncData = await _networkManager.Login(reqBody);
