@@ -187,7 +187,6 @@ public partial class MementoMoriFuncs
             var memo = currentGrid.GridMb.Memo;
             var type = currentGrid.GridMb.DungeonGridType;
             log($"当前第 {layer}层，坐标 {currentGrid.Grid.X},{currentGrid.Grid.Y}，状态 {state}, {Masters.TextResourceTable.Get(type)} 敌人战斗力 {currentGrid.Power}");
-            Console.WriteLine($"当前第 {layer}层，坐标 {currentGrid.Grid.X},{currentGrid.Grid.Y}，状态 {state}, {Masters.TextResourceTable.Get(type)} 敌人战斗力 {currentGrid.Power}");
 
             async Task DoBattle()
             {

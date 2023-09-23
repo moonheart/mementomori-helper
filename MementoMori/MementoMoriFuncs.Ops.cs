@@ -104,6 +104,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     private void AddLog(string message)
     {
+        Console.WriteLine(message);
         MesssageList.Insert(0, message);
         if (MesssageList.Count > 1000) MesssageList.RemoveAt(MesssageList.Count - 1);
     }
@@ -237,7 +238,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             }
             catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.FriendAlreadyMaxReceived)
             {
-                Console.WriteLine(e.Message);
+                log(e.Message);
             }
         });
     }
@@ -329,7 +330,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             }
             catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.BattleBossNotEnoughBossChallengeCount)
             {
-                Console.WriteLine(e.Message);
+                log(e.Message);
             }
         });
     }
@@ -356,7 +357,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             }
             catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.TowerBattleNotEnoughChallengeCount)
             {
-                Console.WriteLine(e.Message);
+                log(e.Message);
             }
         });
     }
@@ -538,7 +539,6 @@ public partial class MementoMoriFuncs : ReactiveObject
                 if (needMoreCount <= 0) break;
                 var equipmentMb = Masters.EquipmentTable.GetById(equipItem.ItemId);
                 log($"为装备找可穿戴的角色, 脱穿一次 {equipmentMb.Memo}");
-                Console.WriteLine(equipmentMb.Memo);
                 // 找到可以装备的一个角色
                 var userCharacterDtoInfo = usersyncData.UserSyncData.UserCharacterDtoInfos.Where(d =>
                 {
@@ -703,7 +703,6 @@ public partial class MementoMoriFuncs : ReactiveObject
                     SourceEquipmentGuid = info.Guid
                 });
             log($"继承完成 {mb.Memo}=>{userEquipmentDtoInfo.Guid}");
-            Console.WriteLine($"继承完成 {mb.Memo}=>{userEquipmentDtoInfo.Guid}");
         }
         else
         {
@@ -780,7 +779,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 await Task.Delay(TimeSpan.FromMilliseconds(500));
             }
 
-            Console.WriteLine("DDDDD");
+            log("DDDDD");
         });
     }
 
@@ -905,7 +904,6 @@ public partial class MementoMoriFuncs : ReactiveObject
                     }
 
                     var m = $"挑战 boss 一次：{win} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}";
-                    Console.WriteLine(m);
                     log(m);
 
                     var t = 1;
@@ -995,9 +993,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             {
                 // await UserGetUserData();
                 var equipment = UserSyncData.UserEquipmentDtoInfos.First(d => d.Guid == EquipmentId);
-                var m =
-                    $"打磨装备 {totalCount} 耐力 {equipment.AdditionalParameterHealth} 魔力 {equipment.AdditionalParameterIntelligence} 力量 {equipment.AdditionalParameterMuscle} 战技 {equipment.AdditionalParameterEnergy}";
-                Console.WriteLine(m);
+                var m = $"打磨装备 {totalCount} 耐力 {equipment.AdditionalParameterHealth} 魔力 {equipment.AdditionalParameterIntelligence} 力量 {equipment.AdditionalParameterMuscle} 战技 {equipment.AdditionalParameterEnergy}";
                 log(m);
                 switch (EquipmentTrainingTargetType)
                 {

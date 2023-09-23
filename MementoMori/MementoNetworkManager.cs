@@ -212,11 +212,18 @@ public class MementoNetworkManager
                 log?.Invoke(uri.ToString());
                 var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(respBytes);
                 var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
-                Console.WriteLine(errorCodeMessage);
-                log?.Invoke($"{errorCodeMessage}");
-                log?.Invoke(req.ToJson());
-                log?.Invoke(apiErrResponse.ToJson());
-                Console.WriteLine(apiErrResponse.ToJson());
+                if (log != null)
+                {
+                    log.Invoke($"{errorCodeMessage}");
+                    log.Invoke(req.ToJson());
+                    log.Invoke(apiErrResponse.ToJson());
+                }
+                else
+                {
+                    Console.WriteLine($"{errorCodeMessage}");
+                    Console.WriteLine(req.ToJson());
+                    Console.WriteLine(apiErrResponse.ToJson());
+                }
                 throw new ApiErrorException(apiErrResponse.ErrorCode);
             }
         }
