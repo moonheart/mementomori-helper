@@ -108,7 +108,7 @@
 - UserId: xxxxxx_Userid_hxxxxxx
 - ClientKey: xxxxxx_ClientKey_hxxxxxx
 
-双击名称, 会显示二进制数据, 把右侧的文本抄下来, 不包含引号.
+双击名称, 会显示二进制数据, 把右侧的文本抄下来, ClientKey 共 32 个字母, 注意不要抄错, 不包含引号.
 
 然后填写到 `appsettings.user.json` 文件中, AuthOption.ClientKey 和 AuthOption.UserId.
 
