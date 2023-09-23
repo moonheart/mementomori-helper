@@ -1,9 +1,10 @@
 ﻿@using System.Collections.ObjectModel
+@using System.Reactive.Concurrency
 @using System.Reactive.Linq
 @using DynamicData.Binding
 <MudSimpleTable Elevation="0" Dense="true">
     <tbody style="max-height: 350px; overflow: auto" class="d-flex flex-column-reverse">
-        @foreach (var msg in _messageList)
+    @foreach (var msg in _messageList)
     {
         <tr>
             <td>@msg</td>
@@ -21,9 +22,16 @@
 
     protected override void OnInitialized()
     {
-        Messages.ToObservableChangeSet().Throttle(TimeSpan.FromMilliseconds(200)).Subscribe(set =>
+        Messages.ObserveCollectionChanges().Throttle(TimeSpan.FromMilliseconds(50)).Subscribe(set =>
         {
-            _messageList = Messages.ToList();
+            try
+            {
+                _messageList = Messages.ToList();
+            }
+            catch
+            {
+                return;
+            }
             InvokeAsync(StateHasChanged);
         });
     }
