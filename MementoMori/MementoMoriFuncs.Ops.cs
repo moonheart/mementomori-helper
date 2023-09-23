@@ -1034,7 +1034,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     public async Task GetMissionInfo()
     {
         var response = await GetResponse<GetMissionInfoRequest, GetMissionInfoResponse>(new GetMissionInfoRequest()
-            {TargetMissionGroupList = new List<MissionGroupType>() {MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main, MissionGroupType.NewCharacter, MissionGroupType.Limited}});
+            {TargetMissionGroupList = new List<MissionGroupType>() {MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main, MissionGroupType.NewCharacter}});
         MissionInfoDict = response.MissionInfoDict;
     }
 
@@ -1108,10 +1108,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             await GetMissionInfo();
-            var missionIds = MissionInfoDict.Values.SelectMany(d =>
-                d.UserMissionDtoInfoDict.Values.SelectMany(x =>
-                    x.SelectMany(f =>
-                        f.MissionStatusHistory[MissionStatusType.NotReceived]))).ToList();
+            var missionIds = MissionInfoDict.Values.SelectMany(d => d.UserMissionDtoInfoDict.Values.SelectMany(x => x.SelectMany(f => f.MissionStatusHistory[MissionStatusType.NotReceived]))).ToList();
             var rewardMissionResponse = await GetResponse<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest() {TargetMissionIdList = missionIds});
             rewardMissionResponse.RewardInfo.ItemList.PrintUserItems(log);
             rewardMissionResponse.RewardInfo.CharacterList.PrintCharacterDtos(log);
