@@ -455,6 +455,11 @@ public partial class MementoMoriFuncs
         return data;
     }
 
+    private async Task<bool> IsValidMonthlyBoost()
+    {
+        return UserSyncData.UserShopMonthlyBoostDtoInfos.Exists(d => d.ExpirationTimeStamp > DateTimeOffset.Now.ToUnixTimeMilliseconds());
+        // return false;
+    }
 
     public async Task<TResp> GetResponse<TReq, TResp>(TReq req)
         where TReq : ApiRequestBase

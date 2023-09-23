@@ -717,28 +717,43 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var autoResponse = await GetResponse<AutoRequest, AutoResponse>(new AutoRequest());
-            if (autoResponse.UserBattleAuto.QuickTodayUseCurrencyCount >= OrtegaConst.Shop.MonthlyBoostBattleQuickBonus)
+            if (await IsValidMonthlyBoost())
+            {
+                var availableCount = OrtegaConst.Shop.MonthlyBoostBattleQuickBonus - autoResponse.UserBattleAuto.QuickTodayUsePrivilegeCount;
+                if (availableCount > 0)
+                {
+                    log($"月卡免费高速战斗 {availableCount} 次");
+                    await BattleQuick(log, QuestQuickExecuteType.Privilege, (int) availableCount);
+                }
+            }
+
+            // 每天有一次免费
+            if (autoResponse.UserBattleAuto.QuickTodayUseCurrencyCount >= 1)
             {
                 log("今日没有免费高速战斗次数了");
             }
             else
             {
                 log("冒险高速战斗奖励：\n");
-
-                var req = new QuickRequest() {QuestQuickExecuteType = QuestQuickExecuteType.Currency, QuickCount = 1};
-                var quickResponse = await GetResponse<QuickRequest, QuickResponse>(req);
-
-                log($"金币 {quickResponse.AutoBattleRewardResult.GoldByPopulation}");
-                log($"潜能宝珠 {quickResponse.AutoBattleRewardResult.PotentialJewelByPopulation}");
-                log($"角色经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.CharacterExp}");
-                log($"额外金币 {quickResponse.AutoBattleRewardResult.BattleRewardResult.ExtraGold}");
-                log($"用户经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.PlayerExp}");
-                log($"升级 {quickResponse.AutoBattleRewardResult.BattleRewardResult.RankUp}");
-
-                quickResponse.AutoBattleRewardResult.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                quickResponse.AutoBattleRewardResult.BattleRewardResult.DropItemList.PrintUserItems(log);
+                await BattleQuick(log, QuestQuickExecuteType.Currency, 1);
             }
         });
+
+        async Task BattleQuick(Action<string> log, QuestQuickExecuteType type, int count)
+        {
+            var req = new QuickRequest() {QuestQuickExecuteType = type, QuickCount = count};
+            var quickResponse = await GetResponse<QuickRequest, QuickResponse>(req);
+
+            log($"金币 {quickResponse.AutoBattleRewardResult.GoldByPopulation}");
+            log($"潜能宝珠 {quickResponse.AutoBattleRewardResult.PotentialJewelByPopulation}");
+            log($"角色经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.CharacterExp}");
+            log($"额外金币 {quickResponse.AutoBattleRewardResult.BattleRewardResult.ExtraGold}");
+            log($"用户经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.PlayerExp}");
+            log($"升级 {quickResponse.AutoBattleRewardResult.BattleRewardResult.RankUp}");
+
+            quickResponse.AutoBattleRewardResult.BattleRewardResult.FixedItemList.PrintUserItems(log);
+            quickResponse.AutoBattleRewardResult.BattleRewardResult.DropItemList.PrintUserItems(log);
+        }
     }
 
     public async Task AutoDungeonBattle()
@@ -993,7 +1008,8 @@ public partial class MementoMoriFuncs : ReactiveObject
             {
                 // await UserGetUserData();
                 var equipment = UserSyncData.UserEquipmentDtoInfos.First(d => d.Guid == EquipmentId);
-                var m = $"打磨装备 {totalCount} 耐力 {equipment.AdditionalParameterHealth} 魔力 {equipment.AdditionalParameterIntelligence} 力量 {equipment.AdditionalParameterMuscle} 战技 {equipment.AdditionalParameterEnergy}";
+                var m =
+                    $"打磨装备 {totalCount} 耐力 {equipment.AdditionalParameterHealth} 魔力 {equipment.AdditionalParameterIntelligence} 力量 {equipment.AdditionalParameterMuscle} 战技 {equipment.AdditionalParameterEnergy}";
                 log(m);
                 switch (EquipmentTrainingTargetType)
                 {
