@@ -1238,21 +1238,21 @@ public partial class MementoMoriFuncs : ReactiveObject
         await GetAutoBattleReward();
         await BulkTransferFriendPoint();
         await PresentReceiveItem();
-        await ReinforcementEquipmentOneTime();
+        if (_gameConfig.AutoJob.AutoReinforcementEquipmentOneTime) await ReinforcementEquipmentOneTime();
         await BattleBossQuick();
         await InfiniteTowerQuick();
-        await PvpAuto();
+        if (_gameConfig.AutoJob.AutoPvp) await PvpAuto();
         await BossHishSpeedBattle();
         await GuildCheckin();
         await GuildRaid();
         await BountyQuestRewardAuto();
         await BountyQuestStartAuto();
-        await AutoDungeonBattle();
+        if (_gameConfig.AutoJob.AutoDungeonBattle) await AutoDungeonBattle();
         await CompleteMissions();
         await RewardMissonActivity();
-        await AutoUseItems();
-        await FreeGacha();
-        await AutoUseItems();
-        await AutoRankUpCharacter();
+        if (_gameConfig.AutoJob.AutoUseItems) await AutoUseItems();
+        if (_gameConfig.AutoJob.AutoFreeGacha) await FreeGacha();
+        if (_gameConfig.AutoJob.AutoUseItems) await AutoUseItems();
+        if (_gameConfig.AutoJob.AutoRankUpCharacter) await AutoRankUpCharacter();
     }
 }

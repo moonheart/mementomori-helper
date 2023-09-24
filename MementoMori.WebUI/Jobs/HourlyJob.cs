@@ -1,17 +1,20 @@
 ﻿using MementoMori.WebUI.Extensions;
+using Microsoft.Extensions.Options;
 using Quartz;
 
 namespace MementoMori.WebUI.Jobs;
 
 [DisallowConcurrentExecution]
 [Cron("0 30 3,7,15,19,23 ? * *")]
-public class HourlyJob: IJob
+public class HourlyJob : IJob
 {
     private MementoMoriFuncs _mementoMoriFuncs;
+    private readonly GameConfig _gameConfig;
 
-    public HourlyJob(MementoMoriFuncs mementoMoriFuncs)
+    public HourlyJob(MementoMoriFuncs mementoMoriFuncs, IOptions<GameConfig> gameConfig)
     {
         _mementoMoriFuncs = mementoMoriFuncs;
+        _gameConfig = gameConfig.Value;
     }
 
     public async Task Execute(IJobExecutionContext context)
@@ -20,6 +23,7 @@ public class HourlyJob: IJob
         {
             return;
         }
+
         await _mementoMoriFuncs.Login();
         await _mementoMoriFuncs.BountyQuestStartAuto();
         await _mementoMoriFuncs.PresentReceiveItem();
@@ -29,7 +33,7 @@ public class HourlyJob: IJob
         await _mementoMoriFuncs.BountyQuestRewardAuto();
         await _mementoMoriFuncs.CompleteMissions();
         await _mementoMoriFuncs.RewardMissonActivity();
-        await _mementoMoriFuncs.FreeGacha();
-        await _mementoMoriFuncs.AutoUseItems();
+        if (_gameConfig.AutoJob.AutoFreeGacha) await _mementoMoriFuncs.FreeGacha();
+        if (_gameConfig.AutoJob.AutoUseItems) await _mementoMoriFuncs.AutoUseItems();
     }
 }
