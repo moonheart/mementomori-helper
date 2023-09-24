@@ -18,7 +18,8 @@
   <tbody>
   <tr >
       <td>
-	      
+
+- [ ] 多账号支持
 - [ ] 主页
     - [x] 用户登陆
     - [x] 领取每日登陆奖励
@@ -98,6 +99,21 @@
 
 配置文件是 `appsettings.user.json`, 你可以把 `appsettings.json` 中的配置复制到 `appsettings.user.json` 然后修改, 就可以覆盖默认配置了.
 
+下面是 `appsettings.user.json` 的示例
+
+``` json
+{
+  "AuthOption": {
+    "ClientKey": "", // 在这里填写自己的clientkey
+    "DeviceToken": "",
+    "AppVersion": "1.4.4",
+    "OSVersion": "Android OS 13 / API-33 (TKQ1.220829.002/V14.0.12.0.TLACNXM)",
+    "ModelName": "Xiaomi 2203121C",
+    "UserId": 0 // 把这里的0改成自己的用户id
+  }
+}
+```
+
 ### 帐号配置
 
 #### 方法1
@@ -162,4 +178,28 @@ Id 是加成效果的编号, 具体哪个加成效果对应哪个 Id 可以在 [
         { "ItemType": "FriendPoint", "ItemId": 1 } // 好友點數
       ]
     }
+```
+
+### 多开修改端口号
+
+在 `appsettings.user.json` 里面修改, 比如下面是把端口修改为 5700
+
+``` json
+{
+  "AuthOption": {
+    "ClientKey": "", // 在这里填写自己的clientkey
+    "DeviceToken": "",
+    "AppVersion": "1.4.4",
+    "OSVersion": "Android OS 13 / API-33 (TKQ1.220829.002/V14.0.12.0.TLACNXM)",
+    "ModelName": "Xiaomi 2203121C",
+    "UserId": 0 // 把这里的0改成自己的用户id
+  },
+  "Kestrel": {
+    "Endpoints": {
+      "Http": {
+        "Url": "http://localhost:5700"
+      }
+    }
+  }
+}
 ```
