@@ -28,7 +28,7 @@ public class MeMoriHttpClientHandler : HttpClientHandler
     }
 
     private readonly Dictionary<string, string> _managedHeaders = new();
-    private readonly SemaphoreSlim _semaphoreSlim = new(1);
+    private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
         CancellationToken cancellationToken)
@@ -41,8 +41,12 @@ public class MeMoriHttpClientHandler : HttpClientHandler
             var response = await base.SendAsync(request, cancellationToken);
             if (response.Headers.TryGetValues("orteganextaccesstoken", out var headers))
             {
-                _managedHeaders["ortegaaccesstoken"] = headers.FirstOrDefault() ?? "";
-                OrtegaAccessToken = _managedHeaders["ortegaaccesstoken"];
+                var ortegaaccesstoken = headers.FirstOrDefault() ?? "";
+                if (!string.IsNullOrEmpty(ortegaaccesstoken))
+                {
+                    _managedHeaders["ortegaaccesstoken"] = ortegaaccesstoken;
+                    OrtegaAccessToken = ortegaaccesstoken;
+                }
             }
 
             if (response.Headers.TryGetValues("ortegamasterversion", out var headers1))
@@ -61,7 +65,7 @@ public class MeMoriHttpClientHandler : HttpClientHandler
         }
         finally
         {
-            _semaphoreSlim.Release();
+            var previousCount = _semaphoreSlim.Release();
         }
     }
 }

@@ -33,6 +33,8 @@ public class MementoNetworkManager
     private readonly HttpClient _httpClient;
     private readonly HttpClient _unityHttpClient;
 
+    private LoginRequest _lastLoginRequest;
+
 
     public string OrtegaAccessToken => _meMoriHttpClientHandler.OrtegaAccessToken;
     public string OrtegaMasterVersion => _meMoriHttpClientHandler.OrtegaMasterVersion;
@@ -168,8 +170,9 @@ public class MementoNetworkManager
 
     public async Task<UserSyncData> Login(LoginRequest loginRequest)
     {
+        _lastLoginRequest = loginRequest;
         var authLoginResp = await GetResponse<LoginRequest, LoginResponse>(loginRequest);
-        var playerDataInfo = authLoginResp.PlayerDataInfoList.MaxBy(d=>d.LastLoginTime);
+        var playerDataInfo = authLoginResp.PlayerDataInfoList.MaxBy(d => d.LastLoginTime);
         if (playerDataInfo == null) throw new Exception("playerDataInfo is null");
 
         // get server host
@@ -189,6 +192,7 @@ public class MementoNetworkManager
         where TReq : ApiRequestBase
         where TResp : ApiResponseBase
     {
+        log ??= Console.WriteLine;
         var authAttr = typeof(TReq).GetCustomAttribute<OrtegaAuthAttribute>();
         var apiAttr = typeof(TReq).GetCustomAttribute<OrtegaApiAttribute>();
         Uri uri;
@@ -209,21 +213,19 @@ public class MementoNetworkManager
             var ortegastatuscode = headers2.FirstOrDefault() ?? "";
             if (ortegastatuscode != "0")
             {
-                log?.Invoke(uri.ToString());
                 var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(respBytes);
+
+                if (apiErrResponse.ErrorCode == ErrorCode.InvalidRequestHeader)
+                {
+                    log("登录失效, 正在重新登录");
+                    await Login(_lastLoginRequest);
+                }
+
                 var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
-                if (log != null)
-                {
-                    log.Invoke($"{errorCodeMessage}");
-                    log.Invoke(req.ToJson());
-                    log.Invoke(apiErrResponse.ToJson());
-                }
-                else
-                {
-                    Console.WriteLine($"{errorCodeMessage}");
-                    Console.WriteLine(req.ToJson());
-                    Console.WriteLine(apiErrResponse.ToJson());
-                }
+                log(uri.ToString());
+                log($"{errorCodeMessage}");
+                log(req.ToJson());
+                log(apiErrResponse.ToJson());
                 throw new ApiErrorException(apiErrResponse.ErrorCode);
             }
         }
