@@ -275,7 +275,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                                 var count = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == presentItem.Item.ItemType && d.ItemId == presentItem.Item.ItemId)?.ItemCount ?? 0;
                                 var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(presentItem.Item.ItemType, presentItem.Item.ItemId);
                                 var maxItemCount = itemMb.MaxItemCount;
-                                if (maxItemCount != count) continue;
+                                if (count >= maxItemCount) continue;
 
                                 var name = Masters.TextResourceTable.Get(itemMb.NameKey);
                                 var useCount = (int) Math.Floor(maxItemCount * 0.1);
