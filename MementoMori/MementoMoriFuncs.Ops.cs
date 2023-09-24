@@ -87,9 +87,13 @@ public partial class MementoMoriFuncs : ReactiveObject
         catch (Exception e)
         {
             AddLog(e.ToString());
+            return;
+        }
+        finally
+        {
+            Logining = false;
         }
 
-        Logining = false;
         await UserGetUserData();
         await GetMyPage();
         await GetMissionInfo();

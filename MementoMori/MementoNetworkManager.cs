@@ -168,22 +168,22 @@ public class MementoNetworkManager
         return sb.ToString();
     }
 
-    public async Task<UserSyncData> Login(LoginRequest loginRequest)
+    public async Task<UserSyncData> Login(LoginRequest loginRequest, Action<string> log = null)
     {
         _lastLoginRequest = loginRequest;
-        var authLoginResp = await GetResponse<LoginRequest, LoginResponse>(loginRequest);
+        var authLoginResp = await GetResponse<LoginRequest, LoginResponse>(loginRequest, log);
         var playerDataInfo = authLoginResp.PlayerDataInfoList.MaxBy(d => d.LastLoginTime);
         if (playerDataInfo == null) throw new Exception("playerDataInfo is null");
 
         // get server host
-        var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest() {WorldId = playerDataInfo.WorldId});
+        var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest() {WorldId = playerDataInfo.WorldId}, log);
         _apiHost = new Uri(resp.ApiHost);
 
         // do login
         var loginPlayerResp = await GetResponse<LoginPlayerRequest, LoginPlayerResponse>(new LoginPlayerRequest
         {
             PlayerId = playerDataInfo.PlayerId, Password = playerDataInfo.Password
-        });
+        }, log);
         return loginPlayerResp.UserSyncData;
     }
 
@@ -219,6 +219,11 @@ public class MementoNetworkManager
                 {
                     log("登录失效, 正在重新登录");
                     await Login(_lastLoginRequest);
+                }
+
+                if (apiErrResponse.ErrorCode == ErrorCode.AuthLoginInvalidRequest)
+                {
+                    log("登录失败, 请检查帐号配置");
                 }
 
                 var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);

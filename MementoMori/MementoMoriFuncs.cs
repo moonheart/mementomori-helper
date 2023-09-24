@@ -112,7 +112,7 @@ public partial class MementoMoriFuncs
             AdverisementId = Guid.NewGuid().ToString("D"),
             UserId = _authOption.UserId
         };
-        UserSyncData = await _networkManager.Login(reqBody);
+        UserSyncData = await _networkManager.Login(reqBody, AddLog);
     }
 
     public async Task AutoDungeonBattle(Action<string> log, CancellationToken cancellationToken)
