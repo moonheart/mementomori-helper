@@ -7,6 +7,7 @@ using MementoMori.Ortega.Share;
 using MessagePack;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -58,7 +59,8 @@ public class MementoNetworkManager
         _logger = logger;
 
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler();
-        _httpClient = new HttpClient(_meMoriHttpClientHandler) {Timeout = TimeSpan.FromSeconds(10)};
+        _httpClient = new HttpClient(_meMoriHttpClientHandler);
+        if (!Debugger.IsAttached) _httpClient.Timeout = TimeSpan.FromSeconds(10);
 
         var response = GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN"}).ConfigureAwait(false).GetAwaiter().GetResult();
         AssetCatalogUriFormat = response.AssetCatalogUriFormat;
@@ -68,7 +70,8 @@ public class MementoNetworkManager
         AppAssetVersionInfo = response.AppAssetVersionInfo;
         _meMoriHttpClientHandler.AppVersion = AppAssetVersionInfo.Version;
 
-        _unityHttpClient = new HttpClient() {Timeout = TimeSpan.FromSeconds(30)};
+        _unityHttpClient = new HttpClient();
+        if (!Debugger.IsAttached) _unityHttpClient.Timeout = TimeSpan.FromSeconds(30);
         _unityHttpClient.DefaultRequestHeaders.Add("User-Agent", "UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)");
         _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", "2021.3.10f1");
     }
@@ -168,7 +171,7 @@ public class MementoNetworkManager
         return sb.ToString();
     }
 
-    public async Task<UserSyncData> Login(LoginRequest loginRequest, Action<string> log = null)
+    public async Task Login(LoginRequest loginRequest, Action<string> log = null)
     {
         _lastLoginRequest = loginRequest;
         var authLoginResp = await GetResponse<LoginRequest, LoginResponse>(loginRequest, log);
@@ -184,7 +187,6 @@ public class MementoNetworkManager
         {
             PlayerId = playerDataInfo.PlayerId, Password = playerDataInfo.Password
         }, log);
-        return loginPlayerResp.UserSyncData;
     }
 
 
@@ -217,13 +219,17 @@ public class MementoNetworkManager
 
                 if (apiErrResponse.ErrorCode == ErrorCode.InvalidRequestHeader)
                 {
-                    log("登录失效, 正在重新登录");
-                    await Login(_lastLoginRequest);
+                    log("登录失效, 请重新登录");
                 }
 
                 if (apiErrResponse.ErrorCode == ErrorCode.AuthLoginInvalidRequest)
                 {
                     log("登录失败, 请检查帐号配置");
+                }
+
+                if (apiErrResponse.ErrorCode == ErrorCode.CommonNoSession)
+                {
+                    log("工作階段已過期, 请重新登錄");
                 }
 
                 var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);

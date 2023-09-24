@@ -77,6 +77,8 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public ObservableCollection<string> MesssageList { get; } = new();
 
+    private const int Max_Err_Count = 20;
+
     public async Task Login()
     {
         Logining = true;
@@ -930,9 +932,9 @@ public partial class MementoMoriFuncs : ReactiveObject
                 catch (Exception e)
                 {
                     errCount++;
-                    if (errCount > 10)
+                    if (errCount > Max_Err_Count)
                     {
-                        log("错误达到了 10 次, 中断");
+                        log($"错误达到了 {Max_Err_Count} 次, 中断");
                         return;
                     }
 
@@ -981,9 +983,9 @@ public partial class MementoMoriFuncs : ReactiveObject
                 catch (Exception e)
                 {
                     errCount++;
-                    if (errCount > 10)
+                    if (errCount > Max_Err_Count)
                     {
-                        log("错误达到了 10 次, 中断");
+                        log($"错误达到了 {Max_Err_Count} 次, 中断");
                         return;
                     }
 
