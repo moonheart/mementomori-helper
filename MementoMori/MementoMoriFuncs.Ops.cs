@@ -912,8 +912,8 @@ public partial class MementoMoriFuncs : ReactiveObject
             while (!token.IsCancellationRequested)
                 try
                 {
-                    // await UserGetUserData();
-                    var bossResponse = await GetResponse<BossRequest, BossResponse>(new BossRequest() {QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1});
+                    var targetQuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1;
+                    var bossResponse = await GetResponse<BossRequest, BossResponse>(new BossRequest() {QuestId = targetQuestId});
                     var win = bossResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                     totalCount++;
                     if (win)
@@ -922,7 +922,9 @@ public partial class MementoMoriFuncs : ReactiveObject
                         winCount++;
                     }
 
-                    var m = $"挑战 boss 一次：{win} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}";
+                    var info = Masters.QuestTable.GetById(targetQuestId).Memo;
+                    var result = win ? "胜" : "负";
+                    var m = $"挑战 {info} boss 一次：{result} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}";
                     log(m);
                 }
                 catch (Exception e)
@@ -934,10 +936,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         return;
                     }
 
-                    if (e is ApiErrorException)
-                    {
-                        await AuthLogin();
-                    }
+                    if (e is ApiErrorException) await AuthLogin();
                 }
         });
     }
@@ -954,7 +953,6 @@ public partial class MementoMoriFuncs : ReactiveObject
             while (!token.IsCancellationRequested)
                 try
                 {
-                    // await UserGetUserData();
                     var towerBattleDtoInfo = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == SelectedAutoTowerType);
                     if (SelectedAutoTowerType != TowerType.Infinite && towerBattleDtoInfo.TodayClearNewFloorCount >= 10)
                     {
@@ -963,37 +961,33 @@ public partial class MementoMoriFuncs : ReactiveObject
                     }
 
                     var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == SelectedAutoTowerType);
+                    var targetQuestId = tower.MaxTowerBattleId + 1;
                     var bossQuickResponse = await GetResponse<TowerBattleStartRequest, TowerBattleStartResponse>(new TowerBattleStartRequest()
                     {
-                        TargetTowerType = SelectedAutoTowerType, TowerBattleQuestId = tower.MaxTowerBattleId + 1
+                        TargetTowerType = SelectedAutoTowerType, TowerBattleQuestId = targetQuestId
                     });
                     var win = bossQuickResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                     totalCount++;
                     if (win) winCount++;
 
-                    if (SelectedAutoTowerType == TowerType.Infinite)
-                        log($"挑战 {SelectedAutoTowerType} 塔一次：{win} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}");
-                    else
-                        log($"挑战 {SelectedAutoTowerType} 塔一次：{win} {towerBattleDtoInfo.TodayClearNewFloorCount}/10 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}");
+                    var name = Masters.TextResourceTable.Get(SelectedAutoTowerType);
+                    var result = win ? "胜" : "负";
 
-                    var t = 1;
-                    await Task.Delay(t);
+                    if (SelectedAutoTowerType == TowerType.Infinite)
+                        log($"挑战 {name} {targetQuestId} 层一次：{result}, 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}");
+                    else
+                        log($"挑战 {name} {targetQuestId}层一次：{result}, {towerBattleDtoInfo.TodayClearNewFloorCount}/10 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}");
                 }
                 catch (Exception e)
                 {
                     errCount++;
-                    if (errCount > 10) return;
+                    if (errCount > 10)
+                    {
+                        log("错误达到了 10 次, 中断");
+                        return;
+                    }
 
-                    while (true)
-                        try
-                        {
-                            await AuthLogin();
-                            break;
-                        }
-                        catch (Exception)
-                        {
-                            await Task.Delay(1000);
-                        }
+                    if (e is ApiErrorException) await AuthLogin();
                 }
         });
     }
