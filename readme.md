@@ -111,6 +111,8 @@
 
 双击名称, 会显示二进制数据, 把右侧的文本抄下来, ClientKey 共 32 个字母, 注意不要抄错, 不包含引号.
 
+> # 警告! ClientKey 相当于密码, 不要泄露给别人, 不要发到群里.
+
 然后填写到 `appsettings.user.json` 文件中, AuthOption.ClientKey 和 AuthOption.UserId.
 
 ### 时空洞窟
