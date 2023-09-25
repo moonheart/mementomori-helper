@@ -22,6 +22,14 @@
 
     protected override void OnInitialized()
     {
+        try
+        {
+            _messageList = Messages.ToList();
+        }
+        catch
+        {
+            // ignored
+        }
         Messages.ObserveCollectionChanges().Throttle(TimeSpan.FromMilliseconds(50)).Subscribe(set =>
         {
             try
