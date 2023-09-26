@@ -38,4 +38,5 @@ public class GameConfig
     public AutoJobModel AutoJob { get; set; } = new();
     public GachaConfigModel GachaConfig { get; set; } = new();
     public DungeonBattleRelicSortInfo[] DungeonBattleRelicSort { get; set; }
+    public int AutoRequestDelay { get; set; }
 }

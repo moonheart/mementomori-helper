@@ -928,6 +928,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var result = win ? "胜" : "负";
                     var m = $"挑战 {info} boss 一次：{result} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}";
                     log(m);
+                    if (_gameConfig.AutoRequestDelay > 0) await Task.Delay(_gameConfig.AutoRequestDelay, token);
                 }
                 catch (Exception e)
                 {
@@ -980,6 +981,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         log($"挑战 {name} {targetQuestId} 层一次：{result}, 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}");
                     else
                         log($"挑战 {name} {targetQuestId}层一次：{result}, {towerBattleDtoInfo.TodayClearNewFloorCount}/10 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}");
+                    if (_gameConfig.AutoRequestDelay > 0) await Task.Delay(_gameConfig.AutoRequestDelay, token);
                 }
                 catch (Exception e)
                 {

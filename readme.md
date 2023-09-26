@@ -236,6 +236,29 @@ Id 是加成效果的编号, 具体哪个加成效果对应哪个 Id 可以在 [
 }
 ```
 
+### 频率限制
+
+配置路径 `GameConfig.AutoRequestDelay`
+
+自动刷 boss 或者 无穷之塔时, 可能触发频率限制, 可以设置每次请求后的等待时长, 默认为 0 表示不限制, 单位是毫秒, 下面的例子表示修改为 100 毫秒.
+
+``` json
+{
+  "AuthOption": {
+    "ClientKey": "", // 在这里填写自己的clientkey
+    "DeviceToken": "",
+    "AppVersion": "1.4.4",
+    "OSVersion": "Android OS 13 / API-33 (TKQ1.220829.002/V14.0.12.0.TLACNXM)",
+    "ModelName": "Xiaomi 2203121C",
+    "UserId": 0 // 把这里的0改成自己的用户id
+  },
+  "GameConfig": {
+    "AutoRequestDelay": 100
+  }
+}
+```
+
+
 ### 多开修改端口号
 
 在 `appsettings.user.json` 里面修改, 比如下面是把端口修改为 5700
