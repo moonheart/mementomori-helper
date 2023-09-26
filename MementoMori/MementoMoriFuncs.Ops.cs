@@ -931,6 +931,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 }
                 catch (Exception e)
                 {
+                    log(e.Message);
                     errCount++;
                     if (errCount > Max_Err_Count)
                     {
@@ -982,6 +983,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 }
                 catch (Exception e)
                 {
+                    log(e.Message);
                     errCount++;
                     if (errCount > Max_Err_Count)
                     {
