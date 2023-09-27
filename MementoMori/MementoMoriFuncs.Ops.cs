@@ -1246,7 +1246,6 @@ public partial class MementoMoriFuncs : ReactiveObject
         if (_gameConfig.AutoJob.AutoReinforcementEquipmentOneTime) await ReinforcementEquipmentOneTime();
         await BattleBossQuick();
         await InfiniteTowerQuick();
-        if (_gameConfig.AutoJob.AutoPvp) await PvpAuto();
         await BossHishSpeedBattle();
         await GuildCheckin();
         await GuildRaid();

@@ -19,6 +19,7 @@ public class TimeZoneAwareJobRegister
         var scheduler = await _schedulerFactory.GetScheduler();
         AddJob<DailyJob>(scheduler);
         AddJob<HourlyJob>(scheduler);
+        AddJob<PvpJob>(scheduler);
     }
 
     private void AddJob<T>(IScheduler scheduler) where T : IJob
