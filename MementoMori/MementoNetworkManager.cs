@@ -33,6 +33,7 @@ public class MementoNetworkManager
     private readonly MeMoriHttpClientHandler _meMoriHttpClientHandler;
     private readonly HttpClient _httpClient;
     private readonly HttpClient _unityHttpClient;
+    private readonly TimeManager _timeManager;
 
     private LoginRequest _lastLoginRequest;
 
@@ -54,9 +55,10 @@ public class MementoNetworkManager
 
     private readonly ILogger<MementoNetworkManager> _logger;
 
-    public MementoNetworkManager(ILogger<MementoNetworkManager> logger)
+    public MementoNetworkManager(ILogger<MementoNetworkManager> logger, TimeManager timeManager)
     {
         _logger = logger;
+        _timeManager = timeManager;
 
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler();
         _httpClient = new HttpClient(_meMoriHttpClientHandler);
@@ -177,6 +179,10 @@ public class MementoNetworkManager
         var authLoginResp = await GetResponse<LoginRequest, LoginResponse>(loginRequest, log);
         var playerDataInfo = authLoginResp.PlayerDataInfoList.MaxBy(d => d.LastLoginTime);
         if (playerDataInfo == null) throw new Exception("playerDataInfo is null");
+
+        var timeServerId = (playerDataInfo.WorldId / 1000);
+        var timeServerMb = Masters.TimeServerTable.GetById(timeServerId);
+        _timeManager.SetTimeServerMb(timeServerMb);
 
         // get server host
         var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest() {WorldId = playerDataInfo.WorldId}, log);

@@ -1,10 +1,9 @@
-﻿using MementoMori.WebUI.Extensions;
-using Quartz;
+﻿using Quartz;
 
-namespace MementoMori.WebUI.Jobs;
+namespace MementoMori.Jobs;
 
 [DisallowConcurrentExecution]
-[Cron("0 30 11 ? * *")]
+[Cron("0 20 4 ? * *")]
 public class DailyJob: IJob
 {
     private MementoMoriFuncs _mementoMoriFuncs;

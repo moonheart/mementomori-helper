@@ -1,11 +1,10 @@
-﻿using MementoMori.WebUI.Extensions;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Quartz;
 
-namespace MementoMori.WebUI.Jobs;
+namespace MementoMori.Jobs;
 
 [DisallowConcurrentExecution]
-[Cron("0 30 3,7,15,19,23 ? * *")]
+[Cron("0 30 0,4,8,16,20 ? * *")]
 public class HourlyJob : IJob
 {
     private MementoMoriFuncs _mementoMoriFuncs;

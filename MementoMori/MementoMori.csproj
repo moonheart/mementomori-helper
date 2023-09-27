@@ -10,6 +10,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
         <PackageReference Include="morelinq" Version="3.4.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Quartz" Version="3.7.0" />
         <PackageReference Include="ReactiveUI" Version="19.4.1" />
         <PackageReference Include="ReactiveUI.Fody" Version="19.4.1" />
         <PackageReference Include="System.Reactive" Version="6.0.0" />

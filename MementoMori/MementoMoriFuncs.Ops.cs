@@ -1073,7 +1073,8 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public TowerType[] GetAvailableTower()
     {
-        var dayOfWeek = DateTimeOffset.Now.ToOffset(TimeSpan.FromHours(1)).DayOfWeek;
+        var now = DateTimeOffset.UtcNow.ToOffset(_timeManager.DiffFromUtc);
+        var dayOfWeek = now.DayOfWeek;
         // SelectedAutoTowerType = TowerType.Infinite;
         return dayOfWeek switch
         {

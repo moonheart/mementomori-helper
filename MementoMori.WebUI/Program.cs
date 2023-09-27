@@ -1,6 +1,6 @@
 using MementoMori;
 using MementoMori.Common;
-using MementoMori.WebUI.Jobs;
+using MementoMori.Jobs;
 using MementoMori.WebUI.ViewModels;
 using MudBlazor.Services;
 using MementoMori.WebUI.Extensions;
@@ -11,7 +11,7 @@ internal class Program
 {
     public static void Main(string[] args)
     {
-        ReactiveUI.PlatformRegistrationManager.SetRegistrationNamespaces(RegistrationNamespace.Blazor);
+        PlatformRegistrationManager.SetRegistrationNamespaces(RegistrationNamespace.Blazor);
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Configuration.AddJsonFile("appsettings.user.json", true, true);
@@ -20,19 +20,16 @@ internal class Program
 
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();
+        builder.Services.AddSingleton<TimeManager>();
         builder.Services.AddSingleton<MementoNetworkManager>();
         builder.Services.AddSingleton<MementoMoriFuncs>();
-        builder.Services.AddSingleton<CharactorUnitViewModel>();
+        builder.Services.AddSingleton<TimeZoneAwareJobRegister>();
 
         builder.Services.AddOptions();
         builder.Services.Configure<AuthOption>(builder.Configuration.GetSection("AuthOption"));
         builder.Services.Configure<GameConfig>(builder.Configuration.GetSection("GameConfig"));
         
-        builder.Services.AddQuartz(q =>
-        {
-            q.AddJob<DailyJob>();
-            q.AddJob<HourlyJob>();
-        });
+        builder.Services.AddQuartz();
         builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
         var app = builder.Build();

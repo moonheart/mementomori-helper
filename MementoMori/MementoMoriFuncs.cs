@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Linq;
 using System.Xml;
+using MementoMori.Jobs;
 using MementoMori.Ortega.Common.Utils;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data;
@@ -55,6 +56,8 @@ public partial class MementoMoriFuncs
     private readonly ILogger<MementoMoriFuncs> _logger;
 
     private readonly MementoNetworkManager _networkManager;
+    private readonly TimeZoneAwareJobRegister _timeZoneAwareJobRegister;
+    private readonly TimeManager _timeManager;
 
     private T ReadFromJson<T>(string jsonPath) where T : new()
     {
@@ -71,10 +74,12 @@ public partial class MementoMoriFuncs
         File.WriteAllText(jsonPath, JsonConvert.SerializeObject(value, Formatting.Indented));
     }
 
-    public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig, ILogger<MementoMoriFuncs> logger, MementoNetworkManager networkManager)
+    public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig, ILogger<MementoMoriFuncs> logger, MementoNetworkManager networkManager, TimeZoneAwareJobRegister timeZoneAwareJobRegister, TimeManager timeManager)
     {
         _logger = logger;
         _networkManager = networkManager;
+        _timeZoneAwareJobRegister = timeZoneAwareJobRegister;
+        _timeManager = timeManager;
         _authOption = authOption.Value;
         _gameConfig = gameConfig.Value;
         AccountXml();
@@ -114,6 +119,7 @@ public partial class MementoMoriFuncs
         };
         await _networkManager.Login(reqBody, AddLog);
         await UserGetUserData();
+        await _timeZoneAwareJobRegister.RegisterJobs();
     }
 
     public async Task AutoDungeonBattle(Action<string> log, CancellationToken cancellationToken)
