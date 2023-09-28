@@ -34,6 +34,9 @@ namespace MementoMori.Ortega.Share.Enums
         [Description("ギルドストック")] GuildFame = 26,
         [Description("ギルド経験値")] GuildExp = 27,
         [Description("貢献メダル")] ActivityMedal = 28,
+        [Description("パネル図鑑解放判定アイテム")] PanelGetJudgmentItem = 29,
+        [Description("パネルミッション マス解放アイテム")] UnlockPanelGridItem = 30,
+        [Description("パネル図鑑解放アイテム")] PanelUnlockItem = 31,
         [Description("イベント交換所アイテム")] EventExchangePlaceItem = 50
     }
 }

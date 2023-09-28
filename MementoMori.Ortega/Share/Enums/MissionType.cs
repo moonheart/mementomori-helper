@@ -67,6 +67,9 @@ namespace MementoMori.Ortega.Share.Enums
 		LimitedSeventhDayTab1 = 671,
 		LimitedSeventhDayTab2,
 		LimitedSeventhDayTab3,
-		LimitedSeventhDayTab4
+		LimitedSeventhDayTab4,
+        PanelSheet1 = 901,
+        PanelSheet2,
+        PanelSheet3
 	}
 }

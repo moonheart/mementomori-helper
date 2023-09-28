@@ -13,6 +13,8 @@ namespace MementoMori.Ortega.Share.Data.Mission
         public UserMissionActivityDtoInfo UserMissionActivityDtoInfo { get; set; }
 
         public Dictionary<MissionType, List<UserMissionDtoInfo>> UserMissionDtoInfoDict { get; set; }
+        
+        public List<UserPanelMissionDtoInfo> UserPanelMissionDtoInfoList { get; set; }
 
         public List<long> GetNotReceivedIdList()
         {

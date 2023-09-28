@@ -47,6 +47,8 @@ namespace MementoMori.Ortega.Share.Enums
 		EventMission,
 		[Description("友達招待")]
 		FriendCampaign,
+        [Description("パネルミッション")]
+        PanelMission,
 		[Description("ゲリラパック")]
 		GuerrillaPack = 140,
 		[Description("格納アイコン")]

@@ -24,6 +24,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Auth
 		public string MasterUriFormat { get; set; }
 
 		public string NoticeBannerImageUriFormat { get; set; }
+        
+        public string RawDataUriFormat { get; set; }
 
 		public TitleInfo TitleInfo { get; set; }
 

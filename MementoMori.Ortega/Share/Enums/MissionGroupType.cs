@@ -11,6 +11,7 @@ namespace MementoMori.Ortega.Share.Enums
         [Description("初心者")] Beginner,
         [Description("カムバック")] Comeback,
         [Description("新キャラ")] NewCharacter,
-        [Description("イベント")] Limited
+        [Description("イベント")] Limited,
+        [Description("パネル")] Panel = 9
     }
 }
