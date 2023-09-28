@@ -1,15 +1,26 @@
 ﻿# MementoMori 游戏助手
 
-施工中
+施工中 
 
-![](images/intro1.png)
-![](images/intro2.png)
-![](images/intro3.png)
-![](images/intro4.png)
-![](images/intro5.png)
-![](images/intro6.png)
-![](images/intro7.png)
-![](images/intro8.png)
+[反馈和交流](https://t.me/+gTRe8AxKxIdkOTg9)
+
+<table>
+<tbody>
+<tr><td> 
+
+![](images/intro1.png) </td><td>![](images/intro2.png)</td></tr>
+<tr><td>
+
+![](images/intro3.png)</td><td>![](images/intro4.png)</td></tr>
+<tr><td>
+
+![](images/intro5.png)</td><td>![](images/intro6.png)</td></tr>
+<tr><td>
+
+![](images/intro7.png)</td><td>![](images/intro8.png)</td></tr>
+</tbody>
+</table>
+
 
 ## Todos
 
@@ -61,7 +72,9 @@
     - [x] 古竞技场一键挑战5次
     - [x] 祈愿之泉一键全部领取
     - [x] 祈愿之泉一键远征
+      - [ ] 可选仅派遣指定奖励物品的任务
     - [x] 时空洞窟一键自动执行
+      - [ ] 可选自动购买指定商品
 - [ ] 抽卡
     - [x] 每日免费/金币抽卡
     - [x] 卡池列表
