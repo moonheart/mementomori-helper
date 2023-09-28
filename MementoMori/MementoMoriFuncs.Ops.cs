@@ -430,13 +430,29 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var response1 = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new BountyQuestGetListRequest());
-            var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData);
-            foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
+            if (_gameConfig.BountyQuestAuto.TargetItems.Count > 0)
             {
-                var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
-                    new BountyQuestStartRequest {BountyQuestStartInfos = new List<BountyQuestStartInfo>() {bountyQuestStartInfo}});
-                log($"已派遣 {bountyQuestStartInfo.BountyQuestId}");
-                // log(startResponse.ToJson());
+                var itemNames = string.Join(",", _gameConfig.BountyQuestAuto.TargetItems.Select(ItemUtil.GetItemName));
+                log($"祈愿之泉: 指定了目标道具 {itemNames}");
+                log("祈愿之泉: 正在派遣目标道具任务");
+                var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData, _gameConfig.BountyQuestAuto);
+                foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
+                {
+                    var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
+                        new BountyQuestStartRequest { BountyQuestStartInfos = new List<BountyQuestStartInfo>() { bountyQuestStartInfo } });
+                    log($"已派遣 {bountyQuestStartInfo.BountyQuestId}");
+                }
+            }
+            else
+            {
+                log($"祈愿之泉: 未指定目标道具, 派遣所有任务");
+                var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData, _gameConfig.BountyQuestAuto);
+                foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
+                {
+                    var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
+                        new BountyQuestStartRequest { BountyQuestStartInfos = new List<BountyQuestStartInfo>() { bountyQuestStartInfo } });
+                    log($"已派遣 {bountyQuestStartInfo.BountyQuestId}");
+                }
             }
 
             await GetBountyRequestInfo();

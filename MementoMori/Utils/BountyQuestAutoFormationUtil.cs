@@ -14,7 +14,7 @@ namespace MementoMori.Utils;
 
 public static class BountyQuestAutoFormationUtil
 {
-    public static List<BountyQuestStartInfo> CalcAutoFormation(GetListResponse getlistResponse, UserSyncData userSyncData)
+    public static List<BountyQuestStartInfo> CalcAutoFormation(GetListResponse getlistResponse, UserSyncData userSyncData, GameConfig.BountyQuestAutoModel bountyQuestConfig)
     {
         var bountyQuestStartInfos = new List<BountyQuestStartInfo>();
         // 正在执行中的任务
@@ -29,14 +29,19 @@ public static class BountyQuestAutoFormationUtil
             if (bountyQuestInfos.Key == BountyQuestType.Guerrilla)
                 userCharacterDtoInfos = SortGuerrilla(userCharacterDtoInfos);
             var selectedCharacterGuids = new List<string>();
-            foreach (var getlistResponseBountyQuestInfo in bountyQuestInfos)
+            foreach (var bountyQuestInfo in bountyQuestInfos)
             {
+                var found = bountyQuestConfig.TargetItems.Any(includeItem => 
+                    bountyQuestInfo.RewardItems.Exists(d => d.ItemType == includeItem.ItemType && d.ItemId == includeItem.ItemId));
+
+                if (bountyQuestConfig.TargetItems.Count > 0 && !found) continue;
+
                 var selectedCharacterId = new List<long>();
-                var bountyQuestData = new BountyQuestData(getlistResponseBountyQuestInfo);
+                var bountyQuestData = new BountyQuestData(bountyQuestInfo);
                 var rarityRequireCount = bountyQuestData.RarityRequireCount;
                 var elementTypes = bountyQuestData.ElementTypes.ToList();
                 var questMemberInfos = new List<BountyQuestMemberInfo>();
-                var bountyQuestStartInfo = new BountyQuestStartInfo() {BountyQuestId = getlistResponseBountyQuestInfo.BountyQuestId, BountyQuestMemberInfos = questMemberInfos};
+                var bountyQuestStartInfo = new BountyQuestStartInfo() {BountyQuestId = bountyQuestInfo.BountyQuestId, BountyQuestMemberInfos = questMemberInfos};
                 // 检查是否联合任务
                 if (bountyQuestData.QuestInfo.BountyQuestType == BountyQuestType.Team)
                 {

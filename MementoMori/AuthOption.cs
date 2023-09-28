@@ -35,8 +35,16 @@ public class GameConfig
         public bool AutoRankUpCharacter { get; set; }
     }
 
+    public class BountyQuestAutoModel
+    {
+        public List<UserItem> TargetItems { get; set; } = new();
+        public int AllowedNonTargetItemCount { get; set; } = 100;
+        public int AutoRefreshCount { get; set; }
+    }
+
     public AutoJobModel AutoJob { get; set; } = new();
     public GachaConfigModel GachaConfig { get; set; } = new();
     public DungeonBattleRelicSortInfo[] DungeonBattleRelicSort { get; set; }
     public int AutoRequestDelay { get; set; }
+    public BountyQuestAutoModel BountyQuestAuto { get; set; } = new();
 }
