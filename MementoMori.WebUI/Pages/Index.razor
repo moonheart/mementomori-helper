@@ -11,6 +11,7 @@
 @using MementoMori.WebUI.Pages.Components
 @using ReactiveUI
 @using DynamicData.Binding
+@using MementoMori.Ortega.Common.Utils
 @using MementoMori.Ortega.Share.Data.DtoInfo
 @using MementoMori.Ortega.Share.Data.MyPage
 @using MementoMori.Ortega.Share.Data.Notice
@@ -119,6 +120,8 @@
             {
                 var bountyQuestInfo = ViewModel.BountyQuestResponseInfo.BountyQuestInfos.First(d => d.BountyQuestId == info.BountyQuestId);
                 var name = Masters.TextResourceTable.Get(bountyQuestInfo.BountyQuestNameKey);
+                var rarityName = Masters.TextResourceTable.Get(bountyQuestInfo.BountyQuestRarity);
+                    var itemNames = bountyQuestInfo.BountyQuestType == BountyQuestType.Guerrilla ? "随机" : string.Join(",", bountyQuestInfo.RewardItems.Select(d => $"{ItemUtil.GetItemName(d)}×{d.ItemCount}"));
                 string status = "未开始";
                 if (info.BountyQuestEndTime > 0)
                 {
@@ -136,7 +139,7 @@
                         status = "已领取";
                     }
                 }
-                <MudChip>@name @status</MudChip>
+                <MudChip>@rarityName @itemNames @status</MudChip>
             }
         </MudPaper>
     </MudPaper>
