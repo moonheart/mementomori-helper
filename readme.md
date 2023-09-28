@@ -73,7 +73,7 @@
     - [x] 古竞技场一键挑战5次
     - [x] 祈愿之泉一键全部领取
     - [x] 祈愿之泉一键远征
-      - [ ] 可选仅派遣指定奖励物品的任务
+      - [x] 可选仅派遣指定奖励物品的任务
     - [x] 时空洞窟一键自动执行
       - [ ] 可选自动购买指定商品
 - [ ] 抽卡
@@ -94,7 +94,33 @@
 
 进入到发布页面：https://github.com/moonheart/mementomori-helper/releases, 然后下载 `publish-win-x64.zip` 解压。
 
+### 方式1 直接运行
+
 要运行的话,你需要配置好你的账号信息. 然后就可以运行 `MementoMori.WebUI.exe` 了, 找到类似 `Now listening on: http://0.0.0.0:5290` 的日志, 打开这个地址就可以了.
+
+### 方式2 用 Docker 运行
+
+```yaml
+version: '3'
+services:
+  mementomori:
+    image: moonheartmoon/mementomori-webui:v1
+    container_name: mementomori
+    restart: unless-stopped
+    privileged: false
+    ports:
+      - "5290:80"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./Master/:/app/Master/
+      - type: bind
+        source: ./account.xml
+        target: /app/account.xml
+      - type: bind
+        source: ./appsettings.user.json
+        target: /app/appsettings.user.json
+```
 
 进入网页之后, 先点击一次登录, 之后就可以随意操作了.
 
@@ -123,7 +149,7 @@
 - 消耗道具抽卡 (配置请看 [下面的抽卡配置](#抽卡)) ([请看自动任务配置](#自动任务))
 - 自动进阶角色 (R->R+, SR->SR+) ([请看自动任务配置](#自动任务))
 
-### 奖励定时收取 (0:30,4:30,8:30,12:30,16:30,20:30)
+### 奖励定时收取 (服务器时间 0:30,4:30,8:30,12:30,16:30,20:30)
     
 - 收取自动战斗奖励
 - 祈愿之泉派遣+收取
@@ -162,6 +188,8 @@
 #### 方法1
 在 Android 手机上登录一次帐号, 然后获取配置文件 `/data/data/jp.boi.mementomori.android/shared_prefs/jp.boi.mementomori.android.v2.playerprefs.xml`,
 重命名为 `account.xml` 放到项目目录.
+
+也可以手动找到 UserId 和 Clientkey 按照 方法 2 的方式填写到 `appsettings.user.json` 文件中.
 
 #### 方法2
 在 Windows 上用 DMM 登录一次游戏, 然后找到注册表 `\HKEY_CURRENT_USER\Software\BankOfInnovation\MementoMori`, 拿到 UserId 和 Clientkey
