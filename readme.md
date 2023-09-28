@@ -90,9 +90,6 @@
   </tbody>
 </table>
 
-
-
-
 ## 使用
 
 进入到发布页面：https://github.com/moonheart/mementomori-helper/releases, 然后下载 `publish-win-x64.zip` 解压。
@@ -147,7 +144,7 @@
 
 下面是 `appsettings.user.json` 的示例
 
-``` json
+```json5
 {
   "AuthOption": {
     "ClientKey": "", // 在这里填写自己的clientkey
@@ -185,6 +182,25 @@
 
 Id 是加成效果的编号, 具体哪个加成效果对应哪个 Id 可以在 [这里看](https://www.moonheartmoon.com/mementomori-masterbook/?lang=ZhTw&mb=DungeonBattleRelicMB) 
 
+### 祈愿之泉
+
+配置路径 `GameConfig.BountyQuestAuto`
+
+可配置仅派遣指定奖励物品的任务. 不指定的话, 会派遣所有任务.
+
+```json5
+{
+  "GameConfig": {
+    "BountyQuestAuto": {
+      "TargetItems": [
+        {"ItemType": "CharacterTrainingMaterial", "ItemId": 2}, // 潛能寶珠
+        {"ItemType": "CurrencyFree", "ItemId": 1}, // 鑽石
+      ]
+    } 
+  }
+}
+```
+
 ### 抽卡
 
 配置路径 `GameConfig.GachaConfig`
@@ -193,7 +209,7 @@ Id 是加成效果的编号, 具体哪个加成效果对应哪个 Id 可以在 [
 
 具体的道具类型和Id可以在 [这里看](https://www.moonheartmoon.com/mementomori-masterbook/?lang=ZhTw&mb=ItemMB) 
 
-``` json
+```json5
 {
       "AutoGachaConsumeUserItems": [
         { "ItemType": "Gold", "ItemId": 1}, // 金幣
@@ -232,7 +248,7 @@ Id 是加成效果的编号, 具体哪个加成效果对应哪个 Id 可以在 [
 
 示例如下
 
-``` json
+```json5
 {
   "AuthOption": {
     "ClientKey": "", // 在这里填写自己的clientkey
@@ -242,13 +258,15 @@ Id 是加成效果的编号, 具体哪个加成效果对应哪个 Id 可以在 [
     "ModelName": "Xiaomi 2203121C",
     "UserId": 0 // 把这里的0改成自己的用户id
   },
-  "AutoJob": {
-    "AutoReinforcementEquipmentOneTime": true, // 强化一次装备
-    "AutoPvp": true, // 自动竞技场
-    "AutoDungeonBattle": true, // 自动时空洞窟
-    "AutoUseItems": true, // 自动使用固定道具
-    "AutoFreeGacha": true, // 自动免费抽卡
-    "AutoRankUpCharacter": true // 自动合成角色
+  "GameConfig": {
+    "AutoJob": {
+      "AutoReinforcementEquipmentOneTime": true, // 强化一次装备
+      "AutoPvp": true, // 自动竞技场
+      "AutoDungeonBattle": true, // 自动时空洞窟
+      "AutoUseItems": true, // 自动使用固定道具
+      "AutoFreeGacha": true, // 自动免费抽卡
+      "AutoRankUpCharacter": true // 自动合成角色
+    }
   }
 }
 ```
@@ -259,7 +277,7 @@ Id 是加成效果的编号, 具体哪个加成效果对应哪个 Id 可以在 [
 
 自动刷 boss 或者 无穷之塔时, 可能触发频率限制, 可以设置每次请求后的等待时长, 默认为 0 表示不限制, 单位是毫秒, 下面的例子表示修改为 100 毫秒.
 
-``` json
+```json5
 {
   "AuthOption": {
     "ClientKey": "", // 在这里填写自己的clientkey
@@ -280,7 +298,7 @@ Id 是加成效果的编号, 具体哪个加成效果对应哪个 Id 可以在 [
 
 在 `appsettings.user.json` 里面修改, 比如下面是把端口修改为 5700
 
-``` json
+```json5
 {
   "AuthOption": {
     "ClientKey": "", // 在这里填写自己的clientkey
