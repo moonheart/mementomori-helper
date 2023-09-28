@@ -73,6 +73,9 @@ public partial class MementoMoriFuncs : ReactiveObject
     [Reactive]
     public bool ShowDebugInfo { get; set; }
 
+    [Reactive]
+    public bool BountyRequestForceAll { get; set; }
+
     private CancellationTokenSource _cancellationTokenSource;
 
     public ObservableCollection<string> MesssageList { get; } = new();
@@ -430,7 +433,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var response1 = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new BountyQuestGetListRequest());
-            if (_gameConfig.BountyQuestAuto.TargetItems.Count > 0)
+            if (_gameConfig.BountyQuestAuto.TargetItems.Count > 0 && !BountyRequestForceAll)
             {
                 var itemNames = string.Join(",", _gameConfig.BountyQuestAuto.TargetItems.Select(ItemUtil.GetItemName));
                 log($"祈愿之泉: 指定了目标道具 {itemNames}");
@@ -439,18 +442,18 @@ public partial class MementoMoriFuncs : ReactiveObject
                 foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
                 {
                     var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
-                        new BountyQuestStartRequest { BountyQuestStartInfos = new List<BountyQuestStartInfo>() { bountyQuestStartInfo } });
+                        new BountyQuestStartRequest {BountyQuestStartInfos = new List<BountyQuestStartInfo>() {bountyQuestStartInfo}});
                     log($"已派遣 {bountyQuestStartInfo.BountyQuestId}");
                 }
             }
             else
             {
-                log($"祈愿之泉: 未指定目标道具, 派遣所有任务");
-                var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData, _gameConfig.BountyQuestAuto);
+                log($"祈愿之泉: 未指定目标道具 或 强制派遣, 派遣所有任务");
+                var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData, _gameConfig.BountyQuestAuto, true);
                 foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
                 {
                     var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
-                        new BountyQuestStartRequest { BountyQuestStartInfos = new List<BountyQuestStartInfo>() { bountyQuestStartInfo } });
+                        new BountyQuestStartRequest {BountyQuestStartInfos = new List<BountyQuestStartInfo>() {bountyQuestStartInfo}});
                     log($"已派遣 {bountyQuestStartInfo.BountyQuestId}");
                 }
             }
@@ -1057,6 +1060,19 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         var response = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new BountyQuestGetListRequest());
         BountyQuestResponseInfo = response;
+    }
+
+    public async Task RemakeBountyRequest()
+    {
+        if (BountyQuestResponseInfo.UserBountyQuestDtoInfos.Any(d => d.BountyQuestEndTime == 0))
+        {
+            var response = await GetResponse<RemakeRequest, RemakeResponse>(new RemakeRequest());
+            await GetBountyRequestInfo();
+        }
+        else
+        {
+            AddLog("没有可以重置的赏金任务");
+        }
     }
 
     public async Task GetMonthlyLoginBonusInfo()

@@ -1,5 +1,6 @@
 ﻿@inject IJSRuntime JsRuntime
 @inject IDialogService DialogService
+@inject IOptions<GameConfig> gameConfig
 
 @page "/"
 @inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
@@ -15,6 +16,7 @@
 @using MementoMori.Ortega.Share.Data.DtoInfo
 @using MementoMori.Ortega.Share.Data.MyPage
 @using MementoMori.Ortega.Share.Data.Notice
+@using Microsoft.Extensions.Options
 
 <PageTitle>主页</PageTitle>
 
@@ -113,7 +115,12 @@
         <MudPaper Elevation="0" Class="d-flex">
             <MudText>祈愿之泉</MudText>
             <MudSpacer/>
-            <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.GetBountyRequestInfo" StartIcon="@Icons.Material.Filled.Sync">同步</MudButton>
+            @if (gameConfig.Value.BountyQuestAuto.TargetItems.Count > 0)
+            {
+                <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@ViewModel.BountyRequestForceAll" Label="强制派遣"></MudSwitch>
+            }
+            <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.RemakeBountyRequest" StartIcon="@Icons.Material.Filled.Refresh">刷新任务(20钻)</MudButton>
+            <MudButton Class="ml-2" Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.GetBountyRequestInfo" StartIcon="@Icons.Material.Filled.Sync">同步</MudButton>
         </MudPaper>
         <MudPaper Elevation="0">
             @foreach (var info in ViewModel.BountyQuestResponseInfo?.UserBountyQuestDtoInfos ?? new List<UserBountyQuestDtoInfo>())

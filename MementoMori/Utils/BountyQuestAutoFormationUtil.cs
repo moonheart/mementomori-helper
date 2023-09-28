@@ -14,7 +14,7 @@ namespace MementoMori.Utils;
 
 public static class BountyQuestAutoFormationUtil
 {
-    public static List<BountyQuestStartInfo> CalcAutoFormation(GetListResponse getlistResponse, UserSyncData userSyncData, GameConfig.BountyQuestAutoModel bountyQuestConfig)
+    public static List<BountyQuestStartInfo> CalcAutoFormation(GetListResponse getlistResponse, UserSyncData userSyncData, GameConfig.BountyQuestAutoModel bountyQuestConfig, bool force = false)
     {
         var bountyQuestStartInfos = new List<BountyQuestStartInfo>();
         // 正在执行中的任务
@@ -31,10 +31,13 @@ public static class BountyQuestAutoFormationUtil
             var selectedCharacterGuids = new List<string>();
             foreach (var bountyQuestInfo in bountyQuestInfos)
             {
-                var found = bountyQuestConfig.TargetItems.Any(includeItem => 
-                    bountyQuestInfo.RewardItems.Exists(d => d.ItemType == includeItem.ItemType && d.ItemId == includeItem.ItemId));
+                if (!force)
+                {
+                    var found = bountyQuestConfig.TargetItems.Any(includeItem =>
+                        bountyQuestInfo.RewardItems.Exists(d => d.ItemType == includeItem.ItemType && d.ItemId == includeItem.ItemId));
 
-                if (bountyQuestConfig.TargetItems.Count > 0 && !found) continue;
+                    if (bountyQuestConfig.TargetItems.Count > 0 && !found) continue;
+                }
 
                 var selectedCharacterId = new List<long>();
                 var bountyQuestData = new BountyQuestData(bountyQuestInfo);
