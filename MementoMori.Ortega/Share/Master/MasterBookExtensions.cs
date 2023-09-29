@@ -4,17 +4,17 @@
 	{
 		public static M FindById<M>(this IEnumerable<M> source, long id) where M : MasterBookBase
 		{
-			throw new NullReferenceException();
+			return source.First(x => x.Id == id);
 		}
 
 		public static M FindByIdOrDefault<M>(this IEnumerable<M> source, long id) where M : MasterBookBase
 		{
-			throw new NullReferenceException();
+			return source.FirstOrDefault(x => x.Id == id);
 		}
 
 		public static List<M> FindManyByIds<M>(this IEnumerable<M> source, List<long> ids) where M : MasterBookBase
 		{
-			throw new NullReferenceException();
+			return source.Where(x => ids.Contains(x.Id)).ToList();
 		}
 
 		public static Dictionary<long, M> GetAllMap<M>(this IMasterProvider master) where M : MasterBookBase
