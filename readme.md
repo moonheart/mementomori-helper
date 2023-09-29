@@ -210,6 +210,24 @@ services:
 
 Id 是加成效果的编号, 具体哪个加成效果对应哪个 Id 可以在 [这里看](https://www.moonheartmoon.com/mementomori-masterbook/?lang=ZhTw&mb=DungeonBattleRelicMB) 
 
+#### 自动购买商店物品
+
+配置路径 `GameConfig.DungeonBattle`
+
+遇到神秘摊贩时, 会检测是否有指定的商品, 如果有的话, 自动购买
+
+```json5
+{
+  "GameConfig": {
+    "DungeonBattle": {
+      "ShopTargetItems": [
+        { "ItemType": "EquipmentRarityCrystal","ItemId": 1 } //  生命樹之露
+      ]
+    }
+  }
+}
+```
+
 ### 祈愿之泉
 
 配置路径 `GameConfig.BountyQuestAuto`

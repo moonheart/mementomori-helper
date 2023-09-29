@@ -74,7 +74,8 @@ public partial class MementoMoriFuncs
         File.WriteAllText(jsonPath, JsonConvert.SerializeObject(value, Formatting.Indented));
     }
 
-    public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig, ILogger<MementoMoriFuncs> logger, MementoNetworkManager networkManager, TimeZoneAwareJobRegister timeZoneAwareJobRegister, TimeManager timeManager)
+    public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig, ILogger<MementoMoriFuncs> logger, MementoNetworkManager networkManager,
+        TimeZoneAwareJobRegister timeZoneAwareJobRegister, TimeManager timeManager)
     {
         _logger = logger;
         _networkManager = networkManager;
@@ -141,7 +142,7 @@ public partial class MementoMoriFuncs
 
         log("进入副本");
         // 进副本
-        var battleInfoResponse1 =
+        var battleInfoResponse =
             await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(
                 new GetDungeonBattleInfoRequest());
         foreach (var g in equips)
@@ -165,7 +166,7 @@ public partial class MementoMoriFuncs
             });
         }
 
-        if (battleInfoResponse1.UserDungeonDtoInfo.IsDoneRewardClearLayer(3))
+        if (battleInfoResponse.UserDungeonDtoInfo.IsDoneRewardClearLayer(3))
         {
             log("时空洞窟已通关");
             return;
@@ -174,7 +175,7 @@ public partial class MementoMoriFuncs
         while (!cancellationToken.IsCancellationRequested)
         {
             // 获取副本信息
-            var battleInfoResponse =
+            battleInfoResponse =
                 await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(
                     new GetDungeonBattleInfoRequest());
             var grids = battleInfoResponse.CurrentDungeonBattleLayer.DungeonGrids.Select(d =>
@@ -226,12 +227,21 @@ public partial class MementoMoriFuncs
                     });
             }
 
+            var tradeShopItemList = battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(d => d.GridGuid == currentGrid.Grid.DungeonGridGuid).TradeShopItemList;
             switch (state)
             {
                 case DungeonBattleGridState.Done:
-
                     // 当前已完成，选择下一个节点
-                    var nextGrid = grids.Where(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
+                    var nextGrid = grids.FirstOrDefault(d => false);
+                    // 先看下一行有没有商店节点,并且有目标物品
+                    if (_gameConfig.DungeonBattle.ShopTargetItems.Count > 0)
+                        nextGrid = grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
+                                                             && d.GridMb.DungeonGridType == DungeonBattleGridType.Shop
+                                                             && _gameConfig.DungeonBattle.ShopTargetItems.Any(x => tradeShopItemList.Any(y => // 商店有目标物品
+                                                                 y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
+                    // 然后选择战斗节点
+                    if (nextGrid == null)
+                        nextGrid = grids.Where(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
                                                     && (d.GridMb.DungeonGridType == DungeonBattleGridType.BattleNormal ||
                                                         d.GridMb.DungeonGridType == DungeonBattleGridType.BattleElite ||
                                                         d.GridMb.DungeonGridType == DungeonBattleGridType.BattleBoss ||
@@ -241,7 +251,7 @@ public partial class MementoMoriFuncs
                                                         d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleSpecial ||
                                                         d.GridMb.DungeonGridType == DungeonBattleGridType.BattleAndRelicReinforce
                                                     ) // 战斗类型的
-                    ).MinBy(d => d.Power);
+                        ).MinBy(d => d.Power);
                     if (nextGrid == null)
                         // 没有战斗类型的节点
                         nextGrid = grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1);
@@ -332,6 +342,20 @@ public partial class MementoMoriFuncs
                         case DungeonBattleGridType.JoinCharacter:
                             break;
                         case DungeonBattleGridType.Shop:
+                            if (_gameConfig.DungeonBattle.ShopTargetItems.Count > 0)
+                                foreach (var tradeShopItem in tradeShopItemList)
+                                    if (_gameConfig.DungeonBattle.ShopTargetItems.Any(d => d.ItemType == tradeShopItem.GiveItem.ItemType && d.ItemId == tradeShopItem.GiveItem.ItemId))
+                                    {
+                                        // 购买
+                                        var execShopResponse = await GetResponse<ExecShopRequest, ExecShopResponse>(new ExecShopRequest
+                                        {
+                                            CurrentTermId = battleInfoResponse.CurrentTermId,
+                                            DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                            TradeShopItemId = tradeShopItem.TradeShopItemId
+                                        });
+                                        log($"购买 {ItemUtil.GetItemName(tradeShopItem.GiveItem)}×{tradeShopItem.GiveItem.ItemCount} 成功");
+                                    }
+
                             var leaveShopResponse = await GetResponse<LeaveShopRequest, LeaveShopResponse>(
                                 new LeaveShopRequest()
                                 {
