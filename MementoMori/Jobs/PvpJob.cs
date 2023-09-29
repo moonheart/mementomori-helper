@@ -36,5 +36,7 @@ internal class PvpJob : IJob
         }
 
         await _mementoMoriFuncs.PvpAuto();
+        await _mementoMoriFuncs.CompleteMissions();
+        await _mementoMoriFuncs.RewardMissonActivity();
     }
 }
