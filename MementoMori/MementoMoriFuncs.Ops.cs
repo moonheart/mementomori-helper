@@ -902,23 +902,57 @@ public partial class MementoMoriFuncs : ReactiveObject
             while (true)
             {
                 var response2 = await GetResponse<GetGuildRaidInfoRequest, GetGuildRaidInfoResponse>(new GetGuildRaidInfoRequest() {BelongGuildId = response1.GuildId});
-                if (response2.GuildRaidInfos.All(d => !d.IsOpen || d.UserGuildRaidDtoInfo is {ChallengeCount: >= 2}))
-                {
-                    log("没有可扫荡的讨伐战");
-                    break;
-                }
-
                 foreach (var info in response2.GuildRaidInfos)
+                {
                     if (info.IsOpen && (info.UserGuildRaidDtoInfo == null || info.UserGuildRaidDtoInfo is {ChallengeCount: < 2}))
                     {
-                        var response3 = await GetResponse<QuickStartGuildRaidRequest, QuickStartGuildRaidResponse>(new QuickStartGuildRaidRequest()
-                            {BelongGuildId = response1.GuildId, GuildRaidBossType = info.GuildRaidDtoInfo.BossType});
-                        log($"战斗结果: {response3.BattleSimulationResult.BattleEndInfo.IsWinAttacker()}");
-                        log("固定掉落");
-                        response3.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                        log("随机掉落");
-                        response3.BattleRewardResult.DropItemList.PrintUserItems(log);
+                        if (info.UserGuildRaidPreviousDtoInfo != null)
+                        {
+                            var response3 = await GetResponse<QuickStartGuildRaidRequest, QuickStartGuildRaidResponse>(new QuickStartGuildRaidRequest()
+                                {BelongGuildId = response1.GuildId, GuildRaidBossType = info.GuildRaidDtoInfo.BossType});
+                            log($"战斗结果: {response3.BattleSimulationResult.BattleEndInfo.IsWinAttacker()}");
+                            log("固定掉落");
+                            response3.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                            log("随机掉落");
+                            response3.BattleRewardResult.DropItemList.PrintUserItems(log);
+                        }
+                        else
+                        {
+                            var response3 = await GetResponse<StartGuildRaidRequest, StartGuildRaidResponse>(new StartGuildRaidRequest()
+                                {BelongGuildId = response1.GuildId, GuildRaidBossType = info.GuildRaidDtoInfo.BossType});
+                            log($"战斗结果: {response3.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker()}");
+                            log("固定掉落");
+                            response3.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                            log("随机掉落");
+                            response3.BattleRewardResult.DropItemList.PrintUserItems(log);
+                        }
                     }
+
+                    if (info.IsExistWorldDamageReward)
+                    {
+                        var bossMb = Masters.GuildRaidBossTable.GetByGuildRaidBossType(info.GuildRaidDtoInfo.BossType);
+                        if (bossMb != null)
+                        {
+                            var worldRewardInfoResponse =
+                                await GetResponse<GetGuildRaidWorldRewardInfoRequest, GetGuildRaidWorldRewardInfoResponse>(new GetGuildRaidWorldRewardInfoRequest() {GuildRaidBossId = bossMb.Id});
+                            var guildRaidRewardMb = Masters.GuildRaidRewardTable.GetByBossId(bossMb.Id);
+                            foreach (var worldDamageBar in guildRaidRewardMb.WorldDamageBarRewards)
+                            {
+                                var worldRewardInfo = worldRewardInfoResponse.WorldRewardInfos.FirstOrDefault(d => d.GoalDamage == worldDamageBar.GoalDamage);
+                                if (worldRewardInfoResponse.TotalWorldDamage >= worldDamageBar.GoalDamage && (worldRewardInfo == null || !worldRewardInfo.IsReceived))
+                                {
+                                    var resp = await GetResponse<GiveGuildRaidWorldRewardItemRequest, GiveGuildRaidWorldRewardItemResponse>(
+                                        new GiveGuildRaidWorldRewardItemRequest {GoalDamage = worldDamageBar.GoalDamage, GuildRaidBossId = bossMb.Id});
+                                    log($"领取世界伤害奖励 {worldDamageBar.GoalDamage}");
+                                    resp.RewardItems.PrintUserItems(log);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                log("扫荡讨伐战完成");
+                break;
             }
         });
     }

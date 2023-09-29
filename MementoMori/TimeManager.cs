@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MementoMori.Ortega.Share.Master.Data;
+using MementoMori.Ortega.Share.Utils;
 
 namespace MementoMori
 {
@@ -16,6 +17,14 @@ namespace MementoMori
         public void SetTimeServerMb(TimeServerMB timeServerMb)
         {
             _timeServerMb = timeServerMb;
+        }
+
+        public bool IsInTime(IHasStartEndTime hasStartEndTime)
+        {
+            var now = DateTime.UtcNow;
+            var start = DateTime.Parse(hasStartEndTime.StartTime);
+            var end = DateTime.Parse(hasStartEndTime.EndTime);
+            return now >= start && now <= end;
         }
     }
 }
