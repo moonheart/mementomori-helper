@@ -1052,7 +1052,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     public async Task GetMissionInfo()
     {
         var response = await GetResponse<GetMissionInfoRequest, GetMissionInfoResponse>(new GetMissionInfoRequest()
-            {TargetMissionGroupList = new List<MissionGroupType>() {MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main, MissionGroupType.NewCharacter}});
+            {TargetMissionGroupList = new List<MissionGroupType>() {MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main}});
         MissionInfoDict = response.MissionInfoDict;
     }
 
