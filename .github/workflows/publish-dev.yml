@@ -23,7 +23,7 @@ jobs:
       - name: Build
         run: dotnet build ./MementoMori.WebUI/MementoMori.WebUI.csproj -c Release --no-restore
       - name: Publish ${{matrix.rid}}
-        run: dotnet publish ./MementoMori.WebUI/MementoMori.WebUI.csproj -c Release -r ${{matrix.rid}} -p:RunAOTCompilation=true -o publish-${{matrix.rid}} --sc -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true  -p:PublishReadyToRun=true -p:DebugSymbols=false -p:DebugType=None
+        run: dotnet publish ./MementoMori.WebUI/MementoMori.WebUI.csproj -c Release -r ${{matrix.rid}} -p:RunAOTCompilation=true -o publish-${{matrix.rid}} --sc -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:PublishReadyToRun=true
       - name: Archive Release ${{matrix.rid}}
         uses: thedoctor0/zip-release@0.7.1
         with:
