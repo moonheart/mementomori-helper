@@ -130,7 +130,9 @@ public partial class MementoMoriFuncs
         var equips = UserSyncData.UserEquipmentDtoInfos.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d => d.CharacterGuid).ToList();
         foreach (var g in equips)
         {
-            log($"脱下装备 {g.Key}");
+            var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
+            var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
+            log($"脱下 {name} Lv{characterDto.Level}的装备");
 
             // 脱装备
             var removeEquipmentResponse = await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
@@ -147,7 +149,9 @@ public partial class MementoMoriFuncs
                 new GetDungeonBattleInfoRequest());
         foreach (var g in equips)
         {
-            log($"穿上装备 {g.Key}");
+            var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
+            var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
+            log($"穿上 {name} Lv{characterDto.Level}的装备");
             // 穿装备
             var changeInfos = g.Select(d =>
             {
@@ -194,7 +198,7 @@ public partial class MementoMoriFuncs
             var state = battleInfoResponse.UserDungeonDtoInfo.CurrentGridState;
             var memo = currentGrid.GridMb.Memo;
             var type = currentGrid.GridMb.DungeonGridType;
-            log($"当前第 {layer}层，坐标 {currentGrid.Grid.X},{currentGrid.Grid.Y}，状态 {state}, {Masters.TextResourceTable.Get(type)} 敌人战斗力 {currentGrid.Power}");
+            log($"当前第 {layer}层，坐标 {currentGrid.Grid.X},{currentGrid.Grid.Y}，状态 {state}, {type} 敌人战斗力 {currentGrid.Power}");
 
             async Task DoBattle()
             {
@@ -227,7 +231,6 @@ public partial class MementoMoriFuncs
                     });
             }
 
-            var tradeShopItemList = battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(d => d.GridGuid == currentGrid.Grid.DungeonGridGuid).TradeShopItemList;
             switch (state)
             {
                 case DungeonBattleGridState.Done:
@@ -237,7 +240,8 @@ public partial class MementoMoriFuncs
                     if (_gameConfig.DungeonBattle.ShopTargetItems.Count > 0)
                         nextGrid = grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
                                                              && d.GridMb.DungeonGridType == DungeonBattleGridType.Shop
-                                                             && _gameConfig.DungeonBattle.ShopTargetItems.Any(x => tradeShopItemList.Any(y => // 商店有目标物品
+                                                             && _gameConfig.DungeonBattle.ShopTargetItems.Any(x => 
+                                                                 battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(y => y.GridGuid == d.Grid.DungeonGridGuid).TradeShopItemList.Any(y => // 商店有目标物品
                                                                  y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
                     // 然后选择战斗节点
                     if (nextGrid == null)
@@ -342,6 +346,7 @@ public partial class MementoMoriFuncs
                         case DungeonBattleGridType.JoinCharacter:
                             break;
                         case DungeonBattleGridType.Shop:
+                            var tradeShopItemList = battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(d => d.GridGuid == currentGrid.Grid.DungeonGridGuid).TradeShopItemList;
                             if (_gameConfig.DungeonBattle.ShopTargetItems.Count > 0)
                                 foreach (var tradeShopItem in tradeShopItemList)
                                     if (_gameConfig.DungeonBattle.ShopTargetItems.Any(d => d.ItemType == tradeShopItem.GiveItem.ItemType && d.ItemId == tradeShopItem.GiveItem.ItemId))
