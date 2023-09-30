@@ -27,6 +27,7 @@ public class GameConfig
 
     public class AutoJobModel
     {
+        public bool DisableAll { get; set; }
         public bool AutoReinforcementEquipmentOneTime { get; set; }
         public bool AutoPvp { get; set; }
         public bool AutoDungeonBattle { get; set; }

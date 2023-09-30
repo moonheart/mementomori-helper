@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.Extensions.Options;
 using Quartz;
 
 namespace MementoMori.Jobs;
@@ -7,15 +8,22 @@ public class TimeZoneAwareJobRegister
 {
     private readonly ISchedulerFactory _schedulerFactory;
     private readonly TimeManager _timeManager;
+    private readonly GameConfig _gameConfig;
 
-    public TimeZoneAwareJobRegister(ISchedulerFactory schedulerFactory, TimeManager timeManager)
+    public TimeZoneAwareJobRegister(ISchedulerFactory schedulerFactory, TimeManager timeManager, IOptions<GameConfig> gameOptions)
     {
         _schedulerFactory = schedulerFactory;
         _timeManager = timeManager;
+        _gameConfig = gameOptions.Value;
     }
 
     public async Task RegisterJobs()
     {
+        if (_gameConfig.AutoJob.DisableAll)
+        {
+            return;
+        }
+
         var scheduler = await _schedulerFactory.GetScheduler();
         AddJob<DailyJob>(scheduler);
         AddJob<HourlyJob>(scheduler);
@@ -41,7 +49,6 @@ public class TimeZoneAwareJobRegister
         scheduler.ScheduleJob(jobDetail, trigger);
     }
 }
-
 
 [AttributeUsage(AttributeTargets.Class)]
 public class CronAttribute : Attribute

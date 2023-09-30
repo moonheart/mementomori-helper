@@ -308,6 +308,7 @@ Id 是加成效果的编号, 具体哪个加成效果对应哪个 Id 可以在 [
   },
   "GameConfig": {
     "AutoJob": {
+      "DisableAll": false, // 禁用所有自动任务
       "AutoReinforcementEquipmentOneTime": true, // 强化一次装备
       "AutoPvp": true, // 自动竞技场
       "AutoDungeonBattle": true, // 自动时空洞窟
