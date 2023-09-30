@@ -899,8 +899,10 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             var response1 = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
             log($"公会 Id {response1.GuildId}");
-            while (true)
+            bool hasRaid;
+            do
             {
+                hasRaid = false;
                 var response2 = await GetResponse<GetGuildRaidInfoRequest, GetGuildRaidInfoResponse>(new GetGuildRaidInfoRequest() {BelongGuildId = response1.GuildId});
                 foreach (var info in response2.GuildRaidInfos)
                 {
@@ -926,6 +928,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                             log("随机掉落");
                             response3.BattleRewardResult.DropItemList.PrintUserItems(log);
                         }
+
+                        hasRaid = true;
                     }
 
                     if (info.IsExistWorldDamageReward)
@@ -950,10 +954,9 @@ public partial class MementoMoriFuncs : ReactiveObject
                         }
                     }
                 }
+            } while (hasRaid);
 
-                log("扫荡讨伐战完成");
-                break;
-            }
+            log("扫荡讨伐战完成");
         });
     }
 
