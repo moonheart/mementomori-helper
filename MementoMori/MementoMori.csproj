@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
@@ -6,7 +6,9 @@
         <Nullable>disable</Nullable>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="FreeSql.Provider.Sqlite" Version="3.2.801" />
         <PackageReference Include="MessagePack" Version="2.5.124" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
         <PackageReference Include="morelinq" Version="3.4.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

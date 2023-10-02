@@ -16,6 +16,8 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+            builder.Services.AddLogging(log => log.AddSystemdConsole());
+            builder.Services.AddSingleton<TimeManager>();
             builder.Services.AddSingleton<MementoNetworkManager>();
             builder.Services.AddHostedService<AssetDownloader>();
 
