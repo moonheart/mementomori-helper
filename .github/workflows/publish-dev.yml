@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - *
   workflow_dispatch: 
     
 jobs: 
@@ -30,12 +32,20 @@ jobs:
           type: 'zip'
           filename: 'publish-${{matrix.rid}}.zip'
           path: './publish-${{matrix.rid}}/'
-      - name: Create Release
+      - name: Create Dev Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             ./publish-${{matrix.rid}}.zip
           tag_name: dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ./publish-${{matrix.rid}}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
