@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Linq;
 using System.Xml;
+using MementoMori.Exceptions;
 using MementoMori.Jobs;
 using MementoMori.Ortega.Common.Utils;
 using MementoMori.Ortega.Share;
@@ -126,7 +127,6 @@ public partial class MementoMoriFuncs
     public async Task AutoDungeonBattle(Action<string> log, CancellationToken cancellationToken)
     {
         // 脱装备进副本，然后穿装备
-        var deckDtoInfo = UserSyncData.UserDeckDtoInfos.First(d => d.DeckUseContentType == DeckUseContentType.DungeonBattle).GetUserCharacterGuids();
         var equips = UserSyncData.UserEquipmentDtoInfos.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d => d.CharacterGuid).ToList();
         foreach (var g in equips)
         {
@@ -240,9 +240,9 @@ public partial class MementoMoriFuncs
                     if (_gameConfig.DungeonBattle.ShopTargetItems.Count > 0)
                         nextGrid = grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
                                                              && d.GridMb.DungeonGridType == DungeonBattleGridType.Shop
-                                                             && _gameConfig.DungeonBattle.ShopTargetItems.Any(x => 
+                                                             && _gameConfig.DungeonBattle.ShopTargetItems.Any(x =>
                                                                  battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(y => y.GridGuid == d.Grid.DungeonGridGuid).TradeShopItemList.Any(y => // 商店有目标物品
-                                                                 y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
+                                                                     y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
                     // 然后选择战斗节点
                     if (nextGrid == null)
                         nextGrid = grids.Where(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
@@ -296,24 +296,32 @@ public partial class MementoMoriFuncs
                         {
                             case DungeonBattleGridType.JoinCharacter:
                             {
-                                var info = battleInfoResponse.UserDungeonBattleGuestCharacterDtoInfos.OrderByDescending(d => d.BattlePower).First();
-                                var execGuestResponse = await GetResponse<ExecGuestRequest, ExecGuestResponse>(
-                                    new ExecGuestRequest()
+                                var infos = battleInfoResponse.UserDungeonBattleGuestCharacterDtoInfos.OrderByDescending(d => d.BattlePower).ToList();
+                                foreach (var info in infos)
+                                    try
                                     {
-                                        DungeonGridGuid = nextGrid.Grid.DungeonGridGuid,
-                                        GuestMBId = info.CharacterId,
-                                        CurrentTermId = battleInfoResponse.CurrentTermId
-                                    });
+                                        var execGuestResponse = await GetResponse<ExecGuestRequest, ExecGuestResponse>(new ExecGuestRequest()
+                                        {
+                                            DungeonGridGuid = nextGrid.Grid.DungeonGridGuid,
+                                            GuestMBId = info.CharacterId,
+                                            CurrentTermId = battleInfoResponse.CurrentTermId
+                                        });
+                                        break;
+                                    }
+                                    catch (ApiErrorException e)
+                                    {
+                                        log($"选择支援时出错, {e.Message}, 继续选择下一个支援");
+                                    }
+
                                 break;
                             }
                             default:
                             {
-                                var selectGridResponse = await GetResponse<SelectGridRequest, SelectGridResponse>(
-                                    new SelectGridRequest()
-                                    {
-                                        CurrentTermId = battleInfoResponse.CurrentTermId,
-                                        DungeonGridGuid = nextGrid.Grid.DungeonGridGuid
-                                    });
+                                var selectGridResponse = await GetResponse<SelectGridRequest, SelectGridResponse>(new SelectGridRequest()
+                                {
+                                    CurrentTermId = battleInfoResponse.CurrentTermId,
+                                    DungeonGridGuid = nextGrid.Grid.DungeonGridGuid
+                                });
                                 break;
                             }
                         }
