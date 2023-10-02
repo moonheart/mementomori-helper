@@ -34,6 +34,7 @@ jobs:
           path: './publish-${{matrix.rid}}/'
       - name: Create Dev Release
         uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/master'
         with:
           files: |
             ./publish-${{matrix.rid}}.zip
