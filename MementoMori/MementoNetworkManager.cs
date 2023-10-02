@@ -180,9 +180,10 @@ public class MementoNetworkManager
         return authLoginResp.PlayerDataInfoList;
     }
 
-    public async Task Login(PlayerDataInfo playerDataInfo, Action<string> log = null)
+    public async Task Login(long worldId, Action<string> log = null)
     {
-        if (playerDataInfo == null) throw new Exception("playerDataInfo is null");
+        var authLoginResp = await GetResponse<LoginRequest, LoginResponse>(_lastLoginRequest, log);
+        var playerDataInfo = authLoginResp.PlayerDataInfoList.First(x => x.WorldId == worldId);
 
         var timeServerId = playerDataInfo.WorldId / 1000;
         var timeServerMb = Masters.TimeServerTable.GetById(timeServerId);

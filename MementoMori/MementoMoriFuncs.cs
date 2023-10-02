@@ -125,7 +125,8 @@ public partial class MementoMoriFuncs
 
     public async Task AuthLogin(PlayerDataInfo playerDataInfo)
     {
-        await _networkManager.Login(playerDataInfo, AddLog);
+        _lastPlayerDataInfo = playerDataInfo;
+        await _networkManager.Login(playerDataInfo.WorldId, AddLog);
         await UserGetUserData();
         await _timeZoneAwareJobRegister.RegisterJobs();
     }
