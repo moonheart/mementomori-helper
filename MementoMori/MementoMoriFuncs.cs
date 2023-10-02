@@ -268,16 +268,18 @@ public partial class MementoMoriFuncs
 
                     if (nextGrid == null)
                     {
-                        // 获取当前层奖励
-                        var rewardClearLayerResponse =
-                            await GetResponse<RewardClearLayerRequest, RewardClearLayerResponse>(
-                                new RewardClearLayerRequest()
-                                {
-                                    ClearedLayer = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount,
-                                    CurrentTermId = battleInfoResponse.CurrentTermId,
-                                    DungeonBattleDifficultyType = battleInfoResponse.CurrentDungeonBattleLayer
-                                        .DungeonDifficultyType
-                                });
+                        if (!battleInfoResponse.UserDungeonDtoInfo.IsDoneRewardClearLayer(battleInfoResponse.CurrentDungeonBattleLayer.LayerCount))
+                        {
+                            // 获取当前层奖励
+                            var rewardClearLayerResponse = await GetResponse<RewardClearLayerRequest, RewardClearLayerResponse>(new RewardClearLayerRequest()
+                            {
+                                ClearedLayer = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount,
+                                CurrentTermId = battleInfoResponse.CurrentTermId,
+                                DungeonBattleDifficultyType = battleInfoResponse.CurrentDungeonBattleLayer
+                                    .DungeonDifficultyType
+                            });
+                        }
+
                         if (battleInfoResponse.CurrentDungeonBattleLayer.LayerCount == 3)
                         {
                             // 结束
