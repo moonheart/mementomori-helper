@@ -13,6 +13,7 @@
 @using ReactiveUI
 @using DynamicData.Binding
 @using MementoMori.Ortega.Common.Utils
+@using MementoMori.Ortega.Share.Data.Auth
 @using MementoMori.Ortega.Share.Data.DtoInfo
 @using MementoMori.Ortega.Share.Data.MyPage
 @using MementoMori.Ortega.Share.Data.Notice
@@ -26,7 +27,7 @@
         <MudCardHeader Class="justify-space-between">
             <MudText >角色信息</MudText>
             <MudPaper Elevation="0" Class="d-flex justify-end gap-2">
-                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="ViewModel.Logining" @onclick="ViewModel.Login">
+                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="ViewModel.Logining" @onclick="ShowPlayerList">
                     登录
                     @if (ViewModel.Logining)
                     {
@@ -128,8 +129,8 @@
                 var bountyQuestInfo = ViewModel.BountyQuestResponseInfo.BountyQuestInfos.First(d => d.BountyQuestId == info.BountyQuestId);
                 var name = Masters.TextResourceTable.Get(bountyQuestInfo.BountyQuestNameKey);
                 var rarityName = Masters.TextResourceTable.Get(bountyQuestInfo.BountyQuestRarity);
-                    var itemNames = bountyQuestInfo.BountyQuestType == BountyQuestType.Guerrilla ? "随机" : string.Join(",", bountyQuestInfo.RewardItems.Select(d => $"{ItemUtil.GetItemName(d)}×{d.ItemCount}"));
-                string status = "未开始";
+                var itemNames = bountyQuestInfo.BountyQuestType == BountyQuestType.Guerrilla ? "随机" : string.Join(",", bountyQuestInfo.RewardItems.Select(d => $"{ItemUtil.GetItemName(d)}×{d.ItemCount}"));
+                var status = "未开始";
                 if (info.BountyQuestEndTime > 0)
                 {
                     var nowMilli = DateTimeOffset.Now.Add(TimeSpan.FromHours(1)).ToUnixTimeMilliseconds();
@@ -370,6 +371,8 @@
 @code {
     private List<CharacterEquipment> _characterEquipments = new();
 
+    private List<PlayerDataInfo> playerDataInfos = new();
+
     protected override async Task OnInitializedAsync()
     {
     // this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
@@ -400,6 +403,20 @@
             CloseOnEscapeKey = true
         };
         DialogService.ShowMessageBox(context.Title, (MarkupString) context.MainText);
+    }
+
+    private async Task ShowPlayerList()
+    {
+        playerDataInfos = await ViewModel.GetPlayerDataInfo();
+        var parameters = new DialogParameters<SelectPlayer>();
+        parameters.Add(d => d.PlayerDataInfos, playerDataInfos);
+        var dialog = await DialogService.ShowAsync<SelectPlayer>("选择角色", parameters, new DialogOptions(){CloseButton = true});
+        var result = await dialog.Result;
+
+        if (!result.Canceled && result.Data is PlayerDataInfo playerDataInfo)
+        {
+            ViewModel.Login(playerDataInfo);
+        }
     }
 
 }

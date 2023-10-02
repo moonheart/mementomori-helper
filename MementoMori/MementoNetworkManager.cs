@@ -173,14 +173,18 @@ public class MementoNetworkManager
         return sb.ToString();
     }
 
-    public async Task Login(LoginRequest loginRequest, Action<string> log = null)
+    public async Task<List<PlayerDataInfo>> GetPlayerDataInfoList(LoginRequest loginRequest, Action<string> log = null)
     {
         _lastLoginRequest = loginRequest;
         var authLoginResp = await GetResponse<LoginRequest, LoginResponse>(loginRequest, log);
-        var playerDataInfo = authLoginResp.PlayerDataInfoList.MaxBy(d => d.LastLoginTime);
+        return authLoginResp.PlayerDataInfoList;
+    }
+
+    public async Task Login(PlayerDataInfo playerDataInfo, Action<string> log = null)
+    {
         if (playerDataInfo == null) throw new Exception("playerDataInfo is null");
 
-        var timeServerId = (playerDataInfo.WorldId / 1000);
+        var timeServerId = playerDataInfo.WorldId / 1000;
         var timeServerMb = Masters.TimeServerTable.GetById(timeServerId);
         _timeManager.SetTimeServerMb(timeServerMb);
 
@@ -223,20 +227,11 @@ public class MementoNetworkManager
             {
                 var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(respBytes);
 
-                if (apiErrResponse.ErrorCode == ErrorCode.InvalidRequestHeader)
-                {
-                    log("登录失效, 请重新登录");
-                }
+                if (apiErrResponse.ErrorCode == ErrorCode.InvalidRequestHeader) log("登录失效, 请重新登录");
 
-                if (apiErrResponse.ErrorCode == ErrorCode.AuthLoginInvalidRequest)
-                {
-                    log("登录失败, 请检查帐号配置");
-                }
+                if (apiErrResponse.ErrorCode == ErrorCode.AuthLoginInvalidRequest) log("登录失败, 请检查帐号配置");
 
-                if (apiErrResponse.ErrorCode == ErrorCode.CommonNoSession)
-                {
-                    log("工作階段已過期, 请重新登錄");
-                }
+                if (apiErrResponse.ErrorCode == ErrorCode.CommonNoSession) log("工作階段已過期, 请重新登錄");
 
                 var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
                 log(uri.ToString());

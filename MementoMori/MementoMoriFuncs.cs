@@ -11,6 +11,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.DungeonBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
+using MementoMori.Ortega.Share.Data.Auth;
 using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Data.Mission;
 using MementoMori.Ortega.Share.Data.Notice;
@@ -107,7 +108,7 @@ public partial class MementoMoriFuncs
         }
     }
 
-    public async Task AuthLogin()
+    public async Task<List<PlayerDataInfo>> GetPlayerDataInfo()
     {
         var reqBody = new LoginRequest()
         {
@@ -119,7 +120,12 @@ public partial class MementoMoriFuncs
             AdverisementId = Guid.NewGuid().ToString("D"),
             UserId = _authOption.UserId
         };
-        await _networkManager.Login(reqBody, AddLog);
+        return await _networkManager.GetPlayerDataInfoList(reqBody, AddLog);
+    }
+
+    public async Task AuthLogin(PlayerDataInfo playerDataInfo)
+    {
+        await _networkManager.Login(playerDataInfo, AddLog);
         await UserGetUserData();
         await _timeZoneAwareJobRegister.RegisterJobs();
     }

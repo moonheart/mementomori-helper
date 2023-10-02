@@ -47,6 +47,7 @@ using GachaGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Gacha.Ge
 using PresentGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Present.GetListRequest;
 using PresentGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Present.GetListResponse;
 using System.Xml.Linq;
+using MementoMori.Ortega.Share.Data.Auth;
 
 namespace MementoMori;
 
@@ -82,12 +83,16 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     private const int Max_Err_Count = 20;
 
-    public async Task Login()
+    private PlayerDataInfo _lastPlayerDataInfo;
+
+    public async Task Login(PlayerDataInfo playerDataInfo = null)
     {
         Logining = true;
         try
         {
-            await AuthLogin();
+            if (playerDataInfo == null) playerDataInfo = _lastPlayerDataInfo;
+            if (playerDataInfo == null) throw new Exception("playerDataInfo is null");
+            await AuthLogin(playerDataInfo);
         }
         catch (Exception e)
         {
@@ -996,7 +1001,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         return;
                     }
 
-                    if (e is ApiErrorException) await AuthLogin();
+                    if (e is ApiErrorException) await AuthLogin(_lastPlayerDataInfo);
                 }
         });
     }
@@ -1049,7 +1054,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         return;
                     }
 
-                    if (e is ApiErrorException) await AuthLogin();
+                    if (e is ApiErrorException) await AuthLogin(_lastPlayerDataInfo);
                 }
         });
     }

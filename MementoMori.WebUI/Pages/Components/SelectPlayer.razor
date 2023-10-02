@@ -1,0 +1,48 @@
+﻿@using MementoMori.Ortega.Share.Data.Auth
+
+<MudDialog>
+    <DialogContent>
+        <MudList Clickable="true" @bind-SelectedValue="selectedPlayerDataInfo">
+            <MudListSubheader>
+                @if (selectedPlayerDataInfo != null)
+                {
+                    <MudText>已选择: @(((PlayerDataInfo)selectedPlayerDataInfo).Name)</MudText>
+                }
+                else
+                {
+                    <MudText>未选择</MudText>
+                }
+            </MudListSubheader>
+            @foreach (var info in PlayerDataInfos)
+            {
+                <MudListItem Value="info">
+                    <MudStack Row="true">
+                        <MudText Typo="Typo.h6">@info.Name</MudText>
+                        <MudText Typo="Typo.subtitle1">Lv @info.PlayerRank</MudText>
+                        <MudText Typo="Typo.body1">World: @info.WorldId</MudText>
+                    </MudStack>
+                </MudListItem>
+            }
+        </MudList>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="ConfirmSelection">确定</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public List<PlayerDataInfo> PlayerDataInfos { get; set; }
+
+    private object selectedPlayerDataInfo;
+
+    private void ConfirmSelection()
+    {
+        MudDialog.Close(selectedPlayerDataInfo);
+    }
+
+}
