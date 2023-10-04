@@ -455,19 +455,23 @@ public partial class MementoMoriFuncs
                         foreach (var info in _gameConfig.DungeonBattleRelicSort)
                             if (upgradableRelics.Contains(info.Id))
                             {
-                                // relicId = Masters.DungeonBattleRelicTable.GetByReinforceFrom(info.Id).Id;
                                 relicId = info.Id;
-                                break;
-                            }
-
-                        var rewardBattleReceiveRelicResponse =
-                            await GetResponse<RewardBattleReinforceRelicRequest, RewardBattleReinforceRelicResponse>(
-                                new RewardBattleReinforceRelicRequest()
+                                try
                                 {
-                                    CurrentTermId = battleInfoResponse.CurrentTermId,
-                                    DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
-                                    SelectedRelicId = relicId
-                                });
+                                    var rewardBattleReceiveRelicResponse = await GetResponse<RewardBattleReinforceRelicRequest, RewardBattleReinforceRelicResponse>(
+                                        new RewardBattleReinforceRelicRequest()
+                                        {
+                                            CurrentTermId = battleInfoResponse.CurrentTermId,
+                                            DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                            SelectedRelicId = relicId
+                                        });
+                                    break;
+                                }
+                                catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.DungeonBattleAlreadyHaveRelic)
+                                {
+                                    log($"已存在强化后的加护,选择下一个");
+                                }
+                            }
                     }
                     else
                     {
