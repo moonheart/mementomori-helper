@@ -17,61 +17,64 @@
 @using MementoMori.Ortega.Share.Data.DtoInfo
 @using MementoMori.Ortega.Share.Data.MyPage
 @using MementoMori.Ortega.Share.Data.Notice
+@using MementoMori.WebUI.Localization
 @using Microsoft.Extensions.Options
+@using static MementoMori.Ortega.Share.Masters
 
 <PageTitle>主页</PageTitle>
 
 <MudGrid>
+<MudItem md="12">
+        <MudAlert Severity="Severity.Warning">@ResourceStrings.PleaseLogin</MudAlert>
+</MudItem>
 <MudItem sm="12" md="6" lg="4" xl="3">
     <MudCard>
         <MudCardHeader Class="justify-space-between">
-            <MudText >角色信息</MudText>
+            <MudText>@ResourceStrings.CharacterInfo</MudText>
             <MudPaper Elevation="0" Class="d-flex justify-end gap-2">
                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="ViewModel.Logining" @onclick="ShowPlayerList">
-                    登录
+                    @ResourceStrings.Login
                     @if (ViewModel.Logining)
                     {
                         <MudProgressCircular Size="Size.Small"/>
                     }
                 </MudButton>
-                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="ViewModel.Logining" @onclick="ViewModel.SyncUserData">同步用户信息</MudButton>
+                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="ViewModel.Logining" @onclick="ViewModel.SyncUserData">@ResourceStrings.SyncUserInfo</MudButton>
             </MudPaper>
         </MudCardHeader>
         <MudCardContent>
             <MudSimpleTable Elevation="0" Dense="true">
                 <tbody>
                 <tr>
-                    <td>用户名</td><td>@ViewModel.UserSyncData?.UserStatusDtoInfo?.Name</td>
+                    <td>@TextResourceTable.Get("[CommonPlayerNameFormat]", ViewModel.UserSyncData?.UserStatusDtoInfo?.Name)</td>
                 </tr>
                 <tr>
-                    <td>玩家ID</td><td>@ViewModel.UserSyncData?.UserStatusDtoInfo?.PlayerId</td>
+                    <td>@TextResourceTable.Get("[PlayerId]") : @ViewModel.UserSyncData?.UserStatusDtoInfo?.PlayerId</td>
                 </tr>
                 <tr>
-                    <td>友情点</td><td>@(ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(d => d.ItemType == ItemType.FriendPoint)?.ItemCount ?? 0)</td>
+                    <td>@TextResourceTable.Get("[ItemName9]") : @(ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(d => d.ItemType == ItemType.FriendPoint)?.ItemCount ?? 0)</td>
                 </tr>
                 <tr>
-                    <td>等级</td><td>@ViewModel.UserSyncData?.UserStatusDtoInfo?.Rank</td>
+                    <td>@TextResourceTable.Get("[CommonPlayerRankLabel]") : @ViewModel.UserSyncData?.UserStatusDtoInfo?.Rank</td>
                 </tr>
                 <tr>
-                    <td>VIP 等级</td><td>@ViewModel.UserSyncData?.UserStatusDtoInfo?.Vip</td>
+                    <td>@TextResourceTable.Get("[CommonVipWithSpaceFormat]", ViewModel.UserSyncData?.UserStatusDtoInfo?.Vip)</td>
                 </tr>
                 <tr>
-                    <td>留言</td><td>@ViewModel.UserSyncData?.UserStatusDtoInfo?.Comment</td>
+                    <td>@TextResourceTable.Get("[MyPagePlayerInformationCommentLabel]") : @ViewModel.UserSyncData?.UserStatusDtoInfo?.Comment</td>
                 </tr>
                 <tr>
-                    <td>潜能宝珠</td>
-                    <td>@(ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(d => d.ItemType == ItemType.CharacterTrainingMaterial && d.ItemId == 2)?.ItemCount ?? 0)</td>
+                    <td>@TextResourceTable.Get("[ItemName11]") : @(ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(d => d.ItemType == ItemType.CharacterTrainingMaterial && d.ItemId == 2)?.ItemCount ?? 0)</td>
                 </tr>
                 <tr>
-                    <td>钻石</td>
                     @{
                         var free = ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.CurrencyFree)?.ItemCount ?? 0;
                         var paid = ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.CurrencyPaid)?.ItemCount ?? 0;
-                        <td> @($"{free + paid}, 免费 {free}, 付费 {paid}") </td>
+                        <td>@TextResourceTable.Get("[ItemName4]") : @($"{free + paid}, {TextResourceTable.Get("[CurrencyDetailCurrencyFree]")} {free}, {TextResourceTable.Get("[CurrencyDetailCurrencyPaid]")} {paid}") </td>
                     }
                 </tr>
                 <tr>
-                    <td>金币</td><td>@((ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.Gold)?.ItemCount ?? 0).ToString("N0"))</td>
+                    <td>@TextResourceTable.Get("[ItemName5]") : @((ViewModel.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.Gold)?.ItemCount ?? 0).ToString("N0"))</td>
                 </tr>
                 </tbody>
             </MudSimpleTable>
@@ -81,32 +84,32 @@
 <MudItem sm="12" md="6" lg="4" xl="3">
     <MudPaper Class="pa-4">
         <MudPaper Elevation="0" Class="d-flex">
-            <MudText>主页信息</MudText>
+            <MudText>@TextResourceTable.Get("[CommonFooterHomeButtonLabel]")</MudText>
             <MudSpacer/>
-            <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.GetMyPage" StartIcon="@Icons.Material.Filled.Sync">同步</MudButton>
+            <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.GetMyPage" StartIcon="@Icons.Material.Filled.Sync">@ResourceStrings.Sync</MudButton>
         </MudPaper>
         <MudPaper Elevation="0">
             <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(ViewModel.Mypage?.ExistNewFriendPointTransfer ?? false)">
-                <MudChip>友情点</MudChip>
+                <MudChip>@TextResourceTable.Get("[ItemName9]")</MudChip>
             </MudBadge>
             <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(ViewModel.Mypage?.ExistNewPrivateChat ?? false)">
-                <MudChip>私信</MudChip>
+                <MudChip>@TextResourceTable.Get("[CommonHeaderChatLabel]")</MudChip>
             </MudBadge>
             <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(ViewModel.Mypage?.ExistNotReceivedBountyQuestReward ?? false)">
-                <MudChip>祈愿之泉</MudChip>
+                <MudChip>@TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")</MudChip>
             </MudBadge>
             <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(ViewModel.Mypage?.ExistNotReceivedMissionReward ?? false)">
-                <MudChip>任务奖励</MudChip>
+                <MudChip>@TextResourceTable.Get("[MyPageMenuButtonMissionLabel]")</MudChip>
             </MudBadge>
             <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@ViewModel.IsNotClearDungeonBattleMap">
-                <MudChip>时空洞窟</MudChip>
+                <MudChip>@TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")</MudChip>
             </MudBadge>
             <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(ViewModel.UserSyncData?.PresentCount > 0)">
-                <MudChip>礼物箱</MudChip>
+                <MudChip>@TextResourceTable.Get("[MyPageMenuButtonPresentBoxLabel]")</MudChip>
             </MudBadge>
             @foreach (var info in ViewModel.Mypage?.MypageInfo?.MypageIconInfos ?? new List<MypageIconInfo>())
             {
-                var name = Masters.TextResourceTable.Get(info.IconNameKey);
+                var name = TextResourceTable.Get(info.IconNameKey);
                 <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@info.IsDisplayBadge">
                     <MudChip>@((MarkupString) name)</MudChip>
                 </MudBadge>
@@ -114,37 +117,40 @@
         </MudPaper>
         <MudDivider Class="my-2"/>
         <MudPaper Elevation="0" Class="d-flex">
-            <MudText>祈愿之泉</MudText>
+            <MudText>@TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")</MudText>
             <MudSpacer/>
             @if (gameConfig.Value.BountyQuestAuto.TargetItems.Count > 0)
             {
-                <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@ViewModel.BountyRequestForceAll" Label="强制派遣"></MudSwitch>
+                <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@ViewModel.BountyRequestForceAll" Label="@ResourceStrings.ForceDispatch"></MudSwitch>
             }
-            <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.RemakeBountyRequest" StartIcon="@Icons.Material.Filled.Refresh">刷新任务(20钻)</MudButton>
-            <MudButton Class="ml-2" Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.GetBountyRequestInfo" StartIcon="@Icons.Material.Filled.Sync">同步</MudButton>
+            <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.RemakeBountyRequest" 
+                       StartIcon="@Icons.Material.Filled.Refresh">@TextResourceTable.Get("[BountyQuestUpdate]") (@TextResourceTable.Get("[CommonAlternativesItemFormat]", TextResourceTable.Get("[CommonCurrencyName]"), 20))</MudButton>
+            <MudButton Class="ml-2" Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.GetBountyRequestInfo" StartIcon="@Icons.Material.Filled.Sync">@ResourceStrings.Sync</MudButton>
         </MudPaper>
         <MudPaper Elevation="0">
             @foreach (var info in ViewModel.BountyQuestResponseInfo?.UserBountyQuestDtoInfos ?? new List<UserBountyQuestDtoInfo>())
             {
                 var bountyQuestInfo = ViewModel.BountyQuestResponseInfo.BountyQuestInfos.First(d => d.BountyQuestId == info.BountyQuestId);
-                var name = Masters.TextResourceTable.Get(bountyQuestInfo.BountyQuestNameKey);
-                var rarityName = Masters.TextResourceTable.Get(bountyQuestInfo.BountyQuestRarity);
-                var itemNames = bountyQuestInfo.BountyQuestType == BountyQuestType.Guerrilla ? "随机" : string.Join(",", bountyQuestInfo.RewardItems.Select(d => $"{ItemUtil.GetItemName(d)}×{d.ItemCount}"));
-                var status = "未开始";
+                var name = TextResourceTable.Get(bountyQuestInfo.BountyQuestNameKey);
+                var rarityName = TextResourceTable.Get(bountyQuestInfo.BountyQuestRarity);
+                var itemNames = bountyQuestInfo.BountyQuestType == BountyQuestType.Guerrilla
+                    ? TextResourceTable.Get("[ItemRewardDetailDialogLotteryRateLabel]")
+                    : string.Join(",", bountyQuestInfo.RewardItems.Select(d => $"{ItemUtil.GetItemName(d)}×{d.ItemCount}"));
+                var status = ResourceStrings.NotStarted;
                 if (info.BountyQuestEndTime > 0)
                 {
                     var nowMilli = DateTimeOffset.Now.Add(TimeSpan.FromHours(1)).ToUnixTimeMilliseconds();
                     if (nowMilli < info.BountyQuestEndTime)
                     {
-                        status = "进行中 " + TimeSpan.FromMilliseconds(info.BountyQuestEndTime - nowMilli).ToString(@"hh\:mm\:ss");
+                        status = ResourceStrings.OnGoing + " " + TimeSpan.FromMilliseconds(info.BountyQuestEndTime - nowMilli).ToString(@"hh\:mm\:ss");
                     }
                     else if (!info.IsReward)
                     {
-                        status = "待领取" + TimeSpan.FromMilliseconds(info.RewardEndTime - nowMilli).ToString(@"hh\:mm\:ss");
+                        status = ResourceStrings.NotReceived + TimeSpan.FromMilliseconds(info.RewardEndTime - nowMilli).ToString(@"hh\:mm\:ss");
                     }
                     else
                     {
-                        status = "已领取";
+                        status = ResourceStrings.Received;
                     }
                 }
                 <MudChip>@rarityName @itemNames @status</MudChip>
@@ -155,11 +161,11 @@
 <MudItem sm="12" md="6" lg="4" xl="3">
     <MudCard>
         <MudCardHeader Class="justify-space-between">
-            <MudText>任务信息</MudText>
+            <MudText>@TextResourceTable.Get("[MyPageMenuButtonMissionLabel]")</MudText>
             <MudPaper Elevation="0" Class="d-flex justify-end gap-2">
-                <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.GetMissionInfo">同步信息</MudButton>
-                <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.CompleteMissions">完成任务</MudButton>
-                <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.RewardMissonActivity">奖章奖励</MudButton>
+                <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.GetMissionInfo">@ResourceStrings.Sync</MudButton>
+                <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.CompleteMissions">@TextResourceTable.Get("[MissionAllReceiveButton]")</MudButton>
+                <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.RewardMissonActivity">@ResourceStrings.RewardMissonActivity</MudButton>
             </MudPaper>
         </MudCardHeader>
         <MudCardContent>
@@ -170,8 +176,8 @@
                     @if (missionInfo.MissionStatusHistory[MissionStatusType.Progress].Any())
                     {
                         var missionId = missionInfo.MissionStatusHistory[MissionStatusType.Progress].Last();
-                        var missionMb = Masters.MissionTable.GetById(missionId);
-                        var name = Masters.TextResourceTable.Get(missionMb.NameKey);
+                        var missionMb = MissionTable.GetById(missionId);
+                        var name = TextResourceTable.Get(missionMb.NameKey);
                         var info = $"{missionInfo.ProgressCount}/{missionMb.RequireValue}";
 
                         <tr>
@@ -183,36 +189,36 @@
                     else if (missionInfo.MissionStatusHistory[MissionStatusType.NotReceived].Any())
                     {
                         var missionId = missionInfo.MissionStatusHistory[MissionStatusType.NotReceived].Last();
-                        var missionMb = Masters.MissionTable.GetById(missionId);
-                        var name = Masters.TextResourceTable.Get(missionMb.NameKey);
+                        var missionMb = MissionTable.GetById(missionId);
+                        var name = TextResourceTable.Get(missionMb.NameKey);
 
                         <tr>
                             <td>@missionInfo.MissionType</td>
                             <td>@name</td>
-                            <td>未领取</td>
+                            <td>@ResourceStrings.NotReceived</td>
                         </tr>
                     }
                     else if (missionInfo.MissionStatusHistory[MissionStatusType.Locked].Any())
                     {
                         var missionId = missionInfo.MissionStatusHistory[MissionStatusType.Locked].Last();
-                        var missionMb = Masters.MissionTable.GetById(missionId);
-                        var name = Masters.TextResourceTable.Get(missionMb.NameKey);
+                        var missionMb = MissionTable.GetById(missionId);
+                        var name = TextResourceTable.Get(missionMb.NameKey);
 
                         <tr>
                             <td>@missionInfo.MissionType</td>
                             <td>@name</td>
-                            <td>未解锁</td>
+                            <td>@ResourceStrings.NotUnlocked</td>
                         </tr>
                     }
                     else if (missionInfo.MissionType == MissionType.Daily || missionInfo.MissionType == MissionType.Weekly)
                     {
                         var missionId = missionInfo.MissionStatusHistory[MissionStatusType.Received].Last();
-                        var missionMb = Masters.MissionTable.GetById(missionId);
-                        var name = Masters.TextResourceTable.Get(missionMb.NameKey);
+                        var missionMb = MissionTable.GetById(missionId);
+                        var name = TextResourceTable.Get(missionMb.NameKey);
                         <tr>
                             <td>@missionInfo.MissionType</td>
                             <td>@name</td>
-                            <td>已完成</td>
+                            <td>@ResourceStrings.Finished</td>
                         </tr>
                     }
                 }
@@ -224,82 +230,81 @@
 <MudItem sm="12" md="6" lg="4" xl="3">
     <MudCard>
         <MudCardHeader Class="">
-            <MudText>快捷操作</MudText>
+            <MudText>@ResourceStrings.QuickActions</MudText>
             <MudSpacer/>
-            <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="ViewModel.IsQuickActionExecuting" @onclick="ViewModel.ExecuteAllQuickAction">一键执行所有</MudButton>
-            <MudButton Class="ml-2" Size="Size.Small" Variant="Variant.Filled" Disabled="!ViewModel.IsQuickActionExecuting" @onclick="ViewModel.CancelQuickAction">取消操作</MudButton>
+            <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="ViewModel.IsQuickActionExecuting" @onclick="ViewModel.ExecuteAllQuickAction">@ResourceStrings.ExecuteAllQuick</MudButton>
+                <MudButton Class="ml-2" Size="Size.Small" Variant="Variant.Filled" Disabled="!ViewModel.IsQuickActionExecuting" @onclick="ViewModel.CancelQuickAction">@TextResourceTable.Get("[CommonCancelLabel]")</MudButton>
         </MudCardHeader>
         <MudCardContent>
             <MudTabs Position="Position.Left" MinimumTabWidth="20px">
-                <MudTabPanel Text="一键操作">
+                <MudTabPanel Text="@ResourceStrings.ExecuteAllQuick">
                     <MudPaper Elevation="0" Class="pa-2">
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetLoginBonus">每日奖励</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetVipGift">每日VIP礼物</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetAutoBattleReward">自动战斗奖励</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BulkTransferFriendPoint">友情点</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.PresentReceiveItem">礼物箱</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.ReinforcementEquipmentOneTime">强化一次装备</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BattleBossQuick">Boss扫荡3次</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.InfiniteTowerQuick">无穷之塔扫荡3次</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.PvpAuto">PVP自动战斗5次</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BossHishSpeedBattle">高速战斗一次</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.FreeGacha">每日免费抽卡</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GuildCheckin">公会签到</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GuildRaid">公会讨伐战</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BountyQuestRewardAuto">祈愿之泉领取</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BountyQuestStartAuto">祈愿之泉派遣</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoUseItems">使用固定物品</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoRankUpCharacter">合成R/SR角色</MudButton>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.UseFriendCode">邀请码</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetLoginBonus">@TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetVipGift">@TextResourceTable.Get("[VipDailyRewardLabelFormat]", ViewModel.UserSyncData.UserStatusDtoInfo.Vip)</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetAutoBattleReward">@TextResourceTable.Get("[AutoBattleRewardInfoRewardLabel]")</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BulkTransferFriendPoint">@TextResourceTable.Get("[ItemName9]")</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.PresentReceiveItem">@TextResourceTable.Get("[MyPagePresentBoxButtonTitle]")</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.ReinforcementEquipmentOneTime">@ResourceStrings.ReinforceEquipmentOnce</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BattleBossQuick">@TextResourceTable.Get("[BattleTypeBoss]") @TextResourceTable.Get("[GuildRaidMultipleCleanup]", 3)</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.InfiniteTowerQuick">@TextResourceTable.Get("[CommonHeaderTowerBattleLabel]") @TextResourceTable.Get("[GuildRaidMultipleCleanup]", 3)</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.PvpAuto">@TextResourceTable.Get("[CommonHeaderLocalPvpLabel]") @TextResourceTable.Get("[BattleTypeAuto]") @TextResourceTable.Get("[CommonTimesFormat]", 5)</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BossHishSpeedBattle">@TextResourceTable.Get("[GachaFree]") @TextResourceTable.Get("[AutoBattleButtonQuickForward]")</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.FreeGacha">@TextResourceTable.Get("[GachaFree]") @TextResourceTable.Get("[CommonFooterGachaButtonLabel]")</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GuildCheckin">@TextResourceTable.Get("[MissionName533]")</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GuildRaid">@TextResourceTable.Get("[CommonHeaderGuildRaidLabel]")</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BountyQuestRewardAuto">@TextResourceTable.Get("[CommonHeaderBountyQuestLabel]") @TextResourceTable.Get("[CommonClaimAll]")</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BountyQuestStartAuto">@TextResourceTable.Get("[CommonHeaderBountyQuestLabel]") @TextResourceTable.Get("[BountyQuestAutoPlacement]")</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoUseItems">@ResourceStrings.UseNormalItems</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoRankUpCharacter">@TextResourceTable.Get("[CharacterRankUpBulkButton]")</MudButton>
+                        @* <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.UseFriendCode">邀请码</MudButton> *@
                     </MudPaper>
                 </MudTabPanel>
-                <MudTabPanel Text="装备精炼">
+                <MudTabPanel Text="@TextResourceTable.Get("[ItemBoxButtonBulkCasting]")">
                     <MudPaper Elevation="0" Class="pa-2">
-                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoEquipmentMatchlessInheritance">自动精炼SABC、继承魔装到D装</MudButton>
-                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoEquipmentLegendInheritance">自动继承圣装到D装</MudButton>
+                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoEquipmentMatchlessInheritance">@ResourceStrings.AutoMatchlessInheritance</MudButton>
+                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoEquipmentLegendInheritance">@ResourceStrings.AutoLegendInheritance</MudButton>
                     </MudPaper>
                 </MudTabPanel>
-                <MudTabPanel Text="冒险战斗">
+                <MudTabPanel Text="@TextResourceTable.Get("[PlayerRankingTypeStage]")">
                     <MudPaper Elevation="0" Class="pa-2">
-                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoBossRequest">自动刷Boss</MudButton>
+                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoBossRequest">@TextResourceTable.Get("[BattleTypeBoss]") @TextResourceTable.Get("[BattleTypeAuto]")</MudButton>
                     </MudPaper>
                 </MudTabPanel>
-                <MudTabPanel Text="时空洞窟">
+                <MudTabPanel Text="@TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")">
                     <MudPaper Elevation="0" Class="pa-2">
-                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoDungeonBattle">时空洞窟自动战斗</MudButton>
+                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoDungeonBattle">@TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]") @TextResourceTable.Get("[BattleTypeAuto]")</MudButton>
                     </MudPaper>
                 </MudTabPanel>
-                <MudTabPanel Text="试炼之塔">
+                <MudTabPanel Text="@TextResourceTable.Get("[CommonHeaderTowerBattleLabel]")">
                     <MudPaper Elevation="0" Class="pa-2">
-                        <MudSelect T="TowerType" Label="塔类型" Variant="Variant.Filled" @bind-Value="@ViewModel.SelectedAutoTowerType">
+                        <MudSelect T="TowerType" Label="@ResourceStrings.TowerType" Variant="Variant.Filled" @bind-Value="@ViewModel.SelectedAutoTowerType">
                             @foreach (var type in ViewModel.GetAvailableTower())
                             {
-                                <MudSelectItem T="TowerType" Value="@type">@(type)</MudSelectItem>
+                                <MudSelectItem T="TowerType" Value="@type">@(TextResourceTable.Get(type))</MudSelectItem>
                             }
                         </MudSelect>
-                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoInfiniteTowerRequest">自动刷无穷之塔</MudButton>
+                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoInfiniteTowerRequest">@TextResourceTable.Get("[CommonHeaderTowerBattleLabel]") @TextResourceTable.Get("[BattleTypeAuto]")</MudButton>
                     </MudPaper>
                 </MudTabPanel>
-                <MudTabPanel Text="装备打磨">
+                <MudTabPanel Text="@TextResourceTable.Get("[CommonForgedLabel]")">
                     <MudPaper Elevation="0" Class="pa-2">
-                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoEquipmentTraning">装备打磨</MudButton>
-                        <MudSelect T="string" Label="装备ID" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="@ViewModel.EquipmentId">
+                        <MudSelect T="string" Label="@TextResourceTable.Get("[CommonEquipmentLabel]")" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="@ViewModel.EquipmentId">
                             @foreach (var e in _characterEquipments)
                             {
                                 <MudSelectItem T="string" Value="e.EquipmentGuid">@($"{e.EquipmentName}/{e.UserEquipmentDtoInfo.ReinforcementLv} {e.CharacterName}")</MudSelectItem>
                             }
                         </MudSelect>
-                        <MudTextField @bind-Value="@ViewModel.EquipmentId" Label="装备Id" Variant="Variant.Text"></MudTextField>
-                        <MudSelect T="string" @bind-Value="@ViewModel.EquipmentTrainingTargetType" Label="类型" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
-                            <MudSelectItem T="string" Value="@("Health")">耐力</MudSelectItem>
-                            <MudSelectItem T="string" Value="@("Intelligence")">魔力</MudSelectItem>
-                            <MudSelectItem T="string" Value="@("Muscle")">力量</MudSelectItem>
-                            <MudSelectItem T="string" Value="@("Energy")">战技</MudSelectItem>
+                        <MudSelect T="string" @bind-Value="@ViewModel.EquipmentTrainingTargetType" Label="@TextResourceTable.Get("[CommonBaseParameterLabel]")" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                            <MudSelectItem T="string" Value="@("Health")">@TextResourceTable.Get(BaseParameterType.Health)</MudSelectItem>
+                            <MudSelectItem T="string" Value="@("Intelligence")">@TextResourceTable.Get(BaseParameterType.Intelligence)</MudSelectItem>
+                            <MudSelectItem T="string" Value="@("Muscle")">@TextResourceTable.Get(BaseParameterType.Muscle)</MudSelectItem>
+                            <MudSelectItem T="string" Value="@("Energy")">@TextResourceTable.Get(BaseParameterType.Energy)</MudSelectItem>
                         </MudSelect>
-                        <MudTextField T="long" @bind-Value="@ViewModel.EquipmentTrainingTargetValue" Label="目标值" Variant="Variant.Text"></MudTextField>
+                        <MudTextField T="long" @bind-Value="@ViewModel.EquipmentTrainingTargetValue" Label="@ResourceStrings.TargetValue" Variant="Variant.Text"></MudTextField>
+                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoEquipmentTraning">@TextResourceTable.Get("[CommonForgedLabel]")</MudButton>
                     </MudPaper>
                 </MudTabPanel>
-                <MudTabPanel Text="调试">
+                <MudTabPanel Text="Debug">
                     <MudPaper Elevation="0" Class="pa-2">
                         <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.Debug">Debug</MudButton>
                         <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.LogDebug">LogTest</MudButton>
@@ -311,7 +316,7 @@
 </MudItem>
 <MudItem sm="12" md="6" lg="4" xl="3">
     <MudCard>
-        <MudCardHeader>执行结果</MudCardHeader>
+        <MudCardHeader>@ResourceStrings.ExecutionOutput</MudCardHeader>
         <MudCardContent>
             <MessageList Messages="@ViewModel.MesssageList"/>
         </MudCardContent>
@@ -323,11 +328,11 @@
             <Header>
                 <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
                     <MudSpacer/>
-                    <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.GetNoticeInfoList">同步</MudButton>
+                    <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@ViewModel.GetNoticeInfoList">@ResourceStrings.Sync</MudButton>
                 </MudStack>
             </Header>
             <ChildContent>
-                <MudTabPanel Text="活动">
+                    <MudTabPanel Text="@TextResourceTable.Get("[NoticeCategoryTypeEventTab]")">
                     <MudTable Elevation="0" T="NoticeInfo" Items="@ViewModel.EventInfoList" Virtualize="true" Dense="true" Height="400px">
                         <RowTemplate>
                             <MudTd>@(context.Title)</MudTd>
@@ -337,7 +342,7 @@
                         </RowTemplate>
                     </MudTable>
                 </MudTabPanel>
-                <MudTabPanel Text="通知">
+                        <MudTabPanel Text="@TextResourceTable.Get("[NoticeCategoryTypeNoticeTab]")">
                     <MudTable Elevation="0" T="NoticeInfo" Items="@ViewModel.NoticeInfoList" Virtualize="true" Dense="true" Height="400px">
                         <RowTemplate>
                             <MudTd>@(context.Title)</MudTd>
@@ -354,7 +359,7 @@
 <MudItem sm="12" md="6" lg="4" xl="3">
     <MudCard>
         <MudCardHeader>
-            <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@ViewModel.ShowDebugInfo" Label="调试信息"></MudSwitch>
+            <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@ViewModel.ShowDebugInfo" Label="Debug Info"></MudSwitch>
         </MudCardHeader>
         <MudCardContent Style="max-height: 400px; overflow: scroll">
             @if (ViewModel.ShowDebugInfo)
@@ -383,11 +388,11 @@
             {
                 if (d == null) throw new ArgumentNullException(nameof(d));
                 var cha = data.UserCharacterDtoInfos.First(x => x.Guid == d.CharacterGuid);
-                var chaMb = Masters.CharacterTable.GetById(cha.CharacterId);
-                var name = Masters.TextResourceTable.Get(chaMb.NameKey);
-                var equipmentMb = Masters.EquipmentTable.GetById(d.EquipmentId);
-                var equipmentName = Masters.TextResourceTable.Get(equipmentMb.NameKey);
-                equipmentName = $"{equipmentName}/耐力{d.AdditionalParameterHealth}/魔力{d.AdditionalParameterIntelligence}/力量{d.AdditionalParameterMuscle}/战技{d.AdditionalParameterEnergy} ";
+                var chaMb = CharacterTable.GetById(cha.CharacterId);
+                var name = TextResourceTable.Get(chaMb.NameKey);
+                var equipmentMb = EquipmentTable.GetById(d.EquipmentId);
+                var equipmentName = TextResourceTable.Get(equipmentMb.NameKey);
+                equipmentName = $"{equipmentName}/{@TextResourceTable.Get(BaseParameterType.Health)}{d.AdditionalParameterHealth}/{@TextResourceTable.Get(BaseParameterType.Intelligence)}{d.AdditionalParameterIntelligence}/{@TextResourceTable.Get(BaseParameterType.Muscle)}{d.AdditionalParameterMuscle}/{@TextResourceTable.Get(BaseParameterType.Energy)}{d.AdditionalParameterEnergy} ";
                 return new CharacterEquipment()
                 {
                     CharacterGuid = d.CharacterGuid, CharacterName = name, EquipmentGuid = d.Guid, EquipmentName = equipmentName, UserEquipmentDtoInfo = d
@@ -410,7 +415,7 @@
         playerDataInfos = await ViewModel.GetPlayerDataInfo();
         var parameters = new DialogParameters<SelectPlayer>();
         parameters.Add(d => d.PlayerDataInfos, playerDataInfos);
-        var dialog = await DialogService.ShowAsync<SelectPlayer>("选择角色", parameters, new DialogOptions(){CloseButton = true});
+        var dialog = await DialogService.ShowAsync<SelectPlayer>(ResourceStrings.SelectPlayer, parameters, new DialogOptions() {CloseButton = true});
         var result = await dialog.Result;
 
         if (!result.Canceled && result.Data is PlayerDataInfo playerDataInfo)

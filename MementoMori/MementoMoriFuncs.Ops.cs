@@ -77,6 +77,9 @@ public partial class MementoMoriFuncs : ReactiveObject
     [Reactive]
     public bool BountyRequestForceAll { get; set; }
 
+    [Reactive]
+    public bool LoginOk { get; set; }
+
     private CancellationTokenSource _cancellationTokenSource;
 
     public ObservableCollection<string> MesssageList { get; } = new();
@@ -93,6 +96,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             if (playerDataInfo == null) playerDataInfo = _lastPlayerDataInfo;
             if (playerDataInfo == null) throw new Exception("playerDataInfo is null");
             await AuthLogin(playerDataInfo);
+            LoginOk = true;
         }
         catch (Exception e)
         {
