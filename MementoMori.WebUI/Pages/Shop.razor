@@ -30,7 +30,10 @@
                     @if (tab.ExpirationTimeStamp > 0)
                     {
                         var span = TimeSpan.FromMilliseconds(tab.ExpirationTimeStamp - DateTimeOffset.Now.ToUnixTimeMilliseconds());
-                        var refreshTime = $"刷新剩余: {(span.Days > 0 ? $"{span.Days}天" : "")} {span.Hours}小时 {span.Minutes}分钟 {span.Seconds}秒";
+                        var time = span.Days > 0
+                            ? Masters.TextResourceTable.Get("[CommonTimeFormatOnlyTime]", span.Hours, span.Minutes, span.Seconds)
+                            : Masters.TextResourceTable.Get("[CommonRemainTimeFull]", span.Days, span.Hours, span.Minutes, span.Seconds);
+                        var refreshTime = $"{Masters.TextResourceTable.Get("[ExchangeRemainingTimeLabel]")}: {time}";
 
                         <MudChip Text="@refreshTime"></MudChip>
                     }
@@ -72,11 +75,7 @@
                                         <MudText>@subName</MudText>
                                         @if (item.LimitTradeCount > 0)
                                         {
-                                            <MudText>限量 @item.TradeCount / @item.LimitTradeCount</MudText>
-                                        }
-                                        else
-                                        {
-                                            <MudText>不限量</MudText>
+                                            <MudText>@Masters.TextResourceTable.Get("[ExchangeCommonLimitLabelFormat]", @item.TradeCount, @item.LimitTradeCount)</MudText>
                                         }
                                     </MudCardContent>
                                     <MudCardActions>
@@ -136,7 +135,7 @@
         var dialogParameters = new DialogParameters<UseItemDialog>();
         dialogParameters.Add(d => d.Count, buyMaxCount);
         dialogParameters.Add(d => d.Name, GetItemName(tradeShopItem.GiveItem).name);
-        dialogParameters.Add(d => d.ButtonText, "购买");
+        dialogParameters.Add(d => d.ButtonText, Masters.TextResourceTable.Get("[ExchangeCommonPurchaseButtonLabel]"));
         dialogParameters.Add(d => d.UseItemFunc, async count =>
         {
             var response = await ViewModel.GetResponse<BuyItemRequest, BuyItemResponse>(
@@ -144,7 +143,7 @@
             return response.TradeShopItems.Select(d => d.GiveItem).Cast<IUserItem>().ToList();
         });
 
-        DialogService.Show<UseItemDialog>("购买物品", dialogParameters);
+        DialogService.Show<UseItemDialog>(Masters.TextResourceTable.Get("[ExchangeConfirmationViewTitle]"), dialogParameters);
     }
 
     private static (string name,string subName) GetItemName(UserItem item)

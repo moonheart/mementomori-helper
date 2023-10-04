@@ -8,6 +8,7 @@ using MessagePack;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -41,6 +42,8 @@ public class MementoNetworkManager
     public string OrtegaAccessToken => _meMoriHttpClientHandler.OrtegaAccessToken;
     public string OrtegaMasterVersion => _meMoriHttpClientHandler.OrtegaMasterVersion;
     public string OrtegaAssetVersion => _meMoriHttpClientHandler.OrtegaAssetVersion;
+
+    public CultureInfo CultureInfo { get; private set; } = new("zh-CN");
 
 
     private Uri _apiAuth = new("https://prd1-auth.mememori-boi.com/api/");
@@ -79,7 +82,7 @@ public class MementoNetworkManager
     }
 
 
-    public async Task DownloadMasterCatalog()
+    public async Task DownloadMasterCatalog(CultureInfo cultureInfo)
     {
         _logger.LogInformation("下载 master 目录中...");
         var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN", UserId = 0});
@@ -103,9 +106,38 @@ public class MementoNetworkManager
             await File.WriteAllBytesAsync(localPath, fileBytes);
         }
 
-        Masters.TextResourceTable.SetLanguageType(LanguageType.zhTW);
-        Masters.LoadAllMasters();
+        SetCultureInfo(cultureInfo);
         _logger.LogInformation("下载 master 目录完成");
+    }
+
+    public void SetCultureInfo(CultureInfo cultureInfo)
+    {
+        CultureInfo = cultureInfo;
+        CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+        CultureInfo.DefaultThreadCurrentUICulture = cultureInfo; 
+        Masters.TextResourceTable.SetLanguageType(parseLanguageType(cultureInfo));
+        Masters.LoadAllMasters();
+    }
+
+    private LanguageType parseLanguageType(CultureInfo cultureInfo)
+    {
+        return cultureInfo.TwoLetterISOLanguageName switch
+        {
+            "zh" => LanguageType.zhTW,
+            "en" => LanguageType.enUS,
+            "ja" => LanguageType.jaJP,
+            "ko" => LanguageType.koKR,
+            "fr" => LanguageType.frFR,
+            "de" => LanguageType.deDE,
+            "es" => LanguageType.esMX,
+            "pt" => LanguageType.ptBR,
+            "th" => LanguageType.thTH,
+            "id" => LanguageType.idID,
+            "vi" => LanguageType.viVN,
+            "ru" => LanguageType.ruRU,
+            "ar" => LanguageType.arEG,
+            _ => LanguageType.enUS
+        };
     }
 
     public async Task DownloadAssets(CancellationToken cancellationToken)

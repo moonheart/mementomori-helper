@@ -1,3 +1,4 @@
+using System.Globalization;
 using MementoMori;
 using MementoMori.Common;
 using MementoMori.Jobs;
@@ -34,7 +35,7 @@ internal class Program
 
         var app = builder.Build();
         
-        app.Services.GetService<MementoNetworkManager>().DownloadMasterCatalog().ConfigureAwait(false).GetAwaiter().GetResult();
+        app.Services.GetService<MementoNetworkManager>().DownloadMasterCatalog(CultureInfo.CurrentCulture).ConfigureAwait(false).GetAwaiter().GetResult();
         Services.Setup(app.Services);
 
 // Configure the HTTP request pipeline.

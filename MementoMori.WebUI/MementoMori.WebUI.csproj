@@ -17,24 +17,6 @@
         <PackageReference Include="Quartz.AspNetCore" Version="3.7.0" />
       <PackageReference Include="ReactiveUI.Blazor" Version="19.4.1" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Localization\ResourceStrings.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>ResourceStrings.resx</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Update="Localization\ResourceStrings.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>ResourceStrings.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Localization\ResourceStrings.zh-CN.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-      </EmbeddedResource>
-    </ItemGroup>
     <ItemGroup>
       <None Update="account.xml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

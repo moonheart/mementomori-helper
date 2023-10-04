@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MementoMori.WebUI.Localization {
+namespace MementoMori.Common.Localization {
     using System;
     
     
@@ -22,7 +22,7 @@ namespace MementoMori.WebUI.Localization {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ResourceStrings {
+    public class ResourceStrings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,10 +36,10 @@ namespace MementoMori.WebUI.Localization {
         ///   返回此类使用的缓存的 ResourceManager 实例。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MementoMori.WebUI.Localization.ResourceStrings", typeof(ResourceStrings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MementoMori.Common.Localization.ResourceStrings", typeof(ResourceStrings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace MementoMori.WebUI.Localization {
         ///   使用此强类型资源类的所有资源查找执行重写。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Auto Legend Inheritance To D Rarity 的本地化字符串。
         /// </summary>
-        internal static string AutoLegendInheritance {
+        public static string AutoLegendInheritance {
             get {
                 return ResourceManager.GetString("AutoLegendInheritance", resourceCulture);
             }
@@ -72,25 +72,106 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Auto Matchless Inheritance To D Rarity 的本地化字符串。
         /// </summary>
-        internal static string AutoMatchlessInheritance {
+        public static string AutoMatchlessInheritance {
             get {
                 return ResourceManager.GetString("AutoMatchlessInheritance", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   查找类似 Buy {0}×{1} Success 的本地化字符串。
+        /// </summary>
+        public static string CaveBuyItemSuccess {
+            get {
+                return ResourceManager.GetString("CaveBuyItemSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Current at {0} layer，coordinate {1},{2}，state {3}, {4}, enemy battle power {5} 的本地化字符串。
+        /// </summary>
+        public static string CaveCurrentState {
+            get {
+                return ResourceManager.GetString("CaveCurrentState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Select Next 的本地化字符串。
+        /// </summary>
+        public static string CaveErrorRelicExist {
+            get {
+                return ResourceManager.GetString("CaveErrorRelicExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Error when select support member, {0}, continue to next one 的本地化字符串。
+        /// </summary>
+        public static string CaveErrorSelectSupport {
+            get {
+                return ResourceManager.GetString("CaveErrorSelectSupport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Character Info 的本地化字符串。
         /// </summary>
-        internal static string CharacterInfo {
+        public static string CharacterInfo {
             get {
                 return ResourceManager.GetString("CharacterInfo", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   查找类似 Designated the target prop 的本地化字符串。
+        /// </summary>
+        public static string DesignatedTargetProp {
+            get {
+                return ResourceManager.GetString("DesignatedTargetProp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Dispatched 的本地化字符串。
+        /// </summary>
+        public static string Dispatched {
+            get {
+                return ResourceManager.GetString("Dispatched", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Not specified target prop or forced dispatch, dispatching all tasks. 的本地化字符串。
+        /// </summary>
+        public static string DispatchingAll {
+            get {
+                return ResourceManager.GetString("DispatchingAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Dispatching the target prop mission 的本地化字符串。
+        /// </summary>
+        public static string DispatchingTargetPropMission {
+            get {
+                return ResourceManager.GetString("DispatchingTargetPropMission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Enter 的本地化字符串。
+        /// </summary>
+        public static string Enter {
+            get {
+                return ResourceManager.GetString("Enter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Execute All Actions 的本地化字符串。
         /// </summary>
-        internal static string ExecuteAllQuick {
+        public static string ExecuteAllQuick {
             get {
                 return ResourceManager.GetString("ExecuteAllQuick", resourceCulture);
             }
@@ -99,16 +180,25 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Execution Output 的本地化字符串。
         /// </summary>
-        internal static string ExecutionOutput {
+        public static string ExecutionOutput {
             get {
                 return ResourceManager.GetString("ExecutionOutput", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   查找类似 For equipment, find a wearable character, and then unequip once. 的本地化字符串。
+        /// </summary>
+        public static string FindEquipmentCharacter {
+            get {
+                return ResourceManager.GetString("FindEquipmentCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Finished 的本地化字符串。
         /// </summary>
-        internal static string Finished {
+        public static string Finished {
             get {
                 return ResourceManager.GetString("Finished", resourceCulture);
             }
@@ -117,25 +207,79 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Force Dispatch 的本地化字符串。
         /// </summary>
-        internal static string ForceDispatch {
+        public static string ForceDispatch {
             get {
                 return ResourceManager.GetString("ForceDispatch", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   查找类似 Gacha Result 的本地化字符串。
+        /// </summary>
+        public static string GachaResult {
+            get {
+                return ResourceManager.GetString("GachaResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Game Assistant 的本地化字符串。
+        /// </summary>
+        public static string GameAssistant {
+            get {
+                return ResourceManager.GetString("GameAssistant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Count Limit 的本地化字符串。
+        /// </summary>
+        public static string ItemLimitCount {
+            get {
+                return ResourceManager.GetString("ItemLimitCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Login 的本地化字符串。
         /// </summary>
-        internal static string Login {
+        public static string Login {
             get {
                 return ResourceManager.GetString("Login", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   查找类似 Name 的本地化字符串。
+        /// </summary>
+        public static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Nothing to receive 的本地化字符串。
+        /// </summary>
+        public static string NothingToReceive {
+            get {
+                return ResourceManager.GetString("NothingToReceive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 There are no more items to smelt. 的本地化字符串。
+        /// </summary>
+        public static string NothingToSmelt {
+            get {
+                return ResourceManager.GetString("NothingToSmelt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Not Received 的本地化字符串。
         /// </summary>
-        internal static string NotReceived {
+        public static string NotReceived {
             get {
                 return ResourceManager.GetString("NotReceived", resourceCulture);
             }
@@ -144,7 +288,7 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Not Started 的本地化字符串。
         /// </summary>
-        internal static string NotStarted {
+        public static string NotStarted {
             get {
                 return ResourceManager.GetString("NotStarted", resourceCulture);
             }
@@ -153,7 +297,7 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Not Unlocked 的本地化字符串。
         /// </summary>
-        internal static string NotUnlocked {
+        public static string NotUnlocked {
             get {
                 return ResourceManager.GetString("NotUnlocked", resourceCulture);
             }
@@ -162,7 +306,7 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Ongoing 的本地化字符串。
         /// </summary>
-        internal static string OnGoing {
+        public static string OnGoing {
             get {
                 return ResourceManager.GetString("OnGoing", resourceCulture);
             }
@@ -171,16 +315,25 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Please Click Login to Use Helper 的本地化字符串。
         /// </summary>
-        internal static string PleaseLogin {
+        public static string PleaseLogin {
             get {
                 return ResourceManager.GetString("PleaseLogin", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   查找类似 Put on all equips of {0} {1} 的本地化字符串。
+        /// </summary>
+        public static string PutOnEquipmentOfCharacter {
+            get {
+                return ResourceManager.GetString("PutOnEquipmentOfCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Quick Actions 的本地化字符串。
         /// </summary>
-        internal static string QuickActions {
+        public static string QuickActions {
             get {
                 return ResourceManager.GetString("QuickActions", resourceCulture);
             }
@@ -189,7 +342,7 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Received 的本地化字符串。
         /// </summary>
-        internal static string Received {
+        public static string Received {
             get {
                 return ResourceManager.GetString("Received", resourceCulture);
             }
@@ -198,16 +351,25 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Reinforce Equipment Once 的本地化字符串。
         /// </summary>
-        internal static string ReinforceEquipmentOnce {
+        public static string ReinforceEquipmentOnce {
             get {
                 return ResourceManager.GetString("ReinforceEquipmentOnce", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   查找类似 Remove all equips of {0} {1} 的本地化字符串。
+        /// </summary>
+        public static string RemoveEquipmentOfCharacter {
+            get {
+                return ResourceManager.GetString("RemoveEquipmentOfCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Reward Medal 的本地化字符串。
         /// </summary>
-        internal static string RewardMissonActivity {
+        public static string RewardMissonActivity {
             get {
                 return ResourceManager.GetString("RewardMissonActivity", resourceCulture);
             }
@@ -216,16 +378,25 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Select Player 的本地化字符串。
         /// </summary>
-        internal static string SelectPlayer {
+        public static string SelectPlayer {
             get {
                 return ResourceManager.GetString("SelectPlayer", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   查找类似 Slot 的本地化字符串。
+        /// </summary>
+        public static string Slot {
+            get {
+                return ResourceManager.GetString("Slot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Sync 的本地化字符串。
         /// </summary>
-        internal static string Sync {
+        public static string Sync {
             get {
                 return ResourceManager.GetString("Sync", resourceCulture);
             }
@@ -234,7 +405,7 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Sync User Info 的本地化字符串。
         /// </summary>
-        internal static string SyncUserInfo {
+        public static string SyncUserInfo {
             get {
                 return ResourceManager.GetString("SyncUserInfo", resourceCulture);
             }
@@ -243,7 +414,7 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Target Value 的本地化字符串。
         /// </summary>
-        internal static string TargetValue {
+        public static string TargetValue {
             get {
                 return ResourceManager.GetString("TargetValue", resourceCulture);
             }
@@ -252,7 +423,7 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Tower Type 的本地化字符串。
         /// </summary>
-        internal static string TowerType {
+        public static string TowerType {
             get {
                 return ResourceManager.GetString("TowerType", resourceCulture);
             }
@@ -261,9 +432,18 @@ namespace MementoMori.WebUI.Localization {
         /// <summary>
         ///   查找类似 Use Normal Items 的本地化字符串。
         /// </summary>
-        internal static string UseNormalItems {
+        public static string UseNormalItems {
             get {
                 return ResourceManager.GetString("UseNormalItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Use over limit item 的本地化字符串。
+        /// </summary>
+        public static string UseOverLimitItem {
+            get {
+                return ResourceManager.GetString("UseOverLimitItem", resourceCulture);
             }
         }
     }

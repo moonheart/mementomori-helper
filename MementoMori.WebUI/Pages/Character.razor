@@ -14,6 +14,7 @@
 @using MementoMori.Ortega.Share.Data.Character
 @using MementoMori.Ortega.Share.Data.Equipment
 @using MementoMori.Ortega.Share.Utils
+@using MementoMori.Common.Localization
 
 <PageTitle>角色</PageTitle>
 <MudGrid>
@@ -30,7 +31,7 @@
                     </MudStack>
                 </Header>
                 <ChildContent>
-                    <MudTabPanel Text="属性">
+                    <MudTabPanel Text="@Masters.TextResourceTable.Get("[CommonHeaderCharacterDetailLabel]")">
                         <MudField Label="@(Masters.TextResourceTable.Get("[CommonPotentialParameterLabel]"))" Variant="Variant.Outlined">
                             <MudStack Elevation="0" Class="d-flex gap-1 flex-wrap" Row="true">
                                 @foreach (var type in EnumUtil.GetValueList<BaseParameterType>())
@@ -56,7 +57,7 @@
                             </MudStack>
                         </MudField>
                     </MudTabPanel>
-                    <MudTabPanel Text="装备">
+                    <MudTabPanel Text="@Masters.TextResourceTable.Get("[CommonEquipmentLabel]")">
                         <MudTabs MinimumTabWidth="20" Style="max-width: 100%">
                             @foreach (var (slotType, equipmentDtoInfo) in ViewModel.UserSyncData.GetUserEquipmentDtoInfoSlotTypeDictionaryByCharacterGuid(_selectedCharactor.Guid))
                             {
@@ -64,7 +65,7 @@
                                 if (equipmentDtoInfo == null)
                                 {
                                     <MudTabPanel Text="@slotName">
-                                        <MudText>无装备</MudText>
+                                        <MudText>@Masters.TextResourceTable.Get("[CommonNotEquippingLabel]")</MudText>
                                     </MudTabPanel>
                                     continue;
                                 }
@@ -74,7 +75,7 @@
                                 var sacredType = equipmentDtoInfo.GetSacredTreasureType();
 
                                 <MudTabPanel Text="@slotName">
-                                    <MudField Variant="Variant.Outlined" Label="信息">
+                                    <MudField Variant="Variant.Outlined" Label="@ResourceStrings.Name">
                                         <MudStack Row="true">
                                             <MudText>@equipmentName</MudText>
                                             <MudText>@(Masters.TextResourceTable.Get(equipmentMb.RarityFlags))</MudText>
@@ -110,7 +111,7 @@
                                                     {
                                                         value = $"{info.Value / 100}%";
                                                     }
-                                                    <MudField Label="@(Masters.TextResourceTable.Get("[CommonItemLegendGenialLevelFormat]", equipmentDtoInfo.LegendSacredTreasureLv))">
+                                                    <MudField Label="@Masters.TextResourceTable.Get("[CommonItemLegendGenialLevelFormat]", equipmentDtoInfo.LegendSacredTreasureLv)">
                                                         @(Masters.TextResourceTable.Get(info.BattleParameterType)) @(value)
                                                     </MudField>
                                                 }
@@ -122,7 +123,7 @@
                                                     {
                                                         value = $"{info.Value / 100}%";
                                                     }
-                                                    <MudField Label="@(Masters.TextResourceTable.Get("[CommonItemMatchlessGenialLevelFormat]", equipmentDtoInfo.MatchlessSacredTreasureLv))">
+                                                    <MudField Label="@Masters.TextResourceTable.Get("[CommonItemMatchlessGenialLevelFormat]", equipmentDtoInfo.MatchlessSacredTreasureLv)">
                                                         @(Masters.TextResourceTable.Get(info.BattleParameterType)) @(value)
                                                     </MudField>
                                                 }
@@ -151,7 +152,7 @@
                                                         key = Masters.TextResourceTable.Get(info.BaseParameterChangeInfo.BaseParameterType);
                                                         value = ParameterUtil.GetBaseParameterValueText(info.BaseParameterChangeInfo.ChangeParameterType, info.BaseParameterChangeInfo.Value);
                                                     }
-                                                    <MudField Label="@(Masters.TextResourceTable.Get("[EquipmentSet]", info.RequiredEquipmentCount))" Disabled="changedSetEquipmentCount < info.RequiredEquipmentCount">
+                                                    <MudField Label="@Masters.TextResourceTable.Get("[EquipmentSet]", info.RequiredEquipmentCount)" Disabled="changedSetEquipmentCount < info.RequiredEquipmentCount">
                                                         @key @value
                                                     </MudField>
                                                 }
@@ -204,8 +205,8 @@
                                                 @foreach (var id in sphereIds.Where(d => d > 0))
                                                 {
                                                     var sphereMb = Masters.SphereTable.GetById(id);
-                                                    string name = $"{Masters.TextResourceTable.Get(sphereMb.NameKey)} Lv{sphereMb.Lv}";
-                                                    string key ;
+                                                    var name = $"{Masters.TextResourceTable.Get(sphereMb.NameKey)} Lv{sphereMb.Lv}";
+                                                    string key;
                                                     string value;
                                                     if (sphereMb.BattleParameterChangeInfo != null)
                                                     {
@@ -226,7 +227,7 @@
                             }
                         </MudTabs>
                     </MudTabPanel>
-                    <MudTabPanel Text="详细"></MudTabPanel>
+                    @* <MudTabPanel Text="详细"></MudTabPanel> *@
                 </ChildContent>
             </MudTabs>
         </MudItem>
@@ -263,7 +264,7 @@
                         <MudText Typo="Typo.h6">@name</MudText>
                     </MudStack>
                     <MudStack Row="true" AlignItems="AlignItems.Center">
-                        <MudText>战力 @battlePower</MudText>
+                        <MudText>@Masters.TextResourceTable.Get("[CommonBattlePowerLabel]") @battlePower</MudText>
                     </MudStack>
                     <MudStack Row="true" AlignItems="AlignItems.Center">
                         <MudText>@jobName</MudText>

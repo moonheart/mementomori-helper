@@ -4,13 +4,13 @@
 @using System.Text
 @using MementoMori.Extensions
 @using MementoMori.WebUI.Extensions
+@using MementoMori.Common.Localization
 @using MementoMori.WebUI.Pages.Components
 @inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
 @inject IDialogService DialogService
 
 @page "/Gacha"
-<PageTitle>召唤</PageTitle>
-<h3>召唤</h3>
+<PageTitle>@Masters.TextResourceTable.Get("[CommonFooterGachaButtonLabel]")</PageTitle>
 
 <MudGrid>
     @foreach (var gachaCaseInfo in gachaCaseInfos.OrderByDescending(d => d.DisplayOrder))
@@ -26,11 +26,11 @@
                         <MudText Typo="Typo.body2">@(Masters.TextResourceTable.Get(gachaCaseUiMb.ExplanationKey))</MudText>
                     </CardHeaderContent>
                     <CardHeaderActions>
-                        <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="() => ShowDetail(gachaCaseInfo)">详细</MudButton>
+                            <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="() => ShowDetail(gachaCaseInfo)">@Masters.TextResourceTable.Get("[CommonDetailLabel]")</MudButton>
                     </CardHeaderActions>
                 </MudCardHeader>
                 <MudCardContent>
-                    <MudField Label="持有资源" Variant="Variant.Outlined">
+                        <MudField Label="@Masters.TextResourceTable.Get("[CommonPossessionLabel]")" Variant="Variant.Outlined">
                         @foreach (var userItem in gachaCaseInfo.GachaButtonInfoList.Select(d => d.ConsumeUserItem).DistinctBy(d=>new {d.ItemType, d.ItemId}))
                         {
                             var label = $"{userItem.GetItemName()} × {ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == userItem.ItemType && d.ItemId == userItem.ItemId)?.ItemCount ?? 0}";
@@ -72,7 +72,7 @@
 
     private async Task DoGacha(long buttonGachaButtonId)
     {
-        var showMessageBox = await DialogService.ShowMessageBox("提示", "确定要抽卡吗", "我确定", "算了吧");
+        var showMessageBox = await DialogService.ShowMessageBox(Masters.TextResourceTable.Get("[GachaPurchaseConfirmationTitle]"), "", Masters.TextResourceTable.Get("[GachaPurchaseConfirmationOK]"), Masters.TextResourceTable.Get("[CommonCancelLabel]"));
         if (showMessageBox != true)
         {
             return;
@@ -86,7 +86,7 @@
         drawResponse.BonusRewardItemList.PrintUserItems(s => msg.AppendLine(s));
         drawResponse.CharacterReleaseItemList.PrintUserItems(s => msg.AppendLine(s));
 
-        await DialogService.ShowMessageBox("抽卡结果", msg.ToString());
+        await DialogService.ShowMessageBox(ResourceStrings.GachaResult, msg.ToString());
     }
 
     private async Task ShowDetail(GachaCaseInfo gachaCaseInfo)
@@ -95,7 +95,7 @@
         var parameters = new DialogParameters<GachaDetail>();
         parameters.Add(d => d.GachaCaseUiId, gachaCaseInfo.GachaCaseUiId);
         parameters.Add(d => d.LotteryItemList, lotteryItemListResponse);
-        await DialogService.ShowAsync<GachaDetail>("抽卡详情", parameters, new DialogOptions() {CloseButton = true, CloseOnEscapeKey = true});
+        await DialogService.ShowAsync<GachaDetail>(Masters.TextResourceTable.Get("[CommonDetailLabel]"), parameters, new DialogOptions() { CloseButton = true, CloseOnEscapeKey = true });
     }
 
 }

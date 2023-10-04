@@ -11,6 +11,7 @@
 @using MementoMori.Ortega.Common.Utils
 @using DynamicData.Binding
 @using MementoMori.Ortega.Share.Data.ApiInterface.Item
+@using MementoMori.Common.Localization
 @using MementoMori.WebUI.Pages.Components
 @using ReactiveUI
 @using SortDirection = MudBlazor.SortDirection
@@ -23,43 +24,43 @@
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => d.ItemType == ItemType.Equipment && d.ItemCount > 0).Select(d => d.ToEquipmentInfo()).Union(ViewModel.UserSyncData.UserEquipmentDtoInfos.Where(d => d.CharacterGuid == "").Select(x => x.ToEquipmentInfo())))">
             <HeaderContent>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Name)">名称</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.SlotType)">位置</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.SlotType)">@ResourceStrings.Slot</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.RarityFlags)">稀有度</MudTableSortLabel>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.RarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.EquipmentLv)">等级</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.EquipmentLv)">@Masters.TextResourceTable.Get("[CommonEquipmentLevelLabel]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Count)">数量</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.PerformancePoint)">武具固有值</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.PerformancePoint)">@Masters.TextResourceTable.Get("[EquipmentUniquePowerLabel]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.BattleParameterChangeInfo.BattleParameterType)">基础属性</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.BattleParameterChangeInfo.BattleParameterType)">@Masters.TextResourceTable.Get("[CharacterEquipmentBasicEffect]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.BattleParameterChangeInfo.Value)">基础属性值</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.BattleParameterChangeInfo.Value)">@Masters.TextResourceTable.Get("[CommonBaseParameterLabel]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.AdditionalParameterTotal)">附加属性合计</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.AdditionalParameterTotal)">@Masters.TextResourceTable.Get("[CommonGrantParameterLabel]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterMuscle)">力量</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterMuscle)">@Masters.TextResourceTable.Get(BaseParameterType.Muscle)</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterEnergy)">魔力</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterEnergy)">@Masters.TextResourceTable.Get(BaseParameterType.Energy)</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterIntelligence)">战技</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterIntelligence)">@Masters.TextResourceTable.Get(BaseParameterType.Intelligence)</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterHealth)">耐力</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterHealth)">@Masters.TextResourceTable.Get(BaseParameterType.Health)</MudTableSortLabel>
                 </MudTh>
             </HeaderContent>
             <RowTemplate>
@@ -91,19 +92,19 @@
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()).OrderBy(d=>d.Item.ItemType).ThenByDescending(d=>d.ItemRarityFlags))">
             <HeaderContent>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">名称</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
                     操作
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">稀有度</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">持有上限</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">@ResourceStrings.ItemLimitCount</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">数量</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>描述</MudTh>
             </HeaderContent>
@@ -112,7 +113,7 @@
                 <MudTd>
                     @if (context.Item.ItemType == ItemType.QuestQuickTicket)
                     {
-                        <MudButton OnClick="() => UseAutoBattleRewardItem(context.Name, context.Item)">使用</MudButton>
+                        <MudButton OnClick="() => UseAutoBattleRewardItem(context.Name, context.Item)">@Masters.TextResourceTable.Get("[ItemBoxButtonUse]")</MudButton>
                     }
                 </MudTd>
                 <MudTd>@(context.ItemRarityFlags)</MudTd>
@@ -142,18 +143,18 @@
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
             <HeaderContent>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">名称</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">稀有度</MudTableSortLabel>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">持有上限</MudTableSortLabel>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">@ResourceStrings.ItemLimitCount</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">数量</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
                 </MudTh>
-                <MudTh>描述</MudTh>
+                <MudTh>@Masters.TextResourceTable.Get("[ItemDescriptionLabel]")</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd>@context.Name</MudTd>
@@ -173,30 +174,30 @@
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToSphereInfo()))">
             <HeaderContent>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.Name)">名称</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.RarityFlags)">稀有度</MudTableSortLabel>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.RarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.Lv)">等级</MudTableSortLabel>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.Lv)">@Masters.TextResourceTable.Get("[EquipmentSphereSynthesisSphereLv]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BaseParameterChangeInfo?.BaseParameterType)">基础属性</MudTableSortLabel>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BaseParameterChangeInfo?.BaseParameterType)">@Masters.TextResourceTable.Get("[CharacterEquipmentBasicEffect]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BaseParameterChangeInfo?.Value)">基础属性值</MudTableSortLabel>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BaseParameterChangeInfo?.Value)">@Masters.TextResourceTable.Get("[CommonBaseParameterLabel]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BattleParameterChangeInfo?.BattleParameterType)">战斗属性</MudTableSortLabel>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BattleParameterChangeInfo?.BattleParameterType)">@Masters.TextResourceTable.Get("[CharacterDetailTabBattleParameter]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BattleParameterChangeInfo?.Value)">战斗属性值</MudTableSortLabel>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BattleParameterChangeInfo?.Value)">@Masters.TextResourceTable.Get("[CommonBaseParameterLabel]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.Count)">数量</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
                 </MudTh>
-                <MudTh>描述</MudTh>
+                <MudTh>@Masters.TextResourceTable.Get("[ItemDescriptionLabel]")</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd>@context.Name</MudTd>
@@ -220,18 +221,18 @@
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
             <HeaderContent>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">名称</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">稀有度</MudTableSortLabel>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">持有上限</MudTableSortLabel>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">@ResourceStrings.ItemLimitCount</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">数量</MudTableSortLabel>
+                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
                 </MudTh>
-                <MudTh>描述</MudTh>
+                <MudTh>@Masters.TextResourceTable.Get("[ItemDescriptionLabel]")</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd>@context.Name</MudTd>
@@ -264,7 +265,7 @@
         var dialogParameters = new DialogParameters<UseItemDialog>();
         dialogParameters.Add(d=>d.Count, userItem.ItemCount);
         dialogParameters.Add(d=>d.Name, name);
-        dialogParameters.Add(d=>d.ButtonText, "使用");
+        dialogParameters.Add(d => d.ButtonText, Masters.TextResourceTable.Get("[ItemBoxButtonUse]"));
         dialogParameters.Add(d=>d.UseItemFunc, (async count =>
         {
             var useAutoBattleRewardItemResponse = await ViewModel.GetResponse<UseAutoBattleRewardItemRequest, UseAutoBattleRewardItemResponse>(
@@ -272,7 +273,7 @@
             return useAutoBattleRewardItemResponse.RewardItemList.Cast<IUserItem>().ToList();
         }));
 
-        DialogService.Show<UseItemDialog>("使用物品", dialogParameters);
+        DialogService.Show<UseItemDialog>(Masters.TextResourceTable.Get("[ItemBoxItemUseTitle]"), dialogParameters);
     }
 
     

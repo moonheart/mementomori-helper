@@ -1,26 +1,36 @@
-﻿@inherits LayoutComponentBase
+﻿@using MementoMori.Common.Localization
+@using static MementoMori.Ortega.Share.Masters
+@using System.Globalization
+@inherits LayoutComponentBase
+@inject MementoNetworkManager NetworkManager
+@inject NavigationManager NavigationManager
 
 <MudThemeProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
 <MudLayout>
-    <MudAppBar>
+    <MudAppBar Dense="false" Color="Color.Transparent">
         <MudIconButton
             Icon="@Icons.Material.Filled.Menu"
             Color="Color.Inherit"
             Edge="Edge.Start"
             @onclick="e => DrawerToggle()">
         </MudIconButton>
-        My Application
-        <MudSpacer/>
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+        <MudSpacer />
+        <MudSpacer />
+        <MudSelect T="CultureInfo" Label="Select Language" Variant="Variant.Text" Dense="true" @bind-Value="SelectedLanguage">
+            <MudSelectItem Value="@(new CultureInfo("en-US"))"></MudSelectItem>
+            <MudSelectItem Value="@(new CultureInfo("zh-CN"))"></MudSelectItem>
+            <MudSelectItem Value="@(new CultureInfo("ja-JP"))"></MudSelectItem>
+            <MudSelectItem Value="@(new CultureInfo("ko-KR"))"></MudSelectItem>
+        </MudSelect>
     </MudAppBar>
-    <MudDrawer Open="_drawerOpen">
+    <MudDrawer @bind-Open="_drawerOpen">
         <MudDrawerHeader>
-            <MudText Typo="Typo.h5" Class="mt-1">游戏助手</MudText>
+            <MudText Typo="Typo.h5" Class="mt-1">@ResourceStrings.GameAssistant</MudText>
         </MudDrawerHeader>
-        <NavMenu/>
+        <NavMenu />
     </MudDrawer>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
@@ -31,10 +41,20 @@
 
 @code {
     bool _drawerOpen = true;
+    bool _languageSelectOpen = false;
+
+    CultureInfo SelectedLanguage
+    {
+        get => NetworkManager.CultureInfo;
+        set
+        {
+            NetworkManager.SetCultureInfo(value);
+            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        }
+    }
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
-
 }

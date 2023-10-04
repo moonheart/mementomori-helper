@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Linq;
 using System.Xml;
+using MementoMori.Common.Localization;
 using MementoMori.Exceptions;
 using MementoMori.Jobs;
 using MementoMori.Ortega.Common.Utils;
@@ -139,7 +140,7 @@ public partial class MementoMoriFuncs
         {
             var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
             var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
-            log($"脱下 {name} Lv{characterDto.Level}的装备");
+            log(string.Format(ResourceStrings.RemoveEquipmentOfCharacter, name, characterDto.Level));
 
             // 脱装备
             var removeEquipmentResponse = await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
@@ -149,7 +150,7 @@ public partial class MementoMoriFuncs
             });
         }
 
-        log("进入副本");
+        log($"{ResourceStrings.Enter} {Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")}");
         // 进副本
         var battleInfoResponse =
             await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(
@@ -158,7 +159,7 @@ public partial class MementoMoriFuncs
         {
             var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
             var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
-            log($"穿上 {name} Lv{characterDto.Level}的装备");
+            log(string.Format(ResourceStrings.PutOnEquipmentOfCharacter, name, characterDto.Level));
             // 穿装备
             var changeInfos = g.Select(d =>
             {
@@ -179,7 +180,7 @@ public partial class MementoMoriFuncs
 
         if (battleInfoResponse.UserDungeonDtoInfo.IsDoneRewardClearLayer(3))
         {
-            log("时空洞窟已通关");
+            log($"{Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")} {ResourceStrings.Finished}");
             return;
         }
 
@@ -205,7 +206,7 @@ public partial class MementoMoriFuncs
             var state = battleInfoResponse.UserDungeonDtoInfo.CurrentGridState;
             var memo = currentGrid.GridMb.Memo;
             var type = currentGrid.GridMb.DungeonGridType;
-            log($"当前第 {layer}层，坐标 {currentGrid.Grid.X},{currentGrid.Grid.Y}，状态 {state}, {type} 敌人战斗力 {currentGrid.Power}");
+            log(string.Format(ResourceStrings.CaveCurrentState, layer, currentGrid.Grid.X, currentGrid.Grid.Y, state, type, currentGrid.Power));
 
             async Task DoBattle()
             {
@@ -319,7 +320,7 @@ public partial class MementoMoriFuncs
                                     }
                                     catch (ApiErrorException e)
                                     {
-                                        log($"选择支援时出错, {e.Message}, 继续选择下一个支援");
+                                        log(string.Format(ResourceStrings.CaveErrorSelectSupport, e.Message));
                                     }
 
                                 break;
@@ -375,7 +376,7 @@ public partial class MementoMoriFuncs
                                             DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
                                             TradeShopItemId = tradeShopItem.TradeShopItemId
                                         });
-                                        log($"购买 {ItemUtil.GetItemName(tradeShopItem.GiveItem)}×{tradeShopItem.GiveItem.ItemCount} 成功");
+                                        log(string.Format(ResourceStrings.CaveBuyItemSuccess, ItemUtil.GetItemName(tradeShopItem.GiveItem), tradeShopItem.GiveItem.ItemCount));
                                     }
 
                             var leaveShopResponse = await GetResponse<LeaveShopRequest, LeaveShopResponse>(
@@ -469,7 +470,7 @@ public partial class MementoMoriFuncs
                                 }
                                 catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.DungeonBattleAlreadyHaveRelic)
                                 {
-                                    log($"已存在强化后的加护,选择下一个");
+                                    log($"{Masters.TextResourceTable.GetErrorCodeMessage(e.ErrorCode)}, {ResourceStrings.CaveErrorRelicExist}");
                                 }
                             }
                     }

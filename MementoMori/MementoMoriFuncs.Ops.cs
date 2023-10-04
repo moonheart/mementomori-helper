@@ -47,7 +47,9 @@ using GachaGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Gacha.Ge
 using PresentGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Present.GetListRequest;
 using PresentGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Present.GetListResponse;
 using System.Xml.Linq;
+using MementoMori.Common.Localization;
 using MementoMori.Ortega.Share.Data.Auth;
+using static MementoMori.Ortega.Share.Masters;
 
 namespace MementoMori;
 
@@ -180,17 +182,17 @@ public partial class MementoMoriFuncs : ReactiveObject
             if (!MonthlyLoginBonusInfo.ReceivedDailyRewardDayList.Contains(day))
             {
                 var bonus = await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(new ReceiveDailyLoginBonusRequest() {ReceiveDay = DateTime.Now.Day});
-                log("每日登录奖励：\n");
+                log($"{TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")}：\n");
                 bonus.RewardItemList.PrintUserItems(log);
                 await GetMonthlyLoginBonusInfo();
             }
             else
             {
-                log("每日登录奖励已领取过了");
+                log(TextResourceTable.GetErrorCodeMessage(ErrorCode.LoginBonusAlreadyReceivedDailyReward));
             }
 
-            var monthlyLoginBonusMb = Masters.MonthlyLoginBonusTable.GetById(MonthlyLoginBonusInfo.MonthlyLoginBonusId);
-            var monthlyLoginBonusRewardListMb = Masters.MonthlyLoginBonusRewardListTable.GetById(monthlyLoginBonusMb.RewardListId);
+            var monthlyLoginBonusMb = MonthlyLoginBonusTable.GetById(MonthlyLoginBonusInfo.MonthlyLoginBonusId);
+            var monthlyLoginBonusRewardListMb = MonthlyLoginBonusRewardListTable.GetById(monthlyLoginBonusMb.RewardListId);
             foreach (var loginCountRewardInfo in monthlyLoginBonusRewardListMb.LoginCountRewardList)
                 // 登录次数达到 && 没有领取过
                 if (loginCountRewardInfo.DayCount <= MonthlyLoginBonusInfo.ReceivedDailyRewardDayList.Count &&
@@ -200,7 +202,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     {
                         ReceiveDayCount = loginCountRewardInfo.DayCount
                     });
-                    log($"领取的登录次数 {loginCountRewardInfo.DayCount} 奖励：\n");
+                    log($"{TextResourceTable.Get("[LoginBonusCountFormat]", loginCountRewardInfo.DayCount, 30)}");
                     resp.RewardItemList.PrintUserItems(log);
                 }
 
@@ -215,12 +217,12 @@ public partial class MementoMoriFuncs : ReactiveObject
             if (UserSyncData.ExistVipDailyGift == true)
             {
                 var bonus = await GetResponse<GetDailyGiftRequest, GetDailyGiftResponse>(new GetDailyGiftRequest());
-                log("领取每日VIP奖励：");
+                log($"{TextResourceTable.Get("[VipDailyRewardLabelFormat]", UserSyncData.UserStatusDtoInfo.Vip)}\n");
                 bonus.ItemList.PrintUserItems(log);
             }
             else
             {
-                log("VIP 奖励领取过了");
+                log($"{TextResourceTable.GetErrorCodeMessage(ErrorCode.VipGetDailyGiftAlreadyGet)}");
             }
         });
     }
@@ -232,15 +234,15 @@ public partial class MementoMoriFuncs : ReactiveObject
             var mapInfoResponse = await GetResponse<MapInfoRequest, MapInfoResponse>(new MapInfoRequest {IsUpdateOtherPlayerInfo = true});
             var autoResponse = await GetResponse<AutoRequest, AutoResponse>(new AutoRequest());
             var bonus = await GetResponse<RewardAutoBattleRequest, RewardAutoBattleResponse>(new RewardAutoBattleRequest());
-            log("领取自动战斗奖励奖励：");
-            log($"战斗次数 {bonus.AutoBattleRewardResult.BattleCountAll}");
-            log($"胜利次数 {bonus.AutoBattleRewardResult.BattleCountWin}");
-            log($"总时间 {TimeSpan.FromMilliseconds(bonus.AutoBattleRewardResult.BattleTotalTime)}");
-            log($"领民金币 {bonus.AutoBattleRewardResult.GoldByPopulation}");
-            log($"领民潜能珠宝 {bonus.AutoBattleRewardResult.PotentialJewelByPopulation}");
-            log("固定掉落");
+            log(TextResourceTable.Get("[AutoBattleRewardInfoTitle]"));
+            log($"{TextResourceTable.Get("[CommonWinLabel]")} {bonus.AutoBattleRewardResult.BattleCountWin}");
+            log($"{TextResourceTable.Get("[CommonLoseLabel]")} {bonus.AutoBattleRewardResult.BattleCountAll - bonus.AutoBattleRewardResult.BattleCountWin}");
+            log($"{TextResourceTable.Get("[AutoBattleRewardInfoBattleTotalTimeLabel]")} {TimeSpan.FromMilliseconds(bonus.AutoBattleRewardResult.BattleTotalTime)}");
+            log(TextResourceTable.Get("[AutoBattleRewardInfoPopulationLabel]"));
+            log($"{TextResourceTable.Get("[ItemName5]")} {bonus.AutoBattleRewardResult.GoldByPopulation}");
+            log($"{TextResourceTable.Get("[ItemName11]")} {bonus.AutoBattleRewardResult.PotentialJewelByPopulation}");
+            log(TextResourceTable.Get("[AutoBattleRewardInfoRewardLabel]"));
             bonus.AutoBattleRewardResult.BattleRewardResult.FixedItemList.PrintUserItems(log);
-            log("随机掉落");
             bonus.AutoBattleRewardResult.BattleRewardResult.DropItemList.PrintUserItems(log);
         });
     }
@@ -252,7 +254,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             try
             {
                 var resp = await GetResponse<BulkTransferFriendPointRequest, BulkTransferFriendPointResponse>(new BulkTransferFriendPointRequest());
-                log("友情点发送接收成功");
+                log($"{TextResourceTable.Get("[ItemName9]")} {TextResourceTable.Get("[BulkReceiveAndSend]")} {ResourceStrings.Finished}");
             }
             catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.FriendAlreadyMaxReceived)
             {
@@ -274,7 +276,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     {
                         var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(new ReceiveItemRequest() {LanguageType = LanguageType.zhTW});
                         usedItem = false;
-                        log("领取礼物箱：");
+                        log($"{TextResourceTable.Get("[MyPagePresentBoxButtonTitle]")} {TextResourceTable.Get("[MyPagePresentBoxButtonAllReceive]")}");
                         resp.ResultItems.Select(d => d.Item).PrintUserItems(log);
                     }
                     catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.PresentReceiveOverLimitCountPresent)
@@ -285,13 +287,13 @@ public partial class MementoMoriFuncs : ReactiveObject
                             if (presentItem.Item.ItemType == ItemType.QuestQuickTicket)
                             {
                                 var count = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == presentItem.Item.ItemType && d.ItemId == presentItem.Item.ItemId)?.ItemCount ?? 0;
-                                var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(presentItem.Item.ItemType, presentItem.Item.ItemId);
+                                var itemMb = ItemTable.GetByItemTypeAndItemId(presentItem.Item.ItemType, presentItem.Item.ItemId);
                                 var maxItemCount = itemMb.MaxItemCount;
                                 if (count >= maxItemCount) continue;
 
-                                var name = Masters.TextResourceTable.Get(itemMb.NameKey);
+                                var name = TextResourceTable.Get(itemMb.NameKey);
                                 var useCount = (int) Math.Floor(maxItemCount * 0.1);
-                                log($"使用达到上限的物品: {name}×{useCount}, {count}/{maxItemCount}");
+                                log($"{ResourceStrings.UseOverLimitItem}: {name}×{useCount}, {count}/{maxItemCount}");
                                 var response = await GetResponse<UseAutoBattleRewardItemRequest, UseAutoBattleRewardItemResponse>(new UseAutoBattleRewardItemRequest()
                                 {
                                     ItemType = (QuestQuickTicketType) itemMb.ItemType,
@@ -308,9 +310,9 @@ public partial class MementoMoriFuncs : ReactiveObject
                                 var maxItemCount = 999;
                                 if (maxItemCount != count) continue;
 
-                                var name = Masters.TextResourceTable.Get(Masters.EquipmentTable.GetById(presentItem.Item.ItemId).NameKey);
+                                var name = TextResourceTable.Get(EquipmentTable.GetById(presentItem.Item.ItemId).NameKey);
                                 var useCount = (int) Math.Floor(maxItemCount * 0.1);
-                                log($"使用达到上限的物品: {name}×{useCount}, {count}/{maxItemCount}");
+                                log($"{ResourceStrings.UseOverLimitItem}: {name}×{useCount}, {count}/{maxItemCount}");
                                 var response = await GetResponse<CastRequest, CastResponse>(new CastRequest {UserEquipment = new UserEquipment(presentItem.Item.ItemId, useCount)});
                                 response.ResultItemList.PrintUserItems(log);
                                 usedItem = true;
@@ -319,7 +321,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         }
                     }
                 else
-                    log("礼物箱没有可领取的");
+                    log(TextResourceTable.GetErrorCodeMessage(ErrorCode.PresentReceiveAlreadyReceivedPresent));
             } while (usedItem);
         });
     }
@@ -338,11 +340,10 @@ public partial class MementoMoriFuncs : ReactiveObject
                     });
                 if (bossQuickResponse.BattleRewardResult == null)
                 {
-                    log("快速战斗奖励为空");
                     return;
                 }
 
-                log("Boss 快速战斗奖励：\n");
+                log($"{TextResourceTable.Get("[AutoBattleButtonQuickForward]")}：\n");
                 bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
                 bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
             }
@@ -360,7 +361,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             try
             {
                 var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
-                log("无穷之塔战斗奖励：\n");
+                log($"{TextResourceTable.Get("[CommonHeaderTowerBattleLabel]")}：\n");
 
                 var bossQuickResponse = await GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
                     new TowerBattleQuickRequest()
@@ -384,7 +385,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log("竞技场战斗奖励：\n");
+            log($"{TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")}：\n");
             for (var i = 0; i < 5; i++)
             {
                 var pvpInfoResponse = await GetResponse<GetPvpInfoRequest, GetPvpInfoResponse>(
@@ -392,7 +393,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
                 if (UserSyncData.UserBattlePvpDtoInfo.PvpTodayCount >= OrtegaConst.BattlePvp.MaxPvpBattleFreeCount)
                 {
-                    log("剩餘挑戰次數不足");
+                    log(TextResourceTable.GetErrorCodeMessage(ErrorCode.BattlePvpOverLegendLeagueChallengeMaxCount));
                     return;
                 }
 
@@ -414,7 +415,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log("祈愿之泉完成奖励：\n");
+            log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}：\n");
             var getListResponse = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(
                 new BountyQuestGetListRequest());
 
@@ -430,7 +431,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             }
             else
             {
-                log("没有可以领取的");
+                log(ResourceStrings.NothingToReceive);
             }
 
             await GetBountyRequestInfo();
@@ -445,25 +446,25 @@ public partial class MementoMoriFuncs : ReactiveObject
             if (_gameConfig.BountyQuestAuto.TargetItems.Count > 0 && !BountyRequestForceAll)
             {
                 var itemNames = string.Join(",", _gameConfig.BountyQuestAuto.TargetItems.Select(ItemUtil.GetItemName));
-                log($"祈愿之泉: 指定了目标道具 {itemNames}");
-                log("祈愿之泉: 正在派遣目标道具任务");
+                log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}: {ResourceStrings.DesignatedTargetProp} {itemNames}");
+                log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}: {ResourceStrings.DispatchingTargetPropMission}");
                 var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData, _gameConfig.BountyQuestAuto);
                 foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
                 {
                     var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
                         new BountyQuestStartRequest {BountyQuestStartInfos = new List<BountyQuestStartInfo>() {bountyQuestStartInfo}});
-                    log($"已派遣 {bountyQuestStartInfo.BountyQuestId}");
+                    log($"{ResourceStrings.Dispatched} {bountyQuestStartInfo.BountyQuestId}");
                 }
             }
             else
             {
-                log($"祈愿之泉: 未指定目标道具 或 强制派遣, 派遣所有任务");
+                log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}: {ResourceStrings.DispatchingAll}");
                 var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData, _gameConfig.BountyQuestAuto, true);
                 foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
                 {
                     var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
                         new BountyQuestStartRequest {BountyQuestStartInfos = new List<BountyQuestStartInfo>() {bountyQuestStartInfo}});
-                    log($"已派遣 {bountyQuestStartInfo.BountyQuestId}");
+                    log($"{ResourceStrings.Dispatched} {bountyQuestStartInfo.BountyQuestId}");
                 }
             }
 
@@ -486,7 +487,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 // 找到所有 等级为S、魔装、未装备 的装备
                 var equipments = usersyncData.UserSyncData.UserEquipmentDtoInfos.Select(d => new
                 {
-                    Equipment = d, EquipmentMB = Masters.EquipmentTable.GetById(d.EquipmentId)
+                    Equipment = d, EquipmentMB = EquipmentTable.GetById(d.EquipmentId)
                 });
 
                 var sEquipments = equipments.Where(d =>
@@ -497,7 +498,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
                 if (sEquipments.Count == 0)
                 {
-                    log("批量精炼");
+                    log(TextResourceTable.Get("[ItemBoxButtonBulkCasting]"));
 
                     try
                     {
@@ -510,7 +511,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.EquipmentMissingEquipment)
                     {
                         // 没有可以精炼的装备了
-                        log("没有可以精炼的装备了");
+                        log(ResourceStrings.NothingToSmelt);
                         break;
                     }
 
@@ -558,7 +559,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         var equipItems = usersyncData.UserSyncData.UserItemDtoInfo.Where(d =>
         {
             if (d.ItemType != ItemType.Equipment) return false;
-            var equipmentMb = Masters.EquipmentTable.GetById(d.ItemId);
+            var equipmentMb = EquipmentTable.GetById(d.ItemId);
             if (equipmentMb.EquipmentLv == 1) return false;
             if (equipmentMb.SlotType != slotType) return false;
             if ((equipmentMb.RarityFlags & EquipmentRarityFlags.D) == 0) return false;
@@ -571,12 +572,12 @@ public partial class MementoMoriFuncs : ReactiveObject
             for (var i = 0; i < equipItem.ItemCount; i++)
             {
                 if (needMoreCount <= 0) break;
-                var equipmentMb = Masters.EquipmentTable.GetById(equipItem.ItemId);
-                log($"为装备找可穿戴的角色, 脱穿一次 {equipmentMb.Memo}");
+                var equipmentMb = EquipmentTable.GetById(equipItem.ItemId);
+                log($"{ResourceStrings.FindEquipmentCharacter} {equipmentMb.Memo}");
                 // 找到可以装备的一个角色
                 var userCharacterDtoInfo = usersyncData.UserSyncData.UserCharacterDtoInfos.Where(d =>
                 {
-                    var characterMb = Masters.CharacterTable.GetById(d.CharacterId);
+                    var characterMb = CharacterTable.GetById(d.CharacterId);
                     if ((characterMb.JobFlags & equipmentMb.EquippedJobFlags) == 0) return false; // 装备职业
 
                     if (d.Level >= equipmentMb.EquipmentLv) return true; // 装备等级
@@ -594,7 +595,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 // 获取角色某个位置的装备, 可能没有装备
                 var replacedEquip = usersyncData.UserSyncData.UserEquipmentDtoInfos.Where(d =>
                 {
-                    var byId = Masters.EquipmentTable.GetById(d.EquipmentId);
+                    var byId = EquipmentTable.GetById(d.EquipmentId);
                     return d.CharacterGuid == userCharacterDtoInfo.Guid &&
                            byId.SlotType == equipmentMb.SlotType;
                 }).FirstOrDefault();
@@ -664,7 +665,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 // 找到所有 等级为S、魔装、未装备 的装备
                 var equipments = usersyncData.UserSyncData.UserEquipmentDtoInfos.Select(d => new
                 {
-                    Equipment = d, EquipmentMB = Masters.EquipmentTable.GetById(d.EquipmentId)
+                    Equipment = d, EquipmentMB = EquipmentTable.GetById(d.EquipmentId)
                 });
                 var sEquipments = equipments.Where(d =>
                         d.Equipment.CharacterGuid == "" && // 未装备
@@ -716,7 +717,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
         var userEquipmentDtoInfo = usersyncData.UserSyncData.UserEquipmentDtoInfos.Where(d =>
         {
-            var equipmentMb = Masters.EquipmentTable.GetById(d.EquipmentId);
+            var equipmentMb = EquipmentTable.GetById(d.EquipmentId);
             if (d.LegendSacredTreasureLv == 0 // 未被继承的装备
                 && d.MatchlessSacredTreasureLv == 0
                 && equipmentMb.EquipmentLv != 1
@@ -860,9 +861,9 @@ public partial class MementoMoriFuncs : ReactiveObject
                         .FirstOrDefault(d => _gameConfig.GachaConfig.AutoGachaConsumeUserItems.Exists(consumeUserItem => CheckCount(d, userItems, consumeUserItem.ItemType, consumeUserItem.ItemId)));
                     if (buttonInfo == null) continue;
 
-                    var gachaCaseMb = Masters.GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
-                    var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(buttonInfo.ConsumeUserItem.ItemType, buttonInfo.ConsumeUserItem.ItemId);
-                    var name = Masters.TextResourceTable.Get(itemMb.NameKey);
+                    var gachaCaseMb = GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
+                    var itemMb = ItemTable.GetByItemTypeAndItemId(buttonInfo.ConsumeUserItem.ItemType, buttonInfo.ConsumeUserItem.ItemId);
+                    var name = TextResourceTable.Get(itemMb.NameKey);
                     log($"抽卡 {gachaCaseMb.Memo} {buttonInfo.LotteryCount}次 消耗 {buttonInfo.ConsumeUserItem.ItemCount}个 {name}");
                     var response = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = buttonInfo.GachaButtonId});
                     response.GachaRewardItemList.PrintUserItems(log);
@@ -943,12 +944,12 @@ public partial class MementoMoriFuncs : ReactiveObject
 
                     if (info.IsExistWorldDamageReward)
                     {
-                        var bossMb = Masters.GuildRaidBossTable.GetByGuildRaidBossType(info.GuildRaidDtoInfo.BossType);
+                        var bossMb = GuildRaidBossTable.GetByGuildRaidBossType(info.GuildRaidDtoInfo.BossType);
                         if (bossMb != null)
                         {
                             var worldRewardInfoResponse =
                                 await GetResponse<GetGuildRaidWorldRewardInfoRequest, GetGuildRaidWorldRewardInfoResponse>(new GetGuildRaidWorldRewardInfoRequest() {GuildRaidBossId = bossMb.Id});
-                            var guildRaidRewardMb = Masters.GuildRaidRewardTable.GetByBossId(bossMb.Id);
+                            var guildRaidRewardMb = GuildRaidRewardTable.GetByBossId(bossMb.Id);
                             foreach (var worldDamageBar in guildRaidRewardMb.WorldDamageBarRewards)
                             {
                                 var worldRewardInfo = worldRewardInfoResponse.WorldRewardInfos.FirstOrDefault(d => d.GoalDamage == worldDamageBar.GoalDamage);
@@ -989,7 +990,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         winCount++;
                     }
 
-                    var info = Masters.QuestTable.GetById(targetQuestId).Memo;
+                    var info = QuestTable.GetById(targetQuestId).Memo;
                     var result = win ? "胜" : "负";
                     var m = $"挑战 {info} boss 一次：{result} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}";
                     log(m);
@@ -1039,7 +1040,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     totalCount++;
                     if (win) winCount++;
 
-                    var name = Masters.TextResourceTable.Get(SelectedAutoTowerType);
+                    var name = TextResourceTable.Get(SelectedAutoTowerType);
                     var result = win ? "胜" : "负";
 
                     if (SelectedAutoTowerType == TowerType.Infinite)
@@ -1172,7 +1173,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var equipmentDtoInfo = UserSyncData.UserEquipmentDtoInfos.OrderBy(d => d.ReinforcementLv)
-                .FirstOrDefault(d => !string.IsNullOrEmpty(d.CharacterGuid) && Masters.EquipmentTable.GetById(d.EquipmentId).EquipmentLv > d.ReinforcementLv);
+                .FirstOrDefault(d => !string.IsNullOrEmpty(d.CharacterGuid) && EquipmentTable.GetById(d.EquipmentId).EquipmentLv > d.ReinforcementLv);
             if (equipmentDtoInfo != null)
             {
                 var response = await GetResponse<ReinforcementRequest, ReinforcementResponse>(new ReinforcementRequest() {EquipmentGuid = equipmentDtoInfo.Guid, NumberOfTimes = 1});
@@ -1205,7 +1206,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 foreach (var (rewardId, statusType) in pair.Value.UserMissionActivityDtoInfo.RewardStatusDict)
                     if (statusType == MissionActivityRewardStatusType.NotReceived)
                     {
-                        var rewardMb = Masters.TotalActivityMedalRewardTable.GetById(rewardId);
+                        var rewardMb = TotalActivityMedalRewardTable.GetById(rewardId);
                         log($"领取 {pair.Key} 的 {rewardMb.RequiredActivityMedalCount} 奖励");
                         var response = await GetResponse<RewardMissionActivityRequest, RewardMissionActivityResponse>(
                             new RewardMissionActivityRequest() {MissionGroupType = pair.Key, RequiredCount = rewardMb.RequiredActivityMedalCount});
@@ -1228,7 +1229,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 await UserGetUserData();
                 foreach (var userItemDtoInfo in UserSyncData.UserItemDtoInfo.Where(d => d.ItemCount > 0 && d.ItemType == ItemType.TreasureChest).ToList())
                 {
-                    var treasureChestMb = Masters.TreasureChestTable.GetById(userItemDtoInfo.ItemId);
+                    var treasureChestMb = TreasureChestTable.GetById(userItemDtoInfo.ItemId);
                     if (treasureChestMb.TreasureChestLotteryType == TreasureChestLotteryType.Fix ||
                         treasureChestMb.TreasureChestLotteryType == TreasureChestLotteryType.Random)
                         if (userItemDtoInfo.ItemCount >= treasureChestMb.MinOpenCount)
@@ -1264,7 +1265,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 OpenCount = (int) openCount,
                 TreasureChestId = treasureChestMb.Id
             });
-            log($"打开物品 {Masters.TextResourceTable.Get(treasureChestMb.NameKey)} x {openCount}");
+            log($"打开物品 {TextResourceTable.Get(treasureChestMb.NameKey)} x {openCount}");
             response.RewardItems.PrintUserItems(log);
         }
     }
@@ -1306,10 +1307,10 @@ public partial class MementoMoriFuncs : ReactiveObject
                         new() {TargetGuid = main.Guid, MaterialGuid1 = materials[0].Guid, MaterialGuid2 = materials.Count == 1 ? null : materials[1].Guid}
                     }
                 });
-                Masters.CharacterTable.GetCharacterName(main.CharacterId, out var name1, out var name2);
+                CharacterTable.GetCharacterName(main.CharacterId, out var name1, out var name2);
                 if (!name2.IsNullOrEmpty()) name1 = $"[{name2}] {name1}";
 
-                log($"消耗了角色 {name1} X {count}, {Masters.TextResourceTable.Get(main.RarityFlags)}");
+                log($"消耗了角色 {name1} X {count}, {TextResourceTable.Get(main.RarityFlags)}");
             }
         }
     }
