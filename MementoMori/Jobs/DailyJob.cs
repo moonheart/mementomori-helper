@@ -3,7 +3,6 @@
 namespace MementoMori.Jobs;
 
 [DisallowConcurrentExecution]
-[Cron("0 20 4 ? * *")]
 public class DailyJob: IJob
 {
     private MementoMoriFuncs _mementoMoriFuncs;

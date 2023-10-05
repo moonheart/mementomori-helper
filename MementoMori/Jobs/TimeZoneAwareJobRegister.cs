@@ -25,16 +25,14 @@ public class TimeZoneAwareJobRegister
         }
 
         var scheduler = await _schedulerFactory.GetScheduler();
-        AddJob<DailyJob>(scheduler);
-        AddJob<HourlyJob>(scheduler);
-        AddJob<PvpJob>(scheduler);
+        AddJob<DailyJob>(scheduler, _gameConfig.AutoJob.DailyJobCron);
+        AddJob<HourlyJob>(scheduler, _gameConfig.AutoJob.HourlyJobCron);
+        AddJob<PvpJob>(scheduler, _gameConfig.AutoJob.PvpJobCron);
     }
 
-    private void AddJob<T>(IScheduler scheduler) where T : IJob
+    private void AddJob<T>(IScheduler scheduler, string cron) where T : IJob
     {
         var type = typeof(T);
-        var cronAttribute = type.GetCustomAttribute(typeof(CronAttribute)) as CronAttribute;
-        if (cronAttribute == null) return;
         var jobKey = new JobKey(type.FullName!);
         var jobDetail = JobBuilder.Create<T>().WithIdentity(jobKey).Build();
 
@@ -42,7 +40,7 @@ public class TimeZoneAwareJobRegister
         var trigger = TriggerBuilder.Create()
             .ForJob(jobKey)
             .WithIdentity($"{type.FullName}-trigger")
-            .WithCronSchedule(cronAttribute.Cron, builer => builer.InTimeZone(customTimeZone))
+            .WithCronSchedule(cron, builer => builer.InTimeZone(customTimeZone))
             .Build();
         scheduler.UnscheduleJob(trigger.Key);
         scheduler.AddJob(jobDetail, true);

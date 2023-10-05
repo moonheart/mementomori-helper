@@ -4,7 +4,6 @@ using Quartz;
 namespace MementoMori.Jobs;
 
 [DisallowConcurrentExecution]
-[Cron("0 30 0,4,8,16,20 ? * *")]
 public class HourlyJob : IJob
 {
     private MementoMoriFuncs _mementoMoriFuncs;

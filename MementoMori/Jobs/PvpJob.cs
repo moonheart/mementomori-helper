@@ -9,7 +9,6 @@ using Quartz;
 namespace MementoMori.Jobs;
 
 [DisallowConcurrentExecution]
-[Cron("0 29 20 ? * *")]
 internal class PvpJob : IJob
 {
     private MementoMoriFuncs _mementoMoriFuncs;

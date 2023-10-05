@@ -130,7 +130,7 @@ After entering the web page, click login once, and then you can operate as you l
 
 The program will execute specific operations at specific times.
 
-### Daily Tasks (Server time: 4:20)
+### Daily Tasks (Server time: 4:10)
 
 - Claim daily login rewards
 - Claim daily VIP rewards
@@ -161,7 +161,7 @@ The program will execute specific operations at specific times.
 - Automatic gacha (See gacha configuration below) (See automatic task configuration for details)
 - Use fixed items (See automatic task configuration for details)
 
-### Arena (Server time: 20:29)
+### Arena (Server time: 20:00)
 
 - Arena 5 times (automatically select opponents with the lowest power from the list) (See automatic task configuration for details)
 - Will stop other tasks currently running (e.g., story mode)
@@ -314,7 +314,10 @@ Here's an example:
       "AutoDungeonBattle": true, // Auto Time-Space Cave
       "AutoUseItems": true, // Auto-use fixed items
       "AutoFreeGacha": true, // Auto free gacha
-      "AutoRankUpCharacter": true // Auto merge characters
+      "AutoRankUpCharacter": true, // Auto merge characters
+      "DailyJobCron": "0 10 4 ? * *", // Daily task execution time, default is 4:10
+      "HourlyJobCron": "0 30 0,4,8,12,16,20 ? * *", // Scheduled task execution time, default is 0:30,4:30,8:30,12:30,16:30,20:30
+      "PvpJobCron": "0 0 20 ? * *"// Arena task execution time, default is 20:00
     }
   }
 }
