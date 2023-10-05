@@ -289,4 +289,7 @@
   <data name="Success" xml:space="preserve">
       <value>成功</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+      <value>未知</value>
+  </data>
 </root>

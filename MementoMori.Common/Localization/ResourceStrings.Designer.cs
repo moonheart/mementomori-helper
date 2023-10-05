@@ -556,7 +556,7 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
-        ///   查找类似  的本地化字符串。
+        ///   查找类似 Unkonow 的本地化字符串。
         /// </summary>
         public static string Unknown {
             get {

@@ -19,6 +19,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Update="Localization\ResourceStrings.ja-jp.resx">
+        <DependentUpon>ResourceStrings.resx</DependentUpon>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Localization\ResourceStrings.ko-kr.resx">
+        <DependentUpon>ResourceStrings.resx</DependentUpon>
+      </EmbeddedResource>
       <EmbeddedResource Update="Localization\ResourceStrings.resx">
         <SubType>Designer</SubType>
         <LastGenOutput>ResourceStrings.Designer.cs</LastGenOutput>
