@@ -100,12 +100,19 @@ public partial class MementoMoriFuncs
     {
         if (File.Exists("account.xml"))
         {
-            var doc = new XmlDocument();
-            doc.Load("account.xml");
-            var userId = doc.SelectSingleNode("/map/string[@name='0_Userid']").FirstChild.Value;
-            var clientKey = doc.SelectSingleNode("/map/string[@name='0_ClientKey']").FirstChild.Value.Replace("%22", "");
-            _authOption.UserId = long.Parse(userId);
-            _authOption.ClientKey = clientKey;
+            try
+            {
+                var doc = new XmlDocument();
+                doc.Load("account.xml");
+                var userId = doc.SelectSingleNode("/map/string[@name='0_Userid']").FirstChild.Value;
+                var clientKey = doc.SelectSingleNode("/map/string[@name='0_ClientKey']").FirstChild.Value.Replace("%22", "");
+                _authOption.UserId = long.Parse(userId);
+                _authOption.ClientKey = clientKey;
+            }
+            catch (XmlException)
+            {
+                _logger.LogInformation("account.xml format error");
+            }
         }
     }
 
