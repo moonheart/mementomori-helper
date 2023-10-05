@@ -1,4 +1,6 @@
-﻿# MementoMori 游戏助手
+﻿[[Zh](readme.md)|[En](readme.en.md)]
+
+# MementoMori 游戏助手
 
 施工中 
 
