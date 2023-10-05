@@ -97,7 +97,7 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
-        ///   查找类似 Challage {0} layer one time：{1},  {5}/10,total：{2}, Success：{3}, Err: {4} 的本地化字符串。
+        ///   查找类似 Challage {0} {1} layer one time：{2},  {6}/10,total：{3}, Success：{4}, Err: {5} 的本地化字符串。
         /// </summary>
         public static string AutoTowerElementExecMsg {
             get {
@@ -106,7 +106,7 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
-        ///   查找类似 Challage {0} layer one time：{1},  total：{2}, Success：{3}, Err: {4} 的本地化字符串。
+        ///   查找类似 Challage {0} {1} layer one time：{2},  total：{3}, Success：{4}, Err: {5} 的本地化字符串。
         /// </summary>
         public static string AutoTowerInfiniteExecMsg {
             get {

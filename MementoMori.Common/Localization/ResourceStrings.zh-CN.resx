@@ -262,17 +262,16 @@
       <value>战斗结果</value>
   </data>
   <data name="AutoBossExecMessage" xml:space="preserve">
-      <value>挑战 {0} boss 一次：{1},  总次数：{2}, 胜利次数：{3}, Err: {4}</value>
+      <value>挑战 {0} boss 一次：{1},  总次数：{2}, 胜利次数: {3}, Err: {4}</value>
   </data>
   <data name="AutoBossErrorMessage" xml:space="preserve">
       <value>错误达到了 {0} 次, 中断</value>
   </data>
   <data name="AutoTowerInfiniteExecMsg" xml:space="preserve">
-      <value>挑战 {0} 层一次：{1},  总次数：{2}, 胜利次数：{3}, Err: {4}</value>
+      <value>挑战 {0} {1} 层一次: {2},  总次数: {3}, 胜利次数: {4}, Err: {5}</value>
   </data>
   <data name="AutoTowerElementExecMsg" xml:space="preserve">
-      <value>挑战 {0} 层一次：{1},  {5}/10 ,总次数：{2}, 胜利次数：{3}, Err: {4}
-</value>
+      <value>挑战 {0} {1} 层一次: {2},  {6}/10 ,总次数: {3}, 胜利次数: {4}, Err: {5}</value>
   </data>
   <data name="NoAvailable" xml:space="preserve">
       <value>没有可用的 {0}</value>

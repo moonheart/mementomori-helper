@@ -24,10 +24,10 @@
         <value>SABC 등급을 자동으로 정제하고 D 등급으로 마법 장비를 계승합니다</value>
     </data>
     <data name="AutoTowerElementExecMsg" xml:space="preserve">
-        <value>{0} 층에 도전 1회: {1}, {5}/10, 총 시도 횟수: {2}, 승리 횟수: {3}, 오류: {4}</value>
+        <value>{0} {1} 층에 도전 1회: {2}, {6}/10, 총 시도 횟수: {3}, 승리 횟수: {4}, 오류: {5}</value>
     </data>
     <data name="AutoTowerInfiniteExecMsg" xml:space="preserve">
-        <value>{0} 층에 도전 1회: {1}, 총 시도 횟수: {2}, 승리 횟수: {3}, 오류: {4}</value>
+        <value>{0} {1} 층에 도전 1회: {2}, 총 시도 횟수: {3}, 승리 횟수: {4}, 오류: {5}</value>
     </data>
     <data name="BattleResult" xml:space="preserve">
         <value>전투 결과</value>

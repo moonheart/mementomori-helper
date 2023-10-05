@@ -24,10 +24,10 @@
         <value>SABCを自動的に精錬し、D級に魔法装備を引き継ぐ</value>
     </data>
     <data name="AutoTowerElementExecMsg" xml:space="preserve">
-        <value>{0} 層に挑戦 1 回：{1}、{5}/10、合計回数：{2}、勝利回数：{3}、エラー：{4}</value>
+        <value>{0} {1} 層に挑戦 1 回：{2}、{6}/10、合計回数：{3}、勝利回数：{4}、エラー：{5}</value>
     </data>
     <data name="AutoTowerInfiniteExecMsg" xml:space="preserve">
-        <value>{0} 層に挑戦 1 回：{1}、合計回数：{2}、勝利回数：{3}、エラー：{4}</value>
+        <value>{0} {1}層に挑戦 1 回：{2}、合計回数：{3}、勝利回数：{4}、エラー：{5}</value>
     </data>
     <data name="BattleResult" xml:space="preserve">
         <value>戦闘結果</value>
