@@ -338,10 +338,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId,
                         QuickCount = 3
                     });
-                if (bossQuickResponse.BattleRewardResult == null)
-                {
-                    return;
-                }
+                if (bossQuickResponse.BattleRewardResult == null) return;
 
                 log($"{TextResourceTable.Get("[AutoBattleButtonQuickForward]")}：\n");
                 bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
@@ -675,7 +672,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
                 if (sEquipments.Count == 0)
                 {
-                    log("没有圣装了");
+                    log(ResourceStrings.NoLegendEquip);
                     break;
                 }
 
@@ -737,11 +734,11 @@ public partial class MementoMoriFuncs : ReactiveObject
                     InheritanceEquipmentGuid = userEquipmentDtoInfo.Guid,
                     SourceEquipmentGuid = info.Guid
                 });
-            log($"继承完成 {mb.Memo}=>{userEquipmentDtoInfo.Guid}");
+            log($"{TextResourceTable.Get("[EquipmentInheritanceButton]")}{ResourceStrings.Finished} {mb.Memo}=>{EquipmentTable.GetById(userEquipmentDtoInfo.EquipmentId).Memo}");
         }
         else
         {
-            log("没有找到可被继承的D装");
+            log(ResourceStrings.NoInheritableDRarityEquip);
         }
 
         return usersyncData;
@@ -757,7 +754,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 var availableCount = OrtegaConst.Shop.MonthlyBoostBattleQuickBonus - autoResponse.UserBattleAuto.QuickTodayUsePrivilegeCount;
                 if (availableCount > 0)
                 {
-                    log($"月卡免费高速战斗 {availableCount} 次");
+                    log(TextResourceTable.Get("[MonthlyBoostPrivilegeDescription3]"));
                     await BattleQuick(log, QuestQuickExecuteType.Privilege, (int) availableCount);
                 }
             }
@@ -765,11 +762,11 @@ public partial class MementoMoriFuncs : ReactiveObject
             // 每天有一次免费
             if (autoResponse.UserBattleAuto.QuickTodayUseCurrencyCount >= 1)
             {
-                log("今日没有免费高速战斗次数了");
+                log(TextResourceTable.GetErrorCodeMessage(ErrorCode.BattleAutoNotEnoughPrivilegeCount));
             }
             else
             {
-                log("冒险高速战斗奖励：\n");
+                log($"{TextResourceTable.Get("[AutoBattleButtonQuickForward]")}{TextResourceTable.Get("[CommonRewardLabel]")}：\n");
                 await BattleQuick(log, QuestQuickExecuteType.Currency, 1);
             }
         });
@@ -779,12 +776,12 @@ public partial class MementoMoriFuncs : ReactiveObject
             var req = new QuickRequest() {QuestQuickExecuteType = type, QuickCount = count};
             var quickResponse = await GetResponse<QuickRequest, QuickResponse>(req);
 
-            log($"金币 {quickResponse.AutoBattleRewardResult.GoldByPopulation}");
-            log($"潜能宝珠 {quickResponse.AutoBattleRewardResult.PotentialJewelByPopulation}");
-            log($"角色经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.CharacterExp}");
-            log($"额外金币 {quickResponse.AutoBattleRewardResult.BattleRewardResult.ExtraGold}");
-            log($"用户经验 {quickResponse.AutoBattleRewardResult.BattleRewardResult.PlayerExp}");
-            log($"升级 {quickResponse.AutoBattleRewardResult.BattleRewardResult.RankUp}");
+            log($"{TextResourceTable.Get("[AutoBattleRewardInfoPopulationLabel]")} {TextResourceTable.Get("[ItemName5]")} {quickResponse.AutoBattleRewardResult.GoldByPopulation}");
+            log($"{TextResourceTable.Get("[AutoBattleRewardInfoPopulationLabel]")} {TextResourceTable.Get("[ItemName11]")} {quickResponse.AutoBattleRewardResult.PotentialJewelByPopulation}");
+            log($"{TextResourceTable.Get("[ItemName6]")} {quickResponse.AutoBattleRewardResult.BattleRewardResult.CharacterExp}");
+            log($"{TextResourceTable.Get("[ItemName5]")} {quickResponse.AutoBattleRewardResult.BattleRewardResult.ExtraGold}");
+            log($"{TextResourceTable.Get("[ItemName11]")} {quickResponse.AutoBattleRewardResult.BattleRewardResult.PlayerExp}");
+            log($"{TextResourceTable.Get("[CharacterLevelUpLabel]")} {quickResponse.AutoBattleRewardResult.BattleRewardResult.RankUp}");
 
             quickResponse.AutoBattleRewardResult.BattleRewardResult.FixedItemList.PrintUserItems(log);
             quickResponse.AutoBattleRewardResult.BattleRewardResult.DropItemList.PrintUserItems(log);
@@ -796,17 +793,13 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             await AutoDungeonBattle(log, token);
-            log("完成");
+            log($"{TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")}{ResourceStrings.Finished}");
         });
     }
 
     public async Task GetMyPage()
     {
-        await ExecuteQuickAction(async (log, token) =>
-        {
-            Mypage = await GetResponse<GetMypageRequest, GetMypageResponse>(new GetMypageRequest());
-            log("完成");
-        });
+        await ExecuteQuickAction(async (log, token) => { Mypage = await GetResponse<GetMypageRequest, GetMypageResponse>(new GetMypageRequest()); });
     }
 
     public async Task Debug()
@@ -849,7 +842,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             {
             }
 
-            log("没有可以执行的抽卡了");
+            log(ResourceStrings.NoAvailableGacha);
 
             async Task<bool> DoFreeGacha()
             {
@@ -864,7 +857,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var gachaCaseMb = GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
                     var itemMb = ItemTable.GetByItemTypeAndItemId(buttonInfo.ConsumeUserItem.ItemType, buttonInfo.ConsumeUserItem.ItemId);
                     var name = TextResourceTable.Get(itemMb.NameKey);
-                    log($"抽卡 {gachaCaseMb.Memo} {buttonInfo.LotteryCount}次 消耗 {buttonInfo.ConsumeUserItem.ItemCount}个 {name}");
+                    log(string.Format(ResourceStrings.GachaExecInfo, gachaCaseMb.Memo, buttonInfo.LotteryCount, name, buttonInfo.ConsumeUserItem.ItemCount));
                     var response = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = buttonInfo.GachaButtonId});
                     response.GachaRewardItemList.PrintUserItems(log);
                     response.BonusRewardItemList.PrintUserItems(log);
@@ -896,9 +889,9 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var response1 = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
-            log($"公会 Id {response1.GuildId}");
+            log($"{TextResourceTable.Get("[GuildId]")} {response1.GuildId}");
             var response2 = await GetResponse<GetGuildBaseInfoRequest, GetGuildBaseInfoResponse>(new GetGuildBaseInfoRequest() {BelongGuildId = response1.GuildId});
-            log("签到成功");
+            log($"{TextResourceTable.Get("[MissionName533]")} {ResourceStrings.Finished}");
             response2.UserSyncData.GivenItemCountInfoList.PrintUserItems(log);
         });
     }
@@ -908,7 +901,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var response1 = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
-            log($"公会 Id {response1.GuildId}");
+            log($"{TextResourceTable.Get("[GuildId]")} {response1.GuildId}");
             bool hasRaid;
             do
             {
@@ -922,20 +915,16 @@ public partial class MementoMoriFuncs : ReactiveObject
                         {
                             var response3 = await GetResponse<QuickStartGuildRaidRequest, QuickStartGuildRaidResponse>(new QuickStartGuildRaidRequest()
                                 {BelongGuildId = response1.GuildId, GuildRaidBossType = info.GuildRaidDtoInfo.BossType});
-                            log($"战斗结果: {response3.BattleSimulationResult.BattleEndInfo.IsWinAttacker()}");
-                            log("固定掉落");
+                            log($"{ResourceStrings.BattleResult}: {response3.BattleSimulationResult.BattleEndInfo.IsWinAttacker()}");
                             response3.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                            log("随机掉落");
                             response3.BattleRewardResult.DropItemList.PrintUserItems(log);
                         }
                         else
                         {
                             var response3 = await GetResponse<StartGuildRaidRequest, StartGuildRaidResponse>(new StartGuildRaidRequest()
                                 {BelongGuildId = response1.GuildId, GuildRaidBossType = info.GuildRaidDtoInfo.BossType});
-                            log($"战斗结果: {response3.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker()}");
-                            log("固定掉落");
+                            log($"{ResourceStrings.BattleResult}: {response3.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker()}");
                             response3.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                            log("随机掉落");
                             response3.BattleRewardResult.DropItemList.PrintUserItems(log);
                         }
 
@@ -957,7 +946,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                                 {
                                     var resp = await GetResponse<GiveGuildRaidWorldRewardItemRequest, GiveGuildRaidWorldRewardItemResponse>(
                                         new GiveGuildRaidWorldRewardItemRequest {GoalDamage = worldDamageBar.GoalDamage, GuildRaidBossId = bossMb.Id});
-                                    log($"领取世界伤害奖励 {worldDamageBar.GoalDamage}");
+                                    log(TextResourceTable.Get("[GuildRaidCurrentWorldDamageFormat]", worldDamageBar.GoalDamage));
                                     resp.RewardItems.PrintUserItems(log);
                                 }
                             }
@@ -966,7 +955,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 }
             } while (hasRaid);
 
-            log("扫荡讨伐战完成");
+            log($"{TextResourceTable.Get("[QuickBattleTitle]")} {TextResourceTable.Get("[CommonHeaderGuildRaidLabel]")} {ResourceStrings.Finished}");
         });
     }
 
@@ -991,9 +980,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                     }
 
                     var info = QuestTable.GetById(targetQuestId).Memo;
-                    var result = win ? "胜" : "负";
-                    var m = $"挑战 {info} boss 一次：{result} 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}";
-                    log(m);
+                    var result = win ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]");
+                    log(string.Format(ResourceStrings.AutoBossExecMessage, info, result, totalCount, winCount, errCount));
                     if (_gameConfig.AutoRequestDelay > 0) await Task.Delay(_gameConfig.AutoRequestDelay, token);
                 }
                 catch (Exception e)
@@ -1002,7 +990,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     errCount++;
                     if (errCount > Max_Err_Count)
                     {
-                        log($"错误达到了 {Max_Err_Count} 次, 中断");
+                        log(string.Format(ResourceStrings.AutoBossErrorMessage, Max_Err_Count));
                         return;
                     }
 
@@ -1026,7 +1014,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var towerBattleDtoInfo = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == SelectedAutoTowerType);
                     if (SelectedAutoTowerType != TowerType.Infinite && towerBattleDtoInfo.TodayClearNewFloorCount >= 10)
                     {
-                        log($"{SelectedAutoTowerType} 塔挑战次数达到上限");
+                        log($"{SelectedAutoTowerType} {TextResourceTable.Get("[ClientErrorMessage1700007]")}");
                         break;
                     }
 
@@ -1041,12 +1029,12 @@ public partial class MementoMoriFuncs : ReactiveObject
                     if (win) winCount++;
 
                     var name = TextResourceTable.Get(SelectedAutoTowerType);
-                    var result = win ? "胜" : "负";
+                    var result = win ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]");
 
                     if (SelectedAutoTowerType == TowerType.Infinite)
-                        log($"挑战 {name} {targetQuestId} 层一次：{result}, 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}");
+                        log(string.Format(ResourceStrings.AutoTowerInfiniteExecMsg, name, targetQuestId, result, totalCount, winCount, errCount));
                     else
-                        log($"挑战 {name} {targetQuestId}层一次：{result}, {towerBattleDtoInfo.TodayClearNewFloorCount}/10 总次数：{totalCount} 胜利次数：{winCount}, Err: {errCount}");
+                        log(string.Format(ResourceStrings.AutoTowerElementExecMsg, name, targetQuestId, result, totalCount, winCount, errCount, towerBattleDtoInfo.TodayClearNewFloorCount));
                     if (_gameConfig.AutoRequestDelay > 0) await Task.Delay(_gameConfig.AutoRequestDelay, token);
                 }
                 catch (Exception e)
@@ -1055,7 +1043,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     errCount++;
                     if (errCount > Max_Err_Count)
                     {
-                        log($"错误达到了 {Max_Err_Count} 次, 中断");
+                        log(string.Format(ResourceStrings.AutoBossErrorMessage, Max_Err_Count));
                         return;
                     }
 
@@ -1074,7 +1062,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 // await UserGetUserData();
                 var equipment = UserSyncData.UserEquipmentDtoInfos.First(d => d.Guid == EquipmentId);
                 var m =
-                    $"打磨装备 {totalCount} 耐力 {equipment.AdditionalParameterHealth} 魔力 {equipment.AdditionalParameterIntelligence} 力量 {equipment.AdditionalParameterMuscle} 战技 {equipment.AdditionalParameterEnergy}";
+                    $"{TextResourceTable.Get("[CommonForgedLabel]")} {totalCount}, {TextResourceTable.Get(BaseParameterType.Health)} {equipment.AdditionalParameterHealth},{TextResourceTable.Get(BaseParameterType.Intelligence)} {equipment.AdditionalParameterIntelligence},{TextResourceTable.Get(BaseParameterType.Muscle)} {equipment.AdditionalParameterMuscle},{TextResourceTable.Get(BaseParameterType.Energy)} {equipment.AdditionalParameterEnergy}";
                 log(m);
                 switch (EquipmentTrainingTargetType)
                 {
@@ -1118,7 +1106,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         }
         else
         {
-            AddLog("没有可以重置的赏金任务");
+            AddLog(string.Format(ResourceStrings.NoAvailable, TextResourceTable.Get("[BountyQuestTypeSolo]")));
         }
     }
 
@@ -1130,12 +1118,13 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public async Task GetNoticeInfoList()
     {
+        var countryCode = OrtegaConst.Addressable.LanguageNameDictionary[_networkManager.LanguageType];
         var response = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()
         {
             AccessType = NoticeAccessType.Title,
             CategoryType = NoticeCategoryType.NoticeTab,
-            CountryCode = "CN",
-            LanguageType = LanguageType.zhTW,
+            CountryCode = countryCode,
+            LanguageType = _networkManager.LanguageType,
             UserId = _authOption.UserId
         });
         NoticeInfoList = response.NoticeInfoList;
@@ -1143,8 +1132,8 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             AccessType = NoticeAccessType.MyPage,
             CategoryType = NoticeCategoryType.EventTab,
-            CountryCode = "CN",
-            LanguageType = LanguageType.zhTW,
+            CountryCode = countryCode,
+            LanguageType = _networkManager.LanguageType,
             UserId = _authOption.UserId
         });
         EventInfoList = response2.NoticeInfoList;
@@ -1177,7 +1166,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             if (equipmentDtoInfo != null)
             {
                 var response = await GetResponse<ReinforcementRequest, ReinforcementResponse>(new ReinforcementRequest() {EquipmentGuid = equipmentDtoInfo.Guid, NumberOfTimes = 1});
-                log($"强化一次完成");
+                log($"{TextResourceTable.Get("[CommonReinforceLabel]")} {ResourceStrings.Finished}");
             }
         });
     }
@@ -1207,9 +1196,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                     if (statusType == MissionActivityRewardStatusType.NotReceived)
                     {
                         var rewardMb = TotalActivityMedalRewardTable.GetById(rewardId);
-                        log($"领取 {pair.Key} 的 {rewardMb.RequiredActivityMedalCount} 奖励");
-                        var response = await GetResponse<RewardMissionActivityRequest, RewardMissionActivityResponse>(
-                            new RewardMissionActivityRequest() {MissionGroupType = pair.Key, RequiredCount = rewardMb.RequiredActivityMedalCount});
+                        log(string.Format(ResourceStrings.RewardMissionMsg, pair.Key, rewardMb.RequiredActivityMedalCount));
+                        var response = await GetResponse<RewardMissionActivityRequest, RewardMissionActivityResponse>(new RewardMissionActivityRequest() {MissionGroupType = pair.Key, RequiredCount = rewardMb.RequiredActivityMedalCount});
                         response.RewardInfo.ItemList.PrintUserItems(log);
                         response.RewardInfo.CharacterList.PrintCharacterDtos(log);
                     }
@@ -1255,7 +1243,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 }
             } while (successOpen);
 
-            log("没有可使用的物品了");
+            log(TextResourceTable.Get("[CharacterResetErrorMessageNotEnoughDiamond]"));
         });
 
         async Task OpenTreasure(long openCount, TreasureChestMB treasureChestMb, Action<string> log)
@@ -1265,7 +1253,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 OpenCount = (int) openCount,
                 TreasureChestId = treasureChestMb.Id
             });
-            log($"打开物品 {TextResourceTable.Get(treasureChestMb.NameKey)} x {openCount}");
+            log($"{TextResourceTable.Get("[CommonOpenLabel]")} {TextResourceTable.Get(treasureChestMb.NameKey)} x {openCount}");
             response.RewardItems.PrintUserItems(log);
         }
     }
@@ -1276,7 +1264,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             await RankUp(CharacterRarityFlags.R, 3, log);
             await RankUp(CharacterRarityFlags.SR, 2, log);
-            log("角色合成完成");
+            log($"{TextResourceTable.Get("[CharacterMenuTabCharacterRankUp]")} {ResourceStrings.Finished}");
         });
 
         async Task RankUp(CharacterRarityFlags rarityFlags, int count, Action<string> log)
@@ -1310,7 +1298,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 CharacterTable.GetCharacterName(main.CharacterId, out var name1, out var name2);
                 if (!name2.IsNullOrEmpty()) name1 = $"[{name2}] {name1}";
 
-                log($"消耗了角色 {name1} X {count}, {TextResourceTable.Get(main.RarityFlags)}");
+                log($"{TextResourceTable.Get("[ItemBoxTabConsumption]")} {TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")} {name1} X {count}, {TextResourceTable.Get(main.RarityFlags)}");
             }
         }
     }

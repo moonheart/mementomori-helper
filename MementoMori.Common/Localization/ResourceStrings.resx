@@ -172,7 +172,7 @@
       <value>Target Value</value>
   </data>
   <data name="PleaseLogin" xml:space="preserve">
-      <value>Please Click Login to Use Helper</value>
+      <value>Please Click Login to Use Assistant</value>
   </data>
   <data name="NotUnlocked" xml:space="preserve">
       <value>Not Unlocked</value>
@@ -245,5 +245,47 @@
   </data>
   <data name="FindEquipmentCharacter" xml:space="preserve">
       <value>For equipment, find a wearable character, and then unequip once.</value>
+  </data>
+  <data name="NoLegendEquip" xml:space="preserve">
+      <value>No Legend Equipments</value>
+  </data>
+  <data name="NoInheritableDRarityEquip" xml:space="preserve">
+      <value>No Inheritable D Rarity Equipments</value>
+  </data>
+  <data name="NoAvailableGacha" xml:space="preserve">
+      <value>No Available Gacha</value>
+  </data>
+  <data name="GachaExecInfo" xml:space="preserve">
+      <value>Gacha {0} {1} times, used {2}×{3}</value>
+  </data>
+  <data name="BattleResult" xml:space="preserve">
+      <value>Battle Result</value>
+  </data>
+  <data name="AutoBossExecMessage" xml:space="preserve">
+      <value>Challage {0} boss one time：{1},  total：{2}, Success：{3}, Err: {4}</value>
+  </data>
+  <data name="AutoBossErrorMessage" xml:space="preserve">
+      <value>Error count reached {0} times, abort</value>
+  </data>
+  <data name="AutoTowerInfiniteExecMsg" xml:space="preserve">
+      <value>Challage {0} layer one time：{1},  total：{2}, Success：{3}, Err: {4}</value>
+  </data>
+  <data name="AutoTowerElementExecMsg" xml:space="preserve">
+      <value>Challage {0} layer one time：{1},  {5}/10,total：{2}, Success：{3}, Err: {4}</value>
+  </data>
+  <data name="NoAvailable" xml:space="preserve">
+      <value>No Available {0}</value>
+  </data>
+  <data name="RewardMissionMsg" xml:space="preserve">
+      <value>Get {0} 's {1} Reward</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+      <value>Selected</value>
+  </data>
+  <data name="NotSelected" xml:space="preserve">
+      <value>Not Selected</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+      <value>Success</value>
   </data>
 </root>

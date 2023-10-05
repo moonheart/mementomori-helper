@@ -24,9 +24,12 @@
 <PageTitle>主页</PageTitle>
 
 <MudGrid>
-<MudItem md="12">
+@if (!ViewModel.LoginOk)
+{
+    <MudItem md="12">
         <MudAlert Severity="Severity.Warning">@ResourceStrings.PleaseLogin</MudAlert>
-</MudItem>
+    </MudItem>
+}
 <MudItem sm="12" md="6" lg="4" xl="3">
     <MudCard>
         <MudCardHeader Class="justify-space-between">
@@ -123,7 +126,7 @@
             {
                 <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@ViewModel.BountyRequestForceAll" Label="@ResourceStrings.ForceDispatch"></MudSwitch>
             }
-            <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.RemakeBountyRequest" 
+            <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.RemakeBountyRequest"
                        StartIcon="@Icons.Material.Filled.Refresh">@TextResourceTable.Get("[BountyQuestUpdate]") (@TextResourceTable.Get("[CommonAlternativesItemFormat]", TextResourceTable.Get("[CommonCurrencyName]"), 20))</MudButton>
             <MudButton Class="ml-2" Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.GetBountyRequestInfo" StartIcon="@Icons.Material.Filled.Sync">@ResourceStrings.Sync</MudButton>
         </MudPaper>
@@ -233,7 +236,7 @@
             <MudText>@ResourceStrings.QuickActions</MudText>
             <MudSpacer/>
             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="ViewModel.IsQuickActionExecuting" @onclick="ViewModel.ExecuteAllQuickAction">@ResourceStrings.ExecuteAllQuick</MudButton>
-                <MudButton Class="ml-2" Size="Size.Small" Variant="Variant.Filled" Disabled="!ViewModel.IsQuickActionExecuting" @onclick="ViewModel.CancelQuickAction">@TextResourceTable.Get("[CommonCancelLabel]")</MudButton>
+            <MudButton Class="ml-2" Size="Size.Small" Variant="Variant.Filled" Disabled="!ViewModel.IsQuickActionExecuting" @onclick="ViewModel.CancelQuickAction">@TextResourceTable.Get("[CommonCancelLabel]")</MudButton>
         </MudCardHeader>
         <MudCardContent>
             <MudTabs Position="Position.Left" MinimumTabWidth="20px">
@@ -332,7 +335,7 @@
                 </MudStack>
             </Header>
             <ChildContent>
-                    <MudTabPanel Text="@TextResourceTable.Get("[NoticeCategoryTypeEventTab]")">
+                <MudTabPanel Text="@TextResourceTable.Get("[NoticeCategoryTypeEventTab]")">
                     <MudTable Elevation="0" T="NoticeInfo" Items="@ViewModel.EventInfoList" Virtualize="true" Dense="true" Height="400px">
                         <RowTemplate>
                             <MudTd>@(context.Title)</MudTd>
@@ -342,7 +345,7 @@
                         </RowTemplate>
                     </MudTable>
                 </MudTabPanel>
-                        <MudTabPanel Text="@TextResourceTable.Get("[NoticeCategoryTypeNoticeTab]")">
+                <MudTabPanel Text="@TextResourceTable.Get("[NoticeCategoryTypeNoticeTab]")">
                     <MudTable Elevation="0" T="NoticeInfo" Items="@ViewModel.NoticeInfoList" Virtualize="true" Dense="true" Height="400px">
                         <RowTemplate>
                             <MudTd>@(context.Title)</MudTd>

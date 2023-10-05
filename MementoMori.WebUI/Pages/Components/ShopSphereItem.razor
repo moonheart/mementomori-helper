@@ -16,10 +16,10 @@
     </MudCardHeader>
     <MudCardContent>
         <MudSlider Min="1" Max="9" ValueLabel="true" @bind-Value="_buyLv">
-            购买等级 @_buyLv
+            @Masters.TextResourceTable.Get("[EquipmentSphereSynthesisSphereLv]") @_buyLv
         </MudSlider>
         <MudSlider Min="1" Max="MaxBuyCount" ValueLabel="true" @bind-Value="_buyCount">
-            购买数量 @_buyCount
+            @_buyCount
         </MudSlider>
     </MudCardContent>
     <MudCardActions>
@@ -109,7 +109,7 @@
 
     private async Task BuySphere()
     {
-        if (await DialogService.ShowMessageBox("确认购买?", $"将花费 {ConsumeText}") == true)
+        if (await DialogService.ShowMessageBox(Masters.TextResourceTable.Get("[PurchaseConfirmationMessage]"), $"{Masters.TextResourceTable.Get("[ItemBoxTabConsumption]")} {ConsumeText}") == true)
         {
             var response = await ViewModel.GetResponse<BuyItemRequest, BuyItemResponse>(new BuyItemRequest
             {
@@ -117,7 +117,7 @@
                 TradeShopSphereId = Masters.SphereTable.GetByCategoryIdAndLevel(SphereMb.CategoryId, _buyLv).Id,
                 TradeSphereCount = _buyCount
             });
-            await DialogService.ShowMessageBox("提示", "购买成功");
+            await DialogService.ShowMessageBox(Masters.TextResourceTable.Get("[PurchaseConfirmationTitle]"), Masters.TextResourceTable.Get("[ShopDialogResultSucceed]"));
             StateHasChanged();
         }
     }

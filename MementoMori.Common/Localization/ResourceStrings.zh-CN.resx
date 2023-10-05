@@ -246,4 +246,47 @@
   <data name="FindEquipmentCharacter" xml:space="preserve">
       <value>为装备找可穿戴的角色, 然后脱穿一次</value>
   </data>
+  <data name="NoLegendEquip" xml:space="preserve">
+      <value>没有圣装了</value>
+  </data>
+  <data name="NoInheritableDRarityEquip" xml:space="preserve">
+      <value>没有找到可被继承的D装了</value>
+  </data>
+  <data name="NoAvailableGacha" xml:space="preserve">
+      <value>没有可以执行的抽卡了</value>
+  </data>
+  <data name="GachaExecInfo" xml:space="preserve">
+      <value>抽卡 {0} {1} 次, 消耗 {2}×{3}</value>
+  </data>
+  <data name="BattleResult" xml:space="preserve">
+      <value>战斗结果</value>
+  </data>
+  <data name="AutoBossExecMessage" xml:space="preserve">
+      <value>挑战 {0} boss 一次：{1},  总次数：{2}, 胜利次数：{3}, Err: {4}</value>
+  </data>
+  <data name="AutoBossErrorMessage" xml:space="preserve">
+      <value>错误达到了 {0} 次, 中断</value>
+  </data>
+  <data name="AutoTowerInfiniteExecMsg" xml:space="preserve">
+      <value>挑战 {0} 层一次：{1},  总次数：{2}, 胜利次数：{3}, Err: {4}</value>
+  </data>
+  <data name="AutoTowerElementExecMsg" xml:space="preserve">
+      <value>挑战 {0} 层一次：{1},  {5}/10 ,总次数：{2}, 胜利次数：{3}, Err: {4}
+</value>
+  </data>
+  <data name="NoAvailable" xml:space="preserve">
+      <value>没有可用的 {0}</value>
+  </data>
+  <data name="RewardMissionMsg" xml:space="preserve">
+      <value>领取 {0} 的 {1} 奖励</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+      <value>已选择</value>
+  </data>
+  <data name="NotSelected" xml:space="preserve">
+      <value>未选择</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+      <value>成功</value>
+  </data>
 </root>

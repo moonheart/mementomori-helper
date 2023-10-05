@@ -61,6 +61,24 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Error count reached {0} times, abort 的本地化字符串。
+        /// </summary>
+        public static string AutoBossErrorMessage {
+            get {
+                return ResourceManager.GetString("AutoBossErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Challage {0} boss one time：{1},  total：{2}, Success：{3}, Err: {4} 的本地化字符串。
+        /// </summary>
+        public static string AutoBossExecMessage {
+            get {
+                return ResourceManager.GetString("AutoBossExecMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Auto Legend Inheritance To D Rarity 的本地化字符串。
         /// </summary>
         public static string AutoLegendInheritance {
@@ -75,6 +93,33 @@ namespace MementoMori.Common.Localization {
         public static string AutoMatchlessInheritance {
             get {
                 return ResourceManager.GetString("AutoMatchlessInheritance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Challage {0} layer one time：{1},  {5}/10,total：{2}, Success：{3}, Err: {4} 的本地化字符串。
+        /// </summary>
+        public static string AutoTowerElementExecMsg {
+            get {
+                return ResourceManager.GetString("AutoTowerElementExecMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Challage {0} layer one time：{1},  total：{2}, Success：{3}, Err: {4} 的本地化字符串。
+        /// </summary>
+        public static string AutoTowerInfiniteExecMsg {
+            get {
+                return ResourceManager.GetString("AutoTowerInfiniteExecMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Battle Result 的本地化字符串。
+        /// </summary>
+        public static string BattleResult {
+            get {
+                return ResourceManager.GetString("BattleResult", resourceCulture);
             }
         }
         
@@ -214,6 +259,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Gacha {0} {1} times, used {2}×{3} 的本地化字符串。
+        /// </summary>
+        public static string GachaExecInfo {
+            get {
+                return ResourceManager.GetString("GachaExecInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Gacha Result 的本地化字符串。
         /// </summary>
         public static string GachaResult {
@@ -259,6 +313,42 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 No Available {0} 的本地化字符串。
+        /// </summary>
+        public static string NoAvailable {
+            get {
+                return ResourceManager.GetString("NoAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 No Available Gacha 的本地化字符串。
+        /// </summary>
+        public static string NoAvailableGacha {
+            get {
+                return ResourceManager.GetString("NoAvailableGacha", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 No Inheritable D Rarity Equipments 的本地化字符串。
+        /// </summary>
+        public static string NoInheritableDRarityEquip {
+            get {
+                return ResourceManager.GetString("NoInheritableDRarityEquip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 No Legend Equipments 的本地化字符串。
+        /// </summary>
+        public static string NoLegendEquip {
+            get {
+                return ResourceManager.GetString("NoLegendEquip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Nothing to receive 的本地化字符串。
         /// </summary>
         public static string NothingToReceive {
@@ -282,6 +372,15 @@ namespace MementoMori.Common.Localization {
         public static string NotReceived {
             get {
                 return ResourceManager.GetString("NotReceived", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Not Selected 的本地化字符串。
+        /// </summary>
+        public static string NotSelected {
+            get {
+                return ResourceManager.GetString("NotSelected", resourceCulture);
             }
         }
         
@@ -313,7 +412,7 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
-        ///   查找类似 Please Click Login to Use Helper 的本地化字符串。
+        ///   查找类似 Please Click Login to Use Assistant 的本地化字符串。
         /// </summary>
         public static string PleaseLogin {
             get {
@@ -367,11 +466,29 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Get {0} &apos;s {1} Reward 的本地化字符串。
+        /// </summary>
+        public static string RewardMissionMsg {
+            get {
+                return ResourceManager.GetString("RewardMissionMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Reward Medal 的本地化字符串。
         /// </summary>
         public static string RewardMissonActivity {
             get {
                 return ResourceManager.GetString("RewardMissonActivity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Selected 的本地化字符串。
+        /// </summary>
+        public static string Selected {
+            get {
+                return ResourceManager.GetString("Selected", resourceCulture);
             }
         }
         
@@ -390,6 +507,15 @@ namespace MementoMori.Common.Localization {
         public static string Slot {
             get {
                 return ResourceManager.GetString("Slot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Success 的本地化字符串。
+        /// </summary>
+        public static string Success {
+            get {
+                return ResourceManager.GetString("Success", resourceCulture);
             }
         }
         

@@ -1344,7 +1344,7 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 			// Note: this type is marked as 'beforefieldinit'.
 			static Addressable()
 			{
-				throw new NullReferenceException();
+				
 			}
 
 			public static readonly Dictionary<LanguageType, string> LanguageNameDictionary = new ()

@@ -1,4 +1,6 @@
 ﻿@using MementoMori.Ortega.Share.Data.Auth
+@using MementoMori.Common.Localization
+@using MementoMori.Ortega.Share
 
 <MudDialog>
     <DialogContent>
@@ -6,11 +8,11 @@
             <MudListSubheader>
                 @if (selectedPlayerDataInfo != null)
                 {
-                    <MudText>已选择: @(((PlayerDataInfo)selectedPlayerDataInfo).Name)</MudText>
+                    <MudText>@ResourceStrings.Selected: @(((PlayerDataInfo)selectedPlayerDataInfo).Name)</MudText>
                 }
                 else
                 {
-                    <MudText>未选择</MudText>
+                    <MudText>@ResourceStrings.NotSelected</MudText>
                 }
             </MudListSubheader>
             @foreach (var info in PlayerDataInfos)
@@ -26,7 +28,7 @@
         </MudList>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="ConfirmSelection">确定</MudButton>
+        <MudButton OnClick="ConfirmSelection">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
     </DialogActions>
 </MudDialog>
 

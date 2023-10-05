@@ -44,6 +44,7 @@ public class MementoNetworkManager
     public string OrtegaAssetVersion => _meMoriHttpClientHandler.OrtegaAssetVersion;
 
     public CultureInfo CultureInfo { get; private set; } = new("zh-CN");
+    public LanguageType LanguageType => parseLanguageType(CultureInfo);
 
 
     private Uri _apiAuth = new("https://prd1-auth.mememori-boi.com/api/");
