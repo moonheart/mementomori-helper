@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using MementoMori.Common.Localization;
 using MementoMori.Ortega.Common.Data;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.Item;
@@ -84,7 +85,7 @@ namespace MementoMori.Ortega.Common.Utils
                     throw new ArgumentOutOfRangeException(nameof(itemType), itemType, null);
             }
 
-            return "未知";
+            return ResourceStrings.Unknown;
 
             // if ("[CommonItemEquipmentFragmentFormat]" > (ulong)13L)
             // {
@@ -167,13 +168,13 @@ namespace MementoMori.Ortega.Common.Utils
                     break;
                 case ItemType.LevelLinkExp:
                     var levelLinkExpMb = Masters.LevelLinkTable.GetById(itemId);
-                    return "无";
+                    return "None";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(itemType), itemType, null);
             }
 
-            return "未知";
+            return ResourceStrings.Unknown;
         }
 
         public static string GetItemDescription(ItemType itemType, long itemId)
