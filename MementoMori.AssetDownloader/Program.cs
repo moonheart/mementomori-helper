@@ -1,26 +1,43 @@
 ﻿using MementoMori;
-using MessagePack;
-using MementoMori.Exceptions;
-using MementoMori.Ortega.Share.Data.ApiInterface;
-using MementoMori.Ortega.Share.Data;
-using MementoMori.Ortega.Share;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http;
-using System.Reflection;
-using Microsoft.Extensions.Hosting;
 
-namespace ConsoleApp1
+namespace ConsoleApp1;
+
+internal class Program
 {
-    internal class Program
+    private static async Task Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
-            builder.Services.AddSingleton<MementoNetworkManager>();
-            builder.Services.AddHostedService<AssetDownloader>();
+        IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+        configurationBuilder.AddCommandLine(args);
+        configurationBuilder.AddEnvironmentVariables();
+        var configurationRoot = configurationBuilder.Build();
 
-            IHost host = builder.Build();
-            host.Run();
+        IServiceCollection services = new ServiceCollection();
+        services.AddOptions();
+        services.Configure<DownloaderOption>(configurationRoot);
+        services.AddLogging(log => log.AddConsole());
+        services.AddSingleton<TimeManager>();
+        services.AddSingleton<MementoNetworkManager>();
+        services.AddSingleton<AssetDownloader>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        await serviceProvider.GetRequiredService<AssetDownloader>().StartAsync(CancellationToken.None);
+
+        while (true)
+        {
+            var i = Console.Read();
+            if (i == -1) await Task.Delay(1000);
         }
     }
+}
+
+internal class DownloaderOption
+{
+    public string GameOs { get; set; }
+    public string AssetStutioCliPath { get; set; }
+    public string DownloadPath { get; set; }
+    public string AListUrl { get; set; }
+    public string AlistUsername { get; set; }
+    public string AlistPassword { get; set; }
+    public string AListTargetPath { get; set; }
 }

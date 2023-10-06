@@ -115,7 +115,7 @@ public class MementoNetworkManager
     {
         CultureInfo = cultureInfo;
         CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-        CultureInfo.DefaultThreadCurrentUICulture = cultureInfo; 
+        CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         Masters.TextResourceTable.SetLanguageType(parseLanguageType(cultureInfo));
         Masters.LoadAllMasters();
     }
@@ -141,10 +141,10 @@ public class MementoNetworkManager
         };
     }
 
-    public async Task DownloadAssets(CancellationToken cancellationToken)
+    public async Task DownloadAssets(string gameOs, string assetsPath, string assetsTmpPath, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("下载 asset 目录中...");
-        var name = $"{GameOs}/{_meMoriHttpClientHandler.OrtegaAssetVersion}.json";
+        _logger.LogInformation("Downloading asset catalog...");
+        var name = $"{gameOs}/{_meMoriHttpClientHandler.OrtegaAssetVersion}.json";
         var assetCatalogUrl = string.Format(AssetCatalogFixedUriFormat, name);
 
         var content = await _unityHttpClient.GetStringAsync(assetCatalogUrl, cancellationToken);
@@ -152,27 +152,30 @@ public class MementoNetworkManager
         var internalIds = jObject["m_InternalIds"]?.ToObject<string[]>();
         if (internalIds == null)
         {
-            _logger.LogInformation("下载 asset 目录失败, 未解析到 m_InternalIds");
+            _logger.LogInformation("Download asset catalog failed, unable to retrieve m_InternalIds");
             return;
         }
 
-        Directory.CreateDirectory("./Assets");
+        Directory.CreateDirectory(assetsPath);
+        Directory.CreateDirectory(assetsTmpPath);
+        _logger.LogInformation("Downloading assets...");
         await Parallel.ForEachAsync(internalIds, cancellationToken, async (internalId, token) =>
         {
             if (cancellationToken.IsCancellationRequested) return;
             if (!internalId.StartsWith("0#/")) return;
 
             var bundleId = internalId.Substring(3);
-            var localPath = $"./Assets/{bundleId}";
+            var localPath = Path.Combine(assetsPath, bundleId);
             if (File.Exists(localPath)) return;
 
             var bundleUrl = string.Format(AssetCatalogFixedUriFormat, $"{GameOs}/{bundleId}");
-            _logger.LogInformation($"下载 {bundleUrl}");
+            _logger.LogInformation($"download {bundleUrl}");
             var bytes = await ExecWithRetry(async () => await _unityHttpClient.GetByteArrayAsync(bundleUrl, cancellationToken));
-            await File.WriteAllBytesAsync(localPath, bytes, cancellationToken);
+            var localTmpPath = Path.Combine(assetsTmpPath, bundleId);
+            await File.WriteAllBytesAsync(localTmpPath, bytes, cancellationToken);
         });
 
-        _logger.LogInformation("下载 asset 目录完成");
+        _logger.LogInformation("Download assets finished");
     }
 
     private static async Task<T> ExecWithRetry<T>(Func<Task<T>> func, int retryCount = 10)
