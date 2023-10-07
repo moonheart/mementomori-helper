@@ -11,6 +11,8 @@ using MementoMori;
 using MementoMori.AssetDownloader.Alist;
 using Microsoft.Extensions.Options;
 
+using Telegram.Bot;
+
 namespace ConsoleApp1;
 
 internal class AssetDownloader : BackgroundService
@@ -122,10 +124,25 @@ internal class AssetDownloader : BackgroundService
 
         if (isDownloaded)
         {
+            var files = Directory.GetFiles("./Assets-tmp");
+            if (files.Length == 0)
+            {
+                _logger.LogInformation("No assets downloaded, skip");
+                return;
+            }
+
+            await SendNotification($"Assets 有更新, 共更新了 {files.Length} 个文件");
             await ConvertAndUpload(stoppingToken);
             _logger.LogInformation("Download assets from boi finished");
         }
     }
+
+    private static async Task SendNotification(string message)
+    {
+        TelegramBotClient botClient = new(Environment.GetEnvironmentVariable("TELEGRAM_BOT_TOKEN"));
+        await botClient.SendTextMessageAsync(Environment.GetEnvironmentVariable("TELEGRAM_CHAT_ID"), message);
+    }
+
 
     private async Task DownloadAssetsInApk(CancellationToken stoppingToken)
     {
@@ -195,6 +212,14 @@ internal class AssetDownloader : BackgroundService
             var tmpPath = Path.Combine("./Assets-tmp", Path.GetFileName(file));
             File.Copy(file, tmpPath, true);
         }
+
+        var files = Directory.GetFiles("./Assets-tmp");
+        if (files.Length == 0)
+        {
+            _logger.LogInformation("No assets downloaded, skip");
+            return;
+        }
+        await SendNotification($"客户端有更新, {lastVersion}->{version}, 共更新了 {files.Length} 个文件");
 
         await ConvertAndUpload(stoppingToken);
 
