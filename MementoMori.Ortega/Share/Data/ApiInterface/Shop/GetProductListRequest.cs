@@ -3,7 +3,7 @@
 namespace MementoMori.Ortega.Share.Data.ApiInterface.Shop;
 
 [MessagePackObject(true)]
-[OrtegaApi("shop/getList", true, false)]
-public class GetListRequest : ApiRequestBase
+[OrtegaApi("shop/getProductList", true, false)]
+public class GetProductListRequest : ApiRequestBase
 {
 }

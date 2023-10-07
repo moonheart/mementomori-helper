@@ -5,18 +5,16 @@ using MessagePack;
 namespace MementoMori.Ortega.Share.Data.ApiInterface.Shop;
 
 [MessagePackObject(true)]
-[OrtegaApi("shop/buyProduct", true, false)]
-public class BuyProductRequest : ApiRequestBase, IHasSteamTicketApiRequest
+[OrtegaApi("shop/receiveReward", true, false)]
+public class ReceiveRewardRequest : ApiRequestBase
 {
-    public long GivePlayerId { get; set; }
+    public bool IsBulk { get; set; }
 
-    public long MbId { get; set; }
+    public long MBId { get; set; }
 
     public string ProductId { get; set; }
 
-    public string Receipt { get; set; }
+    public long RequiredValue { get; set; }
 
     public ShopProductType ShopProductType { get; set; }
-
-    public string SteamTicket { get; set; }
 }

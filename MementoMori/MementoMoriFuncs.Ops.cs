@@ -46,8 +46,11 @@ using GachaGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Gacha.Get
 using GachaGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Gacha.GetListResponse;
 using PresentGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Present.GetListRequest;
 using PresentGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Present.GetListResponse;
+using ShopGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListRequest;
+using ShopGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListResponse;
 using System.Xml.Linq;
 using MementoMori.Common.Localization;
+using MementoMori.Ortega.Share.Data.ApiInterface.Shop;
 using MementoMori.Ortega.Share.Data.Auth;
 using static MementoMori.Ortega.Share.Masters;
 
@@ -223,6 +226,31 @@ public partial class MementoMoriFuncs : ReactiveObject
             else
             {
                 log($"{TextResourceTable.GetErrorCodeMessage(ErrorCode.VipGetDailyGiftAlreadyGet)}");
+            }
+        });
+    }
+
+    public async Task ReceiveMonthlyBoost()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var listResponse = await GetResponse<ShopGetListRequest, ShopGetListResponse>(new ShopGetListRequest());
+            var shopProductInfo = listResponse.ShopTabInfoList.SelectMany(d => d.ShopProductInfoList).FirstOrDefault(d => d.ShopProductType == ShopProductType.MonthlyBoost);
+            if (shopProductInfo != null && shopProductInfo.ShopProductMonthlyBoost.ExpirationTimeStamp >= DateTimeOffset.Now.ToUnixTimeMilliseconds())
+            {
+                if (shopProductInfo.ShopProductMonthlyBoost.IsAlreadyReceive)
+                {
+                    log($"{TextResourceTable.Get("[CommonMonthlyBoosterLabel]")} {TextResourceTable.Get("[ShopMonthlyBoostRewardDetailReceivedMessage]")}");
+                }
+                else
+                {
+                    var receiveRewardResponse = await GetResponse<ReceiveRewardRequest, ReceiveRewardResponse>(new ReceiveRewardRequest
+                        {MBId = shopProductInfo.MbId, ProductId = shopProductInfo.ShopProductMonthlyBoost.ProductId, ShopProductType = ShopProductType.MonthlyBoost});
+                    log($"{TextResourceTable.Get("[CommonMonthlyBoosterLabel]")} {TextResourceTable.Get("[ShopMonthlyBoostRewardDetailReceivedMessage]")}");
+                    receiveRewardResponse.RewardInfo.ItemList.PrintUserItems(log);
+                    receiveRewardResponse.RewardInfo.BonusItemList.PrintUserItems(log);
+                    receiveRewardResponse.RewardInfo.CharacterList.PrintCharacterDtos(log);
+                }
             }
         });
     }
@@ -1197,7 +1225,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                     {
                         var rewardMb = TotalActivityMedalRewardTable.GetById(rewardId);
                         log(string.Format(ResourceStrings.RewardMissionMsg, pair.Key, rewardMb.RequiredActivityMedalCount));
-                        var response = await GetResponse<RewardMissionActivityRequest, RewardMissionActivityResponse>(new RewardMissionActivityRequest() {MissionGroupType = pair.Key, RequiredCount = rewardMb.RequiredActivityMedalCount});
+                        var response = await GetResponse<RewardMissionActivityRequest, RewardMissionActivityResponse>(new RewardMissionActivityRequest()
+                            {MissionGroupType = pair.Key, RequiredCount = rewardMb.RequiredActivityMedalCount});
                         response.RewardInfo.ItemList.PrintUserItems(log);
                         response.RewardInfo.CharacterList.PrintCharacterDtos(log);
                     }
@@ -1307,6 +1336,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await GetLoginBonus();
         await GetVipGift();
+        await ReceiveMonthlyBoost();
         await GetAutoBattleReward();
         await BulkTransferFriendPoint();
         await PresentReceiveItem();

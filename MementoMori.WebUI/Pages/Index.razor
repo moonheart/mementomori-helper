@@ -247,6 +247,7 @@
                     <MudPaper Elevation="0" Class="pa-2">
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetLoginBonus">@TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")</MudButton>
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetVipGift">@TextResourceTable.Get("[VipDailyRewardLabelFormat]", ViewModel.UserSyncData?.UserStatusDtoInfo?.Vip)</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.ReceiveMonthlyBoost">@TextResourceTable.Get("[CommonMonthlyBoosterLabel]")</MudButton>
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.GetAutoBattleReward">@TextResourceTable.Get("[AutoBattleRewardInfoRewardLabel]")</MudButton>
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.BulkTransferFriendPoint">@TextResourceTable.Get("[ItemName9]")</MudButton>
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.PresentReceiveItem">@TextResourceTable.Get("[MyPagePresentBoxButtonTitle]")</MudButton>

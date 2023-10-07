@@ -5,12 +5,8 @@ using MessagePack;
 namespace MementoMori.Ortega.Share.Data.ApiInterface.Shop;
 
 [MessagePackObject(true)]
-public class BuyProductResponse : ApiResponseBase, IUserSyncApiResponse
+public class ReceiveRewardResponse : ApiResponseBase, IUserSyncApiResponse
 {
-    public long GivenPlayerId { get; set; }
-
-    public string GivenPlayerName { get; set; }
-
     public AcquisitionShopRewardInfo RewardInfo { get; set; }
 
     public ShopProductInfo ShopProductInfo { get; set; }
