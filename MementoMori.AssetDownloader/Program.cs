@@ -28,4 +28,5 @@ internal class DownloaderOption
     public string AlistUsername { get; set; }
     public string AlistPassword { get; set; }
     public string AListTargetPath { get; set; }
+    public string ApkVersionFile { get; set; }
 }
