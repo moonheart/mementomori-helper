@@ -146,6 +146,7 @@ public class MementoNetworkManager
         _logger.LogInformation("Downloading asset catalog...");
         var name = $"{gameOs}/{_meMoriHttpClientHandler.OrtegaAssetVersion}.json";
         var assetCatalogUrl = string.Format(AssetCatalogFixedUriFormat, name);
+        _logger.LogInformation($"download {assetCatalogUrl}");
 
         var content = await _unityHttpClient.GetStringAsync(assetCatalogUrl, cancellationToken);
         var jObject = JObject.Parse(content);

@@ -4,30 +4,18 @@ namespace ConsoleApp1;
 
 internal class Program
 {
-    private static async Task Main(string[] args)
+    private static void Main(string[] args)
     {
-        IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-        configurationBuilder.AddCommandLine(args);
-        configurationBuilder.AddEnvironmentVariables();
-        var configurationRoot = configurationBuilder.Build();
+        HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-        IServiceCollection services = new ServiceCollection();
-        services.AddOptions();
-        services.Configure<DownloaderOption>(configurationRoot);
-        services.AddLogging(log => log.AddConsole());
-        services.AddSingleton<TimeManager>();
-        services.AddSingleton<MementoNetworkManager>();
-        services.AddSingleton<AssetDownloader>();
+        builder.Services.AddLogging(log => log.AddSimpleConsole(c => c.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] "));
+        builder.Services.AddOptions();
+        builder.Services.Configure<DownloaderOption>(builder.Configuration);
+        builder.Services.AddSingleton<TimeManager>();
+        builder.Services.AddSingleton<MementoNetworkManager>();
+        builder.Services.AddHostedService<AssetDownloader>();
 
-        var serviceProvider = services.BuildServiceProvider();
-
-        await serviceProvider.GetRequiredService<AssetDownloader>().StartAsync(CancellationToken.None);
-
-        while (true)
-        {
-            var i = Console.Read();
-            if (i == -1) await Task.Delay(1000);
-        }
+        builder.Build().Run();
     }
 }
 
