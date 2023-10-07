@@ -1,6 +1,7 @@
 ﻿@inject IJSRuntime JsRuntime
 @inject IDialogService DialogService
-@inject IOptions<GameConfig> gameConfig
+@inject IOptions<GameConfig> GameConfig
+@inject TimeManager TimeManager
 
 @page "/"
 @inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
@@ -122,12 +123,14 @@
         <MudPaper Elevation="0" Class="d-flex">
             <MudText>@TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")</MudText>
             <MudSpacer/>
-            @if (gameConfig.Value.BountyQuestAuto.TargetItems.Count > 0)
+            @if (GameConfig.Value.BountyQuestAuto.TargetItems.Count > 0)
             {
                 <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@ViewModel.BountyRequestForceAll" Label="@ResourceStrings.ForceDispatch"></MudSwitch>
             }
             <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.RemakeBountyRequest"
-                       StartIcon="@Icons.Material.Filled.Refresh">@TextResourceTable.Get("[BountyQuestUpdate]") (@TextResourceTable.Get("[CommonAlternativesItemFormat]", TextResourceTable.Get("[CommonCurrencyName]"), 20))</MudButton>
+                       StartIcon="@Icons.Material.Filled.Refresh">
+                @TextResourceTable.Get("[BountyQuestUpdate]") (@TextResourceTable.Get("[CommonAlternativesItemFormat]", TextResourceTable.Get("[CommonCurrencyName]"), 20))
+            </MudButton>
             <MudButton Class="ml-2" Variant="Variant.Filled" Size="Size.Small" @onclick="ViewModel.GetBountyRequestInfo" StartIcon="@Icons.Material.Filled.Sync">@ResourceStrings.Sync</MudButton>
         </MudPaper>
         <MudPaper Elevation="0">
@@ -142,7 +145,7 @@
                 var status = ResourceStrings.NotStarted;
                 if (info.BountyQuestEndTime > 0)
                 {
-                    var nowMilli = DateTimeOffset.Now.Add(TimeSpan.FromHours(1)).ToUnixTimeMilliseconds();
+                    var nowMilli = DateTimeOffset.Now.Add(TimeManager.DiffFromUtc).ToUnixTimeMilliseconds();
                     if (nowMilli < info.BountyQuestEndTime)
                     {
                         status = ResourceStrings.OnGoing + " " + TimeSpan.FromMilliseconds(info.BountyQuestEndTime - nowMilli).ToString(@"hh\:mm\:ss");

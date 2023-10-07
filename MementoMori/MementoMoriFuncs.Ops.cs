@@ -417,7 +417,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 new BountyQuestGetListRequest());
 
             var questIds = getListResponse.UserBountyQuestDtoInfos
-                .Where(d => d.BountyQuestEndTime > 0 && !d.IsReward && DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds() > d.BountyQuestEndTime)
+                .Where(d => d.BountyQuestEndTime > 0 && !d.IsReward && DateTimeOffset.Now.Add(_timeManager.DiffFromUtc).ToUnixTimeMilliseconds() > d.BountyQuestEndTime)
                 .Select(d => d.BountyQuestId).ToList();
 
             if (questIds.Count > 0)
