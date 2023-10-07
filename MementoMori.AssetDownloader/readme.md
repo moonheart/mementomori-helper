@@ -1,10 +1,10 @@
 # Assets Downloader
 
-Automatically download assets from memento mori.
+Automatically download assets from memento mori. Only `AddressableConvertAssets` parts.
 
 ## Usage
 
-Create docker-compose.yml and .env file in the same directory. Only `AddressableConvertAssets` parts.
+Create docker-compose.yml and .env file in the same directory.
 
 docker-compose.yml
 ```yaml
