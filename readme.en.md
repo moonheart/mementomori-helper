@@ -42,7 +42,7 @@ Under construction
     - [x] One-click claim task rewards
     - [x] One-click claim badge rewards
     - [x] One-click use fixed items
-    - [ ] Automatic claim of monthly card rewards
+    - [x] Automatic claim of monthly card rewards
 - [ ] Exchange Shop
     - [x] Purchase regular items
     - [x] Purchase crystals

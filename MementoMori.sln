@@ -13,6 +13,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MementoMori.Common", "Memen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MementoMori.AssetDownloader", "MementoMori.AssetDownloader\MementoMori.AssetDownloader.csproj", "{748143DA-CCCD-4A14-A63D-D18E2354478B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{B17F2195-516A-4132-958B-08A6E530D7FA}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		build_docker_downloader.sh = build_docker_downloader.sh
+		build_docker_webui.sh = build_docker_webui.sh
+		LICENSE = LICENSE
+		readme.en.md = readme.en.md
+		readme.md = readme.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
