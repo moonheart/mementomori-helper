@@ -1327,7 +1327,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 CharacterTable.GetCharacterName(main.CharacterId, out var name1, out var name2);
                 if (!name2.IsNullOrEmpty()) name1 = $"[{name2}] {name1}";
 
-                log($"{TextResourceTable.Get("[ItemBoxTabConsumption]")} {TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")} {name1} X {count}, {TextResourceTable.Get(main.RarityFlags)}");
+                log($"{TextResourceTable.Get("[ItemBoxButtonUse]")} {TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")} {name1} X {count}, {TextResourceTable.Get(main.RarityFlags)}");
             }
         }
     }
