@@ -49,7 +49,7 @@ public static class Extensions
         return dict1;
     }
 
-    public static bool IsNotNullOrEmpty<T>(this List<T> list)
+    public static bool IsNotNullOrEmpty<T>(this IReadOnlyList<T> list)
     {
         return list != null && list.Count > 0;
     }

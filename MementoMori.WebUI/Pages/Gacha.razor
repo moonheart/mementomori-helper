@@ -93,7 +93,7 @@
     {
         var lotteryItemListResponse = await ViewModel.GetResponse<GetLotteryItemListRequest, GetLotteryItemListResponse>(new() {GachaButtonId = gachaCaseInfo.GachaButtonInfoList.First().GachaButtonId});
         var parameters = new DialogParameters<GachaDetail>();
-        parameters.Add(d => d.GachaCaseUiId, gachaCaseInfo.GachaCaseUiId);
+        parameters.Add(d => d.GachaCaseInfo, gachaCaseInfo);
         parameters.Add(d => d.LotteryItemList, lotteryItemListResponse);
         await DialogService.ShowAsync<GachaDetail>(Masters.TextResourceTable.Get("[CommonDetailLabel]"), parameters, new DialogOptions() { CloseButton = true, CloseOnEscapeKey = true });
     }
