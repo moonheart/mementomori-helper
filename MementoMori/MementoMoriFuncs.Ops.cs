@@ -310,14 +310,14 @@ public partial class MementoMoriFuncs : ReactiveObject
                     catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.PresentReceiveOverLimitCountPresent)
                     {
                         log(e.Message);
-                        foreach (var presentItem in getListResponse.userPresentDtoInfos.SelectMany(d => d.ItemList))
+                        foreach (var presentItem in getListResponse.userPresentDtoInfos.SelectMany(d => d.ItemList).GroupBy(d => new {d.Item.ItemType, d.Item.ItemId}))
                         {
-                            if (presentItem.Item.ItemType == ItemType.QuestQuickTicket)
+                            if (presentItem.Key.ItemType == ItemType.QuestQuickTicket)
                             {
-                                var count = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == presentItem.Item.ItemType && d.ItemId == presentItem.Item.ItemId)?.ItemCount ?? 0;
-                                var itemMb = ItemTable.GetByItemTypeAndItemId(presentItem.Item.ItemType, presentItem.Item.ItemId);
+                                var count = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == presentItem.Key.ItemType && d.ItemId == presentItem.Key.ItemId)?.ItemCount ?? 0;
+                                var itemMb = ItemTable.GetByItemTypeAndItemId(presentItem.Key.ItemType, presentItem.Key.ItemId);
                                 var maxItemCount = itemMb.MaxItemCount;
-                                if (count >= maxItemCount) continue;
+                                if (count < maxItemCount) continue;
 
                                 var name = TextResourceTable.Get(itemMb.NameKey);
                                 var useCount = (int) Math.Floor(maxItemCount * 0.1);
@@ -332,16 +332,16 @@ public partial class MementoMoriFuncs : ReactiveObject
                                 break;
                             }
 
-                            if (presentItem.Item.ItemType == ItemType.Equipment)
+                            if (presentItem.Key.ItemType == ItemType.Equipment)
                             {
-                                var count = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == presentItem.Item.ItemType && d.ItemId == presentItem.Item.ItemId)?.ItemCount ?? 0;
+                                var count = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == presentItem.Key.ItemType && d.ItemId == presentItem.Key.ItemId)?.ItemCount ?? 0;
                                 var maxItemCount = 999;
-                                if (maxItemCount != count) continue;
+                                if (count < maxItemCount) continue;
 
-                                var name = TextResourceTable.Get(EquipmentTable.GetById(presentItem.Item.ItemId).NameKey);
+                                var name = TextResourceTable.Get(EquipmentTable.GetById(presentItem.Key.ItemId).NameKey);
                                 var useCount = (int) Math.Floor(maxItemCount * 0.1);
                                 log($"{ResourceStrings.UseOverLimitItem}: {name}×{useCount}, {count}/{maxItemCount}");
-                                var response = await GetResponse<CastRequest, CastResponse>(new CastRequest {UserEquipment = new UserEquipment(presentItem.Item.ItemId, useCount)});
+                                var response = await GetResponse<CastRequest, CastResponse>(new CastRequest {UserEquipment = new UserEquipment(presentItem.Key.ItemId, useCount)});
                                 response.ResultItemList.PrintUserItems(log);
                                 usedItem = true;
                                 break;
