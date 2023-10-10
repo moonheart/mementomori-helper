@@ -281,6 +281,7 @@ public class MementoNetworkManager
         }
 
         var response = MessagePackSerializer.Deserialize<TResp>(respBytes);
+        if (Debugger.IsAttached) log(response.ToJson());
         if (response is IUserSyncApiResponse userSyncApiResponse) userData?.Invoke(userSyncApiResponse.UserSyncData);
 
         return response;

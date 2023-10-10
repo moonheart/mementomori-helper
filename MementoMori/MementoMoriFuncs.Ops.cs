@@ -140,7 +140,6 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             IsQuickActionExecuting = true;
             _cancellationTokenSource = new CancellationTokenSource();
-            MesssageList.Clear();
             _funcs.Clear();
             _funcs.Enqueue(func);
         }
@@ -984,6 +983,45 @@ public partial class MementoMoriFuncs : ReactiveObject
             } while (hasRaid);
 
             log($"{TextResourceTable.Get("[QuickBattleTitle]")} {TextResourceTable.Get("[CommonHeaderGuildRaidLabel]")} {ResourceStrings.Finished}");
+        });
+    }
+
+    public async Task OpenGuildRaid()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var response1 = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
+            if (response1.GuildId == 0)
+            {
+                log(TextResourceTable.Get("[RankingNotGuild]"));
+                return;
+            }
+
+            var guildMemberInfoResponse = await GetResponse<GetGuildMemberInfoRequest, GetGuildMemberInfoResponse>(new GetGuildMemberInfoRequest {GuildId = response1.GuildId});
+            var playerInfo = guildMemberInfoResponse.PlayerInfoList.Find(d => d.PlayerId == UserSyncData.UserStatusDtoInfo.PlayerId);
+            if (playerInfo.PlayerGuildPositionType == PlayerGuildPositionType.Member || playerInfo.PlayerGuildPositionType == PlayerGuildPositionType.None)
+            {
+                log(TextResourceTable.GetErrorCodeMessage(ErrorCode.GuildRaidNotHavePermission));
+                return;
+            }
+
+            var response2 = await GetResponse<GetGuildRaidInfoRequest, GetGuildRaidInfoResponse>(new GetGuildRaidInfoRequest() {BelongGuildId = response1.GuildId});
+            var guildRaidInfo = response2.GuildRaidInfos.Find(d => d.GuildRaidDtoInfo.BossType == GuildRaidBossType.Releasable);
+            if (guildRaidInfo.IsOpen)
+            {
+                log(TextResourceTable.GetErrorCodeMessage(ErrorCode.GuildRaidAlreadyOpenGuildRaid));
+                return;
+            }
+
+            try
+            {
+                await GetResponse<OpenGuildRaidRequest, OpenGuildRaidResponse>(new OpenGuildRaidRequest {BelongGuildId = response1.GuildId, GuildRaidBossType = GuildRaidBossType.Releasable});
+                log($"{TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")} {ResourceStrings.Success}");
+            }
+            catch (ApiErrorException e)
+            {
+                log(e.Message);
+            }
         });
     }
 

@@ -38,6 +38,7 @@ public class GameConfig
         public string DailyJobCron { get; set; } = "0 10 4 ? * *";
         public string HourlyJobCron { get; set; } = "0 30 0,4,8,12,16,20 ? * *";
         public string PvpJobCron { get; set; } = "0 0 20 ? * *";
+        public string GuildRaidBossReleaseCron { get; set; } = "0 0 * ? * *";
     }
 
     public class BountyQuestAutoModel
