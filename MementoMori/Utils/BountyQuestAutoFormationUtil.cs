@@ -31,7 +31,7 @@ public static class BountyQuestAutoFormationUtil
             var selectedCharacterGuids = new List<string>();
             foreach (var bountyQuestInfo in bountyQuestInfos)
             {
-                if (!force)
+                if (bountyQuestInfos.Key == BountyQuestType.Solo && !force)
                 {
                     var found = bountyQuestConfig.TargetItems.Any(includeItem =>
                         bountyQuestInfo.RewardItems.Exists(d => d.ItemType == includeItem.ItemType && d.ItemId == includeItem.ItemId));
