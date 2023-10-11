@@ -182,7 +182,11 @@
     public bool AutoJob__DisableAll
     {
         get => WritableGameConfig.Value.AutoJob.DisableAll;
-        set => WritableGameConfig.Update(x => x.AutoJob.DisableAll = value);
+        set
+        {
+            WritableGameConfig.Update(x => x.AutoJob.DisableAll = value);
+            TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
     }
 
     public bool AutoJob__AutoReinforcementEquipmentOneTime
