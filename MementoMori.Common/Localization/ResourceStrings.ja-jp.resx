@@ -185,4 +185,43 @@
     <data name="UseOverLimitItem" xml:space="preserve">
         <value>上限に達したアイテムを使用</value>
     </data>
+    <data name="AutoJobSwitchs" xml:space="preserve">
+    <value>オートジョブスイッチ</value>
+</data>
+    <data name="AutoJobCrons" xml:space="preserve">
+    <value>オートジョブクロン</value>
+</data>
+    <data name="DisableAllJobs" xml:space="preserve">
+    <value>すべてのジョブを無効にする</value>
+</data>
+    <data name="AutoGacha" xml:space="preserve">
+    <value>オートガチャ</value>
+</data>
+    <data name="DailyJobCronExpression" xml:space="preserve">
+    <value>デイリージョブクロン式</value>
+</data>
+    <data name="RewardClaimJobCronExpression" xml:space="preserve">
+    <value>報酬クレームジョブクロン式</value>
+</data>
+    <data name="CronExpression" xml:space="preserve">
+    <value>クロン式</value>
+</data>
+    <data name="AutoGachaConsumeItems" xml:space="preserve">
+    <value>オートガチャ消費アイテム</value>
+</data>
+    <data name="BountyQuestTargetItems" xml:space="preserve">
+        <value>以下の報酬が利用可能なときに自動的にタスクをディスパッチ</value>
+    </data>
+    <data name="DungeonBattleTargetItems" xml:space="preserve">
+        <value>自動購入が必要な店舗のアイテム</value>
+    </data>
+    <data name="Others" xml:space="preserve">
+    <value>その他</value>
+</data>
+    <data name="SelectedXItems" xml:space="preserve">
+        <value>{0} 個のアイテムを選択</value>
+    </data>
+    <data name="AutoRequestDelay" xml:space="preserve">
+        <value>自動リクエスト遅延</value>
+    </data>
 </root>

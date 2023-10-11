@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using MementoMori.Option;
 using Microsoft.Extensions.Options;
 using Quartz;
 
@@ -8,27 +9,38 @@ public class TimeZoneAwareJobRegister
 {
     private readonly ISchedulerFactory _schedulerFactory;
     private readonly TimeManager _timeManager;
-    private readonly GameConfig _gameConfig;
+    private readonly IWritableOptions<GameConfig> _gameConfig;
 
-    public TimeZoneAwareJobRegister(ISchedulerFactory schedulerFactory, TimeManager timeManager, IOptions<GameConfig> gameOptions)
+    public TimeZoneAwareJobRegister(ISchedulerFactory schedulerFactory, TimeManager timeManager, IWritableOptions<GameConfig> gameOptions)
     {
         _schedulerFactory = schedulerFactory;
         _timeManager = timeManager;
-        _gameConfig = gameOptions.Value;
+        _gameConfig = gameOptions;
     }
 
     public async Task RegisterJobs()
     {
-        if (_gameConfig.AutoJob.DisableAll)
+        var scheduler = await _schedulerFactory.GetScheduler();
+        if (_gameConfig.Value.AutoJob.DisableAll)
         {
+            RemoveJob<DailyJob>(scheduler);
+            RemoveJob<HourlyJob>(scheduler);
+            RemoveJob<PvpJob>(scheduler);
+            RemoveJob<GuildRaidBossReleaseJob>(scheduler);
             return;
         }
 
-        var scheduler = await _schedulerFactory.GetScheduler();
-        AddJob<DailyJob>(scheduler, _gameConfig.AutoJob.DailyJobCron);
-        AddJob<HourlyJob>(scheduler, _gameConfig.AutoJob.HourlyJobCron);
-        AddJob<PvpJob>(scheduler, _gameConfig.AutoJob.PvpJobCron);
-        AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.AutoJob.GuildRaidBossReleaseCron);
+        AddJob<DailyJob>(scheduler, _gameConfig.Value.AutoJob.DailyJobCron);
+        AddJob<HourlyJob>(scheduler, _gameConfig.Value.AutoJob.HourlyJobCron);
+        AddJob<PvpJob>(scheduler, _gameConfig.Value.AutoJob.PvpJobCron);
+        AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.Value.AutoJob.GuildRaidBossReleaseCron);
+    }
+
+    private void RemoveJob<T>(IScheduler scheduler) where T : IJob
+    {
+        var type = typeof(T);
+        var jobKey = new JobKey(type.FullName!);
+        scheduler.DeleteJob(jobKey);
     }
 
     private void AddJob<T>(IScheduler scheduler, string cron) where T : IJob

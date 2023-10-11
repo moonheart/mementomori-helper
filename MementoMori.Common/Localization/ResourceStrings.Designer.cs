@@ -79,6 +79,42 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Auto Gacha 的本地化字符串。
+        /// </summary>
+        public static string AutoGacha {
+            get {
+                return ResourceManager.GetString("AutoGacha", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Auto Gacha Consume Items 的本地化字符串。
+        /// </summary>
+        public static string AutoGachaConsumeItems {
+            get {
+                return ResourceManager.GetString("AutoGachaConsumeItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Auto Job Crons 的本地化字符串。
+        /// </summary>
+        public static string AutoJobCrons {
+            get {
+                return ResourceManager.GetString("AutoJobCrons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Auto Job Switchs 的本地化字符串。
+        /// </summary>
+        public static string AutoJobSwitchs {
+            get {
+                return ResourceManager.GetString("AutoJobSwitchs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Auto Legend Inheritance To D Rarity 的本地化字符串。
         /// </summary>
         public static string AutoLegendInheritance {
@@ -93,6 +129,15 @@ namespace MementoMori.Common.Localization {
         public static string AutoMatchlessInheritance {
             get {
                 return ResourceManager.GetString("AutoMatchlessInheritance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Auto Request Delay 的本地化字符串。
+        /// </summary>
+        public static string AutoRequestDelay {
+            get {
+                return ResourceManager.GetString("AutoRequestDelay", resourceCulture);
             }
         }
         
@@ -120,6 +165,15 @@ namespace MementoMori.Common.Localization {
         public static string BattleResult {
             get {
                 return ResourceManager.GetString("BattleResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Automatically dispatch tasks when the following rewards are available 的本地化字符串。
+        /// </summary>
+        public static string BountyQuestTargetItems {
+            get {
+                return ResourceManager.GetString("BountyQuestTargetItems", resourceCulture);
             }
         }
         
@@ -169,11 +223,38 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Cron Expression 的本地化字符串。
+        /// </summary>
+        public static string CronExpression {
+            get {
+                return ResourceManager.GetString("CronExpression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Daily Job Cron Expression 的本地化字符串。
+        /// </summary>
+        public static string DailyJobCronExpression {
+            get {
+                return ResourceManager.GetString("DailyJobCronExpression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Designated the target prop 的本地化字符串。
         /// </summary>
         public static string DesignatedTargetProp {
             get {
                 return ResourceManager.GetString("DesignatedTargetProp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Disable All Jobs 的本地化字符串。
+        /// </summary>
+        public static string DisableAllJobs {
+            get {
+                return ResourceManager.GetString("DisableAllJobs", resourceCulture);
             }
         }
         
@@ -201,6 +282,15 @@ namespace MementoMori.Common.Localization {
         public static string DispatchingTargetPropMission {
             get {
                 return ResourceManager.GetString("DispatchingTargetPropMission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Items to be automatically purchased from the shop 的本地化字符串。
+        /// </summary>
+        public static string DungeonBattleTargetItems {
+            get {
+                return ResourceManager.GetString("DungeonBattleTargetItems", resourceCulture);
             }
         }
         
@@ -412,6 +502,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Others 的本地化字符串。
+        /// </summary>
+        public static string Others {
+            get {
+                return ResourceManager.GetString("Others", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Please Click Login to Use Assistant 的本地化字符串。
         /// </summary>
         public static string PleaseLogin {
@@ -466,6 +565,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Reward Claim Job Cron Expression 的本地化字符串。
+        /// </summary>
+        public static string RewardClaimJobCronExpression {
+            get {
+                return ResourceManager.GetString("RewardClaimJobCronExpression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Get {0} &apos;s {1} Reward 的本地化字符串。
         /// </summary>
         public static string RewardMissionMsg {
@@ -489,6 +597,15 @@ namespace MementoMori.Common.Localization {
         public static string Selected {
             get {
                 return ResourceManager.GetString("Selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Selected {0} Items 的本地化字符串。
+        /// </summary>
+        public static string SelectedXItems {
+            get {
+                return ResourceManager.GetString("SelectedXItems", resourceCulture);
             }
         }
         

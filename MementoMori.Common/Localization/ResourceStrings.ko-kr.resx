@@ -185,4 +185,43 @@
     <data name="UseOverLimitItem" xml:space="preserve">
         <value>사용 제한에 도달한 아이템</value>
     </data>
+    <data name="AutoJobSwitchs" xml:space="preserve">
+    <value>자동 작업 스위치</value>
+</data>
+    <data name="AutoJobCrons" xml:space="preserve">
+    <value>자동 작업 크론</value>
+</data>
+    <data name="DisableAllJobs" xml:space="preserve">
+    <value>모든 작업 비활성화</value>
+</data>
+    <data name="AutoGacha" xml:space="preserve">
+    <value>자동 가챠</value>
+</data>
+    <data name="DailyJobCronExpression" xml:space="preserve">
+    <value>매일 작업 크론 표현</value>
+</data>
+    <data name="RewardClaimJobCronExpression" xml:space="preserve">
+    <value>보상 청구 작업 크론 표현</value>
+</data>
+    <data name="CronExpression" xml:space="preserve">
+    <value>크론 표현</value>
+</data>
+    <data name="AutoGachaConsumeItems" xml:space="preserve">
+    <value>자동 가챠 소비 아이템</value>
+</data>
+    <data name="BountyQuestTargetItems" xml:space="preserve">
+        <value>다음 보상이 제공될 때 자동으로 작업을 배치</value>
+    </data>
+    <data name="DungeonBattleTargetItems" xml:space="preserve">
+        <value>가게에서 자동으로 구매해야 하는 항목</value>
+    </data>
+    <data name="Others" xml:space="preserve">
+    <value>기타</value>
+</data>
+    <data name="SelectedXItems" xml:space="preserve">
+        <value>{0}개 항목 선택됨</value>
+    </data>
+    <data name="AutoRequestDelay" xml:space="preserve">
+        <value>자동 요청 지연</value>
+    </data>
 </root>

@@ -291,4 +291,43 @@
   <data name="Unknown" xml:space="preserve">
       <value>Unkonow</value>
   </data>
+  <data name="AutoJobSwitchs" xml:space="preserve">
+      <value>Auto Job Switchs</value>
+  </data>
+  <data name="AutoJobCrons" xml:space="preserve">
+      <value>Auto Job Crons</value>
+  </data>
+  <data name="DisableAllJobs" xml:space="preserve">
+      <value>Disable All Jobs</value>
+  </data>
+  <data name="AutoGacha" xml:space="preserve">
+      <value>Auto Gacha</value>
+  </data>
+  <data name="DailyJobCronExpression" xml:space="preserve">
+      <value>Daily Job Cron Expression</value>
+  </data>
+  <data name="RewardClaimJobCronExpression" xml:space="preserve">
+      <value>Reward Claim Job Cron Expression</value>
+  </data>
+  <data name="CronExpression" xml:space="preserve">
+      <value>Cron Expression</value>
+  </data>
+  <data name="BountyQuestTargetItems" xml:space="preserve">
+      <value>Automatically dispatch tasks when the following rewards are available</value>
+  </data>
+  <data name="DungeonBattleTargetItems" xml:space="preserve">
+      <value>Items to be automatically purchased from the shop</value>
+  </data>
+  <data name="Others" xml:space="preserve">
+      <value>Others</value>
+  </data>
+  <data name="AutoGachaConsumeItems" xml:space="preserve">
+      <value>Auto Gacha Consume Items</value>
+  </data>
+  <data name="SelectedXItems" xml:space="preserve">
+      <value>Selected {0} Items</value>
+  </data>
+  <data name="AutoRequestDelay" xml:space="preserve">
+      <value>Auto Request Delay</value>
+  </data>
 </root>

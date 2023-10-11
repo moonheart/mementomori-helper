@@ -467,12 +467,12 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             var response1 = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new BountyQuestGetListRequest());
-            if (_gameConfig.BountyQuestAuto.TargetItems.Count > 0 && !BountyRequestForceAll)
+            if (GameConfig.BountyQuestAuto.TargetItems.Count > 0 && !BountyRequestForceAll)
             {
-                var itemNames = string.Join(",", _gameConfig.BountyQuestAuto.TargetItems.Select(ItemUtil.GetItemName));
+                var itemNames = string.Join(",", GameConfig.BountyQuestAuto.TargetItems.Select(ItemUtil.GetItemName));
                 log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}: {ResourceStrings.DesignatedTargetProp} {itemNames}");
                 log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}: {ResourceStrings.DispatchingTargetPropMission}");
-                var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData, _gameConfig.BountyQuestAuto);
+                var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData, GameConfig.BountyQuestAuto);
                 foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
                 {
                     var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
@@ -483,7 +483,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             else
             {
                 log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}: {ResourceStrings.DispatchingAll}");
-                var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData, _gameConfig.BountyQuestAuto, true);
+                var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData, GameConfig.BountyQuestAuto, true);
                 foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
                 {
                     var startResponse = await GetResponse<BountyQuestStartRequest, BountyQuestStartResponse>(
@@ -831,11 +831,12 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public async Task Debug()
     {
-        await ExecuteQuickAction(async (log, token) =>
-        {
-            var bossResponse = await GetResponse<BossRequest, BossResponse>(new BossRequest() {QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1});
-            log(bossResponse.ToJson(true));
-        });
+        _writableGameConfig.Update(c => c.AutoRequestDelay = 100);
+        // await ExecuteQuickAction(async (log, token) =>
+        // {
+        //     var bossResponse = await GetResponse<BossRequest, BossResponse>(new BossRequest() {QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1});
+        //     log(bossResponse.ToJson(true));
+        // });
     }
 
     public async Task LogDebug()
@@ -878,7 +879,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 {
                     var userItems = UserSyncData.UserItemDtoInfo.ToList();
                     var buttonInfo = gachaCaseInfo.GachaButtonInfoList.OrderByDescending(d => d.LotteryCount)
-                        .FirstOrDefault(d => _gameConfig.GachaConfig.AutoGachaConsumeUserItems.Exists(consumeUserItem => CheckCount(d, userItems, consumeUserItem.ItemType, consumeUserItem.ItemId)));
+                        .FirstOrDefault(d => GameConfig.GachaConfig.AutoGachaConsumeUserItems.Exists(consumeUserItem => CheckCount(d, userItems, consumeUserItem.ItemType, consumeUserItem.ItemId)));
                     if (buttonInfo == null) continue;
 
                     var gachaCaseMb = GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
@@ -1048,7 +1049,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var info = QuestTable.GetById(targetQuestId).Memo;
                     var result = win ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]");
                     log(string.Format(ResourceStrings.AutoBossExecMessage, info, result, totalCount, winCount, errCount));
-                    if (_gameConfig.AutoRequestDelay > 0) await Task.Delay(_gameConfig.AutoRequestDelay, token);
+                    if (GameConfig.AutoRequestDelay > 0) await Task.Delay(GameConfig.AutoRequestDelay, token);
                 }
                 catch (Exception e)
                 {
@@ -1101,7 +1102,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         log(string.Format(ResourceStrings.AutoTowerInfiniteExecMsg, name, targetQuestId, result, totalCount, winCount, errCount));
                     else
                         log(string.Format(ResourceStrings.AutoTowerElementExecMsg, name, targetQuestId, result, totalCount, winCount, errCount, towerBattleDtoInfo.TodayClearNewFloorCount));
-                    if (_gameConfig.AutoRequestDelay > 0) await Task.Delay(_gameConfig.AutoRequestDelay, token);
+                    if (GameConfig.AutoRequestDelay > 0) await Task.Delay(GameConfig.AutoRequestDelay, token);
                 }
                 catch (Exception e)
                 {
@@ -1378,7 +1379,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await GetAutoBattleReward();
         await BulkTransferFriendPoint();
         await PresentReceiveItem();
-        if (_gameConfig.AutoJob.AutoReinforcementEquipmentOneTime) await ReinforcementEquipmentOneTime();
+        if (GameConfig.AutoJob.AutoReinforcementEquipmentOneTime) await ReinforcementEquipmentOneTime();
         await BattleBossQuick();
         await InfiniteTowerQuick();
         await BossHishSpeedBattle();
@@ -1386,12 +1387,12 @@ public partial class MementoMoriFuncs : ReactiveObject
         await GuildRaid();
         await BountyQuestRewardAuto();
         await BountyQuestStartAuto();
-        if (_gameConfig.AutoJob.AutoDungeonBattle) await AutoDungeonBattle();
+        if (GameConfig.AutoJob.AutoDungeonBattle) await AutoDungeonBattle();
         await CompleteMissions();
         await RewardMissonActivity();
-        if (_gameConfig.AutoJob.AutoUseItems) await AutoUseItems();
-        if (_gameConfig.AutoJob.AutoFreeGacha) await FreeGacha();
-        if (_gameConfig.AutoJob.AutoUseItems) await AutoUseItems();
-        if (_gameConfig.AutoJob.AutoRankUpCharacter) await AutoRankUpCharacter();
+        if (GameConfig.AutoJob.AutoUseItems) await AutoUseItems();
+        if (GameConfig.AutoJob.AutoFreeGacha) await FreeGacha();
+        if (GameConfig.AutoJob.AutoUseItems) await AutoUseItems();
+        if (GameConfig.AutoJob.AutoRankUpCharacter) await AutoRankUpCharacter();
     }
 }

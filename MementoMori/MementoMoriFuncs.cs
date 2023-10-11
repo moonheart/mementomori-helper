@@ -3,6 +3,7 @@ using System.Xml;
 using MementoMori.Common.Localization;
 using MementoMori.Exceptions;
 using MementoMori.Jobs;
+using MementoMori.Option;
 using MementoMori.Ortega.Common.Utils;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data;
@@ -55,12 +56,13 @@ public partial class MementoMoriFuncs
     public bool IsNotClearDungeonBattleMap { get; set; }
 
     private readonly AuthOption _authOption;
-    private readonly GameConfig _gameConfig;
+    private GameConfig GameConfig => _writableGameConfig.Value;
     private readonly ILogger<MementoMoriFuncs> _logger;
 
     private readonly MementoNetworkManager _networkManager;
     private readonly TimeZoneAwareJobRegister _timeZoneAwareJobRegister;
     private readonly TimeManager _timeManager;
+    private readonly IWritableOptions<GameConfig> _writableGameConfig;
 
     private T ReadFromJson<T>(string jsonPath) where T : new()
     {
@@ -77,15 +79,15 @@ public partial class MementoMoriFuncs
         File.WriteAllText(jsonPath, JsonConvert.SerializeObject(value, Formatting.Indented));
     }
 
-    public MementoMoriFuncs(IOptions<AuthOption> authOption, IOptions<GameConfig> gameConfig, ILogger<MementoMoriFuncs> logger, MementoNetworkManager networkManager,
-        TimeZoneAwareJobRegister timeZoneAwareJobRegister, TimeManager timeManager)
+    public MementoMoriFuncs(IOptions<AuthOption> authOption, ILogger<MementoMoriFuncs> logger, MementoNetworkManager networkManager,
+        TimeZoneAwareJobRegister timeZoneAwareJobRegister, TimeManager timeManager, IWritableOptions<GameConfig> writableGameConfig)
     {
         _logger = logger;
         _networkManager = networkManager;
         _timeZoneAwareJobRegister = timeZoneAwareJobRegister;
         _timeManager = timeManager;
+        _writableGameConfig = writableGameConfig;
         _authOption = authOption.Value;
-        _gameConfig = gameConfig.Value;
         AccountXml();
 
         Mypage = new GetMypageResponse();
@@ -99,7 +101,6 @@ public partial class MementoMoriFuncs
     private void AccountXml()
     {
         if (File.Exists("account.xml"))
-        {
             try
             {
                 var doc = new XmlDocument();
@@ -113,7 +114,6 @@ public partial class MementoMoriFuncs
             {
                 _logger.LogInformation("account.xml format error");
             }
-        }
     }
 
     public async Task<List<PlayerDataInfo>> GetPlayerDataInfo()
@@ -252,10 +252,10 @@ public partial class MementoMoriFuncs
                     // 当前已完成，选择下一个节点
                     var nextGrid = grids.FirstOrDefault(d => false);
                     // 先看下一行有没有商店节点,并且有目标物品
-                    if (_gameConfig.DungeonBattle.ShopTargetItems.Count > 0)
+                    if (GameConfig.DungeonBattle.ShopTargetItems.Count > 0)
                         nextGrid = grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
                                                              && d.GridMb.DungeonGridType == DungeonBattleGridType.Shop
-                                                             && _gameConfig.DungeonBattle.ShopTargetItems.Any(x =>
+                                                             && GameConfig.DungeonBattle.ShopTargetItems.Any(x =>
                                                                  battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(y => y.GridGuid == d.Grid.DungeonGridGuid).TradeShopItemList.Any(y => // 商店有目标物品
                                                                      y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
                     // 然后选择战斗节点
@@ -372,9 +372,9 @@ public partial class MementoMoriFuncs
                             break;
                         case DungeonBattleGridType.Shop:
                             var tradeShopItemList = battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(d => d.GridGuid == currentGrid.Grid.DungeonGridGuid).TradeShopItemList;
-                            if (_gameConfig.DungeonBattle.ShopTargetItems.Count > 0)
+                            if (GameConfig.DungeonBattle.ShopTargetItems.Count > 0)
                                 foreach (var tradeShopItem in tradeShopItemList)
-                                    if (_gameConfig.DungeonBattle.ShopTargetItems.Any(d => d.ItemType == tradeShopItem.GiveItem.ItemType && d.ItemId == tradeShopItem.GiveItem.ItemId))
+                                    if (GameConfig.DungeonBattle.ShopTargetItems.Any(d => d.ItemType == tradeShopItem.GiveItem.ItemType && d.ItemId == tradeShopItem.GiveItem.ItemId))
                                     {
                                         // 购买
                                         var execShopResponse = await GetResponse<ExecShopRequest, ExecShopResponse>(new ExecShopRequest
@@ -409,7 +409,7 @@ public partial class MementoMoriFuncs
                             var relicId = 0L;
                             var canUpgradeRelics = battleInfoResponse.UserDungeonDtoInfo.RelicIds
                                 .Where(d => Masters.DungeonBattleRelicTable.GetById(d).DungeonRelicRarityType != DungeonBattleRelicRarityType.SSR).ToList();
-                            foreach (var info in _gameConfig.DungeonBattleRelicSort)
+                            foreach (var info in GameConfig.DungeonBattleRelicSort)
                                 if (canUpgradeRelics.Contains(info.Id))
                                 {
                                     relicId = info.Id;
@@ -460,7 +460,7 @@ public partial class MementoMoriFuncs
 
                             return true;
                         }).ToList();
-                        foreach (var info in _gameConfig.DungeonBattleRelicSort)
+                        foreach (var info in GameConfig.DungeonBattleRelicSort)
                             if (upgradableRelics.Contains(info.Id))
                             {
                                 relicId = info.Id;
@@ -486,7 +486,7 @@ public partial class MementoMoriFuncs
                         // 选择加成奖励
                         var relicId = 0L;
 
-                        foreach (var info in _gameConfig.DungeonBattleRelicSort)
+                        foreach (var info in GameConfig.DungeonBattleRelicSort)
                             if (battleInfoResponse.RewardRelicIds.Contains(info.Id))
                             {
                                 relicId = info.Id;

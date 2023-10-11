@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using MementoMori.Option;
+
+using Microsoft.Extensions.Options;
 using Quartz;
 
 namespace MementoMori.Jobs;
@@ -7,12 +9,12 @@ namespace MementoMori.Jobs;
 public class HourlyJob : IJob
 {
     private MementoMoriFuncs _mementoMoriFuncs;
-    private readonly GameConfig _gameConfig;
+    private readonly IWritableOptions<GameConfig> _gameConfig;
 
-    public HourlyJob(MementoMoriFuncs mementoMoriFuncs, IOptions<GameConfig> gameConfig)
+    public HourlyJob(MementoMoriFuncs mementoMoriFuncs, IWritableOptions<GameConfig> gameConfig)
     {
         _mementoMoriFuncs = mementoMoriFuncs;
-        _gameConfig = gameConfig.Value;
+        _gameConfig = gameConfig;
     }
 
     public async Task Execute(IJobExecutionContext context)
@@ -31,7 +33,7 @@ public class HourlyJob : IJob
         await _mementoMoriFuncs.BountyQuestRewardAuto();
         await _mementoMoriFuncs.CompleteMissions();
         await _mementoMoriFuncs.RewardMissonActivity();
-        if (_gameConfig.AutoJob.AutoFreeGacha) await _mementoMoriFuncs.FreeGacha();
-        if (_gameConfig.AutoJob.AutoUseItems) await _mementoMoriFuncs.AutoUseItems();
+        if (_gameConfig.Value.AutoJob.AutoFreeGacha) await _mementoMoriFuncs.FreeGacha();
+        if (_gameConfig.Value.AutoJob.AutoUseItems) await _mementoMoriFuncs.AutoUseItems();
     }
 }

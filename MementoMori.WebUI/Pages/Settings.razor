@@ -1,0 +1,287 @@
+﻿@using MementoMori.Option
+@using System.Linq.Expressions
+@using MementoMori.Common.Localization
+@using MementoMori.Jobs
+@using MementoMori.Ortega.Common.Utils
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Data.Item
+@using MementoMori.Ortega.Share.Enums
+@inject IWritableOptions<GameConfig> WritableGameConfig
+@inject TimeZoneAwareJobRegister TimeZoneAwareJobRegister
+
+@page "/settings"
+
+<MudGrid>
+    <MudItem sm="12" md="6" lg="4" xl="3">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>@ResourceStrings.AutoJobSwitchs</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudSwitch Label="@ResourceStrings.DisableAllJobs" @bind-Checked="AutoJob__DisableAll" Color="Color.Primary"></MudSwitch>
+                <MudSwitch Label="@ResourceStrings.ReinforceEquipmentOnce" @bind-Checked="AutoJob__AutoReinforcementEquipmentOneTime" Color="Color.Primary"></MudSwitch>
+                <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")" @bind-Checked="AutoJob__AutoPvp" Color="Color.Primary"></MudSwitch>
+                <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")" @bind-Checked="AutoJob__AutoDungeonBattle" Color="Color.Primary"></MudSwitch>
+                <MudSwitch Label="@ResourceStrings.UseNormalItems" @bind-Checked="AutoJob__AutoUseItems" Color="Color.Primary"></MudSwitch>
+                <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonFooterGachaButtonLabel]")" @bind-Checked="AutoJob__AutoFreeGacha" Color="Color.Primary"></MudSwitch>
+                <MudSwitch Label="@Masters.TextResourceTable.Get("[CharacterMenuTabCharacterRankUp]")" @bind-Checked="AutoJob__AutoRankUpCharacter" Color="Color.Primary"></MudSwitch>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem sm="12" md="6" lg="4" xl="3">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>@ResourceStrings.AutoJobCrons</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTextField Label="@ResourceStrings.DailyJobCronExpression" @bind-Value="AutoJob__DailyJobCron" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField Label="@ResourceStrings.RewardClaimJobCronExpression" @bind-Value="AutoJob__HourlyJobCron" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__PvpJobCron" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField Label="@($"{Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__GuildRaidBossReleaseCron" Variant="Variant.Outlined"></MudTextField>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem sm="12" md="6" lg="4" xl="3">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>@Masters.TextResourceTable.Get("[CommonFooterGachaButtonLabel]")</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudField Label="@ResourceStrings.AutoGachaConsumeItems" Variant="Variant.Outlined">
+                    <MudSelect T="UserItem" Label="" MultiSelection="true" Dense="true" Comparer="@(new UserItemComparer())"
+                               @bind-SelectedValues="GachaConfig__AutoGachaConsumeUserItems" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
+                        @foreach (var item in GachaConsumeItems)
+                        {
+                            <MudSelectItem T="UserItem" Value="@item">@ItemUtil.GetItemName(item)</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudField>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem sm="12" md="6" lg="4" xl="3">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>@Masters.TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudField Label="@ResourceStrings.BountyQuestTargetItems" Variant="Variant.Outlined">
+                    <MudSelect T="UserItem" Label="" MultiSelection="true" Dense="true" Comparer="@(new UserItemComparer())"
+                               @bind-SelectedValues="BountyQuestAuto__TargetItems" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
+                        @foreach (var item in BountyQuestRewardItems)
+                        {
+                            <MudSelectItem T="UserItem" Value="@item">@ItemUtil.GetItemName(item)</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudField>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem sm="12" md="6" lg="4" xl="3">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>@Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudField Label="@ResourceStrings.DungeonBattleTargetItems" Variant="Variant.Outlined">
+                    <MudSelect T="UserItem" Label="" MultiSelection="true" Dense="true" Comparer="@(new UserItemComparer())"
+                               @bind-SelectedValues="DungeonBattle__ShopTargetItems" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
+                        @foreach (var item in DungeonBattleShopItems)
+                        {
+                            <MudSelectItem T="UserItem" Value="@item">@ItemUtil.GetItemName(item)</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudField>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem sm="12" md="6" lg="4" xl="3">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>@ResourceStrings.Others</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudField Label="@ResourceStrings.AutoRequestDelay" Variant="Variant.Outlined">
+                    <MudNumericField @bind-Value="AutoRequestDelay"></MudNumericField>
+                </MudField>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+
+    List<UserItem> GachaConsumeItems = new();
+    List<UserItem> BountyQuestRewardItems = new();
+    List<UserItem> DungeonBattleShopItems = new();
+    private IEnumerable<UserItem> _selected;
+
+    IEnumerable<UserItem> GachaConfig__AutoGachaConsumeUserItems
+    {
+        get => WritableGameConfig.Value.GachaConfig.AutoGachaConsumeUserItems;
+        set => WritableGameConfig.Update(x => x.GachaConfig.AutoGachaConsumeUserItems = value.ToList());
+    }
+
+    IEnumerable<UserItem> BountyQuestAuto__TargetItems
+    {
+        get => WritableGameConfig.Value.BountyQuestAuto.TargetItems;
+        set => WritableGameConfig.Update(x => x.BountyQuestAuto.TargetItems = value.ToList());
+    }
+
+    IEnumerable<UserItem> DungeonBattle__ShopTargetItems
+    {
+        get => WritableGameConfig.Value.DungeonBattle.ShopTargetItems;
+        set => WritableGameConfig.Update(x => x.DungeonBattle.ShopTargetItems = value.ToList());
+    }
+
+
+    protected override Task OnInitializedAsync()
+    {
+        GachaConsumeItems = Masters.ItemTable.GetArray()
+            .Where(d => d.ItemType == ItemType.GachaTicket || d.ItemType == ItemType.FriendPoint || d.ItemType == ItemType.Gold)
+            .Select(d => new UserItem() {ItemId = d.ItemId, ItemType = d.ItemType}).ToList();
+        BountyQuestRewardItems.AddRange(new[]
+        {
+            new UserItem() {ItemType = ItemType.Gold, ItemId = 1},
+            new UserItem() {ItemType = ItemType.CurrencyFree, ItemId = 1},
+            new UserItem() {ItemType = ItemType.CharacterTrainingMaterial, ItemId = 2},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 4},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 5},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 6},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 7},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 8},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 9},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 10},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 27},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 28}
+        });
+        DungeonBattleShopItems.AddRange(new[]
+        {
+            new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}
+        });
+        return base.OnInitializedAsync();
+    }
+
+    public bool AutoJob__DisableAll
+    {
+        get => WritableGameConfig.Value.AutoJob.DisableAll;
+        set => WritableGameConfig.Update(x => x.AutoJob.DisableAll = value);
+    }
+
+    public bool AutoJob__AutoReinforcementEquipmentOneTime
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoReinforcementEquipmentOneTime;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoReinforcementEquipmentOneTime = value);
+    }
+
+    public bool AutoJob__AutoPvp
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoPvp;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoPvp = value);
+    }
+
+    public bool AutoJob__AutoDungeonBattle
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoDungeonBattle;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoDungeonBattle = value);
+    }
+
+    public bool AutoJob__AutoUseItems
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoUseItems;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoUseItems = value);
+    }
+
+    public bool AutoJob__AutoFreeGacha
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoFreeGacha;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoFreeGacha = value);
+    }
+
+    public bool AutoJob__AutoRankUpCharacter
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoRankUpCharacter;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoRankUpCharacter = value);
+    }
+
+    public string AutoJob__DailyJobCron
+    {
+        get => WritableGameConfig.Value.AutoJob.DailyJobCron;
+        set
+        {
+            WritableGameConfig.Update(x => x.AutoJob.DailyJobCron = value);
+            TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+    }
+
+    public string AutoJob__HourlyJobCron
+    {
+        get => WritableGameConfig.Value.AutoJob.HourlyJobCron;
+        set
+        {
+            WritableGameConfig.Update(x => x.AutoJob.HourlyJobCron = value);
+            TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+    }
+
+    public string AutoJob__PvpJobCron
+    {
+        get => WritableGameConfig.Value.AutoJob.PvpJobCron;
+        set
+        {
+            WritableGameConfig.Update(x => x.AutoJob.PvpJobCron = value);
+            TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+    }
+
+    public string AutoJob__GuildRaidBossReleaseCron
+    {
+        get => WritableGameConfig.Value.AutoJob.GuildRaidBossReleaseCron;
+        set
+        {
+            WritableGameConfig.Update(x => x.AutoJob.GuildRaidBossReleaseCron = value);
+            TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+    }
+
+    public int AutoRequestDelay
+    {
+        get => WritableGameConfig.Value.AutoRequestDelay;
+        set => WritableGameConfig.Update(x => x.AutoRequestDelay = value);
+    }
+
+    private class UserItemComparer : IEqualityComparer<UserItem>
+    {
+        public bool Equals(UserItem x, UserItem y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            if (x.GetType() != y.GetType()) return false;
+            return x.ItemId == y.ItemId && x.ItemType == y.ItemType;
+        }
+
+        public int GetHashCode(UserItem obj)
+        {
+            return HashCode.Combine(obj.ItemId, (int) obj.ItemType);
+        }
+    }
+
+}

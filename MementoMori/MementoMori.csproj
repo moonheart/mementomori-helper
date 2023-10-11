@@ -6,6 +6,7 @@
         <Nullable>disable</Nullable>
     </PropertyGroup>
     <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="MessagePack" Version="2.5.124" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
         <PackageReference Include="morelinq" Version="3.4.2" />
