@@ -22,7 +22,7 @@ public static class BountyQuestAutoFormationUtil
         foreach (var bountyQuestInfos in getlistResponse.BountyQuestInfos.Where(d => !ongoingQuest.Contains(d.BountyQuestId)).GroupBy(d => d.BountyQuestType))
         {
             // 已经使用的卡片
-            var usedCharacterGuids = getlistResponse.UserBountyQuestDtoInfos.SelectMany(d =>
+            var usedCharacterGuids = getlistResponse.UserBountyQuestDtoInfos.Where(d => d.BountyQuestType == bountyQuestInfos.Key).SelectMany(d =>
                 d.StartMembers.Where(x => x.PlayerId == userSyncData.UserStatusDtoInfo.PlayerId).Select(x => x.UserCharacterGuid));
             // 用于当前任务类型的角色列表
             var userCharacterDtoInfos = userSyncData.UserCharacterDtoInfos.Where(d => !usedCharacterGuids.Contains(d.Guid)).OrderBy(d => d.RarityFlags).ToList();
