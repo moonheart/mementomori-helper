@@ -28,6 +28,7 @@ public class TimeZoneAwareJobRegister
         AddJob<DailyJob>(scheduler, _gameConfig.AutoJob.DailyJobCron);
         AddJob<HourlyJob>(scheduler, _gameConfig.AutoJob.HourlyJobCron);
         AddJob<PvpJob>(scheduler, _gameConfig.AutoJob.PvpJobCron);
+        AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.AutoJob.GuildRaidBossReleaseCron);
     }
 
     private void AddJob<T>(IScheduler scheduler, string cron) where T : IJob
