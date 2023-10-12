@@ -59,7 +59,8 @@ Under construction
 
 - [ ] Storage Box
     - [x] Automatically use items
-    - [x] Automatically refine SABC equipment into magical equipment, inherit to D-grade equipment
+    - [x] Automatically refine SABC equipment into 
+          magical equipment, inherit to D-grade equipment
     - [x] Automatically inherit godly equipment to D-grade equipment
     - [x] Automatically polish equipment
     - [ ] Manually use items
@@ -78,6 +79,11 @@ Under construction
         - [x] Optionally assign tasks with specified reward items only
     - [x] One-click automatic execution in the Time-Space Cave
         - [x] Optionally automatically purchase specified items
+        - [x] Prioritize selecting treasure chest nodes when available
+        - [x] Automatically use recovery items
+</td>
+<td>
+
 - [ ] Gacha
     - [x] Daily free/gold coin gacha
     - [x] Gacha pool list

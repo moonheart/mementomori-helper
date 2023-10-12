@@ -394,6 +394,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Maximum use quantity for recovery items (0 means not using) 的本地化字符串。
+        /// </summary>
+        public static string MaxUseRecoveryItem {
+            get {
+                return ResourceManager.GetString("MaxUseRecoveryItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Name 的本地化字符串。
         /// </summary>
         public static string Name {
@@ -516,6 +525,15 @@ namespace MementoMori.Common.Localization {
         public static string PleaseLogin {
             get {
                 return ResourceManager.GetString("PleaseLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Prioritize selecting treasure chest nodes 的本地化字符串。
+        /// </summary>
+        public static string PreferTreasureChest {
+            get {
+                return ResourceManager.GetString("PreferTreasureChest", resourceCulture);
             }
         }
         

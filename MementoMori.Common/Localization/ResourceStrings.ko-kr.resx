@@ -224,4 +224,10 @@
     <data name="AutoRequestDelay" xml:space="preserve">
         <value>자동 요청 지연</value>
     </data>
+    <data name="PreferTreasureChest" xml:space="preserve">
+        <value>보물 상자 노드를 우선 선택</value>
+    </data>
+    <data name="MaxUseRecoveryItem" xml:space="preserve">
+        <value>회복 아이템 최대 사용 수량 (0은 사용하지 않음을 의미합니다)</value>
+    </data>
 </root>

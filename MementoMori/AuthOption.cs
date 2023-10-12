@@ -51,6 +51,8 @@ public class GameConfig
     public class DungeonBattleConfig
     {
         public List<UserItem> ShopTargetItems { get; set; } = new();
+        public bool PreferTreasureChest { get; set; }
+        public int MaxUseRecoveryItem { get; set; }
     }
 
     public AutoJobModel AutoJob { get; set; } = new();

@@ -330,4 +330,10 @@
   <data name="AutoRequestDelay" xml:space="preserve">
       <value>Auto Request Delay</value>
   </data>
+  <data name="MaxUseRecoveryItem" xml:space="preserve">
+      <value>Maximum use quantity for recovery items (0 means not using)</value>
+  </data>
+  <data name="PreferTreasureChest" xml:space="preserve">
+      <value>Prioritize selecting treasure chest nodes</value>
+  </data>
 </root>

@@ -224,4 +224,10 @@
     <data name="AutoRequestDelay" xml:space="preserve">
         <value>自動リクエスト遅延</value>
     </data>
+    <data name="PreferTreasureChest" xml:space="preserve">
+        <value>宝箱ノードを優先選択</value>
+    </data>
+    <data name="MaxUseRecoveryItem" xml:space="preserve">
+        <value>回復アイテムの最大使用数量（0は使用しないことを意味します）</value>
+    </data>
 </root>

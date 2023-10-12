@@ -159,9 +159,7 @@ public partial class MementoMoriFuncs
 
         log($"{ResourceStrings.Enter} {Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")}");
         // 进副本
-        var battleInfoResponse =
-            await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(
-                new GetDungeonBattleInfoRequest());
+        var battleInfoResponse = await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(new GetDungeonBattleInfoRequest());
         foreach (var g in equips)
         {
             var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
@@ -217,25 +215,39 @@ public partial class MementoMoriFuncs
 
             async Task DoBattle()
             {
-                // 选择出战斗力最高的5个角色
-                var characters = battleInfoResponse.UserDungeonBattleCharacterDtoInfos.Where(d => d.CurrentHpPerMill != 0).OrderByDescending(d =>
+                // 检查用户编队
+                var battleCharacterGuids = new List<string>();
+                var userDeckDtoInfo = UserSyncData.UserDeckDtoInfos.Find(d => d.DeckUseContentType == DeckUseContentType.DungeonBattle);
+                foreach (var characterGuid in userDeckDtoInfo.GetUserCharacterGuids())
                 {
-                    return BattlePowerCalculatorUtil.GetUserCharacterBattlePower(d.Guid);
-                }).ToList();
-                // todo 处理角色挂掉的情况
+                    var characterDtoInfo = battleInfoResponse.UserDungeonBattleCharacterDtoInfos.Find(d => d.Guid == characterGuid);
+                    if (characterDtoInfo == null || characterDtoInfo.CurrentHpPerMill == 0)
+                        // 没有角色或者角色挂掉了
+                        continue;
+
+                    battleCharacterGuids.Add(characterGuid);
+                }
+
+                // 检查是否需要补充角色
+                var emptyPosition = 5 - battleCharacterGuids.Count;
+                // 按照战力排序
+                battleCharacterGuids.AddRange(battleInfoResponse.UserDungeonBattleCharacterDtoInfos
+                    .Where(d => d.CurrentHpPerMill != 0)
+                    .OrderByDescending(d => BattlePowerCalculatorUtil.GetUserCharacterBattlePower(d.Guid))
+                    .Select(d => d.Guid).Take(emptyPosition));
+
+                // 全灭, 如果已使用的苹果没有超过限制
+                if (battleCharacterGuids.Count == 0 && battleInfoResponse.UserDungeonDtoInfo.UseDungeonRecoveryItemCount < GameConfig.DungeonBattle.MaxUseRecoveryItem)
+                {
+                    var useRecoveryItemResponse = await GetResponse<UseRecoveryItemRequest, UseRecoveryItemResponse>(new() {CurrentTermId = battleInfoResponse.CurrentTermId});
+                }
+
                 var execBattleResponse = await GetResponse<ExecBattleRequest, ExecBattleResponse>(
                     new ExecBattleRequest()
                     {
                         CurrentTermId = battleInfoResponse.CurrentTermId,
                         DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
-                        CharacterGuids = new List<string>()
-                        {
-                            characters[0].Guid,
-                            characters[1].Guid,
-                            characters[2].Guid,
-                            characters[3].Guid,
-                            characters[4].Guid
-                        }.Where(d => !d.IsNullOrEmpty()).ToList()
+                        CharacterGuids = battleCharacterGuids
                     });
                 var finishBattleResponse = await GetResponse<FinishBattleRequest, FinishBattleResponse>(
                     new FinishBattleRequest()
@@ -258,22 +270,31 @@ public partial class MementoMoriFuncs
                                                              && GameConfig.DungeonBattle.ShopTargetItems.Any(x =>
                                                                  battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(y => y.GridGuid == d.Grid.DungeonGridGuid).TradeShopItemList.Any(y => // 商店有目标物品
                                                                      y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
+                    // todo: 递归计算下一节点是否有宝箱
+
+                    // 然后看有没有宝箱节点
+                    if (GameConfig.DungeonBattle.PreferTreasureChest)
+                        nextGrid ??= grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 && d.GridMb.DungeonGridType == DungeonBattleGridType.TreasureChest);
+
                     // 然后选择战斗节点
-                    if (nextGrid == null)
-                        nextGrid = grids.Where(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
-                                                    && (d.GridMb.DungeonGridType == DungeonBattleGridType.BattleNormal ||
-                                                        d.GridMb.DungeonGridType == DungeonBattleGridType.BattleElite ||
-                                                        d.GridMb.DungeonGridType == DungeonBattleGridType.BattleBoss ||
-                                                        d.GridMb.DungeonGridType == DungeonBattleGridType.BattleBossNoRelic ||
-                                                        d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleElite ||
-                                                        d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleNormal ||
-                                                        d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleSpecial ||
-                                                        d.GridMb.DungeonGridType == DungeonBattleGridType.BattleAndRelicReinforce
-                                                    ) // 战斗类型的
-                        ).MinBy(d => d.Power);
-                    if (nextGrid == null)
-                        // 没有战斗类型的节点
-                        nextGrid = grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1);
+                    nextGrid ??= grids.Where(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
+                                                  && (d.GridMb.DungeonGridType == DungeonBattleGridType.BattleNormal ||
+                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.BattleElite ||
+                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.BattleBoss ||
+                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.BattleBossNoRelic ||
+                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleElite ||
+                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleNormal ||
+                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleSpecial ||
+                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.BattleAndRelicReinforce
+                                                  ) // 战斗类型的
+                    ).MinBy(d => d.Power);
+
+                    // 然后选择回复节点
+                    nextGrid ??= grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 && d.GridMb.DungeonGridType == DungeonBattleGridType.Recovery);
+                    // 然后选择复活节点
+                    nextGrid ??= grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 && d.GridMb.DungeonGridType == DungeonBattleGridType.Revival);
+                    // 然后其他
+                    nextGrid ??= grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1);
 
                     if (nextGrid == null)
                     {
@@ -426,6 +447,7 @@ public partial class MementoMoriFuncs
                             break;
                         }
                         case DungeonBattleGridType.TreasureChest:
+                            await DoBattle();
                             break;
                         case DungeonBattleGridType.Revival:
                             var execReviveResponse = await GetResponse<ExecReviveRequest, ExecReviveResponse>(

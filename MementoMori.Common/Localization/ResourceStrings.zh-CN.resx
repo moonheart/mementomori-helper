@@ -330,4 +330,10 @@
     <data name="AutoRequestDelay" xml:space="preserve">
         <value>自动请求延迟</value>
     </data>
+    <data name="PreferTreasureChest" xml:space="preserve">
+        <value>优先选择宝箱节点</value>
+    </data>
+    <data name="MaxUseRecoveryItem" xml:space="preserve">
+        <value>恢复道具最大使用数量(0为不使用) </value>
+    </data>
 </root>
