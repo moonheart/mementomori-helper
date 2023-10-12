@@ -7,6 +7,23 @@ Under construction
 
 [Feedback and Communication](https://t.me/+gTRe8AxKxIdkOTg9)
 
+## **Disclaimer**
+
+Please be aware of the following points when using this tool:
+s
+1. This tool is provided for personal entertainment and educational purposes. The use of this tool may violate the usage policies of specific games or applications, and users assume all associated risks.
+
+2. The developer (referred to as "we") is not responsible for any legal or moral consequences that may arise from a user's use of this tool in games. Users should take full responsibility for the potential risks associated with using the tool.
+
+3. Users should understand that developers of games or applications may take measures to detect and prevent the use of such assistance tools, which may result in users' accounts being banned or subjected to other sanctions.
+
+4. Using this tool may potentially violate applicable laws. Users are responsible for ensuring that their usage complies with all relevant laws and regulations.
+
+5. We reserve the right to change or discontinue this tool at any time without prior notice.
+
+By downloading, installing, and using this tool, users acknowledge that they have carefully read and understood this disclaimer and agree to assume all risks associated with using this tool. If you do not agree with any part of this disclaimer, please discontinue the use of this tool.
+
+## Previews
 <table>
 <tbody>
 <tr><td> 
