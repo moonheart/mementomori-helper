@@ -50,6 +50,8 @@ using ShopGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetLi
 using ShopGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListResponse;
 using System.Xml.Linq;
 using MementoMori.Common.Localization;
+using MementoMori.Ortega.Share.Data.ApiInterface.GlobalGvg;
+using MementoMori.Ortega.Share.Data.ApiInterface.LocalGvg;
 using MementoMori.Ortega.Share.Data.ApiInterface.Shop;
 using MementoMori.Ortega.Share.Data.Auth;
 using static MementoMori.Ortega.Share.Masters;
@@ -1022,6 +1024,41 @@ public partial class MementoMoriFuncs : ReactiveObject
             catch (ApiErrorException e)
             {
                 log(e.Message);
+            }
+        });
+    }
+
+    public async Task ReceiveGvgReward()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            log($"{TextResourceTable.Get("[CommonHeaderGvgLabel]")} {TextResourceTable.Get("[CommonHeaderGlobalGvgLabel]")} {TextResourceTable.Get("[GuildRewardTitle]")}");
+            var guildIdResponse = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
+            if (guildIdResponse.GuildId <= 0) return;
+
+            var guildBaseInfoResponse = await GetResponse<GetGuildBaseInfoRequest, GetGuildBaseInfoResponse>(new GetGuildBaseInfoRequest
+            {
+                BelongGuildId = guildIdResponse.GuildId
+            });
+
+            if (guildBaseInfoResponse.LocalGuildGvgInfo.CanGetCastleRewardInfoList.IsNotNullOrEmpty())
+            {
+                log($"{TextResourceTable.Get("[CommonHeaderGvgLabel]")} {TextResourceTable.Get("[GuildRewardTitle]")}");
+                var localGvgRewardResponse = await GetResponse<ReceiveLocalGvgRewardRequest, ReceiveLocalGvgRewardResponse>(new ReceiveLocalGvgRewardRequest
+                {
+                    CastleIdList = guildBaseInfoResponse.LocalGuildGvgInfo.CanGetCastleRewardInfoList.Select(d => d.CastleId).ToList()
+                });
+                localGvgRewardResponse.RewardItems.PrintUserItems(log);
+            }
+
+            if (guildBaseInfoResponse.GlobalGuildGvgInfo.CanGetCastleRewardInfoList.IsNotNullOrEmpty())
+            {
+                log($"{TextResourceTable.Get("[CommonHeaderGlobalGvgLabel]")} {{TextResourceTable.Get(\"[GuildRewardTitle]\")}}");
+                var receiveGlobalGvgRewardResponse = await GetResponse<ReceiveGlobalGvgRewardRequest, ReceiveGlobalGvgRewardResponse>(new ReceiveGlobalGvgRewardRequest
+                {
+                    CastleIdList = guildBaseInfoResponse.GlobalGuildGvgInfo.CanGetCastleRewardInfoList.Select(d => d.CastleId).ToList()
+                });
+                receiveGlobalGvgRewardResponse.RewardItems.PrintUserItems(log);
             }
         });
     }

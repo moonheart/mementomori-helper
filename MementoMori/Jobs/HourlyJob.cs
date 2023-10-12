@@ -29,6 +29,7 @@ public class HourlyJob : IJob
         await _mementoMoriFuncs.PresentReceiveItem();
         await _mementoMoriFuncs.GetAutoBattleReward();
         await _mementoMoriFuncs.GuildRaid();
+        await _mementoMoriFuncs.ReceiveGvgReward();
         await _mementoMoriFuncs.BulkTransferFriendPoint();
         await _mementoMoriFuncs.BountyQuestRewardAuto();
         await _mementoMoriFuncs.CompleteMissions();
