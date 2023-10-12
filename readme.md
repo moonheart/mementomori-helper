@@ -86,7 +86,8 @@
 - [ ] 公会
     - [x] 公会签到
     - [x] 公会讨伐战自动扫荡
-    - [ ] 自动开启讨伐战
+    - [x] 自动开启讨伐战
+    - [x] 公会战奖励收取
 
 </td>
 </tr>
@@ -118,12 +119,8 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./Master/:/app/Master/
-      - type: bind
-        source: ./account.xml
-        target: /app/account.xml
-      - type: bind
-        source: ./appsettings.user.json
-        target: /app/appsettings.user.json
+      - ${PWD}/account.xml:/app/account.xml:rw
+      - ${PWD}/appsettings.user.json:/app/appsettings.user.json:rw
 ```
 
 进入网页之后, 先点击一次登录, 之后就可以随意操作了.
@@ -160,6 +157,7 @@ services:
 - 公会讨伐
 - 友情点收取			
 - 任务奖励收取
+- 公会战奖励收取
 - 自动抽卡 (配置请看 [下面的抽卡配置](#抽卡)) ([请看自动任务配置](#自动任务))
 - 使用固定物品 ([请看自动任务配置](#自动任务))
 

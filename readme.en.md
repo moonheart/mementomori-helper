@@ -85,6 +85,8 @@ Under construction
 - [ ] Guild
     - [x] Guild sign-in
     - [x] Guild battle automatic sweep
+    - [x] Auto open Guild Raid
+    - [x] Auto receive Gvg Reward
 
 </td>
 </tr>
@@ -116,12 +118,8 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./Master/:/app/Master/
-      - type: bind
-        source: ./account.xml
-        target: /app/account.xml
-      - type: bind
-        source: ./appsettings.user.json
-        target: /app/appsettings.user.json
+      - ${PWD}/account.xml:/app/account.xml:rw
+      - ${PWD}/appsettings.user.json:/app/appsettings.user.json:rw
 ```
 
 After entering the web page, click login once, and then you can operate as you like.
@@ -158,6 +156,7 @@ The program will execute specific operations at specific times.
 - Guild battle
 - Claim friendship points
 - Claim task rewards
+- Claim GvG rewards
 - Automatic gacha (See gacha configuration below) (See automatic task configuration for details)
 - Use fixed items (See automatic task configuration for details)
 
