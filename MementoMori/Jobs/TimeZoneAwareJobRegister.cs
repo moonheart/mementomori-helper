@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
+using MementoMori.Common.Localization;
 using MementoMori.Option;
+using MementoMori.Ortega.Share;
 using Microsoft.Extensions.Options;
 using Quartz;
 
@@ -30,10 +32,10 @@ public class TimeZoneAwareJobRegister
             return;
         }
 
-        AddJob<DailyJob>(scheduler, _gameConfig.Value.AutoJob.DailyJobCron);
-        AddJob<HourlyJob>(scheduler, _gameConfig.Value.AutoJob.HourlyJobCron);
-        AddJob<PvpJob>(scheduler, _gameConfig.Value.AutoJob.PvpJobCron);
-        AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.Value.AutoJob.GuildRaidBossReleaseCron);
+        AddJob<DailyJob>(scheduler, _gameConfig.Value.AutoJob.DailyJobCron, ResourceStrings.DailyJob);
+        AddJob<HourlyJob>(scheduler, _gameConfig.Value.AutoJob.HourlyJobCron, ResourceStrings.RewardClaimJob);
+        AddJob<PvpJob>(scheduler, _gameConfig.Value.AutoJob.PvpJobCron, Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]"));
+        AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.Value.AutoJob.GuildRaidBossReleaseCron, Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]"));
     }
 
     private void RemoveJob<T>(IScheduler scheduler) where T : IJob
@@ -43,11 +45,11 @@ public class TimeZoneAwareJobRegister
         scheduler.DeleteJob(jobKey);
     }
 
-    private void AddJob<T>(IScheduler scheduler, string cron) where T : IJob
+    private void AddJob<T>(IScheduler scheduler, string cron, string description) where T : IJob
     {
         var type = typeof(T);
         var jobKey = new JobKey(type.FullName!);
-        var jobDetail = JobBuilder.Create<T>().WithIdentity(jobKey).Build();
+        var jobDetail = JobBuilder.Create<T>().WithIdentity(jobKey).WithDescription(description).Build();
 
         var customTimeZone = TimeZoneInfo.CreateCustomTimeZone(_timeManager.DiffFromUtc.ToString(), _timeManager.DiffFromUtc, null, null);
         var trigger = TriggerBuilder.Create()

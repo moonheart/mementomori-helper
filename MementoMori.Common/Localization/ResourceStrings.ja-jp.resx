@@ -233,4 +233,13 @@
     <data name="DiscountPercentageforProducts" xml:space="preserve">
         <value>商品の割引率</value>
     </data>
+    <data name="DailyJob" xml:space="preserve">
+        <value>デイリージョブ</value>
+    </data>
+    <data name="RewardClaimJob" xml:space="preserve">
+        <value>報酬クレームジョブ</value>
+    </data>
+    <data name="NextExecutionTime" xml:space="preserve">
+        <value>次回実行時間</value>
+    </data>
 </root>

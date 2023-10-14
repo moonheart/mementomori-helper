@@ -339,4 +339,13 @@
     <data name="DiscountPercentageforProducts" xml:space="preserve">
         <value>商品打折幅度</value>
     </data>
+    <data name="DailyJob" xml:space="preserve">
+        <value>每日任务</value>
+    </data>
+    <data name="RewardClaimJob" xml:space="preserve">
+        <value>奖励领取任务</value>
+    </data>
+    <data name="NextExecutionTime" xml:space="preserve">
+        <value>下次执行时间</value>
+    </data>
 </root>

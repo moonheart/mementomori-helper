@@ -6,8 +6,11 @@
 @using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Data.Item
 @using MementoMori.Ortega.Share.Enums
+@using Quartz
+@using Quartz.Impl.Matchers
 @inject IWritableOptions<GameConfig> WritableGameConfig
 @inject TimeZoneAwareJobRegister TimeZoneAwareJobRegister
+@inject ISchedulerFactory SchedulerFactory
 
 @page "/settings"
 
@@ -38,11 +41,38 @@
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent>
-                <MudTextField Label="@ResourceStrings.DailyJobCronExpression" @bind-Value="AutoJob__DailyJobCron" Variant="Variant.Outlined"></MudTextField>
-                <MudTextField Label="@ResourceStrings.RewardClaimJobCronExpression" @bind-Value="AutoJob__HourlyJobCron" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField Label="@($"{ResourceStrings.DailyJob} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__DailyJobCron" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField Label="@($"{ResourceStrings.RewardClaimJob} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__HourlyJobCron" Variant="Variant.Outlined"></MudTextField>
                 <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__PvpJobCron" Variant="Variant.Outlined"></MudTextField>
                 <MudTextField Label="@($"{Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__GuildRaidBossReleaseCron" Variant="Variant.Outlined"></MudTextField>
-
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem sm="12" md="6" lg="4" xl="3">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>@ResourceStrings.AutoJobCrons</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudSimpleTable >
+                    <thead>
+                    <tr>
+                        <th>@ResourceStrings.Name</th>
+                        <th>@ResourceStrings.NextExecutionTime</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var jobInfo in JobInfos)
+                    {
+                        <tr>
+                            <td>@jobInfo.Desc</td>
+                            <td>@jobInfo.NextFireTime</td>
+                        </tr>
+                    }
+                    </tbody>
+                </MudSimpleTable>
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -132,7 +162,50 @@
     List<UserItem> GachaConsumeItems = new();
     List<UserItem> BountyQuestRewardItems = new();
     List<UserItem> DungeonBattleShopItems = new();
+    List<JobInfo> JobInfos = new();
     private IEnumerable<UserItem> _selected;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var scheduler = await SchedulerFactory.GetScheduler();
+        var triggerKeys = await scheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup());
+        foreach (var triggerKey in triggerKeys)
+        {
+            var trigger = await scheduler.GetTrigger(triggerKey);
+            var jobDetail = await scheduler.GetJobDetail(trigger.JobKey);
+            JobInfos.Add(new JobInfo()
+            {
+                Desc = jobDetail.Description,
+                NextFireTime = trigger.GetNextFireTimeUtc()?.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+        }
+
+        GachaConsumeItems = Masters.ItemTable.GetArray()
+            .Where(d => d.ItemType == ItemType.GachaTicket || d.ItemType == ItemType.FriendPoint || d.ItemType == ItemType.Gold)
+            .Select(d => new UserItem() {ItemId = d.ItemId, ItemType = d.ItemType}).ToList();
+        BountyQuestRewardItems.AddRange(new[]
+        {
+            new UserItem() {ItemType = ItemType.Gold, ItemId = 1},
+            new UserItem() {ItemType = ItemType.CurrencyFree, ItemId = 1},
+            new UserItem() {ItemType = ItemType.CharacterTrainingMaterial, ItemId = 2},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 4},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 5},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 6},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 7},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 8},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 9},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 10},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 27},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 28}
+        });
+        DungeonBattleShopItems.AddRange(new[]
+        {
+            new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}
+        });
+        await base.OnInitializedAsync();
+    }
+
 
     IEnumerable<UserItem> GachaConfig__AutoGachaConsumeUserItems
     {
@@ -170,33 +243,6 @@
         set => WritableGameConfig.Update(x => x.DungeonBattle.ShopDiscountPercent = value);
     }
 
-
-    protected override Task OnInitializedAsync()
-    {
-        GachaConsumeItems = Masters.ItemTable.GetArray()
-            .Where(d => d.ItemType == ItemType.GachaTicket || d.ItemType == ItemType.FriendPoint || d.ItemType == ItemType.Gold)
-            .Select(d => new UserItem() {ItemId = d.ItemId, ItemType = d.ItemType}).ToList();
-        BountyQuestRewardItems.AddRange(new[]
-        {
-            new UserItem() {ItemType = ItemType.Gold, ItemId = 1},
-            new UserItem() {ItemType = ItemType.CurrencyFree, ItemId = 1},
-            new UserItem() {ItemType = ItemType.CharacterTrainingMaterial, ItemId = 2},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 4},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 5},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 6},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 7},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 8},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 9},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 10},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 27},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 28}
-        });
-        DungeonBattleShopItems.AddRange(new[]
-        {
-            new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}
-        });
-        return base.OnInitializedAsync();
-    }
 
     public bool AutoJob__DisableAll
     {
@@ -305,6 +351,12 @@
         {
             return HashCode.Combine(obj.ItemId, (int) obj.ItemType);
         }
+    }
+
+    private class JobInfo
+    {
+        public string Desc { get; set; }
+        public string NextFireTime { get; set; }
     }
 
 }

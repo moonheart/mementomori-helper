@@ -233,4 +233,13 @@
     <data name="DiscountPercentageforProducts" xml:space="preserve">
         <value>상품 할인 비율</value>
     </data>
+    <data name="DailyJob" xml:space="preserve">
+        <value>매일 미션</value>
+    </data>
+    <data name="RewardClaimJob" xml:space="preserve">
+        <value>보상 청구 작업</value>
+    </data>
+    <data name="NextExecutionTime" xml:space="preserve">
+        <value>다음 실행 시간</value>
+    </data>
 </root>

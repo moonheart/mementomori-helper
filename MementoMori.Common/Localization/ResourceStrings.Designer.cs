@@ -232,6 +232,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Daily Job  的本地化字符串。
+        /// </summary>
+        public static string DailyJob {
+            get {
+                return ResourceManager.GetString("DailyJob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Daily Job Cron Expression 的本地化字符串。
         /// </summary>
         public static string DailyJobCronExpression {
@@ -421,6 +430,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Next Execution Time 的本地化字符串。
+        /// </summary>
+        public static string NextExecutionTime {
+            get {
+                return ResourceManager.GetString("NextExecutionTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 No Available {0} 的本地化字符串。
         /// </summary>
         public static string NoAvailable {
@@ -588,6 +606,15 @@ namespace MementoMori.Common.Localization {
         public static string RemoveEquipmentOfCharacter {
             get {
                 return ResourceManager.GetString("RemoveEquipmentOfCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Reward Claim Job 的本地化字符串。
+        /// </summary>
+        public static string RewardClaimJob {
+            get {
+                return ResourceManager.GetString("RewardClaimJob", resourceCulture);
             }
         }
         
