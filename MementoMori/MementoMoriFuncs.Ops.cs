@@ -52,6 +52,7 @@ using System.Xml.Linq;
 using MementoMori.Common.Localization;
 using MementoMori.Ortega.Share.Data.ApiInterface.GlobalGvg;
 using MementoMori.Ortega.Share.Data.ApiInterface.LocalGvg;
+using MementoMori.Ortega.Share.Data.ApiInterface.LocalRaid;
 using MementoMori.Ortega.Share.Data.ApiInterface.Shop;
 using MementoMori.Ortega.Share.Data.Auth;
 using static MementoMori.Ortega.Share.Masters;
@@ -833,12 +834,11 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public async Task Debug()
     {
-        _writableGameConfig.Update(c => c.AutoRequestDelay = 100);
-        // await ExecuteQuickAction(async (log, token) =>
-        // {
-        //     var bossResponse = await GetResponse<BossRequest, BossResponse>(new BossRequest() {QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1});
-        //     log(bossResponse.ToJson(true));
-        // });
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var bossResponse = await GetResponse<GetLocalRaidInfoRequest,GetLocalRaidInfoResponse>(new ());
+            log(bossResponse.ToJson(true));
+        });
     }
 
     public async Task LogDebug()

@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="MagicOnion.Client" Version="5.1.8" />
       <PackageReference Include="MessagePack" Version="2.5.124" />
       <PackageReference Include="MessagePack.Annotations" Version="2.5.124" />
       <PackageReference Include="morelinq" Version="3.4.2" />
