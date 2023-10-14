@@ -69,13 +69,18 @@
                                     <MudCardHeader>
                                         <CardHeaderContent>
                                             <MudText>@itemName</MudText>
+                                           
                                         </CardHeaderContent>
                                     </MudCardHeader>
                                     <MudCardContent>
                                         <MudText>@subName</MudText>
+                                        @if (item.SalePercent > 0)
+                                        {
+                                            <MudText Inline="true">@($"{item.SalePercent}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")} ")</MudText>
+                                        }
                                         @if (item.LimitTradeCount > 0)
                                         {
-                                            <MudText>@Masters.TextResourceTable.Get("[ExchangeCommonLimitLabelFormat]", @item.TradeCount, @item.LimitTradeCount)</MudText>
+                                            <MudText Inline="true">@Masters.TextResourceTable.Get("[ExchangeCommonLimitLabelFormat]", @item.TradeCount, @item.LimitTradeCount)</MudText>
                                         }
                                     </MudCardContent>
                                     <MudCardActions>
