@@ -259,6 +259,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Discount Percentage for Products 的本地化字符串。
+        /// </summary>
+        public static string DiscountPercentageforProducts {
+            get {
+                return ResourceManager.GetString("DiscountPercentageforProducts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Dispatched 的本地化字符串。
         /// </summary>
         public static string Dispatched {

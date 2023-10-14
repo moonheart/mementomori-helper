@@ -336,4 +336,7 @@
     <data name="MaxUseRecoveryItem" xml:space="preserve">
         <value>恢复道具最大使用数量(0为不使用) </value>
     </data>
+    <data name="DiscountPercentageforProducts" xml:space="preserve">
+        <value>商品打折幅度</value>
+    </data>
 </root>

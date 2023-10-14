@@ -269,7 +269,7 @@ public partial class MementoMoriFuncs
                                                              && d.GridMb.DungeonGridType == DungeonBattleGridType.Shop
                                                              && GameConfig.DungeonBattle.ShopTargetItems.Any(x =>
                                                                  battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(y => y.GridGuid == d.Grid.DungeonGridGuid).TradeShopItemList.Any(y => // 商店有目标物品
-                                                                     y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
+                                                                     y.SalePercent >= GameConfig.DungeonBattle.ShopDiscountPercent && y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
                     // todo: 递归计算下一节点是否有宝箱
 
                     // 然后看有没有宝箱节点

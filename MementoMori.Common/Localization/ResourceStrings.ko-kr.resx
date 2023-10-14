@@ -230,4 +230,7 @@
     <data name="MaxUseRecoveryItem" xml:space="preserve">
         <value>회복 아이템 최대 사용 수량 (0은 사용하지 않음을 의미합니다)</value>
     </data>
+    <data name="DiscountPercentageforProducts" xml:space="preserve">
+        <value>상품 할인 비율</value>
+    </data>
 </root>

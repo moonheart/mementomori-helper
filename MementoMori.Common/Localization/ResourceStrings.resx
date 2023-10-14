@@ -336,4 +336,7 @@
   <data name="PreferTreasureChest" xml:space="preserve">
       <value>Prioritize selecting treasure chest nodes</value>
   </data>
+  <data name="DiscountPercentageforProducts" xml:space="preserve">
+      <value>Discount Percentage for Products</value>
+  </data>
 </root>

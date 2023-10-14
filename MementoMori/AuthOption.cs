@@ -51,6 +51,7 @@ public class GameConfig
     public class DungeonBattleConfig
     {
         public List<UserItem> ShopTargetItems { get; set; } = new();
+        public int ShopDiscountPercent { get; set; } = 0;
         public bool PreferTreasureChest { get; set; }
         public int MaxUseRecoveryItem { get; set; }
     }
