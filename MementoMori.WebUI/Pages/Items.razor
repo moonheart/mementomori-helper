@@ -106,7 +106,6 @@
                 <MudTh>
                     <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
                 </MudTh>
-                <MudTh>描述</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd>@context.Name</MudTd>
@@ -119,7 +118,6 @@
                 <MudTd>@(context.ItemRarityFlags)</MudTd>
                 <MudTd>@(context.MaxItemCount)</MudTd>
                 <MudTd>@context.Count</MudTd>
-                <MudTd>@context.Description</MudTd>
             </RowTemplate>
         </MudTable>
     </MudTabPanel>
@@ -154,14 +152,12 @@
                 <MudTh>
                     <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
                 </MudTh>
-                <MudTh>@Masters.TextResourceTable.Get("[ItemDescriptionLabel]")</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd>@context.Name</MudTd>
                 <MudTd>@(context.ItemRarityFlags)</MudTd>
                 <MudTd>@(context.MaxItemCount)</MudTd>
                 <MudTd>@context.Count</MudTd>
-                <MudTd>@context.Description</MudTd>
             </RowTemplate>
         </MudTable>
     </MudTabPanel>
@@ -208,7 +204,6 @@
                 <MudTd>@(context.SphereMB.BattleParameterChangeInfo == null ? "" : Masters.TextResourceTable.Get(context.SphereMB.BattleParameterChangeInfo.BattleParameterType))</MudTd>
                 <MudTd>@(context.SphereMB.BattleParameterChangeInfo == null ? "" : ParameterUtil.GetBaseParameterValueText(context.SphereMB.BattleParameterChangeInfo.ChangeParameterType, context.SphereMB.BattleParameterChangeInfo.Value))</MudTd>
                 <MudTd>@context.Count</MudTd>
-                <MudTd>@context.Description</MudTd>
             </RowTemplate>
         </MudTable>
     </MudTabPanel>
@@ -232,14 +227,12 @@
                 <MudTh>
                     <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
                 </MudTh>
-                <MudTh>@Masters.TextResourceTable.Get("[ItemDescriptionLabel]")</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd>@context.Name</MudTd>
                 <MudTd>@(context.ItemRarityFlags)</MudTd>
                 <MudTd>@(context.MaxItemCount)</MudTd>
                 <MudTd>@context.Count</MudTd>
-                <MudTd>@context.Description</MudTd>
             </RowTemplate>
         </MudTable>
     </MudTabPanel>
