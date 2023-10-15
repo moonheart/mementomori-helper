@@ -238,13 +238,13 @@
       <value>Dispatched</value>
   </data>
   <data name="DispatchingAll" xml:space="preserve">
-      <value>Not specified target prop or forced dispatch, dispatching all tasks.</value>
+      <value>Not specified target prop or forced dispatch, dispatching all tasks</value>
   </data>
   <data name="NothingToSmelt" xml:space="preserve">
-      <value>There are no more items to smelt.</value>
+      <value>There are no more items to smelt</value>
   </data>
   <data name="FindEquipmentCharacter" xml:space="preserve">
-      <value>For equipment, find a wearable character, and then unequip once.</value>
+      <value>For equipment, find a wearable character, and then unequip once</value>
   </data>
   <data name="NoLegendEquip" xml:space="preserve">
       <value>No Legend Equipments</value>
@@ -340,12 +340,15 @@
       <value>Discount Percentage for Products</value>
   </data>
   <data name="DailyJob" xml:space="preserve">
-      <value>Daily Job </value>
+      <value>Daily Job</value>
   </data>
   <data name="RewardClaimJob" xml:space="preserve">
       <value>Reward Claim Job</value>
   </data>
   <data name="NextExecutionTime" xml:space="preserve">
       <value>Next Execution Time</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+      <value>Add</value>
   </data>
 </root>

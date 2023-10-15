@@ -128,15 +128,14 @@
             <MudCardContent>
                 <MudSwitch Label="@ResourceStrings.PreferTreasureChest" @bind-Checked="DungeonBattle__PreferTreasureChest" Color="Color.Primary"/>
                 <MudNumericField Label="@ResourceStrings.MaxUseRecoveryItem" @bind-Value="DungeonBattle__MaxUseFruitOfHealing" Min="0" Max="99"/>
-                <MudSlider Min="0" Max="100" Step="10" @bind-Value="DungeonBattle__ShopDiscountPercent">@($"{ResourceStrings.DiscountPercentageforProducts} {DungeonBattle__ShopDiscountPercent}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}")</MudSlider>
-                <MudSelect T="UserItem" Label="@ResourceStrings.DungeonBattleTargetItems" MultiSelection="true" Dense="true" Comparer="@(new UserItemComparer())"
-                           @bind-SelectedValues="DungeonBattle__ShopTargetItems" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
-                    @foreach (var item in DungeonBattleShopItems)
+                <MudField Label="@ResourceStrings.DungeonBattleTargetItems" Variant="Variant.Outlined">
+                    @foreach (var item in DungeonBattle__ShopTargetItems)
                     {
-                        <MudSelectItem T="UserItem" Value="@item">@ItemUtil.GetItemName(item)</MudSelectItem>
+                        var text = $"{ItemUtil.GetItemName(item.ItemType, item.ItemId)} {item.MinDiscountPercent}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}";
+                        <MudChip OnClose="() => DungeonBattleRemoveItem(item)">@text</MudChip>
                     }
-                </MudSelect>
-
+                </MudField>
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="ShowDungeonBattleSelectItemDialog">@ResourceStrings.Add</MudButton>
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -157,6 +156,22 @@
     </MudItem>
 </MudGrid>
 
+<MudDialog @bind-IsVisible="DungeonBattleSelectItemDialog" Options="@(new DialogOptions() {CloseButton = true})">
+    <DialogContent>
+        <MudSelect T="UserItem" @bind-Value="DungeonBattleSelectedItem">
+            @foreach (var item in DungeonBattleShopItems)
+            {
+                <MudSelectItem T="UserItem" Value="item">@(ItemUtil.GetItemName(item))</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSlider Min="0" Max="100" Step="10" @bind-Value="DungeonBattleSelectedDiscount">@($"{ResourceStrings.DiscountPercentageforProducts} {DungeonBattleSelectedDiscount}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}")</MudSlider>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="ConfirmDungeonBattleSelectItem">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
 @code {
 
     List<UserItem> GachaConsumeItems = new();
@@ -164,6 +179,9 @@
     List<UserItem> DungeonBattleShopItems = new();
     List<JobInfo> JobInfos = new();
     private IEnumerable<UserItem> _selected;
+    UserItem DungeonBattleSelectedItem { get; set; }
+    int DungeonBattleSelectedDiscount { get; set; }
+    bool DungeonBattleSelectItemDialog { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -206,6 +224,45 @@
         await base.OnInitializedAsync();
     }
 
+    private void DungeonBattleRemoveItem(GameConfig.ShopDiscountItem item)
+    {
+        var tmp = DungeonBattle__ShopTargetItems.ToList();
+        tmp.Remove(item);
+        DungeonBattle__ShopTargetItems = tmp;
+    }
+
+    private void ShowDungeonBattleSelectItemDialog()
+    {
+        DungeonBattleSelectItemDialog = true;
+        DungeonBattleSelectedItem = null;
+        DungeonBattleSelectedDiscount = 0;
+    }
+
+    private void ConfirmDungeonBattleSelectItem()
+    {
+        if (DungeonBattleSelectedItem == null)
+        {
+            return;
+        }
+        var tmp = DungeonBattle__ShopTargetItems.ToList();
+        var existing = tmp.Find(d => d.ItemType == DungeonBattleSelectedItem.ItemType && d.ItemId == DungeonBattleSelectedItem.ItemId);
+        if (existing != null)
+        {
+            existing.MinDiscountPercent = DungeonBattleSelectedDiscount;
+        }
+        else
+        {
+            tmp.Add(new GameConfig.ShopDiscountItem()
+            {
+                ItemId = DungeonBattleSelectedItem.ItemId,
+                ItemType = DungeonBattleSelectedItem.ItemType,
+                MinDiscountPercent = DungeonBattleSelectedDiscount
+            });
+        }
+        DungeonBattle__ShopTargetItems = tmp;
+        DungeonBattleSelectItemDialog = false;
+    }
+
 
     IEnumerable<UserItem> GachaConfig__AutoGachaConsumeUserItems
     {
@@ -219,7 +276,7 @@
         set => WritableGameConfig.Update(x => x.BountyQuestAuto.TargetItems = value.ToList());
     }
 
-    IEnumerable<UserItem> DungeonBattle__ShopTargetItems
+    IEnumerable<GameConfig.ShopDiscountItem> DungeonBattle__ShopTargetItems
     {
         get => WritableGameConfig.Value.DungeonBattle.ShopTargetItems;
         set => WritableGameConfig.Update(x => x.DungeonBattle.ShopTargetItems = value.ToList());
@@ -236,13 +293,6 @@
         get => WritableGameConfig.Value.DungeonBattle.MaxUseRecoveryItem;
         set => WritableGameConfig.Update(x => x.DungeonBattle.MaxUseRecoveryItem = value);
     }
-
-    int DungeonBattle__ShopDiscountPercent
-    {
-        get => WritableGameConfig.Value.DungeonBattle.ShopDiscountPercent;
-        set => WritableGameConfig.Update(x => x.DungeonBattle.ShopDiscountPercent = value);
-    }
-
 
     public bool AutoJob__DisableAll
     {

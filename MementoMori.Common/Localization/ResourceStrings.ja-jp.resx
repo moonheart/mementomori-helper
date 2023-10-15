@@ -242,4 +242,7 @@
     <data name="NextExecutionTime" xml:space="preserve">
         <value>次回実行時間</value>
     </data>
+    <data name="Add" xml:space="preserve">
+        <value>追加</value>
+    </data>
 </root>

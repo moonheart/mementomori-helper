@@ -61,6 +61,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Add 的本地化字符串。
+        /// </summary>
+        public static string Add {
+            get {
+                return ResourceManager.GetString("Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Error count reached {0} times, abort 的本地化字符串。
         /// </summary>
         public static string AutoBossErrorMessage {
@@ -232,7 +241,7 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
-        ///   查找类似 Daily Job  的本地化字符串。
+        ///   查找类似 Daily Job 的本地化字符串。
         /// </summary>
         public static string DailyJob {
             get {
@@ -286,7 +295,7 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
-        ///   查找类似 Not specified target prop or forced dispatch, dispatching all tasks. 的本地化字符串。
+        ///   查找类似 Not specified target prop or forced dispatch, dispatching all tasks 的本地化字符串。
         /// </summary>
         public static string DispatchingAll {
             get {
@@ -340,7 +349,7 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
-        ///   查找类似 For equipment, find a wearable character, and then unequip once. 的本地化字符串。
+        ///   查找类似 For equipment, find a wearable character, and then unequip once 的本地化字符串。
         /// </summary>
         public static string FindEquipmentCharacter {
             get {
@@ -484,7 +493,7 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
-        ///   查找类似 There are no more items to smelt. 的本地化字符串。
+        ///   查找类似 There are no more items to smelt 的本地化字符串。
         /// </summary>
         public static string NothingToSmelt {
             get {

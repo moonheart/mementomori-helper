@@ -1,4 +1,5 @@
 ﻿using MementoMori.Ortega.Share.Data.Item;
+using MementoMori.Ortega.Share.Enums;
 
 namespace MementoMori;
 
@@ -14,6 +15,13 @@ public class AuthOption
 
 public class GameConfig
 {
+    public class ShopDiscountItem: IUserItem
+    {
+        public long ItemCount { get; }
+        public long ItemId { get; set; }
+        public ItemType ItemType { get; set; }
+        public int MinDiscountPercent { get; set; }
+    }
     public class DungeonBattleRelicSortInfo
     {
         public long Id { get; set; }
@@ -50,7 +58,8 @@ public class GameConfig
 
     public class DungeonBattleConfig
     {
-        public List<UserItem> ShopTargetItems { get; set; } = new();
+        public List<ShopDiscountItem> ShopTargetItems { get; set; } = new();
+        [Obsolete("Use ShopDiscountItem.MinDiscountPercent")]
         public int ShopDiscountPercent { get; set; } = 0;
         public bool PreferTreasureChest { get; set; }
         public int MaxUseRecoveryItem { get; set; }
