@@ -38,7 +38,7 @@ namespace MementoMori.Ortega.Share.Data.TradeShop
 
         public bool IsSoldOut()
         {
-            return TradeCount >= LimitTradeCount;
+            return LimitTradeCount > 0 && TradeCount >= LimitTradeCount;
         }
 
         public TradeShopItem()

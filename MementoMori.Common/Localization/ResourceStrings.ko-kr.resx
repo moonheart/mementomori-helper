@@ -245,4 +245,25 @@
     <data name="Add" xml:space="preserve">
         <value>추가</value>
     </data>
+    <data name="ShopAutoBuyItems" xml:space="preserve">
+        <value>자동으로 상점 아이템 구매</value>
+    </data>
+    <data name="AutoBuy" xml:space="preserve">
+        <value>자동 구매</value>
+    </data>
+    <data name="ConsumeItem" xml:space="preserve">
+        <value>소비 물품</value>
+    </data>
+    <data name="ShopAutoBuyPleaseSelectOne" xml:space="preserve">
+        <value>최소한 하나를 지정하세요: 상점 아이템 또는 소비품</value>
+    </data>
+    <data name="AnyItems" xml:space="preserve">
+        <value>임의의 항목</value>
+    </data>
+    <data name="BuyWith" xml:space="preserve">
+        <value>{0}로 {1}을 구입</value>
+    </data>
+    <data name="ResettoDefault" xml:space="preserve">
+        <value>기본값으로 재설정</value>
+    </data>
 </root>

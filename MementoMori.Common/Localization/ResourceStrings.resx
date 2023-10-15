@@ -351,4 +351,25 @@
   <data name="Add" xml:space="preserve">
       <value>Add</value>
   </data>
+  <data name="ShopAutoBuyItems" xml:space="preserve">
+      <value>Auto Buy Store Items</value>
+  </data>
+  <data name="AutoBuy" xml:space="preserve">
+      <value>Auto Purchase</value>
+  </data>
+  <data name="ConsumeItem" xml:space="preserve">
+      <value>Consumed Items</value>
+  </data>
+  <data name="ShopAutoBuyPleaseSelectOne" xml:space="preserve">
+      <value>Specify at least one: Store Items or Consumables</value>
+  </data>
+  <data name="AnyItems" xml:space="preserve">
+      <value>Any Items</value>
+  </data>
+  <data name="BuyWith" xml:space="preserve">
+      <value>Buy {1} with {0}</value>
+  </data>
+  <data name="ResettoDefault" xml:space="preserve">
+      <value>Reset to Default</value>
+  </data>
 </root>

@@ -70,6 +70,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Any Items 的本地化字符串。
+        /// </summary>
+        public static string AnyItems {
+            get {
+                return ResourceManager.GetString("AnyItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Error count reached {0} times, abort 的本地化字符串。
         /// </summary>
         public static string AutoBossErrorMessage {
@@ -84,6 +93,15 @@ namespace MementoMori.Common.Localization {
         public static string AutoBossExecMessage {
             get {
                 return ResourceManager.GetString("AutoBossExecMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Auto Purchase 的本地化字符串。
+        /// </summary>
+        public static string AutoBuy {
+            get {
+                return ResourceManager.GetString("AutoBuy", resourceCulture);
             }
         }
         
@@ -187,6 +205,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Buy {1} with {0} 的本地化字符串。
+        /// </summary>
+        public static string BuyWith {
+            get {
+                return ResourceManager.GetString("BuyWith", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Buy {0}×{1} Success 的本地化字符串。
         /// </summary>
         public static string CaveBuyItemSuccess {
@@ -228,6 +255,15 @@ namespace MementoMori.Common.Localization {
         public static string CharacterInfo {
             get {
                 return ResourceManager.GetString("CharacterInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Consumed Items 的本地化字符串。
+        /// </summary>
+        public static string ConsumeItem {
+            get {
+                return ResourceManager.GetString("ConsumeItem", resourceCulture);
             }
         }
         
@@ -619,6 +655,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Reset to Default 的本地化字符串。
+        /// </summary>
+        public static string ResettoDefault {
+            get {
+                return ResourceManager.GetString("ResettoDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Reward Claim Job 的本地化字符串。
         /// </summary>
         public static string RewardClaimJob {
@@ -678,6 +723,24 @@ namespace MementoMori.Common.Localization {
         public static string SelectPlayer {
             get {
                 return ResourceManager.GetString("SelectPlayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Auto Buy Store Items 的本地化字符串。
+        /// </summary>
+        public static string ShopAutoBuyItems {
+            get {
+                return ResourceManager.GetString("ShopAutoBuyItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Specify at least one: Store Items or Consumables 的本地化字符串。
+        /// </summary>
+        public static string ShopAutoBuyPleaseSelectOne {
+            get {
+                return ResourceManager.GetString("ShopAutoBuyPleaseSelectOne", resourceCulture);
             }
         }
         

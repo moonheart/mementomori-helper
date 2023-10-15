@@ -245,4 +245,25 @@
     <data name="Add" xml:space="preserve">
         <value>追加</value>
     </data>
+    <data name="ShopAutoBuyItems" xml:space="preserve">
+        <value>自動購入ストアアイテム</value>
+    </data>
+    <data name="AutoBuy" xml:space="preserve">
+        <value>自動購入</value>
+    </data>
+    <data name="ConsumeItem" xml:space="preserve">
+        <value>消費アイテム</value>
+    </data>
+    <data name="ShopAutoBuyPleaseSelectOne" xml:space="preserve">
+        <value>少なくとも1つ指定してください: ストアアイテムまたは消耗アイテム</value>
+    </data>
+    <data name="AnyItems" xml:space="preserve">
+        <value>任意のアイテム</value>
+    </data>
+    <data name="BuyWith" xml:space="preserve">
+        <value>{0} で {1} を購入</value>
+    </data>
+    <data name="ResettoDefault" xml:space="preserve">
+        <value>デフォルトにリセット</value>
+    </data>
 </root>

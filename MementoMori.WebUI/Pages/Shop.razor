@@ -7,14 +7,19 @@
 @using MementoMori.WebUI.Extensions
 @using MementoMori.WebUI.Pages.Components
 @using MementoMori.Ortega.Common.Utils
+@using MementoMori.Common.Localization
+@using MementoMori.Option
+@using MementoMori.Ortega.Share.Master.Data
 @inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
 @inject IDialogService DialogService
+@inject IWritableOptions<GameConfig> WritableGameConfig
+@inject ISnackbar Snackbar
 
 @page "/Shop"
 
-<MudTabs MinimumTabWidth="20px">
+<MudTabs MinimumTabWidth="20px" @bind-ActivePanelIndex="SelectedTabIndex">
     <ChildContent>
-        @foreach (var tab in _tradeShopTabInfoList.OrderBy(d => Masters.TradeShopTabTable.GetById(d.TradeShopTabId).SortOrder))
+        @foreach (var tab in _tradeShopTabInfoList)
         {
             var tradeShopTabMb = Masters.TradeShopTabTable.GetById(tab.TradeShopTabId);
             <MudTabPanel Text="@(Masters.TextResourceTable.Get(tradeShopTabMb.TabNameKey))">
@@ -63,13 +68,12 @@
 
                             var buyBtnDisabled = (item.LimitTradeCount > 0 && item.IsSoldOut()) || buyMaxCount == 0;
 
-
                             <MudItem Class="pa-1">
                                 <MudCard Elevation="2">
                                     <MudCardHeader>
                                         <CardHeaderContent>
                                             <MudText>@itemName</MudText>
-                                           
+
                                         </CardHeaderContent>
                                     </MudCardHeader>
                                     <MudCardContent>
@@ -85,6 +89,7 @@
                                     </MudCardContent>
                                     <MudCardActions>
                                         <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Disabled="buyBtnDisabled" OnClick="() => BuyItem(tab, item)">@consumeText</MudButton>
+                                        <MudIconButton Class="ml-2" Icon="@Icons.Material.Filled.AlarmAdd" Variant="Variant.Outlined" Color="Color.Secondary" OnClick="() => ShowAutoBuyDialog(tradeShopTabMb, item)"></MudIconButton>
                                     </MudCardActions>
                                 </MudCard>
                             </MudItem>
@@ -110,9 +115,43 @@
     </ChildContent>
 </MudTabs>
 
+<MudDialog @bind-IsVisible="_autoBuyDialogVisible" Options="new DialogOptions() {CloseButton = true}">
+    <DialogContent>
+        @{
+            var tab = _tradeShopTabInfoList[SelectedTabIndex];
+            var tradeShopTabMb = Masters.TradeShopTabTable.GetById(_tradeShopTabInfoList[SelectedTabIndex].TradeShopTabId);
+            var tabName = Masters.TextResourceTable.Get(tradeShopTabMb.TabNameKey);
+        }
+        <MudText Typo="Typo.h5">@tabName @ResourceStrings.AutoBuy</MudText>
+        <MudSelect Label="@ResourceStrings.ShopAutoBuyItems" T="UserItem" @bind-Value="SelectedAutoBuyItem" Comparer="@(new UserItemComparer())" Clearable="true">
+            @foreach (var item in tab.TradeShopItems?.OrderBy(d => d.SortOrder).ToArray() ?? Array.Empty<TradeShopItem>())
+            {
+                <MudSelectItem T="UserItem" Value="item.GiveItem">@($"{ItemUtil.GetItemName(item.GiveItem)}×{item.GiveItem.ItemCount}")</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSlider Min="0" Max="100" Step="10" @bind-Value="SelectedAutoBuyDiscount">@($"{ResourceStrings.DiscountPercentageforProducts} {SelectedAutoBuyDiscount}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}")</MudSlider>
+        <MudSelect Label="@ResourceStrings.ConsumeItem" T="UserItem" @bind-Value="SelectedConsumeItem" Comparer="@(new UserItemComparer())" Clearable="true">
+            @foreach (var item in ConsumableItems)
+            {
+                <MudSelectItem T="UserItem" Value="item">@($"{ItemUtil.GetItemName(item)}")</MudSelectItem>
+            }
+        </MudSelect>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="ConfirmAutoBuy">@ResourceStrings.AutoBuy</MudButton>
+    </DialogActions>
+</MudDialog>
+
 @code {
 
     private List<TradeShopTabInfo> _tradeShopTabInfoList = new();
+    private bool _autoBuyDialogVisible;
+    private int SelectedTabIndex;
+    private UserItem SelectedAutoBuyItem;
+    private UserItem SelectedConsumeItem;
+    private int SelectedAutoBuyDiscount;
+
+    private List<UserItem> ConsumableItems = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -122,7 +161,7 @@
     private async Task GetShopInfo()
     {
         var listResponse = await ViewModel.GetResponse<GetListRequest, GetListResponse>(new GetListRequest());
-        _tradeShopTabInfoList = listResponse.TradeShopTabInfoList;
+        _tradeShopTabInfoList = listResponse.TradeShopTabInfoList.OrderBy(d => Masters.TradeShopTabTable.GetById(d.TradeShopTabId).SortOrder).ToList();
     }
 
     private void BuyItem(TradeShopTabInfo tab, TradeShopItem tradeShopItem)
@@ -179,6 +218,77 @@
 
         itemName = $"{itemName}×{item.ItemCount}";
         return (itemName, subName);
+    }
+
+    private void ShowAutoBuyDialog(TradeShopTabMB tab, TradeShopItem item)
+    {
+        ConsumableItems = tab.ConsumeItemInfos.Select(d => new UserItem() {ItemType = d.ItemType, ItemId = d.ItemId}).ToList();
+        _autoBuyDialogVisible = true;
+        SelectedAutoBuyItem = item.GiveItem;
+        SelectedConsumeItem = ConsumableItems.First();
+    }
+
+    public List<GameConfig.ShopAutoBuyItem> Shop__AutoBuyItems
+    {
+        get => WritableGameConfig.Value.Shop.AutoBuyItems;
+        set => WritableGameConfig.Update(x => x.Shop.AutoBuyItems = value);
+    }
+
+    private void ConfirmAutoBuy()
+    {
+        if (SelectedAutoBuyItem == null && SelectedConsumeItem == null)
+        {
+            Snackbar.Clear();
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+            Snackbar.Add(ResourceStrings.ShopAutoBuyPleaseSelectOne, Severity.Error);
+            return;
+        }
+        var tmp = Shop__AutoBuyItems.ToList();
+        var shopTabId = _tradeShopTabInfoList[SelectedTabIndex].TradeShopTabId;
+
+        var existing = tmp.Find(d => d.ShopTabId == shopTabId && (SelectedAutoBuyItem != null || SelectedConsumeItem != null) &&
+                                     (SelectedAutoBuyItem == null 
+                                         ? d.BuyItem == null && d.ConsumeItem.IsEqual(SelectedConsumeItem.ItemType, SelectedConsumeItem.ItemId) 
+                                         : d.ConsumeItem == null && d.BuyItem.IsEqual(SelectedAutoBuyItem.ItemType, SelectedAutoBuyItem.ItemId)));
+        if (existing != null)
+        {
+            existing.MinDiscountPercent = SelectedAutoBuyDiscount;
+            existing.ConsumeItem = SelectedConsumeItem;
+            existing.BuyItem = SelectedAutoBuyItem;
+            existing.ShopTabId = shopTabId;
+        }
+        else
+        {
+            tmp.Add(new GameConfig.ShopAutoBuyItem()
+            {
+                BuyItem = SelectedAutoBuyItem,
+                MinDiscountPercent = SelectedAutoBuyDiscount,
+                ShopTabId = shopTabId,
+                ConsumeItem = SelectedConsumeItem
+            });
+        }
+        Shop__AutoBuyItems = tmp;
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add(ResourceStrings.Success, Severity.Success);
+        _autoBuyDialogVisible = false;
+    }
+
+    private class UserItemComparer : IEqualityComparer<UserItem>
+    {
+        public bool Equals(UserItem x, UserItem y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            if (x.GetType() != y.GetType()) return false;
+            return x.ItemId == y.ItemId && x.ItemType == y.ItemType;
+        }
+
+        public int GetHashCode(UserItem obj)
+        {
+            return HashCode.Combine(obj.ItemId, (int) obj.ItemType);
+        }
     }
 
 }

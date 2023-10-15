@@ -32,10 +32,18 @@ public class TimeZoneAwareJobRegister
             return;
         }
 
-        AddJob<DailyJob>(scheduler, _gameConfig.Value.AutoJob.DailyJobCron, ResourceStrings.DailyJob);
-        AddJob<HourlyJob>(scheduler, _gameConfig.Value.AutoJob.HourlyJobCron, ResourceStrings.RewardClaimJob);
-        AddJob<PvpJob>(scheduler, _gameConfig.Value.AutoJob.PvpJobCron, Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]"));
-        AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.Value.AutoJob.GuildRaidBossReleaseCron, Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]"));
+        try
+        {
+            AddJob<DailyJob>(scheduler, _gameConfig.Value.AutoJob.DailyJobCron, ResourceStrings.DailyJob);
+            AddJob<HourlyJob>(scheduler, _gameConfig.Value.AutoJob.HourlyJobCron, ResourceStrings.RewardClaimJob);
+            AddJob<PvpJob>(scheduler, _gameConfig.Value.AutoJob.PvpJobCron, Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]"));
+            AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.Value.AutoJob.GuildRaidBossReleaseCron, Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]"));
+            AddJob<AutoBuyShopItemJob>(scheduler, _gameConfig.Value.AutoJob.AutoBuyShopItemJobCron, ResourceStrings.ShopAutoBuyItems);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
     private void RemoveJob<T>(IScheduler scheduler) where T : IJob

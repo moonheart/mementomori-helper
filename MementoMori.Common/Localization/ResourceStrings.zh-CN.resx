@@ -351,4 +351,25 @@
   <data name="Add" xml:space="preserve">
       <value>添加</value>
   </data>
+  <data name="ShopAutoBuyItems" xml:space="preserve">
+      <value>自动购买商城物品</value>
+  </data>
+  <data name="AutoBuy" xml:space="preserve">
+      <value>自动购买</value>
+  </data>
+  <data name="ConsumeItem" xml:space="preserve">
+      <value>消耗的物品</value>
+  </data>
+  <data name="ShopAutoBuyPleaseSelectOne" xml:space="preserve">
+      <value>商城物品和消耗物品请至少指定一个</value>
+  </data>
+  <data name="AnyItems" xml:space="preserve">
+      <value>任意物品</value>
+  </data>
+  <data name="BuyWith" xml:space="preserve">
+      <value>用 {0} 购买 {1}</value>
+  </data>
+  <data name="ResettoDefault" xml:space="preserve">
+      <value>重置为默认</value>
+  </data>
 </root>

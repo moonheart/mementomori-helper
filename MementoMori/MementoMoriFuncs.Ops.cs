@@ -48,13 +48,17 @@ using PresentGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Present
 using PresentGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Present.GetListResponse;
 using ShopGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListRequest;
 using ShopGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListResponse;
+using TradeShopGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.TradeShop.GetListRequest;
+using TradeShopGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.TradeShop.GetListResponse;
 using System.Xml.Linq;
 using MementoMori.Common.Localization;
 using MementoMori.Ortega.Share.Data.ApiInterface.GlobalGvg;
 using MementoMori.Ortega.Share.Data.ApiInterface.LocalGvg;
 using MementoMori.Ortega.Share.Data.ApiInterface.LocalRaid;
 using MementoMori.Ortega.Share.Data.ApiInterface.Shop;
+using MementoMori.Ortega.Share.Data.ApiInterface.TradeShop;
 using MementoMori.Ortega.Share.Data.Auth;
+using MementoMori.Ortega.Share.Data.TradeShop;
 using static MementoMori.Ortega.Share.Masters;
 
 namespace MementoMori;
@@ -836,7 +840,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var bossResponse = await GetResponse<GetLocalRaidInfoRequest,GetLocalRaidInfoResponse>(new ());
+            var bossResponse = await GetResponse<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
             log(bossResponse.ToJson(true));
         });
     }
@@ -911,6 +915,61 @@ public partial class MementoMoriFuncs : ReactiveObject
                 var count = userItems.GetCount(itemType, itemId);
                 return buttonInfo.ConsumeUserItem.ItemCount <= count;
             }
+        });
+    }
+
+
+    public async Task AutoBuyShopItem()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var autoBuyItems = GameConfig.Shop.AutoBuyItems;
+            if (autoBuyItems.Count == 0) return;
+
+            var listResponse = await GetResponse<TradeShopGetListRequest, TradeShopGetListResponse>(new TradeShopGetListRequest());
+
+            log(ResourceStrings.ShopAutoBuyItems);
+            foreach (var tabInfo in listResponse.TradeShopTabInfoList)
+            {
+                if (tabInfo.TradeShopItems == null) continue;
+
+                foreach (var shopItem in tabInfo.TradeShopItems)
+                {
+                    if (shopItem.IsSoldOut()) continue;
+
+                    var shopAutoBuyItem = autoBuyItems.Find(d =>
+                    {
+                        if (d.ShopTabId != tabInfo.TradeShopTabId) return false;
+                        if (d.BuyItem == null && d.ConsumeItem == null) return false;
+                        if (d.BuyItem == null && (
+                                (d.ConsumeItem.ItemType == shopItem.ConsumeItem1.ItemType && d.ConsumeItem.ItemId == shopItem.ConsumeItem1.ItemId)
+                                || (shopItem.ConsumeItem2 != null && d.ConsumeItem.ItemType == shopItem.ConsumeItem2.ItemType && d.ConsumeItem.ItemId == shopItem.ConsumeItem2.ItemId)))
+                            return true;
+                        if (d.ConsumeItem == null && d.BuyItem.ItemType == shopItem.GiveItem.ItemType && d.BuyItem.ItemId == shopItem.GiveItem.ItemId)
+                            return true;
+                        return false;
+                    });
+
+                    if (shopAutoBuyItem == null) continue;
+
+                    if (shopItem.SalePercent < shopAutoBuyItem.MinDiscountPercent) continue;
+
+                    try
+                    {
+                        var response = await GetResponse<BuyItemRequest, BuyItemResponse>(
+                            new BuyItemRequest
+                            {
+                                TradeShopTabId = tabInfo.TradeShopTabId, TradeShopItemInfos = new List<TradeShopItemInfo>() { new() { TradeShopItemId = shopItem.TradeShopItemId, TradeCount = 1 } }
+                            });
+                        response.TradeShopItems.Select(d => d.GiveItem).PrintUserItems(log);
+                    }
+                    catch (ApiErrorException e)
+                    {
+                        log(e.Message);
+                    }
+                }
+            }
+            log($"{ResourceStrings.ShopAutoBuyItems} {ResourceStrings.Finished}");
         });
     }
 

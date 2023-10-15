@@ -45,6 +45,7 @@
                 <MudTextField Label="@($"{ResourceStrings.RewardClaimJob} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__HourlyJobCron" Variant="Variant.Outlined"></MudTextField>
                 <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__PvpJobCron" Variant="Variant.Outlined"></MudTextField>
                 <MudTextField Label="@($"{Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__GuildRaidBossReleaseCron" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField Label="@($"{ResourceStrings.ShopAutoBuyItems} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoBuyShopItemJobCron" Variant="Variant.Outlined"></MudTextField>
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -143,6 +144,30 @@
         <MudCard>
             <MudCardHeader>
                 <CardHeaderContent>
+                    <!--商城-->
+                    <MudText>@Masters.TextResourceTable.Get("[CommonHeaderExchangeLabel]")</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudButton OnClick="ShopAutoBuyRestoreDefault">@ResourceStrings.ResettoDefault</MudButton>
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudField Label="@ResourceStrings.ShopAutoBuyItems" Variant="Variant.Outlined">
+                    @foreach (var item in Shop__AutoBuyItems)
+                    {
+                        var buy = item.BuyItem == null ? ResourceStrings.AnyItems : $"{ItemUtil.GetItemName(item.BuyItem.ItemType, item.BuyItem.ItemId)}";
+                        var consume = item.ConsumeItem == null ? ResourceStrings.AnyItems : $"{ItemUtil.GetItemName(item.ConsumeItem.ItemType, item.ConsumeItem.ItemId)}";
+                        var text = string.Format(ResourceStrings.BuyWith, consume, buy);
+                        <MudChip OnClose="() => RemoveShopAutoBuyItem(item)">@text @($"{item.MinDiscountPercent}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}")</MudChip>
+                    }
+                </MudField>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem sm="12" md="6" lg="4" xl="3">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
                     <MudText>@ResourceStrings.Others</MudText>
                 </CardHeaderContent>
             </MudCardHeader>
@@ -224,6 +249,8 @@
         await base.OnInitializedAsync();
     }
 
+    #region DungeonBattle
+
     private void DungeonBattleRemoveItem(GameConfig.ShopDiscountItem item)
     {
         var tmp = DungeonBattle__ShopTargetItems.ToList();
@@ -293,6 +320,10 @@
         get => WritableGameConfig.Value.DungeonBattle.MaxUseRecoveryItem;
         set => WritableGameConfig.Update(x => x.DungeonBattle.MaxUseRecoveryItem = value);
     }
+
+    #endregion
+
+    #region AutoJob
 
     public bool AutoJob__DisableAll
     {
@@ -379,12 +410,53 @@
             TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
+    public string AutoJob__AutoBuyShopItemJobCron
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoBuyShopItemJobCron;
+        set
+        {
+            WritableGameConfig.Update(x => x.AutoJob.AutoBuyShopItemJobCron = value);
+            TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+    }
+
+    #endregion
+
+    #region Shop
+
+    public List<GameConfig.ShopAutoBuyItem> Shop__AutoBuyItems
+    {
+        get => WritableGameConfig.Value.Shop.AutoBuyItems;
+        set => WritableGameConfig.Update(x => x.Shop.AutoBuyItems = value);
+    }
+
+    private void RemoveShopAutoBuyItem(GameConfig.ShopAutoBuyItem item)
+    {
+        var tmp = Shop__AutoBuyItems.ToList();
+        tmp.Remove(item);
+        Shop__AutoBuyItems = tmp;
+    }
+
+    private void ShopAutoBuyRestoreDefault()
+    {
+        Shop__AutoBuyItems = new List<GameConfig.ShopAutoBuyItem>()
+        {
+            new() {BuyItem = new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}, ShopTabId = 1, MinDiscountPercent = 20},
+            new() {ShopTabId = 1, ConsumeItem = new UserItem() {ItemType = ItemType.Gold, ItemId = 1}}
+        };
+    }
+
+    #endregion
+
+    #region Other
 
     public int AutoRequestDelay
     {
         get => WritableGameConfig.Value.AutoRequestDelay;
         set => WritableGameConfig.Update(x => x.AutoRequestDelay = value);
     }
+
+    #endregion
 
     private class UserItemComparer : IEqualityComparer<UserItem>
     {

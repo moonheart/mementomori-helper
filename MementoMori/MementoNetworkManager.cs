@@ -21,6 +21,7 @@ using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
+using MementoMori.Common.Localization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ortega.Common.Manager;
@@ -249,7 +250,7 @@ public class MementoNetworkManager
         if (authAttr != null)
             uri = new Uri(_apiAuth, authAttr.Uri);
         else if (apiAttr != null)
-            uri = new Uri(_apiHost, apiAttr.Uri);
+            uri = new Uri(_apiHost ?? throw new InvalidOperationException(ResourceStrings.PleaseLogin), apiAttr.Uri);
         else
             throw new NotSupportedException();
 
