@@ -30,7 +30,7 @@
                     @if (tab.ExpirationTimeStamp > 0)
                     {
                         var span = TimeSpan.FromMilliseconds(tab.ExpirationTimeStamp - DateTimeOffset.Now.ToUnixTimeMilliseconds());
-                        var time = span.Days > 0
+                        var time = span.Days == 0
                             ? Masters.TextResourceTable.Get("[CommonTimeFormatOnlyTime]", span.Hours, span.Minutes, span.Seconds)
                             : Masters.TextResourceTable.Get("[CommonRemainTimeFull]", span.Days, span.Hours, span.Minutes, span.Seconds);
                         var refreshTime = $"{Masters.TextResourceTable.Get("[ExchangeRemainingTimeLabel]")}: {time}";
