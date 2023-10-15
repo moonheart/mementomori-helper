@@ -63,6 +63,7 @@ By downloading, installing, and using this tool, users acknowledge that they hav
 - [ ] Exchange Shop
     - [x] Purchase regular items
     - [x] Purchase crystals
+    - [x] Automatic purchase items
 - [ ] Characters
     - [x] Character list
     - [x] Character attributes
