@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using MementoMori;
 using MementoMori.AssetDownloader.Alist;
 using Microsoft.Extensions.Options;
-
 using Telegram.Bot;
 
 namespace ConsoleApp1;
@@ -139,8 +138,12 @@ internal class AssetDownloader : BackgroundService
 
     private static async Task SendNotification(string message)
     {
-        TelegramBotClient botClient = new(Environment.GetEnvironmentVariable("TELEGRAM_BOT_TOKEN"));
-        await botClient.SendTextMessageAsync(Environment.GetEnvironmentVariable("TELEGRAM_CHAT_ID"), message);
+        var token = Environment.GetEnvironmentVariable("TELEGRAM_BOT_TOKEN");
+        var chatId = Environment.GetEnvironmentVariable("TELEGRAM_CHAT_ID");
+        if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(chatId))
+            return;
+        TelegramBotClient botClient = new(token);
+        await botClient.SendTextMessageAsync(chatId, message);
     }
 
 
@@ -219,6 +222,7 @@ internal class AssetDownloader : BackgroundService
             _logger.LogInformation("No assets downloaded, skip");
             return;
         }
+
         await SendNotification($"客户端有更新, {lastVersion}->{version}, 共更新了 {files.Length} 个文件");
 
         await ConvertAndUpload(stoppingToken);

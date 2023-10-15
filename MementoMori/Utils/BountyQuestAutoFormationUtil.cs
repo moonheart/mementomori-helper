@@ -126,7 +126,7 @@ public static class BountyQuestAutoFormationUtil
         List<string> guids,
         List<long> characterIds,
         CharacterRarityFlags rarityFlags = CharacterRarityFlags.None,
-        List<ElementType>? elementTypes = null)
+        List<ElementType> elementTypes = null)
     {
         foreach (var dtoInfo in userCharacterDtoInfos)
         {
