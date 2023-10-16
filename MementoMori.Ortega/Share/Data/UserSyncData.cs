@@ -34,6 +34,8 @@ namespace MementoMori.Ortega.Share.Data
 
         public int? GuildJoinLimitCount { get; set; }
 
+        public bool? HasTransitionedPanelPictureBook { get; set; }
+
         public bool? IsDataLinkage { get; set; }
 
         public bool? IsJoinedGlobalGvg { get; set; }

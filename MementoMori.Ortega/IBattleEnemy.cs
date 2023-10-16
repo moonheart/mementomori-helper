@@ -6,83 +6,37 @@ namespace MementoMori.Ortega;
 
 public interface IBattleEnemy
 {
-	IReadOnlyList<long> ActiveSkillIds
-	{
-		get;
-	}
+    IReadOnlyList<long> ActiveSkillIds { get; }
 
-	BaseParameter BaseParameter
-	{
-		get;
-	}
+    BaseParameter BaseParameter { get; }
 
-	long BattleEnemyCharacterId
-	{
-		get;
-	}
+    long BattleEnemyCharacterId { get; }
 
-	BattleParameter BattleParameter
-	{
-		get;
-	}
+    BattleParameter BattleParameter { get; }
 
-	long BattlePower
-	{
-		get;
-	}
+    long BattlePower { get; }
 
-	CharacterRarityFlags CharacterRarityFlags
-	{
-		get;
-	}
+    CharacterRarityFlags CharacterRarityFlags { get; }
 
-	ElementType ElementType
-	{
-		get;
-	}
+    ElementType ElementType { get; }
 
-	long EnemyAdjustId
-	{
-		get;
-	}
+    long EnemyAdjustId { get; }
 
-	long EnemyEquipmentId
-	{
-		get;
-	}
+    long EnemyEquipmentId { get; }
 
-	long EnemyRank
-	{
-		get;
-	}
+    EquipmentRarityFlags ExclusiveEquipmentRarityFlags { get; }
 
-	JobFlags JobFlags
-	{
-		get;
-	}
+    long EnemyRank { get; }
 
-	string NameKey
-	{
-		get;
-	}
+    JobFlags JobFlags { get; }
 
-	long NormalSkillId
-	{
-		get;
-	}
+    string NameKey { get; }
 
-	IReadOnlyList<long> PassiveSkillIds
-	{
-		get;
-	}
+    long NormalSkillId { get; }
 
-	long UnitIconId
-	{
-		get;
-	}
+    IReadOnlyList<long> PassiveSkillIds { get; }
 
-	UnitIconType UnitIconType
-	{
-		get;
-	}
+    long UnitIconId { get; }
+
+    UnitIconType UnitIconType { get; }
 }

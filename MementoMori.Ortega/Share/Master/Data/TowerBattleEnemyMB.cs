@@ -7,146 +7,105 @@ using MessagePack;
 
 namespace MementoMori.Ortega.Share.Master.Data
 {
-	[Description("無窮の塔\u3000敵データ")]
-	[MessagePackObject(true)]
-	public class TowerBattleEnemyMB : MasterBookBase, IBattleEnemy
-	{
-		[PropertyOrder(15)]
-		[Description("アクティブスキルIDのリスト")]
-		public IReadOnlyList<long> ActiveSkillIds
-		{
-			get;
-		}
+    [Description("無窮の塔\u3000敵データ")]
+    [MessagePackObject(true)]
+    public class TowerBattleEnemyMB : MasterBookBase, IBattleEnemy
+    {
+        [PropertyOrder(12)]
+        [Description("アクティブスキルIDのリスト")]
+        public IReadOnlyList<long> ActiveSkillIds { get; }
 
-		[Description("ベースパラメータ")]
-		[Nest(true, 1)]
-		[PropertyOrder(5)]
-		public BaseParameter BaseParameter
-		{
-			get;
-		}
+        [Nest(true, 1)]
+        [PropertyOrder(9)]
+        [Description("ベースパラメータ")]
+        public BaseParameter BaseParameter { get; }
 
-		[Description("敵キャラクターID")]
-		[PropertyOrder(1)]
-		public long BattleEnemyCharacterId
-		{
-			get;
-		}
+        [PropertyOrder(14)]
+        [Description("敵キャラクターID")]
+        public long BattleEnemyCharacterId { get; }
 
-		[PropertyOrder(6)]
-		[Description("バトルパラメータ")]
-		[Nest(true, 1)]
-		public BattleParameter BattleParameter
-		{
-			get;
-		}
+        [Nest(true, 1)]
+        [PropertyOrder(10)]
+        [Description("バトルパラメータ")]
+        public BattleParameter BattleParameter { get; }
 
-		[PropertyOrder(7)]
-		[Description("戦闘力")]
-		public long BattlePower
-		{
-			get;
-		}
+        [PropertyOrder(5)]
+        [Description("戦闘力")]
+        public long BattlePower { get; }
 
-		[Description("レアリティ")]
-		[PropertyOrder(4)]
-		public CharacterRarityFlags CharacterRarityFlags
-		{
-			get;
-		}
+        [PropertyOrder(8)]
+        [Description("レアリティ")]
+        public CharacterRarityFlags CharacterRarityFlags { get; }
 
-		[Description("属性")]
-		[PropertyOrder(11)]
-		public ElementType ElementType
-		{
-			get;
-		}
+        [PropertyOrder(7)]
+        [Description("属性")]
+        public ElementType ElementType { get; }
 
-		[Description("敵調整値ID")]
-		[PropertyOrder(8)]
-		public long EnemyAdjustId
-		{
-			get;
-		}
+        [PropertyOrder(17)]
+        [Description("敵調整値ID")]
+        public long EnemyAdjustId { get; }
 
-		[PropertyOrder(2)]
-		[Description("敵武具ID")]
-		public long EnemyEquipmentId
-		{
-			get;
-		}
+        [PropertyOrder(15)]
+        [Description("敵武具ID")]
+        public long EnemyEquipmentId { get; }
 
-		[Description("敵のランク")]
-		[PropertyOrder(3)]
-		public long EnemyRank
-		{
-			get;
-		}
+        [PropertyOrder(16)]
+        [Description("専用武器レアリティ")]
+        public EquipmentRarityFlags ExclusiveEquipmentRarityFlags { get; }
 
-		[Description("職業")]
-		[PropertyOrder(10)]
-		public JobFlags JobFlags
-		{
-			get;
-		}
+        [PropertyOrder(4)]
+        [Description("敵のランク")]
+        public long EnemyRank { get; }
 
-		[Description("名称キー")]
-		[PropertyOrder(9)]
-		public string NameKey
-		{
-			get;
-		}
+        [PropertyOrder(6)]
+        [Description("職業")]
+        public JobFlags JobFlags { get; }
 
-		[PropertyOrder(14)]
-		[Description("通常攻撃として使ってくるスキルID")]
-		public long NormalSkillId
-		{
-			get;
-		}
+        [PropertyOrder(3)]
+        [Description("名称キー")]
+        public string NameKey { get; }
 
-		[Description("パッシブスキルIDのリスト")]
-		[PropertyOrder(16)]
-		public IReadOnlyList<long> PassiveSkillIds
-		{
-			get;
-		}
+        [PropertyOrder(11)]
+        [Description("通常攻撃として使ってくるスキルID")]
+        public long NormalSkillId { get; }
 
-		[Description("ユニットアイコンID")]
-		[PropertyOrder(13)]
-		public long UnitIconId
-		{
-			get;
-		}
+        [PropertyOrder(13)]
+        [Description("パッシブスキルIDのリスト")]
+        public IReadOnlyList<long> PassiveSkillIds { get; }
 
-		[Description("ユニットアイコンタイプ")]
-		[PropertyOrder(12)]
-		public UnitIconType UnitIconType
-		{
-			get;
-		}
+        [PropertyOrder(2)]
+        [Description("ユニットアイコンID")]
+        public long UnitIconId { get; }
 
-		[SerializationConstructor]
-		public TowerBattleEnemyMB(long id, bool? isIgnore, string memo, long battleEnemyCharacterId, long enemyEquipmentId, long enemyRank, CharacterRarityFlags characterRarityFlags, BaseParameter baseParameter, BattleParameter battleParameter, long battlePower, long enemyAdjustId, string nameKey, JobFlags jobFlags, ElementType elementType, UnitIconType unitIconType, long unitIconId, long normalSkillId, IReadOnlyList<long> activeSkillIds, IReadOnlyList<long> passiveSkillIds)
-			:base(id, isIgnore, memo)
-		{
-			BattleEnemyCharacterId = battleEnemyCharacterId;
-			EnemyEquipmentId = enemyEquipmentId;
-			EnemyRank = enemyRank;
-			CharacterRarityFlags = characterRarityFlags;
-			BaseParameter = baseParameter;
-			BattleParameter = battleParameter;
-			BattlePower = battlePower;
-			EnemyAdjustId = enemyAdjustId;
-			NameKey = nameKey;
-			JobFlags = jobFlags;
-			ElementType = elementType;
-			UnitIconType = unitIconType;
-			UnitIconId = unitIconId;
-			NormalSkillId = normalSkillId;
-			ActiveSkillIds = activeSkillIds;
-			PassiveSkillIds = passiveSkillIds;
-		}
+        [PropertyOrder(1)]
+        [Description("ユニットアイコンタイプ")]
+        public UnitIconType UnitIconType { get; }
 
-		public TowerBattleEnemyMB()  :base(0L, false, ""){}
-	}
+        [SerializationConstructor]
+        public TowerBattleEnemyMB(long id, bool? isIgnore, string memo, UnitIconType unitIconType, long unitIconId, string nameKey, long enemyRank, long battleEnemyCharacterId, long battlePower, JobFlags jobFlags, ElementType elementType, CharacterRarityFlags characterRarityFlags, BaseParameter baseParameter, BattleParameter battleParameter, long normalSkillId, IReadOnlyList<long> activeSkillIds, IReadOnlyList<long> passiveSkillIds, long enemyAdjustId, EquipmentRarityFlags exclusiveEquipmentRarityFlags, long enemyEquipmentId)
+            : base(id, isIgnore, memo)
+        {
+            UnitIconType = unitIconType;
+            UnitIconId = unitIconId;
+            NameKey = nameKey;
+            EnemyRank = enemyRank;
+            BattleEnemyCharacterId = battleEnemyCharacterId;
+            BattlePower = battlePower;
+            JobFlags = jobFlags;
+            ElementType = elementType;
+            CharacterRarityFlags = characterRarityFlags;
+            BaseParameter = baseParameter;
+            BattleParameter = battleParameter;
+            NormalSkillId = normalSkillId;
+            ActiveSkillIds = activeSkillIds;
+            PassiveSkillIds = passiveSkillIds;
+            EnemyAdjustId = enemyAdjustId;
+            ExclusiveEquipmentRarityFlags = exclusiveEquipmentRarityFlags;
+            EnemyEquipmentId = enemyEquipmentId;
+        }
+
+        public TowerBattleEnemyMB() : base(0L, false, "")
+        {
+        }
+    }
 }

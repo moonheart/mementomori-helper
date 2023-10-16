@@ -7,6 +7,7 @@
 		Skill,
 		SkillQlipha,
 		Memory,
-		MyPageQlipha
+		MyPageQlipha,
+        Recitation
 	}
 }

@@ -41,13 +41,17 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("属性")]
 		public ElementType ElementType { get; }
 
-		[PropertyOrder(18)]
+		[PropertyOrder(19)]
 		[Description("敵調整ID")]
 		public long EnemyAdjustId { get; }
 
 		[PropertyOrder(17)]
 		[Description("敵武具ID")]
 		public long EnemyEquipmentId { get; }
+
+        [PropertyOrder(18)]
+        [Description("専用武器レアリティ")]
+        public EquipmentRarityFlags ExclusiveEquipmentRarityFlags { get; }
 
 		[PropertyOrder(4)]
 		[Description("敵のランク")]
@@ -86,12 +90,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 		public UnitIconType UnitIconType { get; }
 
 		[SerializationConstructor]
-		public AutoBattleEnemyMB(long id, bool? isIgnore, string memo, IReadOnlyList<long> activeSkillIds,
-			BaseParameter baseParameter, UnitIconType unitIconType, long unitIconId, BattleParameter battleParameter,
-			long enemyRank, long battlePower, JobFlags jobFlags, ElementType elementType,
-			CharacterRarityFlags characterRarityFlags, string nameKey, long normalSkillId,
-			IReadOnlyList<long> passiveSkillIds, int rewardCharacterExp, int rewardPlayerExp,
-			long battleEnemyCharacterId, long enemyEquipmentId, long enemyAdjustId)
+		public AutoBattleEnemyMB(long id, bool? isIgnore, string memo, IReadOnlyList<long> activeSkillIds, BaseParameter baseParameter, UnitIconType unitIconType, long unitIconId, BattleParameter battleParameter, long enemyRank, long battlePower, JobFlags jobFlags, ElementType elementType, CharacterRarityFlags characterRarityFlags, string nameKey, long normalSkillId, IReadOnlyList<long> passiveSkillIds, int rewardCharacterExp, int rewardPlayerExp, long battleEnemyCharacterId, long enemyEquipmentId, EquipmentRarityFlags exclusiveEquipmentRarityFlags, long enemyAdjustId)
 			: base(id, isIgnore, memo)
 		{
 			this.ActiveSkillIds = activeSkillIds;
@@ -111,6 +110,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 			this.RewardPlayerExp = rewardPlayerExp;
 			this.BattleEnemyCharacterId = battleEnemyCharacterId;
 			this.EnemyEquipmentId = enemyEquipmentId;
+            this.ExclusiveEquipmentRarityFlags = exclusiveEquipmentRarityFlags;
 			this.EnemyAdjustId = enemyAdjustId;
 
 		}

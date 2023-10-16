@@ -42,6 +42,7 @@
 		BattleMapPopulationCount,
 		BattleMapBuildingRemoveCurse,
 		BattleMapChangeTerritory,
+		BattleMapChangeWorld,
 		CharacterSetLevelLink = 3001,
 		CharacterReinforcement,
 		CharacterSetParty,
@@ -78,6 +79,9 @@
 		LevelLinkBaseCharacterSet,
 		ReleaseLock = 11001,
 		StrengthenLightUp = 12001,
-		Purchase = 13001
+		Purchase = 13001,
+		PanelMissionOpenMass = 14001,
+		PanelMissionBingo,
+		PanelMissionFlashScreen
 	}
 }

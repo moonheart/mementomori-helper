@@ -4,7 +4,7 @@
 	{
 		None,
 		Title,
-		Guild,
+        OP,
 		DungeonBattle,
 		BountyQuest,
 		LocalPvp,

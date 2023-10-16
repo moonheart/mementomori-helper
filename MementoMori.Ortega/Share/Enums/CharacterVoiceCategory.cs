@@ -24,6 +24,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("バトル勝利")]
 		BattleWin,
 		[Description("バトル敗北")]
-		BattleLose
+		BattleLose,
+		[Description("朗読")]
+		Recitation
 	}
 }

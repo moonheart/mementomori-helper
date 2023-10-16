@@ -22,6 +22,7 @@
 		AppsFlyerEventTutorialCompletion,
 		ShowBossBattleButtonArrow,
 		ReleaseMyPage,
-		PreLoadMapObject
+		PreLoadMapObject,
+        ChangeWorld
 	}
 }

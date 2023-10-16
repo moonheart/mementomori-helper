@@ -10,10 +10,11 @@
 		Talk_Out = 6000,
 		Memory_In = 7000,
 		Memory_Loop = 8000,
-        Memory_Loop_SP = 8100,
+		Memory_Loop_SP = 8100,
 		Memory_Out = 9000,
 		Skill = 10000,
 		Memory_Out_End = 11000,
-		Idle_Action = 12000
+		Idle_Action = 12000,
+		Recitation_Loop = 13000
 	}
 }

@@ -120,6 +120,12 @@ namespace MementoMori.Ortega.Share
                 OpenContentTable,
                 LegendLeagueClassTable,
                 EffectGroupTable,
+                RecitationTable,
+                ChatEffectKeywordTable,
+                PanelTable,
+                PanelMissionTable,
+                MusicTable,
+                DownloadRawDataTable
             };
         }
 
@@ -241,6 +247,8 @@ namespace MementoMori.Ortega.Share
 
         public static GachaDestinyAddCharacterTable GachaDestinyAddCharacterTable { get; } = new();
 
+        public static ChatEffectKeywordTable ChatEffectKeywordTable { get; } = new();
+
         public static ActiveSkillTable ActiveSkillTable { get; } = new();
 
         public static AppVersionTable AppVersionTable { get; } = new();
@@ -282,6 +290,8 @@ namespace MementoMori.Ortega.Share
         public static CharacterCollectionRewardTable CharacterCollectionRewardTable { get; } = new();
 
         public static ChapterTable ChapterTable { get; } = new();
+
+        public static DownloadRawDataTable DownloadRawDataTable { get; } = new();
 
         public static DungeonBattleGridTable DungeonBattleGridTable { get; } = new();
 
@@ -379,7 +389,11 @@ namespace MementoMori.Ortega.Share
 
         public static MissionGuideTable MissionGuideTable { get; } = new();
 
+        public static PanelTable PanelTable { get; } = new();
+
         public static PassiveSkillTable PassiveSkillTable { get; } = new();
+
+        public static PanelMissionTable PanelMissionTable { get; } = new();
 
         public static PlayerRankTable PlayerRankTable { get; } = new();
 
@@ -390,6 +404,8 @@ namespace MementoMori.Ortega.Share
         public static QuestTable QuestTable { get; } = new();
 
         public static RequiredCurrencyTable RequiredCurrencyTable { get; } = new();
+
+        public static RecitationTable RecitationTable { get; } = new();
 
         public static StateBonusTable StateBonusTable { get; } = new();
 
@@ -412,6 +428,8 @@ namespace MementoMori.Ortega.Share
         public static TreasureChestItemTable TreasureChestItemTable { get; } = new();
 
         public static TreasureChestTable TreasureChestTable { get; } = new();
+
+        public static MusicTable MusicTable { get; } = new();
 
         public static VipTable VipTable { get; } = new();
 

@@ -72,6 +72,10 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("キャラ詳細")]
 		CharacterDetail = 1901,
 		[Description("マイページお気に入り設定ダイアログ")]
-		FavoriteCharacter = 2001
+		FavoriteCharacter = 2001,
+		[Description("パネル図鑑")]
+		PanelPictureBook = 2101,
+		[Description("楽曲再生")]
+		MusicPlayer = 2201
 	}
 }

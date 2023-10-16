@@ -6,17 +6,17 @@ namespace MementoMori.Ortega.Share.Enums
 	{
 		[Description("なし")]
 		None,
-		[Description("愁（しゅう）")]
+		[Description("藍")]
 		Blue,
-		[Description("業（ごう）")]
+		[Description("紅")]
 		Red,
-		[Description("心（しん）")]
+		[Description("翠")]
 		Green,
-		[Description("渇（かつ）")]
+		[Description("黄")]
 		Yellow,
-		[Description("天（てん） ")]
+		[Description("天")]
 		Light,
-		[Description("冥（めい） ")]
+		[Description("冥")]
 		Dark
 	}
 }

@@ -11,6 +11,7 @@
 		MemoryFace = 1000,
 		MemoryChest,
 		MemoryFull,
-		NewCharacter = 2000
+		NewCharacter = 2000,
+        Recitation = 3000
 	}
 }

@@ -21,6 +21,8 @@ namespace MementoMori.Ortega.Share.Enums
 		MissionTotalActivityAtNewCharacterMission = 1010200,
 		[Description("期間限定ミッション中に貢献メダルを獲得した時")]
 		MissionTotalActivityAtEvent = 1010300,
+		[Description("パネルミッション中に貢献メダルを獲得した時")]
+		MissionTotalActivityAtPanelMission = 1010400,
 		[Description("マイページで自己紹介文を変更した時")]
 		PlayerInfoEditComment = 2010100,
 		[Description("フレンドになった最大の人数")]
@@ -169,6 +171,78 @@ namespace MementoMori.Ortega.Share.Enums
 		BattleLeagueMaxRanking = 12010200,
 		[Description("幻影の神殿勝利回数")]
 		LocalRaidVictoryCount = 13010100,
+		[Description("幻影の神殿で〇人以上の○属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictoryUnitElementTypeBase = 13010200,
+		[Description("幻影の神殿で1人以上の天属性か冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory1UnitLightAndDarkType = 13010210,
+		[Description("幻影の神殿で1人以上の藍属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory1UnitBlueType,
+		[Description("幻影の神殿で1人以上の紅属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory1UnitRedType,
+		[Description("幻影の神殿で1人以上の翠属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory1UnitGreenType,
+		[Description("幻影の神殿で1人以上の黄属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory1UnitYellowType,
+		[Description("幻影の神殿で1人以上の天属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory1UnitLightType,
+		[Description("幻影の神殿で1人以上の冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory1UnitDarkType,
+		[Description("幻影の神殿で2人以上の天属性か冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory2UnitLightAndDarkType = 13010220,
+		[Description("幻影の神殿で2人以上の藍属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory2UnitBlueType,
+		[Description("幻影の神殿で2人以上の紅属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory2UnitRedType,
+		[Description("幻影の神殿で2人以上の翠属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory2UnitGreenType,
+		[Description("幻影の神殿で2人以上の黄属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory2UnitYellowType,
+		[Description("幻影の神殿で2人以上の天属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory2UnitLightType,
+		[Description("幻影の神殿で2人以上の冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory2UnitDarkType,
+		[Description("幻影の神殿で3人以上の天属性か冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory3UnitLightAndDarkType = 13010230,
+		[Description("幻影の神殿で3人以上の藍属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory3UnitBlueType,
+		[Description("幻影の神殿で3人以上の紅属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory3UnitRedType,
+		[Description("幻影の神殿で3人以上の翠属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory3UnitGreenType,
+		[Description("幻影の神殿で3人以上の黄属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory3UnitYellowType,
+		[Description("幻影の神殿で3人以上の天属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory3UnitLightType,
+		[Description("幻影の神殿で3人以上の冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory3UnitDarkType,
+		[Description("幻影の神殿で4人以上の天属性か冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory4UnitLightAndDarkType = 13010240,
+		[Description("幻影の神殿で4人以上の藍属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory4UnitBlueType,
+		[Description("幻影の神殿で4人以上の紅属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory4UnitRedType,
+		[Description("幻影の神殿で4人以上の翠属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory4UnitGreenType,
+		[Description("幻影の神殿で4人以上の黄属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory4UnitYellowType,
+		[Description("幻影の神殿で4人以上の天属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory4UnitLightType,
+		[Description("幻影の神殿で4人以上の冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory4UnitDarkType,
+		[Description("幻影の神殿で5人以上の天属性か冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory5UnitLightAndDarkType = 13010250,
+		[Description("幻影の神殿で5人以上の藍属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory5UnitBlueType,
+		[Description("幻影の神殿で5人以上の紅属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory5UnitRedType,
+		[Description("幻影の神殿で5人以上の翠属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory5UnitGreenType,
+		[Description("幻影の神殿で5人以上の黄属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory5UnitYellowType,
+		[Description("幻影の神殿で5人以上の天属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory5UnitLightType,
+		[Description("幻影の神殿で5人以上の冥属性のキャラで編成して戦闘に勝利（自身の編成のみ有効）")]
+		LocalRaidVictory5UnitDarkType,
 		[Description("祈りの泉クエスト受領回数")]
 		BountyQuestAllStartQuestCount = 14010100,
 		[Description("祈りの泉新キャラミッション")]
@@ -190,6 +264,10 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("ワールドチャット発言回数")]
 		ChatSayWorldChatCount = 17010100,
 		[Description("アップデート回数")]
-		OsStoreUpdateCount = 18010100
+		OsStoreUpdateCount = 18010100,
+		[Description("パネル図鑑遷移")]
+		PictureBookTransitionPanel = 21010100,
+		[Description("楽曲再生画面遷移回数")]
+		MusicPlayerTransitionCount = 22010100
 	}
 }

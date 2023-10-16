@@ -179,6 +179,8 @@ namespace MementoMori.Ortega.Share
 		BattleCommonNotFoundStatusSubSubSkillEffectTurnFormula,
 		[Description("効果系スキルの効果値データが存在しません。")]
 		BattleCommonNotFoundStatusSubSubSkillEffectValueFormula,
+		[Description("アクティブスキルの条件データが存在しません。")]
+		BattleCommonNotFoundActiveSkillConditionFormula,
 		[Description("ユーザーの放置バトルデータがありません")]
 		BattleAutoUserBattleAutoDtoNotFound = 101000,
 		[Description("ユーザーのボスバトルデータがありません")]
@@ -359,6 +361,12 @@ namespace MementoMori.Ortega.Share
 		BattlePvpPlayerRankingNotFound,
 		[Description("ランキングデータの更新に失敗しました。")]
 		BattlePvpFailedToUpdateRankingData,
+		[Description("レジェンドリーグのランキングデータの更新に失敗しました。")]
+		BattlePvpFailedToUpdateLegendLeagueRankingData,
+		[Description("プレイヤー情報の取得に失敗しました。")]
+		BattlePvpFailedToGetPlayerInfo,
+		[Description("レジェンドリーグの開催期間外です。")]
+		BattlePvpNotBattleTimeLegendLeague,
 		[Description("ユーザーのボスバトルデータがありません")]
 		BattleBossUserBountyQuestDtoNotFound = 141000,
 		[Description("ユーザーデータがありません")]
@@ -711,8 +719,8 @@ namespace MementoMori.Ortega.Share
 		EquipmentLockEquipmentDtoNotFound,
 		[Description("装備固定されたキャラクターが存在しません。")]
 		EquipmentNotFoundLockCharacter,
-        [Description("無効な装備固定誘導ダイアログ種別です。")]
-        EquipmentInvalidLeadLockEquipmentDialogType,
+		[Description("無効な装備固定誘導ダイアログ種別です。")]
+		EquipmentInvalidLeadLockEquipmentDialogType,
 		[Description("ユーザのフレンドデータが存在しません。")]
 		FriendUserFriendDtoNotFound = 241000,
 		[Description("ユーザのステータスデータが存在しません。")]
@@ -1053,6 +1061,8 @@ namespace MementoMori.Ortega.Share
 		MissionUserBattleAutoDtoNotFound,
 		[Description("ユーザーのチュートリアルデータが存在しません。")]
 		MissionUserTutorialDtoNotFound,
+		[Description("ユーザーのミッション履歴データが存在しません。")]
+		MissionUserMissionOccurrenceHistoryDtoNotFound,
 		[Description("未解放のミッションです。")]
 		MissionNotOpenMission = 352000,
 		[Description("報酬が受け取れません。")]
@@ -1071,6 +1081,18 @@ namespace MementoMori.Ortega.Share
 		MissionActivityMBNotFoundOrAlreadyAchieved,
 		[Description("受取出来ません。")]
 		MissionActivityRewardNotReceived,
+		[Description("存在しないシート番号です。")]
+		MissionNotExistSheetNo = 352021,
+		[Description("存在しないビンゴ種別です。")]
+		MissionNotExistBingoType,
+		[Description("受け取り済みのビンゴ報酬です。")]
+		MissionAlreadyReceivedBingoReward,
+		[Description("ビンゴが達成出来ていません。")]
+		MissionNotCompletedBingo,
+		[Description("ビンゴ報酬が存在しません。")]
+		MissionNotFoundBingoReward,
+		[Description("前のシートをクリアしていません。")]
+		MissionNotClearedPrevSheetMission,
 		[Description("ユーザーの放置バトルデータが存在しません。")]
 		TradeShopUserBattleAutoDtoNotFound = 361000,
 		[Description("ユーザーの放置バトルデータが存在しません。")]
@@ -1091,6 +1113,32 @@ namespace MementoMori.Ortega.Share
 		TradeShopNotOpen,
 		[Description("ランキングが解放されていません。")]
 		RankingNotOpenRankingContent = 372000,
+		[Description("パネル図鑑表示期間外です。")]
+		PanelNotStarted = 382000,
+		[Description("無条件で解放されているパネルです。")]
+		PanelUnlockFreePanel,
+		[Description("既に解放しているパネルです。")]
+		PanelAlreadyUnlocked,
+		[Description("ユーザーの楽曲データが存在しません。")]
+		MusicUserMusicDtoNotFound = 391000,
+		[Description("ユーザーのプレイリストデータが存在しません。")]
+		MusicUserPlaylistDtoNotFound,
+		[Description("楽曲再生が解放されていません。")]
+		MusicNotOpenMusicContent = 392000,
+		[Description("プレイリストの上限を超えています。")]
+		MusicOverMaxPlaylistCount,
+		[Description("プレイリスト名が入力されていません。")]
+		MusicEmptyPlaylistName,
+		[Description("プレイリストは15文字まで入力できます。")]
+		MusicOverMaxLengthPlaylistName,
+		[Description("使用できない単語が含まれています。")]
+		MusicExistNgWordInPlaylistName,
+		[Description("購入済みです。")]
+		MusicAlreadyBuyMusic,
+		[Description("不正な楽曲IDです。")]
+		MusicInvalidMusicId,
+		[Description("プレイリストの曲数上限を超えています。")]
+		MusicOverMaxPlaylistMusicCount,
 		[Description("ユーザーのアカウント情報が存在しません")]
 		TutorialAccountDtoNotFound = 401000,
 		[Description("ユーザーのステータス情報が存在しません")]
