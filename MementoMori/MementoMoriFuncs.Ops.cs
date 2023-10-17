@@ -136,10 +136,12 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}");
         MesssageList.Insert(0, message);
-        if (MesssageList.Count > 1000) MesssageList.RemoveAt(MesssageList.Count - 1);
+        if (MesssageList.Count > 100) MesssageList.RemoveAt(MesssageList.Count - 1);
     }
 
     private ConcurrentQueue<Func<Action<string>, CancellationToken, Task>> _funcs = new();
+
+    private List<Task> _tasks = new();
 
     public async Task ExecuteQuickAction(Func<Action<string>, CancellationToken, Task> func)
     {
@@ -147,32 +149,13 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             IsQuickActionExecuting = true;
             _cancellationTokenSource = new CancellationTokenSource();
-            _funcs.Clear();
-            _funcs.Enqueue(func);
-        }
-        else
-        {
-            _funcs.Enqueue(func);
-            return;
         }
 
-        _ = Task.Run(async () =>
+        var task = func(AddLog, _cancellationTokenSource.Token);
+        _tasks.Add(task);
+        _ = task.ContinueWith(t =>
         {
-            while (!_cancellationTokenSource.IsCancellationRequested)
-                if (_funcs.TryDequeue(out var func1))
-                    try
-                    {
-                        await func1(AddLog, _cancellationTokenSource.Token);
-                    }
-                    catch (Exception e)
-                    {
-                        AddLog(e.ToString());
-                        break;
-                    }
-                else
-                    break;
-
-            IsQuickActionExecuting = false;
+            if (_tasks.TrueForAll(d => d.IsCompleted)) IsQuickActionExecuting = false;
         });
     }
 
@@ -959,7 +942,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         var response = await GetResponse<BuyItemRequest, BuyItemResponse>(
                             new BuyItemRequest
                             {
-                                TradeShopTabId = tabInfo.TradeShopTabId, TradeShopItemInfos = new List<TradeShopItemInfo>() { new() { TradeShopItemId = shopItem.TradeShopItemId, TradeCount = 1 } }
+                                TradeShopTabId = tabInfo.TradeShopTabId, TradeShopItemInfos = new List<TradeShopItemInfo>() {new() {TradeShopItemId = shopItem.TradeShopItemId, TradeCount = 1}}
                             });
                         response.TradeShopItems.Select(d => d.GiveItem).PrintUserItems(log);
                     }
@@ -969,6 +952,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     }
                 }
             }
+
             log($"{ResourceStrings.ShopAutoBuyItems} {ResourceStrings.Finished}");
         });
     }
