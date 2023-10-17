@@ -26,15 +26,7 @@ internal class PvpJob : IJob
     {
         if (!_gameConfig.Value.AutoJob.AutoPvp) return;
 
-        if (_mementoMoriFuncs.IsQuickActionExecuting)
-        {
-            _mementoMoriFuncs.CancelQuickAction();
-            await Task.Delay(TimeSpan.FromSeconds(10));
-        }
-        else
-        {
-            await _mementoMoriFuncs.Login();
-        }
+        if (!_mementoMoriFuncs.IsQuickActionExecuting) await _mementoMoriFuncs.Login();
 
         await _mementoMoriFuncs.PvpAuto();
         await _mementoMoriFuncs.CompleteMissions();

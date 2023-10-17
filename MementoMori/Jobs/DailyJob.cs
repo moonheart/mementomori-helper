@@ -14,11 +14,7 @@ public class DailyJob: IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
-        if (_mementoMoriFuncs.IsQuickActionExecuting)
-        {
-            return;
-        }
-        await _mementoMoriFuncs.Login();
+        if (!_mementoMoriFuncs.IsQuickActionExecuting) await _mementoMoriFuncs.Login();
         await _mementoMoriFuncs.ExecuteAllQuickAction();
     }
 }
