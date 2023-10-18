@@ -135,6 +135,10 @@ namespace MementoMori.Ortega.Common.Utils
                 case ItemType.GuildExp:
                 case ItemType.ActivityMedal:
                 case ItemType.EventExchangePlaceItem:
+                case ItemType.PanelGetJudgmentItem:
+                case ItemType.UnlockPanelGridItem:
+                case ItemType.PanelUnlockItem:
+                case ItemType.MusicTicket:
                     var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(itemType, itemId);
                     return itemMb.ItemRarityFlags.ToString();
                 case ItemType.Equipment:
@@ -172,8 +176,6 @@ namespace MementoMori.Ortega.Common.Utils
                     var levelLinkExpMb = Masters.LevelLinkTable.GetById(itemId);
                     return "None";
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(itemType), itemType, null);
             }
 
             return ResourceStrings.Unknown;
