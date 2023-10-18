@@ -157,6 +157,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             if (_tasks.TrueForAll(d => d.IsCompleted)) IsQuickActionExecuting = false;
         });
+        await task;
     }
 
     public void CancelQuickAction()

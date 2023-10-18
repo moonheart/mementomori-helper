@@ -426,24 +426,8 @@ public partial class MementoMoriFuncs
                         case DungeonBattleGridType.BattleAndRelicReinforce:
                         {
                             await DoBattle();
-
-                            var relicId = 0L;
-                            var canUpgradeRelics = battleInfoResponse.UserDungeonDtoInfo.RelicIds
-                                .Where(d => Masters.DungeonBattleRelicTable.GetById(d).DungeonRelicRarityType != DungeonBattleRelicRarityType.SSR).ToList();
-                            foreach (var info in GameConfig.DungeonBattleRelicSort)
-                                if (canUpgradeRelics.Contains(info.Id))
-                                {
-                                    relicId = info.Id;
-                                    break;
-                                }
-
-                            var response = await GetResponse<RewardBattleReinforceRelicRequest, RewardBattleReinforceRelicResponse>(
-                                new RewardBattleReinforceRelicRequest()
-                                {
-                                    SelectedRelicId = relicId,
-                                    CurrentTermId = battleInfoResponse.CurrentTermId,
-                                    DungeonGridGuid = currentGrid.Grid.DungeonGridGuid
-                                });
+                            await RewardBattleReinforceRelic(battleInfoResponse.UserDungeonDtoInfo.RelicIds, battleInfoResponse.UserDungeonDtoInfo.RelicIds);
+                           
                             break;
                         }
                         case DungeonBattleGridType.TreasureChest:
@@ -467,41 +451,7 @@ public partial class MementoMoriFuncs
                 {
                     if (type == DungeonBattleGridType.BattleAndRelicReinforce)
                     {
-                        // 选择加成奖励
-                        var relicId = 0L;
-                        var upgradableRelics = battleInfoResponse.UserDungeonDtoInfo.RelicIds.Where(d =>
-                        {
-                            var mb = Masters.DungeonBattleRelicTable.GetByReinforceFrom(d);
-                            if (mb == null)
-                                // 不可升级
-                                return false;
-
-                            if (battleInfoResponse.UserDungeonDtoInfo.RelicIds.Contains(mb.Id))
-                                // 升级后的已经存在了
-                                return false;
-
-                            return true;
-                        }).ToList();
-                        foreach (var info in GameConfig.DungeonBattleRelicSort)
-                            if (upgradableRelics.Contains(info.Id))
-                            {
-                                relicId = info.Id;
-                                try
-                                {
-                                    var rewardBattleReceiveRelicResponse = await GetResponse<RewardBattleReinforceRelicRequest, RewardBattleReinforceRelicResponse>(
-                                        new RewardBattleReinforceRelicRequest()
-                                        {
-                                            CurrentTermId = battleInfoResponse.CurrentTermId,
-                                            DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
-                                            SelectedRelicId = relicId
-                                        });
-                                    break;
-                                }
-                                catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.DungeonBattleAlreadyHaveRelic)
-                                {
-                                    log($"{Masters.TextResourceTable.GetErrorCodeMessage(e.ErrorCode)}, {ResourceStrings.CaveErrorRelicExist}");
-                                }
-                            }
+                        await RewardBattleReinforceRelic(battleInfoResponse.UserDungeonDtoInfo.RelicIds, battleInfoResponse.UserDungeonDtoInfo.RelicIds);
                     }
                     else
                     {
@@ -529,6 +479,45 @@ public partial class MementoMoriFuncs
                 }
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+
+            async Task RewardBattleReinforceRelic(List<long> newRelicIds,List<long> currentRelicIds)
+            {
+                // 选择加成奖励
+                var relicId = 0L;
+                var upgradableRelics = newRelicIds.Where(d =>
+                {
+                    var mb = Masters.DungeonBattleRelicTable.GetByReinforceFrom(d);
+                    if (mb == null)
+                        // 不可升级
+                        return false;
+
+                    if (currentRelicIds.Contains(mb.Id))
+                        // 升级后的已经存在了
+                        return false;
+
+                    return true;
+                }).ToList();
+                foreach (var info in GameConfig.DungeonBattleRelicSort)
+                    if (upgradableRelics.Contains(info.Id))
+                    {
+                        relicId = info.Id;
+                        try
+                        {
+                            var rewardBattleReceiveRelicResponse = await GetResponse<RewardBattleReinforceRelicRequest, RewardBattleReinforceRelicResponse>(
+                                new RewardBattleReinforceRelicRequest()
+                                {
+                                    CurrentTermId = battleInfoResponse.CurrentTermId,
+                                    DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
+                                    SelectedRelicId = relicId
+                                });
+                            break;
+                        }
+                        catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.DungeonBattleAlreadyHaveRelic)
+                        {
+                            log($"{Masters.TextResourceTable.GetErrorCodeMessage(e.ErrorCode)}, {ResourceStrings.CaveErrorRelicExist}");
+                        }
+                    }
             }
         }
     }
