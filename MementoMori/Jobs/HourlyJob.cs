@@ -19,6 +19,7 @@ public class HourlyJob : IJob
     public async Task Execute(IJobExecutionContext context)
     {
         if (!_mementoMoriFuncs.IsQuickActionExecuting) await _mementoMoriFuncs.Login();
+        await _mementoMoriFuncs.GetLoginBonus();
         await _mementoMoriFuncs.BountyQuestStartAuto();
         await _mementoMoriFuncs.PresentReceiveItem();
         await _mementoMoriFuncs.GetAutoBattleReward();

@@ -200,6 +200,41 @@ public partial class MementoMoriFuncs : ReactiveObject
                 }
 
             await GetMonthlyLoginBonusInfo();
+
+            var iconInfo = Mypage.MypageInfo.MypageIconInfos.FirstOrDefault(d => d.TransferDetailInfo.TransferSpotType == TransferSpotType.LimitedLoginBonus);
+            if (iconInfo != null)
+            {
+                var limitedLoginBonusId = iconInfo.TransferDetailInfo.NumberInfo1;
+                var limitedLoginBonusInfoResponse = await GetResponse<GetLimitedLoginBonusInfoRequest, GetLimitedLoginBonusInfoResponse>(new GetLimitedLoginBonusInfoRequest
+                {
+                    LimitedLoginBonusId = limitedLoginBonusId
+                });
+
+                var limitedLoginBonusMb = LimitedLoginBonusTable.GetById(limitedLoginBonusId);
+                var name = TextResourceTable.Get(limitedLoginBonusMb.TitleTextKey);
+                var loginBonusRewardListMb = LimitedLoginBonusRewardListTable.GetById(limitedLoginBonusId);
+                foreach (var dailyLimitedLoginBonusItem in loginBonusRewardListMb.DailyRewardList)
+                {
+                    if (limitedLoginBonusInfoResponse.ReceivedDateList.Contains(dailyLimitedLoginBonusItem.Date)) continue;
+                    if (limitedLoginBonusInfoResponse.TotalLoginCount < dailyLimitedLoginBonusItem.Date) continue;
+                    log(name);
+                    var resp = await GetResponse<ReceiveDailyLimitedLoginBonusRequest, ReceiveDailyLimitedLoginBonusResponse>(new ReceiveDailyLimitedLoginBonusRequest
+                    {
+                        LimitedLoginBonusId = limitedLoginBonusId, ReceiveDate = dailyLimitedLoginBonusItem.Date
+        });
+                    resp.RewardItemList.PrintUserItems(log);
+    }
+
+                if (loginBonusRewardListMb.ExistSpecialReward && !limitedLoginBonusInfoResponse.IsReceivedSpecialReward)
+                {
+                    log(name);
+                    var response = await GetResponse<ReceiveSpecialLimitedLoginBonusRequest, ReceiveSpecialLimitedLoginBonusResponse>(new ReceiveSpecialLimitedLoginBonusRequest()
+                    {
+                        LimitedLoginBonusId = limitedLoginBonusId
+                    });
+                    response.RewardItemList.PrintUserItems(log);
+                }
+            }
         });
     }
 
