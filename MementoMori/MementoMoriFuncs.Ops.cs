@@ -225,7 +225,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     resp.RewardItemList.PrintUserItems(log);
     }
 
-                if (loginBonusRewardListMb.ExistSpecialReward && !limitedLoginBonusInfoResponse.IsReceivedSpecialReward)
+                if (loginBonusRewardListMb.ExistSpecialReward && limitedLoginBonusInfoResponse.TotalLoginCount >= loginBonusRewardListMb.SpecialRewardItem.Date && !limitedLoginBonusInfoResponse.IsReceivedSpecialReward)
                 {
                     log(name);
                     var response = await GetResponse<ReceiveSpecialLimitedLoginBonusRequest, ReceiveSpecialLimitedLoginBonusResponse>(new ReceiveSpecialLimitedLoginBonusRequest()
