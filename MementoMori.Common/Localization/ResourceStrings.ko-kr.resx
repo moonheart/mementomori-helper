@@ -266,4 +266,7 @@
     <data name="ResettoDefault" xml:space="preserve">
         <value>기본값으로 재설정</value>
     </data>
+    <data name="AutoLoginonStartup" xml:space="preserve">
+        <value>시작 시 자동 로그인"</value>
+    </data>
 </root>

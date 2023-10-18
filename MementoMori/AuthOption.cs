@@ -85,12 +85,20 @@ public class GameConfig
         public bool PreferTreasureChest { get; set; }
         public int MaxUseRecoveryItem { get; set; }
     }
+    
+    public class LoginConfig
+    {
+        public bool AutoLogin { get; set; }
+    }
 
     public AutoJobModel AutoJob { get; set; } = new();
     public GachaConfigModel GachaConfig { get; set; } = new();
     public DungeonBattleRelicSortInfo[] DungeonBattleRelicSort { get; set; }
     public int AutoRequestDelay { get; set; }
+    public bool RecordBattleLog { get; set; } = true;
+    public string BattleLogDir { get; set; } = "BattleLogs/";
     public BountyQuestAutoModel BountyQuestAuto { get; set; } = new();
     public DungeonBattleConfig DungeonBattle { get; set; } = new();
     public ShopConfig Shop { get; set; } = new();
+    public LoginConfig Login { get; set; } = new();
 }

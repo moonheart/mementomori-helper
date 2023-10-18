@@ -175,7 +175,7 @@
                 <MudField Label="@ResourceStrings.AutoRequestDelay" Variant="Variant.Outlined">
                     <MudNumericField @bind-Value="AutoRequestDelay"></MudNumericField>
                 </MudField>
-
+                <MudSwitch Label="@ResourceStrings.AutoLoginonStartup" @bind-Checked="Login__AutoLogin" Color="Color.Primary" />
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -454,6 +454,12 @@
     {
         get => WritableGameConfig.Value.AutoRequestDelay;
         set => WritableGameConfig.Update(x => x.AutoRequestDelay = value);
+    }
+
+    public bool Login__AutoLogin
+    {
+        get => WritableGameConfig.Value.Login.AutoLogin;
+        set => WritableGameConfig.Update(x => x.Login.AutoLogin = value);
     }
 
     #endregion

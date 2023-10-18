@@ -372,4 +372,7 @@
   <data name="ResettoDefault" xml:space="preserve">
       <value>Reset to Default</value>
   </data>
+  <data name="AutoLoginonStartup" xml:space="preserve">
+      <value>Auto Login on Startup</value>
+  </data>
 </root>

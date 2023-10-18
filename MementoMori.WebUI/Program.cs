@@ -31,20 +31,17 @@ internal class Program
         builder.Services.AddOptions();
         builder.Services.ConfigureWritable<AuthOption>(builder.Configuration.GetSection("AuthOption"), "appsettings.user.json");
         builder.Services.ConfigureWritable<GameConfig>(builder.Configuration.GetSection("GameConfig"), "appsettings.user.json");
-        
+
         builder.Services.AddQuartz();
         builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
         var app = builder.Build();
-        
-        app.Services.GetService<MementoNetworkManager>().DownloadMasterCatalog(CultureInfo.CurrentCulture).ConfigureAwait(false).GetAwaiter().GetResult();
         Services.Setup(app.Services);
 
+        app.Services.GetService<MementoNetworkManager>().DownloadMasterCatalog(CultureInfo.CurrentCulture).ConfigureAwait(false).GetAwaiter().GetResult();
+
 // Configure the HTTP request pipeline.
-        if (!app.Environment.IsDevelopment())
-        {
-            app.UseExceptionHandler("/Error");
-        }
+        if (!app.Environment.IsDevelopment()) app.UseExceptionHandler("/Error");
 
         app.UseStaticFiles();
 
@@ -52,6 +49,8 @@ internal class Program
 
         app.MapBlazorHub();
         app.MapFallbackToPage("/_Host");
+
+        app.Services.GetService<MementoMoriFuncs>().AutoLogin().ConfigureAwait(false).GetAwaiter().GetResult();
 
         app.Run();
     }

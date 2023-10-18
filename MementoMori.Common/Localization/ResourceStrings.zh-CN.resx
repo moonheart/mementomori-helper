@@ -372,4 +372,7 @@
   <data name="ResettoDefault" xml:space="preserve">
       <value>重置为默认</value>
   </data>
+  <data name="AutoLoginonStartup" xml:space="preserve">
+      <value>启动时自动登录</value>
+  </data>
 </root>

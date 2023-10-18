@@ -127,6 +127,16 @@ public partial class MementoMoriFuncs : ReactiveObject
         // await GetMonthlyLoginBonusInfo(); 
     }
 
+    public async Task AutoLogin()
+    {
+        if (!GameConfig.Login.AutoLogin) return;
+        AddLog(ResourceStrings.AutoLoginonStartup);
+        var playerDataInfos = await GetPlayerDataInfo();
+        var playerDataInfo = Enumerable.MaxBy(playerDataInfos, d => d.LastLoginTime);
+        if (playerDataInfo == null) return;
+        await Login(playerDataInfo);
+    }
+
     public async Task SyncUserData()
     {
         await UserGetUserData();
@@ -221,11 +231,12 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var resp = await GetResponse<ReceiveDailyLimitedLoginBonusRequest, ReceiveDailyLimitedLoginBonusResponse>(new ReceiveDailyLimitedLoginBonusRequest
                     {
                         LimitedLoginBonusId = limitedLoginBonusId, ReceiveDate = dailyLimitedLoginBonusItem.Date
-        });
+                    });
                     resp.RewardItemList.PrintUserItems(log);
-    }
+                }
 
-                if (loginBonusRewardListMb.ExistSpecialReward && limitedLoginBonusInfoResponse.TotalLoginCount >= loginBonusRewardListMb.SpecialRewardItem.Date && !limitedLoginBonusInfoResponse.IsReceivedSpecialReward)
+                if (loginBonusRewardListMb.ExistSpecialReward && limitedLoginBonusInfoResponse.TotalLoginCount >= loginBonusRewardListMb.SpecialRewardItem.Date &&
+                    !limitedLoginBonusInfoResponse.IsReceivedSpecialReward)
                 {
                     log(name);
                     var response = await GetResponse<ReceiveSpecialLimitedLoginBonusRequest, ReceiveSpecialLimitedLoginBonusResponse>(new ReceiveSpecialLimitedLoginBonusRequest()

@@ -151,6 +151,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Auto Login on Startup 的本地化字符串。
+        /// </summary>
+        public static string AutoLoginonStartup {
+            get {
+                return ResourceManager.GetString("AutoLoginonStartup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Auto Matchless Inheritance To D Rarity 的本地化字符串。
         /// </summary>
         public static string AutoMatchlessInheritance {

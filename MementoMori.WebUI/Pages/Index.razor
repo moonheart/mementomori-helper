@@ -124,7 +124,7 @@
         <MudPaper Elevation="0" Class="d-flex">
             <MudText>@TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")</MudText>
             <MudSpacer/>
-            @if (GameConfig.Value.BountyQuestAuto.TargetItems.Count > 0) 
+            @if (GameConfig.Value.BountyQuestAuto.TargetItems.Count > 0)
             {
                 <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@ViewModel.BountyRequestForceAll" Label="@ResourceStrings.ForceDispatch"></MudSwitch>
             }
@@ -317,7 +317,7 @@
                 </MudTabPanel>
                 <MudTabPanel Text="Debug">
                     <MudPaper Elevation="0" Class="pa-2">
-                            <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.Debug">Debug</MudButton>
+                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.Debug">Debug</MudButton>
                         <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.LogDebug">LogTest</MudButton>
                     </MudPaper>
                 </MudTabPanel>
