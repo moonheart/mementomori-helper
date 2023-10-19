@@ -1,0 +1,46 @@
+﻿@using MementoMori.Ortega.Share.Data.Battle.Result
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.Utils
+<tr>
+    <td>
+        @SubSkillResult.SkillDisplayType
+        @SubSkillResult.HitType
+        造成
+        @SubSkillResult.SubSkillResultType
+        
+        @switch (SubSkillResult.SubSkillResultType)
+        {
+            case SubSkillResultType.None:
+                break;
+            case SubSkillResultType.Damage:
+                @("血量变化") @SubSkillResult.ChangeHp @("=>") @SubSkillResult.TargetRemainHp
+                break;
+            case SubSkillResultType.Effect:
+                    @foreach (var effectGroup in SubSkillResult.AddEffectGroups)
+                    {
+                        <EffectGroupPage EffectGroup="effectGroup"/>
+                    }
+                break;
+            case SubSkillResultType.Passive:
+                @("血量变化") @SubSkillResult.ChangeHp @("=>") @SubSkillResult.TargetRemainHp
+
+                break;
+            case SubSkillResultType.Temp:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+    </td>
+    <td>@SubSkillResult.SubSkillIndex</td>
+</tr>
+
+@code {
+
+    [Parameter]
+    public SubSkillResult SubSkillResult { get; set; }
+
+    [Parameter]
+    public Dictionary<int, BattleSimulateUtil.UnitData> UnitDatas { get; set; }
+
+}

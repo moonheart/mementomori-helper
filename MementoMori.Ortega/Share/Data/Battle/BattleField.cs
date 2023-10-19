@@ -56,68 +56,32 @@ namespace MementoMori.Ortega.Share.Data.Battle
         // 	return list;
         // }
         //
-        // public BattleFieldCharacter GetCharacterByGuid(int guid)
-        // {
-        // 	List<BattleFieldCharacter> list = this.Characters;
-        // 	int num = 0;
-        // 	BattlePosition DefaultPosition = this.Characters[num].DefaultPosition;
-        // 	List<BattleFieldCharacter> list2 = this.Characters;
-        // 	if (DefaultPosition.DeckIndex != guid)
-        // 	{
-        // 		num++;
-        // 	}
-        // 	return list2[num];
-        // }
-        //
-        // public List<BattleFieldCharacter> GetOffenseCharacters()
-        // {
-        // 	List<BattleFieldCharacter> list;
-        // 	ulong num;
-        // 	do
-        // 	{
-        // 		list = new List();
-        // 		List<BattleFieldCharacter> list2 = this.Characters;
-        // 		bool flag;
-        // 		if (flag)
-        // 		{
-        // 		}
-        // 	}
-        // 	while (num != (ulong)0L);
-        // 	return list;
-        // }
-        //
-        // public List<BattleFieldCharacter> GetDefenseCharacters()
-        // {
-        // 	List<BattleFieldCharacter> list;
-        // 	ulong num;
-        // 	do
-        // 	{
-        // 		list = new List();
-        // 		List<BattleFieldCharacter> list2 = this.Characters;
-        // 		bool flag;
-        // 		if (flag)
-        // 		{
-        // 		}
-        // 	}
-        // 	while (num != (ulong)0L);
-        // 	return list;
-        // }
-        //
+        public BattleFieldCharacter GetCharacterByGuid(int guid)
+        {
+            for (var i = 0; i < Characters.Count; i++)
+            {
+                if (Characters[i].Guid == guid)
+                {
+                    return Characters[i];
+                }
+            }
+
+            return null;
+        }
+        
+        public List<BattleFieldCharacter> GetOffenseCharacters()
+        {
+        	return Characters.FindAll(x => x.DefaultPosition.IsAttacker);
+        }
+        
+        public List<BattleFieldCharacter> GetDefenseCharacters()
+        {
+        	return Characters.FindAll(x => !x.DefaultPosition.IsAttacker);
+        }
+        
         // public List<long> GetOffenseCharacterIds()
         // {
-        // 	List<long> list;
-        // 	ulong num;
-        // 	do
-        // 	{
-        // 		list = new List();
-        // 		List<BattleFieldCharacter> list2 = this.Characters;
-        // 		bool flag;
-        // 		if (flag)
-        // 		{
-        // 		}
-        // 	}
-        // 	while (num != (ulong)0L);
-        // 	return list;
+        // 	return Characters.FindAll(x => x.DefaultPosition.IsAttacker).ConvertAll(x => x.);
         // }
         //
         // public List<long> GetDefenseCharacterIds()

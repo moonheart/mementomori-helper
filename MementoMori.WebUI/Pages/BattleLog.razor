@@ -1,0 +1,150 @@
+﻿@using MementoMori.Option
+@using MementoMori.Ortega.Custom
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Data.Battle
+@using MementoMori.Ortega.Share.Data.Battle.Result
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.Ortega.Share.Enums.Battle.Skill
+@using MementoMori.Ortega.Share.Utils
+@using MementoMori.Utils
+@using MementoMori.WebUI.Pages.Components.Battle
+@using Newtonsoft.Json
+@inject IWritableOptions<GameConfig> GameConfig
+@inject MementoMoriFuncs Funcs
+@page "/battlelog"
+<h3>BattleLog</h3>
+
+<MudSelect @bind-Value="SelectedBattleResult" Dense="true">
+    @foreach (var (filename, battleResult) in BattleResults)
+    {
+        var name = $"{battleResult.QuestId}";
+        var time = DateTimeOffset.FromUnixTimeMilliseconds(battleResult.BattleTime.StartBattle).ToLocalTime().ToString();
+
+        <MudSelectItem Value="battleResult">
+            <MudText Inline="true">@filename</MudText>
+            <MudText Inline="true">@time</MudText>
+        </MudSelectItem>
+    }
+</MudSelect>
+
+@if (SelectedBattleResult != null)
+{
+    var charactersByUnitId = SelectedBattleResult.SimulationResult.BattleField.Characters.ToDictionary(d => d.UnitId);
+    var charactersReports = SelectedBattleResult.SimulationResult.BattleCharacterReports.ToDictionary(d => d.BattleCharacterGuid);
+    var charactersByGuid = charactersReports.ToDictionary(d => d.Key, d => charactersByUnitId[d.Value.UnitId]);
+    var unitDatas = charactersByGuid.ToDictionary(d => d.Key, d => d.Value.GetUnitData());
+    foreach (var battleSubLog in SelectedBattleResult.SimulationResult.BattleLog.BattleSubLogs)
+    {
+        <MudField Label="@($"Turn {battleSubLog.Turn}")" Variant="Variant.Outlined">
+            <MudField Variant="Variant.Outlined" Label="回合开始被动技能">
+                <MudSimpleTable Dense="true">
+                    <tbody>
+                    @foreach (var subSkillResults in battleSubLog.TurnStartPassiveResults.GroupBy(d => d.AttackUnitGuid))
+                    {
+                        <tr>
+                            <td>@unitDatas[subSkillResults.Key].Name</td>
+                            <td>
+                                <MudSimpleTable Dense="true">
+                                    <tbody>
+                                    @foreach (var subSkillResults1 in subSkillResults.GroupBy(d => d.TargetUnitGuid))
+                                    {
+                                        <tr>
+                                            <td>@unitDatas[subSkillResults1.Key].Name</td>
+                                            <td>
+                                                <MudSimpleTable Dense="true">
+                                                    <tbody>
+                                                    @foreach (var subSkillResult in subSkillResults1)
+                                                    {
+                                                        if (subSkillResult.SkillDisplayType == SkillDisplayType.None) continue;
+                                                        <SubSkillResultPage UnitDatas="unitDatas" SubSkillResult="subSkillResult"/>
+                                                    }
+                                                    </tbody>
+                                                </MudSimpleTable>
+
+                                            </td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </MudSimpleTable>
+
+
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </MudSimpleTable>
+            </MudField>
+            <MudField Variant="Variant.Outlined" Label="战斗过程">
+                <MudSimpleTable Dense="true">
+                    <tbody>
+
+
+                    @foreach (var activeSkill in battleSubLog.ActiveSkillDatas)
+                    {
+                        var activeSkillMb = Masters.ActiveSkillTable.GetById(activeSkill.ActiveSkillId);
+                        var activeSkillName = activeSkillMb == null ? "Normal Attack" : Masters.TextResourceTable.Get(activeSkillMb.NameKey);
+                        var attackerData = unitDatas[activeSkill.FromGuid];
+                        var skillActionName = $"{attackerData.Name} 发动 {activeSkillName}";
+                        <tr>
+                            <td>@attackerData.Name</td>
+                            <td>@activeSkillName</td>
+                            <td>
+                                <MudSimpleTable Dense="true">
+                                    <tbody>
+                                    @foreach (var subSetSkillResult in activeSkill.SubSetSkillResults)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <MudSimpleTable Dense="true">
+                                                    <tbody>
+                                                    @foreach (var subSkillResultGroup in subSetSkillResult.SubSkillResults.GroupBy(d => d.TargetUnitGuid))
+                                                    {
+                                                        <tr>
+                                                            <td>@unitDatas[subSkillResultGroup.Key].Name</td>
+                                                            <td>
+                                                                <MudSimpleTable Dense="true">
+                                                                    <tbody>
+                                                                    @foreach (var subSkillResult in subSkillResultGroup)
+                                                                    {
+                                                                        if (subSkillResult.SkillDisplayType == SkillDisplayType.None) continue;
+                                                                        <SubSkillResultPage UnitDatas="unitDatas" SubSkillResult="subSkillResult"/>
+                                                                    }
+                                                                    </tbody>
+                                                                </MudSimpleTable>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                    </tbody>
+                                                </MudSimpleTable>
+                                            </td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </MudSimpleTable>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </MudSimpleTable>
+            </MudField>
+        </MudField>
+    }
+}
+
+@code {
+    private Dictionary<string, BattleResult> BattleResults { get; set; } = new();
+
+    private BattleResult SelectedBattleResult { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var files = Directory.GetFiles(GameConfig.Value.BattleLogDir);
+        foreach (var file in files.OrderDescending())
+        {
+            var content = await File.ReadAllTextAsync(file);
+            var battleResult = JsonConvert.DeserializeObject<BattleResult>(content);
+            BattleResults.Add(Path.GetFileName(file), battleResult);
+        }
+    }
+
+}

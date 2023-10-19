@@ -1,0 +1,503 @@
+﻿<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="None" xml:space="preserve">
+        <value>なし</value>
+    </data>
+    <data name="SpeedUp" xml:space="preserve">
+        <value>スピード増加</value>
+    </data>
+    <data name="MaxHpUp" xml:space="preserve">
+        <value>最大HP増加</value>
+    </data>
+    <data name="AttackPowerUp" xml:space="preserve">
+        <value>攻撃力増加</value>
+    </data>
+    <data name="DefenseUp" xml:space="preserve">
+        <value>防御力増加</value>
+    </data>
+    <data name="PhysicalDamageRelaxUp" xml:space="preserve">
+        <value>物理ダメージ緩和増加</value>
+    </data>
+    <data name="MagicDamageRelaxUp" xml:space="preserve">
+        <value>魔法ダメージ緩和増加</value>
+    </data>
+    <data name="DefensePenetrationUp" xml:space="preserve">
+        <value>防御貫通力増加</value>
+    </data>
+    <data name="DamageEnhanceUp" xml:space="preserve">
+        <value>ダメージ強化増加</value>
+    </data>
+    <data name="HitUp" xml:space="preserve">
+        <value>命中増加</value>
+    </data>
+    <data name="AvoidanceUp" xml:space="preserve">
+        <value>回避増加</value>
+    </data>
+    <data name="CriticalUp" xml:space="preserve">
+        <value>クリティカル増加</value>
+    </data>
+    <data name="CriticalResistUp" xml:space="preserve">
+        <value>クリティカル耐性増加</value>
+    </data>
+    <data name="HpDrainUp" xml:space="preserve">
+        <value>HP吸収増加</value>
+    </data>
+    <data name="DamageReflectUp" xml:space="preserve">
+        <value>カウンタ増加</value>
+    </data>
+    <data name="CriticalDamageEnhanceUp" xml:space="preserve">
+        <value>クリダメ強化増加</value>
+    </data>
+    <data name="PhysicalCriticalDamageRelaxUp" xml:space="preserve">
+        <value>物理クリダメ緩和増加</value>
+    </data>
+    <data name="MagicCriticalDamageRelaxUp" xml:space="preserve">
+        <value>魔法クリダメ緩和増加</value>
+    </data>
+    <data name="DebuffHitUp" xml:space="preserve">
+        <value>弱体効果命中増加</value>
+    </data>
+    <data name="DebuffResistUp" xml:space="preserve">
+        <value>弱体効果耐性増加</value>
+    </data>
+    <data name="GiveHealRateUp" xml:space="preserve">
+        <value>与HP回復量増加</value>
+    </data>
+    <data name="ReceiveHealRateUp" xml:space="preserve">
+        <value>被HP回復量増加</value>
+    </data>
+    <data name="GiveDamageUp" xml:space="preserve">
+        <value>与ダメージ増加</value>
+    </data>
+    <data name="ReceiveDamageDown" xml:space="preserve">
+        <value>被ダメージ減少</value>
+    </data>
+    <data name="CoolTimeRecoveryUp" xml:space="preserve">
+        <value>スキルクールダウン加速</value>
+    </data>
+    <data name="ElementBonusUp" xml:space="preserve">
+        <value>属性ダメージボーナス増加</value>
+    </data>
+    <data name="GiveDamageStandardUp" xml:space="preserve">
+        <value>与ダメージ基準値増加</value>
+    </data>
+    <data name="ReceiveDamageStandardDown" xml:space="preserve">
+        <value>被ダメージ基準値減少</value>
+    </data>
+    <data name="HitRateUp" xml:space="preserve">
+        <value>命中率増加</value>
+    </data>
+    <data name="AvoidanceRateUp" xml:space="preserve">
+        <value>回避率増加</value>
+    </data>
+    <data name="CriticalRateUp" xml:space="preserve">
+        <value>クリティカル率増加</value>
+    </data>
+    <data name="CriticalResistRateUp" xml:space="preserve">
+        <value>クリティカル耐性率増加</value>
+    </data>
+    <data name="DebuffHitRateUp" xml:space="preserve">
+        <value>弱体効果命中率増加</value>
+    </data>
+    <data name="DebuffResistRateUp" xml:space="preserve">
+        <value>弱体効果耐性率増加</value>
+    </data>
+    <data name="DamageGuard" xml:space="preserve">
+        <value>ダメージ無効化</value>
+    </data>
+    <data name="Shield1" xml:space="preserve">
+        <value>シールド1</value>
+    </data>
+    <data name="Shield2" xml:space="preserve">
+        <value>シールド2</value>
+    </data>
+    <data name="DebuffGuard" xml:space="preserve">
+        <value>デバフ無効化</value>
+    </data>
+    <data name="ConfuseActionDebuffGuard" xml:space="preserve">
+        <value>行動阻害無効化</value>
+    </data>
+    <data name="Taunt" xml:space="preserve">
+        <value>挑発</value>
+    </data>
+    <data name="Stealth" xml:space="preserve">
+        <value>潜伏</value>
+    </data>
+    <data name="NonTarget" xml:space="preserve">
+        <value>除外</value>
+    </data>
+    <data name="GiveDebuff" xml:space="preserve">
+        <value>デバフ付与</value>
+    </data>
+    <data name="NormalSkillEnhance" xml:space="preserve">
+        <value>通常攻撃強化</value>
+    </data>
+    <data name="HealOverTime" xml:space="preserve">
+        <value>毎ターン回復</value>
+    </data>
+    <data name="NonHit" xml:space="preserve">
+        <value>必ず回避</value>
+    </data>
+    <data name="Immortal" xml:space="preserve">
+        <value>不死身</value>
+    </data>
+    <data name="SkillMark" xml:space="preserve">
+        <value>印</value>
+    </data>
+    <data name="ActiveSkill1Enhance" xml:space="preserve">
+        <value>スキル1強化</value>
+    </data>
+    <data name="ActiveSkill2Enhance" xml:space="preserve">
+        <value>スキル2強化</value>
+    </data>
+    <data name="DamageReflectEnhance11" xml:space="preserve">
+        <value>カウンタ変更11</value>
+    </data>
+    <data name="DamageReflectEnhance12" xml:space="preserve">
+        <value>カウンタ変更12</value>
+    </data>
+    <data name="DamageReflectEnhance13" xml:space="preserve">
+        <value>カウンタ変更13</value>
+    </data>
+    <data name="DamageReflectEnhance14" xml:space="preserve">
+        <value>カウンタ変更14</value>
+    </data>
+    <data name="DamageReflectEnhance21" xml:space="preserve">
+        <value>カウンタ変更21</value>
+    </data>
+    <data name="DamageReflectEnhance22" xml:space="preserve">
+        <value>カウンタ変更22</value>
+    </data>
+    <data name="DamageReflectEnhance23" xml:space="preserve">
+        <value>カウンタ変更23</value>
+    </data>
+    <data name="DamageReflectEnhance24" xml:space="preserve">
+        <value>カウンタ変更24</value>
+    </data>
+    <data name="DamageReflectEnhance31" xml:space="preserve">
+        <value>カウンタ変更31</value>
+    </data>
+    <data name="DamageReflectEnhance32" xml:space="preserve">
+        <value>カウンタ変更32</value>
+    </data>
+    <data name="DamageReflectEnhance33" xml:space="preserve">
+        <value>カウンタ変更33</value>
+    </data>
+    <data name="DamageReflectEnhance34" xml:space="preserve">
+        <value>カウンタ変更34</value>
+    </data>
+    <data name="AllSkillCoolTimeRecovery" xml:space="preserve">
+        <value>全てのスキルのクールタイムを回復</value>
+    </data>
+    <data name="Skill1CoolTimeRecovery" xml:space="preserve">
+        <value>スキル1のクールタイムを回復</value>
+    </data>
+    <data name="Skill2CoolTimeRecovery" xml:space="preserve">
+        <value>スキル2のクールタイムを回復</value>
+    </data>
+    <data name="AllSkillCoolTimeIncrease" xml:space="preserve">
+        <value>全てのスキルのクールタイムを増加</value>
+    </data>
+    <data name="Skill1CoolTimeIncrease" xml:space="preserve">
+        <value>スキル1のクールタイムを増加</value>
+    </data>
+    <data name="Skill2CoolTimeIncrease" xml:space="preserve">
+        <value>スキル2のクールタイムを増加</value>
+    </data>
+    <data name="ExtendAllBuffTurn" xml:space="preserve">
+        <value>すべてのバフ効果のターンを増やす</value>
+    </data>
+    <data name="ExtendAllDeBuffTurn" xml:space="preserve">
+        <value>すべてのデバフ効果のターンを増やす</value>
+    </data>
+    <data name="ExtendStunTurn" xml:space="preserve">
+        <value>すべてのスタン効果のターンを増やす</value>
+    </data>
+    <data name="ReduceAllBuffTurn" xml:space="preserve">
+        <value>すべてのバフ効果のターンを減らす</value>
+    </data>
+    <data name="ReduceAllDeBuffTurn" xml:space="preserve">
+        <value>すべてのデバフ効果のターンを減らす</value>
+    </data>
+    <data name="ExtendEffectGroup" xml:space="preserve">
+        <value>指定した効果グループのターン数を1増やす</value>
+    </data>
+    <data name="ReduceEffectGroup" xml:space="preserve">
+        <value>指定した効果グループのターン数を1減らす</value>
+    </data>
+    <data name="IncreaseEffectStack" xml:space="preserve">
+        <value>指定したEffectのスタック数を1増やす</value>
+    </data>
+    <data name="DecreaseEffectStack" xml:space="preserve">
+        <value>指定したEffectのスタック数を1減らす</value>
+    </data>
+    <data name="RemoveAllBuff" xml:space="preserve">
+        <value>全てのバフを解除</value>
+    </data>
+    <data name="RemoveAllDeBuff" xml:space="preserve">
+        <value>全てのデバフを解除</value>
+    </data>
+    <data name="RemoveAllConfuseActionGroupDebuff" xml:space="preserve">
+        <value>全ての行動阻害デバフを解除</value>
+    </data>
+    <data name="RemoveEffectGroup" xml:space="preserve">
+        <value>同じグループ効果を解除</value>
+    </data>
+    <data name="RemoveEffectType" xml:space="preserve">
+        <value>同じタイプの効果をすべて解除</value>
+    </data>
+    <data name="RemoveBuff" xml:space="preserve">
+        <value>バフを解除</value>
+    </data>
+    <data name="RemoveDeBuff" xml:space="preserve">
+        <value>デバフを解除</value>
+    </data>
+    <data name="RemoveSpecialEffectType" xml:space="preserve">
+        <value>同じタイプの固有効果をすべて解除</value>
+    </data>
+    <data name="CopyArchiveBuff" xml:space="preserve">
+        <value>アーカイブバフをコピー</value>
+    </data>
+    <data name="CopyArchiveDeBuff" xml:space="preserve">
+        <value>アーカイブデバフをコピー</value>
+    </data>
+    <data name="CopyAllBuffTargetToSelf" xml:space="preserve">
+        <value>ターゲットの全てのバフをコピー</value>
+    </data>
+    <data name="CopyAllDeBuffSelfToTarget" xml:space="preserve">
+        <value>自分のすべてのデバフをターゲットにコピー</value>
+    </data>
+    <data name="MoveBuffToMeFromEnemy" xml:space="preserve">
+        <value>敵のバフを奪う</value>
+    </data>
+    <data name="MoveDebuffToEnemyFromMe" xml:space="preserve">
+        <value>自分のデバフを敵に移す</value>
+    </data>
+    <data name="SpeedDown" xml:space="preserve">
+        <value>スピード減少</value>
+    </data>
+    <data name="MaxHpDown" xml:space="preserve">
+        <value>最大HP減少</value>
+    </data>
+    <data name="AttackPowerDown" xml:space="preserve">
+        <value>攻撃力減少</value>
+    </data>
+    <data name="DefenseDown" xml:space="preserve">
+        <value>防御力減少</value>
+    </data>
+    <data name="PhysicalDamageRelaxDown" xml:space="preserve">
+        <value>物理ダメージ緩和減少</value>
+    </data>
+    <data name="MagicDamageRelaxDown" xml:space="preserve">
+        <value>魔法ダメージ緩和減少</value>
+    </data>
+    <data name="DefensePenetrationDown" xml:space="preserve">
+        <value>防御貫通力減少</value>
+    </data>
+    <data name="DamageEnhanceDown" xml:space="preserve">
+        <value>ダメージ強化減少</value>
+    </data>
+    <data name="HitDown" xml:space="preserve">
+        <value>命中減少</value>
+    </data>
+    <data name="AvoidanceDown" xml:space="preserve">
+        <value>回避減少</value>
+    </data>
+    <data name="CriticalDown" xml:space="preserve">
+        <value>クリティカル減少</value>
+    </data>
+    <data name="CriticalResistDown" xml:space="preserve">
+        <value>クリティカル耐性減少</value>
+    </data>
+    <data name="HpDrainDown" xml:space="preserve">
+        <value>HP吸収減少</value>
+    </data>
+    <data name="DamageReflectDown" xml:space="preserve">
+        <value>カウンタ減少</value>
+    </data>
+    <data name="CriticalDamageEnhanceDown" xml:space="preserve">
+        <value>クリダメ強化減少</value>
+    </data>
+    <data name="PhysicalCriticalDamageRelaxDown" xml:space="preserve">
+        <value>物理クリダメ緩和減少</value>
+    </data>
+    <data name="MagicCriticalDamageRelaxDown" xml:space="preserve">
+        <value>魔法クリダメ緩和減少</value>
+    </data>
+    <data name="DebuffHitDown" xml:space="preserve">
+        <value>弱体効果命中減少</value>
+    </data>
+    <data name="DebuffResistDown" xml:space="preserve">
+        <value>弱体効果耐性減少</value>
+    </data>
+    <data name="GiveHealRateDown" xml:space="preserve">
+        <value>与HP回復量減少</value>
+    </data>
+    <data name="ReceiveHealRateDown" xml:space="preserve">
+        <value>被HP回復量減少</value>
+    </data>
+    <data name="GiveDamageDown" xml:space="preserve">
+        <value>与ダメージ減少</value>
+    </data>
+    <data name="ReceiveDamageUp" xml:space="preserve">
+        <value>被ダメージ増加</value>
+    </data>
+    <data name="CoolTimeRecoveryDown" xml:space="preserve">
+        <value>スキルクールダウン減少</value>
+    </data>
+    <data name="GiveDamageStandardDown" xml:space="preserve">
+        <value>与ダメージ基準値減少</value>
+    </data>
+    <data name="ReceiveDamageStandardUp" xml:space="preserve">
+        <value>被ダメージ基準値増加</value>
+    </data>
+    <data name="HitRateDown" xml:space="preserve">
+        <value>命中率減少</value>
+    </data>
+    <data name="AvoidanceRateDown" xml:space="preserve">
+        <value>回避率減少</value>
+    </data>
+    <data name="CriticalRateDown" xml:space="preserve">
+        <value>クリティカル率減少</value>
+    </data>
+    <data name="CriticalResistRateDown" xml:space="preserve">
+        <value>クリティカル耐性率減少</value>
+    </data>
+    <data name="DebuffHitRateDown" xml:space="preserve">
+        <value>弱体効果命中率減少</value>
+    </data>
+    <data name="DebuffResistRateDown" xml:space="preserve">
+        <value>弱体効果耐性率減少</value>
+    </data>
+    <data name="Stun" xml:space="preserve">
+        <value>スタン</value>
+    </data>
+    <data name="Confuse" xml:space="preserve">
+        <value>混乱</value>
+    </data>
+    <data name="Silence" xml:space="preserve">
+        <value>封印</value>
+    </data>
+    <data name="Stubborn" xml:space="preserve">
+        <value>固執</value>
+    </data>
+    <data name="HpRecoveryForbidden" xml:space="preserve">
+        <value>HP回復不可</value>
+    </data>
+    <data name="BuffForbidden" xml:space="preserve">
+        <value>バフ獲得不可</value>
+    </data>
+    <data name="AvoidanceForbidden" xml:space="preserve">
+        <value>回避不可</value>
+    </data>
+    <data name="LockOnSelf" xml:space="preserve">
+        <value>ロックオン11</value>
+    </data>
+    <data name="LockOnAllAlly" xml:space="preserve">
+        <value>ロックオン21</value>
+    </data>
+    <data name="LockOnBlueAlly" xml:space="preserve">
+        <value>ロックオン31</value>
+    </data>
+    <data name="LockOnRedAlly" xml:space="preserve">
+        <value>ロックオン32</value>
+    </data>
+    <data name="LockOnGreenAlly" xml:space="preserve">
+        <value>ロックオン33</value>
+    </data>
+    <data name="LockOnYellowAlly" xml:space="preserve">
+        <value>ロックオン34</value>
+    </data>
+    <data name="LockOnLightAlly" xml:space="preserve">
+        <value>ロックオン35</value>
+    </data>
+    <data name="LockOnDarkAlly" xml:space="preserve">
+        <value>ロックオン36</value>
+    </data>
+    <data name="LockOnWarriorAlly" xml:space="preserve">
+        <value>ロックオン41</value>
+    </data>
+    <data name="LockOnSniperAlly" xml:space="preserve">
+        <value>ロックオン42</value>
+    </data>
+    <data name="LockOnSorcererAlly" xml:space="preserve">
+        <value>ロックオン43</value>
+    </data>
+    <data name="LockOnAttack1Ally" xml:space="preserve">
+        <value>ロックオン51</value>
+    </data>
+    <data name="LockOnAttack2Ally" xml:space="preserve">
+        <value>ロックオン52</value>
+    </data>
+    <data name="LockOnAttack3Ally" xml:space="preserve">
+        <value>ロックオン53</value>
+    </data>
+    <data name="Poison" xml:space="preserve">
+        <value>毒</value>
+    </data>
+    <data name="Bleeding" xml:space="preserve">
+        <value>出血</value>
+    </data>
+    <data name="Combustion" xml:space="preserve">
+        <value>浸食</value>
+    </data>
+    <data name="Burn" xml:space="preserve">
+        <value>火傷</value>
+    </data>
+    <data name="DamageResonanceFromSelfAndDamageReduction" xml:space="preserve">
+        <value>ダメージ連携11</value>
+    </data>
+    <data name="DamageResonanceFromHighHpEnemy" xml:space="preserve">
+        <value>ダメージ連携21</value>
+    </data>
+    <data name="DamageResonanceFromLowHpEnemy" xml:space="preserve">
+        <value>ダメージ連携22</value>
+    </data>
+    <data name="DamageResonanceFromHighDefenseEnemy" xml:space="preserve">
+        <value>ダメージ連携23</value>
+    </data>
+    <data name="DamageResonanceFromLowDefenseEnemy" xml:space="preserve">
+        <value>ダメージ連携24</value>
+    </data>
+    <data name="DamageResonanceFromRandomEnemy" xml:space="preserve">
+        <value>ダメージ連携25</value>
+    </data>
+    <data name="DamageResonanceFromHighBaseMaxHpEnemy" xml:space="preserve">
+        <value>ダメージ連携26</value>
+    </data>
+    <data name="DamageResonanceFromLowBaseMaxHpEnemy" xml:space="preserve">
+        <value>ダメージ連携27</value>
+    </data>
+    <data name="DamageResonanceFromHighBaseDefenseEnemy" xml:space="preserve">
+        <value>ダメージ連携28</value>
+    </data>
+    <data name="DamageResonanceFromLowBaseDefenseEnemy" xml:space="preserve">
+        <value>ダメージ連携29</value>
+    </data>
+    <data name="DamageResonanceFromAllEnemy" xml:space="preserve">
+        <value>ダメージ連携31</value>
+    </data>
+    <data name="DamageResonanceFromAllAllyAndDamageReduction" xml:space="preserve">
+        <value>ダメージ連携41</value>
+    </data>
+    <data name="SpeedDrain" xml:space="preserve">
+        <value>スピード吸収</value>
+    </data>
+    <data name="AttackPowerDrain" xml:space="preserve">
+        <value>攻撃力吸収</value>
+    </data>
+    <data name="DefenseDrain" xml:space="preserve">
+        <value>防御力</value>
+    </data>
+</root>

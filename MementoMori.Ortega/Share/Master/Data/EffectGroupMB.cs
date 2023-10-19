@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+
+using MementoMori.Ortega.Share.Data.Battle;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master.Attributes;
 using MessagePack;
@@ -9,45 +11,45 @@ namespace MementoMori.Ortega.Share.Master.Data
     [MessagePackObject(true)]
     public class EffectGroupMB : MasterBookBase
     {
-        [Description("付与者アイコンID")]
         [PropertyOrder(6)]
+        [Description("付与者アイコンID")]
         public long CasterIconId { get; }
 
-        [Description("付与者アイコンタイプ")]
         [PropertyOrder(5)]
+        [Description("付与者アイコンタイプ")]
         public EffectGroupIconType CasterIconType { get; }
 
         [PropertyOrder(2)]
         [Description("説明文キー")]
         public string DescriptionKey { get; }
 
-        [Description("効果アイコンID")]
         [PropertyOrder(4)]
+        [Description("効果アイコンID")]
         public long IconId { get; }
 
         [PropertyOrder(3)]
         [Description("効果アイコンタイプ")]
         public EffectGroupIconType IconType { get; }
 
-        [Description("効果名キー")]
         [PropertyOrder(1)]
+        [Description("効果名キー")]
         public string NameKey { get; }
 
-        [Description("強制非表示フラグ")]
         [PropertyOrder(7)]
+        [Description("強制非表示フラグ")]
         public bool IsHide { get; }
 
-        [Description("ターン数非表示フラグ")]
         [PropertyOrder(8)]
+        [Description("ターン数非表示フラグ")]
         public bool IsTurnHide { get; }
 
-        // [Description("同じEffectGroupリスト")]
-        // [Nest(false, 0)]
-        // [PropertyOrder(9)]
-        // public IReadOnlyList<EffectGroupInfo> EffectGroupInfoList { get; }
+        [Nest(false, 0)]
+        [PropertyOrder(9)]
+        [Description("同じEffectGroupリスト")]
+        public IReadOnlyList<EffectGroupInfo> EffectGroupInfoList { get; }
 
         [SerializationConstructor]
-        public EffectGroupMB(long id, bool? isIgnore, string memo, string nameKey, string descriptionKey, EffectGroupIconType iconType, long iconId, EffectGroupIconType casterIconType, long casterIconId, bool isHide, bool isTurnHide/*, IReadOnlyList<EffectGroupInfo> effectGroupInfoList*/)
+        public EffectGroupMB(long id, bool? isIgnore, string memo, string nameKey, string descriptionKey, EffectGroupIconType iconType, long iconId, EffectGroupIconType casterIconType, long casterIconId, bool isHide, bool isTurnHide, IReadOnlyList<EffectGroupInfo> effectGroupInfoList)
             : base(id, isIgnore, memo)
         {
             NameKey = nameKey;
@@ -58,7 +60,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             CasterIconId = casterIconId;
             IsHide = isHide;
             IsTurnHide = isTurnHide;
-            // EffectGroupInfoList = effectGroupInfoList;
+            EffectGroupInfoList = effectGroupInfoList;
         }
 
         public EffectGroupMB() : base(0, false, "")

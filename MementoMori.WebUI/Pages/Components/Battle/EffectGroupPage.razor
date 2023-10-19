@@ -1,0 +1,25 @@
+﻿@using MementoMori.Ortega.Share.Data.Battle
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Master.Data
+@using MementoMori.Utils
+
+<MudCard Style="display: inline-block" Elevation="0">
+    @* <MudText Inline="true">@EffectGroup.GetName()</MudText> *@
+    @foreach (var effect in EffectGroup.GetEffectNames())
+    {
+        <MudChip Size="Size.Small">@effect</MudChip>
+    }
+</MudCard>
+
+@code {
+    [Parameter]
+    public EffectGroup EffectGroup { get; set; }
+
+    private EffectGroupMB EffectGroupMb { get; set; }
+
+    protected override void OnInitialized()
+    {
+        EffectGroupMb = Masters.EffectGroupTable.GetById(EffectGroup.EffectGroupId);
+    }
+
+}

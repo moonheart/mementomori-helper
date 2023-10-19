@@ -52,8 +52,5 @@ namespace MementoMori.Ortega.Share.Data.Battle
             // return effectGroup;
         }
 
-        public EffectGroup()
-        {
-        }
     }
 }

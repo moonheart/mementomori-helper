@@ -1,36 +1,15 @@
 ﻿using MessagePack;
 
-namespace MementoMori.Ortega.Share.Data.Battle.Result
+namespace MementoMori.Ortega.Share.Data.Battle.Result;
+
+[MessagePackObject(true)]
+public class BattleResult
 {
-	[MessagePackObject(true)]
-	public class BattleResult
-	{
-		public BattleTime BattleTime
-		{
-			get;
-			set;
-		}
+    public BattleTime BattleTime { get; set; }
 
-		public long QuestId
-		{
-			get;
-			set;
-		}
+    public long QuestId { get; set; }
 
-		public BattleReward Reward
-		{
-			get;
-			set;
-		}
+    public BattleReward Reward { get; set; }
 
-		public BattleSimulationResult SimulationResult
-		{
-			get;
-			set;
-		}
-
-		public BattleResult()
-		{
-		}
-	}
+    public BattleSimulationResult SimulationResult { get; set; }
 }

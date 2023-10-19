@@ -187,8 +187,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                 if (_timeManager.ServerNow.Hour >= 4)
                 {
                     var bonus = await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(new ReceiveDailyLoginBonusRequest() {ReceiveDay = _timeManager.ServerNow.Day});
-                log($"{TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")}：\n");
-                bonus.RewardItemList.PrintUserItems(log);
+                    log($"{TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")}：\n");
+                    bonus.RewardItemList.PrintUserItems(log);
                 }
 
                 await GetMonthlyLoginBonusInfo();
@@ -1173,6 +1173,14 @@ public partial class MementoMoriFuncs : ReactiveObject
                     totalCount++;
                     if (win)
                     {
+                        if (GameConfig.RecordBattleLog)
+                        {
+                            Directory.CreateDirectory(GameConfig.BattleLogDir);
+                            var filename = $"main-{bossResponse.BattleResult.QuestId}-{bossResponse.BattleResult.BattleTime.StartBattle}.json";
+                            var path = Path.Combine(GameConfig.BattleLogDir, filename);
+                            await File.WriteAllTextAsync(path, bossResponse.BattleResult.ToJson(true));
+                        }
+
                         var nextQuestResponse = await GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
                         winCount++;
                     }

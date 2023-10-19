@@ -11,6 +11,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Update="Localization\EffectDescResource.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>EffectDescResource.resx</DependentUpon>
+      </Compile>
       <Compile Update="Localization\ResourceStrings.Designer.cs">
         <DependentUpon>ResourceStrings.resx</DependentUpon>
         <DesignTime>True</DesignTime>
@@ -19,6 +24,19 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Update="Localization\EffectDescResource.ja-jp.resx">
+        <DependentUpon>EffectDescResource.resx</DependentUpon>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Localization\EffectDescResource.ko-kr.resx">
+        <DependentUpon>EffectDescResource.resx</DependentUpon>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Localization\EffectDescResource.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>EffectDescResource.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Localization\EffectDescResource.zh-cn.resx">
+        <DependentUpon>EffectDescResource.resx</DependentUpon>
+      </EmbeddedResource>
       <EmbeddedResource Update="Localization\ResourceStrings.ja-jp.resx">
         <DependentUpon>ResourceStrings.resx</DependentUpon>
       </EmbeddedResource>
