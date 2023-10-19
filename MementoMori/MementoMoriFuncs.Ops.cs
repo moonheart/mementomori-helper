@@ -184,9 +184,13 @@ public partial class MementoMoriFuncs : ReactiveObject
             var day = DateTimeOffset.Now.ToOffset(TimeSpan.FromHours(1)).Day;
             if (!MonthlyLoginBonusInfo.ReceivedDailyRewardDayList.Contains(day))
             {
-                var bonus = await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(new ReceiveDailyLoginBonusRequest() {ReceiveDay = DateTime.Now.Day});
+                if (_timeManager.ServerNow.Hour >= 4)
+                {
+                    var bonus = await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(new ReceiveDailyLoginBonusRequest() {ReceiveDay = _timeManager.ServerNow.Day});
                 log($"{TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")}：\n");
                 bonus.RewardItemList.PrintUserItems(log);
+                }
+
                 await GetMonthlyLoginBonusInfo();
             }
             else
@@ -1373,7 +1377,43 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             await GetMissionInfo();
-            var missionIds = MissionInfoDict.Values.SelectMany(d => d.UserMissionDtoInfoDict.Values.SelectMany(x => x.SelectMany(f => f.MissionStatusHistory[MissionStatusType.NotReceived]))).ToList();
+            var missionIds = new List<long>();
+            foreach (var (missionGroupType, missionInfo) in MissionInfoDict)
+            {
+                if (missionGroupType == MissionGroupType.Panel)
+                {
+                    var notReceived1 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet1].SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
+                    missionIds.AddRange(notReceived1);
+
+                    var unfinishedIds1 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet1]
+                        .SelectMany(d => d.MissionStatusHistory)
+                        .Where(d=>d.Key == MissionStatusType.Locked || d.Key == MissionStatusType.Progress)
+                        .SelectMany(d=>d.Value).ToList();
+                    // 检查是否所有任务都已经完成
+                    if (unfinishedIds1.Count ==0)
+                    {
+                        var notReceived2 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet2].SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
+                        missionIds.AddRange(notReceived2);
+
+                        var unfinishedIds2 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet2]
+                            .SelectMany(d => d.MissionStatusHistory)
+                            .Where(d => d.Key == MissionStatusType.Locked || d.Key == MissionStatusType.Progress)
+                            .SelectMany(d => d.Value).ToList();
+
+                        if (unfinishedIds2.Count == 0)
+                        {
+                            var notReceived3 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet3].SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
+                            missionIds.AddRange(notReceived3);
+                        }
+
+                    }
+                }
+                else
+                {
+                    var notReceived = missionInfo.UserMissionDtoInfoDict.Values.SelectMany(d => d.SelectMany(x => x.GetNotReceivedIdList()));
+                    missionIds.AddRange(notReceived);
+                }
+            }
             var rewardMissionResponse = await GetResponse<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest() {TargetMissionIdList = missionIds});
             rewardMissionResponse.RewardInfo.ItemList.PrintUserItems(log);
             rewardMissionResponse.RewardInfo.CharacterList.PrintCharacterDtos(log);

@@ -19,6 +19,8 @@ namespace MementoMori
             _timeServerMb = timeServerMb;
         }
 
+        public DateTime ServerNow=> DateTime.UtcNow + DiffFromUtc;
+
         public bool IsInTime(IHasStartEndTime hasStartEndTime)
         {
             var now = DateTime.UtcNow;
