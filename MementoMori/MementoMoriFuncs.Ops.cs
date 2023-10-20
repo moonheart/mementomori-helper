@@ -1380,6 +1380,41 @@ public partial class MementoMoriFuncs : ReactiveObject
         });
     }
 
+    public async Task ReadAllMemories()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            foreach (var userCharacterBook in UserSyncData.UserCharacterBookDtoInfos)
+            {
+                var stories = CharacterStoryTable.GetListByCharacterId(userCharacterBook.CharacterId);
+                // var episodeIds = new List<long>();
+                foreach (var storyMB in stories)
+                {
+                    if (storyMB.Level <= userCharacterBook.MaxCharacterLevel && storyMB.EpisodeId > userCharacterBook.MaxEpisodeId)
+                    {
+                        // episodeIds.Add(storyMB.Id);
+                        var resp = await GetResponse<GetCharacterStoryRewardRequest, GetCharacterStoryRewardResponse>(new GetCharacterStoryRewardRequest()
+                        {
+                            IsSkip = true,
+                            CharacterStoryIdList = new List<long>(){storyMB.Id}
+                        });
+                        resp.RewardItemList.PrintUserItems(log);
+                    }
+                }
+
+                // if (episodeIds.Count > 0)
+                // {
+                //     var resp = await GetResponse<GetCharacterStoryRewardRequest, GetCharacterStoryRewardResponse>(new GetCharacterStoryRewardRequest()
+                //     {
+                //         IsSkip = true,
+                //         CharacterStoryIdList = episodeIds
+                //     });
+                //     resp.RewardItemList.PrintUserItems(log);
+                // }
+            }
+        });
+    }
+
     public async Task CompleteMissions()
     {
         await ExecuteQuickAction(async (log, token) =>

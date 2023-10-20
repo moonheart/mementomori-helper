@@ -267,6 +267,7 @@
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoBuyShopItem">@ResourceStrings.ShopAutoBuyItems</MudButton>
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoUseItems">@ResourceStrings.UseNormalItems</MudButton>
                         <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoRankUpCharacter">@TextResourceTable.Get("[CharacterRankUpBulkButton]")</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.ReadAllMemories">@TextResourceTable.Get("[CharacterDetailMemory]")</MudButton>
                         @* <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.UseFriendCode">邀请码</MudButton> *@
                     </MudPaper>
                 </MudTabPanel>
