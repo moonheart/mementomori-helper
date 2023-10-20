@@ -232,7 +232,7 @@ public partial class MementoMoriFuncs
                 var emptyPosition = 5 - battleCharacterGuids.Count;
                 // 按照战力排序
                 battleCharacterGuids.AddRange(battleInfoResponse.UserDungeonBattleCharacterDtoInfos
-                    .Where(d => d.CurrentHpPerMill != 0)
+                    .Where(d => !battleCharacterGuids.Contains(d.Guid) && d.CurrentHpPerMill != 0)
                     .OrderByDescending(d => BattlePowerCalculatorUtil.GetUserCharacterBattlePower(d.Guid))
                     .Select(d => d.Guid).Take(emptyPosition));
 

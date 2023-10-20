@@ -98,7 +98,7 @@ namespace MementoMori.Ortega.Share.Data.DtoInfo
 			list.Add(text4);
 			string text5 = this.UserCharacterGuid5;
 			list.Add(text5);
-			return list.Where(d=>string.IsNullOrEmpty(d)).ToList();
+			return list.Where(d=>!string.IsNullOrEmpty(d)).ToList();
 		}
 
 		public List<long> GetCharacterIds()
