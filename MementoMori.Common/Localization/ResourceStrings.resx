@@ -375,4 +375,10 @@
   <data name="AutoLoginonStartup" xml:space="preserve">
       <value>Auto Login on Startup</value>
   </data>
+  <data name="StopAfterSpecifiedStage" xml:space="preserve">
+      <value>Stop after specified stage</value>
+  </data>
+  <data name="NoStop" xml:space="preserve">
+      <value>No stop</value>
+  </data>
 </root>

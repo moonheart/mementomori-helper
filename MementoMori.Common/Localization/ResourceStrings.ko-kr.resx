@@ -269,4 +269,10 @@
     <data name="AutoLoginonStartup" xml:space="preserve">
         <value>시작 시 자동 로그인"</value>
     </data>
+    <data name="StopAfterSpecifiedStage" xml:space="preserve">
+        <value>지정 스테이지 이후 중지</value>
+    </data>
+    <data name="NoStop" xml:space="preserve">
+        <value>중지하지 않음</value>
+    </data>
 </root>

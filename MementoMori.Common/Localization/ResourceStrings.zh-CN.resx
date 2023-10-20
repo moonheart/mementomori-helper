@@ -375,4 +375,10 @@
   <data name="AutoLoginonStartup" xml:space="preserve">
       <value>启动时自动登录</value>
   </data>
+  <data name="StopAfterSpecifiedStage" xml:space="preserve">
+      <value>通过指定关卡后停止</value>
+  </data>
+  <data name="NoStop" xml:space="preserve">
+      <value>不停止</value>
+  </data>
 </root>

@@ -279,7 +279,14 @@
                 </MudTabPanel>
                 <MudTabPanel Text="@TextResourceTable.Get("[PlayerRankingTypeStage]")">
                     <MudPaper Elevation="0" Class="pa-2">
-                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoBossRequest">@TextResourceTable.Get("[BattleTypeBoss]") @TextResourceTable.Get("[BattleTypeAuto]")</MudButton>
+                        <MudSelect T="long" @bind-Value="@selectedTargetQuerstId" Label="@ResourceStrings.StopAfterSpecifiedStage" Variant="Variant.Outlined">
+                            <MudSelectItem T="long" Value="0">@ResourceStrings.NoStop</MudSelectItem>
+                            @foreach (var quest in QuestTable.GetArray().Where(d => d.BaseBattlePower > 0 && d.Id > ViewModel.UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId).Take(50))
+                            {
+                                <MudSelectItem T="long" Value="quest.Id">@quest.Memo</MudSelectItem>
+                            }
+                        </MudSelect>
+                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" OnClick="()=>ViewModel.AutoBossRequest(selectedTargetQuerstId)">@TextResourceTable.Get("[BattleTypeBoss]") @TextResourceTable.Get("[BattleTypeAuto]")</MudButton>
                     </MudPaper>
                 </MudTabPanel>
                 <MudTabPanel Text="@TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")">
@@ -295,7 +302,19 @@
                                 <MudSelectItem T="TowerType" Value="@type">@(TextResourceTable.Get(type))</MudSelectItem>
                             }
                         </MudSelect>
-                        <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" @onclick="@ViewModel.AutoInfiniteTowerRequest">@TextResourceTable.Get("[CommonHeaderTowerBattleLabel]") @TextResourceTable.Get("[BattleTypeAuto]")</MudButton>
+                        @if (ViewModel.SelectedAutoTowerType == TowerType.Infinite)
+                        {
+                            var maxTowerBattleId = ViewModel.UserSyncData.UserTowerBattleDtoInfos.First(x=>x.TowerType == TowerType.Infinite).MaxTowerBattleId;
+                            var quests = TowerBattleQuestTable.GetArray().Where(d => d.TowerType == TowerType.Infinite && d.Floor > maxTowerBattleId).Take(100);
+                                <MudSelect @bind-Value="selectedTargetTowerLayer" Label="@ResourceStrings.StopAfterSpecifiedStage">
+                                <MudSelectItem T="long" Value="0">@ResourceStrings.NoStop</MudSelectItem>
+                                    @foreach (var layer in quests)
+                                {
+                                    <MudSelectItem T="long" Value="layer.Floor">@layer.Floor</MudSelectItem>
+                                }
+                            </MudSelect>
+                        }
+                            <MudButton Variant="Variant.Filled" Disabled="@ViewModel.IsQuickActionExecuting" OnClick="()=>ViewModel.AutoInfiniteTowerRequest(selectedTargetTowerLayer)">@TextResourceTable.Get("[CommonHeaderTowerBattleLabel]") @TextResourceTable.Get("[BattleTypeAuto]")</MudButton>
                     </MudPaper>
                 </MudTabPanel>
                 <MudTabPanel Text="@TextResourceTable.Get("[CommonForgedLabel]")">
@@ -387,6 +406,9 @@
 
 @code {
     private List<CharacterEquipment> _characterEquipments = new();
+
+    private long selectedTargetQuerstId;
+    private long selectedTargetTowerLayer;
 
     private List<PlayerDataInfo> playerDataInfos = new();
 

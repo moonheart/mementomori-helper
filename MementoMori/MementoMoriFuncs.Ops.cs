@@ -874,7 +874,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var bossResponse = await GetResponse<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
+            var bossResponse = await GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
             log(bossResponse.ToJson(true));
         });
     }
@@ -1157,13 +1157,22 @@ public partial class MementoMoriFuncs : ReactiveObject
         });
     }
 
-    public async Task AutoBossRequest()
+    public async Task AutoBossRequest(long selectedTargetQuerstId = 0)
     {
         await ExecuteQuickAction(async (log, token) =>
         {
             var totalCount = 0;
             var winCount = 0;
             var errCount = 0;
+
+            try
+            {
+                await GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
+            }
+            catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.BattleAutoNextQuestNotFound)
+            {
+            }
+
             while (!token.IsCancellationRequested)
                 try
                 {
@@ -1171,6 +1180,11 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var bossResponse = await GetResponse<BossRequest, BossResponse>(new BossRequest() {QuestId = targetQuestId});
                     var win = bossResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                     totalCount++;
+                    if (win) winCount++;
+                    var info = QuestTable.GetById(targetQuestId).Memo;
+                    var result = win ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]");
+                    log(string.Format(ResourceStrings.AutoBossExecMessage, info, result, totalCount, winCount, errCount));
+
                     if (win)
                     {
                         if (GameConfig.RecordBattleLog)
@@ -1181,13 +1195,11 @@ public partial class MementoMoriFuncs : ReactiveObject
                             await File.WriteAllTextAsync(path, bossResponse.BattleResult.ToJson(true));
                         }
 
+                        if (selectedTargetQuerstId > 0 && selectedTargetQuerstId == targetQuestId) break;
+
                         var nextQuestResponse = await GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
-                        winCount++;
                     }
 
-                    var info = QuestTable.GetById(targetQuestId).Memo;
-                    var result = win ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]");
-                    log(string.Format(ResourceStrings.AutoBossExecMessage, info, result, totalCount, winCount, errCount));
                     if (GameConfig.AutoRequestDelay > 0) await Task.Delay(GameConfig.AutoRequestDelay, token);
                 }
                 catch (Exception e)
@@ -1205,7 +1217,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         });
     }
 
-    public async Task AutoInfiniteTowerRequest()
+    public async Task AutoInfiniteTowerRequest(long targetStopLayer)
     {
         await ExecuteQuickAction(async (log, token) =>
         {
@@ -1241,6 +1253,9 @@ public partial class MementoMoriFuncs : ReactiveObject
                         log(string.Format(ResourceStrings.AutoTowerInfiniteExecMsg, name, targetQuestId, result, totalCount, winCount, errCount));
                     else
                         log(string.Format(ResourceStrings.AutoTowerElementExecMsg, name, targetQuestId, result, totalCount, winCount, errCount, towerBattleDtoInfo.TodayClearNewFloorCount));
+
+                    if (win && SelectedAutoTowerType == TowerType.Infinite && targetStopLayer > 0 && targetStopLayer == targetQuestId) break;
+
                     if (GameConfig.AutoRequestDelay > 0) await Task.Delay(GameConfig.AutoRequestDelay, token);
                 }
                 catch (Exception e)
@@ -1389,18 +1404,16 @@ public partial class MementoMoriFuncs : ReactiveObject
                 var stories = CharacterStoryTable.GetListByCharacterId(userCharacterBook.CharacterId);
                 // var episodeIds = new List<long>();
                 foreach (var storyMB in stories)
-                {
                     if (storyMB.Level <= userCharacterBook.MaxCharacterLevel && storyMB.EpisodeId > userCharacterBook.MaxEpisodeId)
                     {
                         // episodeIds.Add(storyMB.Id);
                         var resp = await GetResponse<GetCharacterStoryRewardRequest, GetCharacterStoryRewardResponse>(new GetCharacterStoryRewardRequest()
                         {
                             IsSkip = true,
-                            CharacterStoryIdList = new List<long>(){storyMB.Id}
+                            CharacterStoryIdList = new List<long>() {storyMB.Id}
                         });
                         resp.RewardItemList.PrintUserItems(log);
                     }
-                }
 
                 // if (episodeIds.Count > 0)
                 // {
@@ -1422,7 +1435,6 @@ public partial class MementoMoriFuncs : ReactiveObject
             await GetMissionInfo();
             var missionIds = new List<long>();
             foreach (var (missionGroupType, missionInfo) in MissionInfoDict)
-            {
                 if (missionGroupType == MissionGroupType.Panel)
                 {
                     var notReceived1 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet1].SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
@@ -1430,10 +1442,10 @@ public partial class MementoMoriFuncs : ReactiveObject
 
                     var unfinishedIds1 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet1]
                         .SelectMany(d => d.MissionStatusHistory)
-                        .Where(d=>d.Key == MissionStatusType.Locked || d.Key == MissionStatusType.Progress)
-                        .SelectMany(d=>d.Value).ToList();
+                        .Where(d => d.Key == MissionStatusType.Locked || d.Key == MissionStatusType.Progress)
+                        .SelectMany(d => d.Value).ToList();
                     // 检查是否所有任务都已经完成
-                    if (unfinishedIds1.Count ==0)
+                    if (unfinishedIds1.Count == 0)
                     {
                         var notReceived2 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet2].SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
                         missionIds.AddRange(notReceived2);
@@ -1448,7 +1460,6 @@ public partial class MementoMoriFuncs : ReactiveObject
                             var notReceived3 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet3].SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
                             missionIds.AddRange(notReceived3);
                         }
-
                     }
                 }
                 else
@@ -1456,7 +1467,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var notReceived = missionInfo.UserMissionDtoInfoDict.Values.SelectMany(d => d.SelectMany(x => x.GetNotReceivedIdList()));
                     missionIds.AddRange(notReceived);
                 }
-            }
+
             var rewardMissionResponse = await GetResponse<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest() {TargetMissionIdList = missionIds});
             rewardMissionResponse.RewardInfo.ItemList.PrintUserItems(log);
             rewardMissionResponse.RewardInfo.CharacterList.PrintCharacterDtos(log);

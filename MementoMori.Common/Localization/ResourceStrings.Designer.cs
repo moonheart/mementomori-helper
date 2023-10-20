@@ -529,6 +529,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 No stop 的本地化字符串。
+        /// </summary>
+        public static string NoStop {
+            get {
+                return ResourceManager.GetString("NoStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Nothing to receive 的本地化字符串。
         /// </summary>
         public static string NothingToReceive {
@@ -759,6 +768,15 @@ namespace MementoMori.Common.Localization {
         public static string Slot {
             get {
                 return ResourceManager.GetString("Slot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Stop after specified stage 的本地化字符串。
+        /// </summary>
+        public static string StopAfterSpecifiedStage {
+            get {
+                return ResourceManager.GetString("StopAfterSpecifiedStage", resourceCulture);
             }
         }
         
