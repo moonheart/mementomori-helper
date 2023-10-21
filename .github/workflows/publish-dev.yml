@@ -22,8 +22,8 @@ jobs:
           dotnet-version: 8.0.x
       - name: Restore dependencies
         run: dotnet restore
-      - name: Build
-        run: dotnet build ./MementoMori.WebUI/MementoMori.WebUI.csproj -c Release --no-restore
+#      - name: Build
+#        run: dotnet build ./MementoMori.WebUI/MementoMori.WebUI.csproj -c Release --no-restore
       - name: Publish ${{matrix.rid}}
         run: dotnet publish ./MementoMori.WebUI/MementoMori.WebUI.csproj -c Release -r ${{matrix.rid}} -p:RunAOTCompilation=true -o publish-${{matrix.rid}} --sc -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:PublishReadyToRun=true
         env:
