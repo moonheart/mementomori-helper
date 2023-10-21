@@ -6,9 +6,7 @@ namespace MementoMori.Ortega.Share.Master.Table
 	{
 		public VipMB GetByLevel(long vipLevel)
 		{
-			int num = 0;
-			num++;
-			throw new NullReferenceException();
+            return _datas.FirstOrDefault(d => d.Lv == vipLevel);
 		}
 
 		public long GetMaxLevel()

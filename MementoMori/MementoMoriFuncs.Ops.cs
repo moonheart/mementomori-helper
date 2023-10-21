@@ -167,7 +167,14 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             if (_tasks.TrueForAll(d => d.IsCompleted)) IsQuickActionExecuting = false;
         });
-        await task;
+        try
+        {
+            await task;
+        }
+        catch (ApiErrorException e)
+        {
+            AddLog(e.Message);
+        }
     }
 
     public void CancelQuickAction()
@@ -400,23 +407,72 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             try
             {
-                var bossQuickResponse = await GetResponse<BossQuickRequest, BossQuickResponse>(
-                    new BossQuickRequest()
-                    {
-                        QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId,
-                        QuickCount = 3
-                    });
-                if (bossQuickResponse.BattleRewardResult == null) return;
+                if (IsBossBattleQuickAvailable)
+                {
+                    var bossQuickResponse = await GetResponse<BossQuickRequest, BossQuickResponse>(
+                        new BossQuickRequest()
+                        {
+                            QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId,
+                            QuickCount = 3
+                        });
+                    if (bossQuickResponse.BattleRewardResult == null) return;
 
-                log($"{TextResourceTable.Get("[AutoBattleButtonQuickForward]")}：\n");
-                bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                    log($"{TextResourceTable.Get("[AutoBattleButtonQuickForward]")}：\n");
+                    bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                    bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                }
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        var bossQuickResponse = await GetResponse<BossRequest, BossResponse>(
+                            new BossRequest()
+                            {
+                                QuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId
+                            });
+                        if (bossQuickResponse.BattleRewardResult == null) return;
+
+                        log($"{TextResourceTable.Get("[AutoBattleButtonQuickForward]")}：\n");
+                        bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                        bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                    }
+                }
             }
             catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.BattleBossNotEnoughBossChallengeCount)
             {
                 log(e.Message);
             }
         });
+    }
+
+    private bool IsBossBattleQuickAvailable
+    {
+        get
+        {
+            var vip = VipTable.GetByLevel(UserSyncData.UserStatusDtoInfo.Vip);
+            var isQuickAvailable = vip.IsQuickBossBattleAvailable;
+            if (!isQuickAvailable)
+            {
+                isQuickAvailable = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId >= OpenContentTable.GetByOpenCommandType(OpenCommandType.BossBattleQuick).OpenContentValue;
+            }
+
+            return isQuickAvailable;
+        }
+    }
+    
+    private bool IsGuildRaidQuickAvailable
+    {
+        get
+        {
+            var vip = VipTable.GetByLevel(UserSyncData.UserStatusDtoInfo.Vip);
+            var isQuickAvailable = vip.IsQuickStartGuildRaidAvailable;
+            if (!isQuickAvailable)
+            {
+                isQuickAvailable = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId >= OpenContentTable.GetByOpenCommandType(OpenCommandType.GuildRaidQuick).OpenContentValue;
+            }
+
+            return isQuickAvailable;
+        }
     }
 
     public async Task InfiniteTowerQuick()
@@ -428,16 +484,36 @@ public partial class MementoMoriFuncs : ReactiveObject
                 var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
                 log($"{TextResourceTable.Get("[CommonHeaderTowerBattleLabel]")}：\n");
 
-                var bossQuickResponse = await GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
-                    new TowerBattleQuickRequest()
-                    {
-                        TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId, QuickCount = 3
-                    });
-                if (bossQuickResponse.BattleRewardResult != null)
+                if (IsBossBattleQuickAvailable)
                 {
-                    bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                    bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                    var bossQuickResponse = await GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
+                        new TowerBattleQuickRequest()
+                        {
+                            TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId, QuickCount = 3
+                        });
+                    if (bossQuickResponse.BattleRewardResult != null)
+                    {
+                        bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                        bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                    }
                 }
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        var bossQuickResponse = await GetResponse<TowerBattleStartRequest, TowerBattleStartResponse>(
+                            new TowerBattleStartRequest()
+                            {
+                                TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId
+                            });
+                        if (bossQuickResponse.BattleRewardResult != null)
+                        {
+                            bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                            bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                        }
+                    }
+                }
+                
             }
             catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.TowerBattleNotEnoughChallengeCount)
             {
@@ -1036,6 +1112,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             var response1 = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
             log($"{TextResourceTable.Get("[GuildId]")} {response1.GuildId}");
+            if (response1.GuildId == 0) return;
             bool hasRaid;
             do
             {
@@ -1045,7 +1122,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 {
                     if (info.IsOpen && (info.UserGuildRaidDtoInfo == null || info.UserGuildRaidDtoInfo is {ChallengeCount: < 2}))
                     {
-                        if (info.UserGuildRaidPreviousDtoInfo != null)
+                        if (IsGuildRaidQuickAvailable && info.UserGuildRaidPreviousDtoInfo != null)
                         {
                             var response3 = await GetResponse<QuickStartGuildRaidRequest, QuickStartGuildRaidResponse>(new QuickStartGuildRaidRequest()
                                 {BelongGuildId = response1.GuildId, GuildRaidBossType = info.GuildRaidDtoInfo.BossType});

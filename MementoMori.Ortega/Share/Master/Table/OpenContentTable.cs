@@ -3,40 +3,26 @@ using MementoMori.Ortega.Share.Master.Data;
 
 namespace MementoMori.Ortega.Share.Master.Table
 {
-	public class OpenContentTable : TableBase<OpenContentMB>
-	{
-		public List<OpenContentMB> GetListByOpenContentType(OpenContentType type)
-		{
-			// List<OpenContentMB> list = new List();
-			// int num = 0;
-			// num++;
-			// return list;
-			throw new NullReferenceException();
-		}
+    public class OpenContentTable : TableBase<OpenContentMB>
+    {
+        public List<OpenContentMB> GetListByOpenContentType(OpenContentType type)
+        {
+            return _datas.Where(d => d.OpenContentType == type).ToList();
+        }
 
-		public OpenContentMB GetByOpenCommandType(OpenCommandType type)
-		{
-			int num = 0;
-			num++;
-			throw new NullReferenceException();
-		}
+        public OpenContentMB GetByOpenCommandType(OpenCommandType type)
+        {
+            return _datas.FirstOrDefault(d => d.OpenCommandType == type);
+        }
 
-		public OpenContentMB GetByOpenContentTypeAndCommandType(OpenContentType contentType, OpenCommandType commandType)
-		{
-			int num = 0;
-			num++;
-			throw new NullReferenceException();
-		}
+        public OpenContentMB GetByOpenContentTypeAndCommandType(OpenContentType contentType, OpenCommandType commandType)
+        {
+            return _datas.FirstOrDefault(d => d.OpenContentType == contentType && d.OpenCommandType == commandType);
+        }
 
-		public OpenContentMB GetByTutorialId(long tutorialId)
-		{
-			int num = 0;
-			num++;
-			throw new NullReferenceException();
-		}
-
-		public OpenContentTable()
-		{
-		}
-	}
+        public OpenContentMB GetByTutorialId(long tutorialId)
+        {
+            return _datas.FirstOrDefault(d => d.TutorialId == tutorialId);
+        }
+    }
 }
