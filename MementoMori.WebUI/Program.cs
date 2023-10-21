@@ -8,6 +8,8 @@ using MudBlazor.Services;
 using MementoMori.WebUI.Extensions;
 using Quartz;
 using ReactiveUI;
+using MementoMori.WebUI;
+using MementoMori.WebUI.Pages;
 
 internal class Program
 {
@@ -21,8 +23,11 @@ internal class Program
 
         builder.Services.AddMudServices();
 
-        builder.Services.AddRazorPages();
-        builder.Services.AddServerSideBlazor();
+        builder.Services.AddRazorComponents()
+            .AddInteractiveServerComponents();
+
+        //builder.Services.AddRazorPages();
+        //builder.Services.AddServerSideBlazor();
         builder.Services.AddSingleton<TimeManager>();
         builder.Services.AddSingleton<MementoNetworkManager>();
         builder.Services.AddSingleton<MementoMoriFuncs>();
@@ -40,15 +45,18 @@ internal class Program
 
         app.Services.GetService<MementoNetworkManager>().DownloadMasterCatalog(CultureInfo.CurrentCulture).ConfigureAwait(false).GetAwaiter().GetResult();
 
-// Configure the HTTP request pipeline.
+        // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment()) app.UseExceptionHandler("/Error");
 
         app.UseStaticFiles();
+        app.UseAntiforgery();
+        app.MapRazorComponents<App>()
+            .AddInteractiveServerRenderMode();
 
-        app.UseRouting();
+        //app.UseRouting();
 
-        app.MapBlazorHub();
-        app.MapFallbackToPage("/_Host");
+        //app.MapBlazorHub();
+        //app.MapFallbackToPage("/_Host");
 
         app.Services.GetService<MementoMoriFuncs>().AutoLogin().ConfigureAwait(false).GetAwaiter().GetResult();
 
