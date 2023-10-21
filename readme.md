@@ -141,7 +141,7 @@ services:
     restart: unless-stopped
     privileged: false
     ports:
-      - "5290:80"
+      - "5290:8080"
     environment:
       - TZ=Asia/Shanghai
     volumes:
