@@ -981,10 +981,20 @@ public partial class MementoMoriFuncs : ReactiveObject
                             return true;
                         if (d.ConsumeItem == null && d.BuyItem.ItemType == shopItem.GiveItem.ItemType && d.BuyItem.ItemId == shopItem.GiveItem.ItemId)
                             return true;
+                        if (d.BuyItem != null && d.ConsumeItem != null && d.BuyItem.IsEqual(shopItem.GiveItem.ItemType, shopItem.GiveItem.ItemId) && (
+                                d.ConsumeItem.IsEqual(shopItem.ConsumeItem1.ItemType, shopItem.ConsumeItem1.ItemId)
+                                || (shopItem.ConsumeItem2 != null && d.ConsumeItem.IsEqual(shopItem.ConsumeItem2.ItemType, shopItem.ConsumeItem2.ItemId))))
+                            return true;
+
                         return false;
                     });
 
                     if (shopAutoBuyItem == null) continue;
+
+                    if (shopItem.ConsumeItem1.ItemCount > UserSyncData.UserItemDtoInfo.GetCount(shopItem.ConsumeItem1.ItemType, shopItem.ConsumeItem1.ItemId))
+                        continue;
+                    if (shopItem.ConsumeItem2 != null && shopItem.ConsumeItem2.ItemCount > UserSyncData.UserItemDtoInfo.GetCount(shopItem.ConsumeItem2.ItemType, shopItem.ConsumeItem2.ItemId))
+                        continue;
 
                     if (shopItem.SalePercent < shopAutoBuyItem.MinDiscountPercent) continue;
 
