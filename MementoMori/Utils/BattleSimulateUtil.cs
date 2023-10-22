@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MementoMori.Extensions;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Enums.Battle.Skill;
 
@@ -26,17 +27,68 @@ public static class BattleSimulateUtil
 
     private static string GetEffectDesc(this Effect effect)
     {
-        return effect.EffectType switch
+        var desc = effect.EffectType.GetDesc();
+        if (effect.EffectType < EffectType.SpeedUp)
         {
-            EffectType.AttackPowerUp => $"{"攻击力提升"}: {effect.EffectValue}",
-            EffectType.DefenseDown => $"{"防御力降低"}: {effect.EffectValue}",
-            EffectType.CriticalResistRateDown => $"{"抗暴率降低"}: {effect.EffectValue}%",
-            EffectType.ReceiveDamageUp => $"{"承受伤害增加"}: {effect.EffectValue}%",
-            EffectType.GiveDamageDown => $"{"造成伤害降低"}: {effect.EffectValue}%",
-            EffectType.AvoidanceForbidden => $"{"无法回避"}",
-            EffectType.Shield1 => $"{"护盾"}: {effect.EffectValue}",
-            _ => $"{effect.EffectType}: {effect.EffectValue}"
-        };
+            return $"无";
+        }
+        if (effect.EffectType < EffectType.HitRateUp)
+        {
+            return $"{desc} {effect.EffectValue}";
+        }
+
+        if (effect.EffectType < EffectType.DamageGuard)
+        {
+            return $"{desc} {effect.EffectValue}%";
+
+        }
+
+        if (effect.EffectType < EffectType.ActiveSkill1Enhance)
+        {
+            return desc;
+        }
+
+        if (effect.EffectType < EffectType.SpeedDown)
+        {
+            return desc;
+        }
+
+        if (effect.EffectType < EffectType.HitRateDown)
+        {
+            return $"{desc} {effect.EffectValue}";
+        }
+        if (effect.EffectType < EffectType.Stun)
+        {
+            return $"{desc} {effect.EffectValue}%";
+        }
+        if (effect.EffectType < EffectType.HpRecoveryForbidden)
+        {
+            return desc;
+        }
+
+        return desc;
+
+        //
+        //
+        // return effect.EffectType switch
+        // {
+        //     EffectType.AttackPowerUp => $"攻击力提升: {effect.EffectValue}",
+        //     EffectType.DefenseDown => $"防御力降低: {effect.EffectValue}",
+        //     EffectType.CriticalResistRateDown => $"抗暴率降低: {effect.EffectValue}%",
+        //     EffectType.ReceiveDamageUp => $"承受伤害增加: {effect.EffectValue}%",
+        //     EffectType.GiveDamageDown => $"造成伤害降低: {effect.EffectValue}%",
+        //     EffectType.AvoidanceForbidden => "无法回避",
+        //     EffectType.Shield1 => $"护盾: {effect.EffectValue}",
+        //     EffectType.SpeedUp => $"速度提升: {effect.EffectValue}",
+        //     EffectType.CriticalRateUp=> $"暴击率提升: {effect.EffectValue}%",
+        //     EffectType.DefensePenetrationUp=> $"防御穿透提升: {effect.EffectValue}",
+        //     EffectType.GiveDamageUp=> $"输出伤害提升: {effect.EffectValue}%",
+        //     EffectType.DefenseUp=> $"防御提升: {effect.EffectValue}%",
+        //     EffectType.DebuffGuard=> $"弱化效果免疫",
+        //     EffectType.AvoidanceRateUp=> $"闪避率提升: {effect.EffectValue}%",
+        //     EffectType.CriticalResistRateUp=> $"抗爆率提升: {effect.EffectValue}%",
+        //     _ => $"{effect.EffectType}: {effect.EffectValue}"
+        // };
     }
 
     public class UnitData

@@ -39,27 +39,26 @@
             <MudField Variant="Variant.Outlined" Label="回合开始被动技能">
                 <MudSimpleTable Dense="true">
                     <tbody>
-                    @foreach (var subSkillResults in battleSubLog.TurnStartPassiveResults.GroupBy(d => d.AttackUnitGuid))
+                    @foreach (var subSkillResultsGroup in battleSubLog.TurnStartPassiveResults.GroupBy(d => d.AttackUnitGuid))
                     {
                         <tr>
-                            <td>@unitDatas[subSkillResults.Key].Name</td>
+                            <td>@unitDatas[subSkillResultsGroup.Key].Name</td>
                             <td>
                                 <MudSimpleTable Dense="true">
                                     <tbody>
-                                    @foreach (var subSkillResults1 in subSkillResults.GroupBy(d => d.TargetUnitGuid))
+                                    @foreach (var subSkillResults1 in subSkillResultsGroup.GroupBy(d => d.TargetUnitGuid))
                                     {
                                         <tr>
-                                            <td>@unitDatas[subSkillResults1.Key].Name</td>
                                             <td>
-                                                <MudSimpleTable Dense="true">
-                                                    <tbody>
+                                                <MudStack Row="true">
+                                                    <MudText Inline="true">@unitDatas[subSkillResults1.Key].Name</MudText>
                                                     @foreach (var subSkillResult in subSkillResults1)
                                                     {
                                                         if (subSkillResult.SkillDisplayType == SkillDisplayType.None) continue;
+                                                        if (subSkillResult.SubSkillResultType == SubSkillResultType.Effect && subSkillResult.AddEffectGroups.Count == 0) continue;
                                                         <SubSkillResultPage UnitDatas="unitDatas" SubSkillResult="subSkillResult"/>
                                                     }
-                                                    </tbody>
-                                                </MudSimpleTable>
+                                                </MudStack>
 
                                             </td>
                                         </tr>
@@ -87,7 +86,6 @@
                         var skillActionName = $"{attackerData.Name} 发动 {activeSkillName}";
                         <tr>
                             <td>@attackerData.Name</td>
-                            <td>@activeSkillName</td>
                             <td>
                                 <MudSimpleTable Dense="true">
                                     <tbody>
@@ -100,17 +98,16 @@
                                                     @foreach (var subSkillResultGroup in subSetSkillResult.SubSkillResults.GroupBy(d => d.TargetUnitGuid))
                                                     {
                                                         <tr>
-                                                            <td>@unitDatas[subSkillResultGroup.Key].Name</td>
                                                             <td>
-                                                                <MudSimpleTable Dense="true">
-                                                                    <tbody>
+                                                                <MudStack Row="true">
+                                                                    <MudText Inline="true">@unitDatas[subSkillResultGroup.Key].Name</MudText>
                                                                     @foreach (var subSkillResult in subSkillResultGroup)
                                                                     {
                                                                         if (subSkillResult.SkillDisplayType == SkillDisplayType.None) continue;
+                                                                        if (subSkillResult.SubSkillResultType == SubSkillResultType.Effect && subSkillResult.AddEffectGroups.Count == 0) continue;
                                                                         <SubSkillResultPage UnitDatas="unitDatas" SubSkillResult="subSkillResult"/>
                                                                     }
-                                                                    </tbody>
-                                                                </MudSimpleTable>
+                                                                </MudStack>
                                                             </td>
                                                         </tr>
                                                     }
