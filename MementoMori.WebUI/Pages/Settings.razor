@@ -30,6 +30,7 @@
                 <MudSwitch Label="@ResourceStrings.UseNormalItems" @bind-Checked="AutoJob__AutoUseItems" Color="Color.Primary"></MudSwitch>
                 <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonFooterGachaButtonLabel]")" @bind-Checked="AutoJob__AutoFreeGacha" Color="Color.Primary"></MudSwitch>
                 <MudSwitch Label="@Masters.TextResourceTable.Get("[CharacterMenuTabCharacterRankUp]")" @bind-Checked="AutoJob__AutoRankUpCharacter" Color="Color.Primary"></MudSwitch>
+                <MudSwitch Label="@Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")" @bind-Checked="AutoJob__AutoOpenGuildRaid" Color="Color.Primary"></MudSwitch>
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -369,6 +370,12 @@
     {
         get => WritableGameConfig.Value.AutoJob.AutoRankUpCharacter;
         set => WritableGameConfig.Update(x => x.AutoJob.AutoRankUpCharacter = value);
+    }
+
+    public bool AutoJob__AutoOpenGuildRaid
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoOpenGuildRaid;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoOpenGuildRaid = value);
     }
 
     public string AutoJob__DailyJobCron

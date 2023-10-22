@@ -22,6 +22,10 @@ internal class GuildRaidBossReleaseJob : IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
+        if (!_gameConfig.Value.AutoJob.AutoOpenGuildRaid)
+        {
+            return;
+        }
         if (!_mementoMoriFuncs.IsQuickActionExecuting) await _mementoMoriFuncs.Login();
         await _mementoMoriFuncs.OpenGuildRaid();
     }

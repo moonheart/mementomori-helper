@@ -60,6 +60,7 @@ public class GameConfig
         public bool AutoUseItems { get; set; }
         public bool AutoFreeGacha { get; set; }
         public bool AutoRankUpCharacter { get; set; }
+        public bool AutoOpenGuildRaid { get; set; }
 
         public string DailyJobCron { get; set; } = "0 10 4 ? * *";
         public string HourlyJobCron { get; set; } = "0 30 0,4,8,12,16,20 ? * *";
