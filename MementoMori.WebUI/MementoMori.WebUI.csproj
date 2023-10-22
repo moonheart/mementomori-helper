@@ -12,10 +12,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.0-rc.2.23480.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0-rc.2.23480.2" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.0-rc.2.23480.2" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.0-rc.2.23480.2" />
         <PackageReference Include="MudBlazor" Version="6.11.0" />
         <PackageReference Include="Quartz" Version="3.7.0" />
         <PackageReference Include="Quartz.AspNetCore" Version="3.7.0" />
-      <PackageReference Include="ReactiveUI.Blazor" Version="19.4.1" />
+      <PackageReference Include="ReactiveUI.Blazor" Version="19.5.1" />
     </ItemGroup>
     <ItemGroup>
       <None Update="account.xml">
