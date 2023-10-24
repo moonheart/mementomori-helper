@@ -40,34 +40,34 @@ namespace MementoMori.Ortega.Common.Utils
 // 			return BattleUtil.GetRemainingBossChallengeCount(SingletonMonoBehaviour.Instance.SyncData.UserBattleBossDtoInfo);
 // 		}
 //
-		public static long GetRemainingBossChallengeCount(UserBattleBossDtoInfo dtoInfo)
-		{
-			if (dtoInfo != null)
-			{
-				int dateIntYearMonthDay = DateUtil.GetDateIntYearMonthDay(dtoInfo.BossLastChallengeTime);
-				int dateIntYearMonthDay2 = Services.Get<OrtegaTimeManager>().GetDateIntYearMonthDay();
-
-				if (dateIntYearMonthDay2 > dateIntYearMonthDay)
-				{
-					return OrtegaConst.BattleBoss.MaxBossBattleFreeCount;
-				}
-				else
-				{
-					return OrtegaConst.BattleBoss.MaxBossBattleFreeCount - dtoInfo.BossTodayWinCount;
-				}
-				
-				// long BossTodayUseCurrencyCount = dtoInfo.BossTodayUseCurrencyCount;
-				// long BossTodayUseTicketCount = dtoInfo.BossTodayUseTicketCount;
-				// long num = OrtegaConst.BattleBoss.MaxBossBattleFreeCount;
-				// long BossLastChallengeTime = dtoInfo.BossLastChallengeTime;
-				// num += BossTodayUseTicketCount;
-				// num += BossTodayUseCurrencyCount;
-				// int dateIntYearMonthDay = DateUtil.GetDateIntYearMonthDay(BossLastChallengeTime);
-				// int dateIntYearMonthDay2 = Services.Get<OrtegaTimeManager>().GetDateIntYearMonthDay();
-				// return num;
-			}
-			return OrtegaConst.BattleBoss.MaxBossBattleFreeCount;
-		}
+		// public static long GetRemainingBossChallengeCount(UserBattleBossDtoInfo dtoInfo)
+		// {
+		// 	if (dtoInfo != null)
+		// 	{
+		// 		int dateIntYearMonthDay = DateUtil.GetDateIntYearMonthDay(dtoInfo.BossLastChallengeTime);
+		// 		int dateIntYearMonthDay2 = Services.Get<OrtegaTimeManager>().GetDateIntYearMonthDay();
+		//
+		// 		if (dateIntYearMonthDay2 > dateIntYearMonthDay)
+		// 		{
+		// 			return OrtegaConst.BattleBoss.MaxBossBattleFreeCount;
+		// 		}
+		// 		else
+		// 		{
+		// 			return OrtegaConst.BattleBoss.MaxBossBattleFreeCount - dtoInfo.BossTodayWinCount;
+		// 		}
+		// 		
+		// 		// long BossTodayUseCurrencyCount = dtoInfo.BossTodayUseCurrencyCount;
+		// 		// long BossTodayUseTicketCount = dtoInfo.BossTodayUseTicketCount;
+		// 		// long num = OrtegaConst.BattleBoss.MaxBossBattleFreeCount;
+		// 		// long BossLastChallengeTime = dtoInfo.BossLastChallengeTime;
+		// 		// num += BossTodayUseTicketCount;
+		// 		// num += BossTodayUseCurrencyCount;
+		// 		// int dateIntYearMonthDay = DateUtil.GetDateIntYearMonthDay(BossLastChallengeTime);
+		// 		// int dateIntYearMonthDay2 = Services.Get<OrtegaTimeManager>().GetDateIntYearMonthDay();
+		// 		// return num;
+		// 	}
+		// 	return OrtegaConst.BattleBoss.MaxBossBattleFreeCount;
+		// }
 
 // 		public static AutoBattleQuickBonusConditionType GetAutoQuickBonusConditionType(long questId)
 // 		{

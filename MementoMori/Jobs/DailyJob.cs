@@ -5,16 +5,19 @@ namespace MementoMori.Jobs;
 [DisallowConcurrentExecution]
 public class DailyJob: IJob
 {
-    private MementoMoriFuncs _mementoMoriFuncs;
+    private AccountManager _accountManager;
 
-    public DailyJob(MementoMoriFuncs mementoMoriFuncs)
+    public DailyJob(AccountManager accountManager)
     {
-        _mementoMoriFuncs = mementoMoriFuncs;
+        _accountManager = accountManager;
     }
 
     public async Task Execute(IJobExecutionContext context)
     {
-        if (!_mementoMoriFuncs.IsQuickActionExecuting) await _mementoMoriFuncs.Login();
-        await _mementoMoriFuncs.ExecuteAllQuickAction();
+        foreach (var (_, account) in _accountManager.GetAll())
+        {
+            if (!account.Funcs.IsQuickActionExecuting) await account.Funcs.Login();
+            await account.Funcs.ExecuteAllQuickAction();
+        }
     }
 }

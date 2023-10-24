@@ -9,12 +9,41 @@
 @using Quartz
 @using Quartz.Impl.Matchers
 @inject IWritableOptions<GameConfig> WritableGameConfig
+@inject IWritableOptions<AuthOption> authOption
 @inject TimeZoneAwareJobRegister TimeZoneAwareJobRegister
 @inject ISchedulerFactory SchedulerFactory
+@inject AccountManager AccountManager
+@inject IDialogService DialogService
 
 @page "/settings"
 
 <MudGrid>
+    <MudItem sm="12" md="6" lg="4" xl="3">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>帐号管理</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudButton Variant="Variant.Outlined" OnClick="AddAccountClick">添加</MudButton>
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudList>
+
+                @foreach (var accountInfo in authOption.Value.Accounts)
+                {
+                    <MudListItem Value="accountInfo">
+                        <MudText>@accountInfo.UserId</MudText>
+                        <MudText>@accountInfo.ClientKey</MudText>
+                        <MudSwitch @bind-Checked="accountInfo.AutoLogin" Color="Color.Primary">自动登录</MudSwitch>
+                        <MudButton OnClick="()=>LoginAccount(accountInfo.UserId)">登录</MudButton>
+                    </MudListItem>
+                }
+                </MudList>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
         <MudCard>
             <MudCardHeader>
@@ -197,6 +226,15 @@
     </DialogActions>
 </MudDialog>
 
+<MudDialog @bind-IsVisible="addAccountDialog" Options="@(new DialogOptions() {CloseButton = true})">
+    <DialogContent>
+        <MudNumericField Label="帐号" @bind-Value="addAccountUserId"></MudNumericField>
+        <MudTextField Label="密码" @bind-Value="addAccountPassword"></MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddAccountConfirmClick">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
+    </DialogActions>
+</MudDialog>
 
 @code {
 
@@ -205,10 +243,12 @@
     List<UserItem> DungeonBattleShopItems = new();
     List<JobInfo> JobInfos = new();
     private IEnumerable<UserItem> _selected;
-    UserItem DungeonBattleSelectedItem { get; set; }
-    int DungeonBattleSelectedDiscount { get; set; }
-    bool DungeonBattleSelectItemDialog { get; set; }
-
+    UserItem DungeonBattleSelectedItem;
+    int DungeonBattleSelectedDiscount;
+    bool DungeonBattleSelectItemDialog;
+    bool addAccountDialog;
+    long addAccountUserId;
+    string addAccountPassword;
 
     protected override async Task OnInitializedAsync()
     {
@@ -332,7 +372,7 @@
         set
         {
             WritableGameConfig.Update(x => x.AutoJob.DisableAll = value);
-            TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
 
@@ -384,7 +424,7 @@
         set
         {
             WritableGameConfig.Update(x => x.AutoJob.DailyJobCron = value);
-            TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
 
@@ -394,7 +434,7 @@
         set
         {
             WritableGameConfig.Update(x => x.AutoJob.HourlyJobCron = value);
-            TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
 
@@ -404,7 +444,7 @@
         set
         {
             WritableGameConfig.Update(x => x.AutoJob.PvpJobCron = value);
-            TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
 
@@ -414,7 +454,7 @@
         set
         {
             WritableGameConfig.Update(x => x.AutoJob.GuildRaidBossReleaseCron = value);
-            TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
     public string AutoJob__AutoBuyShopItemJobCron
@@ -423,7 +463,7 @@
         set
         {
             WritableGameConfig.Update(x => x.AutoJob.AutoBuyShopItemJobCron = value);
-            TimeZoneAwareJobRegister.RegisterJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
 
@@ -470,6 +510,46 @@
     }
 
     #endregion
+
+
+    private void AddAccountClick()
+    {
+        this.addAccountDialog = true;
+    }
+
+    private async Task AddAccountConfirmClick()
+    {
+        if (addAccountUserId <=0 || string.IsNullOrEmpty(addAccountPassword))
+        {
+            return;
+        }
+        if (AccountManager.Contains(addAccountUserId))
+        {
+            return;
+        }
+        var account = AccountManager.Get(addAccountUserId);
+        try
+        {
+            var clientKey = await account.Funcs.GetClientKey(addAccountPassword);
+            if (clientKey == null)
+            {
+                throw new Exception("ClientKey is null");
+            }
+            AccountManager.AddAccountInfo(addAccountUserId, clientKey);
+            addAccountDialog = false;
+        }
+        catch (Exception e)
+        {
+            await DialogService.ShowMessageBox("获取帐号信息失败", e.Message);
+            return;
+        }
+    }
+
+    private async Task LoginAccount(long userId)
+    {
+        var account= AccountManager.Get(userId);
+        await account.Funcs.AutoLogin(true);
+    }
 
     private class UserItemComparer : IEqualityComparer<UserItem>
     {

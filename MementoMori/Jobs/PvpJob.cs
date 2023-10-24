@@ -13,23 +13,26 @@ namespace MementoMori.Jobs;
 [DisallowConcurrentExecution]
 internal class PvpJob : IJob
 {
-    private MementoMoriFuncs _mementoMoriFuncs;
+    private AccountManager _accountManager;
     private readonly IWritableOptions<GameConfig> _gameConfig;
 
-    public PvpJob(MementoMoriFuncs mementoMoriFuncs, IWritableOptions<GameConfig> gameConfig)
+    public PvpJob(IWritableOptions<GameConfig> gameConfig, AccountManager accountManager)
     {
-        _mementoMoriFuncs = mementoMoriFuncs;
         _gameConfig = gameConfig;
+        _accountManager = accountManager;
     }
 
     public async Task Execute(IJobExecutionContext context)
     {
         if (!_gameConfig.Value.AutoJob.AutoPvp) return;
+        
+        foreach (var (_, account) in _accountManager.GetAll())
+        {
+            if (!account.Funcs.IsQuickActionExecuting) await account.Funcs.Login();
 
-        if (!_mementoMoriFuncs.IsQuickActionExecuting) await _mementoMoriFuncs.Login();
-
-        await _mementoMoriFuncs.PvpAuto();
-        await _mementoMoriFuncs.CompleteMissions();
-        await _mementoMoriFuncs.RewardMissonActivity();
+            await account.Funcs.PvpAuto();
+            await account.Funcs.CompleteMissions();
+            await account.Funcs.RewardMissonActivity();
+        }
     }
 }

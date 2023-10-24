@@ -35,25 +35,25 @@ namespace MementoMori.Ortega.Common.Utils
 			return result;
 		}
 
-		public static long GetUserCharacterBattlePower(string userCharacterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
+		public static long GetUserCharacterBattlePower(long userId, string userCharacterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
 		{
-			var info = Services.Get<MementoMoriFuncs>().UserSyncData.GetUserCharacterInfoByUserCharacterGuid(userCharacterGuid);
+			var info = Services.Get<AccountManager>().Get(userId).Funcs.UserSyncData.GetUserCharacterInfoByUserCharacterGuid(userCharacterGuid);
             if (info == null)
             {
                 return 0;
             }
-			return GetUserCharacterBattlePower(info, lockEquipmentDeckType);
+			return GetUserCharacterBattlePower(userId, info, lockEquipmentDeckType);
 		}
 
-		public static long GetUserCharacterBattlePower(UserCharacterDtoInfo userCharacterDtoInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
+		public static long GetUserCharacterBattlePower(long userId, UserCharacterDtoInfo userCharacterDtoInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
 		{
-			var info = Services.Get<MementoMoriFuncs>().UserSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(userCharacterDtoInfo);
-			return GetUserCharacterBattlePower(info, lockEquipmentDeckType);
+			var info = Services.Get<AccountManager>().Get(userId).Funcs.UserSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(userCharacterDtoInfo);
+			return GetUserCharacterBattlePower(userId, info, lockEquipmentDeckType);
 		}
 
-		public static long GetUserCharacterBattlePower(UserCharacterInfo userCharacterInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
+		public static long GetUserCharacterBattlePower(long userId, UserCharacterInfo userCharacterInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
 		{
-			var (baseParameter, battleParameter) = CalcCharacterBattleParameter(userCharacterInfo, lockEquipmentDeckType);
+			var (baseParameter, battleParameter) = CalcCharacterBattleParameter(userId, userCharacterInfo, lockEquipmentDeckType);
 			var battlePower = BattlePowerCalculator.CalculateBattlePower(battleParameter, baseParameter);
 			// var characterMb = Masters.CharacterTable.GetById(userCharacterInfo.CharacterId);
 			// var name = Masters.TextResourceTable.Get(characterMb.NameKey);
@@ -141,16 +141,16 @@ namespace MementoMori.Ortega.Common.Utils
 
 		}
 
-		public static ValueTuple<BaseParameter, BattleParameter> CalcCharacterBattleParameter(string userCharacterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
+		public static ValueTuple<BaseParameter, BattleParameter> CalcCharacterBattleParameter(long userId, string userCharacterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
 		{
-			var syncData = Services.Get<MementoMoriFuncs>().UserSyncData;
+			var syncData = Services.Get<AccountManager>().Get(userId).Funcs.UserSyncData;
 			var userCharacterDtoInfo = syncData.GetUserCharacterInfoByUserCharacterGuid(userCharacterGuid);
-			return CalcCharacterBattleParameter(userCharacterDtoInfo, lockEquipmentDeckType);
+			return CalcCharacterBattleParameter(userId, userCharacterDtoInfo, lockEquipmentDeckType);
 		}
 
-		public static ValueTuple<BaseParameter, BattleParameter> CalcCharacterBattleParameter(UserCharacterInfo userCharacterInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
+		public static ValueTuple<BaseParameter, BattleParameter> CalcCharacterBattleParameter(long userId, UserCharacterInfo userCharacterInfo, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
 		{
-			var syncData = Services.Get<MementoMoriFuncs>().UserSyncData;
+			var syncData = Services.Get<AccountManager>().Get(userId).Funcs.UserSyncData;
 			var rank = syncData.UserStatusDtoInfo.Rank;
 			var userEquipmentDtoInfos = syncData.GetUserEquipmentDtoInfosByCharacterGuid(userCharacterInfo.Guid, lockEquipmentDeckType);
 			var characterCollectionDtoInfos = syncData.UserCharacterCollectionDtoInfos();

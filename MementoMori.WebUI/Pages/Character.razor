@@ -1,5 +1,4 @@
-﻿@inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
-
+﻿@inject AccountManager AccountManager
 @page "/Character"
 @using MementoMori;
 @using MementoMori.Ortega.Share.Data
@@ -251,7 +250,7 @@
                     ElementType.Dark=> Colors.Purple.Darken3,
                     _ => ""
                     };
-                var battlePower = BattlePowerCalculatorUtil.GetUserCharacterBattlePower(character);
+                var battlePower = BattlePowerCalculatorUtil.GetUserCharacterBattlePower(ViewModel.UserId, character);
 
                 <MudPaper Width="120px" @onclick="() => SelectCharacter(character)" Style="cursor: pointer">
                     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="0">
@@ -282,9 +281,11 @@
     private BattleParameter _battleParameter;
     private UserCharacterDtoInfo _selectedCharactor;
     private List<UserEquipmentDtoInfo> _equipment;
+    private MementoMoriFuncs ViewModel;
 
     protected override async Task OnInitializedAsync()
     {
+        ViewModel = AccountManager.Current.Funcs;
         _userSyncData = ViewModel.UserSyncData;
         SelectCharacter(_userSyncData.UserCharacterDtoInfos.MaxBy(d => d.Level));
     }
@@ -292,7 +293,7 @@
     private void SelectCharacter(UserCharacterDtoInfo info)
     {
         _selectedCharactor = info;
-        var parameter = BattlePowerCalculatorUtil.CalcCharacterBattleParameter(info.Guid);
+        var parameter = BattlePowerCalculatorUtil.CalcCharacterBattleParameter(ViewModel.UserId, info.Guid);
         _baseParameter = parameter.Item1;
         _battleParameter = parameter.Item2;
         _equipment = _userSyncData.GetUserEquipmentDtoInfosByCharacterGuid(info.Guid);

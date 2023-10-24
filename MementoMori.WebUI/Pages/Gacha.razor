@@ -6,8 +6,8 @@
 @using MementoMori.WebUI.Extensions
 @using MementoMori.Common.Localization
 @using MementoMori.WebUI.Pages.Components
-@inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
 @inject IDialogService DialogService
+@inject AccountManager AccountManager
 
 @page "/Gacha"
 <PageTitle>@Masters.TextResourceTable.Get("[CommonFooterGachaButtonLabel]")</PageTitle>
@@ -58,9 +58,11 @@
 
 @code {
     private List<GachaCaseInfo> gachaCaseInfos = new List<GachaCaseInfo>();
+    private MementoMoriFuncs ViewModel;
 
     protected override async Task OnInitializedAsync()
     {
+        ViewModel = AccountManager.Current.Funcs;
         await GetGachaList();
     }
 

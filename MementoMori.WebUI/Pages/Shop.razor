@@ -10,10 +10,10 @@
 @using MementoMori.Common.Localization
 @using MementoMori.Option
 @using MementoMori.Ortega.Share.Master.Data
-@inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
 @inject IDialogService DialogService
 @inject IWritableOptions<GameConfig> WritableGameConfig
 @inject ISnackbar Snackbar
+@inject AccountManager AccountManager
 
 @page "/Shop"
 
@@ -151,10 +151,12 @@
     private UserItem SelectedConsumeItem;
     private int SelectedAutoBuyDiscount;
 
+    private MementoMoriFuncs ViewModel;
     private List<UserItem> ConsumableItems = new();
 
     protected override async Task OnInitializedAsync()
     {
+        ViewModel = AccountManager.Current.Funcs;
         await GetShopInfo();
     }
 

@@ -22,9 +22,11 @@ using MementoMori.Ortega.Share.Master;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
 using MementoMori.Common.Localization;
+using MementoMori.Option;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ortega.Common.Manager;
+using Microsoft.AspNetCore.Authentication.OAuth;
 
 namespace MementoMori;
 
@@ -35,46 +37,49 @@ public class MementoNetworkManager
     private readonly MeMoriHttpClientHandler _meMoriHttpClientHandler;
     private readonly HttpClient _httpClient;
     private readonly HttpClient _unityHttpClient;
-    private readonly TimeManager _timeManager;
+    public TimeManager TimeManager { get; } = new();
 
     private LoginRequest _lastLoginRequest;
-
-
-    public string OrtegaAccessToken => _meMoriHttpClientHandler.OrtegaAccessToken;
-    public string OrtegaMasterVersion => _meMoriHttpClientHandler.OrtegaMasterVersion;
-    public string OrtegaAssetVersion => _meMoriHttpClientHandler.OrtegaAssetVersion;
 
     public CultureInfo CultureInfo { get; private set; } = new("zh-CN");
     public LanguageType LanguageType => parseLanguageType(CultureInfo);
 
 
     private Uri _apiAuth = new("https://prd1-auth.mememori-boi.com/api/");
+    // private Uri _apiAuth = new("https://stg1-auth.mememori-boi.com/api/");
 
     private Uri _apiHost;
 
-    public string AssetCatalogUriFormat { get; private set; }
-    public string AssetCatalogFixedUriFormat { get; private set; }
-    public string MasterUriFormat { get; private set; }
-    public string NoticeBannerImageUriFormat { get; private set; }
-    public AppAssetVersionInfo AppAssetVersionInfo { get; private set; }
+    public static string AssetCatalogUriFormat { get; private set; }
+    public static string AssetCatalogFixedUriFormat { get; private set; }
+    public static string MasterUriFormat { get; private set; }
+    public static string NoticeBannerImageUriFormat { get; private set; }
+    public static AppAssetVersionInfo AppAssetVersionInfo { get; private set; }
 
     private readonly ILogger<MementoNetworkManager> _logger;
+    private IWritableOptions<AuthOption> _authOption;
+    private static bool initialized;
 
-    public MementoNetworkManager(ILogger<MementoNetworkManager> logger, TimeManager timeManager)
+    public MementoNetworkManager(ILogger<MementoNetworkManager> logger, IWritableOptions<AuthOption> authOption)
     {
         _logger = logger;
-        _timeManager = timeManager;
+        _authOption = authOption;
 
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler();
         _httpClient = new HttpClient(_meMoriHttpClientHandler);
         if (!Debugger.IsAttached) _httpClient.Timeout = TimeSpan.FromSeconds(10);
 
-        var response = GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN"}).ConfigureAwait(false).GetAwaiter().GetResult();
-        AssetCatalogUriFormat = response.AssetCatalogUriFormat;
-        AssetCatalogFixedUriFormat = response.AssetCatalogFixedUriFormat;
-        MasterUriFormat = response.MasterUriFormat;
-        NoticeBannerImageUriFormat = response.NoticeBannerImageUriFormat;
-        AppAssetVersionInfo = response.AppAssetVersionInfo;
+        if (!initialized)
+        {
+            var response = GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() { CountryCode = "CN" }).ConfigureAwait(false).GetAwaiter().GetResult();
+            AssetCatalogUriFormat = response.AssetCatalogUriFormat;
+            AssetCatalogFixedUriFormat = response.AssetCatalogFixedUriFormat;
+            MasterUriFormat = response.MasterUriFormat;
+            NoticeBannerImageUriFormat = response.NoticeBannerImageUriFormat;
+            AppAssetVersionInfo = response.AppAssetVersionInfo;
+            _authOption.Update(x => x.AppVersion = AppAssetVersionInfo.Version);
+            initialized = true;
+        }
         _meMoriHttpClientHandler.AppVersion = AppAssetVersionInfo.Version;
 
         _unityHttpClient = new HttpClient();
@@ -225,7 +230,7 @@ public class MementoNetworkManager
 
         var timeServerId = playerDataInfo.WorldId / 1000;
         var timeServerMb = Masters.TimeServerTable.GetById(timeServerId);
-        _timeManager.SetTimeServerMb(timeServerMb);
+        TimeManager.SetTimeServerMb(timeServerMb);
 
         // get server host
         var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest() {WorldId = playerDataInfo.WorldId}, log);
@@ -255,7 +260,7 @@ public class MementoNetworkManager
             throw new NotSupportedException();
 
         var bytes = MessagePackSerializer.Serialize(req);
-        var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json"}}});
+        var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
         if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
 
         var respBytes = await respMsg.Content.ReadAsByteArrayAsync();
@@ -282,7 +287,7 @@ public class MementoNetworkManager
         }
 
         var response = MessagePackSerializer.Deserialize<TResp>(respBytes);
-        if (Debugger.IsAttached) log(response.ToJson());
+        // if (Debugger.IsAttached) log(response.ToJson());
         if (response is IUserSyncApiResponse userSyncApiResponse) userData?.Invoke(userSyncApiResponse.UserSyncData);
 
         return response;

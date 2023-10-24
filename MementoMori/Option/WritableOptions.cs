@@ -45,7 +45,7 @@ public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
 
     public void Update(Action<T> applyChanges)
     {
-        applyChanges(_value);
+        applyChanges(Value);
         var fileProvider = _environment.ContentRootFileProvider;
         var fileInfo = fileProvider.GetFileInfo(_file);
         var physicalPath = fileInfo.PhysicalPath;

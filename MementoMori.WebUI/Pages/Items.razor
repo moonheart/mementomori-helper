@@ -1,5 +1,5 @@
-﻿@inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
-@inject IDialogService DialogService
+﻿@inject IDialogService DialogService
+@inject AccountManager AccountManager
 
 @page "/Items"
 @using MementoMori.Ortega.Share.Data
@@ -240,8 +240,10 @@
 
 @code {
 
+    private MementoMoriFuncs ViewModel;
     protected override async Task OnInitializedAsync()
     {
+        ViewModel = AccountManager.Current.Funcs;
         this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
     }
 

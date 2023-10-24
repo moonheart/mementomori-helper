@@ -30,8 +30,7 @@ namespace MementoMori.Ortega.Share
 //
 		public long GetLocalTimestamp()
 		{
-			long utcNowTimeStamp = TimeUtil.UtcNowTimeStamp;
-			return utcNowTimeStamp + this.DifferenceFromUtc;
+			return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + this.DifferenceFromUtc;
 		}
 //
 // 		public DateTime GetLocalDateTime()

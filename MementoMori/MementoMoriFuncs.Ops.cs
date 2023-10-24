@@ -100,6 +100,8 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     private PlayerDataInfo _lastPlayerDataInfo;
 
+    public long UserId { get; set; }
+
     public async Task Login(PlayerDataInfo playerDataInfo = null)
     {
         Logining = true;
@@ -127,9 +129,9 @@ public partial class MementoMoriFuncs : ReactiveObject
         // await GetMonthlyLoginBonusInfo(); 
     }
 
-    public async Task AutoLogin()
+    public async Task AutoLogin(bool manual = false)
     {
-        if (!GameConfig.Login.AutoLogin) return;
+        if (!manual && !_accountManager.GetAccountInfo(UserId).AutoLogin) return;
         AddLog(ResourceStrings.AutoLoginonStartup);
         var playerDataInfos = await GetPlayerDataInfo();
         var playerDataInfo = Enumerable.MaxBy(playerDataInfos, d => d.LastLoginTime);
@@ -191,9 +193,9 @@ public partial class MementoMoriFuncs : ReactiveObject
             var day = DateTimeOffset.Now.ToOffset(TimeSpan.FromHours(1)).Day;
             if (!MonthlyLoginBonusInfo.ReceivedDailyRewardDayList.Contains(day))
             {
-                if (_timeManager.ServerNow.Hour >= 4)
+                if (TimeManager.ServerNow.Hour >= 4)
                 {
-                    var bonus = await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(new ReceiveDailyLoginBonusRequest() {ReceiveDay = _timeManager.ServerNow.Day});
+                    var bonus = await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(new ReceiveDailyLoginBonusRequest() {ReceiveDay = TimeManager.ServerNow.Day});
                     log($"{TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")}：\n");
                     bonus.RewardItemList.PrintUserItems(log);
                 }
@@ -561,7 +563,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 new BountyQuestGetListRequest());
 
             var questIds = getListResponse.UserBountyQuestDtoInfos
-                .Where(d => d.BountyQuestEndTime > 0 && !d.IsReward && DateTimeOffset.Now.Add(_timeManager.DiffFromUtc).ToUnixTimeMilliseconds() > d.BountyQuestEndTime)
+                .Where(d => d.BountyQuestEndTime > 0 && !d.IsReward && DateTimeOffset.Now.Add(TimeManager.DiffFromUtc).ToUnixTimeMilliseconds() > d.BountyQuestEndTime)
                 .Select(d => d.BountyQuestId).ToList();
 
             if (questIds.Count > 0)
@@ -1429,13 +1431,13 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public async Task GetNoticeInfoList()
     {
-        var countryCode = OrtegaConst.Addressable.LanguageNameDictionary[_networkManager.LanguageType];
+        var countryCode = OrtegaConst.Addressable.LanguageNameDictionary[NetworkManager.LanguageType];
         var response = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()
         {
             AccessType = NoticeAccessType.Title,
             CategoryType = NoticeCategoryType.NoticeTab,
             CountryCode = countryCode,
-            LanguageType = _networkManager.LanguageType,
+            LanguageType = NetworkManager.LanguageType,
             UserId = _authOption.UserId
         });
         NoticeInfoList = response.NoticeInfoList;
@@ -1444,7 +1446,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             AccessType = NoticeAccessType.MyPage,
             CategoryType = NoticeCategoryType.EventTab,
             CountryCode = countryCode,
-            LanguageType = _networkManager.LanguageType,
+            LanguageType = NetworkManager.LanguageType,
             UserId = _authOption.UserId
         });
         EventInfoList = response2.NoticeInfoList;
@@ -1452,7 +1454,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public TowerType[] GetAvailableTower()
     {
-        var now = DateTimeOffset.UtcNow.ToOffset(_timeManager.DiffFromUtc) - TimeSpan.FromHours(4);
+        var now = DateTimeOffset.UtcNow.ToOffset(TimeManager.DiffFromUtc) - TimeSpan.FromHours(4);
         var dayOfWeek = now.DayOfWeek;
         // SelectedAutoTowerType = TowerType.Infinite;
         return dayOfWeek switch

@@ -10,35 +10,44 @@ namespace MementoMori.Jobs;
 public class TimeZoneAwareJobRegister
 {
     private readonly ISchedulerFactory _schedulerFactory;
-    private readonly TimeManager _timeManager;
     private readonly IWritableOptions<GameConfig> _gameConfig;
-
-    public TimeZoneAwareJobRegister(ISchedulerFactory schedulerFactory, TimeManager timeManager, IWritableOptions<GameConfig> gameOptions)
+    private readonly AccountManager _accountManager;
+    public TimeZoneAwareJobRegister(ISchedulerFactory schedulerFactory, IWritableOptions<GameConfig> gameOptions, AccountManager accountManager)
     {
         _schedulerFactory = schedulerFactory;
-        _timeManager = timeManager;
         _gameConfig = gameOptions;
+        _accountManager = accountManager;
     }
 
-    public async Task RegisterJobs()
+    public async Task RegisterAllJobs()
     {
+        foreach (var account in _accountManager.GetAll())
+        {
+            await RegisterJobs(account.Key);
+        }
+    }
+
+    public async Task RegisterJobs(long userId)
+    {
+        var account = _accountManager.Get(userId);
+        var networkManager = account.NetworkManager;
         var scheduler = await _schedulerFactory.GetScheduler();
         if (_gameConfig.Value.AutoJob.DisableAll)
         {
-            RemoveJob<DailyJob>(scheduler);
-            RemoveJob<HourlyJob>(scheduler);
-            RemoveJob<PvpJob>(scheduler);
-            RemoveJob<GuildRaidBossReleaseJob>(scheduler);
+            RemoveJob<DailyJob>(scheduler, userId);
+            RemoveJob<HourlyJob>(scheduler, userId);
+            RemoveJob<PvpJob>(scheduler, userId);
+            RemoveJob<GuildRaidBossReleaseJob>(scheduler, userId);
             return;
         }
 
         try
         {
-            AddJob<DailyJob>(scheduler, _gameConfig.Value.AutoJob.DailyJobCron, ResourceStrings.DailyJob);
-            AddJob<HourlyJob>(scheduler, _gameConfig.Value.AutoJob.HourlyJobCron, ResourceStrings.RewardClaimJob);
-            AddJob<PvpJob>(scheduler, _gameConfig.Value.AutoJob.PvpJobCron, Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]"));
-            AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.Value.AutoJob.GuildRaidBossReleaseCron, Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]"));
-            AddJob<AutoBuyShopItemJob>(scheduler, _gameConfig.Value.AutoJob.AutoBuyShopItemJobCron, ResourceStrings.ShopAutoBuyItems);
+            AddJob<DailyJob>(scheduler, _gameConfig.Value.AutoJob.DailyJobCron, ResourceStrings.DailyJob, userId, networkManager.TimeManager.DiffFromUtc);
+            AddJob<HourlyJob>(scheduler, _gameConfig.Value.AutoJob.HourlyJobCron, ResourceStrings.RewardClaimJob, userId, networkManager.TimeManager.DiffFromUtc);
+            AddJob<PvpJob>(scheduler, _gameConfig.Value.AutoJob.PvpJobCron, Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]"), userId, networkManager.TimeManager.DiffFromUtc);
+            AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.Value.AutoJob.GuildRaidBossReleaseCron, Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]"), userId, networkManager.TimeManager.DiffFromUtc);
+            AddJob<AutoBuyShopItemJob>(scheduler, _gameConfig.Value.AutoJob.AutoBuyShopItemJobCron, ResourceStrings.ShopAutoBuyItems, userId, networkManager.TimeManager.DiffFromUtc);
         }
         catch (Exception e)
         {
@@ -46,23 +55,23 @@ public class TimeZoneAwareJobRegister
         }
     }
 
-    private void RemoveJob<T>(IScheduler scheduler) where T : IJob
+    private void RemoveJob<T>(IScheduler scheduler, long userId) where T : IJob
     {
         var type = typeof(T);
-        var jobKey = new JobKey(type.FullName!);
+        var jobKey = new JobKey($"{userId}-{type.FullName!}");
         scheduler.DeleteJob(jobKey);
     }
 
-    private void AddJob<T>(IScheduler scheduler, string cron, string description) where T : IJob
+    private void AddJob<T>(IScheduler scheduler, string cron, string description, long userId, TimeSpan offset) where T : IJob
     {
         var type = typeof(T);
-        var jobKey = new JobKey(type.FullName!);
+        var jobKey = new JobKey($"{userId}-{type.FullName!}");
         var jobDetail = JobBuilder.Create<T>().WithIdentity(jobKey).WithDescription(description).Build();
 
-        var customTimeZone = TimeZoneInfo.CreateCustomTimeZone(_timeManager.DiffFromUtc.ToString(), _timeManager.DiffFromUtc, null, null);
+        var customTimeZone = TimeZoneInfo.CreateCustomTimeZone(offset.ToString(), offset, null, null);
         var trigger = TriggerBuilder.Create()
             .ForJob(jobKey)
-            .WithIdentity($"{type.FullName}-trigger")
+            .WithIdentity($"{userId}-{type.FullName}-trigger")
             .WithCronSchedule(cron, builer => builer.InTimeZone(customTimeZone))
             .Build();
         scheduler.UnscheduleJob(trigger.Key);

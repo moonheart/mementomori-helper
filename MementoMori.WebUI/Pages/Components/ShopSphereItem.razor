@@ -1,5 +1,5 @@
-﻿@inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<MementoMoriFuncs>
-@inject IDialogService DialogService
+﻿@inject IDialogService DialogService
+@inject AccountManager AccountManager
 
 @using MementoMori.Ortega.Share.Master.Data
 @using MementoMori.Ortega.Share
@@ -39,6 +39,7 @@
     private int _buyLv = 1;
     private string _itemName;
 
+    private MementoMoriFuncs ViewModel;
     private int MaxBuyCount
     {
         get
@@ -103,6 +104,7 @@
 
     protected override Task OnInitializedAsync()
     {
+        ViewModel = AccountManager.Current.Funcs;
         _itemName = Masters.TextResourceTable.Get(SphereMb.NameKey);
         return Task.CompletedTask;
     }

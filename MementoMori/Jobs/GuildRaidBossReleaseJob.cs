@@ -11,12 +11,12 @@ namespace MementoMori.Jobs;
 
 internal class GuildRaidBossReleaseJob : IJob
 {
-    private MementoMoriFuncs _mementoMoriFuncs;
+    private AccountManager _accountManager;
     private readonly IWritableOptions<GameConfig> _gameConfig;
 
-    public GuildRaidBossReleaseJob(MementoMoriFuncs mementoMoriFuncs, IWritableOptions<GameConfig> gameConfig)
+    public GuildRaidBossReleaseJob(IWritableOptions<GameConfig> gameConfig, AccountManager accountManager)
     {
-        _mementoMoriFuncs = mementoMoriFuncs;
+        _accountManager = accountManager;
         _gameConfig = gameConfig;
     }
 
@@ -26,7 +26,10 @@ internal class GuildRaidBossReleaseJob : IJob
         {
             return;
         }
-        if (!_mementoMoriFuncs.IsQuickActionExecuting) await _mementoMoriFuncs.Login();
-        await _mementoMoriFuncs.OpenGuildRaid();
+        foreach (var (_, account) in _accountManager.GetAll())
+        {
+            if (!account.Funcs.IsQuickActionExecuting) await account.Funcs.Login();
+            await account.Funcs.OpenGuildRaid();
+        }
     }
 }

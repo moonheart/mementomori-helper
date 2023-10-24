@@ -5,12 +5,24 @@ namespace MementoMori;
 
 public class AuthOption
 {
+    [Obsolete]
     public string ClientKey { get; set; }
     public string DeviceToken { get; set; }
     public string AppVersion { get; set; }
     public string OSVersion { get; set; }
     public string ModelName { get; set; }
+    [Obsolete]
     public long UserId { get; set; }
+    public long LastLoginUserId { get; set; }
+
+    public List<AccountInfo> Accounts { get; set; } = new();
+}
+
+public class AccountInfo
+{
+    public long UserId { get; set; }
+    public string ClientKey { get; set; }
+    public bool AutoLogin { get; set; }
 }
 
 public class GameConfig
@@ -86,7 +98,7 @@ public class GameConfig
         public bool PreferTreasureChest { get; set; }
         public int MaxUseRecoveryItem { get; set; }
     }
-    
+
     public class LoginConfig
     {
         public bool AutoLogin { get; set; }

@@ -31,6 +31,7 @@ namespace MementoMori;
 
 public partial class MementoMoriFuncs
 {
+    public TimeManager TimeManager => NetworkManager.TimeManager;
     [Reactive]
     public UserSyncData UserSyncData { get; private set; }
 
@@ -59,84 +60,74 @@ public partial class MementoMoriFuncs
     private GameConfig GameConfig => _writableGameConfig.Value;
     private readonly ILogger<MementoMoriFuncs> _logger;
 
-    private readonly MementoNetworkManager _networkManager;
+    public MementoNetworkManager NetworkManager { get; set; }
+    private readonly AccountManager _accountManager;
     private readonly TimeZoneAwareJobRegister _timeZoneAwareJobRegister;
-    private readonly TimeManager _timeManager;
     private readonly IWritableOptions<GameConfig> _writableGameConfig;
 
-    private T ReadFromJson<T>(string jsonPath) where T : new()
-    {
-        if (!File.Exists(jsonPath)) return new T();
-
-        var json = File.ReadAllText(jsonPath);
-        return JsonConvert.DeserializeObject<T>(json) ?? new T();
-    }
-
-    private void WriteToJson<T>(string jsonPath, T value)
-    {
-        if (value == null) return;
-
-        File.WriteAllText(jsonPath, JsonConvert.SerializeObject(value, Formatting.Indented));
-    }
-
-    public MementoMoriFuncs(IOptions<AuthOption> authOption, ILogger<MementoMoriFuncs> logger, MementoNetworkManager networkManager,
-        TimeZoneAwareJobRegister timeZoneAwareJobRegister, TimeManager timeManager, IWritableOptions<GameConfig> writableGameConfig)
+    public MementoMoriFuncs(IWritableOptions<AuthOption> authOption, ILogger<MementoMoriFuncs> logger,
+        TimeZoneAwareJobRegister timeZoneAwareJobRegister, IWritableOptions<GameConfig> writableGameConfig, AccountManager accountManager)
     {
         _logger = logger;
-        _networkManager = networkManager;
         _timeZoneAwareJobRegister = timeZoneAwareJobRegister;
-        _timeManager = timeManager;
         _writableGameConfig = writableGameConfig;
+        _accountManager = accountManager;
         _authOption = authOption.Value;
-        AccountXml();
-
         Mypage = new GetMypageResponse();
         NoticeInfoList = new List<NoticeInfo>();
-
-        UserSyncData = ReadFromJson<UserSyncData>("usersyncdata.json");
-
-        Observable.Timer(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10)).Where(_ => !IsQuickActionExecuting).Subscribe(t => { WriteToJson("usersyncdata.json", UserSyncData); });
+        UserSyncData = new UserSyncData();
     }
 
-    private void AccountXml()
+    public async Task<string> GetClientKey(string password)
     {
-        if (File.Exists("account.xml"))
-            try
-            {
-                var doc = new XmlDocument();
-                doc.Load("account.xml");
-                var userId = doc.SelectSingleNode("/map/string[@name='0_Userid']").FirstChild.Value;
-                var clientKey = doc.SelectSingleNode("/map/string[@name='0_ClientKey']").FirstChild.Value.Replace("%22", "");
-                _authOption.UserId = long.Parse(userId);
-                _authOption.ClientKey = clientKey;
-            }
-            catch (XmlException)
-            {
-                _logger.LogInformation("account.xml format error");
-            }
+        var createUserResponse = await GetResponse<CreateUserRequest, CreateUserResponse>(new CreateUserRequest()
+        {
+            AdverisementId = Guid.NewGuid().ToString("D"),
+            AppVersion = _authOption.AppVersion,
+            CountryCode = "CN",
+            DeviceToken = "",
+            ModelName = _authOption.ModelName,
+            DisplayLanguage = NetworkManager.LanguageType,
+            OSVersion = _authOption.OSVersion,
+            SteamTicket = ""
+        });
+        var clientKey = createUserResponse.ClientKey;
+        // var accessTokenResponse = await GetResponse<CreateAccessTokenRequest, CreateAccessTokenResponse>(new CreateAccessTokenRequest()
+        // {
+        //     ClientKey = clientKey, UserId = createUserResponse.UserId
+        // });
+        var getComebackUserDataResponse = await GetResponse<GetComebackUserDataRequest, GetComebackUserDataResponse>(new GetComebackUserDataRequest()
+        {
+            FromUserId = createUserResponse.UserId, Password = password, SnsType = SnsType.OrtegaId, UserId = UserId
+        });
+        var comebackUserResponse = await GetResponse<ComebackUserRequest, ComebackUserResponse>(new ComebackUserRequest()
+        {
+            FromUserId = createUserResponse.UserId, OneTimeToken = getComebackUserDataResponse.OneTimeToken, ToUserId = UserId
+        });
+        return comebackUserResponse.ClientKey;
     }
 
     public async Task<List<PlayerDataInfo>> GetPlayerDataInfo()
     {
         var reqBody = new LoginRequest()
         {
-            ClientKey = _authOption.ClientKey,
+            ClientKey = _accountManager.GetAccountInfo(UserId).ClientKey,
             DeviceToken = _authOption.DeviceToken,
             AppVersion = _authOption.AppVersion,
             OSVersion = _authOption.OSVersion,
             ModelName = _authOption.ModelName,
             AdverisementId = Guid.NewGuid().ToString("D"),
-            UserId = _authOption.UserId
+            UserId = UserId
         };
-        return await _networkManager.GetPlayerDataInfoList(reqBody, AddLog);
+        return await NetworkManager.GetPlayerDataInfoList(reqBody, AddLog);
     }
 
     public async Task AuthLogin(PlayerDataInfo playerDataInfo)
     {
         _lastPlayerDataInfo = playerDataInfo;
-        await _networkManager.Login(playerDataInfo.WorldId, AddLog);
+        await NetworkManager.Login(playerDataInfo.WorldId, AddLog);
         await UserGetUserData();
-        await _timeZoneAwareJobRegister.RegisterJobs();
+        await _timeZoneAwareJobRegister.RegisterJobs(UserId);
     }
 
     public async Task AutoDungeonBattle(Action<string> log, CancellationToken cancellationToken)
@@ -233,7 +224,7 @@ public partial class MementoMoriFuncs
                 // 按照战力排序
                 battleCharacterGuids.AddRange(battleInfoResponse.UserDungeonBattleCharacterDtoInfos
                     .Where(d => !battleCharacterGuids.Contains(d.Guid) && d.CurrentHpPerMill != 0)
-                    .OrderByDescending(d => BattlePowerCalculatorUtil.GetUserCharacterBattlePower(d.Guid))
+                    .OrderByDescending(d => BattlePowerCalculatorUtil.GetUserCharacterBattlePower(UserId, d.Guid))
                     .Select(d => d.Guid).Take(emptyPosition));
 
                 // 全灭, 如果已使用的苹果没有超过限制
@@ -541,7 +532,7 @@ public partial class MementoMoriFuncs
         where TReq : ApiRequestBase
         where TResp : ApiResponseBase
     {
-        return await _networkManager.GetResponse<TReq, TResp>(req, AddLog, data =>
+        return await NetworkManager.GetResponse<TReq, TResp>(req, AddLog, data =>
         {
             UserSyncData.UserItemEditorMergeUserSyncData(data);
             this.RaisePropertyChanged(nameof(UserSyncData));

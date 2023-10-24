@@ -9,15 +9,15 @@ namespace MementoMori.Ortega.Share.Utils
 
 		public static DateTime UtcEpoch { get; } = new DateTime(1970, 1, 1, 0, 0, 0, 1, DateTimeKind.Unspecified);
 
-		public static DateTime UtcNowDateTime
-		{
-			get
-			{
-				DateTime dateTime = TimeUtil.UtcEpoch;
-				long utcNowTimeStamp = TimeUtil.UtcNowTimeStamp;
-				return dateTime.AddMilliseconds(utcNowTimeStamp);
-			}
-		}
+		// public static DateTime UtcNowDateTime
+		// {
+		// 	get
+		// 	{
+		// 		DateTime dateTime = TimeUtil.UtcEpoch;
+		// 		long utcNowTimeStamp = TimeUtil.UtcNowTimeStamp;
+		// 		return dateTime.AddMilliseconds(utcNowTimeStamp);
+		// 	}
+		// }
 
 		// public static DateTime JstNowDateTime
 		// {
@@ -29,15 +29,15 @@ namespace MementoMori.Ortega.Share.Utils
 		// 	}
 		// }
 
-		public static long UtcNowTimeStamp
-		{
-			get
-			{
-				long now = TimeUtil.UtcTimeCalculation(DateTime.UtcNow);
-				long diffServerTimeMilliSeconds = Services.Get<NetworkManager>().DiffServerTimeMilliSeconds;
-				return diffServerTimeMilliSeconds + now;
-			}
-		}
+		// public static long UtcNowTimeStamp
+		// {
+		// 	get
+		// 	{
+		// 		long now = TimeUtil.UtcTimeCalculation(DateTime.UtcNow);
+		// 		long diffServerTimeMilliSeconds = Services.Get<NetworkManager>().DiffServerTimeMilliSeconds;
+		// 		return diffServerTimeMilliSeconds + now;
+		// 	}
+		// }
 //
 // 		public static long UtcTodayMidnightTimeStamp
 // 		{

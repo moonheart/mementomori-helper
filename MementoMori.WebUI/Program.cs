@@ -28,9 +28,9 @@ internal class Program
 
         //builder.Services.AddRazorPages();
         //builder.Services.AddServerSideBlazor();
-        builder.Services.AddSingleton<TimeManager>();
-        builder.Services.AddSingleton<MementoNetworkManager>();
-        builder.Services.AddSingleton<MementoMoriFuncs>();
+        builder.Services.AddSingleton<AccountManager>();
+        builder.Services.AddTransient<MementoNetworkManager>();
+        builder.Services.AddTransient<MementoMoriFuncs>();
         builder.Services.AddSingleton<TimeZoneAwareJobRegister>();
 
         builder.Services.AddOptions();
@@ -43,6 +43,7 @@ internal class Program
         var app = builder.Build();
         Services.Setup(app.Services);
 
+        app.Services.GetService<AccountManager>().MigrateToAccountArray();
         app.Services.GetService<MementoNetworkManager>().DownloadMasterCatalog(CultureInfo.CurrentCulture).ConfigureAwait(false).GetAwaiter().GetResult();
 
         // Configure the HTTP request pipeline.
@@ -58,7 +59,8 @@ internal class Program
         //app.MapBlazorHub();
         //app.MapFallbackToPage("/_Host");
 
-        app.Services.GetService<MementoMoriFuncs>().AutoLogin().ConfigureAwait(false).GetAwaiter().GetResult();
+        // app.Services.GetService<MementoMoriFuncs>().TTTTest().ConfigureAwait(false).GetAwaiter().GetResult();
+        // app.Services.GetService<MementoMoriFuncs>().AutoLogin().ConfigureAwait(false).GetAwaiter().GetResult();
 
         app.Run();
     }
