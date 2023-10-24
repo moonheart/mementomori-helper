@@ -1,4 +1,4 @@
-﻿@inject AccountManager AccountManager
+﻿@inherits MementoMori.WebUI.Models.AccountComponent
 @page "/Character"
 @using MementoMori;
 @using MementoMori.Ortega.Share.Data
@@ -6,6 +6,7 @@
 @using MementoMori.Ortega.Share.Data.DtoInfo
 @using MementoMori.Ortega.Share.Enums
 @using System.Collections.ObjectModel
+@using DynamicData.Binding
 @using MementoMori.Ortega.Common.Utils
 @using MementoMori.Ortega.Custom
 @using MementoMori.Ortega.Share.Calculators
@@ -14,8 +15,13 @@
 @using MementoMori.Ortega.Share.Data.Equipment
 @using MementoMori.Ortega.Share.Utils
 @using MementoMori.Common.Localization
+@using ReactiveUI
 
 <PageTitle>角色</PageTitle>
+@if (!string.IsNullOrEmpty(alertMessage))
+{
+    <MudAlert Severity="Severity.Warning">@alertMessage</MudAlert>
+}
 <MudGrid>
     @if (_selectedCharactor != null)
     {
@@ -282,21 +288,35 @@
     private UserCharacterDtoInfo _selectedCharactor;
     private List<UserEquipmentDtoInfo> _equipment;
     private MementoMoriFuncs ViewModel;
+    string alertMessage = "";
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task AccountChanged()
     {
-        ViewModel = AccountManager.Current.Funcs;
-        _userSyncData = ViewModel.UserSyncData;
-        SelectCharacter(_userSyncData.UserCharacterDtoInfos.MaxBy(d => d.Level));
+        try
+        {
+            alertMessage = Funcs.LoginOk ? string.Empty : ResourceStrings.PleaseLogin;
+            ViewModel = Funcs;
+            _userSyncData = ViewModel.UserSyncData;
+            SelectCharacter(_userSyncData.UserCharacterDtoInfos?.MaxBy(d => d.Level));
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception e)
+        {
+            alertMessage = e.Message;
+        }
     }
 
     private void SelectCharacter(UserCharacterDtoInfo info)
     {
         _selectedCharactor = info;
-        var parameter = BattlePowerCalculatorUtil.CalcCharacterBattleParameter(ViewModel.UserId, info.Guid);
-        _baseParameter = parameter.Item1;
-        _battleParameter = parameter.Item2;
-        _equipment = _userSyncData.GetUserEquipmentDtoInfosByCharacterGuid(info.Guid);
+        if (info != null)
+        {
+            var parameter = BattlePowerCalculatorUtil.CalcCharacterBattleParameter(ViewModel.UserId, info.Guid);
+            _baseParameter = parameter.Item1;
+            _battleParameter = parameter.Item2;
+            _equipment = _userSyncData.GetUserEquipmentDtoInfosByCharacterGuid(info.Guid);
+            alertMessage = string.Empty;
+        }
     }
 
 }

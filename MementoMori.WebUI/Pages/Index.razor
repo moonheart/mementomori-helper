@@ -25,10 +25,10 @@
 <PageTitle>主页</PageTitle>
 
 <MudGrid>
-@if (!Funcs.LoginOk)
+@if (!string.IsNullOrEmpty(alertMessage))
 {
     <MudItem md="12">
-        <MudAlert Severity="Severity.Warning">@ResourceStrings.PleaseLogin</MudAlert>
+        <MudAlert Severity="Severity.Warning">@alertMessage</MudAlert>
     </MudItem>
 }
 <MudItem sm="12" md="6" lg="4" xl="3">
@@ -408,35 +408,43 @@
 
     private long selectedTargetQuerstId;
     private long selectedTargetTowerLayer;
+    string alertMessage = "";
+
 
     private List<PlayerDataInfo> playerDataInfos = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task AccountChanged()
     {
-        this.Funcs.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
-    // this.Funcs.RuntimeInfo.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
-        // AccountManager.WhenAnyValue(d => d.CurrentUserId).Subscribe(id =>
-        // {
-        //     Funcs = AccountManager.Get(id).Funcs;
-        //     InvokeAsync(StateHasChanged);
-        // });
-        Funcs.WhenAnyValue(d => d.UserSyncData).Subscribe(data =>
+        try
         {
-            _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>
+            alertMessage = Funcs.LoginOk ? string.Empty : ResourceStrings.PleaseLogin;
+            // Funcs.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
+            Funcs.WhenAnyValue(d => d.UserSyncData).Subscribe(data =>
             {
-                if (d == null) throw new ArgumentNullException(nameof(d));
-                var cha = data.UserCharacterDtoInfos.First(x => x.Guid == d.CharacterGuid);
-                var chaMb = CharacterTable.GetById(cha.CharacterId);
-                var name = TextResourceTable.Get(chaMb.NameKey);
-                var equipmentMb = EquipmentTable.GetById(d.EquipmentId);
-                var equipmentName = TextResourceTable.Get(equipmentMb.NameKey);
-                equipmentName = $"{equipmentName}/{@TextResourceTable.Get(BaseParameterType.Health)}{d.AdditionalParameterHealth}/{@TextResourceTable.Get(BaseParameterType.Intelligence)}{d.AdditionalParameterIntelligence}/{@TextResourceTable.Get(BaseParameterType.Muscle)}{d.AdditionalParameterMuscle}/{@TextResourceTable.Get(BaseParameterType.Energy)}{d.AdditionalParameterEnergy} ";
-                return new CharacterEquipment()
+                _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>
                 {
-                    CharacterGuid = d.CharacterGuid, CharacterName = name, EquipmentGuid = d.Guid, EquipmentName = equipmentName, UserEquipmentDtoInfo = d
-                };
-            }).OrderBy(d => d.CharacterGuid).ToList() ?? new List<CharacterEquipment>();
-        });
+                    if (d == null) throw new ArgumentNullException(nameof(d));
+                    var cha = data.UserCharacterDtoInfos.First(x => x.Guid == d.CharacterGuid);
+                    var chaMb = CharacterTable.GetById(cha.CharacterId);
+                    var name = TextResourceTable.Get(chaMb.NameKey);
+                    var equipmentMb = EquipmentTable.GetById(d.EquipmentId);
+                    var equipmentName = TextResourceTable.Get(equipmentMb.NameKey);
+                    equipmentName = $"{equipmentName}/{@TextResourceTable.Get(BaseParameterType.Health)}{d.AdditionalParameterHealth}/{@TextResourceTable.Get(BaseParameterType.Intelligence)}{d.AdditionalParameterIntelligence}/{@TextResourceTable.Get(BaseParameterType.Muscle)}{d.AdditionalParameterMuscle}/{@TextResourceTable.Get(BaseParameterType.Energy)}{d.AdditionalParameterEnergy} ";
+                    return new CharacterEquipment()
+                    {
+                        CharacterGuid = d.CharacterGuid, CharacterName = name, EquipmentGuid = d.Guid, EquipmentName = equipmentName, UserEquipmentDtoInfo = d
+                    };
+                }).OrderBy(d => d.CharacterGuid).ToList() ?? new List<CharacterEquipment>();
+            });
+        }
+        catch (Exception e)
+        {
+            alertMessage = e.Message;
+        }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
     private void ShowNotice(NoticeInfo context)

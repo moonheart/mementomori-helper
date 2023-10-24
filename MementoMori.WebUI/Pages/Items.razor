@@ -1,6 +1,7 @@
 ﻿@inject IDialogService DialogService
 @inject AccountManager AccountManager
 
+@inherits MementoMori.WebUI.Models.AccountComponent
 @page "/Items"
 @using MementoMori.Ortega.Share.Data
 @using MementoMori.Ortega.Share.Data.DtoInfo
@@ -18,10 +19,24 @@
 
 <PageTitle>储物箱</PageTitle>
 
+@if (!string.IsNullOrEmpty(alertMessage))
+{
+    <MudAlert Severity="Severity.Warning">@ResourceStrings.PleaseLogin</MudAlert>
+}
+@if (Funcs?.LoginOk == true)
+{
+    
 <MudTabs MinimumTabWidth="20px">
     <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabEquipment]")">
-        <MudTable Dense="true" HorizontalScrollbar="true"
-                  Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => d.ItemType == ItemType.Equipment && d.ItemCount > 0).Select(d => d.ToEquipmentInfo()).Union(ViewModel.UserSyncData.UserEquipmentDtoInfos.Where(d => d.CharacterGuid == "").Select(x => x.ToEquipmentInfo())))">
+        @{
+            var equips1 = ViewModel.UserSyncData.UserEquipmentDtoInfos.Where(d => d.CharacterGuid == "").Select(x => x.ToEquipmentInfo());
+            var equips = ViewModel.UserSyncData.UserItemDtoInfo
+                ?.Where(d => d.ItemType == ItemType.Equipment && d.ItemCount > 0)
+                .Select(d => d.ToEquipmentInfo())
+                .Union(equips1);
+        }
+        <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true"
+                  Items="@equips">
             <HeaderContent>
                 <MudTh>
                     <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
@@ -237,18 +252,29 @@
         </MudTable>
     </MudTabPanel>
 </MudTabs>
+}
 
 @code {
 
     private MementoMoriFuncs ViewModel;
-    protected override async Task OnInitializedAsync()
-    {
-        ViewModel = AccountManager.Current.Funcs;
-        this.ViewModel.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
-    }
+    string alertMessage = "";
 
-    private void SelectItem(UserItemDtoInfo item)
+    protected override async Task AccountChanged()
     {
+        try
+        {
+            alertMessage = Funcs.LoginOk ? string.Empty : ResourceStrings.PleaseLogin;
+            ViewModel = Funcs;
+            // Funcs.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
+        }
+        catch (Exception e)
+        {
+            alertMessage = e.Message;
+        }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
     private void UseAutoBattleRewardItem(string name, IUserItem userItem)

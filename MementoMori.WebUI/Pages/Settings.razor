@@ -1,4 +1,5 @@
-﻿@using MementoMori.Option
+﻿@inject ISnackbar Snackbar
+@using MementoMori.Option
 @using System.Linq.Expressions
 @using MementoMori.Common.Localization
 @using MementoMori.Jobs
@@ -15,6 +16,7 @@
 @inject AccountManager AccountManager
 @inject IDialogService DialogService
 
+@inherits MementoMori.WebUI.Models.AccountComponent
 @page "/settings"
 
 <MudGrid>
@@ -25,21 +27,34 @@
                     <MudText>帐号管理</MudText>
                 </CardHeaderContent>
                 <CardHeaderActions>
-                    <MudButton Variant="Variant.Outlined" OnClick="AddAccountClick">添加</MudButton>
+                    <MudButton Variant="Variant.Outlined" Disabled="accountDoingAction" OnClick="AddAccountClick">添加</MudButton>
                 </CardHeaderActions>
             </MudCardHeader>
             <MudCardContent>
                 <MudList>
-
-                @foreach (var accountInfo in authOption.Value.Accounts)
-                {
-                    <MudListItem Value="accountInfo">
-                        <MudText>@accountInfo.UserId</MudText>
-                        <MudText>@accountInfo.ClientKey</MudText>
-                        <MudSwitch @bind-Checked="accountInfo.AutoLogin" Color="Color.Primary">自动登录</MudSwitch>
-                        <MudButton OnClick="()=>LoginAccount(accountInfo.UserId)">登录</MudButton>
-                    </MudListItem>
-                }
+                    @foreach (var accountInfo in authOption.Value.Accounts)
+                    {
+                        var funcs = AccountManager.Get(accountInfo.UserId).Funcs;
+                        <MudListItem Value="accountInfo">
+                            <MudStack Row="true" Class="align-content-center align-center">
+                                <MudPaper Elevation="0" Class="d-flex align-content-center align-center">
+                                    <MudText>@accountInfo.Name</MudText>
+                                </MudPaper>
+                                @if (funcs.LoginOk)
+                                {
+                                    <MudChip Color="Color.Success" Size="Size.Small">已登录</MudChip>
+                                }
+                                else
+                                {
+                                    <MudChip Color="Color.Warning" Size="Size.Small">未登录</MudChip>
+                                }
+                                
+                                <MudButton Disabled="accountDoingAction" OnClick="() => LoginAccount(accountInfo.UserId)" Variant="Variant.Filled" Size="Size.Small">登录</MudButton>
+                                <MudButton Disabled="accountDoingAction" OnClick="() => LogoutAccount(accountInfo.UserId)" Variant="Variant.Filled" Size="Size.Small">退出</MudButton>
+                                <MudButton Disabled="accountDoingAction" OnClick="() => ShowAccountSetting(accountInfo.UserId)" Variant="Variant.Filled" Size="Size.Small">设置</MudButton>
+                            </MudStack>
+                        </MudListItem>
+                    }
                 </MudList>
             </MudCardContent>
         </MudCard>
@@ -205,7 +220,7 @@
                 <MudField Label="@ResourceStrings.AutoRequestDelay" Variant="Variant.Outlined">
                     <MudNumericField @bind-Value="AutoRequestDelay"></MudNumericField>
                 </MudField>
-                <MudSwitch Label="@ResourceStrings.AutoLoginonStartup" @bind-Checked="Login__AutoLogin" Color="Color.Primary" />
+                <MudSwitch Label="@ResourceStrings.AutoLoginonStartup" @bind-Checked="Login__AutoLogin" Color="Color.Primary"/>
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -228,11 +243,24 @@
 
 <MudDialog @bind-IsVisible="addAccountDialog" Options="@(new DialogOptions() {CloseButton = true})">
     <DialogContent>
+        <MudTextField Label="名称" @bind-Value="addAccountName"></MudTextField>
         <MudNumericField Label="帐号" @bind-Value="addAccountUserId"></MudNumericField>
         <MudTextField Label="密码" @bind-Value="addAccountPassword"></MudTextField>
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddAccountConfirmClick">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
+    </DialogActions>
+</MudDialog>
+
+<MudDialog @bind-IsVisible="settingAccountDialog" Options="@(new DialogOptions() {CloseButton = true})">
+    <DialogContent>
+        <MudTextField Label="名称" @bind-Value="settingAccountName"></MudTextField>
+        <MudNumericField Disabled="true" Label="帐号" @bind-Value="settingAccountUserId"></MudNumericField>
+        <MudTextField Label="ClientKey" @bind-Value="settingAccountClientKey"></MudTextField>
+        <MudSwitch Label="自动登录" @bind-Checked="settingAccountAutoLogin" Color="Color.Primary"></MudSwitch>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveAccountSetting">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -246,9 +274,20 @@
     UserItem DungeonBattleSelectedItem;
     int DungeonBattleSelectedDiscount;
     bool DungeonBattleSelectItemDialog;
+
+    bool accountDoingAction;
+
     bool addAccountDialog;
+    string addAccountName;
     long addAccountUserId;
     string addAccountPassword;
+
+    bool settingAccountDialog;
+    string settingAccountName;
+    long settingAccountUserId;
+    string settingAccountClientKey;
+    bool settingAccountAutoLogin;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -457,6 +496,7 @@
             TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
+
     public string AutoJob__AutoBuyShopItemJobCron
     {
         get => WritableGameConfig.Value.AutoJob.AutoBuyShopItemJobCron;
@@ -511,6 +551,7 @@
 
     #endregion
 
+    #region Account
 
     private void AddAccountClick()
     {
@@ -519,7 +560,7 @@
 
     private async Task AddAccountConfirmClick()
     {
-        if (addAccountUserId <=0 || string.IsNullOrEmpty(addAccountPassword))
+        if (addAccountUserId <= 0 || string.IsNullOrEmpty(addAccountPassword))
         {
             return;
         }
@@ -547,9 +588,57 @@
 
     private async Task LoginAccount(long userId)
     {
-        var account= AccountManager.Get(userId);
+        accountDoingAction = true;
+        var account = AccountManager.Get(userId);
         await account.Funcs.AutoLogin(true);
+
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add("登录成功", Severity.Success);
+        accountDoingAction = false;
     }
+
+    private async Task LogoutAccount(long userId)
+    {
+        accountDoingAction = true;
+        var account = AccountManager.Get(userId);
+        await account.Funcs.Logout();
+
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add("退出成功", Severity.Success);
+        accountDoingAction = false;
+    }
+
+    private void ShowAccountSetting(long userId)
+    {
+        var account = AccountManager.Get(userId);
+        settingAccountUserId = userId;
+        settingAccountName = account.AccountInfo.Name;
+        settingAccountAutoLogin = account.AccountInfo.AutoLogin;
+        settingAccountClientKey = account.AccountInfo.ClientKey;
+        settingAccountDialog = true;
+    }
+
+    private void SaveAccountSetting()
+    {
+        authOption.Update(opt =>
+        {
+            var a = opt.Accounts.FirstOrDefault(d => d.UserId == settingAccountUserId);
+            if (a != null)
+            {
+                a.Name = settingAccountName;
+                a.AutoLogin = settingAccountAutoLogin;
+                a.ClientKey = settingAccountClientKey;
+            }
+        });
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add("保存成功", Severity.Success);
+        settingAccountDialog = false;
+    }
+
+    #endregion
 
     private class UserItemComparer : IEqualityComparer<UserItem>
     {

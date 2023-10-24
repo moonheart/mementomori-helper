@@ -22,10 +22,9 @@
         <MudSelect T="long" Label="切换帐号" Variant="Variant.Text" Dense="true" @bind-Value="AccountManager.CurrentUserId">
             @foreach (var account in AuthOption.Value.Accounts)
             {
-                <MudSelectItem T="long" Value="account.UserId">@account.UserId</MudSelectItem>
+                <MudSelectItem T="long" Value="account.UserId">@account.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSpacer />
         <MudSpacer />
         <MudSelect T="CultureInfo" Label="Select Language" Variant="Variant.Text" Dense="true" @bind-Value="SelectedLanguage">
             <MudSelectItem Value="@(new CultureInfo("en-US"))"></MudSelectItem>

@@ -139,6 +139,12 @@ public partial class MementoMoriFuncs : ReactiveObject
         await Login(playerDataInfo);
     }
 
+    public async Task Logout()
+    {
+        await _timeZoneAwareJobRegister.DeregisterJobs(UserId);
+        LoginOk = false;
+    }
+
     public async Task SyncUserData()
     {
         await UserGetUserData();

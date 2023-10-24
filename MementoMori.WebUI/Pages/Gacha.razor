@@ -9,9 +9,17 @@
 @inject IDialogService DialogService
 @inject AccountManager AccountManager
 
+@inherits MementoMori.WebUI.Models.AccountComponent
 @page "/Gacha"
 <PageTitle>@Masters.TextResourceTable.Get("[CommonFooterGachaButtonLabel]")</PageTitle>
 
+    @if (!string.IsNullOrEmpty(alertMessage))
+    {
+    <MudAlert Severity="Severity.Warning">@alertMessage</MudAlert>
+    }
+
+@if (ViewModel?.UserSyncData?.UserItemDtoInfo != null)
+{
 <MudGrid>
     @foreach (var gachaCaseInfo in gachaCaseInfos.OrderByDescending(d => d.DisplayOrder))
     {
@@ -54,22 +62,37 @@
         </MudItem>
     }
 </MudGrid>
-
+}
 
 @code {
     private List<GachaCaseInfo> gachaCaseInfos = new List<GachaCaseInfo>();
     private MementoMoriFuncs ViewModel;
+    string alertMessage = "";
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task AccountChanged()
     {
-        ViewModel = AccountManager.Current.Funcs;
-        await GetGachaList();
+        try
+        {
+            alertMessage = Funcs.LoginOk ? string.Empty : ResourceStrings.PleaseLogin;
+            ViewModel = AccountManager.Current.Funcs;
+            await GetGachaList();
+        }
+        catch (Exception e)
+        {
+            alertMessage = e.Message;
+        }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
+        }
     }
+
 
     private async Task GetGachaList()
     {
         var listResponse = await ViewModel.GetResponse<GetListRequest, GetListResponse>(new GetListRequest());
         gachaCaseInfos = listResponse.GachaCaseInfoList;
+        alertMessage = string.Empty;
     }
 
     private async Task DoGacha(long buttonGachaButtonId)

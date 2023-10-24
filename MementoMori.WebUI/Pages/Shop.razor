@@ -15,8 +15,15 @@
 @inject ISnackbar Snackbar
 @inject AccountManager AccountManager
 
+@inherits MementoMori.WebUI.Models.AccountComponent
 @page "/Shop"
 
+@if (!string.IsNullOrEmpty(alertMessage))
+{
+    <MudAlert Severity="Severity.Warning">@alertMessage</MudAlert>
+}
+@if (ViewModel?.UserSyncData?.UserItemDtoInfo != null)
+{
 <MudTabs MinimumTabWidth="20px" @bind-ActivePanelIndex="SelectedTabIndex">
     <ChildContent>
         @foreach (var tab in _tradeShopTabInfoList)
@@ -27,7 +34,7 @@
                     @foreach (var item in tradeShopTabMb.ConsumeItemInfos)
                     {
                         var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(item.ItemType, item.ItemId);
-                        var count = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(x => x.ItemType == item.ItemType && x.ItemId == item.ItemId)?.ItemCount ?? 0;
+                        var count = ViewModel.UserSyncData.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == item.ItemType && x.ItemId == item.ItemId)?.ItemCount ?? 0;
                         var text = $"{Masters.TextResourceTable.Get(itemMb.NameKey)} × {count}";
                         <MudChip Text="@text"></MudChip>
                     }
@@ -114,6 +121,7 @@
 
     </ChildContent>
 </MudTabs>
+}
 
 <MudDialog @bind-IsVisible="_autoBuyDialogVisible" Options="new DialogOptions() {CloseButton = true}">
     <DialogContent>
@@ -150,14 +158,27 @@
     private UserItem SelectedAutoBuyItem;
     private UserItem SelectedConsumeItem;
     private int SelectedAutoBuyDiscount;
+    string alertMessage = "";
 
     private MementoMoriFuncs ViewModel;
     private List<UserItem> ConsumableItems = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task AccountChanged()
     {
-        ViewModel = AccountManager.Current.Funcs;
-        await GetShopInfo();
+        try
+        {
+            alertMessage = Funcs.LoginOk ? string.Empty : ResourceStrings.PleaseLogin;
+            ViewModel = AccountManager.Current.Funcs;
+            await GetShopInfo();
+        }
+        catch (Exception e)
+        {
+            alertMessage = e.Message;
+        }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
     private async Task GetShopInfo()

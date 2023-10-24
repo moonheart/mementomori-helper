@@ -12,6 +12,7 @@ public class TimeZoneAwareJobRegister
     private readonly ISchedulerFactory _schedulerFactory;
     private readonly IWritableOptions<GameConfig> _gameConfig;
     private readonly AccountManager _accountManager;
+
     public TimeZoneAwareJobRegister(ISchedulerFactory schedulerFactory, IWritableOptions<GameConfig> gameOptions, AccountManager accountManager)
     {
         _schedulerFactory = schedulerFactory;
@@ -25,6 +26,15 @@ public class TimeZoneAwareJobRegister
         {
             await RegisterJobs(account.Key);
         }
+    }
+
+    public async Task DeregisterJobs(long userId)
+    {
+        var scheduler = await _schedulerFactory.GetScheduler();
+        RemoveJob<DailyJob>(scheduler, userId);
+        RemoveJob<HourlyJob>(scheduler, userId);
+        RemoveJob<PvpJob>(scheduler, userId);
+        RemoveJob<GuildRaidBossReleaseJob>(scheduler, userId);
     }
 
     public async Task RegisterJobs(long userId)
@@ -46,7 +56,8 @@ public class TimeZoneAwareJobRegister
             AddJob<DailyJob>(scheduler, _gameConfig.Value.AutoJob.DailyJobCron, ResourceStrings.DailyJob, userId, networkManager.TimeManager.DiffFromUtc);
             AddJob<HourlyJob>(scheduler, _gameConfig.Value.AutoJob.HourlyJobCron, ResourceStrings.RewardClaimJob, userId, networkManager.TimeManager.DiffFromUtc);
             AddJob<PvpJob>(scheduler, _gameConfig.Value.AutoJob.PvpJobCron, Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]"), userId, networkManager.TimeManager.DiffFromUtc);
-            AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.Value.AutoJob.GuildRaidBossReleaseCron, Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]"), userId, networkManager.TimeManager.DiffFromUtc);
+            AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.Value.AutoJob.GuildRaidBossReleaseCron, Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]"), userId,
+                networkManager.TimeManager.DiffFromUtc);
             AddJob<AutoBuyShopItemJob>(scheduler, _gameConfig.Value.AutoJob.AutoBuyShopItemJobCron, ResourceStrings.ShopAutoBuyItems, userId, networkManager.TimeManager.DiffFromUtc);
         }
         catch (Exception e)

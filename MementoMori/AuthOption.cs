@@ -20,6 +20,7 @@ public class AuthOption
 
 public class AccountInfo
 {
+    public string Name { get; set; }
     public long UserId { get; set; }
     public string ClientKey { get; set; }
     public bool AutoLogin { get; set; }

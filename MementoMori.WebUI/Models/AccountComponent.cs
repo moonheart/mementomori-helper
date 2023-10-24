@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Reactive.Linq;
+using Microsoft.AspNetCore.Components;
 using ReactiveUI;
 
 namespace MementoMori.WebUI.Models;
@@ -12,17 +13,24 @@ public class AccountComponent : ComponentBase
     protected MementoMoriFuncs Funcs;
     protected MementoNetworkManager NetworkManager;
 
-    protected override void OnInitialized()
+    protected virtual Task AccountChanged()
     {
-        base.OnInitialized();
-        // Account = AccountManager.Current;
-        AccountManager.WhenAnyValue(d => d.CurrentUserId).Subscribe(userId =>
+        return Task.CompletedTask;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AccountInfo = AccountManager.Current.AccountInfo;
+        Funcs = AccountManager.Current.Funcs;
+        NetworkManager = AccountManager.Current.NetworkManager;
+        await AccountChanged();
+        AccountManager.WhenAnyValue(d => d.CurrentUserId).Throttle(TimeSpan.FromMilliseconds(100)).Subscribe(async userId =>
         {
             var account = AccountManager.Get(userId);
             AccountInfo = account.AccountInfo;
             Funcs = account.Funcs;
             NetworkManager = account.NetworkManager;
-            InvokeAsync(() => StateHasChanged());
+            await AccountChanged();
         });
     }
 }
