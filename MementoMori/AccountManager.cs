@@ -85,6 +85,8 @@ public class AccountManager : ReactiveObject
         {
             this.RaiseAndSetIfChanged(ref _currentCulture, value);
             foreach (var account in _accounts.Values) account.NetworkManager.SetCultureInfo(value);
+            CultureInfo.DefaultThreadCurrentCulture = value;
+            CultureInfo.DefaultThreadCurrentUICulture = value;
         }
     }
 
