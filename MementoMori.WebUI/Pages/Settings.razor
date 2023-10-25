@@ -39,14 +39,16 @@
                                 <MudPaper Elevation="0" Class="d-flex align-content-center align-center">
                                     <MudText>@accountInfo.Name</MudText>
                                 </MudPaper>
-                                <MudSpacer />
+                                <MudSpacer/>
                                 @if (funcs.LoginOk)
                                 {
-                                    <MudChip Color="Color.Success" Size="Size.Small">已登录</MudChip>
+                                    var text = accountInfo.AutoLogin ? "自动登录" : "已登录";
+                                    <MudChip Color="Color.Success" Size="Size.Small">@text</MudChip>
                                 }
                                 else
                                 {
-                                    <MudChip Color="Color.Warning" Size="Size.Small">未登录</MudChip>
+                                    var text = accountInfo.AutoLogin ? "自动登录" : "未登录";
+                                    <MudChip Color="Color.Warning" Size="Size.Small">@text</MudChip>
                                 }
                                 <MudIconButton Title="登录" Icon="@Icons.Material.Filled.Login" Disabled="accountDoingAction" OnClick="() => LoginAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
                                 <MudIconButton Title="退出" Icon="@Icons.Material.Filled.Logout" Disabled="accountDoingAction" OnClick="() => LogoutAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
@@ -247,7 +249,7 @@
         <MudSwitch Label="自动登录" @bind-Checked="addAccountAutoLogin" Color="Color.Primary"></MudSwitch>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddAccountConfirmClick">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="accountDoingAction" OnClick="AddAccountConfirmClick">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -305,10 +307,10 @@
             }
             var jobDetail = await scheduler.GetJobDetail(trigger.JobKey);
             JobInfos.Add(new JobInfo()
-                {
-                    Desc = jobDetail.Description,
-                    NextFireTime = trigger.GetNextFireTimeUtc()?.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss")
-                });
+            {
+                Desc = jobDetail.Description,
+                NextFireTime = trigger.GetNextFireTimeUtc()?.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss")
+            });
         }
         await InvokeAsync(StateHasChanged);
     }
@@ -567,8 +569,8 @@
 
     private async Task AddAccountConfirmClick()
     {
-        if (string.IsNullOrWhiteSpace(addAccountName) 
-            || addAccountUserId <= 0 
+        if (string.IsNullOrWhiteSpace(addAccountName)
+            || addAccountUserId <= 0
             || string.IsNullOrWhiteSpace(addAccountPassword))
         {
             return;
@@ -577,25 +579,28 @@
         {
             return;
         }
-        if (AccountManager.Contains(addAccountUserId))
+        var account = AccountManager.Get(addAccountUserId);
+        if (account.Funcs.LoginOk)
         {
             return;
         }
-        var account = AccountManager.Get(addAccountUserId);
         try
         {
+            accountDoingAction = true;
             var clientKey = await account.Funcs.GetClientKey(addAccountPassword);
             if (clientKey == null)
             {
                 throw new Exception("ClientKey is null");
             }
             AccountManager.AddAccountInfo(addAccountUserId, clientKey, addAccountName, addAccountAutoLogin);
+            accountDoingAction = false;
             addAccountDialog = false;
+            accounts = authOption.Value.Accounts.ToList();
+            StateHasChanged();
         }
         catch (Exception e)
         {
             await DialogService.ShowMessageBox("获取帐号信息失败", e.Message);
-            return;
         }
     }
 
