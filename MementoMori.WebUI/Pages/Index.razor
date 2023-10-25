@@ -363,24 +363,30 @@
             </Header>
             <ChildContent>
                 <MudTabPanel Text="@TextResourceTable.Get("[NoticeCategoryTypeEventTab]")">
-                    <MudTable Elevation="0" T="NoticeInfo" Items="@Funcs.EventInfoList" Virtualize="true" Dense="true" Height="400px">
-                        <RowTemplate>
-                            <MudTd>@(context.Title)</MudTd>
-                            <MudTd>
-                                <MudButton Size="Size.Small" @onclick="() => ShowNotice(context)" StartIcon="@Icons.Material.Filled.ZoomIn"/>
-                            </MudTd>
-                        </RowTemplate>
-                    </MudTable>
+                    @if (Funcs.EventInfoList != null)
+                    {
+                        <MudTable Elevation="0" T="NoticeInfo" Items="@Funcs.EventInfoList" Virtualize="true" Dense="true" Height="400px">
+                            <RowTemplate>
+                                <MudTd>@(context.Title)</MudTd>
+                                <MudTd>
+                                    <MudButton Size="Size.Small" @onclick="() => ShowNotice(context)" StartIcon="@Icons.Material.Filled.ZoomIn"/>
+                                </MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    }
                 </MudTabPanel>
                 <MudTabPanel Text="@TextResourceTable.Get("[NoticeCategoryTypeNoticeTab]")">
-                    <MudTable Elevation="0" T="NoticeInfo" Items="@Funcs.NoticeInfoList" Virtualize="true" Dense="true" Height="400px">
-                        <RowTemplate>
-                            <MudTd>@(context.Title)</MudTd>
-                            <MudTd>
-                                <MudButton Size="Size.Small" @onclick="() => ShowNotice(context)" StartIcon="@Icons.Material.Filled.ZoomIn"/>
-                            </MudTd>
-                        </RowTemplate>
-                    </MudTable>
+                    @if (Funcs.NoticeInfoList != null)
+                    {
+                        <MudTable Elevation="0" T="NoticeInfo" Items="@Funcs.NoticeInfoList" Virtualize="true" Dense="true" Height="400px">
+                            <RowTemplate>
+                                <MudTd>@(context.Title)</MudTd>
+                                <MudTd>
+                                    <MudButton Size="Size.Small" @onclick="() => ShowNotice(context)" StartIcon="@Icons.Material.Filled.ZoomIn"/>
+                                </MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    }
                 </MudTabPanel>
             </ChildContent>
         </MudTabs>
