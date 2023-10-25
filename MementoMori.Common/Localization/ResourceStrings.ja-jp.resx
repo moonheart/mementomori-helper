@@ -275,4 +275,61 @@
     <data name="NoStop" xml:space="preserve">
         <value>停止せず</value>
     </data>
+    <data name="MainAccount" xml:space="preserve">
+        <value>メインアカウント</value>
+    </data>
+    <data name="SwitchAccount" xml:space="preserve">
+        <value>アカウント切り替え</value>
+    </data>
+    <data name="AccountManagement" xml:space="preserve">
+        <value>アカウント管理</value>
+    </data>
+    <data name="NotLoggedIn" xml:space="preserve">
+        <value>ログインしていません</value>
+    </data>
+    <data name="LoggedIn" xml:space="preserve">
+        <value>ログイン済み</value>
+    </data>
+    <data name="AutoLogin" xml:space="preserve">
+        <value>自動ログイン</value>
+    </data>
+    <data name="Settings" xml:space="preserve">
+        <value>設定</value>
+    </data>
+    <data name="Exit" xml:space="preserve">
+        <value>退出</value>
+    </data>
+    <data name="Account" xml:space="preserve">
+        <value>アカウント</value>
+    </data>
+    <data name="Password" xml:space="preserve">
+        <value>パスワード</value>
+    </data>
+    <data name="Failed to retrieve account information" xml:space="preserve">
+        <value>アカウント情報の取得に失敗しました</value>
+    </data>
+    <data name="Login successful" xml:space="preserve">
+        <value>ログイン成功</value>
+    </data>
+    <data name="Logout successful" xml:space="preserve">
+        <value>ログアウト成功</value>
+    </data>
+    <data name="Save successful" xml:space="preserve">
+        <value>保存成功</value>
+    </data>
+    <data name="Downloading master directory..." xml:space="preserve">
+        <value>マスターディレクトリのダウンロード中...</value>
+    </data>
+    <data name="Download master directory completed" xml:space="preserve">
+        <value>マスターディレクトリのダウンロードが完了しました</value>
+    </data>
+    <data name="Login expired, please log in again" xml:space="preserve">
+        <value>ログインの有効期限が切れました。もう一度ログインしてください</value>
+    </data>
+    <data name="Login failed, please check your account configuration" xml:space="preserve">
+        <value>ログインに失敗しました。アカウントの設定を確認してください</value>
+    </data>
+    <data name="Operation" xml:space="preserve">
+        <value>操作</value>
+    </data>
 </root>

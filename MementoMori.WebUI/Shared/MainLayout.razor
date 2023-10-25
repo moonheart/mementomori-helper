@@ -21,7 +21,7 @@
             Edge="Edge.Start"
             @onclick="e => DrawerToggle()">
         </MudIconButton>
-        <MudSelect T="long" Label="切换帐号" Variant="Variant.Text" Dense="true" @bind-Value="AccountManager.CurrentUserId">
+        <MudSelect T="long" Label="@ResourceStrings.SwitchAccount" Variant="Variant.Text" Dense="true" @bind-Value="AccountManager.CurrentUserId">
             @foreach (var account in AuthOption.Value.Accounts)
             {
                 <MudSelectItem T="long" Value="account.UserId">@account.Name</MudSelectItem>

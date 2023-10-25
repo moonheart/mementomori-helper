@@ -1,5 +1,4 @@
 ﻿@inject IDialogService DialogService
-@inject AccountManager AccountManager
 
 @inherits MementoMori.WebUI.Models.AccountComponent
 @page "/Items"
@@ -17,7 +16,7 @@
 @using ReactiveUI
 @using SortDirection = MudBlazor.SortDirection
 
-<PageTitle>储物箱</PageTitle>
+<PageTitle>@Masters.TextResourceTable.Get("[CommonFooterItemBoxButtonLabel]")</PageTitle>
 
 @if (!string.IsNullOrEmpty(alertMessage))
 {
@@ -94,7 +93,7 @@
                     <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
                 </MudTh>
                 <MudTh>
-                    操作
+                    @ResourceStrings.Operation
                 </MudTh>
                 <MudTh>
                     <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>

@@ -13,10 +13,11 @@
 @inject IDialogService DialogService
 @inject IWritableOptions<GameConfig> WritableGameConfig
 @inject ISnackbar Snackbar
-@inject AccountManager AccountManager
 
 @inherits MementoMori.WebUI.Models.AccountComponent
 @page "/Shop"
+
+<PageTitle>@Masters.TextResourceTable.Get("[CommonHeaderExchangeLabel]")</PageTitle>
 
 @if (!string.IsNullOrEmpty(alertMessage))
 {

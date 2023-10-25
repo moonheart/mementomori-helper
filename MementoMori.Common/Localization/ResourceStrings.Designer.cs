@@ -61,6 +61,24 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Account 的本地化字符串。
+        /// </summary>
+        public static string Account {
+            get {
+                return ResourceManager.GetString("Account", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Account Management 的本地化字符串。
+        /// </summary>
+        public static string AccountManagement {
+            get {
+                return ResourceManager.GetString("AccountManagement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Add 的本地化字符串。
         /// </summary>
         public static string Add {
@@ -147,6 +165,15 @@ namespace MementoMori.Common.Localization {
         public static string AutoLegendInheritance {
             get {
                 return ResourceManager.GetString("AutoLegendInheritance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Auto Login 的本地化字符串。
+        /// </summary>
+        public static string AutoLogin {
+            get {
+                return ResourceManager.GetString("AutoLogin", resourceCulture);
             }
         }
         
@@ -358,6 +385,24 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Download master directory completed 的本地化字符串。
+        /// </summary>
+        public static string Download_master_directory_completed {
+            get {
+                return ResourceManager.GetString("Download master directory completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Downloading master directory... 的本地化字符串。
+        /// </summary>
+        public static string Downloading_master_directory___ {
+            get {
+                return ResourceManager.GetString("Downloading master directory...", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Items to be automatically purchased from the shop 的本地化字符串。
         /// </summary>
         public static string DungeonBattleTargetItems {
@@ -390,6 +435,24 @@ namespace MementoMori.Common.Localization {
         public static string ExecutionOutput {
             get {
                 return ResourceManager.GetString("ExecutionOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Exit 的本地化字符串。
+        /// </summary>
+        public static string Exit {
+            get {
+                return ResourceManager.GetString("Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Failed to retrieve account information 的本地化字符串。
+        /// </summary>
+        public static string Failed_to_retrieve_account_information {
+            get {
+                return ResourceManager.GetString("Failed to retrieve account information", resourceCulture);
             }
         }
         
@@ -457,11 +520,65 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Logged In 的本地化字符串。
+        /// </summary>
+        public static string LoggedIn {
+            get {
+                return ResourceManager.GetString("LoggedIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Login 的本地化字符串。
         /// </summary>
         public static string Login {
             get {
                 return ResourceManager.GetString("Login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Login expired, please log in again 的本地化字符串。
+        /// </summary>
+        public static string Login_expired__please_log_in_again {
+            get {
+                return ResourceManager.GetString("Login expired, please log in again", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Login failed, please check your account configuration 的本地化字符串。
+        /// </summary>
+        public static string Login_failed__please_check_your_account_configuration {
+            get {
+                return ResourceManager.GetString("Login failed, please check your account configuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Login successful 的本地化字符串。
+        /// </summary>
+        public static string Login_successful {
+            get {
+                return ResourceManager.GetString("Login successful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Logout successful 的本地化字符串。
+        /// </summary>
+        public static string Logout_successful {
+            get {
+                return ResourceManager.GetString("Logout successful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Main Account 的本地化字符串。
+        /// </summary>
+        public static string MainAccount {
+            get {
+                return ResourceManager.GetString("MainAccount", resourceCulture);
             }
         }
         
@@ -556,6 +673,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Not Logged In 的本地化字符串。
+        /// </summary>
+        public static string NotLoggedIn {
+            get {
+                return ResourceManager.GetString("NotLoggedIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Not Received 的本地化字符串。
         /// </summary>
         public static string NotReceived {
@@ -601,11 +727,29 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Operation 的本地化字符串。
+        /// </summary>
+        public static string Operation {
+            get {
+                return ResourceManager.GetString("Operation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Others 的本地化字符串。
         /// </summary>
         public static string Others {
             get {
                 return ResourceManager.GetString("Others", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Password 的本地化字符串。
+        /// </summary>
+        public static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
             }
         }
         
@@ -718,6 +862,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Save successful 的本地化字符串。
+        /// </summary>
+        public static string Save_successful {
+            get {
+                return ResourceManager.GetString("Save successful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Selected 的本地化字符串。
         /// </summary>
         public static string Selected {
@@ -741,6 +894,15 @@ namespace MementoMori.Common.Localization {
         public static string SelectPlayer {
             get {
                 return ResourceManager.GetString("SelectPlayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Settings 的本地化字符串。
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
             }
         }
         
@@ -786,6 +948,15 @@ namespace MementoMori.Common.Localization {
         public static string Success {
             get {
                 return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Switch Account 的本地化字符串。
+        /// </summary>
+        public static string SwitchAccount {
+            get {
+                return ResourceManager.GetString("SwitchAccount", resourceCulture);
             }
         }
         

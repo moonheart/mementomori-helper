@@ -17,7 +17,7 @@
 @using MementoMori.Common.Localization
 @using ReactiveUI
 
-<PageTitle>角色</PageTitle>
+<PageTitle>@Masters.TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")</PageTitle>
 @if (!string.IsNullOrEmpty(alertMessage))
 {
     <MudAlert Severity="Severity.Warning">@alertMessage</MudAlert>

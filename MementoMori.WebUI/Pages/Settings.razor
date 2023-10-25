@@ -23,10 +23,10 @@
         <MudCard>
             <MudCardHeader>
                 <CardHeaderContent>
-                    <MudText>帐号管理</MudText>
+                    <MudText>@ResourceStrings.AccountManagement</MudText>
                 </CardHeaderContent>
                 <CardHeaderActions>
-                    <MudButton Variant="Variant.Outlined" Disabled="accountDoingAction" OnClick="AddAccountClick">添加</MudButton>
+                    <MudButton Variant="Variant.Outlined" Disabled="accountDoingAction" OnClick="AddAccountClick">@ResourceStrings.Add</MudButton>
                 </CardHeaderActions>
             </MudCardHeader>
             <MudCardContent Class="pa-0">
@@ -42,17 +42,17 @@
                                 <MudSpacer/>
                                 @if (funcs.LoginOk)
                                 {
-                                    var text = accountInfo.AutoLogin ? "自动登录" : "已登录";
+                                    var text = accountInfo.AutoLogin ? ResourceStrings.AutoLogin : ResourceStrings.LoggedIn;
                                     <MudChip Color="Color.Success" Size="Size.Small">@text</MudChip>
                                 }
                                 else
                                 {
-                                    var text = accountInfo.AutoLogin ? "自动登录" : "未登录";
+                                    var text = accountInfo.AutoLogin ? ResourceStrings.AutoLogin : ResourceStrings.NotLoggedIn;
                                     <MudChip Color="Color.Warning" Size="Size.Small">@text</MudChip>
                                 }
-                                <MudIconButton Title="登录" Icon="@Icons.Material.Filled.Login" Disabled="accountDoingAction" OnClick="() => LoginAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
-                                <MudIconButton Title="退出" Icon="@Icons.Material.Filled.Logout" Disabled="accountDoingAction" OnClick="() => LogoutAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
-                                <MudIconButton Title="设置" Icon="@Icons.Material.Filled.Settings" Disabled="accountDoingAction" OnClick="() => ShowAccountSetting(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
+                                <MudIconButton Title="@ResourceStrings.Login" Icon="@Icons.Material.Filled.Login" Disabled="accountDoingAction" OnClick="() => LoginAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
+                                <MudIconButton Title="@ResourceStrings.Exit" Icon="@Icons.Material.Filled.Logout" Disabled="accountDoingAction" OnClick="() => LogoutAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
+                                <MudIconButton Title="@ResourceStrings.Settings" Icon="@Icons.Material.Filled.Settings" Disabled="accountDoingAction" OnClick="() => ShowAccountSetting(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
                             </MudStack>
                         </MudListItem>
                     }
@@ -243,10 +243,10 @@
 
 <MudDialog @bind-IsVisible="addAccountDialog" Options="@(new DialogOptions() {CloseButton = true})">
     <DialogContent>
-        <MudTextField Label="名称" @bind-Value="addAccountName"></MudTextField>
-        <MudNumericField Label="帐号" @bind-Value="addAccountUserId"></MudNumericField>
-        <MudTextField Label="密码" @bind-Value="addAccountPassword"></MudTextField>
-        <MudSwitch Label="自动登录" @bind-Checked="addAccountAutoLogin" Color="Color.Primary"></MudSwitch>
+        <MudTextField Label="@ResourceStrings.Name" @bind-Value="addAccountName"></MudTextField>
+        <MudNumericField Label="@ResourceStrings.Account" @bind-Value="addAccountUserId"></MudNumericField>
+        <MudTextField Label="@ResourceStrings.Password" @bind-Value="addAccountPassword"></MudTextField>
+        <MudSwitch Label="@ResourceStrings.AutoLogin" @bind-Checked="addAccountAutoLogin" Color="Color.Primary"></MudSwitch>
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="accountDoingAction" OnClick="AddAccountConfirmClick">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
@@ -255,10 +255,10 @@
 
 <MudDialog @bind-IsVisible="settingAccountDialog" Options="@(new DialogOptions() {CloseButton = true})">
     <DialogContent>
-        <MudTextField Label="名称" @bind-Value="settingAccountName"></MudTextField>
-        <MudNumericField Disabled="true" Label="帐号" @bind-Value="settingAccountUserId"></MudNumericField>
+        <MudTextField Label="@ResourceStrings.Name" @bind-Value="settingAccountName"></MudTextField>
+        <MudNumericField Disabled="true" Label="@ResourceStrings.Account" @bind-Value="settingAccountUserId"></MudNumericField>
         <MudTextField Label="ClientKey" @bind-Value="settingAccountClientKey"></MudTextField>
-        <MudSwitch Label="自动登录" @bind-Checked="settingAccountAutoLogin" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@ResourceStrings.AutoLogin" @bind-Checked="settingAccountAutoLogin" Color="Color.Primary"></MudSwitch>
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveAccountSetting">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
@@ -600,7 +600,7 @@
         }
         catch (Exception e)
         {
-            await DialogService.ShowMessageBox("获取帐号信息失败", e.Message);
+            await DialogService.ShowMessageBox(ResourceStrings.Failed_to_retrieve_account_information, e.Message);
         }
     }
 
@@ -612,7 +612,7 @@
 
         Snackbar.Clear();
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-        Snackbar.Add("登录成功", Severity.Success);
+        Snackbar.Add(ResourceStrings.Login_successful, Severity.Success);
         accountDoingAction = false;
     }
 
@@ -624,7 +624,7 @@
 
         Snackbar.Clear();
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-        Snackbar.Add("退出成功", Severity.Success);
+        Snackbar.Add(ResourceStrings.Logout_successful, Severity.Success);
         accountDoingAction = false;
     }
 
@@ -653,7 +653,7 @@
         AccountManager.UpdateAccountInfo(settingAccountUserId);
         Snackbar.Clear();
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-        Snackbar.Add("保存成功", Severity.Success);
+        Snackbar.Add(ResourceStrings.Save_successful, Severity.Success);
         settingAccountDialog = false;
         accounts = authOption.Value.Accounts.ToList();
         StateHasChanged();

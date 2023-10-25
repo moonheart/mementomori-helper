@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MementoMori.Common.Localization;
 using MementoMori.Option;
 using MementoMori.Ortega.Share.Extensions;
 using Microsoft.AspNetCore.Authentication.OAuth;
@@ -106,7 +107,7 @@ public class AccountManager : ReactiveObject
                     {
                         UserId = opt.UserId,
                         ClientKey = opt.ClientKey,
-                        Name = "主账号",
+                        Name = ResourceStrings.MainAccount,
                         AutoLogin = _gameConfig.Value.Login.AutoLogin
                     }
                 };

@@ -22,7 +22,7 @@
 @using Microsoft.Extensions.Options
 @using static MementoMori.Ortega.Share.Masters
 
-<PageTitle>主页</PageTitle>
+<PageTitle>@TextResourceTable.Get("[CommonFooterHomeButtonLabel]")</PageTitle>
 
 <MudGrid>
 @if (!string.IsNullOrEmpty(alertMessage))

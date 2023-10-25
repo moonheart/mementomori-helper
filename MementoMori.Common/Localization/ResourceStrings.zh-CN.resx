@@ -381,4 +381,61 @@
   <data name="NoStop" xml:space="preserve">
       <value>不停止</value>
   </data>
+  <data name="MainAccount" xml:space="preserve">
+      <value>主账号</value>
+  </data>
+  <data name="SwitchAccount" xml:space="preserve">
+      <value>切换帐号</value>
+  </data>
+  <data name="AccountManagement" xml:space="preserve">
+      <value>帐号管理</value>
+  </data>
+  <data name="NotLoggedIn" xml:space="preserve">
+      <value>未登录</value>
+  </data>
+  <data name="LoggedIn" xml:space="preserve">
+      <value>已登录</value>
+  </data>
+  <data name="AutoLogin" xml:space="preserve">
+      <value>自动登录</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+      <value>设置</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+      <value>退出</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+      <value>帐号</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+      <value>密码</value>
+  </data>
+  <data name="Failed to retrieve account information" xml:space="preserve">
+      <value>获取帐号信息失败</value>
+  </data>
+  <data name="Login successful" xml:space="preserve">
+      <value>登录成功</value>
+  </data>
+  <data name="Logout successful" xml:space="preserve">
+      <value>退出成功</value>
+  </data>
+  <data name="Save successful" xml:space="preserve">
+      <value>保存成功</value>
+  </data>
+  <data name="Downloading master directory..." xml:space="preserve">
+      <value>下载 master 目录中...</value>
+  </data>
+  <data name="Download master directory completed" xml:space="preserve">
+      <value>下载 master 目录完成</value>
+  </data>
+  <data name="Login expired, please log in again" xml:space="preserve">
+      <value>登录失效, 请重新登录</value>
+  </data>
+  <data name="Login failed, please check your account configuration" xml:space="preserve">
+      <value>登录失败, 请检查帐号配置</value>
+  </data>
+  <data name="Operation" xml:space="preserve">
+      <value>操作</value>
+  </data>
 </root>

@@ -91,7 +91,7 @@ public class MementoNetworkManager
 
     public async Task DownloadMasterCatalog()
     {
-        _logger.LogInformation("下载 master 目录中...");
+        _logger.LogInformation(ResourceStrings.Downloading_master_directory___);
         var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN", UserId = 0});
 
         var url = string.Format(dataUriResponse.MasterUriFormat, _meMoriHttpClientHandler.OrtegaMasterVersion, "master-catalog");
@@ -113,7 +113,7 @@ public class MementoNetworkManager
             await File.WriteAllBytesAsync(localPath, fileBytes);
         }
 
-        _logger.LogInformation("下载 master 目录完成");
+        _logger.LogInformation(ResourceStrings.Download_master_directory_completed);
     }
 
     public void SetCultureInfo(CultureInfo cultureInfo)
@@ -267,11 +267,11 @@ public class MementoNetworkManager
             {
                 var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(respBytes);
 
-                if (apiErrResponse.ErrorCode == ErrorCode.InvalidRequestHeader) log("登录失效, 请重新登录");
+                if (apiErrResponse.ErrorCode == ErrorCode.InvalidRequestHeader) log(ResourceStrings.Login_expired__please_log_in_again);
 
-                if (apiErrResponse.ErrorCode == ErrorCode.AuthLoginInvalidRequest) log("登录失败, 请检查帐号配置");
+                if (apiErrResponse.ErrorCode == ErrorCode.AuthLoginInvalidRequest) log(ResourceStrings.Login_failed__please_check_your_account_configuration);
 
-                if (apiErrResponse.ErrorCode == ErrorCode.CommonNoSession) log("工作階段已過期, 请重新登錄");
+                if (apiErrResponse.ErrorCode == ErrorCode.CommonNoSession) log(Masters.TextResourceTable.GetErrorCodeMessage(ErrorCode.CommonNoSession));
 
                 var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
                 log(uri.ToString());
