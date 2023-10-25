@@ -35,6 +35,7 @@ public class TimeZoneAwareJobRegister
         RemoveJob<HourlyJob>(scheduler, userId);
         RemoveJob<PvpJob>(scheduler, userId);
         RemoveJob<GuildRaidBossReleaseJob>(scheduler, userId);
+        RemoveJob<AutoBuyShopItemJob>(scheduler, userId);
     }
 
     public async Task RegisterJobs(long userId)
@@ -44,10 +45,7 @@ public class TimeZoneAwareJobRegister
         var scheduler = await _schedulerFactory.GetScheduler();
         if (_gameConfig.Value.AutoJob.DisableAll)
         {
-            RemoveJob<DailyJob>(scheduler, userId);
-            RemoveJob<HourlyJob>(scheduler, userId);
-            RemoveJob<PvpJob>(scheduler, userId);
-            RemoveJob<GuildRaidBossReleaseJob>(scheduler, userId);
+            await DeregisterJobs(userId);
             return;
         }
 

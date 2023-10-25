@@ -101,7 +101,7 @@
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent>
-                <MudSimpleTable >
+                <MudSimpleTable Dense="true">
                     <thead>
                     <tr>
                         <th>@ResourceStrings.Name</th>
@@ -291,20 +291,31 @@
     bool settingAccountAutoLogin;
 
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task AccountChanged()
     {
         var scheduler = await SchedulerFactory.GetScheduler();
         var triggerKeys = await scheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup());
+        JobInfos.Clear();
         foreach (var triggerKey in triggerKeys)
         {
             var trigger = await scheduler.GetTrigger(triggerKey);
+            if (!trigger.JobKey.Name.StartsWith(AccountManager.CurrentUserId.ToString()))
+            {
+                continue;
+            }
             var jobDetail = await scheduler.GetJobDetail(trigger.JobKey);
             JobInfos.Add(new JobInfo()
-            {
-                Desc = jobDetail.Description,
-                NextFireTime = trigger.GetNextFireTimeUtc()?.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss")
-            });
+                {
+                    Desc = jobDetail.Description,
+                    NextFireTime = trigger.GetNextFireTimeUtc()?.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss")
+                });
         }
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
 
         GachaConsumeItems = Masters.ItemTable.GetArray()
             .Where(d => d.ItemType == ItemType.GachaTicket || d.ItemType == ItemType.FriendPoint || d.ItemType == ItemType.Gold)
@@ -329,7 +340,6 @@
             new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}
         });
         accounts = authOption.Value.Accounts.ToList();
-        await base.OnInitializedAsync();
     }
 
     #region DungeonBattle
