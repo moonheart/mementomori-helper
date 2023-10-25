@@ -467,7 +467,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             return isQuickAvailable;
         }
     }
-    
+
     private bool IsGuildRaidQuickAvailable
     {
         get
@@ -521,7 +521,6 @@ public partial class MementoMoriFuncs : ReactiveObject
                         }
                     }
                 }
-                
             }
             catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.TowerBattleNotEnoughChallengeCount)
             {
@@ -1460,6 +1459,11 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public TowerType[] GetAvailableTower()
     {
+        if (!LoginOk)
+        {
+            return Array.Empty<TowerType>();
+        }
+
         var now = DateTimeOffset.UtcNow.ToOffset(TimeManager.DiffFromUtc) - TimeSpan.FromHours(4);
         var dayOfWeek = now.DayOfWeek;
         // SelectedAutoTowerType = TowerType.Infinite;

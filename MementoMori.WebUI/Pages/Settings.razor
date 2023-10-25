@@ -13,7 +13,6 @@
 @inject IWritableOptions<AuthOption> authOption
 @inject TimeZoneAwareJobRegister TimeZoneAwareJobRegister
 @inject ISchedulerFactory SchedulerFactory
-@inject AccountManager AccountManager
 @inject IDialogService DialogService
 
 @inherits MementoMori.WebUI.Models.AccountComponent
@@ -30,16 +29,17 @@
                     <MudButton Variant="Variant.Outlined" Disabled="accountDoingAction" OnClick="AddAccountClick">添加</MudButton>
                 </CardHeaderActions>
             </MudCardHeader>
-            <MudCardContent>
+            <MudCardContent Class="pa-0">
                 <MudList>
-                    @foreach (var accountInfo in authOption.Value.Accounts)
+                    @foreach (var accountInfo in accounts)
                     {
                         var funcs = AccountManager.Get(accountInfo.UserId).Funcs;
-                        <MudListItem Value="accountInfo">
+                        <MudListItem Value="accountInfo" Dense="true">
                             <MudStack Row="true" Class="align-content-center align-center">
                                 <MudPaper Elevation="0" Class="d-flex align-content-center align-center">
                                     <MudText>@accountInfo.Name</MudText>
                                 </MudPaper>
+                                <MudSpacer />
                                 @if (funcs.LoginOk)
                                 {
                                     <MudChip Color="Color.Success" Size="Size.Small">已登录</MudChip>
@@ -48,10 +48,9 @@
                                 {
                                     <MudChip Color="Color.Warning" Size="Size.Small">未登录</MudChip>
                                 }
-                                
-                                <MudButton Disabled="accountDoingAction" OnClick="() => LoginAccount(accountInfo.UserId)" Variant="Variant.Filled" Size="Size.Small">登录</MudButton>
-                                <MudButton Disabled="accountDoingAction" OnClick="() => LogoutAccount(accountInfo.UserId)" Variant="Variant.Filled" Size="Size.Small">退出</MudButton>
-                                <MudButton Disabled="accountDoingAction" OnClick="() => ShowAccountSetting(accountInfo.UserId)" Variant="Variant.Filled" Size="Size.Small">设置</MudButton>
+                                <MudIconButton Title="登录" Icon="@Icons.Material.Filled.Login" Disabled="accountDoingAction" OnClick="() => LoginAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
+                                <MudIconButton Title="退出" Icon="@Icons.Material.Filled.Logout" Disabled="accountDoingAction" OnClick="() => LogoutAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
+                                <MudIconButton Title="设置" Icon="@Icons.Material.Filled.Settings" Disabled="accountDoingAction" OnClick="() => ShowAccountSetting(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
                             </MudStack>
                         </MudListItem>
                     }
@@ -220,7 +219,6 @@
                 <MudField Label="@ResourceStrings.AutoRequestDelay" Variant="Variant.Outlined">
                     <MudNumericField @bind-Value="AutoRequestDelay"></MudNumericField>
                 </MudField>
-                <MudSwitch Label="@ResourceStrings.AutoLoginonStartup" @bind-Checked="Login__AutoLogin" Color="Color.Primary"/>
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -246,6 +244,7 @@
         <MudTextField Label="名称" @bind-Value="addAccountName"></MudTextField>
         <MudNumericField Label="帐号" @bind-Value="addAccountUserId"></MudNumericField>
         <MudTextField Label="密码" @bind-Value="addAccountPassword"></MudTextField>
+        <MudSwitch Label="自动登录" @bind-Checked="addAccountAutoLogin" Color="Color.Primary"></MudSwitch>
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddAccountConfirmClick">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
@@ -281,6 +280,9 @@
     string addAccountName;
     long addAccountUserId;
     string addAccountPassword;
+    bool addAccountAutoLogin;
+
+    List<AccountInfo> accounts = new();
 
     bool settingAccountDialog;
     string settingAccountName;
@@ -326,6 +328,7 @@
         {
             new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}
         });
+        accounts = authOption.Value.Accounts.ToList();
         await base.OnInitializedAsync();
     }
 
@@ -543,12 +546,6 @@
         set => WritableGameConfig.Update(x => x.AutoRequestDelay = value);
     }
 
-    public bool Login__AutoLogin
-    {
-        get => WritableGameConfig.Value.Login.AutoLogin;
-        set => WritableGameConfig.Update(x => x.Login.AutoLogin = value);
-    }
-
     #endregion
 
     #region Account
@@ -560,6 +557,12 @@
 
     private async Task AddAccountConfirmClick()
     {
+        if (string.IsNullOrWhiteSpace(addAccountName) 
+            || addAccountUserId <= 0 
+            || string.IsNullOrWhiteSpace(addAccountPassword))
+        {
+            return;
+        }
         if (addAccountUserId <= 0 || string.IsNullOrEmpty(addAccountPassword))
         {
             return;
@@ -576,7 +579,7 @@
             {
                 throw new Exception("ClientKey is null");
             }
-            AccountManager.AddAccountInfo(addAccountUserId, clientKey);
+            AccountManager.AddAccountInfo(addAccountUserId, clientKey, addAccountName, addAccountAutoLogin);
             addAccountDialog = false;
         }
         catch (Exception e)
@@ -612,11 +615,11 @@
 
     private void ShowAccountSetting(long userId)
     {
-        var account = AccountManager.Get(userId);
+        var account = AccountManager.GetAccountInfo(userId);
         settingAccountUserId = userId;
-        settingAccountName = account.AccountInfo.Name;
-        settingAccountAutoLogin = account.AccountInfo.AutoLogin;
-        settingAccountClientKey = account.AccountInfo.ClientKey;
+        settingAccountName = account.Name;
+        settingAccountAutoLogin = account.AutoLogin;
+        settingAccountClientKey = account.ClientKey;
         settingAccountDialog = true;
     }
 
@@ -632,10 +635,13 @@
                 a.ClientKey = settingAccountClientKey;
             }
         });
+        AccountManager.UpdateAccountInfo(settingAccountUserId);
         Snackbar.Clear();
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
         Snackbar.Add("保存成功", Severity.Success);
         settingAccountDialog = false;
+        accounts = authOption.Value.Accounts.ToList();
+        StateHasChanged();
     }
 
     #endregion

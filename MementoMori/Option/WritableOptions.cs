@@ -32,11 +32,12 @@ public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
         _configuration.GetReloadToken().RegisterChangeCallback(x => { _value = _options.CurrentValue; }, null);
         _section = section;
         _file = file;
+        _options.OnChange(obj => _value = obj);
     }
 
     private T _value;
 
-    public T Value => _value ?? (_value = _options.CurrentValue);
+    public T Value => _value ??= _options.CurrentValue;
 
     public T Get(string name)
     {

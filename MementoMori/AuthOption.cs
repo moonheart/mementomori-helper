@@ -102,6 +102,7 @@ public class GameConfig
 
     public class LoginConfig
     {
+        [Obsolete]
         public bool AutoLogin { get; set; }
     }
 

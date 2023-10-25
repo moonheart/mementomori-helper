@@ -1,7 +1,9 @@
 ﻿@using MementoMori.Common.Localization
 @using static MementoMori.Ortega.Share.Masters
 @using System.Globalization
+@using DynamicData.Binding
 @using MementoMori.Option
+@using ReactiveUI
 @inherits LayoutComponentBase
 @inject AccountManager AccountManager
 @inject IWritableOptions<AuthOption> AuthOption
@@ -59,6 +61,11 @@
             AccountManager.CurrentCulture = value;
             NavigationManager.NavigateTo(NavigationManager.Uri, true);
         }
+    }
+
+    protected override void OnInitialized()
+    {
+        AccountManager.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
     }
 
     void DrawerToggle()

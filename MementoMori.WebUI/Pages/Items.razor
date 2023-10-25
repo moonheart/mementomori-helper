@@ -35,7 +35,7 @@
                 .Select(d => d.ToEquipmentInfo())
                 .Union(equips1);
         }
-        <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true"
+        <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true" Striped="true"
                   Items="@equips">
             <HeaderContent>
                 <MudTh>
@@ -65,18 +65,6 @@
                 <MudTh>
                     <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.AdditionalParameterTotal)">@Masters.TextResourceTable.Get("[CommonGrantParameterLabel]")</MudTableSortLabel>
                 </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterMuscle)">@Masters.TextResourceTable.Get(BaseParameterType.Muscle)</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterEnergy)">@Masters.TextResourceTable.Get(BaseParameterType.Energy)</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterIntelligence)">@Masters.TextResourceTable.Get(BaseParameterType.Intelligence)</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Info?.AdditionalParameterHealth)">@Masters.TextResourceTable.Get(BaseParameterType.Health)</MudTableSortLabel>
-                </MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd>@context.Name</MudTd>
@@ -88,10 +76,6 @@
                 <MudTd>@(Masters.TextResourceTable.Get(context.EquipmentMb.BattleParameterChangeInfo.BattleParameterType))</MudTd>
                 <MudTd>@(ParameterUtil.GetBaseParameterValueText(context.EquipmentMb.BattleParameterChangeInfo.ChangeParameterType, context.EquipmentMb.BattleParameterChangeInfo.Value))</MudTd>
                 <MudTd>@context.EquipmentMb.AdditionalParameterTotal</MudTd>
-                <MudTd>@context.Info?.AdditionalParameterMuscle</MudTd>
-                <MudTd>@context.Info?.AdditionalParameterEnergy</MudTd>
-                <MudTd>@context.Info?.AdditionalParameterIntelligence</MudTd>
-                <MudTd>@context.Info?.AdditionalParameterHealth</MudTd>
             </RowTemplate>
         </MudTable>
     </MudTabPanel>
@@ -103,7 +87,7 @@
                ItemType.TreasureChest,
                ItemType.CharacterFragment
            }; }
-        <MudTable Dense="true" HorizontalScrollbar="true"
+        <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true" 
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()).OrderBy(d=>d.Item.ItemType).ThenByDescending(d=>d.ItemRarityFlags))">
             <HeaderContent>
                 <MudTh>
@@ -152,7 +136,7 @@
                ItemType.EventExchangePlaceItem,
                ItemType.EquipmentSetMaterial
            }; }
-        <MudTable Dense="true" HorizontalScrollbar="true"
+        <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true" 
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
             <HeaderContent>
                 <MudTh>
@@ -181,7 +165,7 @@
            {
                ItemType.Sphere
            }; }
-        <MudTable Dense="true" HorizontalScrollbar="true"
+        <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true" 
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToSphereInfo()))">
             <HeaderContent>
                 <MudTh>
@@ -227,7 +211,7 @@
            {
                ItemType.EquipmentFragment
            }; }
-        <MudTable Dense="true" HorizontalScrollbar="true"
+        <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true" 
                   Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
             <HeaderContent>
                 <MudTh>

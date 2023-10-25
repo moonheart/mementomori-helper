@@ -89,7 +89,7 @@ public class MementoNetworkManager
     }
 
 
-    public async Task DownloadMasterCatalog(CultureInfo cultureInfo)
+    public async Task DownloadMasterCatalog()
     {
         _logger.LogInformation("下载 master 目录中...");
         var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN", UserId = 0});
@@ -113,15 +113,11 @@ public class MementoNetworkManager
             await File.WriteAllBytesAsync(localPath, fileBytes);
         }
 
-        SetCultureInfo(cultureInfo);
         _logger.LogInformation("下载 master 目录完成");
     }
 
     public void SetCultureInfo(CultureInfo cultureInfo)
     {
-        CultureInfo = cultureInfo;
-        CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-        CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         Masters.TextResourceTable.SetLanguageType(parseLanguageType(cultureInfo));
         Masters.LoadAllMasters();
     }
