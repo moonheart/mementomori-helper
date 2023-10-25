@@ -1534,29 +1534,30 @@ public partial class MementoMoriFuncs : ReactiveObject
             await GetMissionInfo();
             var missionIds = new List<long>();
             foreach (var (missionGroupType, missionInfo) in MissionInfoDict)
-                if (missionGroupType == MissionGroupType.Panel)
+            {
+                if (missionGroupType == MissionGroupType.Panel && missionInfo.UserMissionDtoInfoDict.TryGetValue(MissionType.PanelSheet1, out var info1))
                 {
-                    var notReceived1 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet1].SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
+                    var notReceived1 = info1.SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
                     missionIds.AddRange(notReceived1);
 
-                    var unfinishedIds1 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet1]
+                    var unfinishedIds1 = info1
                         .SelectMany(d => d.MissionStatusHistory)
                         .Where(d => d.Key == MissionStatusType.Locked || d.Key == MissionStatusType.Progress)
                         .SelectMany(d => d.Value).ToList();
                     // 检查是否所有任务都已经完成
-                    if (unfinishedIds1.Count == 0)
+                    if (unfinishedIds1.Count == 0 && missionInfo.UserMissionDtoInfoDict.TryGetValue(MissionType.PanelSheet2, out var info2))
                     {
-                        var notReceived2 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet2].SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
+                        var notReceived2 = info2.SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
                         missionIds.AddRange(notReceived2);
 
-                        var unfinishedIds2 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet2]
+                        var unfinishedIds2 = info2
                             .SelectMany(d => d.MissionStatusHistory)
                             .Where(d => d.Key == MissionStatusType.Locked || d.Key == MissionStatusType.Progress)
                             .SelectMany(d => d.Value).ToList();
 
-                        if (unfinishedIds2.Count == 0)
+                        if (unfinishedIds2.Count == 0 && missionInfo.UserMissionDtoInfoDict.TryGetValue(MissionType.PanelSheet3, out var info3))
                         {
-                            var notReceived3 = missionInfo.UserMissionDtoInfoDict[MissionType.PanelSheet3].SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
+                            var notReceived3 = info3.SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
                             missionIds.AddRange(notReceived3);
                         }
                     }
@@ -1566,6 +1567,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var notReceived = missionInfo.UserMissionDtoInfoDict.Values.SelectMany(d => d.SelectMany(x => x.GetNotReceivedIdList()));
                     missionIds.AddRange(notReceived);
                 }
+            }
 
             var rewardMissionResponse = await GetResponse<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest() {TargetMissionIdList = missionIds});
             rewardMissionResponse.RewardInfo.ItemList.PrintUserItems(log);
