@@ -111,7 +111,7 @@
                 <MudTd>
                     @if (context.Item.ItemType == ItemType.QuestQuickTicket)
                     {
-                        <MudButton OnClick="() => UseAutoBattleRewardItem(context.Name, context.Item)">@Masters.TextResourceTable.Get("[ItemBoxButtonUse]")</MudButton>
+                        <MudButton OnClick="() => UseAutoBattleRewardItem(context.Name, context.Item)" Size="Size.Small" Variant="Variant.Outlined">@Masters.TextResourceTable.Get("[ItemBoxButtonUse]")</MudButton>
                     }
                 </MudTd>
                 <MudTd>@(context.ItemRarityFlags)</MudTd>
