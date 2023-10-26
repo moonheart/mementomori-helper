@@ -51,7 +51,7 @@ public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
         var fileInfo = fileProvider.GetFileInfo(_file);
         var physicalPath = fileInfo.PhysicalPath;
 
-        var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(physicalPath));
+        var jObject = fileInfo.Exists ? JsonConvert.DeserializeObject<JObject>(File.ReadAllText(physicalPath)) : new JObject();
         var sectionObject = jObject.TryGetValue(_section, out var section) ? JsonConvert.DeserializeObject<T>(section.ToString()) : Value ?? new T();
 
         applyChanges(sectionObject);
