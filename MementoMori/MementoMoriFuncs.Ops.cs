@@ -943,8 +943,15 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            await AutoDungeonBattle(log, token);
-            log($"{TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")}{ResourceStrings.Finished}");
+            try
+            {
+                await AutoDungeonBattle(log, token);
+                log($"{TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")}{ResourceStrings.Finished}");
+            }
+            catch (Exception e)
+            {
+                log(e.ToString());
+            }
         });
     }
 
