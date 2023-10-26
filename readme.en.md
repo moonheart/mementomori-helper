@@ -50,7 +50,8 @@ Here's the English translation of the provided document:
   <tr>
       <td>
 
-- [ ] Multi-account support
+- [x] Multi-account support
+    - [x]Direct login with account and password
 - [ ] Home
     - [x] User login
     - [x] Collect daily login rewards
@@ -200,41 +201,7 @@ weekly task rewards
 
 ## Account Configuration
 
-### Step 1: Get UserId and ClientKey
-
-#### Method 1: Android Phone or Emulator with Root Access
-
-Log in to your account on an Android phone and find the account file at `/data/data/jp.boi.mementomori.android/shared_prefs/jp.boi.mementomori.android.v2.playerprefs.xml`. Search for the following:
-- UserId: Search for `UserId` and find the corresponding number; this is your UserId.
-- ClientKey: Search for `ClientKey` and find the corresponding string. Remove the `%22` at the beginning and end, and the remaining part is your ClientKey.
-
-#### Method 2: DMM Client
-
-Login to the game using the DMM client on Windows, then find the registry key `\HKEY_CURRENT_USER\Software\BankOfInnovation\MementoMori`. Retrieve the UserId and ClientKey.
-- UserId: xxxxxx_Userid_hxxxxxx
-- ClientKey: xxxxxx_ClientKey_hxxxxxx
-
-Double-click the name, and it will display binary data. Copy the text on the right side. The ClientKey consists of 32 letters; make sure not to make any mistakes, and do not share it in groups.
-
-### Step 2: Fill in the Account in the Configuration File
-
-Create a text file named `appsettings.user.json` and fill it with the following content:
-
-```json5
-{
-  "AuthOption": {
-    "ClientKey": "", // Fill in your ClientKey here
-    "UserId": 0 // Change this 0 to your Userid
-  }
-}
-```
-
-
-> Warning! The ClientKey is like a password; do not share it with anyone or post it in groups.
->
-> Warning! The ClientKey is like a password; do not share it with anyone or post it in groups.
->
-> Warning! The ClientKey is like a password; do not share it with anyone or post it in groups.
+After launching the program, go to settings, add an account, and enter the account name, Transfer ID, and Transfer password.
 
 ## FAQs
 
@@ -244,14 +211,6 @@ To run multiple instances, modify the port number in `appsettings.user.json`. Fo
 
 ```json5
 {
-  "AuthOption": {
-    "ClientKey": "", // Fill in your ClientKey here
-    "DeviceToken": "",
-    "AppVersion": "1.4.4",
-    "OSVersion": "Android OS 13 / API-33 (TKQ1.220829.002/V14.0.12.0.TLACNXM)",
-    "ModelName": "Xiaomi 2203121C",
-    "UserId": 0 // Change this 0 to your Userid
-  },
   "Kestrel": {
     "Endpoints": {
       "Http": {
