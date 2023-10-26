@@ -49,7 +49,8 @@
   <tr >
       <td>
 
-- [ ] 多账号支持
+- [x] 多账号支持
+    - [x] 账号密码直接登录
 - [ ] 主页
     - [x] 用户登陆
     - [x] 领取每日登陆奖励
@@ -198,41 +199,7 @@ services:
 
 ## 帐号配置
 
-### 第一步: 获取 UserId 和 ClientKey
-
-#### 方式 1: 有 root 权限 的Android 手机或者模拟器
-
-在 Android 手机上登录一次帐号, 然后找到账号文件 `/data/data/jp.boi.mementomori.android/shared_prefs/jp.boi.mementomori.android.v2.playerprefs.xml`,
-在里面搜索:
-- UserId: 搜索 `UserId` 找到对应的数字, 这个就是 UserId
-- ClientKey: 搜索 `ClientKey` 找到对应的字符串, 将首尾的 `%22` 去掉, 剩下的就是 ClientKey
-
-#### 方式 2: DMM 客户端
-
-在 Windows 上用 DMM 登录一次游戏, 然后找到注册表 `\HKEY_CURRENT_USER\Software\BankOfInnovation\MementoMori`, 拿到 UserId 和 Clientkey
-- UserId: xxxxxx_Userid_hxxxxxx
-- ClientKey: xxxxxx_ClientKey_hxxxxxx
-
-双击名称, 会显示二进制数据, 把右侧的文本抄下来, ClientKey 共 32 个字母, 注意不要抄错, 不包含引号.
-
-### 第二步: 填写账号到配置文件
-
-新建一个文本文件 `appsettings.user.json`, 填写下面的内容
-
-```json5
-{
-  "AuthOption": {
-    "ClientKey": "", // 在这里填写自己的 clientkey
-    "UserId": 0 // 把这里的0改成自己的 Userid
-  }
-}
-```
-
-> 警告! ClientKey 相当于密码, 不要泄露给别人, 不要发到群里.
->
-> 警告! ClientKey 相当于密码, 不要泄露给别人, 不要发到群里.
-> 
-> 警告! ClientKey 相当于密码, 不要泄露给别人, 不要发到群里.
+启动程序后，进入设置，添加账号，输入账号名称，引继ID，引继密码即可。
 
 ## 常见问题
 
@@ -242,14 +209,6 @@ services:
 
 ```json5
 {
-  "AuthOption": {
-    "ClientKey": "", // 在这里填写自己的clientkey
-    "DeviceToken": "",
-    "AppVersion": "1.4.4",
-    "OSVersion": "Android OS 13 / API-33 (TKQ1.220829.002/V14.0.12.0.TLACNXM)",
-    "ModelName": "Xiaomi 2203121C",
-    "UserId": 0 // 把这里的0改成自己的用户id
-  },
   "Kestrel": {
     "Endpoints": {
       "Http": {
