@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>warnings</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Version>0.0.0</Version>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,11 +21,6 @@
         <PackageReference Include="Quartz" Version="3.7.0" />
         <PackageReference Include="Quartz.AspNetCore" Version="3.7.0" />
       <PackageReference Include="ReactiveUI.Blazor" Version="19.5.1" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Update="account.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
 
 </Project>

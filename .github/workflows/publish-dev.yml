@@ -22,8 +22,10 @@ jobs:
           dotnet-version: 8.0.x
       - name: Restore dependencies
         run: dotnet restore
-#      - name: Build
-#        run: dotnet build ./MementoMori.WebUI/MementoMori.WebUI.csproj -c Release --no-restore
+      - name: Set Version in csproj
+        # replace <Version>0.0.0</Version> with <Version>tag</Version>, where tag is the tag name, tag should trim start "v"
+        run: sed -i "s/<Version>.*<\/Version>/<Version>${{ github.ref_name | replace('refs/tags/v', '') }}<\/Version>/g" ./MementoMori.WebUI/MementoMori.WebUI.csproj
+        if: startsWith(github.ref, 'refs/tags/')
       - name: Publish ${{matrix.rid}}
         run: dotnet publish ./MementoMori.WebUI/MementoMori.WebUI.csproj -c Release -r ${{matrix.rid}} -o publish-${{matrix.rid}} --sc -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true
       - name: Archive Release ${{matrix.rid}}
