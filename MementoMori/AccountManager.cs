@@ -136,7 +136,7 @@ public class AccountManager : ReactiveObject
     {
         get
         {
-            if (_currentUserId <= 0) _currentUserId = _authOption.Value.Accounts.First().UserId;
+            if (_currentUserId <= 0) _currentUserId = _authOption.Value.Accounts.FirstOrDefault()?.UserId ?? 0;
             return _currentUserId;
         }
         set => this.RaiseAndSetIfChanged(ref _currentUserId, value);
