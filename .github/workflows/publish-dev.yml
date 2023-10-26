@@ -24,7 +24,7 @@ jobs:
         run: dotnet restore
       - name: Set Version in csproj
         # replace <Version>0.0.0</Version> with <Version>tag</Version>, where tag is the tag name, tag should trim start "v"
-        run: sed -i "s/<Version>.*<\/Version>/<Version>${{ github.ref_name | replace('refs/tags/v', '') }}<\/Version>/g" ./MementoMori.WebUI/MementoMori.WebUI.csproj
+        run: sed -i "s/<Version>.*<\/Version>/<Version>$(echo ${{github.ref_name}} | sed 's@refs/tags/v@@g')<\/Version>/g" ./MementoMori.WebUI/MementoMori.WebUI.csproj
         if: startsWith(github.ref, 'refs/tags/')
       - name: Publish ${{matrix.rid}}
         run: dotnet publish ./MementoMori.WebUI/MementoMori.WebUI.csproj -c Release -r ${{matrix.rid}} -o publish-${{matrix.rid}} --sc -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true
