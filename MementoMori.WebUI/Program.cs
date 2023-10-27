@@ -18,6 +18,12 @@ internal class Program
         PlatformRegistrationManager.SetRegistrationNamespaces(RegistrationNamespace.Blazor);
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.WebHost.UseSentry(o =>
+        {
+            o.Dsn = "https://b4f992ec506ac3ae2b62c2d5a4445e4c@o4506120447852544.ingest.sentry.io/4506120448835584";
+            o.TracesSampleRate = 1.0;
+        });
+
         builder.Configuration.AddJsonFile("appsettings.other.json", true, true);
         builder.Configuration.AddJsonFile("appsettings.user.json", true, true);
 
@@ -55,7 +61,7 @@ internal class Program
         app.UseAntiforgery();
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();
-
+        app.UseSentryTracing();
         //app.UseRouting();
 
         //app.MapBlazorHub();
