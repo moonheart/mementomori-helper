@@ -84,7 +84,6 @@ public class TimeZoneAwareJobRegister
             .WithCronSchedule(cron, builer => builer.InTimeZone(customTimeZone))
             .Build();
         scheduler.UnscheduleJob(trigger.Key);
-        scheduler.AddJob(jobDetail, true);
         scheduler.ScheduleJob(jobDetail, trigger);
     }
 }
