@@ -75,7 +75,7 @@ public class TimeZoneAwareJobRegister
     {
         var type = typeof(T);
         var jobKey = new JobKey($"{userId}-{type.FullName!}");
-        var jobDetail = JobBuilder.Create<T>().WithIdentity(jobKey).WithDescription(description).Build();
+        var jobDetail = JobBuilder.Create<T>().WithIdentity(jobKey).WithDescription(description).UsingJobData("userId", userId).Build();
 
         var customTimeZone = TimeZoneInfo.CreateCustomTimeZone(offset.ToString(), offset, null, null);
         var trigger = TriggerBuilder.Create()

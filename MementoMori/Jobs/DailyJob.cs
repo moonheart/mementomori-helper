@@ -13,10 +13,10 @@ public class DailyJob: IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
-        foreach (var (_, account) in _accountManager.GetAll())
-        {
-            if (!account.Funcs.IsQuickActionExecuting) await account.Funcs.Login();
-            await account.Funcs.ExecuteAllQuickAction();
-        }
+        var userId = context.MergedJobDataMap.GetLongValue("userId");
+        if (userId <= 0) return;
+        var account = _accountManager.Get(userId);
+        if (!account.Funcs.IsQuickActionExecuting) await account.Funcs.Login();
+        await account.Funcs.ExecuteAllQuickAction();
     }
 }

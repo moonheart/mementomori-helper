@@ -25,13 +25,13 @@ internal class PvpJob : IJob
     {
         if (!_gameConfig.Value.AutoJob.AutoPvp) return;
         
-        foreach (var (_, account) in _accountManager.GetAll())
-        {
-            if (!account.Funcs.IsQuickActionExecuting) await account.Funcs.Login();
+        var userId = context.MergedJobDataMap.GetLongValue("userId");
+        if (userId <= 0) return;
+        var account = _accountManager.Get(userId);
+        if (!account.Funcs.IsQuickActionExecuting) await account.Funcs.Login();
 
-            await account.Funcs.PvpAuto();
-            await account.Funcs.CompleteMissions();
-            await account.Funcs.RewardMissonActivity();
-        }
+        await account.Funcs.PvpAuto();
+        await account.Funcs.CompleteMissions();
+        await account.Funcs.RewardMissonActivity();
     }
 }

@@ -26,10 +26,10 @@ internal class GuildRaidBossReleaseJob : IJob
         {
             return;
         }
-        foreach (var (_, account) in _accountManager.GetAll())
-        {
-            if (!account.Funcs.IsQuickActionExecuting) await account.Funcs.Login();
-            await account.Funcs.OpenGuildRaid();
-        }
+        var userId = context.MergedJobDataMap.GetLongValue("userId");
+        if (userId <= 0) return;
+        var account = _accountManager.Get(userId);
+        if (!account.Funcs.IsQuickActionExecuting) await account.Funcs.Login();
+        await account.Funcs.OpenGuildRaid();
     }
 }
