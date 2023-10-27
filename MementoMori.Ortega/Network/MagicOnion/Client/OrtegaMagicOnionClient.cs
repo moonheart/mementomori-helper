@@ -1,4 +1,5 @@
-﻿// using MementoMori.Ortega.Network.MagicOnion.Interface;
+﻿// using Grpc.Net.Client;
+// using MementoMori.Ortega.Network.MagicOnion.Interface;
 // using MementoMori.Ortega.Share;
 // using MementoMori.Ortega.Share.Data.Chat;
 // using MementoMori.Ortega.Share.Data.LocalRaid;
@@ -15,172 +16,182 @@
 // 	{
 // 		public ChatInfo GetLatestChatInfo(ChatType chatType)
 // 		{
-// 			if (chatType <= ChatType.Guild)
-// 			{
-// 				Dictionary<ChatType, List<ChatInfo>> chatInfoList = this._chatInfoList;
-// 				List<ChatInfo> list;
-// 				List<ChatInfo> removedBlockPlayerChat = ChatUtil.GetRemovedBlockPlayerChat(list);
-// 				if (!removedBlockPlayerChat.IsNullOrEmpty<ChatInfo>())
-// 				{
-// 					int size = removedBlockPlayerChat._size;
-// 					return removedBlockPlayerChat[size];
-// 				}
-// 			}
-// 			throw new NullReferenceException();
-// 		}
+// 			// if (chatType <= ChatType.Guild)
+// 			// {
+// 			// 	Dictionary<ChatType, List<ChatInfo>> chatInfoList = this._chatInfoList;
+// 			// 	List<ChatInfo> list;
+// 			// 	List<ChatInfo> removedBlockPlayerChat = ChatUtil.GetRemovedBlockPlayerChat(list);
+// 			// 	if (!removedBlockPlayerChat.IsNullOrEmpty<ChatInfo>())
+// 			// 	{
+// 			// 		int size = removedBlockPlayerChat._size;
+// 			// 		return removedBlockPlayerChat[size];
+// 			// 	}
+// 			// }
+// 			// throw new NullReferenceException();
+//             throw new NotImplementedException();
+//         }
 //
 // 		public List<ChatInfo> GetChatInfos(ChatType chatType)
 // 		{
-// 			if (chatType > ChatType.Guild)
-// 			{
-// 			}
-// 			Dictionary<ChatType, List<ChatInfo>> chatInfoList = this._chatInfoList;
-// 			List<ChatInfo> list;
-// 			return ChatUtil.GetRemovedBlockPlayerChat(list);
-// 		}
+// 			// if (chatType > ChatType.Guild)
+// 			// {
+// 			// }
+// 			// Dictionary<ChatType, List<ChatInfo>> chatInfoList = this._chatInfoList;
+// 			// List<ChatInfo> list;
+// 			// return ChatUtil.GetRemovedBlockPlayerChat(list);
+//             throw new NotImplementedException();
+//         } 
 //
 // 		public List<long> GetAllWorldPlayerIds()
 // 		{
-// 			List<long> list = new List();
-// 			List<ChatInfo> removedBlockPlayerChat = ChatUtil.GetRemovedBlockPlayerChat(this._chatInfoList[(uint)1]);
-// 			int num = 0;
-// 			if (removedBlockPlayerChat[num].<SystemChatType>k__BackingField == SystemChatType.None)
-// 			{
-// 				long <PlayerId>k__BackingField = removedBlockPlayerChat[num].<PlayerId>k__BackingField;
-// 				if (!list.Contains(<PlayerId>k__BackingField))
-// 				{
-// 				}
-// 			}
-// 			num++;
-// 			return list;
+// 			// List<long> list = new List();
+// 			// List<ChatInfo> removedBlockPlayerChat = ChatUtil.GetRemovedBlockPlayerChat(this._chatInfoList[(uint)1]);
+// 			// int num = 0;
+// 			// if (removedBlockPlayerChat[num].<SystemChatType>k__BackingField == SystemChatType.None)
+// 			// {
+// 			// 	long <PlayerId>k__BackingField = removedBlockPlayerChat[num].<PlayerId>k__BackingField;
+// 			// 	if (!list.Contains(<PlayerId>k__BackingField))
+// 			// 	{
+// 			// 	}
+// 			// }
+// 			// num++;
+// 			// return list;
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void ClearGuildChat()
 // 		{
-// 			throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
+// 			// throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void ClearSvsChat()
 // 		{
-// 			throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
+// 			// throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void ClearWorldChat()
 // 		{
-// 			throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
+// 			// throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void SendChatMessageAsync(ChatType chatType, string message)
 // 		{
-// 			base.TryReconnect();
-// 			int num = 0;
-// 			string text = string.Format("SendChatMessageAsync : {0} : {1}", "SendChatMessageAsync : {0} : {1}", message);
-// 			SendMessageRequest sendMessageRequest = new SendMessageRequest();
-// 			sendMessageRequest.<ChatType>k__BackingField = chatType;
-// 			sendMessageRequest.<Message>k__BackingField = message;
-// 			int num2 = 0;
-// 			if (num2 < num)
-// 			{
-// 				num2 += num2;
-// 				num2++;
-// 			}
+// 			// base.TryReconnect();
+// 			// int num = 0;
+// 			// string text = string.Format("SendChatMessageAsync : {0} : {1}", "SendChatMessageAsync : {0} : {1}", message);
+// 			// SendMessageRequest sendMessageRequest = new SendMessageRequest();
+// 			// sendMessageRequest.<ChatType>k__BackingField = chatType;
+// 			// sendMessageRequest.<Message>k__BackingField = message;
+// 			// int num2 = 0;
+// 			// if (num2 < num)
+// 			// {
+// 			// 	num2 += num2;
+// 			// 	num2++;
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void SendChatJoinGuildAsync()
 // 		{
-// 			base.TryReconnect();
+// 			// base.TryReconnect();
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnNoticePrivateMessage(OnNoticePrivateMessageResponse response)
 // 		{
-// 			UserDataManager instance = SingletonMonoBehaviour.Instance;
-// 			long <PlayerId>k__BackingField = response.<PlayerId>k__BackingField;
-// 			bool flag = instance.IsBlockedPlayer(<PlayerId>k__BackingField);
-// 			long <PlayerId>k__BackingField2 = response.<PlayerId>k__BackingField;
-// 			if (!flag)
-// 			{
-// 				string text = string.Format("OnNoticePrivateMessage : PlayerId -> {0}", flag);
-// 				if (this._chatReceiver != 0)
-// 				{
-// 					int num = 0;
-// 					uint num2;
-// 					if (num < (int)num2)
-// 					{
-// 						num += num;
-// 						num++;
-// 					}
-// 				}
-// 				return;
-// 			}
-// 			string text2 = string.Format("OnNoticePrivateMessage Blocked : PlayerId -> {0}", flag);
+// 			// UserDataManager instance = SingletonMonoBehaviour.Instance;
+// 			// long <PlayerId>k__BackingField = response.<PlayerId>k__BackingField;
+// 			// bool flag = instance.IsBlockedPlayer(<PlayerId>k__BackingField);
+// 			// long <PlayerId>k__BackingField2 = response.<PlayerId>k__BackingField;
+// 			// if (!flag)
+// 			// {
+// 			// 	string text = string.Format("OnNoticePrivateMessage : PlayerId -> {0}", flag);
+// 			// 	if (this._chatReceiver != 0)
+// 			// 	{
+// 			// 		int num = 0;
+// 			// 		uint num2;
+// 			// 		if (num < (int)num2)
+// 			// 		{
+// 			// 			num += num;
+// 			// 			num++;
+// 			// 		}
+// 			// 	}
+// 			// 	return;
+// 			// }
+// 			// string text2 = string.Format("OnNoticePrivateMessage Blocked : PlayerId -> {0}", flag);
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnRemovedFromGuild()
 // 		{
-// 			if (this._chatReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._chatReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnReceiveGuildChatLog(OnReceiveGuildChatLogResponse response)
 // 		{
-// 			throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
+// 			// throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnReceiveSvSChatLog(OnReceiveSvSChatLogResponse response)
 // 		{
-// 			throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
+// 			// throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnReceiveWorldChatLog(OnReceiveWorldChatLogResponse response)
 // 		{
-// 			throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
+// 			// throw new AnalysisFailedException("CPP2IL failed to recover any usable IL for this method.");
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnReceiveMessage(OnReceiveMessageResponse response)
 // 		{
-// 			ChatInfo <ChatInfo>k__BackingField = response.<ChatInfo>k__BackingField;
-// 			ChatType <ChatType>k__BackingField = <ChatInfo>k__BackingField.<ChatType>k__BackingField;
-// 			long <PlayerId>k__BackingField = <ChatInfo>k__BackingField.<PlayerId>k__BackingField;
-// 			string <Message>k__BackingField = <ChatInfo>k__BackingField.<Message>k__BackingField;
-// 			int num = 0;
-// 			string text = string.Format("OnReceiveMessage -> {0} : {1} : {2}", <ChatType>k__BackingField, <ChatType>k__BackingField, <Message>k__BackingField);
-// 			if (<ChatInfo>k__BackingField.<ChatType>k__BackingField <= ChatType.Guild)
-// 			{
-// 				Dictionary<ChatType, List<ChatInfo>> chatInfoList = this._chatInfoList;
-// 				ChatType <ChatType>k__BackingField2 = <ChatInfo>k__BackingField.<ChatType>k__BackingField;
-// 				chatInfoList[<ChatType>k__BackingField2].Add(<ChatInfo>k__BackingField);
-// 			}
-// 			uint num2;
-// 			if (this._chatReceiver != 0 && num < (int)num2)
-// 			{
-// 				num += num;
-// 				num++;
-// 			}
+// 			// ChatInfo <ChatInfo>k__BackingField = response.<ChatInfo>k__BackingField;
+// 			// ChatType <ChatType>k__BackingField = <ChatInfo>k__BackingField.<ChatType>k__BackingField;
+// 			// long <PlayerId>k__BackingField = <ChatInfo>k__BackingField.<PlayerId>k__BackingField;
+// 			// string <Message>k__BackingField = <ChatInfo>k__BackingField.<Message>k__BackingField;
+// 			// int num = 0;
+// 			// string text = string.Format("OnReceiveMessage -> {0} : {1} : {2}", <ChatType>k__BackingField, <ChatType>k__BackingField, <Message>k__BackingField);
+// 			// if (<ChatInfo>k__BackingField.<ChatType>k__BackingField <= ChatType.Guild)
+// 			// {
+// 			// 	Dictionary<ChatType, List<ChatInfo>> chatInfoList = this._chatInfoList;
+// 			// 	ChatType <ChatType>k__BackingField2 = <ChatInfo>k__BackingField.<ChatType>k__BackingField;
+// 			// 	chatInfoList[<ChatType>k__BackingField2].Add(<ChatInfo>k__BackingField);
+// 			// }
+// 			// uint num2;
+// 			// if (this._chatReceiver != 0 && num < (int)num2)
+// 			// {
+// 			// 	num += num;
+// 			// 	num++;
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
-// 		public OrtegaMagicOnionClient(GrpcChannelx channel, long playerId, string authToken, IMagicOnionLocalRaidNotificaiton localRaidNotificaiton)
+// 		public OrtegaMagicOnionClient(GrpcChannel channel, long playerId, string authToken, IMagicOnionLocalRaidNotificaiton localRaidNotificaiton)
 // 			: base(channel, playerId, authToken)
-// 		{
-// 			this._localRaidNotificaiton = 0;
-// 			this._currentLocalRaidPartyInfo = (ulong)0L;
-// 			Dictionary<ChatType, List<ChatInfo>> dictionary = new Dictionary();
-// 			this._chatInfoList = dictionary;
-// 			Dictionary<ChatType, List<ChatInfo>> chatInfoList = this._chatInfoList;
-// 			List<ChatInfo> list = new List();
-// 			int num = 0;
-// 			chatInfoList.Add(num, list);
-// 			Dictionary<ChatType, List<ChatInfo>> chatInfoList2 = this._chatInfoList;
-// 			List<ChatInfo> list2 = new List();
-// 			chatInfoList2.Add((uint)2, list2);
-// 			Dictionary<ChatType, List<ChatInfo>> chatInfoList3 = this._chatInfoList;
-// 			List<ChatInfo> list3 = new List();
-// 			chatInfoList3.Add((uint)1, list3);
+//         {
+//             this._localRaidNotificaiton = localRaidNotificaiton;
+// 			this._currentLocalRaidPartyInfo = new LocalRaidPartyInfo();
+//             this._chatInfoList = new Dictionary<ChatType, List<ChatInfo>>()
+//             {
+//                 [ChatType.SvS] = new List<ChatInfo>(),
+//                 [ChatType.World] = new List<ChatInfo>(),
+//                 [ChatType.Guild] = new List<ChatInfo>()
+//             };
 // 			base.AttachInternalReceiver(this, this);
 // 		}
 //
 // 		public void SetupLocalRaid(IMagicOnionLocalRaidReceiver localRaidReceiver, IMagicOnionErrorReceiver errorReceiver)
-// 		{
+//         {
+//             _localRaidReceiver = localRaidReceiver;
+//             _errorReceiver = errorReceiver;
 // 			/*
 // An exception occurred when decompiling this method
 //
@@ -205,6 +216,9 @@
 //
 // 		public void SetupChat(IMagicOnionChatReceiver receiver, IMagicOnionAuthenticateReceiver authenticateReceiver, IMagicOnionErrorReceiver errorReceiver)
 // 		{
+//             this._chatReceiver = receiver;
+//             this._authenticateReceiver = authenticateReceiver;
+//             this._errorReceiver = errorReceiver;
 // 			/*
 // An exception occurred when decompiling this method
 //
@@ -230,6 +244,8 @@
 //
 // 		public void SetupGvg(IMagicOnionGvgReceiver receiver, IMagicOnionErrorReceiver errorReceiver, BattleType battleType)
 // 		{
+//             this._gvgLocalReceiver = receiver;
+//             this._errorReceiver = errorReceiver;
 // 			/*
 // An exception occurred when decompiling this method
 //
@@ -357,21 +373,19 @@
 //
 // 		protected override void Authenticate()
 // 		{
-// 			AuthenticateRequest authenticateRequest = new AuthenticateRequest();
-// 			long playerId = this._playerId;
-// 			authenticateRequest.<PlayerId>k__BackingField = playerId;
-// 			string authToken = this._authToken;
-// 			authenticateRequest.<AuthToken>k__BackingField = authToken;
-// 			DeviceType deviceType = SingletonMonoBehaviour.Instance.GetDeviceType();
-// 			authenticateRequest.<DeviceType>k__BackingField = deviceType;
-// 			int num = 0;
-// 			num += num;
-// 			num++;
+// 			AuthenticateRequest authenticateRequest = new AuthenticateRequest()
+//             {
+//                 PlayerId = _playerId,
+//                 AuthToken = _authToken,
+//                 DeviceType = DeviceType.Android
+//             };
+//             
 // 			base.Authenticate();
 // 		}
 //
 // 		void IDisconnectReceiver.OnDisconnect()
-// 		{
+//         {
+//             _currentLocalRaidPartyInfo = null;
 // 			/*
 // An exception occurred when decompiling this method
 //
@@ -438,227 +452,248 @@
 //
 // 		public void SendGvgAddCastleParty(BattleType battleType, long castleId, List<long> characterIds, int memberCount)
 // 		{
-// 			base.TryReconnect();
-// 			AddCastlePartyRequest addCastlePartyRequest = new AddCastlePartyRequest();
-// 			addCastlePartyRequest.<CastleId>k__BackingField = castleId;
-// 			addCastlePartyRequest.<CharacterIds>k__BackingField = characterIds;
-// 			addCastlePartyRequest.<MemberCount>k__BackingField = 0;
-// 			if (battleType != BattleType.GrandBattle)
-// 			{
-// 			}
-// 			string text = string.Format("SendGvgAddCastleParty -> memberCount : {0}", addCastlePartyRequest);
+// 			// base.TryReconnect();
+// 			// AddCastlePartyRequest addCastlePartyRequest = new AddCastlePartyRequest();
+// 			// addCastlePartyRequest.<CastleId>k__BackingField = castleId;
+// 			// addCastlePartyRequest.<CharacterIds>k__BackingField = characterIds;
+// 			// addCastlePartyRequest.<MemberCount>k__BackingField = 0;
+// 			// if (battleType != BattleType.GrandBattle)
+// 			// {
+// 			// }
+// 			// string text = string.Format("SendGvgAddCastleParty -> memberCount : {0}", addCastlePartyRequest);
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void SendGvgOrderCastleParty(BattleType battleType, int index, long firstCharacterId, long ownerPlayerId, bool isUp)
 // 		{
-// 			object[] array;
-// 			for (;;)
-// 			{
-// 				base.TryReconnect();
-// 				OrderCastlePartyRequest orderCastlePartyRequest = new OrderCastlePartyRequest();
-// 				orderCastlePartyRequest.<IsUp>k__BackingField = false;
-// 				orderCastlePartyRequest.<OwnerPlayerId>k__BackingField = 0L;
-// 				orderCastlePartyRequest.<Index>k__BackingField = index;
-// 				orderCastlePartyRequest.<FirstCharacterId>k__BackingField = firstCharacterId;
-// 				if ((battleType != BattleType.GrandBattle && index == 0) || index != 0)
-// 				{
-// 				}
-// 				array = new object[4];
-// 				if (array == 0 || array != 0)
-// 				{
-// 					array[0] = array;
-// 					if (array == 0 || array != 0)
-// 					{
-// 						array[1] = array;
-// 						if (array == 0 || array != 0)
-// 						{
-// 							array[2] = array;
-// 							if (array == 0 || array != 0)
-// 							{
-// 								break;
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 			array[3] = array;
-// 			string text = string.Format("SendGvgOrderCastleParty -> Index : {0}, FirstCharacterId : {1}, IsUp = {2}, OwnerPlayerId = {3}", array);
+// 			// object[] array;
+// 			// for (;;)
+// 			// {
+// 			// 	base.TryReconnect();
+// 			// 	OrderCastlePartyRequest orderCastlePartyRequest = new OrderCastlePartyRequest();
+// 			// 	orderCastlePartyRequest.<IsUp>k__BackingField = false;
+// 			// 	orderCastlePartyRequest.<OwnerPlayerId>k__BackingField = 0L;
+// 			// 	orderCastlePartyRequest.<Index>k__BackingField = index;
+// 			// 	orderCastlePartyRequest.<FirstCharacterId>k__BackingField = firstCharacterId;
+// 			// 	if ((battleType != BattleType.GrandBattle && index == 0) || index != 0)
+// 			// 	{
+// 			// 	}
+// 			// 	array = new object[4];
+// 			// 	if (array == 0 || array != 0)
+// 			// 	{
+// 			// 		array[0] = array;
+// 			// 		if (array == 0 || array != 0)
+// 			// 		{
+// 			// 			array[1] = array;
+// 			// 			if (array == 0 || array != 0)
+// 			// 			{
+// 			// 				array[2] = array;
+// 			// 				if (array == 0 || array != 0)
+// 			// 				{
+// 			// 					break;
+// 			// 				}
+// 			// 			}
+// 			// 		}
+// 			// 	}
+// 			// }
+// 			// array[3] = array;
+// 			// string text = string.Format("SendGvgOrderCastleParty -> Index : {0}, FirstCharacterId : {1}, IsUp = {2}, OwnerPlayerId = {3}", array);
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void SendGvgOpenBattleDialog(BattleType battleType, long castleId)
 // 		{
-// 			base.TryReconnect();
-// 			OpenBattleDialogRequest openBattleDialogRequest = new OpenBattleDialogRequest();
-// 			openBattleDialogRequest.<CastleId>k__BackingField = castleId;
-// 			if (battleType != BattleType.GrandBattle)
-// 			{
-// 			}
-// 			string text = string.Format("SendGvgOpenBattleDialog -> CastleId : {0}", openBattleDialogRequest);
+// 			// base.TryReconnect();
+// 			// OpenBattleDialogRequest openBattleDialogRequest = new OpenBattleDialogRequest();
+// 			// openBattleDialogRequest.<CastleId>k__BackingField = castleId;
+// 			// if (battleType != BattleType.GrandBattle)
+// 			// {
+// 			// }
+// 			// string text = string.Format("SendGvgOpenBattleDialog -> CastleId : {0}", openBattleDialogRequest);
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void SendGvgOpenPartyDeployDialog(BattleType battleType, long castleId)
 // 		{
-// 			base.TryReconnect();
-// 			OpenPartyDeployDialogRequest openPartyDeployDialogRequest = new OpenPartyDeployDialogRequest();
-// 			openPartyDeployDialogRequest.<CastleId>k__BackingField = castleId;
-// 			if (battleType != BattleType.GrandBattle)
-// 			{
-// 			}
-// 			string text = string.Format("SendGvgOpenPartyDeployDialog -> CastleId : {0}", openPartyDeployDialogRequest);
+// 			// base.TryReconnect();
+// 			// OpenPartyDeployDialogRequest openPartyDeployDialogRequest = new OpenPartyDeployDialogRequest();
+// 			// openPartyDeployDialogRequest.<CastleId>k__BackingField = castleId;
+// 			// if (battleType != BattleType.GrandBattle)
+// 			// {
+// 			// }
+// 			// string text = string.Format("SendGvgOpenPartyDeployDialog -> CastleId : {0}", openPartyDeployDialogRequest);
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void SendGvgCloseCastleDialog(BattleType battleType, GvgDialogType gvgDialogType)
 // 		{
-// 			base.TryReconnect();
-// 			if (battleType != BattleType.GrandBattle)
-// 			{
-// 				if (this != 0)
-// 				{
-// 					new CloseDialogRequest().<DialogType>k__BackingField = gvgDialogType;
-// 				}
-// 				return;
-// 			}
-// 			CloseDialogRequest closeDialogRequest = new CloseDialogRequest();
-// 			throw new NullReferenceException();
+// 			// base.TryReconnect();
+// 			// if (battleType != BattleType.GrandBattle)
+// 			// {
+// 			// 	if (this != 0)
+// 			// 	{
+// 			// 		new CloseDialogRequest().<DialogType>k__BackingField = gvgDialogType;
+// 			// 	}
+// 			// 	return;
+// 			// }
+// 			// CloseDialogRequest closeDialogRequest = new CloseDialogRequest();
+// 			// throw new NullReferenceException();
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void SendGvgCastleDeclaration(BattleType battleType, long castleId)
 // 		{
-// 			base.TryReconnect();
-// 			CastleDeclarationRequest castleDeclarationRequest = new CastleDeclarationRequest();
-// 			castleDeclarationRequest.<CastleId>k__BackingField = castleId;
-// 			if (battleType != BattleType.GrandBattle)
-// 			{
-// 			}
-// 			string text = string.Format("SendGvgCastleDeclaration -> CastleId : {0}", castleDeclarationRequest);
+// 			// base.TryReconnect();
+// 			// CastleDeclarationRequest castleDeclarationRequest = new CastleDeclarationRequest();
+// 			// castleDeclarationRequest.<CastleId>k__BackingField = castleId;
+// 			// if (battleType != BattleType.GrandBattle)
+// 			// {
+// 			// }
+// 			// string text = string.Format("SendGvgCastleDeclaration -> CastleId : {0}", castleDeclarationRequest);
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void SendGvgCastleDeclarationCounter(BattleType battleType, long castleId)
 // 		{
-// 			base.TryReconnect();
-// 			CastleDeclarationCounterRequest castleDeclarationCounterRequest = new CastleDeclarationCounterRequest();
-// 			castleDeclarationCounterRequest.<CastleId>k__BackingField = castleId;
-// 			if (battleType != BattleType.GrandBattle)
-// 			{
-// 			}
-// 			string text = string.Format("SendGvgCastleDeclarationCounter -> CastleId : {0}", castleDeclarationCounterRequest);
+// 			// base.TryReconnect();
+// 			// CastleDeclarationCounterRequest castleDeclarationCounterRequest = new CastleDeclarationCounterRequest();
+// 			// castleDeclarationCounterRequest.<CastleId>k__BackingField = castleId;
+// 			// if (battleType != BattleType.GrandBattle)
+// 			// {
+// 			// }
+// 			// string text = string.Format("SendGvgCastleDeclarationCounter -> CastleId : {0}", castleDeclarationCounterRequest);
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void SendGvgOpenMap(BattleType battleType, int matchingNumber)
 // 		{
-// 			base.TryReconnect();
-// 			if (battleType != BattleType.GrandBattle)
-// 			{
-// 				if (this != 0)
-// 				{
-// 				}
-// 				string text = string.Format("SendGvgOpenMap -> matchingNumber : {0}", "SendGvgOpenMap -> matchingNumber : {0}");
-// 				return;
-// 			}
-// 			OpenMapRequest openMapRequest = new OpenMapRequest();
-// 			int num = 0;
-// 			openMapRequest.<MatchingNumber>k__BackingField = 0;
-// 			int num2 = 0;
-// 			if (num2 < num)
-// 			{
-// 				num2 += num2;
-// 				num2++;
-// 			}
-// 			num2 += 34;
-// 			num2 += 312;
-// 			throw new NullReferenceException();
+// 			// base.TryReconnect();
+// 			// if (battleType != BattleType.GrandBattle)
+// 			// {
+// 			// 	if (this != 0)
+// 			// 	{
+// 			// 	}
+// 			// 	string text = string.Format("SendGvgOpenMap -> matchingNumber : {0}", "SendGvgOpenMap -> matchingNumber : {0}");
+// 			// 	return;
+// 			// }
+// 			// OpenMapRequest openMapRequest = new OpenMapRequest();
+// 			// int num = 0;
+// 			// openMapRequest.<MatchingNumber>k__BackingField = 0;
+// 			// int num2 = 0;
+// 			// if (num2 < num)
+// 			// {
+// 			// 	num2 += num2;
+// 			// 	num2++;
+// 			// }
+// 			// num2 += 34;
+// 			// num2 += 312;
+// 			// throw new NullReferenceException();
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public void SendGvgCloseMap(BattleType battleType)
 // 		{
-// 			base.TryReconnect();
-// 			if (battleType != BattleType.GrandBattle)
-// 			{
-// 			}
+// 			// base.TryReconnect();
+// 			// if (battleType != BattleType.GrandBattle)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnGlobalGvgEndCastleBattle(OnEndCastleBattleResponse response)
 // 		{
-// 			if (this._gvgGlobalReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._gvgGlobalReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnGlobalGvgOpenBattleDialog(OnOpenBattleDialogResponse response)
 // 		{
-// 			if (this._gvgGlobalReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._gvgGlobalReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnGlobalGvgUpdateCastleParty(OnUpdateCastlePartyResponse response)
 // 		{
-// 			if (this._gvgGlobalReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._gvgGlobalReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnGlobalGvgUpdateMap(OnUpdateMapResponse response)
 // 		{
-// 			if (this._gvgGlobalReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._gvgGlobalReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnGlobalGvgUpdateDeployCharacter(OnUpdateDeployCharacterResponse response)
 // 		{
-// 			if (this._gvgGlobalReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._gvgGlobalReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnGlobalGvgAddOnlyReceiverParty(OnAddOnlyReceiverPartyResponse response)
 // 		{
-// 			if (this._gvgGlobalReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._gvgGlobalReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnLocalGvgEndCastleBattle(OnEndCastleBattleResponse response)
 // 		{
-// 			if (this._gvgLocalReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._gvgLocalReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnLocalGvgOpenBattleDialog(OnOpenBattleDialogResponse response)
 // 		{
-// 			if (this._gvgLocalReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._gvgLocalReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnLocalGvgUpdateCastleParty(OnUpdateCastlePartyResponse response)
 // 		{
-// 			if (this._gvgLocalReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._gvgLocalReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnLocalGvgUpdateMap(OnUpdateMapResponse response)
 // 		{
-// 			if (this._gvgLocalReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._gvgLocalReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnLocalGvgUpdateDeployCharacter(OnUpdateDeployCharacterResponse response)
 // 		{
-// 			if (this._gvgLocalReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._gvgLocalReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		void IOrtegaReceiver.OnLocalGvgAddOnlyReceiverParty(OnAddOnlyReceiverPartyResponse response)
 // 		{
-// 			if (this._gvgLocalReceiver != 0)
-// 			{
-// 			}
+// 			// if (this._gvgLocalReceiver != 0)
+// 			// {
+// 			// }
+//             throw new NotImplementedException();
 // 		}
 //
 // 		public LocalRaidPartyInfo GetCurrentLocalRaidPartyInfo()
@@ -668,7 +703,7 @@
 //
 // 		public bool IsLocalRaidMasterInRoom()
 // 		{
-// 			if (this._currentLocalRaidPartyInfo != (ulong)0L)
+// 			if (this._currentLocalRaidPartyInfo != null)
 // 			{
 // 				long playerId = this._playerId;
 // 				bool flag;

@@ -1,13 +1,16 @@
 ﻿// using System.Runtime.CompilerServices;
+// using Grpc.Net.Client;
 // using MagicOnion;
+// using MementoMori.Ortega.Common.Enums;
 // using MementoMori.Ortega.Network.MagicOnion.Interface;
 //
 // namespace MementoMori.Ortega.Network.MagicOnion.Client
 // {
 // 	public abstract class MagicOnionClient<TSender, TReceiver> : BaseMagicOnionClient where TSender : IStreamingHub<TSender, TReceiver>
 // 	{
-// 		public MagicOnionClient(GrpcChannelx channel, long playerId, string authToken)
+// 		public MagicOnionClient(GrpcChannel channel, long playerId, string authToken): base(playerId, authToken)
 // 		{
+//             this._channel = channel
 // 			/*
 // An exception occurred when decompiling this method
 //
@@ -72,7 +75,7 @@
 // 			Action defaultContextAction = AsyncVoidMethodBuilder.Create().m_coreState.m_defaultContextAction;
 // 		}
 //
-// 		protected GrpcChannelx _channel;
+// 		protected GrpcChannel _channel;
 //
 // 		protected TSender _sender;
 //
