@@ -2,7 +2,6 @@
 
 namespace MementoMori.Jobs;
 
-[DisallowConcurrentExecution]
 public class DailyJob: IJob
 {
     private AccountManager _accountManager;

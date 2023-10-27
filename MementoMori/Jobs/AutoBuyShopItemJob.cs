@@ -8,7 +8,6 @@ using Quartz;
 
 namespace MementoMori.Jobs;
 
-[DisallowConcurrentExecution]
 internal class AutoBuyShopItemJob : IJob
 {
     private AccountManager _accountManager;

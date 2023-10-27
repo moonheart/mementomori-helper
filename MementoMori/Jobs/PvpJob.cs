@@ -10,7 +10,6 @@ using Quartz;
 
 namespace MementoMori.Jobs;
 
-[DisallowConcurrentExecution]
 internal class PvpJob : IJob
 {
     private AccountManager _accountManager;

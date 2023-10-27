@@ -4,7 +4,6 @@ using Quartz;
 
 namespace MementoMori.Jobs;
 
-[DisallowConcurrentExecution]
 public class HourlyJob : IJob
 {
     private AccountManager _accountManager;
