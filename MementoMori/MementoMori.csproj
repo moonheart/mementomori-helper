@@ -1,22 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
     </PropertyGroup>
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="MessagePack" Version="2.5.124" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0-rc.2.23479.6" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
         <PackageReference Include="morelinq" Version="3.4.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Quartz" Version="3.7.0" />
         <PackageReference Include="ReactiveUI" Version="19.5.1" />
         <PackageReference Include="ReactiveUI.Fody" Version="19.5.1" />
-        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0-rc.2.23479.6" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
         <PackageReference Include="System.Reactive" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0-rc.2.23479.6" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\MementoMori.Ortega\MementoMori.Ortega.csproj" />
