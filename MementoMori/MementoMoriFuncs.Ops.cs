@@ -563,6 +563,11 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
+            if (!IsBountyQuestAvailable)
+            {
+                return;
+            }
+
             log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}：\n");
             var getListResponse = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(
                 new BountyQuestGetListRequest());
@@ -586,10 +591,21 @@ public partial class MementoMoriFuncs : ReactiveObject
         });
     }
 
+    private bool IsBountyQuestAvailable
+    {
+        get { return UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId >= OpenContentTable.GetByOpenCommandType(OpenCommandType.BountyQuest).OpenContentValue; }
+    }
+
+
     public async Task BountyQuestStartAuto()
     {
         await ExecuteQuickAction(async (log, token) =>
         {
+            if (!IsBountyQuestAvailable)
+            {
+                return;
+            }
+
             var response1 = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new BountyQuestGetListRequest());
             if (GameConfig.BountyQuestAuto.TargetItems.Count > 0 && !BountyRequestForceAll)
             {
@@ -1418,6 +1434,11 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public async Task GetBountyRequestInfo()
     {
+        if (!IsBountyQuestAvailable)
+        {
+            return;
+        }
+
         var response = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(new BountyQuestGetListRequest());
         BountyQuestResponseInfo = response;
     }
