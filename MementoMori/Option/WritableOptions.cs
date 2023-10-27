@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -44,6 +45,7 @@ public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
         return _options.Get(name);
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Update(Action<T> applyChanges)
     {
         applyChanges(Value);
