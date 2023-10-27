@@ -256,16 +256,16 @@ public class MementoNetworkManager
             throw new NotSupportedException();
 
         var bytes = MessagePackSerializer.Serialize(req);
-        var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
+        using var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
         if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
 
-        var respBytes = await respMsg.Content.ReadAsByteArrayAsync();
+        await using var stream = await respMsg.Content.ReadAsStreamAsync();
         if (respMsg.Headers.TryGetValues("ortegastatuscode", out var headers2))
         {
             var ortegastatuscode = headers2.FirstOrDefault() ?? "";
             if (ortegastatuscode != "0")
             {
-                var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(respBytes);
+                var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(stream);
 
                 if (apiErrResponse.ErrorCode == ErrorCode.InvalidRequestHeader) log(ResourceStrings.Login_expired__please_log_in_again);
 
@@ -282,7 +282,7 @@ public class MementoNetworkManager
             }
         }
 
-        var response = MessagePackSerializer.Deserialize<TResp>(respBytes);
+        var response = MessagePackSerializer.Deserialize<TResp>(stream);
         // if (Debugger.IsAttached) log(response.ToJson());
         if (response is IUserSyncApiResponse userSyncApiResponse) userData?.Invoke(userSyncApiResponse.UserSyncData);
 
