@@ -1274,8 +1274,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             {
             }
 
-            var n = 100;
-            while (!token.IsCancellationRequested && n-- > 0)
+            while (!token.IsCancellationRequested)
                 try
                 {
                     var targetQuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1;
