@@ -427,7 +427,7 @@
         try
         {
             alertMessage = Funcs.LoginOk ? string.Empty : ResourceStrings.PleaseLogin;
-            // Funcs.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
+            Funcs.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
             Funcs.WhenAnyValue(d => d.UserSyncData).Subscribe(data =>
             {
                 _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>

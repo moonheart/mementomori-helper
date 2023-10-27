@@ -16,11 +16,20 @@
 @code {
 
     [Parameter]
-    public ObservableCollection<string> Messages { get; set; }
+    public ObservableCollection<string> Messages
+    {
+        get => _messages;
+        set
+        {
+            _messages = value;
+            OnMessageChanged();
+        }
+    }
 
     private List<string> _messageList = new();
+    private ObservableCollection<string> _messages;
 
-    protected override void OnInitialized()
+    private void OnMessageChanged()
     {
         try
         {
@@ -28,7 +37,7 @@
         }
         catch
         {
-            // ignored
+    // ignored
         }
         Messages.ObserveCollectionChanges().Throttle(TimeSpan.FromMilliseconds(50)).Subscribe(set =>
         {
@@ -42,6 +51,11 @@
             }
             InvokeAsync(StateHasChanged);
         });
+    }
+
+    protected override void OnInitialized()
+    {
+        OnMessageChanged();
     }
 
 }

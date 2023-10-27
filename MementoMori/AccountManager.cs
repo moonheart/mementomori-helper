@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using MementoMori.Common.Localization;
@@ -35,6 +36,7 @@ public class AccountManager : ReactiveObject
         _logger = logger;
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Account Get(long userId)
     {
         if (!_accounts.ContainsKey(userId))

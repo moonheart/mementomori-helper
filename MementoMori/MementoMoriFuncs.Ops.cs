@@ -179,7 +179,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             await task;
         }
-        catch (ApiErrorException e)
+        catch (Exception e)
         {
             AddLog(e.Message);
         }
@@ -1274,7 +1274,8 @@ public partial class MementoMoriFuncs : ReactiveObject
             {
             }
 
-            while (!token.IsCancellationRequested)
+            var n = 100;
+            while (!token.IsCancellationRequested && n-- > 0)
                 try
                 {
                     var targetQuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1;
