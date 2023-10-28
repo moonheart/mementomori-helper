@@ -154,8 +154,11 @@ public partial class MementoMoriFuncs : ReactiveObject
     private void AddLog(string message)
     {
         Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}");
-        MesssageList.Insert(0, message);
-        if (MesssageList.Count > 100) MesssageList.RemoveAt(MesssageList.Count - 1);
+        lock (MesssageList)
+        {
+            MesssageList.Insert(0, message);
+            if (MesssageList.Count > 100) MesssageList.RemoveAt(MesssageList.Count - 1);
+        }
     }
 
     private ConcurrentQueue<Func<Action<string>, CancellationToken, Task>> _funcs = new();
