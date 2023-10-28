@@ -52,6 +52,7 @@ using TradeShopGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Trade
 using TradeShopGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.TradeShop.GetListResponse;
 using System.Xml.Linq;
 using MementoMori.Common.Localization;
+using MementoMori.Ortega.Network.MagicOnion.Client;
 using MementoMori.Ortega.Share.Data.ApiInterface.GlobalGvg;
 using MementoMori.Ortega.Share.Data.ApiInterface.LocalGvg;
 using MementoMori.Ortega.Share.Data.ApiInterface.LocalRaid;
@@ -980,8 +981,13 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var bossResponse = await GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
-            log(bossResponse.ToJson(true));
+            var localRaidInfoResponse = await GetResponse<GetLocalRaidInfoRequest,GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
+            var localRaidQuestMbs = localRaidInfoResponse.OpenLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
+            var localRaidQuestMb = localRaidQuestMbs.FirstOrDefault(d=>d.FixedBattleRewards.Any(x=>x.IsEqual(ItemType.ExchangePlaceItem, 4)));
+            
+            var client = NetworkManager.GetOnionClient();
+            client.Connect();
+            client.SendLocalRaidJoinRandomRoom(localRaidQuestMb.Id);
         });
     }
 
@@ -1724,6 +1730,16 @@ public partial class MementoMoriFuncs : ReactiveObject
         }
     }
 
+    public async Task AutoLocalRaid()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            
+            
+        });
+    }
+    
+    
     public async Task ExecuteAllQuickAction()
     {
         await GetLoginBonus();

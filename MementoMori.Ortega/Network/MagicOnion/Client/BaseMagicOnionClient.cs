@@ -43,7 +43,8 @@ namespace MementoMori.Ortega.Network.MagicOnion.Client
 		public void Connect()
 		{
 			if (this._state != HubClientState.Ready)
-			{
+            {
+                TryReconnect();
 				HubClientState state = this._state;
 				if (state != HubClientState.Idle)
 				{

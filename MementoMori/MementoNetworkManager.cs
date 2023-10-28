@@ -21,8 +21,11 @@ using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
+using Grpc.Net.Client;
 using MementoMori.Common.Localization;
+using MementoMori.MagicOnion;
 using MementoMori.Option;
+using MementoMori.Ortega.Network.MagicOnion.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ortega.Common.Manager;
@@ -41,6 +44,7 @@ public class MementoNetworkManager
 
     private LoginRequest _lastLoginRequest;
 
+    public long UserId { get; set; }
     public CultureInfo CultureInfo { get; private set; } = new("zh-CN");
     public LanguageType LanguageType => parseLanguageType(CultureInfo);
 
@@ -49,6 +53,8 @@ public class MementoNetworkManager
     // private Uri _apiAuth = new("https://stg1-auth.mememori-boi.com/api/");
 
     private Uri _apiHost;
+    private GrpcChannel _grpcChannel;
+    private string AuthTokenOfMagicOnion;
 
     public static string AssetCatalogUriFormat { get; private set; }
     public static string AssetCatalogFixedUriFormat { get; private set; }
@@ -231,14 +237,21 @@ public class MementoNetworkManager
         // get server host
         var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest() {WorldId = playerDataInfo.WorldId}, log);
         _apiHost = new Uri(resp.ApiHost);
+        _grpcChannel = GrpcChannel.ForAddress(new Uri($"https://{resp.MagicOnionHost}:{resp.MagicOnionPort}"));
 
         // do login
         var loginPlayerResp = await GetResponse<LoginPlayerRequest, LoginPlayerResponse>(new LoginPlayerRequest
         {
             PlayerId = playerDataInfo.PlayerId, Password = playerDataInfo.Password
         }, log);
+        AuthTokenOfMagicOnion = loginPlayerResp.AuthTokenOfMagicOnion;
     }
 
+    public OrtegaMagicOnionClient GetOnionClient()
+    {
+        var ortegaMagicOnionClient = new OrtegaMagicOnionClient(_grpcChannel, UserId, AuthTokenOfMagicOnion, new MagicOnionLocalRaidNotificaiton());
+        return ortegaMagicOnionClient;
+    }
 
     public async Task<TResp> GetResponse<TReq, TResp>(TReq req, Action<string> log = null, Action<UserSyncData> userData = null)
         where TReq : ApiRequestBase

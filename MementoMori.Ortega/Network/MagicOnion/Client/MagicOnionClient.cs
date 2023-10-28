@@ -31,10 +31,11 @@ namespace MementoMori.Ortega.Network.MagicOnion.Client
             _internalDisconnectReceiver = internalDisconnectReceiver;
 		}
 
-		protected override void ConnectHub()
+		protected override async void ConnectHub()
         {
-            _sender = StreamingHubClient.ConnectAsync<TSender, TReceiver>(_channel, _internalReceiver).ConfigureAwait(false).GetAwaiter().GetResult();
-		}
+            ChangeState(HubClientState.Connecting);
+            _sender = await StreamingHubClient.ConnectAsync<TSender, TReceiver>(_channel, _internalReceiver);
+        }
 
 		protected override void Authenticate()
 		{
