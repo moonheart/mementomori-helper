@@ -34,7 +34,7 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>EffectDescResource.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Localization\EffectDescResource.zh-cn.resx">
+      <EmbeddedResource Update="Localization\EffectDescResource.zh.resx">
         <DependentUpon>EffectDescResource.resx</DependentUpon>
       </EmbeddedResource>
       <EmbeddedResource Update="Localization\ResourceStrings.ja-jp.resx">
@@ -43,13 +43,12 @@
       <EmbeddedResource Update="Localization\ResourceStrings.ko-kr.resx">
         <DependentUpon>ResourceStrings.resx</DependentUpon>
       </EmbeddedResource>
+      <EmbeddedResource Update="Localization\ResourceStrings.zh.resx">
+          <DependentUpon>ResourceStrings.resx</DependentUpon>
+      </EmbeddedResource>
       <EmbeddedResource Update="Localization\ResourceStrings.resx">
         <SubType>Designer</SubType>
         <LastGenOutput>ResourceStrings.Designer.cs</LastGenOutput>
-        <Generator>PublicResXFileCodeGenerator</Generator>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Localization\ResourceStrings.zh-CN.resx">
-        <SubType>Designer</SubType>
         <Generator>PublicResXFileCodeGenerator</Generator>
       </EmbeddedResource>
     </ItemGroup>

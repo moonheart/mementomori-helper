@@ -332,4 +332,7 @@
     <data name="Operation" xml:space="preserve">
         <value>操作</value>
     </data>
+    <data name="Request timed out, check your network" xml:space="preserve">
+        <value>リクエストがタイムアウトしました。ネットワークを確認してください</value>
+    </data>
 </root>

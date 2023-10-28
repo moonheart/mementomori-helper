@@ -77,7 +77,7 @@ public class MementoNetworkManager
 
         if (!initialized)
         {
-            var response = GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() { CountryCode = "CN" }).ConfigureAwait(false).GetAwaiter().GetResult();
+            var response = GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN"}).ConfigureAwait(false).GetAwaiter().GetResult();
             AssetCatalogUriFormat = response.AssetCatalogUriFormat;
             AssetCatalogFixedUriFormat = response.AssetCatalogFixedUriFormat;
             MasterUriFormat = response.MasterUriFormat;
@@ -86,6 +86,7 @@ public class MementoNetworkManager
             _authOption.Update(x => x.AppVersion = AppAssetVersionInfo.Version);
             initialized = true;
         }
+
         _meMoriHttpClientHandler.AppVersion = AppAssetVersionInfo.Version;
 
         _unityHttpClient = new HttpClient();
@@ -269,36 +270,43 @@ public class MementoNetworkManager
             throw new NotSupportedException();
 
         var bytes = MessagePackSerializer.Serialize(req);
-        using var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
-        if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
-
-        await using var stream = await respMsg.Content.ReadAsStreamAsync();
-        if (respMsg.Headers.TryGetValues("ortegastatuscode", out var headers2))
+        try
         {
-            var ortegastatuscode = headers2.FirstOrDefault() ?? "";
-            if (ortegastatuscode != "0")
+            using var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
+            if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
+
+            await using var stream = await respMsg.Content.ReadAsStreamAsync();
+            if (respMsg.Headers.TryGetValues("ortegastatuscode", out var headers2))
             {
-                var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(stream);
+                var ortegastatuscode = headers2.FirstOrDefault() ?? "";
+                if (ortegastatuscode != "0")
+                {
+                    var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(stream);
 
-                if (apiErrResponse.ErrorCode == ErrorCode.InvalidRequestHeader) log(ResourceStrings.Login_expired__please_log_in_again);
+                    if (apiErrResponse.ErrorCode == ErrorCode.InvalidRequestHeader) log(ResourceStrings.Login_expired__please_log_in_again);
 
-                if (apiErrResponse.ErrorCode == ErrorCode.AuthLoginInvalidRequest) log(ResourceStrings.Login_failed__please_check_your_account_configuration);
+                    if (apiErrResponse.ErrorCode == ErrorCode.AuthLoginInvalidRequest) log(ResourceStrings.Login_failed__please_check_your_account_configuration);
 
-                if (apiErrResponse.ErrorCode == ErrorCode.CommonNoSession) log(Masters.TextResourceTable.GetErrorCodeMessage(ErrorCode.CommonNoSession));
+                    if (apiErrResponse.ErrorCode == ErrorCode.CommonNoSession) log(Masters.TextResourceTable.GetErrorCodeMessage(ErrorCode.CommonNoSession));
 
-                var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
-                log(uri.ToString());
-                log($"{errorCodeMessage}");
-                log(req.ToJson());
-                log(apiErrResponse.ToJson());
-                throw new ApiErrorException(apiErrResponse.ErrorCode);
+                    var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
+                    log(uri.ToString());
+                    log($"{errorCodeMessage}");
+                    log(req.ToJson());
+                    log(apiErrResponse.ToJson());
+                    throw new ApiErrorException(apiErrResponse.ErrorCode);
+                }
             }
+
+            var response = MessagePackSerializer.Deserialize<TResp>(stream);
+            // if (Debugger.IsAttached) log(response.ToJson());
+            if (response is IUserSyncApiResponse userSyncApiResponse) userData?.Invoke(userSyncApiResponse.UserSyncData);
+
+            return response;
         }
-
-        var response = MessagePackSerializer.Deserialize<TResp>(stream);
-        // if (Debugger.IsAttached) log(response.ToJson());
-        if (response is IUserSyncApiResponse userSyncApiResponse) userData?.Invoke(userSyncApiResponse.UserSyncData);
-
-        return response;
+        catch (TaskCanceledException e)
+        {
+            throw new Exception(ResourceStrings.Request_timed_out__check_your_network);
+        }
     }
 }

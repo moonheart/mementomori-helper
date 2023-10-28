@@ -438,4 +438,7 @@
   <data name="Operation" xml:space="preserve">
       <value>Operation</value>
   </data>
+  <data name="Request timed out, check your network" xml:space="preserve">
+      <value>Request timed out, check your network.</value>
+  </data>
 </root>

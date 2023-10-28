@@ -332,4 +332,7 @@
     <data name="Operation" xml:space="preserve">
         <value>조작</value>
     </data>
+    <data name="Request timed out, check your network" xml:space="preserve">
+        <value>요청 시간이 초과되었습니다. 네트워크를 확인하세요.</value>
+    </data>
 </root>
