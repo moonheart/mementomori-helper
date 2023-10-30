@@ -984,10 +984,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public async Task Debug()
     {
-        await ExecuteQuickAction(async (log, token) =>
-        {
-            
-        });
+        await ExecuteQuickAction(async (log, token) => { });
     }
 
     public async Task LogDebug()
@@ -1764,6 +1761,11 @@ public partial class MementoMoriFuncs : ReactiveObject
                 while (!token.IsCancellationRequested)
                 {
                     await Task.Delay(1000);
+                    if (localRaidReceiver.IsNoRemainingChallenges)
+                    {
+                        return;
+                    }
+
                     if (localRaidReceiver.IsBattleStarted)
                     {
                         await Task.Delay(1000);

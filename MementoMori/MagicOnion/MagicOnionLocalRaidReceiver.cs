@@ -5,17 +5,18 @@ using MementoMori.Ortega.Share.MagicOnionShare.Response;
 
 namespace MementoMori.MagicOnion;
 
-public class MagicOnionLocalRaidReceiver: IMagicOnionLocalRaidReceiver, IMagicOnionErrorReceiver
+public class MagicOnionLocalRaidReceiver : IMagicOnionLocalRaidReceiver, IMagicOnionErrorReceiver
 {
     private readonly OrtegaMagicOnionClient _ortegaMagicOnionClient;
-    
+
     public MagicOnionLocalRaidReceiver(OrtegaMagicOnionClient ortegaMagicOnionClient)
     {
         _ortegaMagicOnionClient = ortegaMagicOnionClient;
     }
-    
+
     public long QuestId { get; set; }
     public bool IsBattleStarted { get; private set; }
+    public bool IsNoRemainingChallenges { get; private set; }
 
     public void OnGetRoomList(OnGetRoomListResponse response)
     {
@@ -78,6 +79,13 @@ public class MagicOnionLocalRaidReceiver: IMagicOnionLocalRaidReceiver, IMagicOn
             case ErrorCode.MagicOnionLocalRaidJoinRandomRoomNotExistRoom:
                 await Task.Delay(500);
                 _ortegaMagicOnionClient.SendLocalRaidJoinRandomRoom(QuestId);
+                break;
+            case ErrorCode.MagicOnionLocalRaidInviteNoRemainingChallenges:
+            case ErrorCode.MagicOnionLocalRaidJoinRoomNoRemainingChallenges:
+            case ErrorCode.MagicOnionLocalRaidOpenRoomNoRemainingChallenges:
+            case ErrorCode.MagicOnionLocalRaidJoinFriendRoomNoRemainingChallenges:
+            case ErrorCode.MagicOnionLocalRaidJoinRandomRoomNoRemainingChallenges:
+                IsNoRemainingChallenges = true;
                 break;
         }
     }
