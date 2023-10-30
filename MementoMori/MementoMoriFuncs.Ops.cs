@@ -52,6 +52,8 @@ using TradeShopGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Trade
 using TradeShopGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.TradeShop.GetListResponse;
 using System.Xml.Linq;
 using MementoMori.Common.Localization;
+using MementoMori.MagicOnion;
+using MementoMori.Ortega.Common.Enums;
 using MementoMori.Ortega.Network.MagicOnion.Client;
 using MementoMori.Ortega.Share.Data.ApiInterface.GlobalGvg;
 using MementoMori.Ortega.Share.Data.ApiInterface.LocalGvg;
@@ -984,13 +986,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var localRaidInfoResponse = await GetResponse<GetLocalRaidInfoRequest,GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
-            var localRaidQuestMbs = localRaidInfoResponse.OpenLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
-            var localRaidQuestMb = localRaidQuestMbs.FirstOrDefault(d=>d.FixedBattleRewards.Any(x=>x.IsEqual(ItemType.ExchangePlaceItem, 4)));
             
-            var client = NetworkManager.GetOnionClient();
-            client.Connect();
-            client.SendLocalRaidJoinRandomRoom(localRaidQuestMb.Id);
         });
     }
 
@@ -1737,12 +1733,61 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            
-            
+            var localRaidInfoResponse = await GetResponse<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
+            var localRaidQuestMbs = localRaidInfoResponse.OpenLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
+            var localRaidQuestMb = localRaidQuestMbs.FirstOrDefault(d => d.FixedBattleRewards.Any(x => x.IsEqual(ItemType.ExchangePlaceItem, 4)));
+            localRaidQuestMb ??= localRaidQuestMbs.OrderByDescending(d => d.Level).First();
+
+            var client = NetworkManager.GetOnionClient();
+            var localRaidReceiver = new MagicOnionLocalRaidReceiver(client);
+            localRaidReceiver.QuestId = localRaidQuestMb.Id;
+            client.SetupLocalRaid(localRaidReceiver, localRaidReceiver);
+            await client.Connect();
+            while (client.GetState() != HubClientState.Ready)
+            {
+                await Task.Delay(500);
+            }
+
+            CancellationTokenSource keepaliveCts = new CancellationTokenSource();
+            _ = Task.Run(async () =>
+            {
+                while (!keepaliveCts.IsCancellationRequested)
+                {
+                    client.SendKeepAliveAsync();
+                    await Task.Delay(5000);
+                }
+            });
+
+            for (int i = 0; i < 6 && !token.IsCancellationRequested; i++)
+            {
+                client.SendLocalRaidJoinRandomRoom(localRaidQuestMb.Id);
+                while (!token.IsCancellationRequested)
+                {
+                    await Task.Delay(1000);
+                    if (localRaidReceiver.IsBattleStarted)
+                    {
+                        await Task.Delay(1000);
+                        try
+                        {
+                            var battleResultResponse = await GetResponse<GetLocalRaidBattleResultRequest, GetLocalRaidBattleResultResponse>(new GetLocalRaidBattleResultRequest());
+                            var isWinAttacker = battleResultResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
+                            log(isWinAttacker ? "胜利" : "失败");
+                            battleResultResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                            battleResultResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                        }
+                        catch (Exception e)
+                        {
+                            log(e.Message);
+                        }
+
+                        break;
+                    }
+                }
+            }
         });
     }
-    
-    
+
+
     public async Task ExecuteAllQuickAction()
     {
         await GetLoginBonus();

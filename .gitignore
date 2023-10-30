@@ -5,6 +5,7 @@ riderModule.iml
 /_ReSharper.Caches/
 /MementoMori.WebUI/appsettings.dev.json
 /MementoMori.WebUI/Master/
+Master/
 .idea/
 /MementoMori.WebUI/account.xml
 /MementoMori.WebUI/battlePowerDebug/
@@ -16,3 +17,8 @@ usersyncdata.json
 Assets
 appsettings.user.json
 BattleLogs/
+MementoMori.AssetDownloader/Assets
+MementoMori.AssetDownloader/Assets*
+MementoMori.AssetDownloader/apk*
+publish-linux-x64
+publish-win-x64

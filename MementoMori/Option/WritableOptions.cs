@@ -49,11 +49,19 @@ public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
     public void Update(Action<T> applyChanges)
     {
         applyChanges(Value);
-        var fileProvider = _environment.ContentRootFileProvider;
-        var fileInfo = fileProvider.GetFileInfo(_file);
-        var physicalPath = fileInfo.PhysicalPath;
+        string physicalPath;
+        if (_environment != null)
+        {
+            var fileProvider = _environment.ContentRootFileProvider;
+            var fileInfo = fileProvider.GetFileInfo(_file);
+            physicalPath = fileInfo.PhysicalPath;
+        }
+        else
+        {
+            physicalPath = Path.Combine(Directory.GetCurrentDirectory(), _file);
+        }
 
-        var jObject = fileInfo.Exists ? JsonConvert.DeserializeObject<JObject>(File.ReadAllText(physicalPath)) : new JObject();
+        var jObject = physicalPath != null && File.Exists(physicalPath) ? JsonConvert.DeserializeObject<JObject>(File.ReadAllText(physicalPath)) : new JObject();
         var sectionObject = jObject.TryGetValue(_section, out var section) ? JsonConvert.DeserializeObject<T>(section.ToString()) : Value ?? new T();
 
         applyChanges(sectionObject);

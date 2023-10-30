@@ -31,15 +31,16 @@ namespace MementoMori.Ortega.Network.MagicOnion.Client
             _internalDisconnectReceiver = internalDisconnectReceiver;
 		}
 
-		protected override async void ConnectHub()
+		protected override async Task ConnectHub()
         {
             ChangeState(HubClientState.Connecting);
             _sender = await StreamingHubClient.ConnectAsync<TSender, TReceiver>(_channel, _internalReceiver);
         }
 
-		protected override void Authenticate()
+		protected override Task Authenticate()
 		{
-			base.ChangeState(HubClientState.Authenticating);
+            base.ChangeState(HubClientState.Authenticating);
+            return Task.CompletedTask;
 		}
 
 		protected override void SucceededAuthentication()

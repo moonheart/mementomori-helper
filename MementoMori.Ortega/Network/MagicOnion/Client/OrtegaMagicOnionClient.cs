@@ -279,7 +279,7 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
             }
 		}
 
-		protected override void Authenticate()
+		protected override async Task Authenticate()
 		{
             if (_sender != null)
             {
@@ -289,9 +289,9 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
                     AuthToken = _authToken,
                     DeviceType = DeviceType.Android
                 };
-                _sender.AuthenticateAsync(authenticateRequest);
+                await _sender.AuthenticateAsync(authenticateRequest);
+                await base.Authenticate();
             }
-			base.Authenticate();
 		}
 
 		void IDisconnectReceiver.OnDisconnect()
@@ -304,18 +304,22 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 			this.SucceededAuthentication();
 			if (this._authenticateReceiver != null)
             {
+                _authenticateReceiver.OnAuthenticateSuccess();
             }
 			if (this._gvgLocalReceiver != null)
 			{
+                _gvgLocalReceiver.OnAuthenticateSuccess();
 			}
 			if (this._gvgGlobalReceiver != null)
 			{
+                _gvgGlobalReceiver.OnAuthenticateSuccess();
 			}
 		}
 
 		void IOrtegaReceiver.OnError(ErrorCode errorCode)
 		{
-            string text = string.Format("OnError : ErrorCode -> {0}", errorCode);
+            string text = string.Format("OnError : ErrorCode -> {0}", Masters.TextResourceTable.GetErrorCodeMessage(errorCode));
+            Console.WriteLine(text);
             if (errorCode > ErrorCode.MagicOnionLocalRaidLeaveRoomNotExistRoom)
             {
                 if (errorCode == ErrorCode.MagicOnionLocalRaidExpiredLocalRaidQuest)
@@ -329,9 +333,11 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
             }
             if (_errorReceiver != null)
             {
+                _errorReceiver.OnError(errorCode);
             }
-            if (_localRaidNotificaiton == null)
+            if (_localRaidNotificaiton != null)
             {
+                _localRaidNotificaiton.OnError(errorCode);
             }
 		}
 

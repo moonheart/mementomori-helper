@@ -45,6 +45,7 @@ public class MementoNetworkManager
     private LoginRequest _lastLoginRequest;
 
     public long UserId { get; set; }
+    public long PlayerId { get; set; }
     public CultureInfo CultureInfo { get; private set; } = new("zh-CN");
     public LanguageType LanguageType => parseLanguageType(CultureInfo);
 
@@ -245,12 +246,13 @@ public class MementoNetworkManager
         {
             PlayerId = playerDataInfo.PlayerId, Password = playerDataInfo.Password
         }, log);
+        PlayerId = playerDataInfo.PlayerId;
         AuthTokenOfMagicOnion = loginPlayerResp.AuthTokenOfMagicOnion;
     }
 
     public OrtegaMagicOnionClient GetOnionClient()
     {
-        var ortegaMagicOnionClient = new OrtegaMagicOnionClient(_grpcChannel, UserId, AuthTokenOfMagicOnion, new MagicOnionLocalRaidNotificaiton());
+        var ortegaMagicOnionClient = new OrtegaMagicOnionClient(_grpcChannel, PlayerId, AuthTokenOfMagicOnion, new MagicOnionLocalRaidNotificaiton());
         return ortegaMagicOnionClient;
     }
 

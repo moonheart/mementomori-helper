@@ -36,6 +36,7 @@ public class TimeZoneAwareJobRegister
         RemoveJob<PvpJob>(scheduler, userId);
         RemoveJob<GuildRaidBossReleaseJob>(scheduler, userId);
         RemoveJob<AutoBuyShopItemJob>(scheduler, userId);
+        RemoveJob<LocalRaidJob>(scheduler, userId);
     }
 
     public async Task RegisterJobs(long userId)
@@ -57,6 +58,7 @@ public class TimeZoneAwareJobRegister
             AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.Value.AutoJob.GuildRaidBossReleaseCron, Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]"), userId,
                 networkManager.TimeManager.DiffFromUtc);
             AddJob<AutoBuyShopItemJob>(scheduler, _gameConfig.Value.AutoJob.AutoBuyShopItemJobCron, ResourceStrings.ShopAutoBuyItems, userId, networkManager.TimeManager.DiffFromUtc);
+            AddJob<LocalRaidJob>(scheduler, _gameConfig.Value.AutoJob.AutoLocalRaidJobCron, Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]"), userId, networkManager.TimeManager.DiffFromUtc);
         }
         catch (Exception e)
         {

@@ -49,6 +49,7 @@ public class AccountManager : ReactiveObject
             };
             account.Funcs.NetworkManager = account.NetworkManager;
             account.Funcs.UserId = userId;
+            account.NetworkManager.UserId = userId;
             _accounts[userId] = account;
         }
 

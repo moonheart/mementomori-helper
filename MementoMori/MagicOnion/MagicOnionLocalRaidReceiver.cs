@@ -1,57 +1,84 @@
-﻿using MementoMori.Ortega.Network.MagicOnion.Interface;
+﻿using MementoMori.Ortega.Network.MagicOnion.Client;
+using MementoMori.Ortega.Network.MagicOnion.Interface;
+using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.MagicOnionShare.Response;
 
 namespace MementoMori.MagicOnion;
 
-public class MagicOnionLocalRaidReceiver: IMagicOnionLocalRaidReceiver
+public class MagicOnionLocalRaidReceiver: IMagicOnionLocalRaidReceiver, IMagicOnionErrorReceiver
 {
+    private readonly OrtegaMagicOnionClient _ortegaMagicOnionClient;
+    
+    public MagicOnionLocalRaidReceiver(OrtegaMagicOnionClient ortegaMagicOnionClient)
+    {
+        _ortegaMagicOnionClient = ortegaMagicOnionClient;
+    }
+    
+    public long QuestId { get; set; }
+    public bool IsBattleStarted { get; private set; }
+
     public void OnGetRoomList(OnGetRoomListResponse response)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("OnGetRoomList");
     }
 
     public void OnDisbandRoom()
     {
-        throw new NotImplementedException();
+        Console.WriteLine("OnDisbandRoom");
+        _ortegaMagicOnionClient.SendLocalRaidJoinRandomRoom(QuestId);
     }
 
     public void OnInvite(OnInviteResponse response)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("OnInvite");
     }
 
     public void OnLeaveRoom()
     {
-        throw new NotImplementedException();
+        Console.WriteLine("OnLeaveRoom");
+        _ortegaMagicOnionClient.SendLocalRaidJoinRandomRoom(QuestId);
     }
 
     public void OnLockRoom()
     {
-        throw new NotImplementedException();
+        Console.WriteLine("OnLockRoom");
     }
 
     public void OnJoinRoom(OnJoinRoomResponse response)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("OnJoinRoom");
+        _ortegaMagicOnionClient.SendLocalRaidReady(true);
     }
 
     public void OnRefuse()
     {
-        throw new NotImplementedException();
+        Console.WriteLine("OnRefuse");
     }
 
     public void OnStartBattle()
     {
-        throw new NotImplementedException();
+        Console.WriteLine("OnStartBattle");
+        IsBattleStarted = true;
     }
 
     public void OnUpdateRoom(OnUpdateRoomResponse response)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("OnUpdateRoom");
     }
 
     public void OnUpdatePartyCount(OnUpdatePartyCountResponse response)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("OnUpdatePartyCount");
+    }
+
+    public async void OnError(ErrorCode errorCode)
+    {
+        switch (errorCode)
+        {
+            case ErrorCode.MagicOnionLocalRaidJoinRandomRoomNotExistRoom:
+                await Task.Delay(500);
+                _ortegaMagicOnionClient.SendLocalRaidJoinRandomRoom(QuestId);
+                break;
+        }
     }
 }
