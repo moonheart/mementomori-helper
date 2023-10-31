@@ -150,7 +150,7 @@ services:
       - ${PWD}/appsettings.user.json:/app/appsettings.user.json:rw
 ```
 
-- 启动或更新: `docker compose up -d —pull always`
+- 启动或更新: `docker compose up -d --pull always`
 - 停止: `docker compose down`
 - 查看日志: `docker compose logs -f`
 

@@ -153,7 +153,7 @@ services:
       - ${PWD}/appsettings.user.json:/app/appsettings.user.json:rw
 ```
 
-- Start or update: `docker compose up -d —pull always`
+- Start or update: `docker compose up -d --pull always`
 - Stop: `docker compose down`
 - View logs: `docker compose logs -f`
 
