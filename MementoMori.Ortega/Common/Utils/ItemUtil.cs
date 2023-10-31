@@ -58,13 +58,18 @@ namespace MementoMori.Ortega.Common.Utils
                     return Masters.TextResourceTable.Get("[CommonItemEquipmentFragmentFormat]", name);
                 }
                 case ItemType.Character:
+                {
+                    var characterMb = Masters.CharacterTable.GetById(itemId);
+                    var combinedName = characterMb.GetCombinedName();
+                    return combinedName;
+                }
+                case ItemType.CharacterFragment:
+                {
                     var characterMb = Masters.CharacterTable.GetById(itemId);
                     var combinedName = characterMb.GetCombinedName();
                     return Masters.TextResourceTable.Get("[CommonItemCharacterFragment]", combinedName);
-                case ItemType.CharacterFragment:
-                    var characterFragmentMb = Masters.CharacterTable.GetById(itemId);
-                    return Masters.TextResourceTable.Get(characterFragmentMb.NameKey);
                     break;
+                }
                 case ItemType.DungeonBattleRelic:
                     var dungeonBattleRelicMb = Masters.DungeonBattleRelicTable.GetById(itemId);
                     return Masters.TextResourceTable.Get(dungeonBattleRelicMb.NameKey);
