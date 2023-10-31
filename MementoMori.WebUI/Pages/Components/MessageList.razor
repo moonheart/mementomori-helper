@@ -2,6 +2,9 @@
 @using System.Reactive.Concurrency
 @using System.Reactive.Linq
 @using DynamicData.Binding
+
+@inherits MementoMori.WebUI.Models.AccountComponent
+
 <MudSimpleTable Elevation="0" Dense="true">
     <tbody style="max-height: 350px; overflow: auto" class="d-flex flex-column-reverse">
     @foreach (var msg in _messageList)
@@ -15,47 +18,33 @@
 
 @code {
 
-    [Parameter]
-    public ObservableCollection<string> Messages
-    {
-        get => _messages;
-        set
-        {
-            _messages = value;
-            OnMessageChanged();
-        }
-    }
-
-    private List<string> _messageList = new();
-    private ObservableCollection<string> _messages;
-
-    private void OnMessageChanged()
+    protected override async Task AccountChanged()
     {
         try
         {
-            _messageList = Messages.ToList();
+            Funcs.MesssageList.ObserveCollectionChanges().Throttle(TimeSpan.FromMilliseconds(50)).Subscribe(set =>
+            {
+                try
+                {
+                    _messageList.Clear();
+                    _messageList = Funcs.MesssageList.ToList();
+                }
+                catch
+                {
+                    return;
+                }
+                InvokeAsync(StateHasChanged);
+            });
         }
         catch
         {
     // ignored
         }
-        Messages.ObserveCollectionChanges().Throttle(TimeSpan.FromMilliseconds(50)).Subscribe(set =>
+        finally
         {
-            try
-            {
-                _messageList = Messages.ToList();
-            }
-            catch
-            {
-                return;
-            }
-            InvokeAsync(StateHasChanged);
-        });
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
-    protected override void OnInitialized()
-    {
-        OnMessageChanged();
-    }
-
+    private List<string> _messageList = new();
 }
