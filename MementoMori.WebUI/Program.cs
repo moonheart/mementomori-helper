@@ -10,12 +10,20 @@ using Quartz;
 using ReactiveUI;
 using MementoMori.WebUI;
 using MementoMori.WebUI.Pages;
+using Sentry;
 
 internal class Program
 {
     public static void Main(string[] args)
     {
         PlatformRegistrationManager.SetRegistrationNamespaces(RegistrationNamespace.Blazor);
+        SentrySdk.ConfigureScope(scope =>
+        {
+            scope.User = new User()
+            {
+                IpAddress = "{{auto}}"
+            };
+        });
         var builder = WebApplication.CreateBuilder(args);
 
         builder.WebHost.UseSentry(o =>
