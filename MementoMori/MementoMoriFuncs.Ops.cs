@@ -1730,14 +1730,9 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var localRaidInfoResponse = await GetResponse<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
-            var localRaidQuestMbs = localRaidInfoResponse.OpenLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
-            var localRaidQuestMb = localRaidQuestMbs.FirstOrDefault(d => d.FixedBattleRewards.Any(x => x.IsEqual(ItemType.ExchangePlaceItem, 4)));
-            localRaidQuestMb ??= localRaidQuestMbs.OrderByDescending(d => d.Level).First();
-
+            // 奖励: 经验珠 强化水 強化秘薬 潜在宝珠 符石兑换券
             var client = NetworkManager.GetOnionClient();
-            var localRaidReceiver = new MagicOnionLocalRaidReceiver(client);
-            localRaidReceiver.QuestId = localRaidQuestMb.Id;
+            var localRaidReceiver = new MagicOnionLocalRaidReceiver(client, log);
             client.SetupLocalRaid(localRaidReceiver, localRaidReceiver);
             await client.Connect();
             while (client.GetState() != HubClientState.Ready)
@@ -1755,9 +1750,14 @@ public partial class MementoMoriFuncs : ReactiveObject
                 }
             });
 
-            for (int i = 0; i < 6 && !token.IsCancellationRequested; i++)
+            while (!token.IsCancellationRequested)
             {
-                client.SendLocalRaidJoinRandomRoom(localRaidQuestMb.Id);
+                var localRaidInfoResponse = await GetResponse<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
+                var questId = GetQuestId(localRaidInfoResponse);
+                localRaidReceiver.QuestId = questId;
+
+                log(TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
+                client.SendLocalRaidJoinRandomRoom(questId);
                 while (!token.IsCancellationRequested)
                 {
                     await Task.Delay(1000);
@@ -1768,7 +1768,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
                     if (localRaidReceiver.IsBattleStarted)
                     {
-                        await Task.Delay(1000);
+                        await Task.Delay(2000);
                         try
                         {
                             var battleResultResponse = await GetResponse<GetLocalRaidBattleResultRequest, GetLocalRaidBattleResultResponse>(new GetLocalRaidBattleResultRequest());
@@ -1784,6 +1784,25 @@ public partial class MementoMoriFuncs : ReactiveObject
 
                         break;
                     }
+                }
+            }
+
+            long GetQuestId(GetLocalRaidInfoResponse response)
+            {
+                if (response.OpenEventLocalRaidQuestIds.Count > 0)
+                {
+                    var localRaidQuestMbs = response.OpenEventLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
+                    var localRaidQuestMb = localRaidQuestMbs.OrderByDescending(d => response.ClearCountDict.TryGetValue(d.Id, out var c)
+                        ? c > 0 ? d.FixedBattleRewards[0].ItemCount : d.FirstBattleRewards[0].ItemCount
+                        : d.FirstBattleRewards[0].ItemCount).First();
+                    return localRaidQuestMb.Id;
+                }
+                else
+                {
+                    var localRaidQuestMbs = response.OpenLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
+                    var localRaidQuestMb = localRaidQuestMbs.FirstOrDefault(d => d.FixedBattleRewards.Any(x => x.IsEqual(ItemType.ExchangePlaceItem, 4)));
+                    localRaidQuestMb ??= localRaidQuestMbs.OrderByDescending(d => d.Level).First();
+                    return localRaidQuestMb.Id;
                 }
             }
         });

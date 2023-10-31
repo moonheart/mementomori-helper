@@ -283,6 +283,7 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 		{
             if (_sender != null)
             {
+                await base.Authenticate();
                 AuthenticateRequest authenticateRequest = new AuthenticateRequest()
                 {
                     PlayerId = _playerId,
@@ -290,7 +291,6 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
                     DeviceType = DeviceType.Android
                 };
                 await _sender.AuthenticateAsync(authenticateRequest);
-                await base.Authenticate();
             }
 		}
 
