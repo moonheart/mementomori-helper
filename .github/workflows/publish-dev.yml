@@ -63,6 +63,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Set Version in csproj
+        # replace <Version>0.0.0</Version> with <Version>tag</Version>, where tag is the tag name, tag should trim start "v"
+        run: sed -i "s/<Version>.*<\/Version>/<Version>$(echo ${{github.ref_name}} | sed 's@v@@g')<\/Version>/g" ./MementoMori.WebUI/MementoMori.WebUI.csproj
+        if: startsWith(github.ref, 'refs/tags/')
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
