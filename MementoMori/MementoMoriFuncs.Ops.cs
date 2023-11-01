@@ -1792,9 +1792,15 @@ public partial class MementoMoriFuncs : ReactiveObject
                 if (response.OpenEventLocalRaidQuestIds.Count > 0)
                 {
                     var localRaidQuestMbs = response.OpenEventLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
-                    var localRaidQuestMb = localRaidQuestMbs.OrderByDescending(d => response.ClearCountDict.TryGetValue(d.Id, out var c)
-                        ? c > 0 ? d.FixedBattleRewards[0].ItemCount : d.FirstBattleRewards[0].ItemCount
-                        : d.FirstBattleRewards[0].ItemCount).First();
+                    var localRaidQuestMb = localRaidQuestMbs.OrderByDescending(d =>
+                    {
+                        if (response.ClearCountDict.TryGetValue(d.Id, out var c) && c > 0)
+                        {
+                            return d.FixedBattleRewards[0].ItemCount;
+                        }
+
+                        return d.FixedBattleRewards[0].ItemCount + d.FirstBattleRewards[0].ItemCount;
+                    }).First();
                     return localRaidQuestMb.Id;
                 }
                 else
