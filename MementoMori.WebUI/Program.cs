@@ -37,11 +37,11 @@ internal class Program
 
         builder.Services.AddMudServices();
 
-        builder.Services.AddRazorComponents()
-            .AddInteractiveServerComponents();
+        // builder.Services.AddRazorComponents()
+        //     .AddInteractiveServerComponents();
 
-        //builder.Services.AddRazorPages();
-        //builder.Services.AddServerSideBlazor();
+        builder.Services.AddRazorPages();
+        builder.Services.AddServerSideBlazor();
         builder.Services.AddSingleton<AccountManager>();
         builder.Services.AddTransient<MementoNetworkManager>();
         builder.Services.AddTransient<MementoMoriFuncs>();
@@ -66,14 +66,15 @@ internal class Program
         if (!app.Environment.IsDevelopment()) app.UseExceptionHandler("/Error");
 
         app.UseStaticFiles();
-        app.UseAntiforgery();
-        app.MapRazorComponents<App>()
-            .AddInteractiveServerRenderMode();
-        app.UseSentryTracing();
-        //app.UseRouting();
+        // app.UseAntiforgery();
+        // app.MapRazorComponents<App>()
+        //     .AddInteractiveServerRenderMode();
 
-        //app.MapBlazorHub();
-        //app.MapFallbackToPage("/_Host");
+        app.UseSentryTracing();
+        app.UseRouting();
+
+        app.MapBlazorHub();
+        app.MapFallbackToPage("/_Host");
 
         app.Services.GetRequiredService<AccountManager>().AutoLogin().ConfigureAwait(false).GetAwaiter().GetResult();
 
