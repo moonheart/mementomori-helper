@@ -29,3 +29,9 @@ README.md
 **/runtimeinfo.json
 **/usersyncdata.json
 **/Assets/
+
+MementoMori.AssetDownloader/Assets
+MementoMori.AssetDownloader/Assets*
+MementoMori.AssetDownloader/apk*
+publish-linux-x64
+publish-win-x64

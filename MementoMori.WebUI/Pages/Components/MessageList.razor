@@ -22,11 +22,11 @@
     {
         try
         {
+            _messageList = Funcs.MesssageList.ToList();
             Funcs.MesssageList.ObserveCollectionChanges().Throttle(TimeSpan.FromMilliseconds(50)).Subscribe(set =>
             {
                 try
                 {
-                    _messageList.Clear();
                     _messageList = Funcs.MesssageList.ToList();
                 }
                 catch
