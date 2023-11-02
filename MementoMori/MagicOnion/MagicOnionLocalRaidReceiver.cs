@@ -26,9 +26,10 @@ public class MagicOnionLocalRaidReceiver : IMagicOnionLocalRaidReceiver, IMagicO
     {
     }
 
-    public void OnDisbandRoom()
+    public async void OnDisbandRoom()
     {
         _log(Masters.TextResourceTable.GetErrorCodeMessage(ClientErrorCode.LocalRaidDismissedRoom));
+        await Task.Delay(500);
         _ortegaMagicOnionClient.SendLocalRaidJoinRandomRoom(QuestId);
     }
 
@@ -36,9 +37,10 @@ public class MagicOnionLocalRaidReceiver : IMagicOnionLocalRaidReceiver, IMagicO
     {
     }
 
-    public void OnLeaveRoom()
+    public async void OnLeaveRoom()
     {
         _log(Masters.TextResourceTable.Get("[LocalRaidRoomRefuseReceiveDialogMessage]"));
+        await Task.Delay(500);
         _ortegaMagicOnionClient.SendLocalRaidJoinRandomRoom(QuestId);
     }
 

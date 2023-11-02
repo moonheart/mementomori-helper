@@ -1750,41 +1750,50 @@ public partial class MementoMoriFuncs : ReactiveObject
                 }
             });
 
-            while (!token.IsCancellationRequested)
+            try
             {
-                var localRaidInfoResponse = await GetResponse<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
-                var questId = GetQuestId(localRaidInfoResponse);
-                localRaidReceiver.QuestId = questId;
-
-                log(TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
-                client.SendLocalRaidJoinRandomRoom(questId);
                 while (!token.IsCancellationRequested)
                 {
-                    await Task.Delay(1000);
-                    if (localRaidReceiver.IsNoRemainingChallenges)
-                    {
-                        return;
-                    }
+                    var localRaidInfoResponse = await GetResponse<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
+                    var questId = GetQuestId(localRaidInfoResponse);
+                    localRaidReceiver.QuestId = questId;
 
-                    if (localRaidReceiver.IsBattleStarted)
+                    log(TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
+                    client.SendLocalRaidJoinRandomRoom(questId);
+                    while (!token.IsCancellationRequested)
                     {
-                        await Task.Delay(2000);
-                        try
+                        await Task.Delay(1000);
+                        if (localRaidReceiver.IsNoRemainingChallenges)
                         {
-                            var battleResultResponse = await GetResponse<GetLocalRaidBattleResultRequest, GetLocalRaidBattleResultResponse>(new GetLocalRaidBattleResultRequest());
-                            var isWinAttacker = battleResultResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
-                            log(isWinAttacker ? "胜利" : "失败");
-                            battleResultResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                            battleResultResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
-                        }
-                        catch (Exception e)
-                        {
-                            log(e.Message);
+                            return;
                         }
 
-                        break;
+                        if (localRaidReceiver.IsBattleStarted)
+                        {
+                            await Task.Delay(2000);
+                            try
+                            {
+                                var battleResultResponse = await GetResponse<GetLocalRaidBattleResultRequest, GetLocalRaidBattleResultResponse>(new GetLocalRaidBattleResultRequest());
+                                var isWinAttacker = battleResultResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
+                                log(isWinAttacker ? "胜利" : "失败");
+                                battleResultResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                                battleResultResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                            }
+                            catch (Exception e)
+                            {
+                                log(e.Message);
+                            }
+
+                            break;
+                        }
                     }
                 }
+            }
+            finally
+            {
+                keepaliveCts.Cancel();
+                client.ClearLocalRaidReceiver();
+                await client.DisposeAsync();
             }
 
             long GetQuestId(GetLocalRaidInfoResponse response)
