@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 
 # 设置GitHub仓库信息
 repository="moonheart/mementomori-helper"
@@ -47,7 +47,7 @@ else
     pkill -f "$programFileName" || true
 
     # 复制解压后的文件到程序文件夹
-    cp -R "$tempDir/publish-linux-x64"/* "$downloadDirectory/"
+    cp -Rf "$tempDir/publish-linux-x64"/* "$downloadDirectory/"
 
     # 启动新程序
     nohup "$downloadDirectory/$programFileName" &
