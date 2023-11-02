@@ -105,12 +105,12 @@
         var drawResponse = await ViewModel.GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = buttonGachaButtonId});
         var msg = new StringBuilder();
         gachaCaseInfos = drawResponse.GachaCaseInfoList;
-        drawResponse.GachaRewardItemList.PrintUserItems(s => msg.AppendLine(s));
-        drawResponse.GachaRewardAddItemList.PrintUserItems(s => msg.AppendLine(s));
-        drawResponse.BonusRewardItemList.PrintUserItems(s => msg.AppendLine(s));
-        drawResponse.CharacterReleaseItemList.PrintUserItems(s => msg.AppendLine(s));
+        drawResponse.GachaRewardItemList.PrintUserItems(s => msg.AppendLine(s).AppendLine("<br />"));
+        drawResponse.GachaRewardAddItemList.PrintUserItems(s => msg.AppendLine(s).AppendLine("<br />"));
+        drawResponse.BonusRewardItemList.PrintUserItems(s => msg.AppendLine(s).AppendLine("<br />"));
+        drawResponse.CharacterReleaseItemList.PrintUserItems(s => msg.AppendLine(s).AppendLine("<br />"));
 
-        await DialogService.ShowMessageBox(ResourceStrings.GachaResult, msg.ToString());
+        await DialogService.ShowMessageBox(ResourceStrings.GachaResult, (MarkupString)msg.ToString());
     }
 
     private async Task ShowDetail(GachaCaseInfo gachaCaseInfo)
