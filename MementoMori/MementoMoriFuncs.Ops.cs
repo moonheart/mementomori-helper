@@ -1815,9 +1815,28 @@ public partial class MementoMoriFuncs : ReactiveObject
                 else
                 {
                     var localRaidQuestMbs = response.OpenLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
-                    var localRaidQuestMb = localRaidQuestMbs.FirstOrDefault(d => d.FixedBattleRewards.Any(x => x.IsEqual(ItemType.ExchangePlaceItem, 4)));
-                    localRaidQuestMb ??= localRaidQuestMbs.OrderByDescending(d => d.Level).First();
-                    return localRaidQuestMb.Id;
+                    var rewardItems = _writableGameConfig.Value.LocalRaid.RewardItems;
+                    if (rewardItems.Count == 0)
+                    {
+                        return localRaidQuestMbs.OrderByDescending(d => d.Level).First().Id;
+                    }
+
+                    return localRaidQuestMbs.Select(d =>
+                    {
+                        var count = 0D;
+                        foreach (var rewardItem in rewardItems)
+                        {
+                            foreach (var reward in d.FixedBattleRewards)
+                            {
+                                if (reward.IsEqual(rewardItem.ItemType, rewardItem.ItemId))
+                                {
+                                    count += reward.ItemCount * rewardItem.Weight;
+                                }
+                            }
+                        }
+
+                        return new {quest = d, count};
+                    }).OrderByDescending(d => d.count).First().quest.Id;
                 }
             }
         });

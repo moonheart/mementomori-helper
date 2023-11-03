@@ -7,12 +7,15 @@ public class AuthOption
 {
     [Obsolete]
     public string ClientKey { get; set; }
+
     public string DeviceToken { get; set; }
     public string AppVersion { get; set; }
     public string OSVersion { get; set; }
     public string ModelName { get; set; }
+
     [Obsolete]
     public long UserId { get; set; }
+
     public long LastLoginUserId { get; set; }
 
     public List<AccountInfo> Accounts { get; set; } = new();
@@ -91,6 +94,33 @@ public class GameConfig
         public int AutoRefreshCount { get; set; }
     }
 
+    public class WeightedItem : IUserItem
+    {
+        public WeightedItem(ItemType itemType, long itemId, double weight)
+        {
+            ItemId = itemId;
+            ItemType = itemType;
+            Weight = weight;
+        }
+
+        public long ItemCount { get; set; }
+        public long ItemId { get; set;}
+        public ItemType ItemType { get; set;}
+        public double Weight { get; set; }
+    }
+
+    public class LocalRaidConfig
+    {
+        public List<WeightedItem> RewardItems { get; set; } = new();
+        // {
+        //     new WeightedItem(ItemType.ExchangePlaceItem, 4, 4), // 符石兑换券
+        //     new WeightedItem(ItemType.CharacterTrainingMaterial, 2, 3), // 潜能宝珠
+        //     new WeightedItem(ItemType.EquipmentReinforcementItem, 2, 2.5), // 强化秘药
+        //     new WeightedItem(ItemType.CharacterTrainingMaterial, 1, 2), // 经验珠
+        //     new WeightedItem(ItemType.EquipmentReinforcementItem, 1, 1), // 强化水
+        // };
+    }
+
     public class DungeonBattleConfig
     {
         public List<ShopDiscountItem> ShopTargetItems { get; set; } = new();
@@ -117,5 +147,6 @@ public class GameConfig
     public BountyQuestAutoModel BountyQuestAuto { get; set; } = new();
     public DungeonBattleConfig DungeonBattle { get; set; } = new();
     public ShopConfig Shop { get; set; } = new();
+    public LocalRaidConfig LocalRaid { get; set; } = new();
     public LoginConfig Login { get; set; } = new();
 }
