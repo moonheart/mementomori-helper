@@ -1,4 +1,5 @@
-﻿using MementoMori.Ortega.Common.Utils;
+﻿using MementoMori.Common.Localization;
+using MementoMori.Ortega.Common.Utils;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Item;
@@ -20,7 +21,7 @@ public static class GameExtensions
         {
             var itemName = ItemUtil.GetItemName(userItem.ItemType, userItem.ItemId);
             var itemRarity = ItemUtil.GetItemRarity(userItem.ItemType, userItem.ItemId);
-            log($"名称：{itemName}, 稀有度: {itemRarity}, 数量： {userItem.ItemCount}");
+            log($"{ResourceStrings.Name}: {itemName}({itemRarity}{itemRarity}) × {userItem.ItemCount}");
         }
     }
     public static void PrintUserItems(this IEnumerable<IUserCharacterItem> userItems, Action<string> log)
@@ -34,8 +35,7 @@ public static class GameExtensions
         {
             var itemName = ItemUtil.GetItemName(userItem.Item.ItemType, userItem.Item.ItemId);
             var itemRarity = ItemUtil.GetItemRarity(userItem.Item.ItemType, userItem.Item.ItemId);
-            log($"名称：{itemName}, 稀有度: {itemRarity}, 数量： {userItem.Item.ItemCount}");
-        }
+            log($"{ResourceStrings.Name}: {itemName}({itemRarity}{itemRarity}) × {userItem.Item.ItemCount}");}
     }
     public static void PrintCharacterDtos(this IEnumerable<UserCharacterDtoInfo> userItems, Action<string> log)
     {
@@ -48,7 +48,7 @@ public static class GameExtensions
         {
             var characterMb = Masters.CharacterTable.GetById(userItem.CharacterId);
             var name = Masters.TextResourceTable.Get(characterMb.NameKey);
-            log($"名称：{name}, 稀有度: {characterMb.RarityFlags}, 等级： {userItem.Level}");
+            log($"{ResourceStrings.Name}: {name}({characterMb.RarityFlags}) Lv{userItem.Level}");
         }
     }
 

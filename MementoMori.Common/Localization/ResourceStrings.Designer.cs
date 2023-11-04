@@ -609,6 +609,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No available support characters found..
+        /// </summary>
+        public static string No_available_support_characters_found_ {
+            get {
+                return ResourceManager.GetString("No available support characters found.", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Available {0}.
         /// </summary>
         public static string NoAvailable {
@@ -875,6 +884,15 @@ namespace MementoMori.Common.Localization {
         public static string Save_successful {
             get {
                 return ResourceManager.GetString("Save successful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select tasks based on reward quantity and weight.
+        /// </summary>
+        public static string Select_tasks_based_on_reward_quantity_and_weight {
+            get {
+                return ResourceManager.GetString("Select tasks based on reward quantity and weight", resourceCulture);
             }
         }
         

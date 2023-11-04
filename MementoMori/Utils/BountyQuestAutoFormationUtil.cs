@@ -1,5 +1,6 @@
 ﻿using DynamicData;
 using MementoMori.Common;
+using MementoMori.Common.Localization;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest;
@@ -160,7 +161,7 @@ public static class BountyQuestAutoFormationUtil
             if (bountyQuestData.ElementTypes.Contains(characterMb.ElementType)) return info;
         }
 
-        throw new Exception("找不到可用的资源角色");
+        throw new Exception(ResourceStrings.No_available_support_characters_found_);
     }
 
     private static List<UserCharacterDtoInfo> SortGuerrilla(List<UserCharacterDtoInfo> characterDtoInfos)

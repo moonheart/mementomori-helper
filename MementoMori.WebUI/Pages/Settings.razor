@@ -195,11 +195,11 @@
                     <MudText>@Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]")</MudText>
                 </CardHeaderContent>
                 <CardHeaderActions>
-                    <MudButton Variant="Variant.Outlined" OnClick="SaveLocalRaidConfig">保存</MudButton>
+                    <MudButton Variant="Variant.Outlined" OnClick="SaveLocalRaidConfig">@Masters.TextResourceTable.Get("[CommonSaveLabel]")</MudButton>
                 </CardHeaderActions>
             </MudCardHeader>
             <MudCardContent>
-                <MudField Label="按照报酬数量和权重选择任务" Variant="Variant.Outlined">
+                <MudField Label="@ResourceStrings.Select_tasks_based_on_reward_quantity_and_weight" Variant="Variant.Outlined">
                     @foreach (var reward in localRaidRewardItems)
                     {
                         <MudNumericField Label="@ItemUtil.GetItemName(reward.ItemType, reward.ItemId)" Margin="Margin.None" @bind-Value="reward.Weight" />

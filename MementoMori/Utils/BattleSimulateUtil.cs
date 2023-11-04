@@ -30,7 +30,7 @@ public static class BattleSimulateUtil
         var desc = effect.EffectType.GetDesc();
         if (effect.EffectType < EffectType.SpeedUp)
         {
-            return $"无";
+            return $"None";
         }
         if (effect.EffectType < EffectType.HitRateUp)
         {

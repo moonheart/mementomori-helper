@@ -207,7 +207,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 if (TimeManager.ServerNow.Hour >= 4)
                 {
                     var bonus = await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(new ReceiveDailyLoginBonusRequest() {ReceiveDay = TimeManager.ServerNow.Day});
-                    log($"{TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")}：\n");
+                    log($"{TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")}:\n");
                     bonus.RewardItemList.PrintUserItems(log);
                 }
 
@@ -430,7 +430,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         });
                     if (bossQuickResponse.BattleRewardResult == null) return;
 
-                    log($"{TextResourceTable.Get("[AutoBattleButtonQuickForward]")}：\n");
+                    log($"{TextResourceTable.Get("[AutoBattleButtonQuickForward]")}:\n");
                     bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
                     bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
                 }
@@ -445,7 +445,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                             });
                         if (bossQuickResponse.BattleRewardResult == null) return;
 
-                        log($"{TextResourceTable.Get("[AutoBattleButtonQuickForward]")}：\n");
+                        log($"{TextResourceTable.Get("[AutoBattleButtonQuickForward]")}:\n");
                         bossQuickResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
                         bossQuickResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
                     }
@@ -495,7 +495,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             try
             {
                 var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
-                log($"{TextResourceTable.Get("[CommonHeaderTowerBattleLabel]")}：\n");
+                log($"{TextResourceTable.Get("[CommonHeaderTowerBattleLabel]")}:\n");
 
                 if (IsBossBattleQuickAvailable)
                 {
@@ -538,7 +538,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log($"{TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")}：\n");
+            log($"{TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")}:\n");
             for (var i = 0; i < 5; i++)
             {
                 var pvpInfoResponse = await GetResponse<GetPvpInfoRequest, GetPvpInfoResponse>(
@@ -573,7 +573,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 return;
             }
 
-            log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}：\n");
+            log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}:\n");
             var getListResponse = await GetResponse<BountyQuestGetListRequest, BountyQuestGetListResponse>(
                 new BountyQuestGetListRequest());
 
@@ -938,7 +938,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             }
             else
             {
-                log($"{TextResourceTable.Get("[AutoBattleButtonQuickForward]")}{TextResourceTable.Get("[CommonRewardLabel]")}：\n");
+                log($"{TextResourceTable.Get("[AutoBattleButtonQuickForward]")}{TextResourceTable.Get("[CommonRewardLabel]")}:\n");
                 await BattleQuick(log, QuestQuickExecuteType.Currency, 1);
             }
         });
@@ -1774,7 +1774,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                             {
                                 var battleResultResponse = await GetResponse<GetLocalRaidBattleResultRequest, GetLocalRaidBattleResultResponse>(new GetLocalRaidBattleResultRequest());
                                 var isWinAttacker = battleResultResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
-                                log(isWinAttacker ? "胜利" : "失败");
+                                log(isWinAttacker ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]"));
                                 battleResultResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
                                 battleResultResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
                             }

@@ -335,4 +335,10 @@
     <data name="Request timed out, check your network" xml:space="preserve">
         <value>요청 시간이 초과되었습니다. 네트워크를 확인하세요.</value>
     </data>
+    <data name="No available support characters found." xml:space="preserve">
+        <value>사용 가능한 지원 캐릭터를 찾을 수 없습니다.</value>
+    </data>
+    <data name="Select tasks based on reward quantity and weight" xml:space="preserve">
+        <value>보상 수량과 가중치에 따라 작업을 선택합니다</value>
+    </data>
 </root>

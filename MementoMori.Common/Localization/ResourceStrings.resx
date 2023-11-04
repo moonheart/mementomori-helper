@@ -441,4 +441,10 @@
   <data name="Request timed out, check your network" xml:space="preserve">
       <value>Request timed out, check your network.</value>
   </data>
+  <data name="No available support characters found." xml:space="preserve">
+      <value>No available support characters found.</value>
+  </data>
+  <data name="Select tasks based on reward quantity and weight" xml:space="preserve">
+      <value>Select tasks based on reward quantity and weight</value>
+  </data>
 </root>
