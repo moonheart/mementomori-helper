@@ -23,6 +23,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("Local GVG 受け取り可能なギルドバトル報酬がある場合")]
 		LocalGvgReward,
 		[Description("Global GVG 受け取り可能なギルドバトル報酬がある場合")]
-		GlobalGvgReward
+		GlobalGvgReward,
+        [Description("新しく登録された回収アイテムがある場合")]
+        NewRetrieveItem
 	}
 }

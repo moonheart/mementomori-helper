@@ -94,43 +94,32 @@ namespace MementoMori.Ortega.Share.Master.Data
 		public string EndTime { get; }
 
 		[PropertyOrder(21)]
-		[Description("キャラクター座標X")]
-		public float CharacterImageX { get; }
-
-		[PropertyOrder(22)]
-		[Description("キャラクター座標Y")]
-		public float CharacterImageY { get; }
-
-		[PropertyOrder(23)]
-		[Description("キャラクタースケール")]
-		public float CharacterImageScale { get; }
-
-		[PropertyOrder(24)]
 		[Description("バナーテキスト")]
 		public string BannerText { get; }
 
-		[PropertyOrder(25)]
+		[PropertyOrder(22)]
 		[Description("ギルドレイドボタン座標U")]
 		public float GuildRaidButtonU { get; }
 
-		[PropertyOrder(26)]
+		[PropertyOrder(23)]
 		[Description("ギルドレイドボタン座標V")]
 		public float GuildRaidButtonV { get; }
 
-		[PropertyOrder(27)]
+		[PropertyOrder(24)]
 		[Description("ワールド報酬キャラ画像座標X")]
 		public float WorldDamageBarRewardCharacterImageX { get; }
 
-		[PropertyOrder(28)]
+		[PropertyOrder(25)]
 		[Description("ワールド報酬キャラ画像座標Y")]
 		public float WorldDamageBarRewardCharacterImageY { get; }
 
-		[PropertyOrder(29)]
+		[PropertyOrder(26)]
 		[Description("ワールド報酬キャラ画像サイズ")]
 		public float WorldDamageBarRewardCharacterImageSize { get; }
 
+
         [SerializationConstructor]
-        public GuildRaidBossMB(long id, bool? isIgnore, string memo, BaseParameter baseParameter, BattleParameter battleParameter, UnitIconType unitIconType, long unitIconId, long normalSkillId, GuildRaidBossType guildRaidBossType, long releasableGuildFame, IReadOnlyList<long> activeSkillIds, IReadOnlyList<long> passiveSkillIds, long enemyRank, JobFlags jobFlags, ElementType elementType, long battlePower, CharacterRarityFlags characterRarityFlags, string nameKey, IReadOnlyList<GuildRaidDamageBar> normalDamageBar, IReadOnlyList<GuildRaidDamageBar> guildDamageBar, string startTime, string endTime, float characterImageX, float characterImageY, float characterImageScale, string bannerText, float guildRaidButtonU, float guildRaidButtonV, float worldDamageBarRewardCharacterImageX, float worldDamageBarRewardCharacterImageY, float worldDamageBarRewardCharacterImageSize)
+        public GuildRaidBossMB(long id, bool? isIgnore, string memo, BaseParameter baseParameter, BattleParameter battleParameter, UnitIconType unitIconType, long unitIconId, long normalSkillId, GuildRaidBossType guildRaidBossType, long releasableGuildFame, IReadOnlyList<long> activeSkillIds, IReadOnlyList<long> passiveSkillIds, long enemyRank, JobFlags jobFlags, ElementType elementType, long battlePower, CharacterRarityFlags characterRarityFlags, string nameKey, IReadOnlyList<GuildRaidDamageBar> normalDamageBar, IReadOnlyList<GuildRaidDamageBar> guildDamageBar, string startTime, string endTime, string bannerText, float guildRaidButtonU, float guildRaidButtonV, float worldDamageBarRewardCharacterImageX, float worldDamageBarRewardCharacterImageY, float worldDamageBarRewardCharacterImageSize)
             : base(id, isIgnore, memo)
         {
             this.BaseParameter = baseParameter;
@@ -152,8 +141,6 @@ namespace MementoMori.Ortega.Share.Master.Data
             this.GuildDamageBar = guildDamageBar;
             this.StartTime = startTime;
             this.EndTime = endTime;
-            this.CharacterImageX = characterImageX;
-            this.CharacterImageY = characterImageY;
             this.BannerText = bannerText;
             this.GuildRaidButtonU = guildRaidButtonU;
             this.GuildRaidButtonV = guildRaidButtonV;

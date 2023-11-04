@@ -29,6 +29,8 @@ namespace MementoMori.Ortega.Share.Data
 
         public List<string> DeletedEquipmentGuidList { get; set; }
 
+        public bool? ExistUnconfirmedRetrieveItemHistory { get; set; }
+
         public bool? ExistVipDailyGift { get; set; }
         public List<IUserItem> GivenItemCountInfoList { get; set; }
 
@@ -43,6 +45,8 @@ namespace MementoMori.Ortega.Share.Data
         public bool? IsJoinedLocalGvg { get; set; }
 
         public bool? IsReceivedSnsShareReward { get; set; }
+
+        public bool? IsRetrievedItem { get; set; }
 
         public bool? IsValidContractPrivilege { get; set; }
 

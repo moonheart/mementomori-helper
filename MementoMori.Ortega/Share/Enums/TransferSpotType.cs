@@ -34,5 +34,6 @@ public enum TransferSpotType
     [Description("ギルド")] Guild = 180,
     [Description("ギルドレイド")] GuildRaid,
     [Description("ギルドレイドワールドダメージ報酬ダイアログ")] GuildRaidWorldReward,
+    [Description("アイテム自動回収ダイアログ")] RetrieveItem = 190,
     [Description("フレンド")] Friend = 4
 }
