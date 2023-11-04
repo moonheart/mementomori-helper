@@ -14,7 +14,7 @@ lastDownloadedZip="$downloadDirectory/latest.zip"
 lastTempDir="$downloadDirectory/temp"
 
 if [ -f "$lastDownloadedZip" ]; then
-    rm -f "$lastDownloadedZip"
+    rm -rf "$lastDownloadedZip"
 fi
 
 if [ -d "$lastTempDir" ]; then
@@ -28,7 +28,7 @@ latestVersionStr=$(echo "$latestRelease" | jq -r '.tag_name')
 latestVersion=$(echo "$latestVersionStr" | sed 's/^v//')
 
 # 检查当前版本是否与最新版本相同
-currentVersion=$(ls "$downloadDirectory/$programFileName" 2>/dev/null | xargs file --mime-type -b | grep -o "version=[0-9\.]*" | cut -d'=' -f2)
+currentVersion=$(strings "$downloadDirectory/$programFileName" | grep -o 'MementoMori.WebUI/[0-9]\+\.[0-9]\+\.[0-9]\+' | awk '!seen[$0]++' | sed 's/MementoMori.WebUI\///')
 
 if [ "$(printf '%s\n' "$currentVersion" "$latestVersion" | sort -V | head -n 1)" = "$latestVersion" ]; then
     echo "程序已经是最新版本 ($latestVersion). 无需更新."
@@ -49,8 +49,8 @@ else
     # 复制解压后的文件到程序文件夹
     cp -Rf "$tempDir/publish-linux-x64"/* "$downloadDirectory/"
 
-    # 启动新程序
-    nohup "$downloadDirectory/$programFileName" &
+    # 删去临时文件夹与下载的包
+    rm -rf $tempDir $downloadPath
 
     echo "程序已成功更新到版本 $latestVersion."
 fi
