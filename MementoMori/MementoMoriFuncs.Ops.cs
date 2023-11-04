@@ -113,7 +113,6 @@ public partial class MementoMoriFuncs : ReactiveObject
             if (playerDataInfo == null) playerDataInfo = _lastPlayerDataInfo;
             if (playerDataInfo == null) throw new Exception("playerDataInfo is null");
             await AuthLogin(playerDataInfo);
-            LoginOk = true;
         }
         catch (Exception e)
         {

@@ -126,6 +126,7 @@ public partial class MementoMoriFuncs
     {
         _lastPlayerDataInfo = playerDataInfo;
         await NetworkManager.Login(playerDataInfo.WorldId, AddLog);
+        LoginOk = true;
         await UserGetUserData();
         await _timeZoneAwareJobRegister.RegisterJobs(UserId);
     }

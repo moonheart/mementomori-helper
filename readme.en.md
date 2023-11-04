@@ -88,12 +88,15 @@ Here's the English translation of the provided document:
     - [x] One-click high-speed battle
     - [x] Boss one-click sweep
     - [x] Auto stage clearing
-        - [ ] Stop after a specified stage
+        - [x] Stop after a specified stage
 - [ ] Trial
     - [x] Infinite Tower one-click sweep
     - [x] Auto stage clearing in the Infinite Tower
-        - [ ] Stop after a specified stage
-    - [ ] Phantom Temple one-click challenge
+        - [x] Stop after a specified stage
+    - [x] Phantom Temple one-click challenge
+      - [x] Hitch a Ride Mode
+      - [ ] Create Your Own Room Mode
+      - [x] Configure Reward Weight
     - [x] Ancient Arena one-click challenge 5 times
     - [x] Fountain of Wishes one-click collect all
     - [x] Fountain of Wishes one-click expedition
