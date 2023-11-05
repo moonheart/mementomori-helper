@@ -21,7 +21,7 @@ public static class GameExtensions
         {
             var itemName = ItemUtil.GetItemName(userItem.ItemType, userItem.ItemId);
             var itemRarity = ItemUtil.GetItemRarity(userItem.ItemType, userItem.ItemId);
-            log($"{ResourceStrings.Name}: {itemName}({itemRarity}{itemRarity}) × {userItem.ItemCount}");
+            log($"{ResourceStrings.Name}: {itemName}({itemRarity}) × {userItem.ItemCount}");
         }
     }
     public static void PrintUserItems(this IEnumerable<IUserCharacterItem> userItems, Action<string> log)
@@ -35,7 +35,7 @@ public static class GameExtensions
         {
             var itemName = ItemUtil.GetItemName(userItem.Item.ItemType, userItem.Item.ItemId);
             var itemRarity = ItemUtil.GetItemRarity(userItem.Item.ItemType, userItem.Item.ItemId);
-            log($"{ResourceStrings.Name}: {itemName}({itemRarity}{itemRarity}) × {userItem.Item.ItemCount}");}
+            log($"{ResourceStrings.Name}: {itemName}({itemRarity}) × {userItem.Item.ItemCount}");}
     }
     public static void PrintCharacterDtos(this IEnumerable<UserCharacterDtoInfo> userItems, Action<string> log)
     {
