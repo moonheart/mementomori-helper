@@ -450,4 +450,13 @@
   <data name="You can download the battle log and parse it here" xml:space="preserve">
       <value>你可以下载战斗日志然后在这里解析</value>
   </data>
+  <data name="No deployable castles available" xml:space="preserve">
+      <value>没有可部署的据点</value>
+  </data>
+  <data name="Successfully deployed" xml:space="preserve">
+      <value>已成功在 {0} 部署了 {1}</value>
+  </data>
+  <data name="Deploy defense" xml:space="preserve">
+      <value>部署防御</value>
+  </data>
 </root>

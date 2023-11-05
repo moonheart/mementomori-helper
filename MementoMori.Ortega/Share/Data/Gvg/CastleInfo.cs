@@ -29,20 +29,13 @@ namespace MementoMori.Ortega.Share.Data.Gvg
 
 		public void Copy(CastleInfo castleInfo)
 		{
-			long num = castleInfo.AttackerGuildId;
-			this.AttackerGuildId = num;
-			int num2 = castleInfo.AttackPartyCount;
-			this.AttackPartyCount = num2;
-			long num3 = castleInfo.CastleId;
-			this.CastleId = num3;
-			int num4 = castleInfo.DefensePartyCount;
-			this.DefensePartyCount = num4;
-			long num5 = castleInfo.GuildId;
-			this.GuildId = num5;
-			GvgCastleState gvgCastleState = castleInfo.GvgCastleState;
-			this.GvgCastleState = gvgCastleState;
-			long num6 = castleInfo.UtcFallenTimeStamp;
-			this.UtcFallenTimeStamp = num6;
+            AttackerGuildId = castleInfo.AttackerGuildId;
+            AttackPartyCount = castleInfo.AttackPartyCount;
+            CastleId = castleInfo.CastleId;
+            DefensePartyCount = castleInfo.DefensePartyCount;
+            GuildId = castleInfo.GuildId;
+            GvgCastleState = castleInfo.GvgCastleState;
+            UtcFallenTimeStamp = castleInfo.UtcFallenTimeStamp;
 		}
 
 		public long GetOffenseGuildId()

@@ -77,6 +77,7 @@
                 <MudSwitch Label="@Masters.TextResourceTable.Get("[CharacterMenuTabCharacterRankUp]")" @bind-Checked="AutoJob__AutoRankUpCharacter" Color="Color.Primary"></MudSwitch>
                 <MudSwitch Label="@Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")" @bind-Checked="AutoJob__AutoOpenGuildRaid" Color="Color.Primary"></MudSwitch>
                 <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]")" @bind-Checked="AutoJob__AutoLocalRaid" Color="Color.Primary"></MudSwitch>
+                <MudSwitch Label="@ResourceStrings.Deploy_defense" @bind-Checked="AutoJob__AutoDeployGuildDefense" Color="Color.Primary"></MudSwitch>
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -94,6 +95,7 @@
                 <MudTextField Label="@($"{Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__GuildRaidBossReleaseCron" Variant="Variant.Outlined"></MudTextField>
                 <MudTextField Label="@($"{ResourceStrings.ShopAutoBuyItems} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoBuyShopItemJobCron" Variant="Variant.Outlined"></MudTextField>
                 <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoLocalRaidJobCron" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField Label="@($"{ResourceStrings.Deploy_defense} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoDeployGuildDefenseJobCron" Variant="Variant.Outlined"></MudTextField>
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -503,6 +505,12 @@
         set => WritableGameConfig.Update(x => x.AutoJob.AutoLocalRaid = value);
     }
 
+    public bool AutoJob__AutoDeployGuildDefense
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoDeployGuildDefense;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoDeployGuildDefense = value);
+    }
+    
     public string AutoJob__DailyJobCron
     {
         get => WritableGameConfig.Value.AutoJob.DailyJobCron;
@@ -559,6 +567,16 @@
         set
         {
             WritableGameConfig.Update(x => x.AutoJob.AutoLocalRaidJobCron = value);
+            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+    }
+    
+    public string AutoJob__AutoDeployGuildDefenseJobCron
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoDeployGuildDefenseJobCron;
+        set
+        {
+            WritableGameConfig.Update(x => x.AutoJob.AutoDeployGuildDefenseJobCron = value);
             TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }

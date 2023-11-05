@@ -344,4 +344,13 @@
     <data name="You can download the battle log and parse it here" xml:space="preserve">
         <value>戦闘ログをダウンロードして、ここで解析できます</value>
     </data>
+    <data name="No deployable castles available" xml:space="preserve">
+        <value>配置可能な城がありません</value>
+    </data>
+    <data name="Successfully deployed" xml:space="preserve">
+        <value>{0} で {1} を正常に展開しました</value>
+    </data>
+    <data name="Deploy defense" xml:space="preserve">
+        <value>防衛を展開</value>
+    </data>
 </root>

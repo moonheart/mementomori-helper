@@ -450,4 +450,13 @@
   <data name="You can download the battle log and parse it here" xml:space="preserve">
       <value>You can download the battle log and parse it here</value>
   </data>
+  <data name="No deployable castles available" xml:space="preserve">
+      <value>No deployable castles available</value>
+  </data>
+  <data name="Successfully deployed" xml:space="preserve">
+      <value>Successfully deployed {1} in {0}</value>
+  </data>
+  <data name="Deploy defense" xml:space="preserve">
+      <value>Deploy defense</value>
+  </data>
 </root>

@@ -37,6 +37,7 @@ public class TimeZoneAwareJobRegister
         RemoveJob<GuildRaidBossReleaseJob>(scheduler, userId);
         RemoveJob<AutoBuyShopItemJob>(scheduler, userId);
         RemoveJob<LocalRaidJob>(scheduler, userId);
+        RemoveJob<GuildBattleDeployDefenseJob>(scheduler, userId);
     }
 
     public async Task RegisterJobs(long userId)
@@ -64,6 +65,8 @@ public class TimeZoneAwareJobRegister
                 networkManager.TimeManager.DiffFromUtc);
             AddJob<AutoBuyShopItemJob>(scheduler, _gameConfig.Value.AutoJob.AutoBuyShopItemJobCron, ResourceStrings.ShopAutoBuyItems, userId, networkManager.TimeManager.DiffFromUtc);
             AddJob<LocalRaidJob>(scheduler, _gameConfig.Value.AutoJob.AutoLocalRaidJobCron, Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]"), userId,
+                networkManager.TimeManager.DiffFromUtc);
+            AddJob<GuildBattleDeployDefenseJob>(scheduler, _gameConfig.Value.AutoJob.AutoDeployGuildDefenseJobCron, ResourceStrings.Deploy_defense, userId,
                 networkManager.TimeManager.DiffFromUtc);
         }
         catch (Exception e)

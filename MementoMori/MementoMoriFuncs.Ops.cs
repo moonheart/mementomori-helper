@@ -1240,6 +1240,106 @@ public partial class MementoMoriFuncs : ReactiveObject
         });
     }
 
+    public async Task SetupLocalGvgDefense()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var response1 = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
+            if (response1.GuildId == 0)
+            {
+                log(TextResourceTable.Get("[RankingNotGuild]"));
+                return;
+            }
+
+            var response2 = await GetResponse<GetGuildBaseInfoRequest, GetGuildBaseInfoResponse>(new GetGuildBaseInfoRequest() {BelongGuildId = response1.GuildId});
+            if (!response2.LocalGuildGvgInfo.IsOpen)
+            {
+                log(TextResourceTable.GetErrorCodeMessage(ErrorCode.MagicOnionNotOpenGuildBattle));
+                return;
+            }
+
+            var client = NetworkManager.GetOnionClient();
+            var localGvgReceiver = new MagicOnionGvgReceiver(client, log);
+            client.SetupGvg(localGvgReceiver, localGvgReceiver, BattleType.GuildBattle);
+            await client.Connect();
+            while (client.GetState() != HubClientState.Ready)
+            {
+                await Task.Delay(100);
+            }
+
+            CancellationTokenSource keepaliveCts = new CancellationTokenSource();
+            _ = Task.Run(async () =>
+            {
+                while (!keepaliveCts.IsCancellationRequested)
+                {
+                    client.SendKeepAliveAsync();
+                    await Task.Delay(5000);
+                }
+            });
+
+            try
+            {
+                client.SendGvgOpenMap(BattleType.GuildBattle, 0);
+                while (!localGvgReceiver.IsCastleInfoUpdated) await Task.Delay(100);
+
+                var castleInfos = localGvgReceiver.CastleInfos
+                    .Where(d => d.GvgCastleState == GvgCastleState.InBattle && d.GuildId == response1.GuildId)
+                    .OrderByDescending(d => LocalGvgCastleTable.GetById(d.CastleId).CastleType)
+                    .ToList();
+
+                if (castleInfos.Count == 0)
+                {
+                    log(ResourceStrings.No_deployable_castles_available);
+                    return;
+                }
+
+                var noMoreDeploy = false;
+                var queue = new Queue<int>(new[] {5, 5, 3, 3});
+                while (!noMoreDeploy)
+                {
+                    foreach (var castleInfo in castleInfos)
+                    {
+                        // open deploy dialog to update character list
+                        localGvgReceiver.IsDeployCharacterUpdated = false;
+                        client.SendGvgOpenPartyDeployDialog(BattleType.GuildBattle, castleInfo.CastleId);
+                        while (!localGvgReceiver.IsDeployCharacterUpdated) await Task.Delay(100);
+
+                        // calculate character count
+                        var characterCount = queue.TryDequeue(out var i) ? i : 1;
+                        var characterInfos = localGvgReceiver.OnUpdateDeployCharacterResponse.PartyCharacterInfos
+                            .Where(d => !d.IsDeployed)
+                            .OrderByDescending(d => d.UserGvgCharacterInfo.BattlePower)
+                            .Take(characterCount).ToList();
+                        if (characterInfos.Count == 0)
+                        {
+                            noMoreDeploy = true;
+                            break;
+                        }
+
+                        var characterIds = characterInfos.Select(d => d.UserGvgCharacterInfo.UserCharacterInfo.CharacterId).ToList();
+                        localGvgReceiver.IsDeployCharacterUpdated = false;
+                        // deploy
+                        client.SendGvgAddCastleParty(BattleType.GuildBattle, castleInfo.CastleId, characterIds, characterInfos.Count);
+                        while (!localGvgReceiver.IsDeployCharacterUpdated) await Task.Delay(100);
+                        
+                        // log
+                        var name = TextResourceTable.Get(LocalGvgCastleTable.GetById(castleInfo.CastleId).NameKey);
+                        var characters = string.Join(", ", characterIds.Select(d => CharacterTable.GetById(d).GetCombinedName()));
+                        log(string.Format(ResourceStrings.Successfully_deployed, name, characters));
+                    }
+                }
+            }
+            finally
+            {
+                keepaliveCts.Cancel();
+                client.ClearGvgReceiver();
+                await client.DisposeAsync();
+            }
+
+            log($"{ResourceStrings.Deploy_defense} {ResourceStrings.Finished}");
+        });
+    }
+
     public async Task ReceiveGvgReward()
     {
         await ExecuteQuickAction(async (log, token) =>
@@ -1307,7 +1407,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                     {
                         Directory.CreateDirectory(GameConfig.BattleLogDir);
                         var res = win ? "win" : "lose";
-                        var filename = $"main-{bossResponse.BattleResult.QuestId}-{res}-{bossResponse.BattleResult.BattleTime.StartBattle}-{bossResponse.BattleResult.SimulationResult.BattleToken}.json";
+                        var filename =
+                            $"main-{bossResponse.BattleResult.QuestId}-{res}-{bossResponse.BattleResult.BattleTime.StartBattle}-{bossResponse.BattleResult.SimulationResult.BattleToken}.json";
                         var path = Path.Combine(GameConfig.BattleLogDir, filename);
                         await File.WriteAllTextAsync(path, bossResponse.BattleResult.ToJson(true));
                         if (!win)
@@ -1374,7 +1475,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                     {
                         Directory.CreateDirectory(GameConfig.BattleLogDir);
                         var res = win ? "win" : "lose";
-                        var filename = $"tower-{SelectedAutoTowerType}-{bossQuickResponse.BattleResult.QuestId}-{res}-{bossQuickResponse.BattleResult.BattleTime.StartBattle}-{bossQuickResponse.BattleResult.SimulationResult.BattleToken}.json";
+                        var filename =
+                            $"tower-{SelectedAutoTowerType}-{bossQuickResponse.BattleResult.QuestId}-{res}-{bossQuickResponse.BattleResult.BattleTime.StartBattle}-{bossQuickResponse.BattleResult.SimulationResult.BattleToken}.json";
                         var path = Path.Combine(GameConfig.BattleLogDir, filename);
                         await File.WriteAllTextAsync(path, bossQuickResponse.BattleResult.ToJson(true));
                         if (!win)

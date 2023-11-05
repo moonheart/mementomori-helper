@@ -344,4 +344,13 @@
     <data name="You can download the battle log and parse it here" xml:space="preserve">
         <value>전투 로그를 다운로드하고 여기에서 분석할 수 있습니다.</value>
     </data>
+    <data name="No deployable castles available" xml:space="preserve">
+        <value>배치 가능한 성이 없습니다</value>
+    </data>
+    <data name="Successfully deployed" xml:space="preserve">
+        <value>{0}에서 {1}를 성공적으로 배치했습니다</value>
+    </data>
+    <data name="Deploy defense" xml:space="preserve">
+        <value>방어를 배치하십시오</value>
+    </data>
 </root>
