@@ -341,4 +341,7 @@
     <data name="Select tasks based on reward quantity and weight" xml:space="preserve">
         <value>報酬量と重みに基づいてタスクを選択します</value>
     </data>
+    <data name="You can download the battle log and parse it here" xml:space="preserve">
+        <value>戦闘ログをダウンロードして、ここで解析できます</value>
+    </data>
 </root>

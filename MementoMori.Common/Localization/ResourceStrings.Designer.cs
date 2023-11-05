@@ -1048,5 +1048,14 @@ namespace MementoMori.Common.Localization {
                 return ResourceManager.GetString("UseOverLimitItem", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can download the battle log and parse it here.
+        /// </summary>
+        public static string You_can_download_the_battle_log_and_parse_it_here {
+            get {
+                return ResourceManager.GetString("You can download the battle log and parse it here", resourceCulture);
+            }
+        }
     }
 }

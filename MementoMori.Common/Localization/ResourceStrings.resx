@@ -447,4 +447,7 @@
   <data name="Select tasks based on reward quantity and weight" xml:space="preserve">
       <value>Select tasks based on reward quantity and weight</value>
   </data>
+  <data name="You can download the battle log and parse it here" xml:space="preserve">
+      <value>You can download the battle log and parse it here</value>
+  </data>
 </root>

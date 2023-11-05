@@ -1303,18 +1303,24 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var result = win ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]");
                     log(string.Format(ResourceStrings.AutoBossExecMessage, info, result, totalCount, winCount, errCount));
 
+                    if (GameConfig.RecordBattleLog)
+                    {
+                        Directory.CreateDirectory(GameConfig.BattleLogDir);
+                        var res = win ? "win" : "lose";
+                        var filename = $"main-{bossResponse.BattleResult.QuestId}-{res}-{bossResponse.BattleResult.BattleTime.StartBattle}-{bossResponse.BattleResult.SimulationResult.BattleToken}.json";
+                        var path = Path.Combine(GameConfig.BattleLogDir, filename);
+                        await File.WriteAllTextAsync(path, bossResponse.BattleResult.ToJson(true));
+                        if (!win)
+                        {
+                            // keep only 100 lose logs
+                            var files = Directory.GetFiles(GameConfig.BattleLogDir, $"main-*lose*.json").OrderDescending();
+                            foreach (var file in files.Skip(20)) File.Delete(file);
+                        }
+                    }
+
                     if (win)
                     {
-                        if (GameConfig.RecordBattleLog)
-                        {
-                            Directory.CreateDirectory(GameConfig.BattleLogDir);
-                            var filename = $"main-{bossResponse.BattleResult.QuestId}-{bossResponse.BattleResult.BattleTime.StartBattle}.json";
-                            var path = Path.Combine(GameConfig.BattleLogDir, filename);
-                            await File.WriteAllTextAsync(path, bossResponse.BattleResult.ToJson(true));
-                        }
-
                         if (selectedTargetQuerstId > 0 && selectedTargetQuerstId == targetQuestId) break;
-
                         var nextQuestResponse = await GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
                     }
 
@@ -1363,6 +1369,21 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var win = bossQuickResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                     totalCount++;
                     if (win) winCount++;
+
+                    if (GameConfig.RecordBattleLog)
+                    {
+                        Directory.CreateDirectory(GameConfig.BattleLogDir);
+                        var res = win ? "win" : "lose";
+                        var filename = $"tower-{SelectedAutoTowerType}-{bossQuickResponse.BattleResult.QuestId}-{res}-{bossQuickResponse.BattleResult.BattleTime.StartBattle}-{bossQuickResponse.BattleResult.SimulationResult.BattleToken}.json";
+                        var path = Path.Combine(GameConfig.BattleLogDir, filename);
+                        await File.WriteAllTextAsync(path, bossQuickResponse.BattleResult.ToJson(true));
+                        if (!win)
+                        {
+                            // keep only 100 lose logs
+                            var files = Directory.GetFiles(GameConfig.BattleLogDir, $"tower-{SelectedAutoTowerType}-*lose*.json").OrderDescending();
+                            foreach (var file in files.Skip(20)) File.Delete(file);
+                        }
+                    }
 
                     var name = TextResourceTable.Get(SelectedAutoTowerType);
                     var result = win ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]");

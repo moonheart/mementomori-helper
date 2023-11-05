@@ -27,6 +27,23 @@
     <ItemGroup>
       <Content Remove="Pages\App.razor" />
       <Content Remove="Pages\Routes.razor" />
+      <Content Remove="BattleLogs\**" />
+      <Content Remove="Master\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="BattleLogs\**" />
+      <Compile Remove="Master\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="BattleLogs\**" />
+      <EmbeddedResource Remove="Master\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="BattleLogs\**" />
+      <None Remove="Master\**" />
     </ItemGroup>
 
 </Project>
