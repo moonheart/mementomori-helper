@@ -46,7 +46,7 @@ public class MagicOnionLocalRaidReceiver : IMagicOnionLocalRaidReceiver, IMagicO
 
     public void OnLockRoom()
     {
-        Console.WriteLine("OnLockRoom");
+        _log("OnLockRoom");
     }
 
     public void OnJoinRoom(OnJoinRoomResponse response)

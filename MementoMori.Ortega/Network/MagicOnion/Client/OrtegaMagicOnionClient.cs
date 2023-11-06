@@ -270,8 +270,6 @@ namespace MementoMori.Ortega.Network.MagicOnion.Client
 
         void IOrtegaReceiver.OnError(ErrorCode errorCode)
         {
-            string text = string.Format("OnError : ErrorCode -> {0}", Masters.TextResourceTable.GetErrorCodeMessage(errorCode));
-            Console.WriteLine(text);
             if (errorCode > ErrorCode.MagicOnionLocalRaidLeaveRoomNotExistRoom)
             {
                 if (errorCode == ErrorCode.MagicOnionLocalRaidExpiredLocalRaidQuest)
