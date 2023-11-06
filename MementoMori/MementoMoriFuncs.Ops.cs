@@ -1283,7 +1283,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 while (!localGvgReceiver.IsCastleInfoUpdated) await Task.Delay(100);
 
                 var castleInfos = localGvgReceiver.CastleInfos
-                    .Where(d => d.GvgCastleState == GvgCastleState.InBattle && d.GuildId == response1.GuildId)
+                    .Where(d => d.GvgCastleState is GvgCastleState.None or GvgCastleState.InBattle && d.GuildId == response1.GuildId)
                     .OrderByDescending(d => LocalGvgCastleTable.GetById(d.CastleId).CastleType)
                     .ToList();
 
