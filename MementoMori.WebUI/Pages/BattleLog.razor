@@ -1,15 +1,6 @@
 ﻿@using MementoMori.Option
-@using MementoMori.Ortega.Custom
-@using MementoMori.Ortega.Share
-@using MementoMori.Ortega.Share.Data.Battle
 @using MementoMori.Ortega.Share.Data.Battle.Result
-@using MementoMori.Ortega.Share.Enums
-@using MementoMori.Ortega.Share.Enums.Battle.Skill
-@using MementoMori.Ortega.Share.Utils
-@using MementoMori.Utils
-@using MementoMori.WebUI.Pages.Components.Battle
 @using Newtonsoft.Json
-@using System.Text.RegularExpressions
 @using System.Text
 @using MementoMori.Common.Localization
 @inject IWritableOptions<GameConfig> GameConfig
@@ -20,35 +11,27 @@
     @ResourceStrings.You_can_download_the_battle_log_and_parse_it_here: <MudLink Href="https://mentemori.icu/battle_log.html" Target="_blank">Battle Log Viewer</MudLink>
 </MudText>
 
-@* <MudSelect @bind-Value="SelectedBattleResult" Dense="true"> *@
-@*     @foreach (var (filename, battleResult) in BattleResults) *@
-@*     { *@
-@*         var time = DateTimeOffset.FromUnixTimeMilliseconds(battleResult.BattleTime.StartBattle).ToLocalTime().ToString(); *@
-@* *@
-@*         <MudSelectItem Value="battleResult"> *@
-@*             <MudText Inline="true">@filename</MudText> *@
-@*             <MudText Inline="true">@time</MudText> *@
-@*         </MudSelectItem> *@
-@*     } *@
-@* </MudSelect> *@
+<MudStack Row="true" Class="justify-start align-center">
+    <MudIconButton Icon="@Icons.Material.Filled.Pageview" Size="Size.Small" Variant="Variant.Outlined" OnClick="() => ViewBattleLog(SelectedBattleResult)"></MudIconButton>
+    <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small" Variant="Variant.Outlined" OnClick="() => DownloadBattleLog(SelectedBattleResult)"></MudIconButton>
+    <MudSelect @bind-Value="SelectedBattleResult" Dense="true">
+        @foreach (var filename in BattleResults)
+        {
+            <MudSelectItem Value="filename">
+                <MudText Inline="true">@filename</MudText>
+            </MudSelectItem>
+        }
+    </MudSelect>
+</MudStack>
 
-<MudSimpleTable Dense="true">
-    <tbody>
-    @foreach (var filename in BattleResults)
-    {
-        // var time = DateTimeOffset.FromUnixTimeMilliseconds(battleResult.BattleTime.StartBattle).ToLocalTime().ToString();
-        // main-176-lose-1699199840663-a80ee608f95b431bbf9bf941f270cd3f.json
-        <tr>
-            <td>@filename</td>
-            @* <td>@time</td> *@
-            <td>
-                <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small" Variant="Variant.Outlined" OnClick="() => DownloadBattleLog(filename)"></MudIconButton>
-            </td>
-        </tr>
+<iframe id="log_viewer" src="https://mentemori.icu/battle_log.html"></iframe>
+<style>
+    #log_viewer {
+        width: 100%;
+        height: 800px;
+        border: none;
     }
-    </tbody>
-</MudSimpleTable>
-
+</style>
 <script>
   window.downloadFileFromStream = async (fileName, contentStreamReference) => {
     const arrayBuffer = await contentStreamReference.arrayBuffer();
@@ -61,142 +44,61 @@
     anchorElement.remove();
     URL.revokeObjectURL(url);
   }
+  window.showBattleLog = (log_content) => {
+      const iframe = document.querySelector('#log_viewer');
+      iframe.contentWindow.postMessage(new File([log_content], {
+          type: 'application/json'
+      }), 'https://mentemori.icu/');
+  }
 </script>
-
-@* @if (SelectedBattleResult != null) *@
-@* { *@
-@*     var charactersByUnitId = SelectedBattleResult.SimulationResult.BattleField.Characters.ToDictionary(d => d.UnitId); *@
-@*     var charactersReports = SelectedBattleResult.SimulationResult.BattleCharacterReports.ToDictionary(d => d.BattleCharacterGuid); *@
-@*     var charactersByGuid = charactersReports.ToDictionary(d => d.Key, d => charactersByUnitId[d.Value.UnitId]); *@
-@*     var unitDatas = charactersByGuid.ToDictionary(d => d.Key, d => d.Value.GetUnitData()); *@
-@*     foreach (var battleSubLog in SelectedBattleResult.SimulationResult.BattleLog.BattleSubLogs) *@
-@*     { *@
-@*         <MudField Label="@($"Turn {battleSubLog.Turn}")" Variant="Variant.Outlined"> *@
-@*             <MudField Variant="Variant.Outlined" Label="回合开始被动技能"> *@
-@*                 <MudSimpleTable Dense="true"> *@
-@*                     <tbody> *@
-@*                     @foreach (var subSkillResultsGroup in battleSubLog.TurnStartPassiveResults.GroupBy(d => d.AttackUnitGuid)) *@
-@*                     { *@
-@*                         <tr> *@
-@*                             <td>@unitDatas[subSkillResultsGroup.Key].Name</td> *@
-@*                             <td> *@
-@*                                 <MudSimpleTable Dense="true"> *@
-@*                                     <tbody> *@
-@*                                     @foreach (var subSkillResults1 in subSkillResultsGroup.GroupBy(d => d.TargetUnitGuid)) *@
-@*                                     { *@
-@*                                         <tr> *@
-@*                                             <td> *@
-@*                                                 <MudStack Row="true"> *@
-@*                                                     <MudText Inline="true">@unitDatas[subSkillResults1.Key].Name</MudText> *@
-@*                                                     @foreach (var subSkillResult in subSkillResults1) *@
-@*                                                     { *@
-@*                                                         if (subSkillResult.SkillDisplayType == SkillDisplayType.None) continue; *@
-@*                                                         if (subSkillResult.SubSkillResultType == SubSkillResultType.Effect && subSkillResult.AddEffectGroups.Count == 0) continue; *@
-@*                                                         <SubSkillResultPage UnitDatas="unitDatas" SubSkillResult="subSkillResult"/> *@
-@*                                                     } *@
-@*                                                 </MudStack> *@
-@* *@
-@*                                             </td> *@
-@*                                         </tr> *@
-@*                                     } *@
-@*                                     </tbody> *@
-@*                                 </MudSimpleTable> *@
-@* *@
-@* *@
-@*                             </td> *@
-@*                         </tr> *@
-@*                     } *@
-@*                     </tbody> *@
-@*                 </MudSimpleTable> *@
-@*             </MudField> *@
-@*             <MudField Variant="Variant.Outlined" Label="战斗过程"> *@
-@*                 <MudSimpleTable Dense="true"> *@
-@*                     <tbody> *@
-@* *@
-@* *@
-@*                     @foreach (var activeSkill in battleSubLog.ActiveSkillDatas) *@
-@*                     { *@
-@*                         var activeSkillMb = Masters.ActiveSkillTable.GetById(activeSkill.ActiveSkillId); *@
-@*                         var activeSkillName = activeSkillMb == null ? "Normal Attack" : Masters.TextResourceTable.Get(activeSkillMb.NameKey); *@
-@*                         var attackerData = unitDatas[activeSkill.FromGuid]; *@
-@*                         var skillActionName = $"{attackerData.Name} 发动 {activeSkillName}"; *@
-@*                         <tr> *@
-@*                             <td>@attackerData.Name</td> *@
-@*                             <td> *@
-@*                                 <MudSimpleTable Dense="true"> *@
-@*                                     <tbody> *@
-@*                                     @foreach (var subSetSkillResult in activeSkill.SubSetSkillResults) *@
-@*                                     { *@
-@*                                         <tr> *@
-@*                                             <td> *@
-@*                                                 <MudSimpleTable Dense="true"> *@
-@*                                                     <tbody> *@
-@*                                                     @foreach (var subSkillResultGroup in subSetSkillResult.SubSkillResults.GroupBy(d => d.TargetUnitGuid)) *@
-@*                                                     { *@
-@*                                                         <tr> *@
-@*                                                             <td> *@
-@*                                                                 <MudStack Row="true"> *@
-@*                                                                     <MudText Inline="true">@unitDatas[subSkillResultGroup.Key].Name</MudText> *@
-@*                                                                     @foreach (var subSkillResult in subSkillResultGroup) *@
-@*                                                                     { *@
-@*                                                                         if (subSkillResult.SkillDisplayType == SkillDisplayType.None) continue; *@
-@*                                                                         if (subSkillResult.SubSkillResultType == SubSkillResultType.Effect && subSkillResult.AddEffectGroups.Count == 0) continue; *@
-@*                                                                         <SubSkillResultPage UnitDatas="unitDatas" SubSkillResult="subSkillResult"/> *@
-@*                                                                     } *@
-@*                                                                 </MudStack> *@
-@*                                                             </td> *@
-@*                                                         </tr> *@
-@*                                                     } *@
-@*                                                     </tbody> *@
-@*                                                 </MudSimpleTable> *@
-@*                                             </td> *@
-@*                                         </tr> *@
-@*                                     } *@
-@*                                     </tbody> *@
-@*                                 </MudSimpleTable> *@
-@*                             </td> *@
-@*                         </tr> *@
-@*                     } *@
-@*                     </tbody> *@
-@*                 </MudSimpleTable> *@
-@*             </MudField> *@
-@*         </MudField> *@
-@*     } *@
-@* } *@
 
 @code {
     private List<string> BattleResults { get; set; } = new();
 
-    // private BattleResult SelectedBattleResult { get; set; }
+    private string SelectedBattleResult { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         var files = Directory.GetFiles(GameConfig.Value.BattleLogDir);
         foreach (var file in files.OrderDescending())
         {
-    // var content = await File.ReadAllTextAsync(file);
-    // var battleResult = JsonConvert.DeserializeObject<BattleResult>(content);
+            // var content = await File.ReadAllTextAsync(file);
+            // var battleResult = JsonConvert.DeserializeObject<BattleResult>(content);
             BattleResults.Add(Path.GetFileName(file));
         }
+        SelectedBattleResult = BattleResults.FirstOrDefault();
     }
 
     private async Task DownloadBattleLog(string filename)
     {
+        if (ReadLogContent(filename, out var json)) return;
+        var bytes = Encoding.UTF8.GetBytes(json);
+        using var streamRef = new DotNetStreamReference(new MemoryStream(bytes));
+        await JS.InvokeVoidAsync("downloadFileFromStream", filename, streamRef);
+    }
+
+    private bool ReadLogContent(string filename, out string json)
+    {
+        json = null;
         var path = Path.Combine(GameConfig.Value.BattleLogDir, filename);
         var content = File.ReadAllText(path);
         var battleResult = JsonConvert.DeserializeObject<BattleResult>(content);
         if (battleResult == null)
         {
-            return;
+            return false;
         }
         var obj = new
         {
             BattleSimulationResult = battleResult.SimulationResult
         };
-        var json = JsonConvert.SerializeObject(obj);
-        var bytes = Encoding.UTF8.GetBytes(json);
-        using var streamRef = new DotNetStreamReference(new MemoryStream(bytes));
-        await JS.InvokeVoidAsync("downloadFileFromStream", filename, streamRef);
+        json = JsonConvert.SerializeObject(obj);
+        return true;
+    }
+
+    private async Task ViewBattleLog(string filename)
+    {
+        if (!ReadLogContent(filename, out var json)) return;
+        await JS.InvokeVoidAsync("showBattleLog", json);
     }
 
 }
