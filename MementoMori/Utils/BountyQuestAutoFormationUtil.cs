@@ -24,7 +24,7 @@ public static class BountyQuestAutoFormationUtil
         {
             // 已经使用的卡片
             var usedCharacterGuids = getlistResponse.UserBountyQuestDtoInfos.Where(d => d.BountyQuestType == bountyQuestInfos.Key).SelectMany(d =>
-                d.StartMembers.Where(x => x.PlayerId == userSyncData.UserStatusDtoInfo.PlayerId).Select(x => x.UserCharacterGuid));
+                d.StartMembers.Select(x => x.UserCharacterGuid));
             // 用于当前任务类型的角色列表
             var userCharacterDtoInfos = userSyncData.UserCharacterDtoInfos.Where(d => !usedCharacterGuids.Contains(d.Guid)).OrderBy(d => d.RarityFlags).ToList();
             if (bountyQuestInfos.Key == BountyQuestType.Guerrilla)
@@ -49,7 +49,7 @@ public static class BountyQuestAutoFormationUtil
                 // 检查是否联合任务
                 if (bountyQuestData.QuestInfo.BountyQuestType == BountyQuestType.Team)
                 {
-                    var userBountyQuestMemberDtoInfos = GetReadySupportMemberDtoInfos(getlistResponse.FriendAndGuildMemberUserBountyQuestMemberDtoInfos);
+                    var userBountyQuestMemberDtoInfos = GetReadySupportMemberDtoInfos(getlistResponse);
                     // 这里假定一定能获取到符合条件的支援角色
                     var supportMember = GetSupportMember(userBountyQuestMemberDtoInfos, bountyQuestData);
                     var characterMb = Masters.CharacterTable.GetById(supportMember.CharacterId);
@@ -146,9 +146,10 @@ public static class BountyQuestAutoFormationUtil
         return null;
     }
 
-    public static List<UserBountyQuestMemberDtoInfo> GetReadySupportMemberDtoInfos(List<UserBountyQuestMemberDtoInfo> memberDtoInfos)
+    public static List<UserBountyQuestMemberDtoInfo> GetReadySupportMemberDtoInfos(GetListResponse getListResponse)
     {
-        return memberDtoInfos.ToList();
+        var memberDtoInfos = getListResponse.FriendAndGuildMemberUserBountyQuestMemberDtoInfos;
+        return memberDtoInfos.Where(d => d.DispatchPlayerId == 0).ToList();
     }
 
     public static UserBountyQuestMemberDtoInfo GetSupportMember(List<UserBountyQuestMemberDtoInfo> supportMemberDtoInfos, BountyQuestData bountyQuestData)

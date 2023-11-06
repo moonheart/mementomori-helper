@@ -22,10 +22,6 @@ namespace MementoMori.Ortega.Share.Data.DtoInfo
 
         public bool IsReward { get; set; }
 
-        public List<BountyQuestMemberInfo> StartMembers{ get; set; }
-
-        public UserBountyQuestDtoInfo()
-        {
-        }
+        public List<BountyQuestMemberInfo> StartMembers { get; set; }
     }
 }
