@@ -1294,11 +1294,13 @@ public partial class MementoMoriFuncs : ReactiveObject
                 }
 
                 var noMoreDeploy = false;
-                var queue = new Queue<int>(new[] {5, 5, 3, 3});
-                while (!noMoreDeploy)
+                var queue = new Queue<int>(new[] {5, 3, 3, 3});
+                while (!noMoreDeploy && !token.IsCancellationRequested)
                 {
                     foreach (var castleInfo in castleInfos)
                     {
+                        if (token.IsCancellationRequested) break;
+
                         // open deploy dialog to update character list
                         localGvgReceiver.IsDeployCharacterUpdated = false;
                         client.SendGvgOpenPartyDeployDialog(BattleType.GuildBattle, castleInfo.CastleId);
@@ -1321,7 +1323,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         // deploy
                         client.SendGvgAddCastleParty(BattleType.GuildBattle, castleInfo.CastleId, characterIds, characterInfos.Count);
                         while (!localGvgReceiver.IsDeployCharacterUpdated) await Task.Delay(100);
-                        
+
                         // log
                         var name = TextResourceTable.Get(LocalGvgCastleTable.GetById(castleInfo.CastleId).NameKey);
                         var characters = string.Join(", ", characterIds.Select(d => CharacterTable.GetById(d).GetCombinedName()));
