@@ -52,35 +52,34 @@
                 <MudSimpleTable Elevation="0" Dense="true">
                     <tbody>
                     <tr>
-                        <td>@TextResourceTable.Get("[CommonPlayerNameFormat]", Funcs.UserSyncData?.UserStatusDtoInfo?.Name)</td>
+                        <td colspan="2">@TextResourceTable.Get("[CommonPlayerNameFormat]", Funcs.UserSyncData?.UserStatusDtoInfo?.Name)</td>
                     </tr>
                     <tr>
-                        <td>@TextResourceTable.Get("[PlayerId]") : @Funcs.UserSyncData?.UserStatusDtoInfo?.PlayerId</td>
+                        <td colspan="2">@TextResourceTable.Get("[PlayerId]") : @Funcs.UserSyncData?.UserStatusDtoInfo?.PlayerId</td>
                     </tr>
                     <tr>
-                        <td>@TextResourceTable.Get("[ItemName9]") : @(Funcs.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(d => d.ItemType == ItemType.FriendPoint)?.ItemCount ?? 0)</td>
+                        <td colspan="2">@ResourceStrings.Account_Creation_Time : @(Funcs.UserSyncData?.UserStatusDtoInfo?.CreateAt.ToDateTimeOffset())</td>
                     </tr>
                     <tr>
                         <td>@TextResourceTable.Get("[CommonPlayerRankLabel]") : @Funcs.UserSyncData?.UserStatusDtoInfo?.Rank</td>
-                    </tr>
-                    <tr>
                         <td>@TextResourceTable.Get("[CommonVipWithSpaceFormat]", Funcs.UserSyncData?.UserStatusDtoInfo?.Vip)</td>
                     </tr>
                     <tr>
-                        <td>@TextResourceTable.Get("[MyPagePlayerInformationCommentLabel]") : @Funcs.UserSyncData?.UserStatusDtoInfo?.Comment</td>
+                        <td colspan="2">@TextResourceTable.Get("[MyPagePlayerInformationCommentLabel]") : @Funcs.UserSyncData?.UserStatusDtoInfo?.Comment</td>
                     </tr>
                     <tr>
+                        <td>@TextResourceTable.Get("[ItemName9]") : @(Funcs.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(d => d.ItemType == ItemType.FriendPoint)?.ItemCount ?? 0)</td>
                         <td>@TextResourceTable.Get("[ItemName11]") : @(Funcs.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(d => d.ItemType == ItemType.CharacterTrainingMaterial && d.ItemId == 2)?.ItemCount ?? 0)</td>
                     </tr>
                     <tr>
                         @{
                             var free = Funcs.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.CurrencyFree)?.ItemCount ?? 0;
                             var paid = Funcs.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.CurrencyPaid)?.ItemCount ?? 0;
-                            <td>@TextResourceTable.Get("[ItemName4]") : @($"{free + paid}, {TextResourceTable.Get("[CurrencyDetailCurrencyFree]")} {free}, {TextResourceTable.Get("[CurrencyDetailCurrencyPaid]")} {paid}") </td>
+                            <td colspan="2">@TextResourceTable.Get("[ItemName4]") : @($"{free + paid}, {TextResourceTable.Get("[CurrencyDetailCurrencyFree]")} {free}, {TextResourceTable.Get("[CurrencyDetailCurrencyPaid]")} {paid}") </td>
                         }
                     </tr>
                     <tr>
-                        <td>@TextResourceTable.Get("[ItemName5]") : @((Funcs.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.Gold)?.ItemCount ?? 0).ToString("N0"))</td>
+                        <td colspan="2">@TextResourceTable.Get("[ItemName5]") : @((Funcs.UserSyncData?.UserItemDtoInfo?.FirstOrDefault(x => x.ItemType == ItemType.Gold)?.ItemCount ?? 0).ToString("N0"))</td>
                     </tr>
                     </tbody>
                 </MudSimpleTable>

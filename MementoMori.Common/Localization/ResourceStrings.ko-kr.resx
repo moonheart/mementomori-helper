@@ -353,4 +353,7 @@
     <data name="Deploy defense" xml:space="preserve">
         <value>방어를 배치하십시오</value>
     </data>
+    <data name="Account Creation Time" xml:space="preserve">
+        <value>계정 생성 시간</value>
+    </data>
 </root>

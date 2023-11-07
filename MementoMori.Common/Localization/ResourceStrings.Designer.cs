@@ -70,6 +70,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Account Creation Time 的本地化字符串。
+        /// </summary>
+        public static string Account_Creation_Time {
+            get {
+                return ResourceManager.GetString("Account Creation Time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Account Management 的本地化字符串。
         /// </summary>
         public static string AccountManagement {

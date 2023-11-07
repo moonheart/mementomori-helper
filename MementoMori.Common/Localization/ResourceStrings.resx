@@ -459,4 +459,7 @@
   <data name="Deploy defense" xml:space="preserve">
       <value>Deploy defense</value>
   </data>
+  <data name="Account Creation Time" xml:space="preserve">
+      <value>Account Creation Time</value>
+  </data>
 </root>

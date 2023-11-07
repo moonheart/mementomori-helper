@@ -353,4 +353,7 @@
     <data name="Deploy defense" xml:space="preserve">
         <value>防衛を展開</value>
     </data>
+    <data name="Account Creation Time" xml:space="preserve">
+        <value>アカウント作成時間</value>
+    </data>
 </root>

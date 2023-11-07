@@ -459,4 +459,7 @@
   <data name="Deploy defense" xml:space="preserve">
       <value>部署防御</value>
   </data>
+  <data name="Account Creation Time" xml:space="preserve">
+      <value>帐号创建时间</value>
+  </data>
 </root>
