@@ -598,7 +598,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     private bool IsBountyQuestAvailable
     {
-        get { return UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId >= OpenContentTable.GetByOpenCommandType(OpenCommandType.BountyQuest).OpenContentValue; }
+        get { return UserSyncData?.UserBattleBossDtoInfo?.BossClearMaxQuestId >= OpenContentTable.GetByOpenCommandType(OpenCommandType.BountyQuest).OpenContentValue; }
     }
 
 
