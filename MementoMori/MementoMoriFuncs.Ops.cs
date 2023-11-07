@@ -154,7 +154,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     private void AddLog(string message)
     {
-        Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}");
+        Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [{_lastPlayerDataInfo?.Name}(Lv{_lastPlayerDataInfo?.PlayerRank})] {message}");
         lock (MesssageList)
         {
             MesssageList.Insert(0, message);
