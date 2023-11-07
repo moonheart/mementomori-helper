@@ -71,7 +71,7 @@
 
     private async Task DownloadBattleLog(string filename)
     {
-        if (ReadLogContent(filename, out var json)) return;
+        if (!ReadLogContent(filename, out var json)) return;
         var bytes = Encoding.UTF8.GetBytes(json);
         using var streamRef = new DotNetStreamReference(new MemoryStream(bytes));
         await JS.InvokeVoidAsync("downloadFileFromStream", filename, streamRef);
