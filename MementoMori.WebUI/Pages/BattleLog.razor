@@ -40,11 +40,13 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (!Directory.Exists(GameConfig.Value.BattleLogDir))
+        {
+            return;
+        }
         var files = Directory.GetFiles(GameConfig.Value.BattleLogDir);
         foreach (var file in files.OrderDescending())
         {
-            // var content = await File.ReadAllTextAsync(file);
-            // var battleResult = JsonConvert.DeserializeObject<BattleResult>(content);
             BattleResults.Add(Path.GetFileName(file));
         }
         SelectedBattleResult = BattleResults.FirstOrDefault();
@@ -52,6 +54,7 @@
 
     private async Task DownloadBattleLog(string filename)
     {
+        if (string.IsNullOrEmpty(filename)) return;
         if (!ReadLogContent(filename, out var json)) return;
         var bytes = Encoding.UTF8.GetBytes(json);
         using var streamRef = new DotNetStreamReference(new MemoryStream(bytes));
@@ -61,6 +64,7 @@
     private bool ReadLogContent(string filename, out string json)
     {
         json = null;
+        if (string.IsNullOrEmpty(filename)) return false;
         var path = Path.Combine(GameConfig.Value.BattleLogDir, filename);
         var content = File.ReadAllText(path);
         var battleResult = JsonConvert.DeserializeObject<BattleResult>(content);
@@ -78,6 +82,7 @@
 
     private async Task ViewBattleLog(string filename)
     {
+        if (string.IsNullOrEmpty(filename)) return;
         if (!ReadLogContent(filename, out var json)) return;
         await JS.InvokeVoidAsync("showBattleLog", json);
     }
