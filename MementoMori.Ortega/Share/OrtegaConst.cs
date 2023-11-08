@@ -510,7 +510,7 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 
 			public static long MaxDefenseSucceededRewardNumPerDay { get; }
 
-			public static long MaxLegendLeagueBattleFreeCount { get; }
+            public static long MaxLegendLeagueBattleFreeCount { get; } = 10;
 
 			public static long MaxLegendLeagueBuyChallengeCount { get; }
 

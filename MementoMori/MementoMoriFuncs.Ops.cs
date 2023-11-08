@@ -564,6 +564,52 @@ public partial class MementoMoriFuncs : ReactiveObject
         });
     }
 
+    public async Task LegendLeagueAuto()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            log($"{TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]")}");
+            if (UserSyncData.CanJoinTodayLegendLeague != true)
+            {
+                log(TextResourceTable.Get("[GlobalPvpIsNotParticipateToastMessage]"));
+                return;
+            }
+
+            for (var i = 0; i < 10; i++)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                var leagueInfoResponse = await GetResponse<GetLegendLeagueInfoRequest, GetLegendLeagueInfoResponse>(new GetLegendLeagueInfoRequest());
+
+                if (UserSyncData.UserBattleLegendLeagueDtoInfo != null && UserSyncData.UserBattleLegendLeagueDtoInfo.LegendLeagueTodayCount >= OrtegaConst.BattlePvp.MaxLegendLeagueBattleFreeCount)
+                {
+                    log(TextResourceTable.GetErrorCodeMessage(ErrorCode.BattlePvpOverLegendLeagueChallengeMaxCount));
+                    return;
+                }
+
+                var pvpRankingPlayerInfo = leagueInfoResponse.MatchingRivalList.OrderBy(d => d.DefenseBattlePower).First();
+
+                try
+                {
+                    var leagueStartResponse = await GetResponse<LegendLeagueStartRequest, LegendLeagueStartResponse>(new LegendLeagueStartRequest()
+                    {
+                        RivalPlayerId = pvpRankingPlayerInfo.PlayerInfo.PlayerId
+                    });
+
+                    log(TextResourceTable.Get("[GlobalPvpChangePointFormat]", leagueStartResponse.GetPoint));
+                }
+                catch (Exception e)
+                {
+                    log(e.Message);
+                    return;
+                }
+            }
+        });
+    }
+
     public async Task BountyQuestRewardAuto()
     {
         await ExecuteQuickAction(async (log, token) =>
