@@ -1310,7 +1310,8 @@ public partial class MementoMoriFuncs : ReactiveObject
             await client.Connect();
             while (client.GetState() != HubClientState.Ready)
             {
-                await Task.Delay(100);
+                log("waiting for connection...");
+                await Task.Delay(1000);
             }
 
             CancellationTokenSource keepaliveCts = new CancellationTokenSource();
@@ -1326,7 +1327,11 @@ public partial class MementoMoriFuncs : ReactiveObject
             try
             {
                 client.SendGvgOpenMap(BattleType.GuildBattle, 0);
-                while (!localGvgReceiver.IsCastleInfoUpdated) await Task.Delay(100);
+                while (!localGvgReceiver.IsCastleInfoUpdated)
+                {
+                    log("waiting for castle info...");
+                    await Task.Delay(1000);
+                }
 
                 var castleInfos = localGvgReceiver.CastleInfos
                     .Where(d => d.GvgCastleState is GvgCastleState.None or GvgCastleState.InBattle && d.GuildId == response1.GuildId)
@@ -1350,7 +1355,11 @@ public partial class MementoMoriFuncs : ReactiveObject
                         // open deploy dialog to update character list
                         localGvgReceiver.IsDeployCharacterUpdated = false;
                         client.SendGvgOpenPartyDeployDialog(BattleType.GuildBattle, castleInfo.CastleId);
-                        while (!localGvgReceiver.IsDeployCharacterUpdated) await Task.Delay(100);
+                        while (!localGvgReceiver.IsDeployCharacterUpdated)
+                        {
+                            log("waiting for deploy dialog to open...");
+                            await Task.Delay(1000);
+                        }
 
                         // calculate character count
                         var characterCount = queue.TryDequeue(out var i) ? i : 1;
@@ -1368,7 +1377,11 @@ public partial class MementoMoriFuncs : ReactiveObject
                         localGvgReceiver.IsDeployCharacterUpdated = false;
                         // deploy
                         client.SendGvgAddCastleParty(BattleType.GuildBattle, castleInfo.CastleId, characterIds, characterInfos.Count);
-                        while (!localGvgReceiver.IsDeployCharacterUpdated) await Task.Delay(100);
+                        while (!localGvgReceiver.IsDeployCharacterUpdated)
+                        {
+                            log("waiting for deploy...");
+                            await Task.Delay(1000);
+                        }
 
                         // log
                         var name = TextResourceTable.Get(LocalGvgCastleTable.GetById(castleInfo.CastleId).NameKey);
@@ -1907,7 +1920,8 @@ public partial class MementoMoriFuncs : ReactiveObject
             await client.Connect();
             while (client.GetState() != HubClientState.Ready)
             {
-                await Task.Delay(500);
+                log("Waiting for connection...");
+                await Task.Delay(1000);
             }
 
             CancellationTokenSource keepaliveCts = new CancellationTokenSource();
