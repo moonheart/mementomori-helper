@@ -23,6 +23,7 @@ namespace MementoMori.Ortega.Network.MagicOnion.Client
 		{
             if (_sender == null) return;
             await _sender.DisposeAsync();
+            await _sender.WaitForDisconnect();
         }
 
 		protected void AttachInternalReceiver(TReceiver internalReceiver, IDisconnectReceiver internalDisconnectReceiver)

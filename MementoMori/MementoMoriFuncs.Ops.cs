@@ -1900,8 +1900,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                                 var battleResultResponse = await GetResponse<GetLocalRaidBattleResultRequest, GetLocalRaidBattleResultResponse>(new GetLocalRaidBattleResultRequest());
                                 var isWinAttacker = battleResultResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                                 log(isWinAttacker ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]"));
-                                battleResultResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                                battleResultResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                                battleResultResponse.BattleRewardResult?.FixedItemList?.PrintUserItems(log);
+                                battleResultResponse.BattleRewardResult?.DropItemList?.PrintUserItems(log);
                             }
                             catch (Exception e)
                             {
