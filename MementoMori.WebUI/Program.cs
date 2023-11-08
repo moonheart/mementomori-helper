@@ -30,6 +30,8 @@ internal class Program
         {
             o.Dsn = "https://b4f992ec506ac3ae2b62c2d5a4445e4c@o4506120447852544.ingest.sentry.io/4506120448835584";
             o.TracesSampleRate = 1.0;
+            o.AutoSessionTracking = true;
+            o.IsGlobalModeEnabled = true;
         });
 
         builder.Configuration.AddJsonFile("appsettings.other.json", true, true);
