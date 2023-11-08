@@ -72,6 +72,7 @@ public class GameConfig
         public bool DisableAll { get; set; }
         public bool AutoReinforcementEquipmentOneTime { get; set; }
         public bool AutoPvp { get; set; }
+        public bool AutoLegendLeague { get; set; }
         public bool AutoDungeonBattle { get; set; }
         public bool AutoUseItems { get; set; }
         public bool AutoFreeGacha { get; set; }
@@ -83,6 +84,7 @@ public class GameConfig
         public string DailyJobCron { get; set; } = "0 10 4 ? * *";
         public string HourlyJobCron { get; set; } = "0 30 0,4,8,12,16,20 ? * *";
         public string PvpJobCron { get; set; } = "0 0 20 ? * *";
+        public string LegendLeagueJobCron { get; set; } = "0 10 20 ? * *";
         public string GuildRaidBossReleaseCron { get; set; } = "0 0 * ? * *";
         public string AutoBuyShopItemJobCron { get; set; } = "0 9 9,12,15,18 ? * *";
         public string AutoLocalRaidJobCron { get; set; } = "0 31 12,19 ? * *";

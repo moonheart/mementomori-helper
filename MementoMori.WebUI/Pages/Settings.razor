@@ -71,6 +71,7 @@
                 <MudSwitch Label="@ResourceStrings.DisableAllJobs" @bind-Checked="AutoJob__DisableAll" Color="Color.Primary"></MudSwitch>
                 <MudSwitch Label="@ResourceStrings.ReinforceEquipmentOnce" @bind-Checked="AutoJob__AutoReinforcementEquipmentOneTime" Color="Color.Primary"></MudSwitch>
                 <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")" @bind-Checked="AutoJob__AutoPvp" Color="Color.Primary"></MudSwitch>
+                <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]")" @bind-Checked="AutoJob__AutoLegendLeague" Color="Color.Primary"></MudSwitch>
                 <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")" @bind-Checked="AutoJob__AutoDungeonBattle" Color="Color.Primary"></MudSwitch>
                 <MudSwitch Label="@ResourceStrings.UseNormalItems" @bind-Checked="AutoJob__AutoUseItems" Color="Color.Primary"></MudSwitch>
                 <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonFooterGachaButtonLabel]")" @bind-Checked="AutoJob__AutoFreeGacha" Color="Color.Primary"></MudSwitch>
@@ -92,6 +93,7 @@
                 <MudTextField Label="@($"{ResourceStrings.DailyJob} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__DailyJobCron" Variant="Variant.Outlined"></MudTextField>
                 <MudTextField Label="@($"{ResourceStrings.RewardClaimJob} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__HourlyJobCron" Variant="Variant.Outlined"></MudTextField>
                 <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__PvpJobCron" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__LegendLeagueJobCron" Variant="Variant.Outlined"></MudTextField>
                 <MudTextField Label="@($"{Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__GuildRaidBossReleaseCron" Variant="Variant.Outlined"></MudTextField>
                 <MudTextField Label="@($"{ResourceStrings.ShopAutoBuyItems} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoBuyShopItemJobCron" Variant="Variant.Outlined"></MudTextField>
                 <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoLocalRaidJobCron" Variant="Variant.Outlined"></MudTextField>
@@ -469,6 +471,12 @@
         set => WritableGameConfig.Update(x => x.AutoJob.AutoPvp = value);
     }
 
+    public bool AutoJob__AutoLegendLeague
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoLegendLeague;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoLegendLeague = value);
+    }
+
     public bool AutoJob__AutoDungeonBattle
     {
         get => WritableGameConfig.Value.AutoJob.AutoDungeonBattle;
@@ -537,6 +545,16 @@
         set
         {
             WritableGameConfig.Update(x => x.AutoJob.PvpJobCron = value);
+            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+    }
+
+    public string AutoJob__LegendLeagueJobCron
+    {
+        get => WritableGameConfig.Value.AutoJob.LegendLeagueJobCron;
+        set
+        {
+            WritableGameConfig.Update(x => x.AutoJob.LegendLeagueJobCron = value);
             TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
