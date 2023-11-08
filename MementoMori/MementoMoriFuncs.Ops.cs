@@ -1310,6 +1310,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             await client.Connect();
             while (client.GetState() != HubClientState.Ready)
             {
+                if (token.IsCancellationRequested) return;
                 log("waiting for connection...");
                 await Task.Delay(1000);
             }
@@ -1329,6 +1330,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 client.SendGvgOpenMap(BattleType.GuildBattle, 0);
                 while (!localGvgReceiver.IsCastleInfoUpdated)
                 {
+                    if (token.IsCancellationRequested) return;
                     log("waiting for castle info...");
                     await Task.Delay(1000);
                 }
@@ -1357,6 +1359,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         client.SendGvgOpenPartyDeployDialog(BattleType.GuildBattle, castleInfo.CastleId);
                         while (!localGvgReceiver.IsDeployCharacterUpdated)
                         {
+                            if (token.IsCancellationRequested) return;
                             log("waiting for deploy dialog to open...");
                             await Task.Delay(1000);
                         }
@@ -1379,6 +1382,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         client.SendGvgAddCastleParty(BattleType.GuildBattle, castleInfo.CastleId, characterIds, characterInfos.Count);
                         while (!localGvgReceiver.IsDeployCharacterUpdated)
                         {
+                            if (token.IsCancellationRequested) return;
                             log("waiting for deploy...");
                             await Task.Delay(1000);
                         }
@@ -1387,6 +1391,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                         var name = TextResourceTable.Get(LocalGvgCastleTable.GetById(castleInfo.CastleId).NameKey);
                         var characters = string.Join(", ", characterIds.Select(d => CharacterTable.GetById(d).GetCombinedName()));
                         log(string.Format(ResourceStrings.Successfully_deployed, name, characters));
+                        client.SendGvgCloseCastleDialog(BattleType.GuildBattle, GvgDialogType.Deploy);
+                        await Task.Delay(1000);
                     }
                 }
             }
@@ -1920,6 +1926,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             await client.Connect();
             while (client.GetState() != HubClientState.Ready)
             {
+                if (token.IsCancellationRequested) return;
                 log("Waiting for connection...");
                 await Task.Delay(1000);
             }
