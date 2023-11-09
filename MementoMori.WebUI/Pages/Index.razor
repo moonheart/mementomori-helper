@@ -137,7 +137,7 @@
             <MudPaper Elevation="0">
                 @foreach (var info in Funcs.BountyQuestResponseInfo?.UserBountyQuestDtoInfos ?? new List<UserBountyQuestDtoInfo>())
                 {
-                    var bountyQuestInfo = Funcs.BountyQuestResponseInfo.BountyQuestInfos.First(d => d.BountyQuestId == info.BountyQuestId);
+                    var bountyQuestInfo = Funcs.BountyQuestResponseInfo.BountyQuestInfos.ToArray().First(d => d.BountyQuestId == info.BountyQuestId);
                     var name = TextResourceTable.Get(bountyQuestInfo.BountyQuestNameKey);
                     var rarityName = TextResourceTable.Get(bountyQuestInfo.BountyQuestRarity);
                     var itemNames = bountyQuestInfo.BountyQuestType == BountyQuestType.Guerrilla
@@ -307,7 +307,7 @@
                             </MudSelect>
                             @if (Funcs.SelectedAutoTowerType != TowerType.None)
                             {
-                                var maxTowerBattleId = Funcs.UserSyncData.UserTowerBattleDtoInfos.First(x => x.TowerType == Funcs.SelectedAutoTowerType).MaxTowerBattleId;
+                                var maxTowerBattleId = Funcs.UserSyncData.UserTowerBattleDtoInfos.ToArray().First(x => x.TowerType == Funcs.SelectedAutoTowerType).MaxTowerBattleId;
                                 var quests = TowerBattleQuestTable.GetArray().Where(d => d.TowerType == Funcs.SelectedAutoTowerType && d.Floor > maxTowerBattleId).Take(50);
                                 <MudSelect @bind-Value="selectedTargetTowerLayer" Label="@ResourceStrings.StopAfterSpecifiedStage">
                                     <MudSelectItem T="long" Value="0">@ResourceStrings.NoStop</MudSelectItem>
@@ -435,7 +435,7 @@
                 _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>
                 {
                     if (d == null) throw new ArgumentNullException(nameof(d));
-                    var cha = data.UserCharacterDtoInfos.First(x => x.Guid == d.CharacterGuid);
+                    var cha = data.UserCharacterDtoInfos.ToArray().First(x => x.Guid == d.CharacterGuid);
                     var chaMb = CharacterTable.GetById(cha.CharacterId);
                     var name = TextResourceTable.Get(chaMb.NameKey);
                     var equipmentMb = EquipmentTable.GetById(d.EquipmentId);
