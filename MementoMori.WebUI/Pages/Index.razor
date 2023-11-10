@@ -58,7 +58,14 @@
                         <td colspan="2">@TextResourceTable.Get("[PlayerId]") : @Funcs.UserSyncData?.UserStatusDtoInfo?.PlayerId</td>
                     </tr>
                     <tr>
-                        <td colspan="2">@ResourceStrings.Account_Creation_Time : @(Funcs.UserSyncData?.UserStatusDtoInfo?.CreateAt.ToDateTimeOffset())</td>
+                        @{
+                            var createTime = "";
+                            if (Funcs.LoginOk)
+                            {
+                                createTime = (Funcs.UserSyncData?.UserStatusDtoInfo?.CreateAt.ToDateTimeOffset() - NetworkManager.TimeManager.DiffFromUtc).ToString();
+                            }
+                        }
+                        <td colspan="2">@ResourceStrings.Account_Creation_Time : @(createTime)</td>
                     </tr>
                     <tr>
                         <td>@TextResourceTable.Get("[CommonPlayerRankLabel]") : @Funcs.UserSyncData?.UserStatusDtoInfo?.Rank</td>
