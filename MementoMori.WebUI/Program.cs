@@ -12,6 +12,8 @@ using MementoMori.WebUI;
 using MementoMori.WebUI.Pages;
 using Sentry;
 using MementoMori.WebUI.UI;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Net.Http.Headers;
 
 internal class Program
 {
@@ -69,7 +71,19 @@ internal class Program
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment()) app.UseExceptionHandler("/Error");
 
-        app.UseStaticFiles();
+        app.UseStaticFiles(new StaticFileOptions()
+        {
+            HttpsCompression = HttpsCompressionMode.Compress,
+            OnPrepareResponse = ctx =>
+            {
+                var typedHeaders = ctx.Context.Response.GetTypedHeaders();
+                typedHeaders.CacheControl = new CacheControlHeaderValue()
+                {
+                    Public = true,
+                    MaxAge = TimeSpan.FromDays(1)
+                };
+            }
+        });
         // app.UseAntiforgery();
         // app.MapRazorComponents<App>()
         //     .AddInteractiveServerRenderMode();
