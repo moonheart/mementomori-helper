@@ -11,6 +11,7 @@ using ReactiveUI;
 using MementoMori.WebUI;
 using MementoMori.WebUI.Pages;
 using Sentry;
+using MementoMori.WebUI.UI;
 
 internal class Program
 {
@@ -44,6 +45,7 @@ internal class Program
 
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();
+        builder.Services.AddSingleton<AtlasManager>();
         builder.Services.AddSingleton<AccountManager>();
         builder.Services.AddTransient<MementoNetworkManager>();
         builder.Services.AddTransient<MementoMoriFuncs>();

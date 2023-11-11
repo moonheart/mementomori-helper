@@ -15,6 +15,7 @@
 @using MementoMori.Ortega.Share.Data.Equipment
 @using MementoMori.Ortega.Share.Utils
 @using MementoMori.Common.Localization
+@using MementoMori.WebUI.Pages.Components
 @using ReactiveUI
 
 <PageTitle>@Masters.TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")</PageTitle>
@@ -258,23 +259,24 @@
                     };
                 var battlePower = BattlePowerCalculatorUtil.GetUserCharacterBattlePower(ViewModel.UserId, character);
 
-                <MudPaper Width="120px" @onclick="() => SelectCharacter(character)" Style="cursor: pointer">
-                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="0">
-                        <MudPaper Elevation="0" Style="@($"background: {elemntColor}")" Class="rounded-circle pa-2"/>
-                        <MudText>Lv@(character.Level)</MudText>
-                        <MudSpacer/>
-                        <MudIcon Class="ml-1" Size="Size.Small" Icon="@(character.IsLocked ? Icons.Material.Filled.Lock : Icons.Material.Filled.LockOpen)"/>
-                    </MudStack>
-                    <MudStack Row="true" AlignItems="AlignItems.Center">
-                        <MudText Typo="Typo.h6">@name</MudText>
-                    </MudStack>
-                    <MudStack Row="true" AlignItems="AlignItems.Center">
-                        <MudText>@Masters.TextResourceTable.Get("[CommonBattlePowerLabel]") @battlePower</MudText>
-                    </MudStack>
-                    <MudStack Row="true" AlignItems="AlignItems.Center">
-                        <MudText>@jobName</MudText>
-                        <MudText>@rarity</MudText>
-                    </MudStack>
+                <MudPaper Elevation="0" Width="100px" Height="100px" @onclick="() => SelectCharacter(character)" Style="cursor: pointer">
+                    <CharacterIcon Size="96" UserCharacterInfo="@Funcs.UserSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(character)" />
+                    @* <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="0"> *@
+                    @*     <MudPaper Elevation="0" Style="@($"background: {elemntColor}")" Class="rounded-circle pa-2"/> *@
+                    @*     <MudText>Lv@(character.Level)</MudText> *@
+                    @*     <MudSpacer/> *@
+                    @*     <MudIcon Class="ml-1" Size="Size.Small" Icon="@(character.IsLocked ? Icons.Material.Filled.Lock : Icons.Material.Filled.LockOpen)"/> *@
+                    @* </MudStack> *@
+                    @* <MudStack Row="true" AlignItems="AlignItems.Center"> *@
+                    @*     <MudText Typo="Typo.h6">@name</MudText> *@
+                    @* </MudStack> *@
+                    @* <MudStack Row="true" AlignItems="AlignItems.Center"> *@
+                    @*     <MudText>@Masters.TextResourceTable.Get("[CommonBattlePowerLabel]") @battlePower</MudText> *@
+                    @* </MudStack> *@
+                    @* <MudStack Row="true" AlignItems="AlignItems.Center"> *@
+                    @*     <MudText>@jobName</MudText> *@
+                    @*     <MudText>@rarity</MudText> *@
+                    @* </MudStack> *@
                 </MudPaper>
             }
         </MudPaper>
