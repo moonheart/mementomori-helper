@@ -1954,7 +1954,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     while (!token.IsCancellationRequested)
                     {
                         await Task.Delay(1000);
-                        if (localRaidReceiver.IsNoRemainingChallenges)
+                        if (localRaidReceiver.IsNoRemainingChallenges || localRaidReceiver.IsMaxTimeExceeded)
                         {
                             return;
                         }
