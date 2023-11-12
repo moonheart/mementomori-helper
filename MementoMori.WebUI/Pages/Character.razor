@@ -259,8 +259,8 @@
                     };
                 var battlePower = BattlePowerCalculatorUtil.GetUserCharacterBattlePower(ViewModel.UserId, character);
 
-                <MudPaper Elevation="0" Width="100px" Height="100px" @onclick="() => SelectCharacter(character)" Style="cursor: pointer">
-                    <CharacterIcon Size="96" UserCharacterInfo="@Funcs.UserSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(character)" />
+                <MudPaper Elevation="0" Width="72px" Height="72px" @onclick="() => SelectCharacter(character)" Style="cursor: pointer">
+                    <CharacterIcon Size="72" UserCharacterInfo="@Funcs.UserSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(character)" />
                     @* <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="0"> *@
                     @*     <MudPaper Elevation="0" Style="@($"background: {elemntColor}")" Class="rounded-circle pa-2"/> *@
                     @*     <MudText>Lv@(character.Level)</MudText> *@
