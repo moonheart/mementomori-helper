@@ -56,6 +56,19 @@ internal class Program
         builder.Services.AddOptions();
         builder.Services.ConfigureWritable<AuthOption>(builder.Configuration.GetSection("AuthOption"), "appsettings.user.json");
         builder.Services.ConfigureWritable<GameConfig>(builder.Configuration.GetSection("GameConfig"), "appsettings.user.json");
+        builder.Services.Configure<StaticFileOptions>(opt =>
+        {
+            opt.HttpsCompression = HttpsCompressionMode.Compress;
+            opt.OnPrepareResponse = ctx =>
+            {
+                var typedHeaders = ctx.Context.Response.GetTypedHeaders();
+                typedHeaders.CacheControl = new CacheControlHeaderValue()
+                {
+                    Public = true,
+                    MaxAge = TimeSpan.FromDays(1)
+                };
+            };
+        });
 
         builder.Services.AddQuartz();
         builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
@@ -71,19 +84,7 @@ internal class Program
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment()) app.UseExceptionHandler("/Error");
 
-        app.UseStaticFiles(new StaticFileOptions()
-        {
-            HttpsCompression = HttpsCompressionMode.Compress,
-            OnPrepareResponse = ctx =>
-            {
-                var typedHeaders = ctx.Context.Response.GetTypedHeaders();
-                typedHeaders.CacheControl = new CacheControlHeaderValue()
-                {
-                    Public = true,
-                    MaxAge = TimeSpan.FromDays(1)
-                };
-            }
-        });
+        app.UseStaticFiles();
         // app.UseAntiforgery();
         // app.MapRazorComponents<App>()
         //     .AddInteractiveServerRenderMode();
