@@ -2,6 +2,8 @@
 @using MementoMori.WebUI.UI
 @using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Enums
+@using MementoMori.Ortega.Custom
+@inject AccountManager AccountManager
 @inject AtlasManager AtlasManager
 
 @{
@@ -10,6 +12,8 @@
     var characterMb = Masters.CharacterTable.GetById(UserCharacterInfo.CharacterId);
     var element = AtlasManager.GetIconCharacterElement(characterMb.ElementType);
     var scale = Size / 128.0;
+    var isLevelLinkMember = AccountManager.Current.Funcs.UserSyncData.IsLevelLinkMember(UserCharacterInfo.Guid);
+    var level = isLevelLinkMember ? AccountManager.Current.Funcs.UserSyncData.GetLevelLinkLevel(UserCharacterInfo.CharacterId) : UserCharacterInfo.Level;
 }
 
 <div style="width: 128px; height: 128px; position: relative; transform:scale(@(scale));transform-origin: top left;">
@@ -53,10 +57,10 @@ top: 2px;
 right: 10px;
 font-size: 24px;
 z-index: 11;
-color: white;
+color: @(isLevelLinkMember ? "#abe4e6" : "white");
 text-shadow: 0px 0px 5px black;
 ">
-        Lv @UserCharacterInfo.Level
+        Lv @level
     </span>
     @if (!string.IsNullOrEmpty(deco))
     {

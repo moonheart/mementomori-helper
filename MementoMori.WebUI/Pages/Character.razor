@@ -38,6 +38,12 @@
                 </Header>
                 <ChildContent>
                     <MudTabPanel Text="@Masters.TextResourceTable.Get("[CommonHeaderCharacterDetailLabel]")">
+                        <MudField Label="@(Masters.TextResourceTable.Get("[CommonBattlePowerLabel]"))" Variant="Variant.Outlined">
+                            @{
+                                var battlePower = BattlePowerCalculatorUtil.GetUserCharacterBattlePower(ViewModel.UserId, _selectedCharactor);
+                            }
+                            <MudText>@battlePower</MudText>
+                        </MudField>
                         <MudField Label="@(Masters.TextResourceTable.Get("[CommonPotentialParameterLabel]"))" Variant="Variant.Outlined">
                             <MudStack Elevation="0" Class="d-flex gap-1 flex-wrap" Row="true">
                                 @foreach (var type in EnumUtil.GetValueList<BaseParameterType>())
