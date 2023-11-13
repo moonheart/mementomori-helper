@@ -133,47 +133,47 @@ public partial class MementoMoriFuncs
 
     public async Task AutoDungeonBattle(Action<string> log, CancellationToken cancellationToken)
     {
-        // 脱装备进副本，然后穿装备
-        var equips = UserSyncData.UserEquipmentDtoInfos.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d => d.CharacterGuid).ToList();
-        foreach (var g in equips)
-        {
-            var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
-            var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
-            log(string.Format(ResourceStrings.RemoveEquipmentOfCharacter, name, characterDto.Level));
-
-            // 脱装备
-            var removeEquipmentResponse = await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
-            {
-                UserCharacterGuid = g.Key,
-                EquipmentSlotTypes = g.Select(d => Masters.EquipmentTable.GetById(d.EquipmentId).SlotType).ToList()
-            });
-        }
+        // // 脱装备进副本，然后穿装备
+        // var equips = UserSyncData.UserEquipmentDtoInfos.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d => d.CharacterGuid).ToList();
+        // foreach (var g in equips)
+        // {
+        //     var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
+        //     var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
+        //     log(string.Format(ResourceStrings.RemoveEquipmentOfCharacter, name, characterDto.Level));
+        //
+        //     // 脱装备
+        //     var removeEquipmentResponse = await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
+        //     {
+        //         UserCharacterGuid = g.Key,
+        //         EquipmentSlotTypes = g.Select(d => Masters.EquipmentTable.GetById(d.EquipmentId).SlotType).ToList()
+        //     });
+        // }
 
         log($"{ResourceStrings.Enter} {Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")}");
         // 进副本
         var battleInfoResponse = await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(new GetDungeonBattleInfoRequest());
-        foreach (var g in equips)
-        {
-            var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
-            var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
-            log(string.Format(ResourceStrings.PutOnEquipmentOfCharacter, name, characterDto.Level));
-            // 穿装备
-            var changeInfos = g.Select(d =>
-            {
-                var equipmentMb = Masters.EquipmentTable.GetById(d.EquipmentId);
-                return new EquipmentChangeInfo()
-                {
-                    EquipmentGuid = d.Guid,
-                    EquipmentId = d.EquipmentId,
-                    EquipmentSlotType = equipmentMb.SlotType,
-                    IsInherit = false
-                };
-            });
-            var changeEquipmentResponse = await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(new ChangeEquipmentRequest()
-            {
-                UserCharacterGuid = g.Key, EquipmentChangeInfos = changeInfos.ToList()
-            });
-        }
+        // foreach (var g in equips)
+        // {
+        //     var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
+        //     var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
+        //     log(string.Format(ResourceStrings.PutOnEquipmentOfCharacter, name, characterDto.Level));
+        //     // 穿装备
+        //     var changeInfos = g.Select(d =>
+        //     {
+        //         var equipmentMb = Masters.EquipmentTable.GetById(d.EquipmentId);
+        //         return new EquipmentChangeInfo()
+        //         {
+        //             EquipmentGuid = d.Guid,
+        //             EquipmentId = d.EquipmentId,
+        //             EquipmentSlotType = equipmentMb.SlotType,
+        //             IsInherit = false
+        //         };
+        //     });
+        //     var changeEquipmentResponse = await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(new ChangeEquipmentRequest()
+        //     {
+        //         UserCharacterGuid = g.Key, EquipmentChangeInfos = changeInfos.ToList()
+        //     });
+        // }
 
         if (battleInfoResponse.UserDungeonDtoInfo.IsDoneRewardClearLayer(3))
         {
