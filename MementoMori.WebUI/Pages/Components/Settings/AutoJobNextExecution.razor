@@ -1,0 +1,68 @@
+﻿@using Quartz
+@using Quartz.Impl.Matchers
+@using MementoMori.Common.Localization
+@inherits MementoMori.WebUI.Models.AccountComponent
+@inject ISchedulerFactory SchedulerFactory
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>@ResourceStrings.AutoJobCrons</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudSimpleTable Dense="true">
+            <thead>
+            <tr>
+                <th>@ResourceStrings.Name</th>
+                <th>@ResourceStrings.NextExecutionTime</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var jobInfo in JobInfos)
+            {
+                <tr>
+                    <td>@jobInfo.Desc</td>
+                    <td>@jobInfo.NextFireTime</td>
+                </tr>
+            }
+            </tbody>
+        </MudSimpleTable>
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+    protected override async Task AccountChanged()
+    {
+        var scheduler = await SchedulerFactory.GetScheduler();
+        var triggerKeys = await scheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup());
+        JobInfos.Clear();
+        foreach (var triggerKey in triggerKeys)
+        {
+            var trigger = await scheduler.GetTrigger(triggerKey);
+            if (!trigger.JobKey.Name.StartsWith(AccountManager.CurrentUserId.ToString()))
+            {
+                continue;
+            }
+            var jobDetail = await scheduler.GetJobDetail(trigger.JobKey);
+            JobInfos.Add(new JobInfo()
+            {
+                Desc = jobDetail.Description,
+                NextFireTime = trigger.GetNextFireTimeUtc()?.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+
+
+    List<JobInfo> JobInfos = new();
+
+    private class JobInfo
+    {
+        public string Desc { get; set; }
+        public string NextFireTime { get; set; }
+    }
+
+
+}

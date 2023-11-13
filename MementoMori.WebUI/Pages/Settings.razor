@@ -1,133 +1,29 @@
 ﻿@inject ISnackbar Snackbar
 @using MementoMori.Option
-@using System.Linq.Expressions
 @using MementoMori.Common.Localization
-@using MementoMori.Jobs
 @using MementoMori.Ortega.Common.Utils
 @using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Data.Item
 @using MementoMori.Ortega.Share.Enums
-@using Quartz
-@using Quartz.Impl.Matchers
+@using MementoMori.WebUI.Pages.Components.Settings
 @inject IWritableOptions<GameConfig> WritableGameConfig
 @inject IWritableOptions<AuthOption> authOption
-@inject TimeZoneAwareJobRegister TimeZoneAwareJobRegister
-@inject ISchedulerFactory SchedulerFactory
-@inject IDialogService DialogService
 
 @inherits MementoMori.WebUI.Models.AccountComponent
 @page "/settings"
 
 <MudGrid>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText>@ResourceStrings.AccountManagement</MudText>
-                </CardHeaderContent>
-                <CardHeaderActions>
-                    <MudButton Variant="Variant.Outlined" Disabled="accountDoingAction" OnClick="AddAccountClick">@ResourceStrings.Add</MudButton>
-                </CardHeaderActions>
-            </MudCardHeader>
-            <MudCardContent Class="pa-0">
-                <MudList>
-                    @foreach (var accountInfo in accounts)
-                    {
-                        var funcs = AccountManager.Get(accountInfo.UserId).Funcs;
-                        <MudListItem Value="accountInfo" Dense="true">
-                            <MudStack Row="true" Class="align-content-center align-center">
-                                <MudPaper Elevation="0" Class="d-flex align-content-center align-center">
-                                    <MudText>@accountInfo.Name</MudText>
-                                </MudPaper>
-                                <MudSpacer/>
-                                @if (funcs.LoginOk)
-                                {
-                                    var text = accountInfo.AutoLogin ? ResourceStrings.AutoLogin : ResourceStrings.LoggedIn;
-                                    <MudChip Color="Color.Success" Size="Size.Small">@text</MudChip>
-                                }
-                                else
-                                {
-                                    var text = accountInfo.AutoLogin ? ResourceStrings.AutoLogin : ResourceStrings.NotLoggedIn;
-                                    <MudChip Color="Color.Warning" Size="Size.Small">@text</MudChip>
-                                }
-                                <MudIconButton Title="@ResourceStrings.Login" Icon="@Icons.Material.Filled.Login" Disabled="accountDoingAction" OnClick="() => LoginAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
-                                <MudIconButton Title="@ResourceStrings.Exit" Icon="@Icons.Material.Filled.Logout" Disabled="accountDoingAction" OnClick="() => LogoutAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
-                                <MudIconButton Title="@ResourceStrings.Settings" Icon="@Icons.Material.Filled.Settings" Disabled="accountDoingAction" OnClick="() => ShowAccountSetting(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
-                            </MudStack>
-                        </MudListItem>
-                    }
-                </MudList>
-            </MudCardContent>
-        </MudCard>
+        <AccountManagement />
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText>@ResourceStrings.AutoJobSwitchs</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudSwitch Label="@ResourceStrings.DisableAllJobs" @bind-Checked="AutoJob__DisableAll" Color="Color.Primary"></MudSwitch>
-                <MudSwitch Label="@ResourceStrings.ReinforceEquipmentOnce" @bind-Checked="AutoJob__AutoReinforcementEquipmentOneTime" Color="Color.Primary"></MudSwitch>
-                <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")" @bind-Checked="AutoJob__AutoPvp" Color="Color.Primary"></MudSwitch>
-                <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]")" @bind-Checked="AutoJob__AutoLegendLeague" Color="Color.Primary"></MudSwitch>
-                <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")" @bind-Checked="AutoJob__AutoDungeonBattle" Color="Color.Primary"></MudSwitch>
-                <MudSwitch Label="@ResourceStrings.UseNormalItems" @bind-Checked="AutoJob__AutoUseItems" Color="Color.Primary"></MudSwitch>
-                <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonFooterGachaButtonLabel]")" @bind-Checked="AutoJob__AutoFreeGacha" Color="Color.Primary"></MudSwitch>
-                <MudSwitch Label="@Masters.TextResourceTable.Get("[CharacterMenuTabCharacterRankUp]")" @bind-Checked="AutoJob__AutoRankUpCharacter" Color="Color.Primary"></MudSwitch>
-                <MudSwitch Label="@Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")" @bind-Checked="AutoJob__AutoOpenGuildRaid" Color="Color.Primary"></MudSwitch>
-                <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]")" @bind-Checked="AutoJob__AutoLocalRaid" Color="Color.Primary"></MudSwitch>
-                <MudSwitch Label="@ResourceStrings.Deploy_defense" @bind-Checked="AutoJob__AutoDeployGuildDefense" Color="Color.Primary"></MudSwitch>
-            </MudCardContent>
-        </MudCard>
+        <AutoJobSwitch />
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText>@ResourceStrings.AutoJobCrons</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudTextField Label="@($"{ResourceStrings.DailyJob} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__DailyJobCron" Variant="Variant.Outlined"></MudTextField>
-                <MudTextField Label="@($"{ResourceStrings.RewardClaimJob} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__HourlyJobCron" Variant="Variant.Outlined"></MudTextField>
-                <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__PvpJobCron" Variant="Variant.Outlined"></MudTextField>
-                <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__LegendLeagueJobCron" Variant="Variant.Outlined"></MudTextField>
-                <MudTextField Label="@($"{Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__GuildRaidBossReleaseCron" Variant="Variant.Outlined"></MudTextField>
-                <MudTextField Label="@($"{ResourceStrings.ShopAutoBuyItems} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoBuyShopItemJobCron" Variant="Variant.Outlined"></MudTextField>
-                <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoLocalRaidJobCron" Variant="Variant.Outlined"></MudTextField>
-                <MudTextField Label="@($"{ResourceStrings.Deploy_defense} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoDeployGuildDefenseJobCron" Variant="Variant.Outlined"></MudTextField>
-            </MudCardContent>
-        </MudCard>
+        <AutoJobCron />
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText>@ResourceStrings.AutoJobCrons</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudSimpleTable Dense="true">
-                    <thead>
-                    <tr>
-                        <th>@ResourceStrings.Name</th>
-                        <th>@ResourceStrings.NextExecutionTime</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var jobInfo in JobInfos)
-                    {
-                        <tr>
-                            <td>@jobInfo.Desc</td>
-                            <td>@jobInfo.NextFireTime</td>
-                        </tr>
-                    }
-                    </tbody>
-                </MudSimpleTable>
-            </MudCardContent>
-        </MudCard>
+        <AutoJobNextExecution />
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
         <MudCard>
@@ -139,8 +35,8 @@
             <MudCardContent>
                 <MudField Label="@ResourceStrings.AutoGachaConsumeItems" Variant="Variant.Outlined">
                     <MudSelect T="UserItem" Label="" MultiSelection="true" Dense="true" Comparer="@(new UserItemComparer())"
-                               @bind-SelectedValues="GachaConfig__AutoGachaConsumeUserItems" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
-                        @foreach (var item in GachaConsumeItems)
+                               @bind-SelectedValues="GachaConfigAutoGachaConsumeUserItems" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
+                        @foreach (var item in _gachaConsumeItems)
                         {
                             <MudSelectItem T="UserItem" Value="@item">@ItemUtil.GetItemName(item)</MudSelectItem>
                         }
@@ -160,8 +56,8 @@
             <MudCardContent>
                 <MudField Label="@ResourceStrings.BountyQuestTargetItems" Variant="Variant.Outlined">
                     <MudSelect T="UserItem" Label="" MultiSelection="true" Dense="true" Comparer="@(new UserItemComparer())"
-                               @bind-SelectedValues="BountyQuestAuto__TargetItems" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
-                        @foreach (var item in BountyQuestRewardItems)
+                               @bind-SelectedValues="BountyQuestAutoTargetItems" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
+                        @foreach (var item in _bountyQuestRewardItems)
                         {
                             <MudSelectItem T="UserItem" Value="@item">@ItemUtil.GetItemName(item)</MudSelectItem>
                         }
@@ -179,10 +75,10 @@
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent>
-                <MudSwitch Label="@ResourceStrings.PreferTreasureChest" @bind-Checked="DungeonBattle__PreferTreasureChest" Color="Color.Primary"/>
-                <MudNumericField Label="@ResourceStrings.MaxUseRecoveryItem" @bind-Value="DungeonBattle__MaxUseFruitOfHealing" Min="0" Max="99"/>
+                <MudSwitch Label="@ResourceStrings.PreferTreasureChest" @bind-Checked="DungeonBattlePreferTreasureChest" Color="Color.Primary"/>
+                <MudNumericField Label="@ResourceStrings.MaxUseRecoveryItem" @bind-Value="DungeonBattleMaxUseFruitOfHealing" Min="0" Max="99"/>
                 <MudField Label="@ResourceStrings.DungeonBattleTargetItems" Variant="Variant.Outlined">
-                    @foreach (var item in DungeonBattle__ShopTargetItems)
+                    @foreach (var item in DungeonBattleShopTargetItems)
                     {
                         var text = $"{ItemUtil.GetItemName(item.ItemType, item.ItemId)} {item.MinDiscountPercent}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}";
                         <MudChip OnClose="() => DungeonBattleRemoveItem(item)">@text</MudChip>
@@ -204,7 +100,7 @@
             </MudCardHeader>
             <MudCardContent>
                 <MudField Label="@ResourceStrings.Select_tasks_based_on_reward_quantity_and_weight" Variant="Variant.Outlined">
-                    @foreach (var reward in localRaidRewardItems)
+                    @foreach (var reward in _localRaidRewardItems)
                     {
                         <MudNumericField Label="@ItemUtil.GetItemName(reward.ItemType, reward.ItemId)" Margin="Margin.None" @bind-Value="reward.Weight" />
                     }
@@ -225,7 +121,7 @@
             </MudCardHeader>
             <MudCardContent>
                 <MudField Label="@ResourceStrings.ShopAutoBuyItems" Variant="Variant.Outlined">
-                    @foreach (var item in Shop__AutoBuyItems)
+                    @foreach (var item in ShopAutoBuyItems)
                     {
                         var buy = item.BuyItem == null ? ResourceStrings.AnyItems : $"{ItemUtil.GetItemName(item.BuyItem.ItemType, item.BuyItem.ItemId)}";
                         var consume = item.ConsumeItem == null ? ResourceStrings.AnyItems : $"{ItemUtil.GetItemName(item.ConsumeItem.ItemType, item.ConsumeItem.ItemId)}";
@@ -252,94 +148,38 @@
     </MudItem>
 </MudGrid>
 
-<MudDialog @bind-IsVisible="DungeonBattleSelectItemDialog" Options="@(new DialogOptions() {CloseButton = true})">
+<MudDialog @bind-IsVisible="_dungeonBattleSelectItemDialog" Options="@(new DialogOptions() {CloseButton = true})">
     <DialogContent>
-        <MudSelect T="UserItem" @bind-Value="DungeonBattleSelectedItem">
-            @foreach (var item in DungeonBattleShopItems)
+        <MudSelect T="UserItem" @bind-Value="_dungeonBattleSelectedItem">
+            @foreach (var item in _dungeonBattleShopItems)
             {
                 <MudSelectItem T="UserItem" Value="item">@(ItemUtil.GetItemName(item))</MudSelectItem>
             }
         </MudSelect>
-        <MudSlider Min="0" Max="100" Step="10" @bind-Value="DungeonBattleSelectedDiscount">@($"{ResourceStrings.DiscountPercentageforProducts} {DungeonBattleSelectedDiscount}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}")</MudSlider>
+        <MudSlider Min="0" Max="100" Step="10" @bind-Value="_dungeonBattleSelectedDiscount">@($"{ResourceStrings.DiscountPercentageforProducts} {_dungeonBattleSelectedDiscount}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}")</MudSlider>
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="ConfirmDungeonBattleSelectItem">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
     </DialogActions>
 </MudDialog>
 
-<MudDialog @bind-IsVisible="addAccountDialog" Options="@(new DialogOptions() {CloseButton = true})">
-    <DialogContent>
-        <MudTextField Label="@ResourceStrings.Name" @bind-Value="addAccountName"></MudTextField>
-        <MudNumericField Label="@ResourceStrings.Account" @bind-Value="addAccountUserId"></MudNumericField>
-        <MudTextField Label="@ResourceStrings.Password" @bind-Value="addAccountPassword"></MudTextField>
-        <MudSwitch Label="@ResourceStrings.AutoLogin" @bind-Checked="addAccountAutoLogin" Color="Color.Primary"></MudSwitch>
-    </DialogContent>
-    <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="accountDoingAction" OnClick="AddAccountConfirmClick">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
-    </DialogActions>
-</MudDialog>
-
-<MudDialog @bind-IsVisible="settingAccountDialog" Options="@(new DialogOptions() {CloseButton = true})">
-    <DialogContent>
-        <MudTextField Label="@ResourceStrings.Name" @bind-Value="settingAccountName"></MudTextField>
-        <MudNumericField Disabled="true" Label="@ResourceStrings.Account" @bind-Value="settingAccountUserId"></MudNumericField>
-        <MudTextField Label="ClientKey" @bind-Value="settingAccountClientKey"></MudTextField>
-        <MudSwitch Label="@ResourceStrings.AutoLogin" @bind-Checked="settingAccountAutoLogin" Color="Color.Primary"></MudSwitch>
-    </DialogContent>
-    <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveAccountSetting">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
-    </DialogActions>
-</MudDialog>
 
 @code {
 
-    List<UserItem> GachaConsumeItems = new();
-    List<UserItem> BountyQuestRewardItems = new();
-    List<UserItem> DungeonBattleShopItems = new();
-    List<JobInfo> JobInfos = new();
+    List<UserItem> _gachaConsumeItems = new();
+    List<UserItem> _bountyQuestRewardItems = new();
+    List<UserItem> _dungeonBattleShopItems = new();
     private IEnumerable<UserItem> _selected;
-    UserItem DungeonBattleSelectedItem;
-    int DungeonBattleSelectedDiscount;
-    bool DungeonBattleSelectItemDialog;
+    UserItem _dungeonBattleSelectedItem;
+    int _dungeonBattleSelectedDiscount;
+    bool _dungeonBattleSelectItemDialog;
 
-    bool accountDoingAction;
 
-    bool addAccountDialog;
-    string addAccountName;
-    long addAccountUserId;
-    string addAccountPassword;
-    bool addAccountAutoLogin;
-
-    List<AccountInfo> accounts = new();
-
-    bool settingAccountDialog;
-    string settingAccountName;
-    long settingAccountUserId;
-    string settingAccountClientKey;
-    bool settingAccountAutoLogin;
-
-    List<GameConfig.WeightedItem> localRaidRewardItems;
+    List<GameConfig.WeightedItem> _localRaidRewardItems;
 
 
     protected override async Task AccountChanged()
     {
-        var scheduler = await SchedulerFactory.GetScheduler();
-        var triggerKeys = await scheduler.GetTriggerKeys(GroupMatcher<TriggerKey>.AnyGroup());
-        JobInfos.Clear();
-        foreach (var triggerKey in triggerKeys)
-        {
-            var trigger = await scheduler.GetTrigger(triggerKey);
-            if (!trigger.JobKey.Name.StartsWith(AccountManager.CurrentUserId.ToString()))
-            {
-                continue;
-            }
-            var jobDetail = await scheduler.GetJobDetail(trigger.JobKey);
-            JobInfos.Add(new JobInfo()
-            {
-                Desc = jobDetail.Description,
-                NextFireTime = trigger.GetNextFireTimeUtc()?.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss")
-            });
-        }
         await InvokeAsync(StateHasChanged);
     }
 
@@ -347,10 +187,10 @@
     {
         await base.OnInitializedAsync();
 
-        GachaConsumeItems = Masters.ItemTable.GetArray()
+        _gachaConsumeItems = Masters.ItemTable.GetArray()
             .Where(d => d.ItemType == ItemType.GachaTicket || d.ItemType == ItemType.FriendPoint || d.ItemType == ItemType.Gold)
             .Select(d => new UserItem() {ItemId = d.ItemId, ItemType = d.ItemType}).ToList();
-        BountyQuestRewardItems.AddRange(new[]
+        _bountyQuestRewardItems.AddRange(new[]
         {
             new UserItem() {ItemType = ItemType.Gold, ItemId = 1},
             new UserItem() {ItemType = ItemType.CurrencyFree, ItemId = 1},
@@ -365,81 +205,80 @@
             new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 27},
             new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 28}
         });
-        DungeonBattleShopItems.AddRange(new[]
+        _dungeonBattleShopItems.AddRange(new[]
         {
             new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}
         });
-        accounts = authOption.Value.Accounts.ToList();
-        localRaidRewardItems = WritableGameConfig.Value.LocalRaid.RewardItems;
+        _localRaidRewardItems = WritableGameConfig.Value.LocalRaid.RewardItems;
     }
 
     #region DungeonBattle
 
     private void DungeonBattleRemoveItem(GameConfig.ShopDiscountItem item)
     {
-        var tmp = DungeonBattle__ShopTargetItems.ToList();
+        var tmp = DungeonBattleShopTargetItems.ToList();
         tmp.Remove(item);
-        DungeonBattle__ShopTargetItems = tmp;
+        DungeonBattleShopTargetItems = tmp;
     }
 
     private void ShowDungeonBattleSelectItemDialog()
     {
-        DungeonBattleSelectItemDialog = true;
-        DungeonBattleSelectedItem = null;
-        DungeonBattleSelectedDiscount = 0;
+        _dungeonBattleSelectItemDialog = true;
+        _dungeonBattleSelectedItem = null;
+        _dungeonBattleSelectedDiscount = 0;
     }
 
     private void ConfirmDungeonBattleSelectItem()
     {
-        if (DungeonBattleSelectedItem == null)
+        if (_dungeonBattleSelectedItem == null)
         {
             return;
         }
-        var tmp = DungeonBattle__ShopTargetItems.ToList();
-        var existing = tmp.Find(d => d.ItemType == DungeonBattleSelectedItem.ItemType && d.ItemId == DungeonBattleSelectedItem.ItemId);
+        var tmp = DungeonBattleShopTargetItems.ToList();
+        var existing = tmp.Find(d => d.ItemType == _dungeonBattleSelectedItem.ItemType && d.ItemId == _dungeonBattleSelectedItem.ItemId);
         if (existing != null)
         {
-            existing.MinDiscountPercent = DungeonBattleSelectedDiscount;
+            existing.MinDiscountPercent = _dungeonBattleSelectedDiscount;
         }
         else
         {
             tmp.Add(new GameConfig.ShopDiscountItem()
             {
-                ItemId = DungeonBattleSelectedItem.ItemId,
-                ItemType = DungeonBattleSelectedItem.ItemType,
-                MinDiscountPercent = DungeonBattleSelectedDiscount
+                ItemId = _dungeonBattleSelectedItem.ItemId,
+                ItemType = _dungeonBattleSelectedItem.ItemType,
+                MinDiscountPercent = _dungeonBattleSelectedDiscount
             });
         }
-        DungeonBattle__ShopTargetItems = tmp;
-        DungeonBattleSelectItemDialog = false;
+        DungeonBattleShopTargetItems = tmp;
+        _dungeonBattleSelectItemDialog = false;
     }
 
 
-    IEnumerable<UserItem> GachaConfig__AutoGachaConsumeUserItems
+    IEnumerable<UserItem> GachaConfigAutoGachaConsumeUserItems
     {
         get => WritableGameConfig.Value.GachaConfig.AutoGachaConsumeUserItems;
         set => WritableGameConfig.Update(x => x.GachaConfig.AutoGachaConsumeUserItems = value.ToList());
     }
 
-    IEnumerable<UserItem> BountyQuestAuto__TargetItems
+    IEnumerable<UserItem> BountyQuestAutoTargetItems
     {
         get => WritableGameConfig.Value.BountyQuestAuto.TargetItems;
         set => WritableGameConfig.Update(x => x.BountyQuestAuto.TargetItems = value.ToList());
     }
 
-    IEnumerable<GameConfig.ShopDiscountItem> DungeonBattle__ShopTargetItems
+    IEnumerable<GameConfig.ShopDiscountItem> DungeonBattleShopTargetItems
     {
         get => WritableGameConfig.Value.DungeonBattle.ShopTargetItems;
         set => WritableGameConfig.Update(x => x.DungeonBattle.ShopTargetItems = value.ToList());
     }
 
-    bool DungeonBattle__PreferTreasureChest
+    bool DungeonBattlePreferTreasureChest
     {
         get => WritableGameConfig.Value.DungeonBattle.PreferTreasureChest;
         set => WritableGameConfig.Update(x => x.DungeonBattle.PreferTreasureChest = value);
     }
 
-    int DungeonBattle__MaxUseFruitOfHealing
+    int DungeonBattleMaxUseFruitOfHealing
     {
         get => WritableGameConfig.Value.DungeonBattle.MaxUseRecoveryItem;
         set => WritableGameConfig.Update(x => x.DungeonBattle.MaxUseRecoveryItem = value);
@@ -447,163 +286,9 @@
 
     #endregion
 
-    #region AutoJob
-
-    public bool AutoJob__DisableAll
-    {
-        get => WritableGameConfig.Value.AutoJob.DisableAll;
-        set
-        {
-            WritableGameConfig.Update(x => x.AutoJob.DisableAll = value);
-            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-    }
-
-    public bool AutoJob__AutoReinforcementEquipmentOneTime
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoReinforcementEquipmentOneTime;
-        set => WritableGameConfig.Update(x => x.AutoJob.AutoReinforcementEquipmentOneTime = value);
-    }
-
-    public bool AutoJob__AutoPvp
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoPvp;
-        set => WritableGameConfig.Update(x => x.AutoJob.AutoPvp = value);
-    }
-
-    public bool AutoJob__AutoLegendLeague
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoLegendLeague;
-        set => WritableGameConfig.Update(x => x.AutoJob.AutoLegendLeague = value);
-    }
-
-    public bool AutoJob__AutoDungeonBattle
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoDungeonBattle;
-        set => WritableGameConfig.Update(x => x.AutoJob.AutoDungeonBattle = value);
-    }
-
-    public bool AutoJob__AutoUseItems
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoUseItems;
-        set => WritableGameConfig.Update(x => x.AutoJob.AutoUseItems = value);
-    }
-
-    public bool AutoJob__AutoFreeGacha
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoFreeGacha;
-        set => WritableGameConfig.Update(x => x.AutoJob.AutoFreeGacha = value);
-    }
-
-    public bool AutoJob__AutoRankUpCharacter
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoRankUpCharacter;
-        set => WritableGameConfig.Update(x => x.AutoJob.AutoRankUpCharacter = value);
-    }
-
-    public bool AutoJob__AutoOpenGuildRaid
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoOpenGuildRaid;
-        set => WritableGameConfig.Update(x => x.AutoJob.AutoOpenGuildRaid = value);
-    }
-
-    public bool AutoJob__AutoLocalRaid
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoLocalRaid;
-        set => WritableGameConfig.Update(x => x.AutoJob.AutoLocalRaid = value);
-    }
-
-    public bool AutoJob__AutoDeployGuildDefense
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoDeployGuildDefense;
-        set => WritableGameConfig.Update(x => x.AutoJob.AutoDeployGuildDefense = value);
-    }
-    
-    public string AutoJob__DailyJobCron
-    {
-        get => WritableGameConfig.Value.AutoJob.DailyJobCron;
-        set
-        {
-            WritableGameConfig.Update(x => x.AutoJob.DailyJobCron = value);
-            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-    }
-
-    public string AutoJob__HourlyJobCron
-    {
-        get => WritableGameConfig.Value.AutoJob.HourlyJobCron;
-        set
-        {
-            WritableGameConfig.Update(x => x.AutoJob.HourlyJobCron = value);
-            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-    }
-
-    public string AutoJob__PvpJobCron
-    {
-        get => WritableGameConfig.Value.AutoJob.PvpJobCron;
-        set
-        {
-            WritableGameConfig.Update(x => x.AutoJob.PvpJobCron = value);
-            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-    }
-
-    public string AutoJob__LegendLeagueJobCron
-    {
-        get => WritableGameConfig.Value.AutoJob.LegendLeagueJobCron;
-        set
-        {
-            WritableGameConfig.Update(x => x.AutoJob.LegendLeagueJobCron = value);
-            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-    }
-
-    public string AutoJob__GuildRaidBossReleaseCron
-    {
-        get => WritableGameConfig.Value.AutoJob.GuildRaidBossReleaseCron;
-        set
-        {
-            WritableGameConfig.Update(x => x.AutoJob.GuildRaidBossReleaseCron = value);
-            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-    }
-
-    public string AutoJob__AutoBuyShopItemJobCron
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoBuyShopItemJobCron;
-        set
-        {
-            WritableGameConfig.Update(x => x.AutoJob.AutoBuyShopItemJobCron = value);
-            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-    }
-
-    public string AutoJob__AutoLocalRaidJobCron
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoLocalRaidJobCron;
-        set
-        {
-            WritableGameConfig.Update(x => x.AutoJob.AutoLocalRaidJobCron = value);
-            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-    }
-    
-    public string AutoJob__AutoDeployGuildDefenseJobCron
-    {
-        get => WritableGameConfig.Value.AutoJob.AutoDeployGuildDefenseJobCron;
-        set
-        {
-            WritableGameConfig.Update(x => x.AutoJob.AutoDeployGuildDefenseJobCron = value);
-            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-    }
-
-    #endregion
-
     #region Shop
 
-    public List<GameConfig.ShopAutoBuyItem> Shop__AutoBuyItems
+    public List<GameConfig.ShopAutoBuyItem> ShopAutoBuyItems
     {
         get => WritableGameConfig.Value.Shop.AutoBuyItems;
         set => WritableGameConfig.Update(x => x.Shop.AutoBuyItems = value);
@@ -611,14 +296,14 @@
 
     private void RemoveShopAutoBuyItem(GameConfig.ShopAutoBuyItem item)
     {
-        var tmp = Shop__AutoBuyItems.ToList();
+        var tmp = ShopAutoBuyItems.ToList();
         tmp.Remove(item);
-        Shop__AutoBuyItems = tmp;
+        ShopAutoBuyItems = tmp;
     }
 
     private void ShopAutoBuyRestoreDefault()
     {
-        Shop__AutoBuyItems = new List<GameConfig.ShopAutoBuyItem>()
+        ShopAutoBuyItems = new List<GameConfig.ShopAutoBuyItem>()
         {
             new() {BuyItem = new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}, ShopTabId = 1, MinDiscountPercent = 20},
             new() {ShopTabId = 1, ConsumeItem = new UserItem() {ItemType = ItemType.Gold, ItemId = 1}}
@@ -637,112 +322,11 @@
 
     #endregion
 
-    #region Account
-
-    private void AddAccountClick()
-    {
-        this.addAccountDialog = true;
-    }
-
-    private async Task AddAccountConfirmClick()
-    {
-        if (string.IsNullOrWhiteSpace(addAccountName)
-            || addAccountUserId <= 0
-            || string.IsNullOrWhiteSpace(addAccountPassword))
-        {
-            return;
-        }
-        if (addAccountUserId <= 0 || string.IsNullOrEmpty(addAccountPassword))
-        {
-            return;
-        }
-        var account = AccountManager.Get(addAccountUserId);
-        if (account.Funcs.LoginOk)
-        {
-            return;
-        }
-        try
-        {
-            accountDoingAction = true;
-            var clientKey = await account.Funcs.GetClientKey(addAccountPassword);
-            if (clientKey == null)
-            {
-                throw new Exception("ClientKey is null");
-            }
-            AccountManager.AddAccountInfo(addAccountUserId, clientKey, addAccountName, addAccountAutoLogin);
-            accountDoingAction = false;
-            addAccountDialog = false;
-            accounts = authOption.Value.Accounts.ToList();
-            StateHasChanged();
-        }
-        catch (Exception e)
-        {
-            await DialogService.ShowMessageBox(ResourceStrings.Failed_to_retrieve_account_information, e.Message);
-        }
-    }
-
-    private async Task LoginAccount(long userId)
-    {
-        accountDoingAction = true;
-        var account = AccountManager.Get(userId);
-        await account.Funcs.AutoLogin(true);
-
-        Snackbar.Clear();
-        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-        Snackbar.Add(ResourceStrings.Login_successful, Severity.Success);
-        accountDoingAction = false;
-    }
-
-    private async Task LogoutAccount(long userId)
-    {
-        accountDoingAction = true;
-        var account = AccountManager.Get(userId);
-        await account.Funcs.Logout();
-
-        Snackbar.Clear();
-        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-        Snackbar.Add(ResourceStrings.Logout_successful, Severity.Success);
-        accountDoingAction = false;
-    }
-
-    private void ShowAccountSetting(long userId)
-    {
-        var account = AccountManager.GetAccountInfo(userId);
-        settingAccountUserId = userId;
-        settingAccountName = account.Name;
-        settingAccountAutoLogin = account.AutoLogin;
-        settingAccountClientKey = account.ClientKey;
-        settingAccountDialog = true;
-    }
-
-    private void SaveAccountSetting()
-    {
-        authOption.Update(opt =>
-        {
-            var a = opt.Accounts.FirstOrDefault(d => d.UserId == settingAccountUserId);
-            if (a != null)
-            {
-                a.Name = settingAccountName;
-                a.AutoLogin = settingAccountAutoLogin;
-                a.ClientKey = settingAccountClientKey;
-            }
-        });
-        AccountManager.UpdateAccountInfo(settingAccountUserId);
-        Snackbar.Clear();
-        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-        Snackbar.Add(ResourceStrings.Save_successful, Severity.Success);
-        settingAccountDialog = false;
-        accounts = authOption.Value.Accounts.ToList();
-        StateHasChanged();
-    }
-
-    #endregion
-
     private void SaveLocalRaidConfig()
     {
         WritableGameConfig.Update(opt =>
         {
-            opt.LocalRaid.RewardItems = localRaidRewardItems;
+            opt.LocalRaid.RewardItems = _localRaidRewardItems;
         });
         Snackbar.Clear();
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
@@ -764,12 +348,6 @@
         {
             return HashCode.Combine(obj.ItemId, (int) obj.ItemType);
         }
-    }
-
-    private class JobInfo
-    {
-        public string Desc { get; set; }
-        public string NextFireTime { get; set; }
     }
 
 }

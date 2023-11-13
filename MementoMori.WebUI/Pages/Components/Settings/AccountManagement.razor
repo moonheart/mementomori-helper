@@ -1,0 +1,194 @@
+﻿@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IWritableOptions<AuthOption> authOption
+@using MementoMori.Common.Localization
+@using MementoMori.Option
+@using MementoMori.Ortega.Share
+@inherits MementoMori.WebUI.Models.AccountComponent
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>@ResourceStrings.AccountManagement</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudButton Variant="Variant.Outlined" Disabled="_accountDoingAction" OnClick="AddAccountClick">@ResourceStrings.Add</MudButton>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent Class="pa-0">
+        <MudList>
+            @foreach (var accountInfo in _accounts)
+            {
+                var funcs = AccountManager.Get(accountInfo.UserId).Funcs;
+                <MudListItem Value="accountInfo" Dense="true">
+                    <MudStack Row="true" Class="align-content-center align-center">
+                        <MudPaper Elevation="0" Class="d-flex align-content-center align-center">
+                            <MudText>@accountInfo.Name</MudText>
+                        </MudPaper>
+                        <MudSpacer/>
+                        @if (funcs.LoginOk)
+                        {
+                            var text = accountInfo.AutoLogin ? ResourceStrings.AutoLogin : ResourceStrings.LoggedIn;
+                            <MudChip Color="Color.Success" Size="Size.Small">@text</MudChip>
+                        }
+                        else
+                        {
+                            var text = accountInfo.AutoLogin ? ResourceStrings.AutoLogin : ResourceStrings.NotLoggedIn;
+                            <MudChip Color="Color.Warning" Size="Size.Small">@text</MudChip>
+                        }
+                        <MudIconButton Title="@ResourceStrings.Login" Icon="@Icons.Material.Filled.Login" Disabled="_accountDoingAction" OnClick="() => LoginAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
+                        <MudIconButton Title="@ResourceStrings.Exit" Icon="@Icons.Material.Filled.Logout" Disabled="_accountDoingAction" OnClick="() => LogoutAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
+                        <MudIconButton Title="@ResourceStrings.Settings" Icon="@Icons.Material.Filled.Settings" Disabled="_accountDoingAction" OnClick="() => ShowAccountSetting(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
+                    </MudStack>
+                </MudListItem>
+            }
+        </MudList>
+    </MudCardContent>
+</MudCard>
+<MudDialog @bind-IsVisible="_addAccountDialog" Options="@(new DialogOptions() {CloseButton = true})">
+    <DialogContent>
+        <MudTextField Label="@ResourceStrings.Name" @bind-Value="_addAccountName"></MudTextField>
+        <MudNumericField Label="@ResourceStrings.Account" @bind-Value="_addAccountUserId"></MudNumericField>
+        <MudTextField Label="@ResourceStrings.Password" @bind-Value="_addAccountPassword"></MudTextField>
+        <MudSwitch Label="@ResourceStrings.AutoLogin" @bind-Checked="_addAccountAutoLogin" Color="Color.Primary"></MudSwitch>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_accountDoingAction" OnClick="AddAccountConfirmClick">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
+    </DialogActions>
+</MudDialog>
+
+<MudDialog @bind-IsVisible="_settingAccountDialog" Options="@(new DialogOptions() {CloseButton = true})">
+    <DialogContent>
+        <MudTextField Label="@ResourceStrings.Name" @bind-Value="_settingAccountName"></MudTextField>
+        <MudNumericField Disabled="true" Label="@ResourceStrings.Account" @bind-Value="_settingAccountUserId"></MudNumericField>
+        <MudTextField Label="ClientKey" @bind-Value="_settingAccountClientKey"></MudTextField>
+        <MudSwitch Label="@ResourceStrings.AutoLogin" @bind-Checked="_settingAccountAutoLogin" Color="Color.Primary"></MudSwitch>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveAccountSetting">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    List<AccountInfo> _accounts = new();
+
+    bool _accountDoingAction;
+
+    bool _addAccountDialog;
+    string _addAccountName;
+    long _addAccountUserId;
+    string _addAccountPassword;
+    bool _addAccountAutoLogin;
+
+
+    bool _settingAccountDialog;
+    string _settingAccountName;
+    long _settingAccountUserId;
+    string _settingAccountClientKey;
+    bool _settingAccountAutoLogin;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _accounts = authOption.Value.Accounts.ToList();
+    }
+
+    private void AddAccountClick()
+    {
+        _addAccountDialog = true;
+    }
+
+    private async Task AddAccountConfirmClick()
+    {
+        if (string.IsNullOrWhiteSpace(_addAccountName)
+            || _addAccountUserId <= 0
+            || string.IsNullOrWhiteSpace(_addAccountPassword))
+        {
+            return;
+        }
+        if (_addAccountUserId <= 0 || string.IsNullOrEmpty(_addAccountPassword))
+        {
+            return;
+        }
+        var account = AccountManager.Get(_addAccountUserId);
+        if (account.Funcs.LoginOk)
+        {
+            return;
+        }
+        try
+        {
+            _accountDoingAction = true;
+            var clientKey = await account.Funcs.GetClientKey(_addAccountPassword);
+            if (clientKey == null)
+            {
+                throw new Exception("ClientKey is null");
+            }
+            AccountManager.AddAccountInfo(_addAccountUserId, clientKey, _addAccountName, _addAccountAutoLogin);
+            _accountDoingAction = false;
+            _addAccountDialog = false;
+            _accounts = authOption.Value.Accounts.ToList();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            await DialogService.ShowMessageBox(ResourceStrings.Failed_to_retrieve_account_information, e.Message);
+        }
+    }
+
+    private async Task LoginAccount(long userId)
+    {
+        _accountDoingAction = true;
+        var account = AccountManager.Get(userId);
+        await account.Funcs.AutoLogin(true);
+
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add(ResourceStrings.Login_successful, Severity.Success);
+        _accountDoingAction = false;
+    }
+
+    private async Task LogoutAccount(long userId)
+    {
+        _accountDoingAction = true;
+        var account = AccountManager.Get(userId);
+        await account.Funcs.Logout();
+
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add(ResourceStrings.Logout_successful, Severity.Success);
+        _accountDoingAction = false;
+    }
+
+    private void ShowAccountSetting(long userId)
+    {
+        var account = AccountManager.GetAccountInfo(userId);
+        _settingAccountUserId = userId;
+        _settingAccountName = account.Name;
+        _settingAccountAutoLogin = account.AutoLogin;
+        _settingAccountClientKey = account.ClientKey;
+        _settingAccountDialog = true;
+    }
+
+    private void SaveAccountSetting()
+    {
+        authOption.Update(opt =>
+        {
+            var a = opt.Accounts.FirstOrDefault(d => d.UserId == _settingAccountUserId);
+            if (a != null)
+            {
+                a.Name = _settingAccountName;
+                a.AutoLogin = _settingAccountAutoLogin;
+                a.ClientKey = _settingAccountClientKey;
+            }
+        });
+        AccountManager.UpdateAccountInfo(_settingAccountUserId);
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add(ResourceStrings.Save_successful, Severity.Success);
+        _settingAccountDialog = false;
+        _accounts = authOption.Value.Accounts.ToList();
+        StateHasChanged();
+    }
+
+}
