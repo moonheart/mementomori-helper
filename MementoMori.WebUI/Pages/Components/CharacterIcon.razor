@@ -14,77 +14,33 @@
     var scale = Size / 128.0;
     var isLevelLinkMember = AccountManager.Current.Funcs.UserSyncData.IsLevelLinkMember(UserCharacterInfo.Guid);
     var level = isLevelLinkMember ? AccountManager.Current.Funcs.UserSyncData.GetLevelLinkLevel(UserCharacterInfo.CharacterId) : UserCharacterInfo.Level;
+    var filter = UserCharacterInfo.RarityFlags switch {
+        CharacterRarityFlags.None => "none",
+        CharacterRarityFlags.N => "url(#svgTintN)",
+        CharacterRarityFlags.R => "url(#svgTintR)",
+        CharacterRarityFlags.RPlus => "url(#svgTintR)",
+        CharacterRarityFlags.SR => "url(#svgTintSR)",
+        CharacterRarityFlags.SRPlus => "url(#svgTintSR)",
+        CharacterRarityFlags.SSR => "url(#svgTintSSR)",
+        CharacterRarityFlags.SSRPlus => "url(#svgTintSSR)",
+        CharacterRarityFlags.UR => "url(#svgTintUR)",
+        CharacterRarityFlags.URPlus => "url(#svgTintUR)",
+        _ => "none",
+        };
 }
 
-<div style="width: 128px; height: 128px; position: relative; transform:scale(@(scale));transform-origin: top left;">
-    <div style="
-background-image: url(assets/Atlas/plate_character.png);
-background-size: contain; 
-height: 100%; 
-width: 100%;
-position: absolute;
-z-index: 8;
-background-origin: content-box;
-background-repeat: no-repeat;
-"></div>
-    <div style="
-background-image: url(@AtlasManager.GetCharacterIcon(UserCharacterInfo.CharacterId)); 
-background-size: contain; 
-height: 100%; 
-width: 100%;
-position: absolute;
-z-index: 9;
-border-width: 6px;
-border-color: transparent;
-background-origin: content-box;
-background-repeat: no-repeat;
-"></div>
-    <div style="
-height: 100%;
-width: 100%;
-border-image-source: url(@sprite.Url);
-border-image-slice: 20;
-position: absolute;
-z-index: 10;
-filter: @(sprite.Filter);
-border-image-width: auto;
-border-width:5px;
-border-image-outset: 6px;
-"></div>
-    <span style="
-position: absolute;
-top: 2px;
-right: 10px;
-font-size: 24px;
-z-index: 11;
-color: @(isLevelLinkMember ? "#abe4e6" : "white");
-text-shadow: 0px 0px 5px black;
-">
-        Lv @level
-    </span>
+<div class="character-icon" style="transform:scale(@(scale));">
+    <div class="icon-background"></div>
+    <div class="icon-avatar" style="background-image: url(@AtlasManager.GetCharacterIcon(UserCharacterInfo.CharacterId));"></div>
+    <div class="icon-border" style="border-image-source: url(@sprite.Url);filter: @(filter);"></div>
+    <span class="icon-level" style="color: @(isLevelLinkMember ? "#abe4e6" : "white");">Lv @level</span>
     @if (!string.IsNullOrEmpty(deco))
     {
-    
-    <img src="@deco" style="
-position: absolute;
-bottom: 0;
-right: 0;
-z-index: 11;
-width:32px;
-height:32px;
-"/>
+        <img class="icon-deco" src="@deco"/>
     }
     @if (!string.IsNullOrEmpty(element))
-        {
-    
-    <img src="@element" style="
-position: absolute;
-top: 2px;
-left: 2px;
-z-index: 11;
-width:34px;
-height:34px;
-"/>
+    {
+        <img class="icon-element" src="@element"/>
     }
     @if (UserCharacterInfo.RarityFlags > CharacterRarityFlags.LR)
     {
@@ -109,15 +65,10 @@ height:34px;
             _ => 0
             };
 
-        <div style="
-position: absolute;
-bottom: -3px;
-z-index: 11;
-left: 20px;
-">
+        <div class="icon-rarity-star-container">
             @for (var i = 0; i < count; i++)
             {
-                <img style="display: inline-block; height:20px; width: 20px; margin: 0 -3px 0 0" src="@icon" />
+                <img class="icon-rarity-star" src="@icon"/>
             }
         </div>
     }
@@ -129,5 +80,6 @@ left: 20px;
     public UserCharacterInfo UserCharacterInfo { get; set; }
 
     [Parameter]
-    public int Size { get; set;} = 128;
+    public int Size { get; set; } = 128;
+
 }

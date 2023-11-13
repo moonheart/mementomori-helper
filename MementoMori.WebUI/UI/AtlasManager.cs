@@ -18,23 +18,6 @@ namespace MementoMori.WebUI.UI
             }
             var sprite = new Sprite();
             GetFrameCharacter(characterRarityFlags, sprite);
-            sprite.Color = ClientConst.Icon.CharacterFrameColorDictionary[characterRarityFlags];
-            sprite.Filter = characterRarityFlags switch
-            {
-                CharacterRarityFlags.None => "none",
-                CharacterRarityFlags.N => "invert(0%) sepia(70%) saturate(481%) hue-rotate(302deg) brightness(95%) contrast(93%)",
-                CharacterRarityFlags.R => "invert(0%) sepia(2%) saturate(318%) hue-rotate(195deg) brightness(114%) contrast(73%)",
-                CharacterRarityFlags.RPlus => "invert(0%) sepia(2%) saturate(318%) hue-rotate(195deg) brightness(114%) contrast(73%)",
-                CharacterRarityFlags.SR => "invert(0%) sepia(70%) saturate(262%) hue-rotate(343deg) brightness(85%) contrast(101%)",
-                CharacterRarityFlags.SRPlus => "invert(0%) sepia(70%) saturate(262%) hue-rotate(343deg) brightness(85%) contrast(101%)",
-                CharacterRarityFlags.SSR => "invert(0%) sepia(70%) saturate(450%) hue-rotate(268deg) brightness(62%) contrast(107%)",
-                CharacterRarityFlags.SSRPlus => "invert(0%) sepia(70%) saturate(450%) hue-rotate(268deg) brightness(62%) contrast(107%)",
-                CharacterRarityFlags.UR => "invert(0%) sepia(75%) saturate(982%) hue-rotate(299deg) brightness(84%) contrast(124%)",
-                CharacterRarityFlags.URPlus => "invert(0%) sepia(75%) saturate(982%) hue-rotate(299deg) brightness(84%) contrast(124%)",
-                CharacterRarityFlags.LR => "none",
-                _ => throw new ArgumentOutOfRangeException(nameof(characterRarityFlags), characterRarityFlags, null)
-            };
-
             return sprite;
         }
 
