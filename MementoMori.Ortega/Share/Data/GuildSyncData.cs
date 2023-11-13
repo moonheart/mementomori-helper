@@ -11,6 +11,8 @@ namespace MementoMori.Ortega.Share.Data
 	{
 		public List<PlayerInfo> ApplyPlayerInfoList { get; set; }
 
+        public long CreateGuildLocalTime { get; set; }
+
 		public GlobalGvgGroupType GlobalGvgGroupType { get; set; }
 
 		public string GuildAnnouncement { get; set; }
