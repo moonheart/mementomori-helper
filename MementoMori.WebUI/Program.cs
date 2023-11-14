@@ -56,6 +56,7 @@ internal class Program
         builder.Services.AddOptions();
         builder.Services.ConfigureWritable<AuthOption>(builder.Configuration.GetSection("AuthOption"), "appsettings.user.json");
         builder.Services.ConfigureWritable<GameConfig>(builder.Configuration.GetSection("GameConfig"), "appsettings.user.json");
+        builder.Services.ConfigureWritable<PlayersOption>(builder.Configuration.GetSection("PlayersOption"), "appsettings.user.json");
         builder.Services.Configure<StaticFileOptions>(opt =>
         {
             opt.HttpsCompression = HttpsCompressionMode.Compress;
