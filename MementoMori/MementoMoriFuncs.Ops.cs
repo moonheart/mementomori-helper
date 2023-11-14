@@ -63,6 +63,8 @@ using MementoMori.Ortega.Share.Data.ApiInterface.TradeShop;
 using MementoMori.Ortega.Share.Data.Auth;
 using MementoMori.Ortega.Share.Data.TradeShop;
 using static MementoMori.Ortega.Share.Masters;
+using DynamicData;
+using MementoMori.Ortega.Share.Data.Battle;
 
 namespace MementoMori;
 
@@ -539,29 +541,134 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             log($"{TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")}:\n");
-            for (var i = 0; i < 5; i++)
+            var count = 100;
+            while (!token.IsCancellationRequested && count-- > 0)
             {
-                var pvpInfoResponse = await GetResponse<GetPvpInfoRequest, GetPvpInfoResponse>(
-                    new GetPvpInfoRequest());
-
-                if (UserSyncData.UserBattlePvpDtoInfo.PvpTodayCount >= OrtegaConst.BattlePvp.MaxPvpBattleFreeCount)
+                try
                 {
-                    log(TextResourceTable.GetErrorCodeMessage(ErrorCode.BattlePvpOverLegendLeagueChallengeMaxCount));
-                    return;
+                    var pvpInfoResponse = await GetResponse<GetPvpInfoRequest, GetPvpInfoResponse>(
+                        new GetPvpInfoRequest());
+
+                    if (UserSyncData.UserBattlePvpDtoInfo.PvpTodayCount >= OrtegaConst.BattlePvp.MaxPvpBattleFreeCount)
+                    {
+                        log(TextResourceTable.GetErrorCodeMessage(ErrorCode.BattlePvpOverLegendLeagueChallengeMaxCount));
+                        return;
+                    }
+
+                    List<(long PlayerId, long DefenseBattlePower, List<(long characterId, Func<Task<BattleParameter>> battleParameter)> characterDetailInfos)> list = new();
+
+                    var characterDetailInfoDict = new Dictionary<long, List<CharacterDetailInfo>>();
+
+                    foreach (var d in pvpInfoResponse.MatchingRivalList)
+                    {
+                        List<(long characterId, Func<Task<BattleParameter>> battleParameter)> characterDetailInfos = new();
+                        for (var i1 = 0; i1 < d.UserCharacterInfoList.Count; i1++)
+                        {
+                            var i2 = i1;
+                            characterDetailInfos.Add((d.UserCharacterInfoList[i1].CharacterId, async () =>
+                                    {
+                                        if (!characterDetailInfoDict.TryGetValue(d.PlayerInfo.PlayerId, out var details))
+                                        {
+                                            details = (await GetResponse<GetDetailsInfoRequest, GetDetailsInfoResponse>(new GetDetailsInfoRequest()
+                                            {
+                                                DeckType = DeckUseContentType.BattleLeagueDefense, TargetPlayerId = d.PlayerInfo.PlayerId,
+                                                TargetUserCharacterGuids = d.UserCharacterInfoList.Select(x => x.Guid).ToList()
+                                            })).CharacterDetailInfos;
+                                            characterDetailInfoDict.Add(d.PlayerInfo.PlayerId, details);
+                                        }
+
+                                        return details[i2].BattleParameter;
+                                    }
+                                ));
+                        }
+
+                        list.Add((d.PlayerInfo.PlayerId, d.DefenseBattlePower, characterDetailInfos));
+                    }
+
+                    var targetPlayerId = await SelectLeagueTarget(log, PlayerOption.BattleLeague, list);
+                    if (targetPlayerId == 0)
+                    {
+                        continue;
+                    }
+
+                    var playerInfo = pvpInfoResponse.MatchingRivalList.FirstOrDefault(d => d.PlayerInfo.PlayerId == targetPlayerId);
+                    if (playerInfo == null)
+                    {
+                        continue;
+                    }
+
+                    var pvpStartResponse = await GetResponse<PvpStartRequest, PvpStartResponse>(new PvpStartRequest()
+                    {
+                        RivalPlayerRank = playerInfo.CurrentRank,
+                        RivalPlayerId = playerInfo.PlayerInfo.PlayerId
+                    });
+
+                    pvpStartResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                    pvpStartResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
                 }
-
-                var pvpRankingPlayerInfo = pvpInfoResponse.MatchingRivalList.OrderBy(d => d.DefenseBattlePower).First();
-
-                var pvpStartResponse = await GetResponse<PvpStartRequest, PvpStartResponse>(new PvpStartRequest()
+                catch (ApiErrorException e)
                 {
-                    RivalPlayerRank = pvpRankingPlayerInfo.CurrentRank,
-                    RivalPlayerId = pvpRankingPlayerInfo.PlayerInfo.PlayerId
-                });
-
-                pvpStartResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
-                pvpStartResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                    log(e.Message);
+                    break;
+                }
             }
         });
+    }
+
+    private async Task<long> SelectLeagueTarget(Action<string> log, PvpOption pvpOption,
+        List<(long playerId, long defenseBattlePower, List<(long characterId, Func<Task<BattleParameter>> battleParameter)> chareacters)> playerInfoList)
+    {
+        // playerInfoList: dict<playerId, dict<characterId, CharacterDetailInfo>>
+        playerInfoList = playerInfoList.ToList();
+        foreach (var characterFilter in pvpOption.CharacterFilters)
+        {
+            if (playerInfoList.Count == 0)
+            {
+                break;
+            }
+
+            switch (characterFilter.FilterStrategy)
+            {
+                case CharacterFilterStrategy.Character:
+                    foreach (var (playerId, _, _) in playerInfoList.Where(d => d.chareacters.Any(x => x.characterId == characterFilter.CharacterId)))
+                    {
+                        playerInfoList.RemoveAll(x => x.playerId == playerId);
+                    }
+
+                    break;
+                case CharacterFilterStrategy.PropertyMoreThanSelf:
+                    foreach (var (playerId, _, characterDetailInfos) in playerInfoList)
+                    {
+                        var (characterId, battleParameter) = characterDetailInfos.FirstOrDefault(d => d.characterId == characterFilter.CharacterId);
+                        if (characterId == 0) continue;
+                        var targetParameterValue = (await battleParameter()).GetParameter(characterFilter.BattleParameterType);
+                        var selfCharacterGuid = UserSyncData.UserCharacterDtoInfos.FirstOrDefault(d => d.CharacterId == characterId)?.Guid;
+                        if (selfCharacterGuid == null) continue;
+                        var lockType = UserSyncData.ReleaseLockEquipmentCooldownTimeStampMap.ContainsKey(LockEquipmentDeckType.League) ? LockEquipmentDeckType.League : LockEquipmentDeckType.None;
+                        var selfParameterValue = BattlePowerCalculatorUtil.CalcCharacterBattleParameter(UserId, selfCharacterGuid, lockType).Item2.GetParameter(characterFilter.BattleParameterType);
+                        if (targetParameterValue > selfParameterValue) playerInfoList.RemoveAll(x => x.playerId == playerId);
+                    }
+
+                    break;
+            }
+        }
+
+        if (playerInfoList.Count == 0)
+        {
+            return 0;
+        }
+
+        switch (pvpOption.SelectStrategy)
+        {
+            case TargetSelectStrategy.Random:
+                return Enumerable.MinBy(playerInfoList, d => Guid.NewGuid()).playerId;
+            case TargetSelectStrategy.LowestBattlePower:
+                return Enumerable.MinBy(playerInfoList, d => playerInfoList.Min(x => x.defenseBattlePower)).playerId;
+            case TargetSelectStrategy.HighestBattlePower:
+                return Enumerable.MaxBy(playerInfoList, d => playerInfoList.Max(x => x.defenseBattlePower)).playerId;
+            default:
+                return Enumerable.MinBy(playerInfoList, d => Guid.NewGuid()).playerId;
+        }
     }
 
     public async Task LegendLeagueAuto()
@@ -575,36 +682,48 @@ public partial class MementoMoriFuncs : ReactiveObject
                 return;
             }
 
-            for (var i = 0; i < 10; i++)
+            var count = 100;
+            while (!token.IsCancellationRequested && count-- > 0)
             {
-                if (token.IsCancellationRequested)
-                {
-                    return;
-                }
-
-                var leagueInfoResponse = await GetResponse<GetLegendLeagueInfoRequest, GetLegendLeagueInfoResponse>(new GetLegendLeagueInfoRequest());
-
-                if (UserSyncData.UserBattleLegendLeagueDtoInfo != null && UserSyncData.UserBattleLegendLeagueDtoInfo.LegendLeagueTodayCount >= OrtegaConst.BattlePvp.MaxLegendLeagueBattleFreeCount)
-                {
-                    log(TextResourceTable.GetErrorCodeMessage(ErrorCode.BattlePvpOverLegendLeagueChallengeMaxCount));
-                    return;
-                }
-
-                var pvpRankingPlayerInfo = leagueInfoResponse.MatchingRivalList.OrderBy(d => d.DefenseBattlePower).First();
-
                 try
                 {
+                    var leagueInfoResponse = await GetResponse<GetLegendLeagueInfoRequest, GetLegendLeagueInfoResponse>(new GetLegendLeagueInfoRequest());
+
+                    if (UserSyncData.UserBattleLegendLeagueDtoInfo != null && UserSyncData.UserBattleLegendLeagueDtoInfo.LegendLeagueTodayCount >= OrtegaConst.BattlePvp.MaxLegendLeagueBattleFreeCount)
+                    {
+                        log(TextResourceTable.GetErrorCodeMessage(ErrorCode.BattlePvpOverLegendLeagueChallengeMaxCount));
+                        return;
+                    }
+
+                    var list = new List<(long playerId, long defenseBattlePower, List<(long characterId, Func<Task<BattleParameter>> battleParameter)> chareacters)>();
+                    foreach (var playerInfo in leagueInfoResponse.MatchingRivalList)
+                    {
+                        var characterDetailInfos = new List<(long characterId, Func<Task<BattleParameter>> battleParameter)>();
+                        foreach (var dtoInfo in playerInfo.UserCharacterDtoInfoList)
+                        {
+                            characterDetailInfos.Add((dtoInfo.CharacterId, () => Task.FromResult(playerInfo.DefenseCharacterBattleParameterMap[dtoInfo.Guid])));
+                        }
+
+                        list.Add((playerInfo.PlayerInfo.PlayerId, playerInfo.DefenseBattlePower, characterDetailInfos));
+                    }
+
+                    var targetPlayerId = await SelectLeagueTarget(log, PlayerOption.LegendLeague, list);
+                    if (targetPlayerId == 0)
+                    {
+                        continue;
+                    }
+
                     var leagueStartResponse = await GetResponse<LegendLeagueStartRequest, LegendLeagueStartResponse>(new LegendLeagueStartRequest()
                     {
-                        RivalPlayerId = pvpRankingPlayerInfo.PlayerInfo.PlayerId
+                        RivalPlayerId = targetPlayerId
                     });
 
                     log(TextResourceTable.Get("[GlobalPvpChangePointFormat]", leagueStartResponse.GetPoint));
                 }
-                catch (Exception e)
+                catch (ApiErrorException e)
                 {
                     log(e.Message);
-                    return;
+                    break;
                 }
             }
         });

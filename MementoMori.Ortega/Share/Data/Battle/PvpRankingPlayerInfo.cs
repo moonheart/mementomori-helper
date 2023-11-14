@@ -20,9 +20,5 @@ namespace MementoMori.Ortega.Share.Data.Battle
         {
             return UserCharacterInfoList.Select(d => d.CharacterId).ToList();
         }
-
-        public PvpRankingPlayerInfo()
-        {
-        }
     }
 }

@@ -154,3 +154,47 @@ public class GameConfig
     public LocalRaidConfig LocalRaid { get; set; } = new();
     public LoginConfig Login { get; set; } = new();
 }
+
+public class PlayersOption: Dictionary<long, PlayerOption>
+{
+    
+}
+
+public class PlayerOption
+{
+    public long PlayerId { get; set; }
+    public PvpOption BattleLeague { get; set; }
+    public PvpOption LegendLeague { get; set; }
+}
+
+public class PvpOption
+{
+    public TargetSelectStrategy SelectStrategy { get; set; }
+    public List<CharacterFilter> CharacterFilters { get; set; } = new();
+}
+
+public enum TargetSelectStrategy
+{
+    Random,
+    LowestBattlePower,
+    HighestBattlePower,
+}
+
+public class CharacterFilter
+{
+    public long CharacterId { get; set; }
+    public CharacterFilterStrategy FilterStrategy { get; set; }
+    public BattleParameterType BattleParameterType { get; set; }
+}
+
+public enum CharacterFilterStrategy
+{
+    /// <summary>
+    /// 不包含这个角色
+    /// </summary>
+    Character,
+    /// <summary>
+    /// 这个角色的属性比自己的角色的高
+    /// </summary>
+    PropertyMoreThanSelf,
+}

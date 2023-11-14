@@ -64,14 +64,18 @@ public partial class MementoMoriFuncs
     private readonly AccountManager _accountManager;
     private readonly TimeZoneAwareJobRegister _timeZoneAwareJobRegister;
     private readonly IWritableOptions<GameConfig> _writableGameConfig;
+    private readonly IWritableOptions<PlayersOption> _playersOption;
+
+    private PlayerOption PlayerOption => _playersOption.Value.TryGetValue(NetworkManager.PlayerId, out var opt) ? opt : new PlayerOption();
 
     public MementoMoriFuncs(IWritableOptions<AuthOption> authOption, ILogger<MementoMoriFuncs> logger,
-        TimeZoneAwareJobRegister timeZoneAwareJobRegister, IWritableOptions<GameConfig> writableGameConfig, AccountManager accountManager)
+        TimeZoneAwareJobRegister timeZoneAwareJobRegister, IWritableOptions<GameConfig> writableGameConfig, AccountManager accountManager, IWritableOptions<PlayersOption> playersOption)
     {
         _logger = logger;
         _timeZoneAwareJobRegister = timeZoneAwareJobRegister;
         _writableGameConfig = writableGameConfig;
         _accountManager = accountManager;
+        _playersOption = playersOption;
         _authOption = authOption.Value;
         Mypage = new GetMypageResponse();
         NoticeInfoList = new List<NoticeInfo>();
