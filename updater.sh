@@ -50,7 +50,7 @@ else
     cp -Rf "$tempDir/publish-linux-x64"/* "$downloadDirectory/"
 
     # 删去临时文件夹与下载的包
-    rm -rf $tempDir $downloadPath
+    rm -rf "$tempDir" "$downloadPath"
 
     echo "程序已成功更新到版本 $latestVersion."
 fi
