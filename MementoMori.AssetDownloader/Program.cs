@@ -1,4 +1,5 @@
 ﻿using MementoMori;
+using MementoMori.Option;
 
 namespace ConsoleApp1;
 
@@ -11,6 +12,7 @@ internal class Program
         builder.Services.AddLogging(log => log.AddSimpleConsole(c => c.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] "));
         builder.Services.AddOptions();
         builder.Services.Configure<DownloaderOption>(builder.Configuration);
+        builder.Services.ConfigureWritable<AuthOption>(builder.Configuration.GetSection("Auth"));
         builder.Services.AddSingleton<TimeManager>();
         builder.Services.AddSingleton<MementoNetworkManager>();
         builder.Services.AddHostedService<AssetDownloader>();
