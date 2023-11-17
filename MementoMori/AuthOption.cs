@@ -163,13 +163,13 @@ public class PlayersOption: Dictionary<long, PlayerOption>
 public class PlayerOption
 {
     public long PlayerId { get; set; }
-    public PvpOption BattleLeague { get; set; }
-    public PvpOption LegendLeague { get; set; }
+    public PvpOption BattleLeague { get; set; } = new ();
+    public PvpOption LegendLeague { get; set; } = new();
 }
 
 public class PvpOption
 {
-    public TargetSelectStrategy SelectStrategy { get; set; }
+    public TargetSelectStrategy SelectStrategy { get; set; } = TargetSelectStrategy.Random;
     public List<CharacterFilter> CharacterFilters { get; set; } = new();
 }
 
@@ -183,8 +183,8 @@ public enum TargetSelectStrategy
 public class CharacterFilter
 {
     public long CharacterId { get; set; }
-    public CharacterFilterStrategy FilterStrategy { get; set; }
-    public BattleParameterType BattleParameterType { get; set; }
+    public CharacterFilterStrategy FilterStrategy { get; set; } = CharacterFilterStrategy.Character;
+    public BattleParameterType BattleParameterType { get; set; } = BattleParameterType.AttackPower;
 }
 
 public enum CharacterFilterStrategy

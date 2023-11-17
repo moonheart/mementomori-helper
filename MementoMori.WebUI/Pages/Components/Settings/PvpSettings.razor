@@ -1,0 +1,171 @@
+﻿@using MementoMori.Option
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.Ortega.Share.Extensions
+@using MementoMori.Common.Localization
+@inject ISnackbar Snackbar
+@inject IWritableOptions<PlayersOption> PlayersOptions
+@inherits MementoMori.WebUI.Models.AccountComponent
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>@name</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudButton Variant="Variant.Outlined" Size="Size.Small" StartIcon="@Icons.Material.Filled.Save" OnClick="() => SavePlayerSetting()">保存</MudButton>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudSelect FullWidth="true" Label="角色选择策略" @bind-Value="pvpOption.SelectStrategy">
+            <MudSelectItem Value="TargetSelectStrategy.Random">随机</MudSelectItem>
+            <MudSelectItem Value="TargetSelectStrategy.LowestBattlePower">最低战力</MudSelectItem>
+            <MudSelectItem Value="TargetSelectStrategy.HighestBattlePower">最高战力</MudSelectItem>
+        </MudSelect>
+        <MudList>
+            <MudListSubheader>
+                <MudText Inline="true">角色筛选</MudText>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="() => OpenCreateFilter()">新增</MudButton>
+            </MudListSubheader>
+            @foreach (var filter in pvpOption.CharacterFilters)
+            {
+                var characterName = Masters.CharacterTable.GetById(filter.CharacterId).GetCombinedName();
+                var battleParameterName = Masters.TextResourceTable.Get(filter.BattleParameterType);
+                var desc = filter.FilterStrategy switch
+                {
+                    CharacterFilterStrategy.Character => $"排除 {characterName}",
+                    CharacterFilterStrategy.PropertyMoreThanSelf => $"排除 {battleParameterName} 高于己方的 {characterName}"
+                    };
+                <MudListItem Dense="true">
+                    <MudStack Row="true" Class="align-content-center align-center">
+                        <MudText Inline="true">@desc</MudText>
+                        <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Settings" OnClick="() => OpenSetting(filter)"></MudIconButton>
+                        <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Delete" OnClick="() => DeleteFilter(filter)"></MudIconButton>
+                    </MudStack>
+                </MudListItem>
+            }
+        </MudList>
+    </MudCardContent>
+</MudCard>
+
+<MudDialog @bind-IsVisible="settingDialogOpen" Options="@(new DialogOptions() {CloseButton = true})">
+    <TitleContent>
+        添加角色筛选
+    </TitleContent>
+    <DialogContent>
+        <MudPaper MinWidth="300px" Elevation="0">
+            <MudSelect Label="筛选策略" @bind-Value="settingFilter.FilterStrategy">
+                <MudSelectItem Value="CharacterFilterStrategy.Character">排除角色</MudSelectItem>
+                <MudSelectItem Value="CharacterFilterStrategy.PropertyMoreThanSelf">排除属性高于己方</MudSelectItem>
+            </MudSelect>
+            <MudSelect Label="角色" @bind-Value="settingFilter.CharacterId" FullWidth="true">
+                @foreach (var character in Masters.CharacterTable.GetArray())
+                {
+                    <MudSelectItem Value="@character.Id">@character.GetCombinedName()</MudSelectItem>
+                }
+            </MudSelect>
+            @if (settingFilter.FilterStrategy == CharacterFilterStrategy.PropertyMoreThanSelf)
+            {
+                <MudSelect Label="属性" @bind-Value="settingFilter.BattleParameterType">
+                    @foreach (var battleParameterType in Enum.GetValues(typeof(BattleParameterType)).Cast<BattleParameterType>())
+                    {
+                        <MudSelectItem Value="@battleParameterType">@Masters.TextResourceTable.Get(battleParameterType)</MudSelectItem>
+                    }
+                </MudSelect>
+            }
+        </MudPaper>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="() => ConfirmFilter()">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+
+    [Parameter]
+    public int LeagueType { get; set; }
+
+    Func<PlayerOption, PvpOption> pvpOptionSelector;
+    string name;
+    PlayerOption playerOption;
+    PvpOption pvpOption;
+
+    CharacterFilter settingFilter;
+    bool settingDialogOpen;
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (LeagueType == 0)
+        {
+            pvpOptionSelector = x => x.BattleLeague;
+            name = "竞技场";
+        }
+        else
+        {
+            pvpOptionSelector = x => x.LegendLeague;
+            name = "传奇联赛";
+        }
+    }
+
+    protected override Task AccountChanged()
+    {
+        playerOption = PlayersOptions.Value.TryGetValue(NetworkManager.PlayerId, out var opt) ? opt : new PlayerOption() {PlayerId = NetworkManager.PlayerId};
+        pvpOption = pvpOptionSelector(playerOption);
+        return Task.CompletedTask;
+    }
+
+    private void OpenCreateFilter()
+    {
+        settingFilter = new CharacterFilter();
+        settingDialogOpen = true;
+    }
+
+    private void OpenSetting(CharacterFilter filter)
+    {
+        settingFilter = filter;
+        settingDialogOpen = true;
+    }
+
+    private void DeleteFilter(CharacterFilter filter)
+    {
+        pvpOption.CharacterFilters.Remove(filter);
+        SavePlayerSetting();
+    }
+
+    private void ConfirmFilter()
+    {
+        if (settingFilter.CharacterId == 0)
+        {
+            return;
+        }
+
+        if (!pvpOption.CharacterFilters.Contains(settingFilter))
+        {
+            pvpOption.CharacterFilters.Add(settingFilter);
+        }
+        settingDialogOpen = false;
+    }
+
+    private void SavePlayerSetting()
+    {
+        PlayersOptions.Update(opt =>
+        {
+            var playerOpt = opt.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
+            if (LeagueType == 0)
+            {
+                playerOpt.BattleLeague = pvpOption;
+            }
+            else
+            {
+                playerOpt.LegendLeague = pvpOption;
+            }
+        });
+
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add(ResourceStrings.Save_successful, Severity.Success);
+    }
+
+}
