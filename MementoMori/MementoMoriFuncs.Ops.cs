@@ -542,6 +542,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             log($"{TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")}:\n");
             var count = 100;
+            var characterDetailInfoDict = new Dictionary<long, List<(string, CharacterDetailInfo)>>();
             while (!token.IsCancellationRequested && count-- > 0)
             {
                 try
@@ -557,30 +558,13 @@ public partial class MementoMoriFuncs : ReactiveObject
 
                     List<(long PlayerId, long DefenseBattlePower, List<(long characterId, Func<Task<BattleParameter>> battleParameter)> characterDetailInfos)> list = new();
 
-                    var characterDetailInfoDict = new Dictionary<long, List<CharacterDetailInfo>>();
-
                     foreach (var d in pvpInfoResponse.MatchingRivalList)
                     {
-                        List<(long characterId, Func<Task<BattleParameter>> battleParameter)> characterDetailInfos = new();
-                        for (var i1 = 0; i1 < d.UserCharacterInfoList.Count; i1++)
-                        {
-                            var i2 = i1;
-                            characterDetailInfos.Add((d.UserCharacterInfoList[i1].CharacterId, async () =>
-                                    {
-                                        if (!characterDetailInfoDict.TryGetValue(d.PlayerInfo.PlayerId, out var details))
-                                        {
-                                            details = (await GetResponse<GetDetailsInfoRequest, GetDetailsInfoResponse>(new GetDetailsInfoRequest()
-                                            {
-                                                DeckType = DeckUseContentType.BattleLeagueDefense, TargetPlayerId = d.PlayerInfo.PlayerId,
-                                                TargetUserCharacterGuids = d.UserCharacterInfoList.Select(x => x.Guid).ToList()
-                                            })).CharacterDetailInfos;
-                                            characterDetailInfoDict.Add(d.PlayerInfo.PlayerId, details);
-                                        }
-
-                                        return details[i2].BattleParameter;
-                                    }
-                                ));
-                        }
+                        var characterDetailInfos = BuildPvpPlayerInfo(
+                            characterDetailInfoDict,
+                            DeckUseContentType.LegendLeagueOffense,
+                            d.PlayerInfo.PlayerId,
+                            d.UserCharacterInfoList.Select(x => (x.CharacterId, x.Guid)).ToList());
 
                         list.Add((d.PlayerInfo.PlayerId, d.DefenseBattlePower, characterDetailInfos));
                     }
@@ -619,7 +603,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         List<(long playerId, long defenseBattlePower, List<(long characterId, Func<Task<BattleParameter>> battleParameter)> chareacters)> playerInfoList)
     {
         // playerInfoList: dict<playerId, dict<characterId, CharacterDetailInfo>>
-        playerInfoList = playerInfoList.ToList();
+        var localplayerInfoList = playerInfoList.ToList();
         foreach (var characterFilter in pvpOption.CharacterFilters)
         {
             if (playerInfoList.Count == 0)
@@ -632,7 +616,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 case CharacterFilterStrategy.Character:
                     foreach (var (playerId, _, _) in playerInfoList.Where(d => d.chareacters.Any(x => x.characterId == characterFilter.CharacterId)))
                     {
-                        playerInfoList.RemoveAll(x => x.playerId == playerId);
+                        localplayerInfoList.RemoveAll(x => x.playerId == playerId);
                     }
 
                     break;
@@ -641,19 +625,20 @@ public partial class MementoMoriFuncs : ReactiveObject
                     {
                         var (characterId, battleParameter) = characterDetailInfos.FirstOrDefault(d => d.characterId == characterFilter.CharacterId);
                         if (characterId == 0) continue;
-                        var targetParameterValue = (await battleParameter()).GetParameter(characterFilter.BattleParameterType);
+                        var battleParameters = await battleParameter();
+                        var targetParameterValue = battleParameters?.GetParameter(characterFilter.BattleParameterType) ?? 0;
                         var selfCharacterGuid = UserSyncData.UserCharacterDtoInfos.FirstOrDefault(d => d.CharacterId == characterId)?.Guid;
                         if (selfCharacterGuid == null) continue;
                         var lockType = UserSyncData.ReleaseLockEquipmentCooldownTimeStampMap.ContainsKey(LockEquipmentDeckType.League) ? LockEquipmentDeckType.League : LockEquipmentDeckType.None;
                         var selfParameterValue = BattlePowerCalculatorUtil.CalcCharacterBattleParameter(UserId, selfCharacterGuid, lockType).Item2.GetParameter(characterFilter.BattleParameterType);
-                        if (targetParameterValue > selfParameterValue) playerInfoList.RemoveAll(x => x.playerId == playerId);
+                        if (targetParameterValue > selfParameterValue) localplayerInfoList.RemoveAll(x => x.playerId == playerId);
                     }
 
                     break;
             }
         }
 
-        if (playerInfoList.Count == 0)
+        if (localplayerInfoList.Count == 0)
         {
             return 0;
         }
@@ -661,14 +646,68 @@ public partial class MementoMoriFuncs : ReactiveObject
         switch (pvpOption.SelectStrategy)
         {
             case TargetSelectStrategy.Random:
-                return Enumerable.MinBy(playerInfoList, d => Guid.NewGuid()).playerId;
+                return Enumerable.MinBy(localplayerInfoList, d => Guid.NewGuid()).playerId;
             case TargetSelectStrategy.LowestBattlePower:
-                return Enumerable.MinBy(playerInfoList, d => playerInfoList.Min(x => x.defenseBattlePower)).playerId;
+                return Enumerable.MinBy(localplayerInfoList, d => localplayerInfoList.Min(x => x.defenseBattlePower)).playerId;
             case TargetSelectStrategy.HighestBattlePower:
-                return Enumerable.MaxBy(playerInfoList, d => playerInfoList.Max(x => x.defenseBattlePower)).playerId;
+                return Enumerable.MaxBy(localplayerInfoList, d => localplayerInfoList.Max(x => x.defenseBattlePower)).playerId;
             default:
-                return Enumerable.MinBy(playerInfoList, d => Guid.NewGuid()).playerId;
+                return Enumerable.MinBy(localplayerInfoList, d => Guid.NewGuid()).playerId;
         }
+    }
+
+    private List<(long characterId, Func<Task<BattleParameter>> battleParameter)> BuildPvpPlayerInfo(
+        Dictionary<long, List<(string guid, CharacterDetailInfo)>> characterDetailInfoDict,
+        DeckUseContentType deckUseContentType,
+        long playerId,
+        List<(long characterId, string guid)> characters)
+    {
+        var characterDetailInfos = new List<(long characterId, Func<Task<BattleParameter>> battleParameter)>();
+        foreach (var (characterId, guid) in characters)
+        {
+            characterDetailInfos.Add((characterId, async () =>
+                    {
+                        if (!characterDetailInfoDict.TryGetValue(playerId, out var details))
+                        {
+                            var allGuids = characters.Select(x => x.guid).ToList();
+                            var guids = allGuids.Where(d => !string.IsNullOrEmpty(d)).ToList();
+                            if (guids.Count == 0)
+                            {
+                                details = new List<(string, CharacterDetailInfo)>() {(null, null), (null, null), (null, null), (null, null), (null, null)};
+                                characterDetailInfoDict.Add(playerId, details);
+                            }
+                            else
+                            {
+                                var details1 = (await GetResponse<GetDetailsInfoRequest, GetDetailsInfoResponse>(new GetDetailsInfoRequest()
+                                {
+                                    DeckType = deckUseContentType, TargetPlayerId = playerId,
+                                    TargetUserCharacterGuids = guids.ToList()
+                                })).CharacterDetailInfos;
+
+                                details = new List<(string, CharacterDetailInfo)>();
+                                var index = 0;
+                                foreach (var guid1 in allGuids)
+                                {
+                                    if (string.IsNullOrEmpty(guid1))
+                                    {
+                                        details.Add((null, null));
+                                    }
+                                    else
+                                    {
+                                        details.Add((guid1, details1[index++]));
+                                    }
+                                }
+
+                                characterDetailInfoDict.Add(playerId, details);
+                            }
+                        }
+
+                        return details.FirstOrDefault(d => d.guid == guid).Item2?.BattleParameter;
+                    }
+                ));
+        }
+
+        return characterDetailInfos;
     }
 
     public async Task LegendLeagueAuto()
@@ -683,11 +722,18 @@ public partial class MementoMoriFuncs : ReactiveObject
             }
 
             var count = 100;
+            var characterDetailInfoDict = new Dictionary<long, List<(string, CharacterDetailInfo)>>();
             while (!token.IsCancellationRequested && count-- > 0)
             {
                 try
                 {
                     var leagueInfoResponse = await GetResponse<GetLegendLeagueInfoRequest, GetLegendLeagueInfoResponse>(new GetLegendLeagueInfoRequest());
+
+                    if (leagueInfoResponse.IsInTimeCanChallenge)
+                    {
+                        log(TextResourceTable.GetErrorCodeMessage(ClientErrorCode.PvpGlobalIsNotOpen));
+                        return;
+                    }
 
                     if (UserSyncData.UserBattleLegendLeagueDtoInfo != null && UserSyncData.UserBattleLegendLeagueDtoInfo.LegendLeagueTodayCount >= OrtegaConst.BattlePvp.MaxLegendLeagueBattleFreeCount)
                     {
@@ -696,15 +742,15 @@ public partial class MementoMoriFuncs : ReactiveObject
                     }
 
                     var list = new List<(long playerId, long defenseBattlePower, List<(long characterId, Func<Task<BattleParameter>> battleParameter)> chareacters)>();
-                    foreach (var playerInfo in leagueInfoResponse.MatchingRivalList)
+                    foreach (var d in leagueInfoResponse.MatchingRivalList)
                     {
-                        var characterDetailInfos = new List<(long characterId, Func<Task<BattleParameter>> battleParameter)>();
-                        foreach (var dtoInfo in playerInfo.UserCharacterDtoInfoList)
-                        {
-                            characterDetailInfos.Add((dtoInfo.CharacterId, () => Task.FromResult(playerInfo.DefenseCharacterBattleParameterMap[dtoInfo.Guid])));
-                        }
+                        var characterDetailInfos = BuildPvpPlayerInfo(
+                            characterDetailInfoDict,
+                            DeckUseContentType.LegendLeagueOffense,
+                            d.PlayerInfo.PlayerId,
+                            d.UserCharacterDtoInfoList.Select(x => (x.CharacterId, x.Guid)).ToList());
 
-                        list.Add((playerInfo.PlayerInfo.PlayerId, playerInfo.DefenseBattlePower, characterDetailInfos));
+                        list.Add((d.PlayerInfo.PlayerId, d.DefenseBattlePower, characterDetailInfos));
                     }
 
                     var targetPlayerId = await SelectLeagueTarget(log, PlayerOption.LegendLeague, list);
