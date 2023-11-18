@@ -587,6 +587,10 @@ public partial class MementoMoriFuncs : ReactiveObject
                         RivalPlayerId = playerInfo.PlayerInfo.PlayerId
                     });
 
+                    log(pvpStartResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker()
+                        ? $"{TextResourceTable.Get("[CommonWinLabel]")}: {pvpStartResponse.RivalPlayerInfo.PlayerName}"
+                        : $"{TextResourceTable.Get("[CommonLoseLabel]")}: {pvpStartResponse.RivalPlayerInfo.PlayerName}");
+
                     pvpStartResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
                     pvpStartResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
                 }
@@ -729,7 +733,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 {
                     var leagueInfoResponse = await GetResponse<GetLegendLeagueInfoRequest, GetLegendLeagueInfoResponse>(new GetLegendLeagueInfoRequest());
 
-                    if (leagueInfoResponse.IsInTimeCanChallenge)
+                    if (!leagueInfoResponse.IsInTimeCanChallenge)
                     {
                         log(TextResourceTable.GetErrorCodeMessage(ClientErrorCode.PvpGlobalIsNotOpen));
                         return;
@@ -763,6 +767,10 @@ public partial class MementoMoriFuncs : ReactiveObject
                     {
                         RivalPlayerId = targetPlayerId
                     });
+
+                    log(leagueStartResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker()
+                        ? $"{TextResourceTable.Get("[CommonWinLabel]")}: {leagueStartResponse.RivalPlayerInfo.PlayerName}"
+                        : $"{TextResourceTable.Get("[CommonLoseLabel]")}: {leagueStartResponse.RivalPlayerInfo.PlayerName}");
 
                     log(TextResourceTable.Get("[GlobalPvpChangePointFormat]", leagueStartResponse.GetPoint));
                 }
