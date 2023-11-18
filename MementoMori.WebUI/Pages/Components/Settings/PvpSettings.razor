@@ -16,15 +16,15 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudSelect FullWidth="true" Label="角色选择策略" @bind-Value="pvpOption.SelectStrategy">
-            <MudSelectItem Value="TargetSelectStrategy.Random">随机</MudSelectItem>
-            <MudSelectItem Value="TargetSelectStrategy.LowestBattlePower">最低战力</MudSelectItem>
-            <MudSelectItem Value="TargetSelectStrategy.HighestBattlePower">最高战力</MudSelectItem>
+        <MudSelect FullWidth="true" Label="@ResourceStrings.Opponent_Selection_Strategy" @bind-Value="pvpOption.SelectStrategy">
+            <MudSelectItem Value="TargetSelectStrategy.Random">@ResourceStrings.Random</MudSelectItem>
+            <MudSelectItem Value="TargetSelectStrategy.LowestBattlePower">@ResourceStrings.Min_Battle_Power</MudSelectItem>
+            <MudSelectItem Value="TargetSelectStrategy.HighestBattlePower">@ResourceStrings.Max_Battle_Power</MudSelectItem>
         </MudSelect>
         <MudList>
             <MudListSubheader>
-                <MudText Inline="true">角色筛选</MudText>
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="() => OpenCreateFilter()">新增</MudButton>
+                <MudText Inline="true">@ResourceStrings.Character_Filter</MudText>
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="() => OpenCreateFilter()">@ResourceStrings.Add</MudButton>
             </MudListSubheader>
             @foreach (var filter in pvpOption.CharacterFilters)
             {
@@ -32,8 +32,8 @@
                 var battleParameterName = Masters.TextResourceTable.Get(filter.BattleParameterType);
                 var desc = filter.FilterStrategy switch
                 {
-                    CharacterFilterStrategy.Character => $"排除 {characterName}",
-                    CharacterFilterStrategy.PropertyMoreThanSelf => $"排除 {battleParameterName} 高于己方的 {characterName}"
+                    CharacterFilterStrategy.Character => string.Format(ResourceStrings.Exclude__0_, characterName),
+                    CharacterFilterStrategy.PropertyMoreThanSelf => string.Format(ResourceStrings.Exclude__battleParameterName__higher_than__characterName_, battleParameterName, characterName)
                     };
                 <MudListItem Dense="true">
                     <MudStack Row="true" Class="align-content-center align-center">
@@ -53,11 +53,11 @@
     </TitleContent>
     <DialogContent>
         <MudPaper MinWidth="300px" Elevation="0">
-            <MudSelect Label="筛选策略" @bind-Value="settingFilter.FilterStrategy">
-                <MudSelectItem Value="CharacterFilterStrategy.Character">排除角色</MudSelectItem>
-                <MudSelectItem Value="CharacterFilterStrategy.PropertyMoreThanSelf">排除属性高于己方</MudSelectItem>
+            <MudSelect Label="@ResourceStrings.Filtering_strategy" @bind-Value="settingFilter.FilterStrategy">
+                <MudSelectItem Value="CharacterFilterStrategy.Character">@ResourceStrings.Exclude_character</MudSelectItem>
+                <MudSelectItem Value="CharacterFilterStrategy.PropertyMoreThanSelf">@ResourceStrings.Exclude_enemy_character_with_higher_stats_in_the_same_attribute_as_ours</MudSelectItem>
             </MudSelect>
-            <MudSelect Label="角色" @bind-Value="settingFilter.CharacterId" FullWidth="true">
+                <MudSelect Label="@Masters.TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")" @bind-Value="settingFilter.CharacterId" FullWidth="true">
                 @foreach (var character in Masters.CharacterTable.GetArray())
                 {
                     <MudSelectItem Value="@character.Id">@character.GetCombinedName()</MudSelectItem>
@@ -65,7 +65,7 @@
             </MudSelect>
             @if (settingFilter.FilterStrategy == CharacterFilterStrategy.PropertyMoreThanSelf)
             {
-                <MudSelect Label="属性" @bind-Value="settingFilter.BattleParameterType">
+                <MudSelect Label="@Masters.TextResourceTable.Get("[CharacterDetailTabBattleParameter]")" @bind-Value="settingFilter.BattleParameterType">
                     @foreach (var battleParameterType in Enum.GetValues(typeof(BattleParameterType)).Cast<BattleParameterType>())
                     {
                         <MudSelectItem Value="@battleParameterType">@Masters.TextResourceTable.Get(battleParameterType)</MudSelectItem>
@@ -100,12 +100,12 @@
         if (LeagueType == 0)
         {
             pvpOptionSelector = x => x.BattleLeague;
-            name = "竞技场";
+            name = Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]");
         }
         else
         {
             pvpOptionSelector = x => x.LegendLeague;
-            name = "传奇联赛";
+            name = Masters.TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]");
         }
     }
 

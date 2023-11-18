@@ -462,4 +462,34 @@
   <data name="Account Creation Time" xml:space="preserve">
       <value>帐号创建时间</value>
   </data>
+  <data name="Opponent Selection Strategy" xml:space="preserve">
+      <value>对手选择策略</value>
+  </data>
+  <data name="Random" xml:space="preserve">
+      <value>随机</value>
+  </data>
+  <data name="Min Battle Power" xml:space="preserve">
+      <value>最低战力</value>
+  </data>
+  <data name="Max Battle Power" xml:space="preserve">
+      <value>最高战力</value>
+  </data>
+  <data name="Character Filter" xml:space="preserve">
+      <value>角色筛选</value>
+  </data>
+  <data name="Exclude {0}" xml:space="preserve">
+      <value>排除 {0}</value>
+  </data>
+  <data name="Exclude {battleParameterName} higher than {characterName}" xml:space="preserve">
+      <value>排除 {0} 高于己方的 {1}</value>
+  </data>
+  <data name="Exclude character" xml:space="preserve">
+      <value>排除角色</value>
+  </data>
+  <data name="Exclude enemy character with higher stats in the same attribute as ours" xml:space="preserve">
+      <value>排除高于我方同属性敌方角色</value>
+  </data>
+  <data name="Filtering strategy" xml:space="preserve">
+      <value>筛选策略</value>
+  </data>
 </root>

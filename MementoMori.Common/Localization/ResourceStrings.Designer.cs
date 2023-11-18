@@ -295,6 +295,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Character Filter 的本地化字符串。
+        /// </summary>
+        public static string Character_Filter {
+            get {
+                return ResourceManager.GetString("Character Filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Character Info 的本地化字符串。
         /// </summary>
         public static string CharacterInfo {
@@ -439,6 +448,42 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Exclude {0} 的本地化字符串。
+        /// </summary>
+        public static string Exclude__0_ {
+            get {
+                return ResourceManager.GetString("Exclude {0}", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Exclude {0} higher than {1} 的本地化字符串。
+        /// </summary>
+        public static string Exclude__battleParameterName__higher_than__characterName_ {
+            get {
+                return ResourceManager.GetString("Exclude {battleParameterName} higher than {characterName}", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Exclude character 的本地化字符串。
+        /// </summary>
+        public static string Exclude_character {
+            get {
+                return ResourceManager.GetString("Exclude character", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Exclude enemy character with higher stats in the same attribute as ours 的本地化字符串。
+        /// </summary>
+        public static string Exclude_enemy_character_with_higher_stats_in_the_same_attribute_as_ours {
+            get {
+                return ResourceManager.GetString("Exclude enemy character with higher stats in the same attribute as ours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Execute All Actions 的本地化字符串。
         /// </summary>
         public static string ExecuteAllQuick {
@@ -471,6 +516,15 @@ namespace MementoMori.Common.Localization {
         public static string Failed_to_retrieve_account_information {
             get {
                 return ResourceManager.GetString("Failed to retrieve account information", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Filtering strategy 的本地化字符串。
+        /// </summary>
+        public static string Filtering_strategy {
+            get {
+                return ResourceManager.GetString("Filtering strategy", resourceCulture);
             }
         }
         
@@ -601,11 +655,29 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Max Battle Power 的本地化字符串。
+        /// </summary>
+        public static string Max_Battle_Power {
+            get {
+                return ResourceManager.GetString("Max Battle Power", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Maximum use quantity for recovery items (0 means not using) 的本地化字符串。
         /// </summary>
         public static string MaxUseRecoveryItem {
             get {
                 return ResourceManager.GetString("MaxUseRecoveryItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Min Battle Power 的本地化字符串。
+        /// </summary>
+        public static string Min_Battle_Power {
+            get {
+                return ResourceManager.GetString("Min Battle Power", resourceCulture);
             }
         }
         
@@ -772,6 +844,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Opponent Selection Strategy 的本地化字符串。
+        /// </summary>
+        public static string Opponent_Selection_Strategy {
+            get {
+                return ResourceManager.GetString("Opponent Selection Strategy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Others 的本地化字符串。
         /// </summary>
         public static string Others {
@@ -822,6 +903,15 @@ namespace MementoMori.Common.Localization {
         public static string QuickActions {
             get {
                 return ResourceManager.GetString("QuickActions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Random 的本地化字符串。
+        /// </summary>
+        public static string Random {
+            get {
+                return ResourceManager.GetString("Random", resourceCulture);
             }
         }
         

@@ -356,4 +356,34 @@
     <data name="Account Creation Time" xml:space="preserve">
         <value>계정 생성 시간</value>
     </data>
+    <data name="Opponent Selection Strategy" xml:space="preserve">
+        <value>상대 선택 전략</value>
+    </data>
+    <data name="Random" xml:space="preserve">
+        <value>무작위</value>
+    </data>
+    <data name="Min Battle Power" xml:space="preserve">
+        <value>최소 전투력</value>
+    </data>
+    <data name="Max Battle Power" xml:space="preserve">
+        <value>최대 전투력</value>
+    </data>
+    <data name="Character Filter" xml:space="preserve">
+        <value>캐릭터 필터</value>
+    </data>
+    <data name="Exclude {0}" xml:space="preserve">
+        <value>제외 {0}</value>
+    </data>
+    <data name="Exclude {battleParameterName} higher than {characterName}" xml:space="preserve">
+        <value>{0} 이(가) {1} 보다 높은 것을 제외</value>
+    </data>
+    <data name="Exclude character" xml:space="preserve">
+        <value>캐릭터 제외</value>
+    </data>
+    <data name="Exclude enemy character with higher stats in the same attribute as ours" xml:space="preserve">
+        <value>적 캐릭터 중 속성이 우리와 동일하면서 스탯이 더 높은 경우 제외합니다</value>
+    </data>
+    <data name="Filtering strategy" xml:space="preserve">
+        <value>필터링 전략</value>
+    </data>
 </root>

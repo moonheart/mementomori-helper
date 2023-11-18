@@ -462,4 +462,34 @@
   <data name="Account Creation Time" xml:space="preserve">
       <value>Account Creation Time</value>
   </data>
+  <data name="Opponent Selection Strategy" xml:space="preserve">
+      <value>Opponent Selection Strategy</value>
+  </data>
+  <data name="Random" xml:space="preserve">
+      <value>Random</value>
+  </data>
+  <data name="Min Battle Power" xml:space="preserve">
+      <value>Min Battle Power</value>
+  </data>
+  <data name="Max Battle Power" xml:space="preserve">
+      <value>Max Battle Power</value>
+  </data>
+  <data name="Character Filter" xml:space="preserve">
+      <value>Character Filter</value>
+  </data>
+  <data name="Exclude {0}" xml:space="preserve">
+      <value>Exclude {0}</value>
+  </data>
+  <data name="Exclude {battleParameterName} higher than {characterName}" xml:space="preserve">
+      <value>Exclude {0} higher than {1}</value>
+  </data>
+  <data name="Exclude character" xml:space="preserve">
+      <value>Exclude character</value>
+  </data>
+  <data name="Exclude enemy character with higher stats in the same attribute as ours" xml:space="preserve">
+      <value>Exclude enemy character with higher stats in the same attribute as ours</value>
+  </data>
+  <data name="Filtering strategy" xml:space="preserve">
+      <value>Filtering strategy</value>
+  </data>
 </root>

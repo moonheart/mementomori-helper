@@ -356,4 +356,34 @@
     <data name="Account Creation Time" xml:space="preserve">
         <value>アカウント作成時間</value>
     </data>
+    <data name="Opponent Selection Strategy" xml:space="preserve">
+        <value>相手選択戦略</value>
+    </data>
+    <data name="Random" xml:space="preserve">
+        <value>ランダム</value>
+    </data>
+    <data name="Min Battle Power" xml:space="preserve">
+        <value>最低戦力</value>
+    </data>
+    <data name="Max Battle Power" xml:space="preserve">
+        <value>最大戦力</value>
+    </data>
+    <data name="Character Filter" xml:space="preserve">
+        <value>キャラクターフィルター</value>
+    </data>
+    <data name="Exclude {0}" xml:space="preserve">
+        <value>除外 {0}</value>
+    </data>
+    <data name="Exclude {battleParameterName} higher than {characterName}" xml:space="preserve">
+        <value>{0} が {1} よりも高いものを除外する</value>
+    </data>
+    <data name="Exclude character" xml:space="preserve">
+        <value>キャラクターを除外する</value>
+    </data>
+    <data name="Exclude enemy character with higher stats in the same attribute as ours" xml:space="preserve">
+        <value>敵キャラクターのステータスが、同じ属性で自分たちよりも高い場合は除外します</value>
+    </data>
+    <data name="Filtering strategy" xml:space="preserve">
+        <value>フィルタリング戦略</value>
+    </data>
 </root>
