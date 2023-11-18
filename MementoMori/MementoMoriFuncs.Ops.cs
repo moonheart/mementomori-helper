@@ -2140,7 +2140,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                             {
                                 if (reward.IsEqual(rewardItem.ItemType, rewardItem.ItemId))
                                 {
-                                    count += reward.ItemCount * rewardItem.Weight;
+                                    count += reward.ItemCount / GetMaxItemCount(rewardItem) * rewardItem.Weight;
                                 }
                             }
                         }
@@ -2148,6 +2148,19 @@ public partial class MementoMoriFuncs : ReactiveObject
                         return new {quest = d, count};
                     }).OrderByDescending(d => d.count).First().quest.Id;
                 }
+            }
+
+            double GetMaxItemCount(IUserItem userItem)
+            {
+                return (userItem.ItemType, userItem.ItemId) switch
+                {
+                    (ItemType.CharacterTrainingMaterial, 1) => 241032D,
+                    (ItemType.EquipmentReinforcementItem, 1) => 296D,
+                    (ItemType.EquipmentReinforcementItem, 2) => 34D,
+                    (ItemType.CharacterTrainingMaterial, 2) => 378D,
+                    (ItemType.ExchangePlaceItem, 4) => 27D,
+                    _ => 99999999D
+                };
             }
         });
     }
