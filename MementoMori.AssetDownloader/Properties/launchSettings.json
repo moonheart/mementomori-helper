@@ -1,0 +1,18 @@
+{
+  "profiles": {
+    "MementoMori.AssetDownloader": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "GameOs": "Android",
+        "AssetStutioCliPath": "D:\\PortablePrograms\\ArknightsStudioCLI\\ArknightsStudioCLI.exe",
+        "DownloadPath": "./Assets/",
+        "AListUrl": "https://list.moonheartmoon.com/",
+        "AListUsername": "admin",
+        "AListPassword": "@FZPfzp123",
+        "AListTargetPath": "/onedrive/mmtm/",
+        "ApkVersionFile": "apkVersion"
+      }
+    }
+  }
+}

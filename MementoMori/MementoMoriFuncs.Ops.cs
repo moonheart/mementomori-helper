@@ -1735,7 +1735,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     else
                         log(string.Format(ResourceStrings.AutoTowerElementExecMsg, name, targetQuestId, result, totalCount, winCount, errCount, towerBattleDtoInfo.TodayClearNewFloorCount));
 
-                    if (win && SelectedAutoTowerType == TowerType.Infinite && targetStopLayer > 0 && targetStopLayer == targetQuestId) break;
+                    if (win && targetStopLayer > 0 && targetStopLayer == targetQuestId) break;
 
                     if (GameConfig.AutoRequestDelay > 0) await Task.Delay(GameConfig.AutoRequestDelay, token);
                 }
