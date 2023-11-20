@@ -152,5 +152,9 @@ public static class UserSyncDataExtensions
         return count;
     }
 
+    public static long GetUserItemCount(this UserSyncData usersyncData, ItemType itemType, long itemId)
+    {
+        return usersyncData?.UserItemDtoInfo?.ToList().Find(x => x.ItemType == itemType && (itemId == 0 || x.ItemId == itemId))?.ItemCount ?? 0;
+    }
 
 }

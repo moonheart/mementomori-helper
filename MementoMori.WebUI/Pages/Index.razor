@@ -19,6 +19,7 @@
 @using MementoMori.Ortega.Share.Data.Notice
 @using MementoMori.Common.Localization
 @using MementoMori.Option
+@using MementoMori.Ortega.Custom
 @using Microsoft.Extensions.Options
 @using static MementoMori.Ortega.Share.Masters
 
@@ -75,18 +76,27 @@
                         <td colspan="2">@TextResourceTable.Get("[MyPagePlayerInformationCommentLabel]") : @Funcs.UserSyncData?.UserStatusDtoInfo?.Comment</td>
                     </tr>
                     <tr>
-                                <td>@TextResourceTable.Get("[ItemName9]") : @(Funcs.UserSyncData?.UserItemDtoInfo?.ToList().Find(d => d.ItemType == ItemType.FriendPoint)?.ItemCount ?? 0)</td>
-                                <td>@TextResourceTable.Get("[ItemName11]") : @(Funcs.UserSyncData?.UserItemDtoInfo?.ToList().Find(d => d.ItemType == ItemType.CharacterTrainingMaterial && d.ItemId == 2)?.ItemCount ?? 0)</td>
-                    </tr>
-                    <tr>
                         @{
-                                    var free = Funcs.UserSyncData?.UserItemDtoInfo?.ToList().Find(x => x.ItemType == ItemType.CurrencyFree)?.ItemCount ?? 0;
-                                    var paid = Funcs.UserSyncData?.UserItemDtoInfo?.ToList().Find(x => x.ItemType == ItemType.CurrencyPaid)?.ItemCount ?? 0;
+                            var free = Funcs.UserSyncData.GetUserItemCount(ItemType.CurrencyFree, 1);
+                            var paid = Funcs.UserSyncData.GetUserItemCount(ItemType.CurrencyPaid, 0);
                             <td colspan="2">@TextResourceTable.Get("[ItemName4]") : @($"{free + paid}, {TextResourceTable.Get("[CurrencyDetailCurrencyFree]")} {free}, {TextResourceTable.Get("[CurrencyDetailCurrencyPaid]")} {paid}") </td>
                         }
                     </tr>
                     <tr>
-                                <td colspan="2">@TextResourceTable.Get("[ItemName5]") : @((Funcs.UserSyncData?.UserItemDtoInfo?.ToList().Find(x => x.ItemType == ItemType.Gold)?.ItemCount ?? 0).ToString("N0"))</td>
+                        <td>@TextResourceTable.Get("[ItemName9]") : @(Funcs.UserSyncData.GetUserItemCount(ItemType.FriendPoint, 1))</td>
+                        <td>@TextResourceTable.Get("[ItemName11]") : @(Funcs.UserSyncData.GetUserItemCount(ItemType.CharacterTrainingMaterial, 2))</td>
+                    </tr>
+                    <tr>
+                        <td>@TextResourceTable.Get("[ItemName5]") : @(Funcs.UserSyncData.GetUserItemCount(ItemType.Gold, 1).ToString("N0"))</td>
+                        <td>
+                            @TextResourceTable.Get("[ItemName10]") : @(Funcs.UserSyncData.GetUserItemCount(ItemType.CharacterTrainingMaterial, 1).ToString("N0"))
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@TextResourceTable.Get("[ItemName43]") : @(Funcs.UserSyncData.GetUserItemCount(ItemType.ExchangePlaceItem, 4).ToString("N0"))</td>
+                        <td>
+                            @TextResourceTable.Get("[ItemName16]") : @(Funcs.UserSyncData.GetUserItemCount(ItemType.EquipmentRarityCrystal, 1).ToString("N0"))
+                        </td>
                     </tr>
                     </tbody>
                 </MudSimpleTable>
@@ -144,7 +154,7 @@
             <MudPaper Elevation="0">
                 @foreach (var info in Funcs.BountyQuestResponseInfo?.UserBountyQuestDtoInfos ?? new List<UserBountyQuestDtoInfo>())
                 {
-                        var bountyQuestInfo = Funcs.BountyQuestResponseInfo.BountyQuestInfos.ToList().Find(d => d.BountyQuestId == info.BountyQuestId);
+                    var bountyQuestInfo = Funcs.BountyQuestResponseInfo.BountyQuestInfos.ToList().Find(d => d.BountyQuestId == info.BountyQuestId);
                     var name = TextResourceTable.Get(bountyQuestInfo.BountyQuestNameKey);
                     var rarityName = TextResourceTable.Get(bountyQuestInfo.BountyQuestRarity);
                     var itemNames = bountyQuestInfo.BountyQuestType == BountyQuestType.Guerrilla
@@ -314,7 +324,7 @@
                             </MudSelect>
                             @if (Funcs.SelectedAutoTowerType != TowerType.None)
                             {
-                                    var maxTowerBattleId = Funcs.UserSyncData.UserTowerBattleDtoInfos.ToList().Find(x => x.TowerType == Funcs.SelectedAutoTowerType).MaxTowerBattleId;
+                                var maxTowerBattleId = Funcs.UserSyncData.UserTowerBattleDtoInfos.ToList().Find(x => x.TowerType == Funcs.SelectedAutoTowerType).MaxTowerBattleId;
                                 var quests = TowerBattleQuestTable.GetArray().Where(d => d.TowerType == Funcs.SelectedAutoTowerType && d.Floor > maxTowerBattleId).Take(50);
                                 <MudSelect @bind-Value="selectedTargetTowerLayer" Label="@ResourceStrings.StopAfterSpecifiedStage">
                                     <MudSelectItem T="long" Value="0">@ResourceStrings.NoStop</MudSelectItem>
