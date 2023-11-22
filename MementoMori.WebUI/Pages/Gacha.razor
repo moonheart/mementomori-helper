@@ -29,8 +29,8 @@
             <MudCard>
                 <MudCardHeader>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.body1">@(Masters.TextResourceTable.Get(gachaCaseUiMb.NameKey))</MudText>
-                        <MudText Typo="Typo.body2">@(Masters.TextResourceTable.Get(gachaCaseUiMb.ExplanationKey))</MudText>
+                        <MudText Typo="Typo.body1">@(Masters.TextResourceTable.Get(gachaCaseUiMb?.NameKey))</MudText>
+                        <MudText Typo="Typo.body2">@(Masters.TextResourceTable.Get(gachaCaseUiMb?.ExplanationKey))</MudText>
                     </CardHeaderContent>
                     <CardHeaderActions>
                             <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="() => ShowDetail(gachaCaseInfo)">@Masters.TextResourceTable.Get("[CommonDetailLabel]")</MudButton>
