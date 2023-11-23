@@ -492,4 +492,7 @@
   <data name="Filtering strategy" xml:space="preserve">
       <value>筛选策略</value>
   </data>
+  <data name="Confirm removal of this account?" xml:space="preserve">
+      <value>确认移除此账号吗？</value>
+  </data>
 </root>

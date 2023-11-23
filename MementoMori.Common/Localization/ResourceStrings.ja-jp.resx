@@ -386,4 +386,7 @@
     <data name="Filtering strategy" xml:space="preserve">
         <value>フィルタリング戦略</value>
     </data>
+    <data name="Confirm removal of this account?" xml:space="preserve">
+        <value>このアカウントを削除しますか？</value>
+    </data>
 </root>

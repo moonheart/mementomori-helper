@@ -313,6 +313,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Confirm removal of this account? 的本地化字符串。
+        /// </summary>
+        public static string Confirm_removal_of_this_account_ {
+            get {
+                return ResourceManager.GetString("Confirm removal of this account?", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Consumed Items 的本地化字符串。
         /// </summary>
         public static string ConsumeItem {

@@ -39,6 +39,7 @@
                         <MudIconButton Title="@ResourceStrings.Login" Icon="@Icons.Material.Filled.Login" Disabled="_accountDoingAction" OnClick="() => LoginAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
                         <MudIconButton Title="@ResourceStrings.Exit" Icon="@Icons.Material.Filled.Logout" Disabled="_accountDoingAction" OnClick="() => LogoutAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
                         <MudIconButton Title="@ResourceStrings.Settings" Icon="@Icons.Material.Filled.Settings" Disabled="_accountDoingAction" OnClick="() => ShowAccountSetting(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Disabled="_accountDoingAction" OnClick="() => DeleteAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
                     </MudStack>
                 </MudListItem>
             }
@@ -168,6 +169,18 @@
         _settingAccountAutoLogin = account.AutoLogin;
         _settingAccountClientKey = account.ClientKey;
         _settingAccountDialog = true;
+    }
+
+    private async Task DeleteAccount(long userId)
+    {
+        if (await DialogService.ShowMessageBox(ResourceStrings.Confirm_removal_of_this_account_, "", options: new DialogOptions() {CloseButton = true}) != true)
+        {
+            return;
+        }
+        authOption.Update(opt => { opt.Accounts.RemoveAll(d => d.UserId == userId); });
+        AccountManager.CurrentUserId = 0;
+        _accounts = authOption.Value.Accounts.ToList();
+        StateHasChanged();
     }
 
     private void SaveAccountSetting()

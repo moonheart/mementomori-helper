@@ -492,4 +492,7 @@
   <data name="Filtering strategy" xml:space="preserve">
       <value>Filtering strategy</value>
   </data>
+  <data name="Confirm removal of this account?" xml:space="preserve">
+      <value>Confirm removal of this account?</value>
+  </data>
 </root>

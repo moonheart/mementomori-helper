@@ -386,4 +386,7 @@
     <data name="Filtering strategy" xml:space="preserve">
         <value>필터링 전략</value>
     </data>
+    <data name="Confirm removal of this account?" xml:space="preserve">
+        <value>이 계정을 삭제하시겠습니까?</value>
+    </data>
 </root>
