@@ -1,6 +1,11 @@
-﻿[[Zh](readme.md)|[En](readme.en.md)]
+﻿[ [Zh](readme.md) | [En](readme.en.md) ]
 
 # MementoMori 游戏助手
+
+
+![GitHub all releases](https://img.shields.io/github/downloads/moonheart/mementomori-helper/total)
+![GitHub release (with filter)](https://img.shields.io/github/v/release/moonheart/mementomori-helper)
+![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/moonheart/mementomori-helper)
 
 施工中 
 
