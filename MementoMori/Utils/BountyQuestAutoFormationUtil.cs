@@ -50,17 +50,20 @@ public static class BountyQuestAutoFormationUtil
                 if (bountyQuestData.QuestInfo.BountyQuestType == BountyQuestType.Team)
                 {
                     var userBountyQuestMemberDtoInfos = GetReadySupportMemberDtoInfos(getlistResponse);
-                    // 这里假定一定能获取到符合条件的支援角色
+                    // 这里可能获取不到符合条件的支援角色
                     var supportMember = GetSupportMember(userBountyQuestMemberDtoInfos, bountyQuestData);
-                    var characterMb = Masters.CharacterTable.GetById(supportMember.CharacterId);
-                    if (rarityRequireCount > 0) rarityRequireCount--;
-                    elementTypes.Remove(characterMb.ElementType);
-                    selectedCharacterId.Add(supportMember.CharacterId);
-                    questMemberInfos.Add(new BountyQuestMemberInfo()
+                    if (supportMember != null)
                     {
-                        CharacterId = supportMember.CharacterId, CharacterRarityFlags = supportMember.RarityFlags, UserCharacterGuid = supportMember.UserCharacterGuid,
-                        PlayerId = supportMember.PlayerId
-                    });
+                        var characterMb = Masters.CharacterTable.GetById(supportMember.CharacterId);
+                        if (rarityRequireCount > 0) rarityRequireCount--;
+                        elementTypes.Remove(characterMb.ElementType);
+                        selectedCharacterId.Add(supportMember.CharacterId);
+                        questMemberInfos.Add(new BountyQuestMemberInfo()
+                        {
+                            CharacterId = supportMember.CharacterId, CharacterRarityFlags = supportMember.RarityFlags, UserCharacterGuid = supportMember.UserCharacterGuid,
+                            PlayerId = supportMember.PlayerId
+                        });
+                    }
                 }
 
                 // 匹配元素类型
@@ -152,7 +155,7 @@ public static class BountyQuestAutoFormationUtil
         return memberDtoInfos.Where(d => d.DispatchPlayerId == 0).ToList();
     }
 
-    public static UserBountyQuestMemberDtoInfo GetSupportMember(List<UserBountyQuestMemberDtoInfo> supportMemberDtoInfos, BountyQuestData bountyQuestData)
+    public static UserBountyQuestMemberDtoInfo? GetSupportMember(List<UserBountyQuestMemberDtoInfo> supportMemberDtoInfos, BountyQuestData bountyQuestData)
     {
         foreach (var info in supportMemberDtoInfos)
         {
@@ -162,7 +165,8 @@ public static class BountyQuestAutoFormationUtil
             if (bountyQuestData.ElementTypes.Contains(characterMb.ElementType)) return info;
         }
 
-        throw new Exception(ResourceStrings.No_available_support_characters_found_);
+        // throw new Exception(ResourceStrings.No_available_support_characters_found_);
+        return null;
     }
 
     private static List<UserCharacterDtoInfo> SortGuerrilla(List<UserCharacterDtoInfo> characterDtoInfos)
