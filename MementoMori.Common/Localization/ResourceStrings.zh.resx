@@ -495,4 +495,16 @@
   <data name="Confirm removal of this account?" xml:space="preserve">
       <value>确认移除此账号吗？</value>
   </data>
+  <data name="AutoUseItemTypeOthers" xml:space="preserve"><value>其他</value></data>
+  <data name="AutoUseItemTypeDiamondBag" xml:space="preserve"><value>一袋鑽石</value></data>
+  <data name="AutoUseItemTypeMysteryRune" xml:space="preserve"><value>未鑑定符石</value></data>
+  <data name="AutoUseItemTypeWitchLetterR" xml:space="preserve"><value>魔女的來信(R)</value></data>
+  <data name="AutoUseItemTypeWitchLetterSr" xml:space="preserve"><value>魔女的來信(SR)</value></data>
+  <data name="AutoUseItemTypeWitchShard" xml:space="preserve"><value>魔女的心片</value></data>
+  <data name="AutoUseItemTypePot" xml:space="preserve"><value>陶壺</value></data>
+  <data name="AutoUseItemTypeAmphora" xml:space="preserve"><value>瓷壺</value></data>
+  <data name="AutoUseItemTypeSealedChest" xml:space="preserve"><value>封印寶箱</value></data>
+  <data name="AutoUseItemTypeWitchLetterGift" xml:space="preserve"><value>魔女的來信禮袋</value></data>
+  <data name="AutoUseItemTypeChestOfChance" xml:space="preserve"><value>命運盒</value></data>
+
 </root>

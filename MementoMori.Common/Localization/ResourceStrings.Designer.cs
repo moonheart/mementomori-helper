@@ -232,6 +232,105 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Amphora 的本地化字符串。
+        /// </summary>
+        public static string AutoUseItemTypeAmphora {
+            get {
+                return ResourceManager.GetString("AutoUseItemTypeAmphora", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Chest of Chance 的本地化字符串。
+        /// </summary>
+        public static string AutoUseItemTypeChestOfChance {
+            get {
+                return ResourceManager.GetString("AutoUseItemTypeChestOfChance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Diamond Bag 的本地化字符串。
+        /// </summary>
+        public static string AutoUseItemTypeDiamondBag {
+            get {
+                return ResourceManager.GetString("AutoUseItemTypeDiamondBag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Mystery Rune 的本地化字符串。
+        /// </summary>
+        public static string AutoUseItemTypeMysteryRune {
+            get {
+                return ResourceManager.GetString("AutoUseItemTypeMysteryRune", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Others 的本地化字符串。
+        /// </summary>
+        public static string AutoUseItemTypeOthers {
+            get {
+                return ResourceManager.GetString("AutoUseItemTypeOthers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Pot 的本地化字符串。
+        /// </summary>
+        public static string AutoUseItemTypePot {
+            get {
+                return ResourceManager.GetString("AutoUseItemTypePot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Sealed Chest 的本地化字符串。
+        /// </summary>
+        public static string AutoUseItemTypeSealedChest {
+            get {
+                return ResourceManager.GetString("AutoUseItemTypeSealedChest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Witch&apos;s Letter Gift 的本地化字符串。
+        /// </summary>
+        public static string AutoUseItemTypeWitchLetterGift {
+            get {
+                return ResourceManager.GetString("AutoUseItemTypeWitchLetterGift", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Witch&apos;s Letter(R) 的本地化字符串。
+        /// </summary>
+        public static string AutoUseItemTypeWitchLetterR {
+            get {
+                return ResourceManager.GetString("AutoUseItemTypeWitchLetterR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Witch&apos;s Letter(SR) 的本地化字符串。
+        /// </summary>
+        public static string AutoUseItemTypeWitchLetterSr {
+            get {
+                return ResourceManager.GetString("AutoUseItemTypeWitchLetterSr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Witch&apos;s Shard 的本地化字符串。
+        /// </summary>
+        public static string AutoUseItemTypeWitchShard {
+            get {
+                return ResourceManager.GetString("AutoUseItemTypeWitchShard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Battle Result 的本地化字符串。
         /// </summary>
         public static string BattleResult {

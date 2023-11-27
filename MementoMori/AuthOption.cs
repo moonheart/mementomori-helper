@@ -108,8 +108,8 @@ public class GameConfig
         }
 
         public long ItemCount { get; set; }
-        public long ItemId { get; set;}
-        public ItemType ItemType { get; set;}
+        public long ItemId { get; set; }
+        public ItemType ItemType { get; set; }
         public double Weight { get; set; }
     }
 
@@ -136,11 +136,73 @@ public class GameConfig
         public int MaxUseRecoveryItem { get; set; }
     }
 
+    [Obsolete]
     public class LoginConfig
     {
         [Obsolete]
         public bool AutoLogin { get; set; }
     }
+
+    public class ItemsConfig
+    {
+        public List<AutoUseItemType> AutoUseItemTypes { get; set; } = new();
+    }
+
+    public enum AutoUseItemType
+    {
+        Others,
+
+        /// <summary>
+        /// 一袋钻石
+        /// </summary>
+        DiamondBag,
+
+        /// <summary>
+        /// 未鉴定符石
+        /// </summary>
+        MysteryRune,
+
+        /// <summary>
+        /// 魔女的来信 R
+        /// </summary>
+        WitchLetterR,
+
+        /// <summary>
+        /// 魔女的来信 SR
+        /// </summary>
+        WitchLetterSr,
+
+        /// <summary>
+        /// 魔女的心片
+        /// </summary>
+        WitchShard,
+
+        /// <summary>
+        /// 小壶
+        /// </summary>
+        Pot,
+
+        /// <summary>
+        /// 大壶
+        /// </summary>
+        Amphora,
+
+        /// <summary>
+        /// 封印宝箱
+        /// </summary>
+        SealedChest,
+
+        /// <summary>
+        /// 魔女的来信礼盒
+        /// </summary>
+        WitchLetterGift,
+
+        /// <summary>
+        /// 命运盒
+        /// </summary>
+        ChestOfChance
+    }
+
 
     public AutoJobModel AutoJob { get; set; } = new();
     public GachaConfigModel GachaConfig { get; set; } = new();
@@ -153,17 +215,17 @@ public class GameConfig
     public ShopConfig Shop { get; set; } = new();
     public LocalRaidConfig LocalRaid { get; set; } = new();
     public LoginConfig Login { get; set; } = new();
+    public ItemsConfig Items { get; set; } = new();
 }
 
-public class PlayersOption: Dictionary<long, PlayerOption>
+public class PlayersOption : Dictionary<long, PlayerOption>
 {
-    
 }
 
 public class PlayerOption
 {
     public long PlayerId { get; set; }
-    public PvpOption BattleLeague { get; set; } = new ();
+    public PvpOption BattleLeague { get; set; } = new();
     public PvpOption LegendLeague { get; set; } = new();
 }
 
@@ -177,7 +239,7 @@ public enum TargetSelectStrategy
 {
     Random,
     LowestBattlePower,
-    HighestBattlePower,
+    HighestBattlePower
 }
 
 public class CharacterFilter
@@ -193,8 +255,9 @@ public enum CharacterFilterStrategy
     /// 不包含这个角色
     /// </summary>
     Character,
+
     /// <summary>
     /// 这个角色的属性比自己的角色的高
     /// </summary>
-    PropertyMoreThanSelf,
+    PropertyMoreThanSelf
 }
