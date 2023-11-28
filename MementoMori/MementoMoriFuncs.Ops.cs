@@ -2253,6 +2253,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await BattleBossQuick();
         await InfiniteTowerQuick();
         await BossHishSpeedBattle();
+        await ReceiveGvgReward();
         await GuildCheckin();
         await GuildRaid();
         await BountyQuestRewardAuto();
