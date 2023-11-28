@@ -400,5 +400,7 @@
     <data name="AutoUseItemTypeSealedChest" xml:space="preserve"><value>보물상자</value></data>
     <data name="AutoUseItemTypeWitchLetterGift" xml:space="preserve"><value>마녀의 편지기프트</value></data>
     <data name="AutoUseItemTypeChestOfChance" xml:space="preserve"><value>운명의 상자</value></data>
-
+    <data name="The current version ({0}) is not the latest version ({1}). Click to download the latest version." xml:space="preserve">
+        <value>현재 버전 ({0})은 최신 버전 ({1})이 아닙니다. 최신 버전을 다운로드하려면 클릭하세요.</value>
+    </data>
 </root>

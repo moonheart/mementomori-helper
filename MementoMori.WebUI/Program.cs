@@ -52,6 +52,7 @@ internal class Program
         builder.Services.AddTransient<MementoNetworkManager>();
         builder.Services.AddTransient<MementoMoriFuncs>();
         builder.Services.AddSingleton<TimeZoneAwareJobRegister>();
+        builder.Services.AddHttpClient();
 
         builder.Services.AddOptions();
         builder.Services.ConfigureWritable<AuthOption>(builder.Configuration.GetSection("AuthOption"), "appsettings.user.json");

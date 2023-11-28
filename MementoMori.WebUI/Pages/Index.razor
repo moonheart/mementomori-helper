@@ -1,6 +1,7 @@
 ﻿@inject IJSRuntime JsRuntime
 @inject IDialogService DialogService
 @inject IWritableOptions<GameConfig> GameConfig
+@inject IHttpClientFactory HttpClientFactory
 
 @inherits AccountComponent
 @page "/"
@@ -10,6 +11,7 @@
 @using MementoMori.WebUI.Extensions
 @using MementoMori.WebUI.Models
 @using MementoMori.WebUI.Pages.Components
+@using Newtonsoft.Json.Linq
 @using ReactiveUI
 @using DynamicData.Binding
 @using MementoMori.Ortega.Common.Utils
@@ -22,10 +24,26 @@
 @using MementoMori.Ortega.Custom
 @using Microsoft.Extensions.Options
 @using static MementoMori.Ortega.Share.Masters
+@using System.Reflection
 
 <PageTitle>@TextResourceTable.Get("[CommonFooterHomeButtonLabel]")</PageTitle>
 
 <MudGrid>
+@if (!string.IsNullOrEmpty(newVersionMessage))
+{
+    <MudItem md="12">
+        <MudAlert Severity="Severity.Warning">@newVersionMessage
+                <MudButton Href="https://github.com/moonheart/mementomori-helper/releases"
+                       Target="_blank"
+                       Variant="Variant.Outlined"
+                       Style="text-transform:none"
+                       StartIcon="@Icons.Custom.Brands.GitHub"
+                       Color="Color.Primary">
+                    mementomori-helper
+            </MudButton>
+            </MudAlert>
+    </MudItem>
+}
 @if (!string.IsNullOrEmpty(alertMessage))
 {
     <MudItem md="12">
@@ -437,6 +455,7 @@
     private long selectedTargetQuerstId;
     private long selectedTargetTowerLayer;
     string alertMessage = "";
+    string newVersionMessage = "";
 
 
     private List<PlayerDataInfo> playerDataInfos = new();
@@ -475,6 +494,12 @@
         }
     }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _ = CheckLatestVersion();
+    }
+
     private void ShowNotice(NoticeInfo context)
     {
         var options = new DialogOptions()
@@ -495,6 +520,31 @@
         if (!result.Canceled && result.Data is PlayerDataInfo playerDataInfo)
         {
             await Funcs.Login(playerDataInfo);
+        }
+    }
+
+    private async Task CheckLatestVersion()
+    {
+        try
+        {
+            var githubUrl = "https://api.github.com/repos/moonheart/mementomori-helper/releases/latest";
+            var httpClient = HttpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "mementomori-helper");
+            var json = await httpClient.GetStringAsync(githubUrl);
+            var release = JObject.Parse(json);
+            var version = release["tag_name"].ToString();
+            var newVersion = Version.Parse(version.TrimStart('v'));
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            var currentVersion = assembly.GetName().Version;
+            if (newVersion > currentVersion)
+            {
+                newVersionMessage = string.Format(ResourceStrings.The_current_version___0___is_not_the_latest_version___1____Click_to_download_the_latest_version_, currentVersion, version);
+                this.InvokeAsync(() => StateHasChanged());
+            }
+        }
+        catch
+        {
+            
         }
     }
 

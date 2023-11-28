@@ -400,5 +400,7 @@
     <data name="AutoUseItemTypeSealedChest" xml:space="preserve"><value>封印の宝箱</value></data>
     <data name="AutoUseItemTypeWitchLetterGift" xml:space="preserve"><value>魔女の手紙ギフト</value></data>
     <data name="AutoUseItemTypeChestOfChance" xml:space="preserve"><value>運命の箱</value></data>
-
+    <data name="The current version ({0}) is not the latest version ({1}). Click to download the latest version." xml:space="preserve">
+        <value>現在のバージョン（{0}）は最新バージョン（{1}）ではありません。最新バージョンをダウンロードするにはクリックしてください。</value>
+    </data>
 </root>

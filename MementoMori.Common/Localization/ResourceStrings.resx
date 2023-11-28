@@ -506,4 +506,7 @@
   <data name="AutoUseItemTypeSealedChest" xml:space="preserve"><value>Sealed Chest</value></data>
   <data name="AutoUseItemTypeWitchLetterGift" xml:space="preserve"><value>Witch's Letter Gift</value></data>
   <data name="AutoUseItemTypeChestOfChance" xml:space="preserve"><value>Chest of Chance</value></data>
+  <data name="The current version ({0}) is not the latest version ({1}). Click to download the latest version." xml:space="preserve">
+      <value>The current version ({0}) is not the latest version ({1}). Click to download the latest version.</value>
+  </data>
 </root>

@@ -1249,6 +1249,16 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 The current version ({0}) is not the latest version ({1}). Click to download the latest version. 的本地化字符串。
+        /// </summary>
+        public static string The_current_version___0___is_not_the_latest_version___1____Click_to_download_the_latest_version_ {
+            get {
+                return ResourceManager.GetString("The current version ({0}) is not the latest version ({1}). Click to download the " +
+                        "latest version.", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Tower Type 的本地化字符串。
         /// </summary>
         public static string TowerType {
