@@ -46,6 +46,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 		}
 
 		[PropertyOrder(9)]
+        [TimeSpanString]
 		[Description("送信時刻")]
 		public string SendTime
 		{

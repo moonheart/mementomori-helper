@@ -121,6 +121,8 @@ namespace MementoMori.Ortega.Share
 		ItemEditorNotEnoughPaidCurrency,
 		[Description("消費できないアイテムです。")]
 		ItemEditorNotConsumableItem,
+		[Description("付与できないアイテムです。")]
+		ItemEditorCanNotGiveItem,
 		[Description("ユーザのボックスデータが存在しません。")]
 		ItemEditorUserBoxSizeDtoNotFound = 82000,
 		[Description("ユーザーのステータスデータが存在しません。")]
@@ -329,6 +331,8 @@ namespace MementoMori.Ortega.Share
 		BattlePvpUserStatusDtoNotFound,
 		[Description("ユーザーのレジェンドリーグデータがありません")]
 		BattlePvpUserBattleLegendLeagueDtoNotFound,
+		[Description("ユーザーのレジェンドリーグアイコン報酬データがありません")]
+		BattlePvpUserLegendLeagueIconRewardDtoNotFound,
 		[Description("石でPVP挑戦券を購入できません")]
 		BattlePvpInvalidBuyPvpTicket = 132000,
 		[Description("PVP挑戦最大回数を超えました")]
@@ -367,6 +371,12 @@ namespace MementoMori.Ortega.Share
 		BattlePvpFailedToGetPlayerInfo,
 		[Description("レジェンドリーグの開催期間外です。")]
 		BattlePvpNotBattleTimeLegendLeague,
+		[Description("アイコン報酬は解放されていません。")]
+		BattlePvpLegendLeagueIconRewardNotOpen,
+		[Description("アイコン報酬購入可能な時間が過ぎました。")]
+		BattlePvpLegendLeagueIconRewardLimitTimeOver,
+		[Description("アイコン報酬購入済みです")]
+		BattlePvpLegendLeagueIconRewardAlreadyBuy,
 		[Description("ユーザーのボスバトルデータがありません")]
 		BattleBossUserBountyQuestDtoNotFound = 141000,
 		[Description("ユーザーデータがありません")]
@@ -1111,8 +1121,16 @@ namespace MementoMori.Ortega.Share
 		TradeShopIsHideTab,
 		[Description("有効期間ではありません。")]
 		TradeShopNotOpen,
+		[Description("受け取り可能なランキング到達報酬データが存在しません。")]
+		RankingWorldReceivableRankingRewardDtoNotFound = 371000,
 		[Description("ランキングが解放されていません。")]
 		RankingNotOpenRankingContent = 372000,
+		[Description("受け取り出来ないランキング到達報酬です。")]
+		RankingCanNotReceiveReward,
+		[Description("既に受け取り済みのランキング到達報酬です。")]
+		RankingAlreadyReceivedRankingReward,
+		[Description("ランキング到達報酬が解放されていません。")]
+		RankingNotOpenAchieveRankingReward,
 		[Description("パネル図鑑表示期間外です。")]
 		PanelNotStarted = 382000,
 		[Description("無条件で解放されているパネルです。")]
@@ -1187,6 +1205,8 @@ namespace MementoMori.Ortega.Share
 		ItemOpenTreasureChestStaticItemIsNull,
 		[Description("天井対象のアイテムが存在しません。")]
 		ItemOpenTreasureChestCeilingTargetItemNotFound,
+		[Description("特別アイコンアイテムが存在しません。")]
+		ItemSpecialIconItemNotFound,
 		[Description("LocalRaidで解散に失敗した")]
 		MagicOnionLocalRaidDisbandRoomFailed = 900102,
 		[Description("LocalRaidで他の部屋に参加しているので参加に失敗した")]

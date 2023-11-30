@@ -8,6 +8,7 @@
 		BattleShowQlipha = 2201,
 		BattleChapterClear,
 		NextChapter,
+		BattleSecondContinentChapterClear,
 		CharacterEquip = 3005,
 		GachaCharacterResultOpen = 7002,
 		GachaDestinyResultOpen = 7006,

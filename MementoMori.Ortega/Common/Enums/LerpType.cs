@@ -5,8 +5,16 @@
 		None,
 		Liner,
 		EaseInQuart,
+		EaseOutQuart,
+		EaseInOutQuart,
 		EaseInCubic,
+		EaseOutCubic,
+		EaseInOutCubic,
 		EaseInExpo,
-		EaseInCirc
+		EaseOutExpo,
+		EaseInOutExpo,
+		EaseInCirc,
+		EaseOutCirc,
+		EaseInOutCirc
 	}
 }

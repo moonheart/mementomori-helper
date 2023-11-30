@@ -8,6 +8,6 @@
 		SkillQlipha,
 		Memory,
 		MyPageQlipha,
-        Recitation
+		Monologue
 	}
 }

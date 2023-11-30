@@ -125,6 +125,8 @@ namespace MementoMori.Ortega.Share.Enums
 		MusicPlayer = 180,
 		[Description("フレンドコード")]
 		FriendCode = 200,
+		[Description("ランキング到達報酬")]
+		AchieveRanking = 220,
 		[Description("武具固定")]
 		LockEquipment = 1000
 	}

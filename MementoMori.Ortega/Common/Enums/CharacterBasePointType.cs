@@ -12,6 +12,6 @@
 		MemoryChest,
 		MemoryFull,
 		NewCharacter = 2000,
-        Recitation = 3000
+		Monologue = 3000
 	}
 }

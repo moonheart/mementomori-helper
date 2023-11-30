@@ -80,8 +80,10 @@
 		ReleaseLock = 11001,
 		StrengthenLightUp = 12001,
 		Purchase = 13001,
-		PanelMissionOpenMass = 14001,
+		PanelMissionOpenGrid = 14001,
 		PanelMissionBingo,
-		PanelMissionFlashScreen
+		PanelMissionFlashScreen,
+		MonologueIn = 15001,
+		MonologueOut
 	}
 }

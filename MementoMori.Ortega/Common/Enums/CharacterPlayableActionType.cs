@@ -4,6 +4,6 @@
 	{
 		Idle,
 		VoiceAction,
-		RecitationAction
+		MonologueAction
 	}
 }

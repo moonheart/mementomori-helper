@@ -10,6 +10,7 @@ namespace MementoMori.Ortega.Share
         {
             return new ITable[]
             {
+                AchieveRankingRewardTable,
                 CharacterProfileTable,
                 CharacterDetailVoiceTable,
                 CommunityTable,
@@ -78,6 +79,7 @@ namespace MementoMori.Ortega.Share
                 ItemTable,
                 MonthlyLoginBonusRewardListTable,
                 MonthlyLoginBonusTable,
+                MonologueTable,
                 SphereTable,
                 LeadReviewTable,
                 LevelLinkTable,
@@ -124,6 +126,7 @@ namespace MementoMori.Ortega.Share
                 ChatEffectKeywordTable,
                 PanelTable,
                 PanelMissionTable,
+                SpecialIconItemTable,
                 MusicTable,
                 DownloadRawDataTable
             };
@@ -209,6 +212,8 @@ namespace MementoMori.Ortega.Share
             return Masters.GachaDestinyAddCharacterTable.Load();
         }
 
+        public static AchieveRankingRewardTable AchieveRankingRewardTable { get; } = new();
+        
         public static CharacterProfileTable CharacterProfileTable { get; } = new();
 
         public static CharacterDetailVoiceTable CharacterDetailVoiceTable { get; } = new();
@@ -348,6 +353,8 @@ namespace MementoMori.Ortega.Share
         public static MonthlyLoginBonusRewardListTable MonthlyLoginBonusRewardListTable { get; } = new();
 
         public static MonthlyLoginBonusTable MonthlyLoginBonusTable { get; } = new();
+        
+        public static MonologueTable MonologueTable { get; } = new();
 
         public static SphereTable SphereTable { get; } = new();
 
@@ -407,6 +414,8 @@ namespace MementoMori.Ortega.Share
 
         public static RecitationTable RecitationTable { get; } = new();
 
+        public static SpecialIconItemTable SpecialIconItemTable { get; } = new();
+        
         public static StateBonusTable StateBonusTable { get; } = new();
 
         public static StateTable StateTable { get; } = new();

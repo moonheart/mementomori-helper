@@ -4,6 +4,7 @@
 	{
 		CharacterPlayable,
 		NewCharacter,
-		CharacterEvolution
+		CharacterEvolution,
+		Monologue
 	}
 }

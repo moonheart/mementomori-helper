@@ -15,6 +15,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Battle
 
 		public bool ExistNewDefenseBattleLog { get; set; }
 
+        public bool IsDisplayRewardBadge { get; set; }
+
 		public bool IsInTimeCanChallenge { get; set; }
 
 		public List<LegendLeagueRankingPlayerInfo> MatchingRivalList{ get; set; }
