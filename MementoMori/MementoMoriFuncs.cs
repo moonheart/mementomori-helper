@@ -9,6 +9,7 @@ using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.ApiInterface;
 using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
+using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
 using MementoMori.Ortega.Share.Data.ApiInterface.DungeonBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
@@ -32,6 +33,7 @@ namespace MementoMori;
 public partial class MementoMoriFuncs
 {
     public TimeManager TimeManager => NetworkManager.TimeManager;
+
     [Reactive]
     public UserSyncData UserSyncData { get; private set; }
 
@@ -137,47 +139,55 @@ public partial class MementoMoriFuncs
 
     public async Task AutoDungeonBattle(Action<string> log, CancellationToken cancellationToken)
     {
-        // // 脱装备进副本，然后穿装备
-        // var equips = UserSyncData.UserEquipmentDtoInfos.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d => d.CharacterGuid).ToList();
-        // foreach (var g in equips)
-        // {
-        //     var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
-        //     var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
-        //     log(string.Format(ResourceStrings.RemoveEquipmentOfCharacter, name, characterDto.Level));
-        //
-        //     // 脱装备
-        //     var removeEquipmentResponse = await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
-        //     {
-        //         UserCharacterGuid = g.Key,
-        //         EquipmentSlotTypes = g.Select(d => Masters.EquipmentTable.GetById(d.EquipmentId).SlotType).ToList()
-        //     });
-        // }
+        // 脱装备进副本，然后穿装备
+        var competitionInfoResponse = await GetResponse<GetCompetitionInfoRequest, GetCompetitionInfoResponse>(new GetCompetitionInfoRequest());
+        if (competitionInfoResponse.IsDungeonBattleEventOpen)
+        {
+            var equips = UserSyncData.UserEquipmentDtoInfos.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d => d.CharacterGuid).ToList();
+            foreach (var g in equips)
+            {
+                var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
+                var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
+                log(string.Format(ResourceStrings.RemoveEquipmentOfCharacter, name, characterDto.Level));
+
+                // 脱装备
+                var removeEquipmentResponse = await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
+                {
+                    UserCharacterGuid = g.Key,
+                    EquipmentSlotTypes = g.Select(d => Masters.EquipmentTable.GetById(d.EquipmentId).SlotType).ToList()
+                });
+            }
+
+            // 进副本
+            await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(new GetDungeonBattleInfoRequest());
+            if (competitionInfoResponse.IsDungeonBattleEventOpen)
+                foreach (var g in equips)
+                {
+                    var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
+                    var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
+                    log(string.Format(ResourceStrings.PutOnEquipmentOfCharacter, name, characterDto.Level));
+                    // 穿装备
+                    var changeInfos = g.Select(d =>
+                    {
+                        var equipmentMb = Masters.EquipmentTable.GetById(d.EquipmentId);
+                        return new EquipmentChangeInfo()
+                        {
+                            EquipmentGuid = d.Guid,
+                            EquipmentId = d.EquipmentId,
+                            EquipmentSlotType = equipmentMb.SlotType,
+                            IsInherit = false
+                        };
+                    });
+                    var changeEquipmentResponse = await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(new ChangeEquipmentRequest()
+                    {
+                        UserCharacterGuid = g.Key, EquipmentChangeInfos = changeInfos.ToList()
+                    });
+                }
+        }
+
+        var battleInfoResponse = await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(new GetDungeonBattleInfoRequest());
 
         log($"{ResourceStrings.Enter} {Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")}");
-        // 进副本
-        var battleInfoResponse = await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(new GetDungeonBattleInfoRequest());
-        // foreach (var g in equips)
-        // {
-        //     var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
-        //     var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
-        //     log(string.Format(ResourceStrings.PutOnEquipmentOfCharacter, name, characterDto.Level));
-        //     // 穿装备
-        //     var changeInfos = g.Select(d =>
-        //     {
-        //         var equipmentMb = Masters.EquipmentTable.GetById(d.EquipmentId);
-        //         return new EquipmentChangeInfo()
-        //         {
-        //             EquipmentGuid = d.Guid,
-        //             EquipmentId = d.EquipmentId,
-        //             EquipmentSlotType = equipmentMb.SlotType,
-        //             IsInherit = false
-        //         };
-        //     });
-        //     var changeEquipmentResponse = await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(new ChangeEquipmentRequest()
-        //     {
-        //         UserCharacterGuid = g.Key, EquipmentChangeInfos = changeInfos.ToList()
-        //     });
-        // }
 
         if (battleInfoResponse.UserDungeonDtoInfo.IsDoneRewardClearLayer(3))
         {
@@ -188,9 +198,7 @@ public partial class MementoMoriFuncs
         while (!cancellationToken.IsCancellationRequested)
         {
             // 获取副本信息
-            battleInfoResponse =
-                await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(
-                    new GetDungeonBattleInfoRequest());
+            battleInfoResponse = await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(new GetDungeonBattleInfoRequest());
             var grids = battleInfoResponse.CurrentDungeonBattleLayer.DungeonGrids.Select(d =>
             {
                 var dungeonBattleGridMb = Masters.DungeonBattleGridTable.GetById(d.DungeonGridId);
@@ -235,7 +243,14 @@ public partial class MementoMoriFuncs
                 // 全灭, 如果已使用的苹果没有超过限制
                 if (battleCharacterGuids.Count == 0 && battleInfoResponse.UserDungeonDtoInfo.UseDungeonRecoveryItemCount < GameConfig.DungeonBattle.MaxUseRecoveryItem)
                 {
-                    var useRecoveryItemResponse = await GetResponse<UseRecoveryItemRequest, UseRecoveryItemResponse>(new() {CurrentTermId = battleInfoResponse.CurrentTermId});
+                    var useRecoveryItemResponse = await GetResponse<UseRecoveryItemRequest, UseRecoveryItemResponse>(new UseRecoveryItemRequest {CurrentTermId = battleInfoResponse.CurrentTermId});
+                    return;
+                }
+
+                if (battleCharacterGuids.Count == 0)
+                {
+                    log("All character died");
+                    return;
                 }
 
                 var execBattleResponse = await GetResponse<ExecBattleRequest, ExecBattleResponse>(
@@ -259,13 +274,41 @@ public partial class MementoMoriFuncs
                 case DungeonBattleGridState.Done:
                     // 当前已完成，选择下一个节点
                     var nextGrid = grids.FirstOrDefault(d => false);
+                    // 先检查是不是活动节点
+                    if (battleInfoResponse.IsEvent())
+                    {
+                        var eventGrids = grids.Where(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
+                                                          && (d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleElite ||
+                                                              d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleNormal ||
+                                                              d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleSpecial)).ToList();
+                        if (eventGrids.Count > 1)
+                        {
+                            var counts = new List<long>();
+                            foreach (var d in eventGrids)
+                                counts.Add((await GetResponse<GetBattleGridDataRequest, GetBattleGridDataResponse>(new GetBattleGridDataRequest()
+                                        {CurrentTermId = battleInfoResponse.CurrentTermId, DungeonGridGuid = d.Grid.DungeonGridGuid})).NormalRewardItemList
+                                    .FirstOrDefault(x => x.ItemType == battleInfoResponse.EventItemType && x.ItemId == battleInfoResponse.EventItemId)?.ItemCount ?? 0L);
+                            var maxIndex = counts
+                                .Select((value, index) => new {Value = value, Index = index})
+                                .OrderByDescending(item => item.Value)
+                                .First()
+                                .Index;
+                            nextGrid = eventGrids[maxIndex];
+                        }
+                        else if (eventGrids.Count == 1)
+                        {
+                            nextGrid = eventGrids[0];
+                        }
+                    }
+
                     // 先看下一行有没有商店节点,并且有目标物品
                     if (GameConfig.DungeonBattle.ShopTargetItems.Count > 0)
-                        nextGrid = grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
-                                                             && d.GridMb.DungeonGridType == DungeonBattleGridType.Shop
-                                                             && GameConfig.DungeonBattle.ShopTargetItems.Any(x =>
-                                                                 battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(y => y.GridGuid == d.Grid.DungeonGridGuid).TradeShopItemList.Any(y => // 商店有目标物品
-                                                                     y.SalePercent >= x.MinDiscountPercent && y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
+                        nextGrid ??= grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
+                                                               && d.GridMb.DungeonGridType == DungeonBattleGridType.Shop
+                                                               && GameConfig.DungeonBattle.ShopTargetItems.Any(x =>
+                                                                   battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(y => y.GridGuid == d.Grid.DungeonGridGuid).TradeShopItemList.Any(
+                                                                       y => // 商店有目标物品
+                                                                           y.SalePercent >= x.MinDiscountPercent && y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
                     // todo: 递归计算下一节点是否有宝箱
 
                     // 然后看有没有宝箱节点
@@ -423,7 +466,7 @@ public partial class MementoMoriFuncs
                         {
                             await DoBattle();
                             await RewardBattleReinforceRelic(battleInfoResponse.UserDungeonDtoInfo.RelicIds, battleInfoResponse.UserDungeonDtoInfo.RelicIds);
-                           
+
                             break;
                         }
                         case DungeonBattleGridType.TreasureChest:
@@ -477,7 +520,7 @@ public partial class MementoMoriFuncs
                     throw new ArgumentOutOfRangeException();
             }
 
-            async Task RewardBattleReinforceRelic(List<long> newRelicIds,List<long> currentRelicIds)
+            async Task RewardBattleReinforceRelic(List<long> newRelicIds, List<long> currentRelicIds)
             {
                 // 选择加成奖励
                 var relicId = 0L;
