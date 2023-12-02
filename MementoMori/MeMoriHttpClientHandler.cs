@@ -20,7 +20,7 @@ public class MeMoriHttpClientHandler : HttpClientHandler
     public MeMoriHttpClientHandler()
     {
         _managedHeaders["ortegaaccesstoken"] = "";
-        _managedHeaders["ortegaappversion"] = "2.3.0";
+        // _managedHeaders["ortegaappversion"] = "2.2.0";
         _managedHeaders["ortegadevicetype"] = "2";
         _managedHeaders["ortegauuid"] = Guid.NewGuid().ToString("N");
         _managedHeaders["accept-encoding"] = "gzip";

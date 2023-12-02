@@ -72,7 +72,7 @@ public class MementoNetworkManager
         _logger = logger;
         _authOption = authOption;
 
-        _meMoriHttpClientHandler = new MeMoriHttpClientHandler();
+        _meMoriHttpClientHandler = new MeMoriHttpClientHandler {AppVersion = authOption.Value.AppVersion};
         _httpClient = new HttpClient(_meMoriHttpClientHandler);
         if (!Debugger.IsAttached) _httpClient.Timeout = TimeSpan.FromSeconds(10);
 
@@ -272,6 +272,7 @@ public class MementoNetworkManager
             throw new NotSupportedException();
 
         var bytes = MessagePackSerializer.Serialize(req);
+        UPDATEREDO:
         try
         {
             using var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
@@ -284,6 +285,12 @@ public class MementoNetworkManager
                 if (ortegastatuscode != "0")
                 {
                     var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(stream);
+
+                    if (apiErrResponse.ErrorCode == ErrorCode.CommonRequireClientUpdate)
+                    {
+                        await GetLatestAvailableVersion();
+                        goto UPDATEREDO;
+                    }
 
                     if (apiErrResponse.ErrorCode == ErrorCode.InvalidRequestHeader) log(ResourceStrings.Login_expired__please_log_in_again);
 
@@ -309,6 +316,80 @@ public class MementoNetworkManager
         catch (TaskCanceledException e)
         {
             throw new Exception(ResourceStrings.Request_timed_out__check_your_network);
+        }
+    }
+
+    private async Task GetLatestAvailableVersion()
+    {
+        _logger.LogInformation("auto get latest version...");
+        var buildAddCount = 5;
+        var minorAddCount = 5;
+        var majorAddCount = 5;
+
+        var handler = new MeMoriHttpClientHandler {AppVersion = _authOption.Value.AppVersion};
+        var client = new HttpClient(handler);
+
+        while (true)
+        {
+            var path = typeof(GetDataUriRequest).GetCustomAttribute<OrtegaAuthAttribute>()!.Uri;
+            var uri = new Uri(_apiAuth, path);
+
+            var bytes = MessagePackSerializer.Serialize(new GetDataUriRequest() {CountryCode = OrtegaConst.Addressable.LanguageNameDictionary[LanguageType], UserId = UserId});
+            using var respMsg = await client.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
+            if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
+
+            await using var stream = await respMsg.Content.ReadAsStreamAsync();
+            if (respMsg.Headers.TryGetValues("ortegastatuscode", out var headers2))
+            {
+                var ortegastatuscode = headers2.FirstOrDefault() ?? "";
+                if (ortegastatuscode != "0")
+                {
+                    var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(stream);
+                    if (apiErrResponse.ErrorCode != ErrorCode.CommonRequireClientUpdate)
+                    {
+                        throw new InvalidOperationException(Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode));
+                    }
+
+                    var version = new Version(handler.AppVersion);
+                    if (buildAddCount > 0)
+                    {
+                        var newVersion = new Version(version.Major, version.Minor, version.Build + 1);
+                        handler.AppVersion = newVersion.ToString(3);
+                        _logger.LogInformation($"trying {handler.AppVersion}");
+                        buildAddCount--;
+                        continue;
+                    }
+
+                    if (minorAddCount > 0)
+                    {
+                        var newVersion = new Version(version.Major, version.Minor + 1, 0);
+                        handler.AppVersion = newVersion.ToString(3);
+                        _logger.LogInformation($"trying {handler.AppVersion}");
+                        minorAddCount--;
+                        continue;
+                    }
+
+                    if (majorAddCount > 0)
+                    {
+                        var newVersion = new Version(version.Major + 1, 0, 0);
+                        handler.AppVersion = newVersion.ToString(3);
+                        _logger.LogInformation($"trying {handler.AppVersion}");
+                        majorAddCount--;
+                        continue;
+                    }
+
+                    throw new InvalidOperationException("reached max try out");
+                }
+                else
+                {
+                    _logger.LogInformation($"found latest version {handler.AppVersion}");
+                    _authOption.Update(x => { x.AppVersion = handler.AppVersion; });
+                    _meMoriHttpClientHandler.AppVersion = handler.AppVersion;
+                    return;
+                }
+            }
+
+            throw new InvalidOperationException("no ortegastatuscode");
         }
     }
 }
