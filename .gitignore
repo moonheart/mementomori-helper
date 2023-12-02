@@ -5,7 +5,8 @@ riderModule.iml
 /_ReSharper.Caches/
 /MementoMori.WebUI/appsettings.dev.json
 /MementoMori.WebUI/Master/
-Master/
+/MementoMori.BotServer/Master/
+/Master/
 .idea/
 /MementoMori.WebUI/account.xml
 /MementoMori.WebUI/battlePowerDebug/

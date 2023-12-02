@@ -6,11 +6,9 @@ namespace MementoMori.Ortega.Share.Master.Table
 	public class TowerBattleQuestTable : TableBase<TowerBattleQuestMB>
 	{
 		public TowerBattleQuestMB GetByTowerTypeAndFloor(long floor, TowerType towerType)
-		{
-			int num = 0;
-			num++;
-			throw new NullReferenceException();
-		}
+        {
+            return _datas.FirstOrDefault(d => d.Floor == floor && d.TowerType == towerType);
+        }
 
 		public long GetMaxFloor(TowerType towerType)
 		{

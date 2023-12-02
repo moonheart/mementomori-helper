@@ -50,7 +50,7 @@ public class MementoNetworkManager
     public LanguageType LanguageType => parseLanguageType(CultureInfo);
 
 
-    private Uri _apiAuth = new("https://prd1-auth.mememori-boi.com/api/");
+    private Uri _apiAuth;
     // private Uri _apiAuth = new("https://stg1-auth.mememori-boi.com/api/");
 
     private Uri _apiHost;
@@ -71,6 +71,7 @@ public class MementoNetworkManager
     {
         _logger = logger;
         _authOption = authOption;
+        _apiAuth = new Uri(string.IsNullOrEmpty(authOption.Value.AuthUrl) ? "https://prd1-auth.mememori-boi.com/api/" : authOption.Value.AuthUrl);
 
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler {AppVersion = authOption.Value.AppVersion};
         _httpClient = new HttpClient(_meMoriHttpClientHandler);
@@ -94,10 +95,31 @@ public class MementoNetworkManager
         if (!Debugger.IsAttached) _unityHttpClient.Timeout = TimeSpan.FromSeconds(30);
         _unityHttpClient.DefaultRequestHeaders.Add("User-Agent", "UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)");
         _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", "2021.3.10f1");
+
+        _ = AutoUpdateMasterData();
     }
 
+    private async Task AutoUpdateMasterData()
+    {
+        while (true)
+        {
+            try
+            {
+                await Task.Delay(TimeSpan.FromHours(1));
+                _logger.LogInformation("auto updating master data");
+                if (await DownloadMasterCatalog())
+                {
+                    Masters.LoadAllMasters();
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "error auto update master data");
+            }
+        }
+    }
 
-    public async Task DownloadMasterCatalog()
+    public async Task<bool> DownloadMasterCatalog()
     {
         _logger.LogInformation(ResourceStrings.Downloading_master_directory___);
         var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN", UserId = 0});
@@ -106,6 +128,7 @@ public class MementoNetworkManager
         var bytes = await _unityHttpClient.GetByteArrayAsync(url);
         var masterBookCatalog = MessagePackSerializer.Deserialize<MasterBookCatalog>(bytes);
         Directory.CreateDirectory("./Master");
+        var hasUpdate = false;
         foreach (var (name, info) in masterBookCatalog.MasterBookInfoMap)
         {
             var localPath = $"./Master/{name}";
@@ -116,12 +139,15 @@ public class MementoNetworkManager
                 File.Delete(localPath);
             }
 
+            hasUpdate = true;
+            
             var mbUrl = string.Format(dataUriResponse.MasterUriFormat, _meMoriHttpClientHandler.OrtegaMasterVersion, name);
             var fileBytes = await _unityHttpClient.GetByteArrayAsync(mbUrl);
             await File.WriteAllBytesAsync(localPath, fileBytes);
         }
 
         _logger.LogInformation(ResourceStrings.Download_master_directory_completed);
+        return hasUpdate;
     }
 
     public void SetCultureInfo(CultureInfo cultureInfo)
