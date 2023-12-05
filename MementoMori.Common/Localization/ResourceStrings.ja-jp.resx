@@ -403,4 +403,7 @@
     <data name="The current version ({0}) is not the latest version ({1}). Click to download the latest version." xml:space="preserve">
         <value>現在のバージョン（{0}）は最新バージョン（{1}）ではありません。最新バージョンをダウンロードするにはクリックしてください。</value>
     </data>
+    <data name="Exclude player IDs (comma-separated)" xml:space="preserve">
+        <value>プレイヤーIDを除外（コンマで区切る）</value>
+    </data>
 </root>

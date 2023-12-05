@@ -509,4 +509,7 @@
   <data name="The current version ({0}) is not the latest version ({1}). Click to download the latest version." xml:space="preserve">
       <value>The current version ({0}) is not the latest version ({1}). Click to download the latest version.</value>
   </data>
+  <data name="Exclude player IDs (comma-separated)" xml:space="preserve">
+      <value>Exclude player IDs (comma-separated)</value>
+  </data>
 </root>

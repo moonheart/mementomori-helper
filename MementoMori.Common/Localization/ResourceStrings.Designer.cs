@@ -592,6 +592,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Exclude player IDs (comma-separated) 的本地化字符串。
+        /// </summary>
+        public static string Exclude_player_IDs__comma_separated_ {
+            get {
+                return ResourceManager.GetString("Exclude player IDs (comma-separated)", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Execute All Actions 的本地化字符串。
         /// </summary>
         public static string ExecuteAllQuick {

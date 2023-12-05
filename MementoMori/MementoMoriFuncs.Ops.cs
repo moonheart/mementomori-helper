@@ -608,6 +608,9 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         // playerInfoList: dict<playerId, dict<characterId, CharacterDetailInfo>>
         var localplayerInfoList = playerInfoList.ToList();
+
+        localplayerInfoList.RemoveAll(d => pvpOption.ExcludePlayerIds.Contains(d.playerId));
+
         foreach (var characterFilter in pvpOption.CharacterFilters)
         {
             if (playerInfoList.Count == 0)

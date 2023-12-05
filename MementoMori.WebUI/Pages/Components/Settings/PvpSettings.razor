@@ -21,6 +21,7 @@
             <MudSelectItem Value="TargetSelectStrategy.LowestBattlePower">@ResourceStrings.Min_Battle_Power</MudSelectItem>
             <MudSelectItem Value="TargetSelectStrategy.HighestBattlePower">@ResourceStrings.Max_Battle_Power</MudSelectItem>
         </MudSelect>
+        <MudTextField Label="@ResourceStrings.Exclude_player_IDs__comma_separated_" @bind-Value="ExcludePlayerIds"></MudTextField>
         <MudList>
             <MudListSubheader>
                 <MudText Inline="true">@ResourceStrings.Character_Filter</MudText>
@@ -92,6 +93,12 @@
 
     CharacterFilter settingFilter;
     bool settingDialogOpen;
+
+    string ExcludePlayerIds
+    {
+        get => string.Join(",", pvpOption.ExcludePlayerIds);
+        set => pvpOption.ExcludePlayerIds = value.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => long.TryParse(x, out var n) ? n : 0).Where(x => x > 0).ToList();
+    }
 
 
     protected override void OnInitialized()

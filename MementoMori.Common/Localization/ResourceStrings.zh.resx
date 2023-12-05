@@ -509,4 +509,7 @@
   <data name="The current version ({0}) is not the latest version ({1}). Click to download the latest version." xml:space="preserve">
       <value>当前版本({0})不是最新版本({1})，点击下载最新版本。</value>
   </data>
+  <data name="Exclude player IDs (comma-separated)" xml:space="preserve">
+      <value>排除玩家ID(英语逗号分隔) </value>
+  </data>
 </root>
