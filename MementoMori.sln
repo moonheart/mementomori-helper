@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{B17F2195
 		readme.md = readme.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MementoMori.BotServer", "MementoMori.BotServer\MementoMori.BotServer.csproj", "{14D5D348-5AB2-478D-8BC3-34494ADB70BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{748143DA-CCCD-4A14-A63D-D18E2354478B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{748143DA-CCCD-4A14-A63D-D18E2354478B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{748143DA-CCCD-4A14-A63D-D18E2354478B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14D5D348-5AB2-478D-8BC3-34494ADB70BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14D5D348-5AB2-478D-8BC3-34494ADB70BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14D5D348-5AB2-478D-8BC3-34494ADB70BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14D5D348-5AB2-478D-8BC3-34494ADB70BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

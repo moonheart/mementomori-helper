@@ -6,6 +6,7 @@ riderModule.iml
 /MementoMori.WebUI/appsettings.dev.json
 /MementoMori.WebUI/Master/
 /MementoMori.BotServer/Master/
+/MementoMori.BotServer/appsettings*
 /Master/
 .idea/
 /MementoMori.WebUI/account.xml
