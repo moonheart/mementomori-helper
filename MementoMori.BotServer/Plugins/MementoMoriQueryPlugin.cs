@@ -50,11 +50,14 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             {
                 await GetNotice(NoticeAccessType.Title, NoticeCategoryType.NoticeTab, option => option.LastNotices);
                 await GetNotice(NoticeAccessType.MyPage, NoticeCategoryType.EventTab, option => option.LastEvents);
-                await Task.Delay(TimeSpan.FromMinutes(10));
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "get notice failed");
+            }
+            finally
+            {
+                await Task.Delay(TimeSpan.FromMinutes(10));
             }
         }
 
