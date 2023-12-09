@@ -101,7 +101,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             }
 
             // only send latest 5
-            foreach (var noticeInfo in noticeToPush.Take(5))
+            foreach (var noticeInfo in noticeToPush.Where(d => d.Id % 10 != 6).Take(5))
             {
                 var msg = new StringBuilder();
                 msg.AppendLine($"<h1>{noticeInfo.Title}({noticeInfo.Id})</h1>");
@@ -187,6 +187,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         msg.AppendLine("/主线 关卡 (示例 /主线 12-28)");
         msg.AppendLine("/(无穷|红|黄|绿|蓝)塔 关卡 (示例 /绿塔 499)");
         msg.AppendLine("/(战力|等级|主线|塔|竞技场)排名 (日|韩|亚|美|欧|国际)1 (示例 /战力排名 日10)");
+        msg.AppendLine("/公告 [ID] (示例 /公告 123 ，/公告)");
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
     }
 
@@ -535,5 +536,54 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         }
 
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
+    }
+
+    [CqMessageMatch(@"^/公告\s*?(?<noticeIdStr>\d+)?$")]
+    public async Task RecentNotice(CqGroupMessagePostContext context, string? noticeIdStr)
+    {
+        if (!IsGroupAllowed(context)) return;
+        _logger.LogInformation($"{nameof(RecentNotice)} {noticeIdStr}");
+        CqMessage msg;
+        if (long.TryParse(noticeIdStr, out var noticeId))
+        {
+            using var db = _dbAccessor.GetDb();
+            var noticeInfo = db.GetCollection<NoticeInfo>().FindById(noticeId);
+            if (noticeInfo == null)
+            {
+                msg = new CqMessage("未找到此公告");
+            }
+            else
+            {
+                var notice = new StringBuilder();
+                notice.AppendLine($"<h1>{noticeInfo.Title}({noticeInfo.Id})</h1>");
+                notice.AppendLine();
+                var mainText = $"<div>{noticeInfo.MainText}</div>";
+                notice.AppendLine(mainText);
+                var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
+                {
+                    Content = notice.ToString(),
+                    Quality = 100,
+                    Format = ImageFormat.Jpeg,
+                    Width = 600,
+                    MinimumFontSize = 24,
+                });
+                var cqImageMsg = CqImageMsg.FromBytes(bytes);
+                msg = new CqMessage(cqImageMsg, new CqTextMsg(noticeInfo.Title));
+            }
+        }
+        else
+        {
+            using var db = _dbAccessor.GetDb();
+            var noticeInfos = db.GetCollection<NoticeInfo>().Query().OrderByDescending(d => d.Id).Limit(20).ToList();
+            var list = new StringBuilder();
+            foreach (var noticeInfo in noticeInfos.Where(d => d.Id % 10 != 6).Take(10))
+            {
+                list.AppendLine($"({noticeInfo.Id}) {noticeInfo.Title}");
+            }
+
+            msg = new CqMessage(list.ToString());
+        }
+
+        await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, msg);
     }
 }
