@@ -2,10 +2,11 @@
 
 # MementoMori 游戏助手
 
-
-![GitHub all releases](https://img.shields.io/github/downloads/moonheart/mementomori-helper/total)
-![GitHub release (with filter)](https://img.shields.io/github/v/release/moonheart/mementomori-helper)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/moonheart/mementomori-helper/publish-dev.yml)
 ![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/moonheart/mementomori-helper)
+![GitHub release (with filter)](https://img.shields.io/github/v/release/moonheart/mementomori-helper)
+![GitHub all releases](https://img.shields.io/github/downloads/moonheart/mementomori-helper/total)
+![Docker Pulls](https://img.shields.io/docker/pulls/moonheartmoon/mementomori-webui)
 
 施工中 
 
