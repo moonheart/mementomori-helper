@@ -30,7 +30,7 @@ namespace MementoMori.Ortega.Share.Data.LocalRaid
 		{
 			get
 			{
-                if (LocalRaidBattleLogPlayerInfoList == null || LocalRaidBattleLogPlayerInfoList.Count != 3)
+                if (LocalRaidBattleLogPlayerInfoList == null)
                 {
                     return false;
                 }

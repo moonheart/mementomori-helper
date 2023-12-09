@@ -124,6 +124,8 @@ public class GameConfig
         //     new WeightedItem(ItemType.CharacterTrainingMaterial, 1, 2), // 经验珠
         //     new WeightedItem(ItemType.EquipmentReinforcementItem, 1, 1), // 强化水
         // };
+        
+        public bool SelfCreateRoom { get; set; }
     }
 
     public class DungeonBattleConfig
@@ -214,6 +216,7 @@ public class GameConfig
     public BountyQuestAutoModel BountyQuestAuto { get; set; } = new();
     public DungeonBattleConfig DungeonBattle { get; set; } = new();
     public ShopConfig Shop { get; set; } = new();
+    [Obsolete("Use config in PlayerOption")]
     public LocalRaidConfig LocalRaid { get; set; } = new();
     public LoginConfig Login { get; set; } = new();
     public ItemsConfig Items { get; set; } = new();
@@ -228,6 +231,7 @@ public class PlayerOption
     public long PlayerId { get; set; }
     public PvpOption BattleLeague { get; set; } = new();
     public PvpOption LegendLeague { get; set; } = new();
+    public GameConfig.LocalRaidConfig LocalRaid { get; set; } = new();
 }
 
 public class PvpOption

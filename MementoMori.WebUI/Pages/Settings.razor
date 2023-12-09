@@ -7,7 +7,6 @@
 @using MementoMori.Ortega.Share.Enums
 @using MementoMori.WebUI.Pages.Components.Settings
 @inject IWritableOptions<GameConfig> WritableGameConfig
-@inject IWritableOptions<AuthOption> authOption
 
 @inherits MementoMori.WebUI.Models.AccountComponent
 @page "/settings"
@@ -89,24 +88,7 @@
         </MudCard>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText>@Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]") (Global)</MudText>
-                </CardHeaderContent>
-                <CardHeaderActions>
-                    <MudButton Variant="Variant.Outlined" OnClick="SaveLocalRaidConfig">@Masters.TextResourceTable.Get("[CommonSaveLabel]")</MudButton>
-                </CardHeaderActions>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudField Label="@ResourceStrings.Select_tasks_based_on_reward_quantity_and_weight" Variant="Variant.Outlined">
-                    @foreach (var reward in _localRaidRewardItems)
-                    {
-                        <MudNumericField Label="@ItemUtil.GetItemName(reward.ItemType, reward.ItemId)" Margin="Margin.None" @bind-Value="reward.Weight" />
-                    }
-                </MudField>
-            </MudCardContent>
-        </MudCard>
+        <LocalRaidSettings />
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
         <MudCard>
@@ -183,10 +165,6 @@
     int _dungeonBattleSelectedDiscount;
     bool _dungeonBattleSelectItemDialog;
 
-    
-    List<GameConfig.WeightedItem> _localRaidRewardItems;
-
-
     protected override async Task AccountChanged()
     {
         await InvokeAsync(StateHasChanged);
@@ -218,7 +196,6 @@
         {
             new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}
         });
-        _localRaidRewardItems = WritableGameConfig.Value.LocalRaid.RewardItems;
     }
 
     #region DungeonBattle
@@ -330,17 +307,6 @@
     }
 
     #endregion
-
-    private void SaveLocalRaidConfig()
-    {
-        WritableGameConfig.Update(opt =>
-        {
-            opt.LocalRaid.RewardItems = _localRaidRewardItems;
-        });
-        Snackbar.Clear();
-        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-        Snackbar.Add(ResourceStrings.Save_successful, Severity.Success);
-    }
 
     private class UserItemComparer : IEqualityComparer<UserItem>
     {

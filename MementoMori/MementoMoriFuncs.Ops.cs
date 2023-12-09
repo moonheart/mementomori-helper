@@ -2118,7 +2118,8 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             // 奖励: 经验珠 强化水 強化秘薬 潜在宝珠 符石兑换券
             var client = NetworkManager.GetOnionClient();
-            var localRaidReceiver = new MagicOnionLocalRaidReceiver(client, log);
+            var createRoom = _playersOption.Value.TryGetValue(NetworkManager.PlayerId, out var c) && c.LocalRaid.SelfCreateRoom;
+            LocalRaidBaseReceiver localRaidReceiver = createRoom ? new LocalRaidCreateRoomReceiver(client, log) : new LocalRaidJoinRoomReceiver(client, log);
             client.SetupLocalRaid(localRaidReceiver, localRaidReceiver);
             await client.Connect();
             while (client.GetState() != HubClientState.Ready)
@@ -2146,8 +2147,17 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var questId = GetQuestId(localRaidInfoResponse);
                     localRaidReceiver.QuestId = questId;
 
-                    log(TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
-                    client.SendLocalRaidJoinRandomRoom(questId);
+                    if (createRoom)
+                    {
+                        log(TextResourceTable.Get("[LocalRaidRoomSearchButtonCreateRoom]"));
+                        client.SendLocalRaidOpenRoom(LocalRaidRoomConditionsType.All, questId, 0, 0);
+                    }
+                    else
+                    {
+                        log(TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
+                        client.SendLocalRaidJoinRandomRoom(questId);
+                    }
+                    
                     while (!token.IsCancellationRequested)
                     {
                         await Task.Delay(1000);
