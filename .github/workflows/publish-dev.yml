@@ -98,6 +98,7 @@ jobs:
         if: startsWith(github.ref, 'refs/heads/master')
         with:
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: moonheartmoon/mementomori-webui:dev
           context: .
           file: ./MementoMori.WebUI/Dockerfile
