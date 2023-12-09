@@ -146,7 +146,7 @@
 version: '3'
 services:
   mementomori:
-    image: moonheartmoon/mementomori-webui:v1
+    image: moonheartmoon/mementomori-webui
     container_name: mementomori
     restart: unless-stopped
     privileged: false
