@@ -1,0 +1,3 @@
+[submodule "refs/elecho.gocqhttpsdk"]
+	path = refs/elecho.gocqhttpsdk
+	url = https://github.com/moonheart/EleCho.GoCqHttpSdk.git

@@ -4,6 +4,9 @@ using EleCho.GoCqHttpSdk;
 using EleCho.GoCqHttpSdk.Message;
 using EleCho.GoCqHttpSdk.MessageMatching;
 using EleCho.GoCqHttpSdk.Post;
+using HtmlConverter.Configurations;
+using HtmlConverter.Options;
+using LiteDB;
 using MementoMori.BotServer.Api;
 using MementoMori.BotServer.Options;
 using MementoMori.Extensions;
@@ -13,6 +16,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Notice;
 using MementoMori.Ortega.Share.Data.Notice;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master.Data;
+using Newtonsoft.Json.Linq;
 using Refit;
 using static MementoMori.Ortega.Share.Masters;
 
@@ -26,19 +30,26 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
     private readonly IMentemoriIcu _mentemoriIcu;
     private readonly MementoNetworkManager _networkManager;
     private readonly ILogger<MementoMoriQueryPlugin> _logger;
+    private readonly LiteDbAccessor _dbAccessor;
+    private readonly IHttpClientFactory _httpClientFactory;
 
     public MementoMoriQueryPlugin(
         IWritableOptions<BotOptions> botOptions,
         SessionAccessor sessionAccessor,
         MementoNetworkManager networkManager,
-        ILogger<MementoMoriQueryPlugin> logger)
+        ILogger<MementoMoriQueryPlugin> logger,
+        LiteDbAccessor dbAccessor,
+        IHttpClientFactory httpClientFactory)
     {
         _botOptions = botOptions;
         _sessionAccessor = sessionAccessor;
         _networkManager = networkManager;
         _logger = logger;
+        _dbAccessor = dbAccessor;
+        _httpClientFactory = httpClientFactory;
         _mentemoriIcu = RestService.For<IMentemoriIcu>(_botOptions.Value.MentemoriIcuUri);
         _ = AutoNotice();
+        _ = AutoDmmVersionCheck();
     }
 
     private async Task AutoNotice()
@@ -75,38 +86,84 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
             var noticeInfos = listResponse.NoticeInfoList.OrderByDescending(d => d.Id).ToList();
             var noticeToPush = new List<NoticeInfo>();
-            foreach (var noticeInfo in noticeInfos)
+            using (var db = _dbAccessor.GetDb())
             {
-                if (getList(_botOptions.Value).Contains(noticeInfo.Id))
+                foreach (var noticeInfo in noticeInfos)
                 {
-                    continue;
-                }
+                    if (db.GetCollection<NoticeInfo>().Exists(d => d.Id == noticeInfo.Id))
+                    {
+                        continue;
+                    }
 
-                noticeToPush.Add(noticeInfo);
+                    noticeToPush.Add(noticeInfo);
+                    db.GetCollection<NoticeInfo>().Insert(noticeInfo);
+                }
             }
 
             // only send latest 5
             foreach (var noticeInfo in noticeToPush.Take(5))
             {
+                var msg = new StringBuilder();
+                msg.AppendLine($"<h1>{noticeInfo.Title}({noticeInfo.Id})</h1>");
+                msg.AppendLine();
+                var mainText = $"<div>{noticeInfo.MainText}</div>"; //.Replace("<br>", "\r\n");
+                msg.AppendLine(mainText);
+                var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
+                {
+                    Content = msg.ToString(),
+                    Quality = 100,
+                    Format = ImageFormat.Jpeg,
+                    Width = 600,
+                    MinimumFontSize = 24,
+                });
                 foreach (var group in _botOptions.Value.OpenedGroups)
                 {
-                    var msg = new StringBuilder();
-                    msg.AppendLine($"{noticeInfo.Title}({noticeInfo.Id})");
-                    msg.AppendLine();
-                    var mainText = noticeInfo.MainText.Replace("<br>", "\r\n");
-                    mainText = NoticeCleanupRegex().Replace(mainText, "");
-                    msg.AppendLine(mainText);
-                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    // await Task.Delay(TimeSpan.FromSeconds(1));
                     _logger.LogInformation($"send notice{noticeInfo.Title} to group {group}");
-                    await _sessionAccessor.Session.SendGroupMessageAsync(group, new CqMessage(msg.ToString()));
+                    var cqImageMsg = CqImageMsg.FromBytes(bytes);
+                    await _sessionAccessor.Session.SendGroupMessageAsync(group, new CqMessage(cqImageMsg, new CqTextMsg(noticeInfo.Title)));
                 }
             }
+        }
+    }
 
-            _botOptions.Update(x =>
+    private async Task AutoDmmVersionCheck()
+    {
+        await Task.Delay(TimeSpan.FromSeconds(10));
+        while (true)
+        {
+            try
             {
-                getList(x).Clear();
-                getList(x).AddRange(noticeInfos.Select(d => d.Id));
-            });
+                var httpClient = _httpClientFactory.CreateClient();
+                while (true)
+                {
+                    var dmmGameId = _botOptions.Value.LastDmmGameId + 1;
+                    var dmmUrl = $"{_botOptions.Value.DmmApiUrl}/gameplayer/filelist/{dmmGameId}";
+                    var json = await httpClient.GetStringAsync(dmmUrl);
+                    var jObject = JObject.Parse(json);
+                    if (jObject["result_code"]?.Value<long>() != 100) break;
+                    if (jObject["data"]?["file_list"] is not JArray jArray || jArray.Count == 0) break;
+
+                    _botOptions.Update(d => d.LastDmmGameId = dmmGameId);
+                    // product/mementomori/MementoMori/content/win/2.3.0/data/GameAssembly.dll
+                    var match = Regex.Match(jArray[0]["path"]?.ToString() ?? "", @"product/mementomori/MementoMori/content/win/(?<version>.+?)/data/");
+                    if (!match.Success) continue;
+
+                    var version = match.Groups["version"].Value;
+                    foreach (var group in _botOptions.Value.OpenedGroups)
+                    {
+                        await _sessionAccessor.Session.SendGroupMessageAsync(group, new CqMessage($"DMM 版本监测：发现新版 {version} ({dmmGameId})"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "get dmm version failed");
+            }
+            finally
+            {
+                await Task.Delay(TimeSpan.FromMinutes(10));
+            }
         }
     }
 
@@ -476,9 +533,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             var arenaInfo = arena.data[i];
             msg.AppendLine($"No.{i + 1:000}\t{arenaInfo.PlayerName}(Lv.{arenaInfo.PlayerLevel})");
         }
+
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
     }
-    
-    [GeneratedRegex("</?color.*?>")]
-    private static partial Regex NoticeCleanupRegex();
 }
