@@ -15,7 +15,9 @@ jobs:
         rid: [ win-x64, linux-x64, linux-arm64, osx-x64, osx-arm64 ]
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
@@ -55,7 +57,9 @@ jobs:
   publish-docker:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Docker meta
