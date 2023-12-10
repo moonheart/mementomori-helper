@@ -512,4 +512,7 @@
   <data name="Exclude player IDs (comma-separated)" xml:space="preserve">
       <value>Exclude player IDs (comma-separated)</value>
   </data>
+  <data name="Seconds of pre-battle wait time" xml:space="preserve">
+      <value>Seconds of pre-battle wait time</value>
+  </data>
 </root>

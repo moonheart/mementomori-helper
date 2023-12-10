@@ -21,6 +21,10 @@
     </MudCardHeader>
     <MudCardContent>
         <MudSwitch T="bool" Label="@(selfCreateRoom ? Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonCreateRoom]") : Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"))" @bind-Checked="selfCreateRoom" Color="Color.Primary"></MudSwitch>
+        @if (selfCreateRoom)
+        {
+            <MudTextField T="int" Label="@ResourceStrings.Seconds_of_pre_battle_wait_time" @bind-Value="waitSeconds"></MudTextField>
+        }
         <MudField Label="@ResourceStrings.Select_tasks_based_on_reward_quantity_and_weight" Variant="Variant.Outlined">
             @foreach (var reward in _localRaidRewardItems)
             {
@@ -35,6 +39,7 @@
     List<GameConfig.WeightedItem> _localRaidRewardItems;
 
     bool selfCreateRoom;
+    int waitSeconds;
 
     protected override Task AccountChanged()
     {
@@ -57,6 +62,7 @@
         }
 
         selfCreateRoom = playerOpt.LocalRaid.SelfCreateRoom;
+        waitSeconds = playerOpt.LocalRaid.WaitSeconds;
 
         return Task.CompletedTask;
     }
@@ -69,6 +75,7 @@
             var playerOpt = opt.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
             playerOpt.LocalRaid.RewardItems = _localRaidRewardItems;
             playerOpt.LocalRaid.SelfCreateRoom = selfCreateRoom;
+            playerOpt.LocalRaid.WaitSeconds = waitSeconds;
         });
         Snackbar.Clear();
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;

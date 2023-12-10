@@ -512,4 +512,7 @@
   <data name="Exclude player IDs (comma-separated)" xml:space="preserve">
       <value>排除玩家ID(英语逗号分隔) </value>
   </data>
+  <data name="Seconds of pre-battle wait time" xml:space="preserve">
+      <value>开启战斗前等待的秒数</value>
+  </data>
 </root>

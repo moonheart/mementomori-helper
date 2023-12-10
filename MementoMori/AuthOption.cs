@@ -126,6 +126,8 @@ public class GameConfig
         // };
         
         public bool SelfCreateRoom { get; set; }
+
+        public int WaitSeconds { get; set; } = 3;
     }
 
     public class DungeonBattleConfig

@@ -1123,6 +1123,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Seconds of pre-battle wait time 的本地化字符串。
+        /// </summary>
+        public static string Seconds_of_pre_battle_wait_time {
+            get {
+                return ResourceManager.GetString("Seconds of pre-battle wait time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Select tasks based on reward quantity and weight 的本地化字符串。
         /// </summary>
         public static string Select_tasks_based_on_reward_quantity_and_weight {

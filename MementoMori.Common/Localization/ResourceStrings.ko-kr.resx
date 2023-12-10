@@ -406,4 +406,7 @@
     <data name="Exclude player IDs (comma-separated)" xml:space="preserve">
         <value>플레이어 ID 제외 (쉼표로 구분)</value>
     </data>
+    <data name="Seconds of pre-battle wait time" xml:space="preserve">
+        <value>전투 전 대기 시간(초)</value>
+    </data>
 </root>

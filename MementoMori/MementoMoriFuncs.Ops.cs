@@ -2135,7 +2135,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
             var client = NetworkManager.GetOnionClient();
             var createRoom = _playersOption.Value.TryGetValue(NetworkManager.PlayerId, out var c) && c.LocalRaid.SelfCreateRoom;
-            LocalRaidBaseReceiver localRaidReceiver = createRoom ? new LocalRaidCreateRoomReceiver(client, log) : new LocalRaidJoinRoomReceiver(client, log);
+            LocalRaidBaseReceiver localRaidReceiver = createRoom ? new LocalRaidCreateRoomReceiver(client, log, PlayerOption.LocalRaid.WaitSeconds, token) : new LocalRaidJoinRoomReceiver(client, log, token);
             client.SetupLocalRaid(localRaidReceiver, localRaidReceiver);
             await client.Connect();
             while (client.GetState() != HubClientState.Ready)
@@ -2162,6 +2162,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var localRaidInfoResponse = await GetResponse<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
                     var questId = GetQuestId(localRaidInfoResponse);
                     localRaidReceiver.QuestId = questId;
+                    localRaidReceiver.IsBattleStarted = false;
 
                     if (createRoom)
                     {

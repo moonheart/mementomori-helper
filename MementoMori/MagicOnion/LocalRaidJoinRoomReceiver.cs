@@ -1,8 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using MementoMori.Ortega.Common.Enums;
 using MementoMori.Ortega.Network.MagicOnion.Client;
 using MementoMori.Ortega.Network.MagicOnion.Interface;
 using MementoMori.Ortega.Share;
+using MementoMori.Ortega.Share.Data.LocalRaid;
 using MementoMori.Ortega.Share.MagicOnionShare.Response;
 using MementoMori.Ortega.Share.Master.Table;
 
@@ -12,17 +15,19 @@ public abstract class LocalRaidBaseReceiver : IMagicOnionLocalRaidReceiver, IMag
 {
     protected readonly OrtegaMagicOnionClient _ortegaMagicOnionClient;
     protected Action<string> _log;
+    protected readonly CancellationToken CancellationToken;
     protected Stopwatch _startSw;
     public long QuestId { get; set; }
     public bool IsNoRemainingChallenges { get; protected set; }
     public bool IsMaxTimeExceeded { get; protected set; }
 
-    public bool IsBattleStarted { get; protected set; }
+    public bool IsBattleStarted { get; set; }
 
-    public LocalRaidBaseReceiver(OrtegaMagicOnionClient ortegaMagicOnionClient, Action<string> log)
+    public LocalRaidBaseReceiver(OrtegaMagicOnionClient ortegaMagicOnionClient, Action<string> log, CancellationToken cancellationToken)
     {
         _ortegaMagicOnionClient = ortegaMagicOnionClient;
         _log = log;
+        CancellationToken = cancellationToken;
         _startSw = Stopwatch.StartNew();
     }
 
@@ -85,7 +90,7 @@ public abstract class LocalRaidBaseReceiver : IMagicOnionLocalRaidReceiver, IMag
 
 public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
 {
-    public LocalRaidJoinRoomReceiver(OrtegaMagicOnionClient ortegaMagicOnionClient, Action<string> log) : base(ortegaMagicOnionClient, log)
+    public LocalRaidJoinRoomReceiver(OrtegaMagicOnionClient ortegaMagicOnionClient, Action<string> log, CancellationToken cancellationToken) : base(ortegaMagicOnionClient, log, cancellationToken)
     {
     }
 
@@ -142,26 +147,46 @@ public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
 
 public class LocalRaidCreateRoomReceiver : LocalRaidBaseReceiver
 {
-    public LocalRaidCreateRoomReceiver(OrtegaMagicOnionClient ortegaMagicOnionClient, Action<string> log) : base(ortegaMagicOnionClient, log)
+    private readonly int _waitSeconds;
+    private string _lastRoomId;
+
+    public LocalRaidCreateRoomReceiver(OrtegaMagicOnionClient ortegaMagicOnionClient, Action<string> log, int waitSeconds, CancellationToken cancellationToken) : base(ortegaMagicOnionClient, log,
+        cancellationToken)
     {
+        _waitSeconds = waitSeconds;
     }
 
     public override void OnJoinRoom(OnJoinRoomResponse response)
     {
         _log("OnJoinRoom");
-        if (response.LocalRaidPartyInfo.IsReady)
+        StartBattle(response.LocalRaidPartyInfo);
+    }
+
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    private void StartBattle(LocalRaidPartyInfo partyInfo)
+    {
+        if (_lastRoomId != partyInfo.RoomId)
         {
-            _ortegaMagicOnionClient.SendLocalRaidStartBattle();
+            _lastRoomId = partyInfo.RoomId;
+            Task.Delay(TimeSpan.FromSeconds(_waitSeconds)).ContinueWith(async _ =>
+            {
+                while (!IsBattleStarted && !CancellationToken.IsCancellationRequested)
+                {
+                    if (partyInfo.IsReady)
+                    {
+                        _ortegaMagicOnionClient.SendLocalRaidStartBattle();
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+                }
+            }, CancellationToken);
         }
     }
 
     public override void OnUpdateRoom(OnUpdateRoomResponse response)
     {
         _log("OnUpdateRoom");
-        if (response.LocalRaidPartyInfo.IsReady)
-        {
-            _ortegaMagicOnionClient.SendLocalRaidStartBattle();
-        }
+        StartBattle(response.LocalRaidPartyInfo);
     }
 
     public override async void OnError(ErrorCode errorCode)
@@ -178,5 +203,5 @@ public class LocalRaidCreateRoomReceiver : LocalRaidBaseReceiver
                 IsNoRemainingChallenges = true;
                 break;
         }
-    } 
+    }
 }

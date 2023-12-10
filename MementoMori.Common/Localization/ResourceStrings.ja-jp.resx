@@ -406,4 +406,7 @@
     <data name="Exclude player IDs (comma-separated)" xml:space="preserve">
         <value>プレイヤーIDを除外（コンマで区切る）</value>
     </data>
+    <data name="Seconds of pre-battle wait time" xml:space="preserve">
+        <value>バトル前の待機秒数</value>
+    </data>
 </root>
