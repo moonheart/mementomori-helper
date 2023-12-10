@@ -64,6 +64,10 @@ public static class BountyQuestAutoFormationUtil
                             PlayerId = supportMember.PlayerId
                         });
                     }
+                    else
+                    {
+                        continue;
+                    }
                 }
 
                 // 匹配元素类型
