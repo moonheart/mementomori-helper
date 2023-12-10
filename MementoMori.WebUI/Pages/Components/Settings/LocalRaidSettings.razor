@@ -7,6 +7,7 @@
 
 @inject ISnackbar Snackbar
 @inject IWritableOptions<PlayersOption> PlayersOptions
+@inject IWritableOptions<GameConfig> WritableGameConfig
 @inherits MementoMori.WebUI.Models.AccountComponent
 
 <MudCard>
@@ -19,7 +20,7 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudSwitch T="bool" Label="@(selfCreateRoom ? Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonCreateRoom]"): Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"))" @bind-Checked="selfCreateRoom" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@(selfCreateRoom ? Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonCreateRoom]") : Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"))" @bind-Checked="selfCreateRoom" Color="Color.Primary"></MudSwitch>
         <MudField Label="@ResourceStrings.Select_tasks_based_on_reward_quantity_and_weight" Variant="Variant.Outlined">
             @foreach (var reward in _localRaidRewardItems)
             {
@@ -41,14 +42,18 @@
         _localRaidRewardItems = playerOpt.LocalRaid.RewardItems;
         if (_localRaidRewardItems.Count == 0)
         {
-            _localRaidRewardItems.AddRange(new[]
+            _localRaidRewardItems = WritableGameConfig.Value.LocalRaid.RewardItems;
+            if (_localRaidRewardItems.Count == 0)
             {
-                new GameConfig.WeightedItem(ItemType.ExchangePlaceItem, 4, 4), // 符石兑换券
-                new GameConfig.WeightedItem(ItemType.CharacterTrainingMaterial, 2, 3), // 潜能宝珠
-                new GameConfig.WeightedItem(ItemType.EquipmentReinforcementItem, 2, 2.5), // 强化秘药
-                new GameConfig.WeightedItem(ItemType.CharacterTrainingMaterial, 1, 2), // 经验珠
-                new GameConfig.WeightedItem(ItemType.EquipmentReinforcementItem, 1, 1), // 强化水
-            });
+                _localRaidRewardItems.AddRange(new[]
+                {
+                    new GameConfig.WeightedItem(ItemType.ExchangePlaceItem, 4, 4), // 符石兑换券
+                    new GameConfig.WeightedItem(ItemType.CharacterTrainingMaterial, 2, 3), // 潜能宝珠
+                    new GameConfig.WeightedItem(ItemType.EquipmentReinforcementItem, 2, 2.5), // 强化秘药
+                    new GameConfig.WeightedItem(ItemType.CharacterTrainingMaterial, 1, 2), // 经验珠
+                    new GameConfig.WeightedItem(ItemType.EquipmentReinforcementItem, 1, 1), // 强化水
+                });
+            }
         }
 
         selfCreateRoom = playerOpt.LocalRaid.SelfCreateRoom;

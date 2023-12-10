@@ -2116,7 +2116,23 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            // 奖励: 经验珠 强化水 強化秘薬 潜在宝珠 符石兑换券
+            List<GameConfig.WeightedItem> rewardItems = PlayerOption.LocalRaid.RewardItems;
+            if (rewardItems.Count == 0)
+            {
+                rewardItems = GameConfig.LocalRaid.RewardItems;
+                if (rewardItems.Count == 0)
+                {
+                    rewardItems.AddRange(new[]
+                    {
+                        new GameConfig.WeightedItem(ItemType.ExchangePlaceItem, 4, 4), // 符石兑换券
+                        new GameConfig.WeightedItem(ItemType.CharacterTrainingMaterial, 2, 3), // 潜能宝珠
+                        new GameConfig.WeightedItem(ItemType.EquipmentReinforcementItem, 2, 2.5), // 强化秘药
+                        new GameConfig.WeightedItem(ItemType.CharacterTrainingMaterial, 1, 2), // 经验珠
+                        new GameConfig.WeightedItem(ItemType.EquipmentReinforcementItem, 1, 1), // 强化水
+                    });
+                }
+            }
+
             var client = NetworkManager.GetOnionClient();
             var createRoom = _playersOption.Value.TryGetValue(NetworkManager.PlayerId, out var c) && c.LocalRaid.SelfCreateRoom;
             LocalRaidBaseReceiver localRaidReceiver = createRoom ? new LocalRaidCreateRoomReceiver(client, log) : new LocalRaidJoinRoomReceiver(client, log);
@@ -2213,7 +2229,6 @@ public partial class MementoMoriFuncs : ReactiveObject
                 else
                 {
                     var localRaidQuestMbs = response.OpenLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
-                    var rewardItems = _writableGameConfig.Value.LocalRaid.RewardItems;
                     if (rewardItems.Count == 0)
                     {
                         return localRaidQuestMbs.OrderByDescending(d => d.Level).First().Id;
