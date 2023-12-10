@@ -37,7 +37,7 @@ internal class AssetDownloader : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             await DownloadAssetsFromBoi(stoppingToken);
-            await DownloadAssetsInApk(stoppingToken);
+            // await DownloadAssetsInApk(stoppingToken);
 
             await Task.Delay(TimeSpan.FromMinutes(60), stoppingToken);
         }
@@ -72,16 +72,16 @@ internal class AssetDownloader : BackgroundService
             }
         }
 
-        var aListApi = new AListApi(_downloaderOption.AListUrl);
-        await aListApi.AuthLogin(_downloaderOption.AlistUsername, _downloaderOption.AlistPassword);
-        var fsGetResponse = await aListApi.FsGet(_downloaderOption.AListTargetPath);
-        if (fsGetResponse == null)
-            // not found, create directory
-            await aListApi.FsMkdir(_downloaderOption.AListTargetPath);
-
-        // upload files to AList
-        _logger.LogInformation("Upload files to AList");
-        await CopyFilesRecursively(aListApi, new DirectoryInfo("./Assets-export"), _downloaderOption.AListTargetPath);
+        // var aListApi = new AListApi(_downloaderOption.AListUrl);
+        // await aListApi.AuthLogin(_downloaderOption.AlistUsername, _downloaderOption.AlistPassword);
+        // var fsGetResponse = await aListApi.FsGet(_downloaderOption.AListTargetPath);
+        // if (fsGetResponse == null)
+        //     // not found, create directory
+        //     await aListApi.FsMkdir(_downloaderOption.AListTargetPath);
+        //
+        // // upload files to AList
+        // _logger.LogInformation("Upload files to AList");
+        // await CopyFilesRecursively(aListApi, new DirectoryInfo("./Assets-export"), _downloaderOption.AListTargetPath);
 
         // copy temp files in ./Assets-tmp to ./Assets
         _logger.LogInformation($"Copy temp files to {_downloaderOption.DownloadPath}");
@@ -97,7 +97,7 @@ internal class AssetDownloader : BackgroundService
         // delete temp files
         _logger.LogInformation("Delete temp files");
         Directory.Delete("./Assets-tmp", true);
-        Directory.Delete("./Assets-export", true);
+        // Directory.Delete("./Assets-export", true);
     }
 
     private async Task DownloadAssetsFromBoi(CancellationToken stoppingToken)

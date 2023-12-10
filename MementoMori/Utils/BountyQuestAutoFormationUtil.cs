@@ -156,7 +156,7 @@ public static class BountyQuestAutoFormationUtil
     public static List<UserBountyQuestMemberDtoInfo> GetReadySupportMemberDtoInfos(GetListResponse getListResponse)
     {
         var memberDtoInfos = getListResponse.FriendAndGuildMemberUserBountyQuestMemberDtoInfos;
-        return memberDtoInfos.Where(d => d.DispatchPlayerId == 0).ToList();
+        return memberDtoInfos.ToList();
     }
 
     public static UserBountyQuestMemberDtoInfo? GetSupportMember(List<UserBountyQuestMemberDtoInfo> supportMemberDtoInfos, BountyQuestData bountyQuestData)
