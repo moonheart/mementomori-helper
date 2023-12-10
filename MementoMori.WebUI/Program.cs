@@ -31,7 +31,7 @@ internal class Program
 
         builder.WebHost.UseSentry(o =>
         {
-            o.Dsn = "https://b4f992ec506ac3ae2b62c2d5a4445e4c@o4506120447852544.ingest.sentry.io/4506120448835584";
+            o.Dsn = "https://89589ae6d459add80b04ac7f9069f9ee@sentry.moonheartmoon.com/2";
             o.TracesSampleRate = 1.0;
             o.AutoSessionTracking = true;
             o.IsGlobalModeEnabled = true;
