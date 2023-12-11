@@ -122,7 +122,6 @@ namespace MementoMori.Ortega.Share
                 OpenContentTable,
                 LegendLeagueClassTable,
                 EffectGroupTable,
-                RecitationTable,
                 ChatEffectKeywordTable,
                 PanelTable,
                 PanelMissionTable,
@@ -411,8 +410,6 @@ namespace MementoMori.Ortega.Share
         public static QuestTable QuestTable { get; } = new();
 
         public static RequiredCurrencyTable RequiredCurrencyTable { get; } = new();
-
-        public static RecitationTable RecitationTable { get; } = new();
 
         public static SpecialIconItemTable SpecialIconItemTable { get; } = new();
         

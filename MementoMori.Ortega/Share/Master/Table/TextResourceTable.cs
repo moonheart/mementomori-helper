@@ -32,6 +32,11 @@ namespace MementoMori.Ortega.Share.Master.Table
             return true;
         }
 
+        public bool Load(byte[] binaryData)
+        {
+            return false;
+        }
+
         public string GetMasterBookName()
         {
             return GetMbName(_languageType);

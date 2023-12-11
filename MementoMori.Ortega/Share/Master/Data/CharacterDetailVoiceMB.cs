@@ -7,6 +7,7 @@ using MessagePack;
 namespace MementoMori.Ortega.Share.Master.Data
 {
 	[MessagePackObject(true)]
+    [NotUseOnBatch]
 	[Description("キャラクター視聴可能ボイス")]
 	public class CharacterDetailVoiceMB : MasterBookBase
 	{

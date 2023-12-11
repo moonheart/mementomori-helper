@@ -102,6 +102,12 @@ namespace MementoMori.Ortega.Share.Master.Table
 			// throw new NotImplementedException();
 		}
 
+        public virtual bool Load(byte[] binaryData)
+        {
+            _datas = MessagePackSerializer.Deserialize<TM[]>(binaryData);;
+            return true;
+        }
+
 		protected static string GetMasterDataPath(string masterBookName)
 		{
 			return "./Master/" + masterBookName;

@@ -7,6 +7,7 @@ using MessagePack;
 namespace MementoMori.Ortega.Share.Master.Data
 {
 	[MessagePackObject(true)]
+    [NotUseOnBatch]
 	[Description("無窮の塔\u3000階層情報")]
 	public class TowerBattleQuestMB : MasterBookBase
 	{

@@ -8,6 +8,7 @@ using MessagePack;
 namespace MementoMori.Ortega.Share.Master.Data
 {
     [Description("幻影の神殿敵データ")]
+    [NotUseOnBatch]
     [MessagePackObject(true)]
     public class LocalRaidEnemyMB : MasterBookBase, IBattleEnemy
     {

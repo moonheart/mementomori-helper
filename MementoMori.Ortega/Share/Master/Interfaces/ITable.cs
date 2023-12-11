@@ -4,6 +4,8 @@
 	{
 		bool Load();
 
+        bool Load(byte[] binaryData);
+
 		string GetMasterBookName();
 	}
 }
