@@ -155,7 +155,8 @@ public static class BountyQuestAutoFormationUtil
 
     public static List<UserBountyQuestMemberDtoInfo> GetReadySupportMemberDtoInfos(GetListResponse getListResponse)
     {
-        var memberDtoInfos = getListResponse.FriendAndGuildMemberUserBountyQuestMemberDtoInfos;
+        var ongoingGuids = getListResponse.UserBountyQuestDtoInfos.SelectMany(d=>d.StartMembers).Select(d=>d.UserCharacterGuid).ToHashSet();
+        var memberDtoInfos = getListResponse.FriendAndGuildMemberUserBountyQuestMemberDtoInfos.Where(d => !ongoingGuids.Contains(d.UserCharacterGuid));
         return memberDtoInfos.ToList();
     }
 
