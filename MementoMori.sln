@@ -20,6 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{B17F2195
 		.gitignore = .gitignore
 		build_docker_downloader.sh = build_docker_downloader.sh
 		build_docker_webui.sh = build_docker_webui.sh
+		global.json = global.json
 		LICENSE = LICENSE
 		readme.en.md = readme.en.md
 		readme.md = readme.md
