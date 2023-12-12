@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using MementoMori.Common.Localization;
 using MementoMori.Option;
 using MementoMori.Ortega.Share.Extensions;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;

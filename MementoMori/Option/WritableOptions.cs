@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -14,20 +14,20 @@ public interface IWritableOptions<out T> : IOptions<T> where T : class, new()
 
 public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
 {
-    private readonly IWebHostEnvironment _environment;
+    private readonly IFileProvider _fileProvider;
     private readonly IOptionsMonitor<T> _options;
     private readonly IConfigurationRoot _configuration;
     private readonly string _section;
     private readonly string _file;
 
     public WritableOptions(
-        IWebHostEnvironment environment,
+        IFileProvider fileProvider,
         IOptionsMonitor<T> options,
         IConfigurationRoot configuration,
         string section,
         string file)
     {
-        _environment = environment;
+        _fileProvider = fileProvider;
         _options = options;
         _configuration = configuration;
         _configuration.GetReloadToken().RegisterChangeCallback(x => { _value = _options.CurrentValue; }, null);
@@ -50,10 +50,9 @@ public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
     {
         applyChanges(Value);
         string physicalPath;
-        if (_environment != null)
+        if (_fileProvider != null)
         {
-            var fileProvider = _environment.ContentRootFileProvider;
-            var fileInfo = fileProvider.GetFileInfo(_file);
+            var fileInfo = _fileProvider.GetFileInfo(_file);
             physicalPath = fileInfo.PhysicalPath;
         }
         else

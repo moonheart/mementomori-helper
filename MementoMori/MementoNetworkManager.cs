@@ -29,7 +29,6 @@ using MementoMori.Ortega.Network.MagicOnion.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ortega.Common.Manager;
-using Microsoft.AspNetCore.Authentication.OAuth;
 
 namespace MementoMori;
 

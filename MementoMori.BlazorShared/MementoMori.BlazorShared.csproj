@@ -7,8 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Error.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Pages\App.razor" />
     <Content Remove="Pages\CharactorUnit.razor" />
+    <Content Remove="Pages\Error.cshtml" />
     <Content Remove="Pages\Routes.razor" />
   </ItemGroup>
 
@@ -17,7 +22,6 @@
     <None Include="Pages\BattleLog.razor" />
     <None Include="Pages\Character.razor" />
     <None Include="Pages\Chat.razor" />
-    <None Include="Pages\Error.cshtml" />
     <None Include="Pages\Gacha.razor" />
     <None Include="Pages\Guild.razor" />
     <None Include="Pages\Index.razor" />

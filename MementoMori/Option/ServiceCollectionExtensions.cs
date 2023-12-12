@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 
 namespace MementoMori.Option;
@@ -16,9 +16,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IWritableOptions<T>>(provider =>
         {
             var configuration = (IConfigurationRoot) provider.GetService<IConfiguration>();
-            var environment = provider.GetService<IWebHostEnvironment>();
+            var fileProvider = provider.GetService<IFileProvider>();
             var options = provider.GetService<IOptionsMonitor<T>>();
-            return new WritableOptions<T>(environment, options, configuration, section.Key, file);
+            return new WritableOptions<T>(fileProvider, options, configuration, section.Key, file);
         });
     }
 }
