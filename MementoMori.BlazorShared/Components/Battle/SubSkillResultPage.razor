@@ -1,0 +1,246 @@
+﻿@using MementoMori.Ortega.Share.Data.Battle.Result
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.Ortega.Share.Enums.Battle.Skill
+@using MementoMori.Utils
+@using MementoMori.Extensions
+<MudPaper>
+    @* <td> *@
+        @(GetDesc())
+
+        @* @SubSkillResult.SubSkillResultType *@
+
+        @foreach (var effectGroup in SubSkillResult.AddEffectGroups)
+        {
+            <EffectGroupPage EffectGroup="effectGroup"/>
+        }
+    @* </td> *@
+    @* <td>@SubSkillResult.SubSkillIndex</td> *@
+    @* <td>@SubSkillResult.ToJson()</td> *@
+</MudPaper>
+
+@code {
+
+    [Parameter]
+    public SubSkillResult SubSkillResult { get; set; }
+
+    [Parameter]
+    public Dictionary<int, BattleSimulateUtil.UnitData> UnitDatas { get; set; }
+
+    private RenderFragment GetAttackDesc()
+    {
+        RenderFragment getDamangeHp(bool isBold = false)
+        {
+            return __builder =>
+            {
+                if (SubSkillResult.SubSkillResultType == SubSkillResultType.Damage)
+                {
+                    <MudText Inline="true" Color="Color.Error">
+                        @if (isBold)
+                        {
+                            <b>-@SubSkillResult.ChangeHp</b>
+                        }
+                        else
+                        {
+                            @(-@SubSkillResult.ChangeHp)
+                        }
+                    </MudText>
+                    <MudText Inline="true">当前 @SubSkillResult.TargetRemainHp</MudText>
+                }
+            };
+        }
+        switch (SubSkillResult.HitType)
+        {
+            case HitType.Ignore:
+                return __builder =>
+                {
+                    <MudText Inline="true">无视</MudText>
+                };
+                break;
+            case HitType.Hit:
+                return __builder =>
+                {
+                    <MudText Inline="true">命中</MudText>
+                    @(getDamangeHp())
+                };
+                break;
+            case HitType.Miss:
+                return __builder =>
+                {
+                    <MudText Inline="true">未命中</MudText>
+                };
+                break;
+            case HitType.Critical:
+                return __builder =>
+                {
+                    <MudText Inline="true"><b>暴击</b></MudText>
+                    @(getDamangeHp(true))
+                };
+                break;
+            case HitType.Shield1:
+                return __builder =>
+                {
+                    <MudText Inline="true">护盾1</MudText>
+                    @(getDamangeHp())
+                };
+                break;
+            case HitType.Shield1Critical:
+                return __builder =>
+                {
+                    <MudText Inline="true"><b>护盾1暴击</b></MudText>
+                    @(getDamangeHp(true))
+                };
+                break;
+            case HitType.Shield2:
+                return __builder =>
+                {
+                    <MudText Inline="true">护盾2</MudText>
+                    @(getDamangeHp())
+                };
+                break;
+            case HitType.Shield2Critical:
+                return __builder =>
+                {
+                    <MudText Inline="true"><b>护盾2暴击</b></MudText>
+                    @(getDamangeHp(true))
+                };
+                break;
+            case HitType.ShieldBreak:
+                return __builder =>
+                {
+                    <MudText Inline="true">破盾</MudText>
+                    @(getDamangeHp())
+                };
+                break;
+            case HitType.ShieldBreakCritical:
+                return __builder =>
+                {
+                    <MudText Inline="true"><b>破盾暴击</b></MudText>
+                    @(getDamangeHp(true))
+                };
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private RenderFragment GetDesc()
+    {
+        @switch (SubSkillResult.SkillDisplayType)
+        {
+            case SkillDisplayType.None:
+                return __builder  =>
+                {
+                    <MudText Inline="true">无</MudText>
+                };
+                break;
+            case SkillDisplayType.Heal:
+                return __builder =>
+                {
+                    <MudText Inline="true">恢复生命值</MudText>
+                    <MudText Inline="true" Color="Color.Success">+@SubSkillResult.ChangeHp</MudText>
+                };
+            case SkillDisplayType.PhysicalAttack:
+                return __builder  =>
+                {
+                    <MudText Inline="true">物理攻击</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            case SkillDisplayType.MagicAttack:
+                return __builder  =>
+                {
+                    <MudText Inline="true">魔法攻击</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            case SkillDisplayType.PhysicalDirectDamage:
+                return __builder  =>
+                {
+                    <MudText Inline="true">直接物理伤害</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            case SkillDisplayType.MagicDirectDamage:
+                return __builder  =>
+                {
+                    <MudText Inline="true">直接魔法伤害</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            case SkillDisplayType.HpDrain:
+                return __builder  =>
+                {
+                    <MudText Inline="true">吸血</MudText>
+                    <MudText Inline="true" Color="Color.Success">+@SubSkillResult.ChangeHp</MudText>
+                    <MudText Inline="true">当前 @SubSkillResult.TargetRemainHp</MudText>
+                };
+                break;
+            case SkillDisplayType.Buff:
+                return __builder  =>
+                {
+                    <MudText Inline="true" Color="Color.Success">增益</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            case SkillDisplayType.DeBuff:
+                return __builder  =>
+                {
+                    <MudText Inline="true" Color="Color.Error">弱化</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            case SkillDisplayType.PhysicalCounterAttack:
+                return __builder  =>
+                {
+                    <MudText Inline="true">物理攻击计数</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            case SkillDisplayType.MagicCounterAttack:
+                return __builder  =>
+                {
+                    <MudText Inline="true">魔法攻击计数</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            case SkillDisplayType.PhysicalResonanceAttack:
+                return __builder  =>
+                {
+                    <MudText Inline="true">物理攻击共鸣</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            case SkillDisplayType.MagicResonanceAttack:
+                return __builder  =>
+                {
+                    <MudText Inline="true">魔法攻击共鸣</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            case SkillDisplayType.RemoveEffect:
+                return __builder  =>
+                {
+                    <MudText Inline="true">移除效果</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            case SkillDisplayType.BurstEffect:
+                return __builder  =>
+                {
+                    <MudText Inline="true">即时发动</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            case SkillDisplayType.Resurrection:
+                return __builder  =>
+                {
+                    <MudText Inline="true">复活</MudText>
+                    @(GetAttackDesc())
+                };
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+}

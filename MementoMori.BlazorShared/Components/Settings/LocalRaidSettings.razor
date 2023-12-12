@@ -1,0 +1,85 @@
+﻿@using MementoMori.Ortega.Share
+@using MementoMori.Common.Localization
+@using MementoMori.Option
+@using MementoMori.Ortega.Common.Utils
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.Ortega.Share.Extensions
+
+@inject ISnackbar Snackbar
+@inject IWritableOptions<PlayersOption> PlayersOptions
+@inject IWritableOptions<GameConfig> WritableGameConfig
+@inherits MementoMori.WebUI.Models.AccountComponent
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>@Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]") (@(Funcs?.UserSyncData?.UserStatusDtoInfo?.Name))</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudButton Variant="Variant.Outlined" OnClick="SaveLocalRaidConfig">@Masters.TextResourceTable.Get("[CommonSaveLabel]")</MudButton>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudSwitch T="bool" Label="@(selfCreateRoom ? Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonCreateRoom]") : Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"))" @bind-Checked="selfCreateRoom" Color="Color.Primary"></MudSwitch>
+        @if (selfCreateRoom)
+        {
+            <MudTextField T="int" Label="@ResourceStrings.Seconds_of_pre_battle_wait_time" @bind-Value="waitSeconds"></MudTextField>
+        }
+        <MudField Label="@ResourceStrings.Select_tasks_based_on_reward_quantity_and_weight" Variant="Variant.Outlined">
+            @foreach (var reward in _localRaidRewardItems)
+            {
+                <MudNumericField Label="@ItemUtil.GetItemName(reward.ItemType, reward.ItemId)" Margin="Margin.None" @bind-Value="reward.Weight"/>
+            }
+        </MudField>
+    </MudCardContent>
+</MudCard>
+
+
+@code {
+    List<GameConfig.WeightedItem> _localRaidRewardItems;
+
+    bool selfCreateRoom;
+    int waitSeconds;
+
+    protected override Task AccountChanged()
+    {
+        var playerOpt = PlayersOptions.Value.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
+        _localRaidRewardItems = playerOpt.LocalRaid.RewardItems;
+        if (_localRaidRewardItems.Count == 0)
+        {
+            _localRaidRewardItems = WritableGameConfig.Value.LocalRaid.RewardItems;
+            if (_localRaidRewardItems.Count == 0)
+            {
+                _localRaidRewardItems.AddRange(new[]
+                {
+                    new GameConfig.WeightedItem(ItemType.ExchangePlaceItem, 4, 4), // 符石兑换券
+                    new GameConfig.WeightedItem(ItemType.CharacterTrainingMaterial, 2, 3), // 潜能宝珠
+                    new GameConfig.WeightedItem(ItemType.EquipmentReinforcementItem, 2, 2.5), // 强化秘药
+                    new GameConfig.WeightedItem(ItemType.CharacterTrainingMaterial, 1, 2), // 经验珠
+                    new GameConfig.WeightedItem(ItemType.EquipmentReinforcementItem, 1, 1), // 强化水
+                });
+            }
+        }
+
+        selfCreateRoom = playerOpt.LocalRaid.SelfCreateRoom;
+        waitSeconds = playerOpt.LocalRaid.WaitSeconds;
+
+        return Task.CompletedTask;
+    }
+
+
+    private void SaveLocalRaidConfig()
+    {
+        PlayersOptions.Update(opt =>
+        {
+            var playerOpt = opt.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
+            playerOpt.LocalRaid.RewardItems = _localRaidRewardItems;
+            playerOpt.LocalRaid.SelfCreateRoom = selfCreateRoom;
+            playerOpt.LocalRaid.WaitSeconds = waitSeconds;
+        });
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add(ResourceStrings.Save_successful, Severity.Success);
+    }
+
+}

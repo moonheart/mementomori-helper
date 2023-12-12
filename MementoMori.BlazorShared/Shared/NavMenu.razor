@@ -1,0 +1,27 @@
+﻿@using static MementoMori.Ortega.Share.Masters
+
+<MudNavMenu>
+    <MudNavLink Icon="@Icons.Material.Filled.Home" Href="" Match="NavLinkMatch.All">@TextResourceTable.Get("[CommonFooterHomeButtonLabel]")</MudNavLink>
+    <MudNavLink Icon="@Icons.Material.Filled.People" Href="Character" Match="NavLinkMatch.Prefix">@TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")</MudNavLink>
+    <MudNavLink Icon="@Icons.Material.Filled.AllInbox" Href="Items" Match="NavLinkMatch.Prefix">@TextResourceTable.Get("[CommonFooterItemBoxButtonLabel]")</MudNavLink>
+    <MudNavLink Icon="@Icons.Material.Filled.Shop" Href="Shop" Match="NavLinkMatch.Prefix">@TextResourceTable.Get("[CommonHeaderExchangeLabel]")</MudNavLink>
+    @* <MudNavLink Icon="@Icons.Material.Filled.LocalFireDepartment" Href="/Adventure" Match="NavLinkMatch.Prefix">冒险</MudNavLink> *@
+    @* <MudNavLink Icon="@Icons.Material.Filled.Flag" Href="/Trial" Match="NavLinkMatch.Prefix">试炼</MudNavLink> *@
+    <MudNavLink Icon="@Icons.Material.Filled.ChangeCircle" Href="Gacha" Match="NavLinkMatch.Prefix">@TextResourceTable.Get("[CommonFooterGachaButtonLabel]")</MudNavLink>
+    @* <MudNavLink Icon="@Icons.Material.Filled.Chat" Href="/Chat" Match="NavLinkMatch.Prefix">聊天</MudNavLink> *@
+    @* <MudNavLink Icon="@Icons.Material.Filled.NaturePeople" Href="/Guild" Match="NavLinkMatch.Prefix">公会</MudNavLink> *@
+    <MudNavLink Icon="@Icons.Material.Filled.FileCopy" Href="Battlelog" Match="NavLinkMatch.Prefix">@TextResourceTable.Get("[BattleReportTitle]")</MudNavLink>
+    <MudNavLink Icon="@Icons.Material.Filled.Settings" Href="Settings" Match="NavLinkMatch.Prefix">@TextResourceTable.Get("[CommonOptionParameterLabel]")</MudNavLink>
+</MudNavMenu>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+}

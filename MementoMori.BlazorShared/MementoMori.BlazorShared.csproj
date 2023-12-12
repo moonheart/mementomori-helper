@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\App.razor" />
+    <Content Remove="Pages\CharactorUnit.razor" />
+    <Content Remove="Pages\Routes.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Adventure.razor" />
+    <None Include="Pages\BattleLog.razor" />
+    <None Include="Pages\Character.razor" />
+    <None Include="Pages\Chat.razor" />
+    <None Include="Pages\Error.cshtml" />
+    <None Include="Pages\Gacha.razor" />
+    <None Include="Pages\Guild.razor" />
+    <None Include="Pages\Index.razor" />
+    <None Include="Pages\Items.razor" />
+    <None Include="Pages\Settings.razor" />
+    <None Include="Pages\Shop.razor" />
+    <None Include="Pages\Teams.razor" />
+    <None Include="Pages\Trial.razor" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+	  <PackageReference Include="MudBlazor" Version="6.11.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MementoMori\MementoMori.csproj" />
+  </ItemGroup>
+
+</Project>

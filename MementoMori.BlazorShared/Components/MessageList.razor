@@ -1,0 +1,50 @@
+﻿@using System.Collections.ObjectModel
+@using System.Reactive.Concurrency
+@using System.Reactive.Linq
+@using DynamicData.Binding
+
+@inherits MementoMori.WebUI.Models.AccountComponent
+
+<MudSimpleTable Elevation="0" Dense="true">
+    <tbody style="max-height: 350px; overflow: auto" class="d-flex flex-column-reverse">
+    @foreach (var msg in _messageList)
+    {
+        <tr>
+            <td>@msg</td>
+        </tr>
+    }
+    </tbody>
+</MudSimpleTable>
+
+@code {
+
+    protected override async Task AccountChanged()
+    {
+        try
+        {
+            _messageList = Funcs.MesssageList.ToList();
+            Funcs.MesssageList.ObserveCollectionChanges().Throttle(TimeSpan.FromMilliseconds(50)).Subscribe(set =>
+            {
+                try
+                {
+                    _messageList = Funcs.MesssageList.ToList();
+                }
+                catch
+                {
+                    return;
+                }
+                InvokeAsync(StateHasChanged);
+            });
+        }
+        catch
+        {
+    // ignored
+        }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private List<string> _messageList = new();
+}

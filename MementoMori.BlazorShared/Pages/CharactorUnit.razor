@@ -1,0 +1,20 @@
+﻿@page "/test"
+
+@using MementoMori.WebUI.ViewModels
+@inherits ReactiveUI.Blazor.ReactiveInjectableComponentBase<CharactorUnitViewModel>
+
+<Row>
+    <Column></Column>
+</Row>
+<h3>CharactorUnit</h3>
+
+<p>@ViewModel.Count</p>
+
+@code {
+    private int _count;
+    protected override void OnInitialized()
+    {
+        
+    }
+
+}

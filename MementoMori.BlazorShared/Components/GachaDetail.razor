@@ -1,0 +1,181 @@
+﻿@using MementoMori.Ortega.Share.Data.ApiInterface.Gacha
+@using MementoMori.Ortega.Share
+@using MementoMori.WebUI.Extensions
+@using MementoMori.Ortega.Custom
+@using MementoMori.Ortega.Share.Data.Gacha
+@using static MementoMori.Ortega.Share.Masters
+@using System.Globalization
+@using MementoMori.Ortega.Common.Utils
+@using MementoMori.Ortega.Share.Data.Item
+@using MementoMori.Ortega.Share.Extensions
+
+<MudPaper Class="pa-6">
+    <MudGrid>
+        <MudItem md="12">
+            @((MarkupString) detailHeader.Replace("\n", "<br/>"))
+        </MudItem>
+        <MudItem md="12">
+            @((MarkupString) detailBody.Replace("\n", "<br/>"))
+        </MudItem>
+        <MudItem md="12">
+            @if (LotteryItemList.GachaBonusRateList.IsNotNullOrEmpty())
+            {
+                <MudField Label="@TextResourceTable.Get("[GachaBonusRewardLabel]")" Variant="Variant.Outlined">
+                    <MudSimpleTable Dense="true" Elevation="0">
+                        <tbody>
+                        @foreach (var group in LotteryItemList.GachaBonusRateList.GroupBy(d => d.GachaCount).OrderBy(d => d.Key))
+                        {
+                            var bonusRates = group.ToArray();
+                            @for (var i = 0; i < bonusRates.Length; i++)
+                            {
+                                var bonusRate = bonusRates[i];
+                                <tr>
+                                    @if (i == 0)
+                                    {
+                                        <td rowspan="@bonusRates.Length">@TextResourceTable.Get("[CommonTimesFormat]", bonusRate.GachaCount)</td>
+                                    }
+                                    <td>
+                                        @foreach (var item in bonusRate.GachaItemRateList)
+                                        {
+                                            <span>@item.Item.GetItemName() × @item.Item.ItemCount</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var item in bonusRate.GachaItemRateList)
+                                        {
+                                            <span>@item.LotteryRate.ToString("P")</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        </tbody>
+                    </MudSimpleTable>
+                </MudField>
+            }
+            @if (AddRewardList.IsNotNullOrEmpty())
+            {
+                <MudField Label="@TextResourceTable.Get("[GachaRewardAddItem]")" Variant="Variant.Outlined">
+                    <MudSimpleTable Dense="true" Elevation="0">
+                        <tbody>
+                        @foreach (var item in AddRewardList)
+                        {
+                            var name = ItemUtil.GetItemName(item);
+                            <tr>
+                                <td>@name × @item.ItemCount</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </MudSimpleTable>
+                </MudField>
+            }
+            @if (LotteryItemList.GachaRarityRateList.IsNotNullOrEmpty())
+            {
+                <MudField Label="@TextResourceTable.Get("[GachaLotteryRarityDropRate]")" Variant="Variant.Outlined">
+                    <MudSimpleTable Dense="true" Elevation="0">
+                        <tbody>
+                        @foreach (var rarityRate in LotteryItemList.GachaRarityRateList)
+                        {
+                            <tr>
+                                <td>@TextResourceTable.Get(rarityRate.CharacterRarityFlags)</td>
+                                <td>@rarityRate.LotteryRate.ToString("P")</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </MudSimpleTable>
+                </MudField>
+            }
+            @if (LotteryItemList.GachaRarityRateSpecialList.IsNotNullOrEmpty())
+            {
+                <MudField Label="@TextResourceTable.Get("[GachaLotteryRarityDropRate]")" Variant="Variant.Outlined">
+                    <MudSimpleTable Dense="true" Elevation="0">
+                        <tbody>
+                        @foreach (var rarityRate in LotteryItemList.GachaRarityRateSpecialList)
+                        {
+                            <tr>
+                                <td>@TextResourceTable.Get(rarityRate.CharacterRarityFlags)</td>
+                                <td>@rarityRate.LotteryRate.ToString("P")</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </MudSimpleTable>
+                </MudField>
+            }
+            @if (LotteryItemList.GachaItemRateList.IsNotNullOrEmpty())
+            {
+                <MudField Label="@TextResourceTable.Get("[GachaLotteryIndividualDropRates]")" Variant="Variant.Outlined">
+                    <MudSimpleTable Dense="true" Elevation="0">
+                        <tbody>
+                        @foreach (var itemRate in LotteryItemList.GachaItemRateList)
+                        {
+                            <tr>
+                                <td>@itemRate.Item.GetItemName() × @itemRate.Item.ItemCount</td>
+                                <td>@TextResourceTable.Get(itemRate.CharacterRarityFlags)</td>
+                                <td>@itemRate.LotteryRate.ToString("P")</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </MudSimpleTable>
+                </MudField>
+            }
+            @if (LotteryItemList.GachaItemRateSpecialList.IsNotNullOrEmpty())
+            {
+                <MudField Label="@TextResourceTable.Get("[GachaLotteryIndividualDropRates]")" Variant="Variant.Outlined">
+                    <MudSimpleTable Dense="true" Elevation="0">
+                        <tbody>
+                        @foreach (var itemRate in LotteryItemList.GachaItemRateSpecialList)
+                        {
+                            <tr>
+                                <td>@itemRate.Item.GetItemName() × @itemRate.Item.ItemCount</td>
+                                <td>@TextResourceTable.Get(itemRate.CharacterRarityFlags)</td>
+                                <td>@itemRate.LotteryRate.ToString("P")</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </MudSimpleTable>
+                </MudField>
+            }
+        </MudItem>
+        <MudItem md="12">
+            @((MarkupString) detailFooter.Replace("\n", "<br/>"))
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+
+@code {
+
+    [Parameter]
+    public GetLotteryItemListResponse LotteryItemList { get; set; }
+
+    [Parameter]
+    public GachaCaseInfo GachaCaseInfo { get; set; }
+
+    private IReadOnlyList<UserItem> AddRewardList = Array.Empty<UserItem>();
+
+    private string detailHeader;
+    private string detailBody;
+    private string detailFooter;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetGachaLottery();
+    }
+
+    private async Task GetGachaLottery()
+    {
+        var gachaCaseUiMb = GachaCaseUiTable.GetById(GachaCaseInfo.GachaCaseUiId);
+        AddRewardList = gachaCaseUiMb.AddRewardItems;
+        var gachaCaseMb = GachaCaseTable.GetById(GachaCaseInfo.GachaCaseId);
+        var startTime = DateTimeOffset.Parse(gachaCaseMb.StartTimeFixJST + " +09:00").ToLocalTime();
+        var startTimeTime = TextResourceTable.Get("[CommonTimeFormatOnlyTime]", startTime.Hour, startTime.Minute, startTime.Second);
+        var endTime = DateTimeOffset.Parse(gachaCaseMb.EndTimeFixJST + " +09:00").ToLocalTime();
+        var endTimeTime = TextResourceTable.Get("[CommonTimeFormatOnlyTime]", endTime.Hour, endTime.Minute, endTime.Second);
+        var periodTime = TextResourceTable.Get("[GachaLotteryPeriodFormat]", startTime.Year, startTime.Month, startTime.Day, startTimeTime, endTime.Year, endTime.Month, endTime.Day, endTimeTime);
+
+        detailHeader = TextResourceTable.Get(gachaCaseUiMb.DetailDialogHeadingKey, periodTime);
+        detailBody = TextResourceTable.Get(gachaCaseUiMb.DetailDialogDetailKey, GachaCaseInfo.GachaDrawCount);
+        detailFooter = TextResourceTable.Get(gachaCaseUiMb.DetailDialogNotesKey);
+    }
+
+}

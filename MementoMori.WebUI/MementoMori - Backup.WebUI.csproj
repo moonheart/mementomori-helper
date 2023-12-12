@@ -8,10 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <SupportedPlatform Include="browser" />
-    </ItemGroup>
-
-	<ItemGroup>
       <ProjectReference Include="..\MementoMori.BlazorShared\MementoMori.BlazorShared.csproj" />
       <ProjectReference Include="..\MementoMori.Common\MementoMori.Common.csproj" />
       <ProjectReference Include="..\MementoMori\MementoMori.csproj" />
@@ -38,8 +34,7 @@
       <Content Remove="Extensions\**" />
       <Content Remove="Master\**" />
       <Content Remove="Models\**" />
-      <Content Remove="Pages\**" />
-      <Content Remove="Shared\**" />
+      <Content Remove="Pages\Components\**" />
       <Content Remove="UI\**" />
       <Content Remove="ViewModels\**" />
     </ItemGroup>
@@ -49,8 +44,7 @@
       <Compile Remove="Extensions\**" />
       <Compile Remove="Master\**" />
       <Compile Remove="Models\**" />
-      <Compile Remove="Pages\**" />
-      <Compile Remove="Shared\**" />
+      <Compile Remove="Pages\Components\**" />
       <Compile Remove="UI\**" />
       <Compile Remove="ViewModels\**" />
     </ItemGroup>
@@ -60,8 +54,7 @@
       <EmbeddedResource Remove="Extensions\**" />
       <EmbeddedResource Remove="Master\**" />
       <EmbeddedResource Remove="Models\**" />
-      <EmbeddedResource Remove="Pages\**" />
-      <EmbeddedResource Remove="Shared\**" />
+      <EmbeddedResource Remove="Pages\Components\**" />
       <EmbeddedResource Remove="UI\**" />
       <EmbeddedResource Remove="ViewModels\**" />
     </ItemGroup>
@@ -71,10 +64,31 @@
       <None Remove="Extensions\**" />
       <None Remove="Master\**" />
       <None Remove="Models\**" />
-      <None Remove="Pages\**" />
-      <None Remove="Shared\**" />
+      <None Remove="Pages\Components\**" />
       <None Remove="UI\**" />
       <None Remove="ViewModels\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Pages\App.razor" />
+      <Content Remove="Pages\Routes.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Pages\Adventure.razor" />
+      <None Include="Pages\BattleLog.razor" />
+      <None Include="Pages\Character.razor" />
+      <None Include="Pages\CharactorUnit.razor" />
+      <None Include="Pages\Chat.razor" />
+      <None Include="Pages\Error.cshtml" />
+      <None Include="Pages\Gacha.razor" />
+      <None Include="Pages\Guild.razor" />
+      <None Include="Pages\Index.razor" />
+      <None Include="Pages\Items.razor" />
+      <None Include="Pages\Settings.razor" />
+      <None Include="Pages\Shop.razor" />
+      <None Include="Pages\Teams.razor" />
+      <None Include="Pages\Trial.razor" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,8 @@
+﻿@using Index = MementoMori.BlazorShared.Pages.Index
+
+<Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new []{typeof(Index).Assembly}">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+    </Found>
+</Router>

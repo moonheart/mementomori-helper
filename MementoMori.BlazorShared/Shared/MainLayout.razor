@@ -1,0 +1,75 @@
+﻿@using MementoMori.Common.Localization
+@using static MementoMori.Ortega.Share.Masters
+@using System.Globalization
+@using DynamicData.Binding
+@using MementoMori.Option
+@using ReactiveUI
+@inherits LayoutComponentBase
+@inject AccountManager AccountManager
+@inject IWritableOptions<AuthOption> AuthOption
+@inject NavigationManager NavigationManager
+
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+<MudLayout>
+    <MudAppBar Dense="false" Color="Color.Transparent">
+        <MudIconButton
+            Icon="@Icons.Material.Filled.Menu"
+            Color="Color.Inherit"
+            Edge="Edge.Start"
+            @onclick="e => DrawerToggle()">
+        </MudIconButton>
+        <MudSelect T="long" Label="@ResourceStrings.SwitchAccount" Variant="Variant.Text" Dense="true" @bind-Value="AccountManager.CurrentUserId">
+            @foreach (var account in AuthOption.Value.Accounts)
+            {
+                <MudSelectItem T="long" Value="account.UserId">@account.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSpacer />
+        <MudSelect T="CultureInfo" Label="Select Language" Variant="Variant.Text" Dense="true" @bind-Value="SelectedLanguage">
+            <MudSelectItem Value="@(new CultureInfo("en-US"))"></MudSelectItem>
+            <MudSelectItem Value="@(new CultureInfo("zh-CN"))"></MudSelectItem>
+            <MudSelectItem Value="@(new CultureInfo("ja-JP"))"></MudSelectItem>
+            <MudSelectItem Value="@(new CultureInfo("ko-KR"))"></MudSelectItem>
+        </MudSelect>
+        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Target="_blank" Color="Color.Inherit" Href="https://github.com/moonheart/mementomori-helper/" />
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h5" Class="mt-1">@ResourceStrings.GameAssistant</MudText>
+        </MudDrawerHeader>
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    bool _drawerOpen = true;
+    bool _languageSelectOpen = false;
+
+    CultureInfo SelectedLanguage
+    {
+        get => AccountManager.CurrentCulture;
+        set
+        {
+            AccountManager.CurrentCulture = value;
+            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        AccountManager.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
+    }
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

@@ -1,0 +1,75 @@
+﻿@using MementoMori.Ortega.Share.Data.Item
+@using MementoMori.Extensions
+@using System.Text
+@using MementoMori.Common.Localization
+@using MementoMori.Ortega.Share
+
+<MudCard Class="pa-6">
+    <MudGrid>
+        <MudItem md="12">
+            <MudText>@Name × @Count</MudText>
+        </MudItem>
+        <MudItem md="12">
+            <MudSlider T="long" Min="1L" Max="@Count" ValueLabel="true" @bind-Value="_useCount">
+                @ButtonText @_useCount
+            </MudSlider>
+        </MudItem>
+        <MudItem md="12">
+            <pre>@message</pre>
+        </MudItem>
+        <MudItem md="12">
+            <MudButton OnClick="@Cancel">@Masters.TextResourceTable.Get("[CommonCloseLabel]")</MudButton>
+            <MudButton Color="Color.Primary" OnClick="@UseItem" Disabled="_processing || _buyed">
+                @if (_processing)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                }
+                <MudText Class="ms-2">@ButtonText</MudText>
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+</MudCard>
+
+@code {
+
+    [Parameter]
+    public string Name { get; set; }
+
+    [Parameter]
+    public long Count { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; }
+
+    [Parameter]
+    public Func<long, Task<IList<IUserItem>>> UseItemFunc { get; set; }
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    private string message;
+
+    private long _useCount = 1;
+
+    private bool _processing;
+
+    private bool _buyed;
+
+    private void Cancel()
+    {
+        MudDialog.Close();
+    }
+
+    private async Task UseItem()
+    {
+        _processing = true;
+        var items = await UseItemFunc(_useCount);
+        _buyed = true;
+        var msg = new StringBuilder();
+        msg.AppendLine($"{ButtonText}{ResourceStrings.Success}");
+        items.PrintUserItems(s => msg.AppendLine(s));
+        message = msg.ToString();
+        _processing = false;
+    }
+
+}

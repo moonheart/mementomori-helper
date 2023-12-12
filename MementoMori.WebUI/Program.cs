@@ -14,6 +14,7 @@ using Sentry;
 using MementoMori.WebUI.UI;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Net.Http.Headers;
+using Index = MementoMori.BlazorShared.Pages.Index;
 
 internal class Program
 {
@@ -90,6 +91,7 @@ internal class Program
         app.UseStaticFiles();
         app.UseAntiforgery();
         app.MapRazorComponents<App>()
+            .AddAdditionalAssemblies(typeof(Index).Assembly)
             .AddInteractiveServerRenderMode();
         app.UseSentryTracing();
         //app.UseRouting();

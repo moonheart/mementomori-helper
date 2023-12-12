@@ -1,0 +1,35 @@
+﻿@using MementoMori.Option
+@using MementoMori.Ortega.Share
+@using MementoMori.Jobs
+@using MementoMori.Common.Localization
+@using MementoMori.Common
+@inject IWritableOptions<GameConfig> WritableGameConfig
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>@Masters.TextResourceTable.Get("[CommonFooterItemBoxButtonLabel]") (Global)</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudSelect Label="自动使用的物品"  MultiSelection="true" Dense="true" 
+                   @bind-SelectedValues="AutoUseItemTypes" 
+                   MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
+            @foreach (var item in Enum.GetValues<GameConfig.AutoUseItemType>())
+            {
+                <MudSelectItem  Value="@item">@(ResourceStrings.ResourceManager.GetEnumString(item))</MudSelectItem>
+            }
+        </MudSelect> 
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+
+    IEnumerable<GameConfig.AutoUseItemType> AutoUseItemTypes
+    {
+        get => WritableGameConfig.Value.Items.AutoUseItemTypes;
+        set => WritableGameConfig.Update(x => x.Items.AutoUseItemTypes = value.ToList());
+    }
+
+}
