@@ -3,6 +3,7 @@ using MementoMori.Jobs;
 using MementoMori.Option;
 using MementoMori.WebUI.UI;
 
+using Microsoft.AspNetCore.Components.WebView.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -11,6 +12,8 @@ using MudBlazor.Services;
 using Quartz;
 
 using System.Globalization;
+using Microsoft.Extensions.FileProviders;
+using System.Reflection;
 
 namespace MementoMori.Maui
 {
@@ -26,7 +29,10 @@ namespace MementoMori.Maui
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
-            builder.Configuration.AddJsonFile("appsettings.other.json", true, true);
+            Directory.SetCurrentDirectory(FileSystem.Current.AppDataDirectory);
+            var embeddedFileProvider = new EmbeddedFileProvider(typeof(App).Assembly);
+
+            builder.Configuration.AddJsonFile(embeddedFileProvider, "appsettings.json", false, false);
             builder.Configuration.AddJsonFile("appsettings.user.json", true, true);
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddMudServices();
@@ -46,6 +52,7 @@ namespace MementoMori.Maui
             builder.Services.AddQuartz();
             builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
+            builder.Services.AddSingleton<InitializeWorker>();
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
@@ -54,23 +61,9 @@ namespace MementoMori.Maui
             var app = builder.Build();
             Services.Setup(app.Services);
 
-            app.Services.GetRequiredService<AccountManager>().MigrateToAccountArray();
-            app.Services.GetRequiredService<AccountManager>().CurrentCulture = CultureInfo.CurrentCulture;
-            Init(app);
-            // Task.Run(async () =>
-            // {
-            //     await app.Services.GetRequiredService<MementoNetworkManager>().DownloadMasterCatalog();
-            //     app.Services.GetRequiredService<MementoNetworkManager>().SetCultureInfo(CultureInfo.CurrentCulture);
-            //     await app.Services.GetRequiredService<AccountManager>().AutoLogin();
-            // });
             return app;
         }
 
-        private static void Init(MauiApp app)
-        {
-            app.Services.GetRequiredService<MementoNetworkManager>().DownloadMasterCatalog();
-            // app.Services.GetRequiredService<MementoNetworkManager>().SetCultureInfo(CultureInfo.CurrentCulture);
-            // await app.Services.GetRequiredService<AccountManager>().AutoLogin();
-        }
+
     }
 }

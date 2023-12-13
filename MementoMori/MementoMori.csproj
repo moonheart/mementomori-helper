@@ -12,6 +12,7 @@
         <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
         <PackageReference Include="morelinq" Version="3.4.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Quartz" Version="3.7.0" />

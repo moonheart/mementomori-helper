@@ -26,6 +26,7 @@ using MementoMori.Common.Localization;
 using MementoMori.MagicOnion;
 using MementoMori.Option;
 using MementoMori.Ortega.Network.MagicOnion.Client;
+using Microsoft.Extensions.FileProviders;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ortega.Common.Manager;
@@ -75,27 +76,25 @@ public class MementoNetworkManager
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler {AppVersion = authOption.Value.AppVersion};
         _httpClient = new HttpClient(_meMoriHttpClientHandler);
         if (!Debugger.IsAttached) _httpClient.Timeout = TimeSpan.FromSeconds(10);
-
-        if (!initialized)
-        {
-            var response = GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN"}).ConfigureAwait(false).GetAwaiter().GetResult();
-            AssetCatalogUriFormat = response.AssetCatalogUriFormat;
-            AssetCatalogFixedUriFormat = response.AssetCatalogFixedUriFormat;
-            MasterUriFormat = response.MasterUriFormat;
-            NoticeBannerImageUriFormat = response.NoticeBannerImageUriFormat;
-            AppAssetVersionInfo = response.AppAssetVersionInfo;
-            _authOption.Update(x => x.AppVersion = AppAssetVersionInfo.Version);
-            initialized = true;
-        }
-
-        _meMoriHttpClientHandler.AppVersion = AppAssetVersionInfo.Version;
-
         _unityHttpClient = new HttpClient();
         if (!Debugger.IsAttached) _unityHttpClient.Timeout = TimeSpan.FromSeconds(30);
         _unityHttpClient.DefaultRequestHeaders.Add("User-Agent", "UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)");
         _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", "2021.3.10f1");
 
         _ = AutoUpdateMasterData();
+    }
+
+    public async Task Initialize()
+    {
+        var response = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() { CountryCode = "CN" });
+        AssetCatalogUriFormat = response.AssetCatalogUriFormat;
+        AssetCatalogFixedUriFormat = response.AssetCatalogFixedUriFormat;
+        MasterUriFormat = response.MasterUriFormat;
+        NoticeBannerImageUriFormat = response.NoticeBannerImageUriFormat;
+        AppAssetVersionInfo = response.AppAssetVersionInfo;
+        _authOption.Update(x => x.AppVersion = AppAssetVersionInfo.Version);
+        initialized = true;
+        _meMoriHttpClientHandler.AppVersion = AppAssetVersionInfo.Version;
     }
 
     private async Task AutoUpdateMasterData()

@@ -75,14 +75,9 @@ internal class Program
 
         builder.Services.AddQuartz();
         builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
-
+        builder.Services.AddHostedService<InitializeWorker>();
         var app = builder.Build();
         Services.Setup(app.Services);
-
-        app.Services.GetRequiredService<AccountManager>().MigrateToAccountArray();
-        app.Services.GetRequiredService<AccountManager>().CurrentCulture = CultureInfo.CurrentCulture;
-        app.Services.GetRequiredService<MementoNetworkManager>().DownloadMasterCatalog().ConfigureAwait(false).GetAwaiter().GetResult();
-        app.Services.GetRequiredService<MementoNetworkManager>().SetCultureInfo(CultureInfo.CurrentCulture);
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment()) app.UseExceptionHandler("/Error");
@@ -98,7 +93,6 @@ internal class Program
         //app.MapBlazorHub();
         //app.MapFallbackToPage("/_Host");
 
-        app.Services.GetRequiredService<AccountManager>().AutoLogin().ConfigureAwait(false).GetAwaiter().GetResult();
 
         app.Run();
     }
