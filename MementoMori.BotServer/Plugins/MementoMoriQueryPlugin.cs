@@ -11,6 +11,7 @@ using MementoMori.BotServer.Api;
 using MementoMori.BotServer.Options;
 using MementoMori.Extensions;
 using MementoMori.Option;
+using MementoMori.Ortega;
 using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.ApiInterface.Notice;
 using MementoMori.Ortega.Share.Data.Notice;
@@ -375,6 +376,13 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             enemies.Add(BossBattleEnemyTable.GetById(enemyId));
         }
 
+        BuildEnemyInfo(enemies, msg);
+
+        await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
+    }
+
+    private static void BuildEnemyInfo(IReadOnlyList<IBattleEnemy> enemies, StringBuilder msg)
+    {
         foreach (var enemyMb in enemies)
         {
             msg.AppendLine();
@@ -395,8 +403,6 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             msg.AppendLine($"[{rarity}] Lv.{lv} {name} ({ele}) 速度: {enemyMb.BattleParameter.Speed} {connect}");
             msg.AppendLine($"力: {enemyMb.BaseParameter.Muscle:N0} 技: {enemyMb.BaseParameter.Energy:N0} 魔: {enemyMb.BaseParameter.Intelligence:N0} 耐: {enemyMb.BaseParameter.Health:N0}");
         }
-
-        await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
     }
 
     [CqMessageMatch(@"^/(?<towerTypeStr>(无穷|红|黄|绿|蓝))塔\s+(?<quest>\d+)$")]
@@ -430,26 +436,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             enemies.Add(TowerBattleEnemyTable.GetById(enemyId));
         }
 
-        foreach (var enemyMb in enemies)
-        {
-            msg.AppendLine();
-            var rarity = enemyMb.CharacterRarityFlags.GetDesc();
-            var lv = enemyMb.EnemyRank;
-            var name = TextResourceTable.Get(enemyMb.NameKey);
-            var ele = enemyMb.ElementType.GetDesc();
-            var connect = "";
-            if (enemies.MaxBy(d => d.BattleParameter.Defense) == enemyMb)
-            {
-                connect = "共鸣(高)";
-            }
-            else if (enemies.MinBy(d => d.BattleParameter.Defense) == enemyMb)
-            {
-                connect = "共鸣(低)";
-            }
-
-            msg.AppendLine($"[{rarity}] Lv.{lv} {name} ({ele}) 速度: {enemyMb.BattleParameter.Speed} {connect}");
-            msg.AppendLine($"力: {enemyMb.BaseParameter.Muscle:N0} 技: {enemyMb.BaseParameter.Energy:N0} 魔: {enemyMb.BaseParameter.Intelligence:N0} 耐: {enemyMb.BaseParameter.Health:N0}");
-        }
+        BuildEnemyInfo(enemies, msg);
 
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
     }
