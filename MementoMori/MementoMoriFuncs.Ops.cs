@@ -2167,7 +2167,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     if (createRoom)
                     {
                         log(TextResourceTable.Get("[LocalRaidRoomSearchButtonCreateRoom]"));
-                        client.SendLocalRaidOpenRoom(LocalRaidRoomConditionsType.All, questId, 0, 0);
+                        client.SendLocalRaidOpenRoom(LocalRaidRoomConditionsType.None, questId, 0, 0);
                     }
                     else
                     {
