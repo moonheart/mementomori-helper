@@ -14,6 +14,7 @@ using MementoMori.WebUI.UI;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Net.Http.Headers;
 using Index = MementoMori.BlazorShared.Pages.Index;
+using Ortega.Common.Manager;
 
 internal class Program
 {
@@ -75,7 +76,6 @@ internal class Program
 
         builder.Services.AddQuartz();
         builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
-        builder.Services.AddHostedService<InitializeWorker>();
         var app = builder.Build();
         Services.Setup(app.Services);
 
@@ -93,7 +93,19 @@ internal class Program
         //app.MapBlazorHub();
         //app.MapFallbackToPage("/_Host");
 
-
+        InitializeAsync(app.Services).ConfigureAwait(false).GetAwaiter().GetResult();
         app.Run();
+    }
+
+    private static async Task InitializeAsync(IServiceProvider sp)
+    {
+        var accountManager = sp.GetRequiredService<AccountManager>();
+        var networkManager = sp.GetRequiredService<MementoNetworkManager>();
+        accountManager.MigrateToAccountArray();
+        accountManager.CurrentCulture = CultureInfo.CurrentCulture;
+        await networkManager.Initialize();
+        await networkManager.DownloadMasterCatalog();
+        networkManager.SetCultureInfo(CultureInfo.CurrentCulture);
+        await accountManager.AutoLogin();
     }
 }
