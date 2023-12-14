@@ -51,8 +51,6 @@ namespace MementoMori.Maui
 
             builder.Services.AddQuartz();
             builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
-
-            builder.Services.AddSingleton<InitializeWorker>();
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
