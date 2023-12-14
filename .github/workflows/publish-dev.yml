@@ -101,3 +101,46 @@ jobs:
           tags: moonheartmoon/mementomori-webui:dev
           context: .
           file: ./MementoMori.WebUI/Dockerfile
+
+  publish-maui-android:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+      - name: Install MAUI workload
+        run: dotnet workload install maui
+      - name: Write keystore
+        run: |
+          $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.KEYSTORE_BASE64_ENCODED }}")
+          [IO.File]::WriteAllBytes("MementoMori.Maui/mementomori-helper.keystore", $pfx_cert_byte)
+      - name: Set Version in csproj
+        run: (Get-Content -Path .\MementoMori.Maui\MementoMori.Maui.csproj -Raw) -replace '<Version>.*?</Version>', "<Version>$((echo v1.2.3) -replace 'v')</Version>" | Set-Content -Path .\MementoMori.Maui\MementoMori.Maui.csproj
+        if: startsWith(github.ref, 'refs/tags/')
+      - name: Set ApplicationDisplayVersion in csproj
+        run: (Get-Content -Path .\MementoMori.Maui\MementoMori.Maui.csproj -Raw) -replace '<ApplicationDisplayVersion>.*?</ApplicationDisplayVersion>', "<ApplicationDisplayVersion>$((echo v1.2.3) -replace 'v')</ApplicationDisplayVersion>" | Set-Content -Path .\MementoMori.Maui\MementoMori.Maui.csproj
+        if: startsWith(github.ref, 'refs/tags/')
+      - name: Build Android
+        run: dotnet publish -c Release -f net8.0-android -p:AndroidSigningStorePass=${{ secrets.KEYSTORE_PASSWORD }} -p:AndroidSigningKeyPass=${{ secrets.KEYSTORE_PASSWORD }} -o publish-android
+      - name: Create Dev Release
+        uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/master'
+        with:
+          files: |
+            ./publish-android/io.github.moonheart.mementomorihelper-Signed.apk
+          tag_name: dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ./publish-android/io.github.moonheart.mementomorihelper-Signed.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
