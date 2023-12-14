@@ -655,9 +655,9 @@ public partial class MementoMoriFuncs : ReactiveObject
             case TargetSelectStrategy.Random:
                 return Enumerable.MinBy(localplayerInfoList, d => Guid.NewGuid()).playerId;
             case TargetSelectStrategy.LowestBattlePower:
-                return Enumerable.MinBy(localplayerInfoList, d => localplayerInfoList.Min(x => x.defenseBattlePower)).playerId;
+                return Enumerable.MinBy(localplayerInfoList, d => d.defenseBattlePower).playerId;
             case TargetSelectStrategy.HighestBattlePower:
-                return Enumerable.MaxBy(localplayerInfoList, d => localplayerInfoList.Max(x => x.defenseBattlePower)).playerId;
+                return Enumerable.MaxBy(localplayerInfoList, d => d.defenseBattlePower).playerId;
             default:
                 return Enumerable.MinBy(localplayerInfoList, d => Guid.NewGuid()).playerId;
         }
