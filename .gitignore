@@ -24,3 +24,4 @@ MementoMori.AssetDownloader/apk*
 publish-linux-x64
 publish-win-x64
 *.db
+*.keystore

@@ -1,6 +1,4 @@
-﻿using MementoMori.Common;
-
-namespace MementoMori.Maui
+﻿namespace MementoMori.Maui
 {
     public partial class App : Application
     {
