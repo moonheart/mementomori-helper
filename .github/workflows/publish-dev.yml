@@ -125,7 +125,9 @@ jobs:
         run: (Get-Content -Path .\MementoMori.Maui\MementoMori.Maui.csproj -Raw) -replace '<ApplicationDisplayVersion>.*?</ApplicationDisplayVersion>', "<ApplicationDisplayVersion>$((echo v1.2.3) -replace 'v')</ApplicationDisplayVersion>" | Set-Content -Path .\MementoMori.Maui\MementoMori.Maui.csproj
         if: startsWith(github.ref, 'refs/tags/')
       - name: Build Android
-        run: dotnet publish -c Release -f net8.0-android -p:AndroidSigningStorePass=${{ secrets.KEYSTORE_PASSWORD }} -p:AndroidSigningKeyPass=${{ secrets.KEYSTORE_PASSWORD }} -o publish-android
+        run: dotnet publish .\MementoMori.Maui\MementoMori.Maui.csproj -c Release -f net8.0-android -p:AndroidSigningStorePass=$env:KEYSTORE_PASSWORD -p:AndroidSigningKeyPass=$env:KEYSTORE_PASSWORD -o publish-android
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       - name: Create Dev Release
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
