@@ -14,6 +14,7 @@ using MementoMori.WebUI.UI;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Net.Http.Headers;
 using Index = MementoMori.BlazorShared.Pages.Index;
+using Ortega.Common.Manager;
 
 internal class Program
 {
@@ -75,14 +76,8 @@ internal class Program
 
         builder.Services.AddQuartz();
         builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
-
         var app = builder.Build();
         Services.Setup(app.Services);
-
-        app.Services.GetRequiredService<AccountManager>().MigrateToAccountArray();
-        app.Services.GetRequiredService<AccountManager>().CurrentCulture = CultureInfo.CurrentCulture;
-        app.Services.GetRequiredService<MementoNetworkManager>().DownloadMasterCatalog().ConfigureAwait(false).GetAwaiter().GetResult();
-        app.Services.GetRequiredService<MementoNetworkManager>().SetCultureInfo(CultureInfo.CurrentCulture);
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment()) app.UseExceptionHandler("/Error");
@@ -98,8 +93,19 @@ internal class Program
         //app.MapBlazorHub();
         //app.MapFallbackToPage("/_Host");
 
-        app.Services.GetRequiredService<AccountManager>().AutoLogin().ConfigureAwait(false).GetAwaiter().GetResult();
-
+        InitializeAsync(app.Services).ConfigureAwait(false).GetAwaiter().GetResult();
         app.Run();
+    }
+
+    private static async Task InitializeAsync(IServiceProvider sp)
+    {
+        var accountManager = sp.GetRequiredService<AccountManager>();
+        var networkManager = sp.GetRequiredService<MementoNetworkManager>();
+        accountManager.MigrateToAccountArray();
+        accountManager.CurrentCulture = CultureInfo.CurrentCulture;
+        await networkManager.Initialize();
+        await networkManager.DownloadMasterCatalog();
+        networkManager.SetCultureInfo(CultureInfo.CurrentCulture);
+        await accountManager.AutoLogin();
     }
 }

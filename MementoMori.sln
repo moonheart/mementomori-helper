@@ -34,6 +34,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EleCho.GoCqHttpSdk.MessageM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MementoMori.BlazorShared", "MementoMori.BlazorShared\MementoMori.BlazorShared.csproj", "{CF31329A-C865-4519-97FD-30ACA0B3E1B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MementoMori.Maui", "MementoMori.Maui\MementoMori.Maui.csproj", "{C16BBD62-E945-4F87-97D0-353ACC1BE488}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +78,12 @@ Global
 		{CF31329A-C865-4519-97FD-30ACA0B3E1B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF31329A-C865-4519-97FD-30ACA0B3E1B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF31329A-C865-4519-97FD-30ACA0B3E1B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C16BBD62-E945-4F87-97D0-353ACC1BE488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C16BBD62-E945-4F87-97D0-353ACC1BE488}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C16BBD62-E945-4F87-97D0-353ACC1BE488}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{C16BBD62-E945-4F87-97D0-353ACC1BE488}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C16BBD62-E945-4F87-97D0-353ACC1BE488}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C16BBD62-E945-4F87-97D0-353ACC1BE488}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
