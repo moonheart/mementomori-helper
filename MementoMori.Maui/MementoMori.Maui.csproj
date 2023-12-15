@@ -46,6 +46,7 @@
       <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
       <AndroidKeyStore>True</AndroidKeyStore>
       <AndroidSigningKeyAlias>mementomori-helper</AndroidSigningKeyAlias>
+      <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
@@ -53,6 +54,7 @@
       <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
       <AndroidKeyStore>True</AndroidKeyStore>
       <AndroidSigningKeyAlias>mementomori-helper</AndroidSigningKeyAlias>
+      <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
     </PropertyGroup>
 
     <ItemGroup>

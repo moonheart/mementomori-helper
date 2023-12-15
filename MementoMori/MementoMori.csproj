@@ -20,7 +20,6 @@
         <PackageReference Include="ReactiveUI.Fody" Version="19.5.1" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
         <PackageReference Include="System.Reactive" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\MementoMori.Ortega\MementoMori.Ortega.csproj" />
