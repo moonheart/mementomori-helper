@@ -195,7 +195,8 @@ public partial class MementoMoriFuncs
             return;
         }
 
-        while (!cancellationToken.IsCancellationRequested)
+        var shouldStop = false;
+        while (!cancellationToken.IsCancellationRequested && !shouldStop)
         {
             // 获取副本信息
             battleInfoResponse = await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(new GetDungeonBattleInfoRequest());
@@ -250,6 +251,7 @@ public partial class MementoMoriFuncs
                 if (battleCharacterGuids.Count == 0)
                 {
                     log("All character died");
+                    shouldStop = true;
                     return;
                 }
 
