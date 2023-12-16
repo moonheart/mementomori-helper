@@ -5,9 +5,10 @@ namespace MementoMori.WebUI.UI
 {
     public class AtlasManager
     {
+        private const string AssetsPath = "_content/MementoMori.BlazorShared/assets";
         public string GetCharacterIcon(long characterId)
         {
-            return $"assets/CharacterIcon/CHR_{characterId:000000}/CHR_{characterId:000000}_00_s.png";
+            return $"{AssetsPath}/CharacterIcon/CHR_{characterId:000000}/CHR_{characterId:000000}_00_s.png";
         }
         
         public Sprite GetCharacterFrame(CharacterRarityFlags characterRarityFlags)
@@ -29,7 +30,7 @@ namespace MementoMori.WebUI.UI
                 sprite.Height = 150;
                 sprite.X = 176;
                 sprite.Y = 567;
-                sprite.Url = "assets/Atlas/frame_common_watercolor.png";
+                sprite.Url = $"{AssetsPath}/Atlas/frame_common_watercolor.png";
                 return sprite;
             }
             if (rarityFlags < CharacterRarityFlags.LR)
@@ -38,7 +39,7 @@ namespace MementoMori.WebUI.UI
                 sprite.Height = 62;
                 sprite.X = 694;
                 sprite.Y = 738;
-                sprite.Url = "assets/Atlas/frame_common_slice.png";
+                sprite.Url = $"{AssetsPath}/Atlas/frame_common_slice.png";
                 return sprite;
             }
 
@@ -46,7 +47,7 @@ namespace MementoMori.WebUI.UI
             sprite.Height = 62;
             sprite.X = 787;
             sprite.Y = 962;
-            sprite.Url = "assets/Atlas/frame_common_lr_slice.png";
+            sprite.Url = $"{AssetsPath}/Atlas/frame_common_lr_slice.png";
 
             return sprite;
         }
@@ -55,7 +56,7 @@ namespace MementoMori.WebUI.UI
         {
             if ((ClientConst.Icon.NeedFrameDecorationCharacterRarityFlags & characterRarityFlags) == characterRarityFlags)
             {
-                return $"assets/Atlas/frame_decoration_{characterRarityFlags.ToString().ToLower()}.png";
+                return $"{AssetsPath}/Atlas/frame_decoration_{characterRarityFlags.ToString().ToLower()}.png";
             }
 
             return null;
@@ -64,7 +65,7 @@ namespace MementoMori.WebUI.UI
 
         public string GetIconCharacterElement(ElementType elementType)
         {
-            return $"assets/Atlas/icon_element_{(int) elementType}.png";
+            return $"_content/MementoMori.BlazorShared/assets/Atlas/icon_element_{(int) elementType}.png";
         }
 
 

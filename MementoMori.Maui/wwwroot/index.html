@@ -6,6 +6,7 @@
     <title>MementoMori.Maui</title>
     <base href="/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="_content/MementoMori.BlazorShared/css/site.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="MementoMori.Maui.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -23,6 +24,33 @@
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
+    </div>
+    <div style="">
+        <svg xmlns="http://www.w3.org/2000/svg">
+            <filter id="svgTintUR">
+                <feColorMatrix type="matrix" values="0.2784313725490196 0.2784313725490196 0.2784313725490196  0 0 0.00784313725490196 0.00784313725490196 0.00784313725490196  0 0 0 0 0  0 0  0 0 0 1 0" />
+            </filter>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg">
+            <filter id="svgTintSSR">
+                <feColorMatrix type="matrix" values="0.1411764705882353 0.1411764705882353 0.1411764705882353  0 0 0.027450980392156862 0.027450980392156862 0.027450980392156862  0 0 0.2549019607843137 0.2549019607843137 0.2549019607843137  0 0  0 0 0 1 0" />
+            </filter>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg">
+            <filter id="svgTintSR">
+                <feColorMatrix type="matrix" values="0.44313725490196076 0.44313725490196076 0.44313725490196076  0 0 0.2235294117647059 0.2235294117647059 0.2235294117647059  0 0 0.0196078431372549 0.0196078431372549 0.0196078431372549  0 0  0 0 0 1 0" />
+            </filter>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg">
+            <filter id="svgTintR">
+                <feColorMatrix type="matrix" values="0.15294117647058825 0.15294117647058825 0.15294117647058825  0 0 0.18823529411764706 0.18823529411764706 0.18823529411764706  0 0 0.27058823529411763 0.27058823529411763 0.27058823529411763  0 0  0 0 0 1 0" />
+            </filter>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg">
+            <filter id="svgTintN">
+                <feColorMatrix type="matrix" values="0.06666666666666667 0.06666666666666667 0.06666666666666667  0 0 0.0196078431372549 0.0196078431372549 0.0196078431372549  0 0 0.01568627450980392 0.01568627450980392 0.01568627450980392  0 0  0 0 0 1 0"/>
+            </filter>
+        </svg>
     </div>
 
     <script src="_framework/blazor.webview.js" autostart="false"></script>
