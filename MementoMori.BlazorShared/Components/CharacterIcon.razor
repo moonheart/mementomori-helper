@@ -44,10 +44,10 @@
     }
     @if (UserCharacterInfo.RarityFlags > CharacterRarityFlags.LR)
     {
-        var icon = "assets/Atlas/icon_rarity_plus_star_1.png";
+        var icon = "_content/MementoMori.BlazorShared/assets/Atlas/icon_rarity_plus_star_1.png";
         if (characterMb.RarityFlags >= CharacterRarityFlags.LRPlus6)
         {
-            icon = "assets/Atlas/icon_rarity_plus_star_2.png";
+            icon = "_content/MementoMori.BlazorShared/assets/Atlas/icon_rarity_plus_star_2.png";
         }
 
         var count = UserCharacterInfo.RarityFlags switch

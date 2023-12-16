@@ -6,7 +6,7 @@
 }
 
     .character-icon .icon-background {
-        background-image: url(assets/Atlas/plate_character.png);
+        background-image: url(_content/MementoMori.BlazorShared/assets/Atlas/plate_character.png);
         background-size: contain;
         height: 100%;
         width: 100%;
