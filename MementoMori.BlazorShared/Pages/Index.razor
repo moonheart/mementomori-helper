@@ -534,7 +534,7 @@
             var release = JObject.Parse(json);
             var version = release["tag_name"].ToString();
             var newVersion = Version.Parse(version.TrimStart('v'));
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            Assembly assembly = Assembly.GetEntryAssembly();
             var currentVersion = assembly.GetName().Version;
             if (newVersion > currentVersion)
             {

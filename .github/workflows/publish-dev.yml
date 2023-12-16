@@ -118,9 +118,6 @@ jobs:
         run: |
           $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.KEYSTORE_BASE64_ENCODED }}")
           [IO.File]::WriteAllBytes("MementoMori.Maui/mementomori-helper.keystore", $pfx_cert_byte)
-      - name: Set Version in csproj
-        run: (Get-Content -Path .\MementoMori.Maui\MementoMori.Maui.csproj -Raw) -replace '<Version>.*?</Version>', "<Version>$((echo v1.2.3) -replace 'v')</Version>" | Set-Content -Path .\MementoMori.Maui\MementoMori.Maui.csproj
-        if: startsWith(github.ref, 'refs/tags/')
       - name: Set ApplicationDisplayVersion in csproj
         run: (Get-Content -Path .\MementoMori.Maui\MementoMori.Maui.csproj -Raw) -replace '<ApplicationDisplayVersion>.*?</ApplicationDisplayVersion>', "<ApplicationDisplayVersion>$((echo v1.2.3) -replace 'v')</ApplicationDisplayVersion>" | Set-Content -Path .\MementoMori.Maui\MementoMori.Maui.csproj
         if: startsWith(github.ref, 'refs/tags/')
