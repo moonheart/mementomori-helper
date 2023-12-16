@@ -14,7 +14,15 @@
 <MudStack Row="true" Class="justify-start align-center">
     <MudIconButton Icon="@Icons.Material.Filled.Pageview" Size="Size.Small" Variant="Variant.Outlined" OnClick="() => ViewBattleLog(SelectedBattleResult)"></MudIconButton>
     <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small" Variant="Variant.Outlined" OnClick="() => DownloadBattleLog(SelectedBattleResult)"></MudIconButton>
-    <MudSelect @bind-Value="SelectedBattleResult" Dense="true">
+    <MudSelect Label="Battle Type" T="BattleLogType" @bind-Value="selectedBattleLogType" Dense="true">
+        @foreach (BattleLogType battleLogType in Enum.GetValues(typeof(BattleLogType)))
+        {
+            <MudSelectItem Value="battleLogType">
+                <MudText Inline="true">@battleLogType</MudText>
+            </MudSelectItem>
+        }
+    </MudSelect>
+    <MudSelect Label="Log file" @bind-Value="SelectedBattleResult" Dense="true">
         @foreach (var filename in BattleResults)
         {
             <MudSelectItem Value="filename">
@@ -36,6 +44,16 @@
 @code {
     private List<string> BattleResults { get; set; } = new();
 
+    private BattleLogType selectedBattleLogType
+    {
+        get => _selectedBattleLogType;
+        set
+        {
+            _selectedBattleLogType = value;
+            this.GetLogs();
+        }
+    }
+
     private string SelectedBattleResult { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -44,10 +62,20 @@
         {
             return;
         }
+
+        GetLogs();
+    }
+
+    private void GetLogs()
+    {
         var files = Directory.GetFiles(GameConfig.Value.BattleLogDir);
+        var prefix = logTypePrefixes[selectedBattleLogType];
+        BattleResults.Clear();
         foreach (var file in files.OrderDescending())
         {
-            BattleResults.Add(Path.GetFileName(file));
+            var fileName = Path.GetFileName(file);
+            if (!fileName.StartsWith(prefix)) continue;
+            BattleResults.Add(fileName);
         }
         SelectedBattleResult = BattleResults.FirstOrDefault();
     }
@@ -86,5 +114,27 @@
         if (!ReadLogContent(filename, out var json)) return;
         await JS.InvokeVoidAsync("showBattleLog", json);
     }
+
+    public enum BattleLogType
+    {
+        Main,
+        TowerInfinite,
+        TowerBlue,
+        TowerRed,
+        TowerGreen,
+        TowerYellow,
+    }
+
+    private Dictionary<BattleLogType,string> logTypePrefixes = new()
+    {
+        { BattleLogType.Main, "main-" },
+        { BattleLogType.TowerInfinite, "tower-Infinite-" },
+        { BattleLogType.TowerBlue, "tower-Blue-" },
+        { BattleLogType.TowerRed, "tower-Red-" },
+        { BattleLogType.TowerGreen, "tower-Green-" },
+        { BattleLogType.TowerYellow, "tower-Yellow-" },
+    };
+
+    private BattleLogType _selectedBattleLogType = BattleLogType.Main;
 
 }
