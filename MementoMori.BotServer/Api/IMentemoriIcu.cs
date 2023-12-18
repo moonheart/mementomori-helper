@@ -54,7 +54,7 @@ public class PlayerInfo
     public int rank { get; set; }
     public int quest_id { get; set; }
     public int tower_id { get; set; }
-    public int icon_id { get; set; }
+    public long icon_id { get; set; }
     public long guild_id { get; set; }
     public string guild_name { get; set; }
     public long guild_join_time { get; set; }

@@ -222,14 +222,14 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             return;
         }
 
-        var msg = new StringBuilder();
+        var msg = new StringBuilder(tableStyle);
         var chaName = CharacterTable.GetCharacterName(characterMb.Id);
-        msg.AppendLine($"{chaName}的技能\n");
+        msg.AppendLine($"<h1>{chaName}的技能</h1><table>");
         foreach (var skillId in characterMb.ActiveSkillIds)
         {
             var skillMb = ActiveSkillTable.GetById(skillId);
             var name = TextResourceTable.Get(skillMb.NameKey);
-            msg.AppendLine($"{name} 冷却{skillMb.SkillMaxCoolTime}");
+            msg.AppendFormat($"<tr><th width=\"150px\">{name}</th><th>冷却 {skillMb.SkillMaxCoolTime}</th></tr>");
             foreach (var skillInfo in skillMb.ActiveSkillInfos)
             {
                 var description = TextResourceTable.Get(skillInfo.DescriptionKey);
@@ -237,19 +237,15 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
                 {
                     continue;
                 }
-
-                msg.AppendLine(GetSkillDesc(skillInfo.OrderNumber, skillInfo.CharacterLevel, skillInfo.EquipmentRarityFlags));
-                msg.AppendLine($"{description} ");
+                msg.AppendFormat($"<tr><td>{GetSkillDesc(skillInfo.OrderNumber, skillInfo.CharacterLevel, skillInfo.EquipmentRarityFlags)}</td><td>{description}</td></tr>");
             }
-
-            msg.AppendLine();
         }
 
         foreach (var skillId in characterMb.PassiveSkillIds)
         {
             var skillMb = PassiveSkillTable.GetById(skillId);
             var name = TextResourceTable.Get(skillMb.NameKey);
-            msg.AppendLine($"{name}");
+            msg.AppendFormat($"<tr><th>{name}</th><th></th></tr>");
             foreach (var skillInfo in skillMb.PassiveSkillInfos)
             {
                 var description = TextResourceTable.Get(skillInfo.DescriptionKey);
@@ -258,11 +254,9 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
                     continue;
                 }
 
-                msg.AppendLine(GetSkillDesc(skillInfo.OrderNumber, skillInfo.CharacterLevel, skillInfo.EquipmentRarityFlags));
-                msg.AppendLine($"{description} ");
+                msg.AppendFormat($"<tr><td>{GetSkillDesc(skillInfo.OrderNumber, skillInfo.CharacterLevel, skillInfo.EquipmentRarityFlags)}</td><td>{description}</td></tr>");
             }
 
-            msg.AppendLine();
         }
 
         var equipmentMbs = EquipmentTable.GetArray().Where(d => d.Category == EquipmentCategory.Exclusive && (d.RarityFlags & EquipmentRarityFlags.SSR) != 0 && d.EquipmentLv == 180).ToList();
@@ -270,22 +264,34 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         {
             if (EquipmentExclusiveEffectTable.GetById(equipmentMb.ExclusiveEffectId).CharacterId == id)
             {
+                msg.AppendFormat($"<tr><th>专属装备</th><th></th></tr>");
                 var descriptionMb = EquipmentExclusiveSkillDescriptionTable.GetById(equipmentMb.EquipmentExclusiveSkillDescriptionId);
-                msg.AppendLine($"Ex.1 (SSR解锁) {TextResourceTable.Get(descriptionMb.Description1Key)}");
-                msg.AppendLine($"Ex.2 (UR解锁) {TextResourceTable.Get(descriptionMb.Description2Key)}");
-                msg.AppendLine($"Ex.3 (LR解锁) {TextResourceTable.Get(descriptionMb.Description3Key)}");
+                msg.AppendFormat(@$"<tr><td>Ex.1</td><td>{TextResourceTable.Get(descriptionMb.Description1Key)}</td></tr>");
+                msg.AppendFormat(@$"<tr><td>Ex.2</td><td>{TextResourceTable.Get(descriptionMb.Description2Key)}</td></tr>");
+                msg.AppendFormat(@$"<tr><td>Ex.3</td><td>{TextResourceTable.Get(descriptionMb.Description3Key)}</td></tr>");
                 break;
             }
         }
 
-        await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
-
+        msg.AppendLine("</table>");
+        
+        var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
+        {
+            Content = msg.ToString(),
+            Quality = 100,
+            Format = ImageFormat.Jpeg,
+            Width = 1000,
+            MinimumFontSize = 24,
+        });
+   
+        var cqImageMsg = CqImageMsg.FromBytes(bytes);
+        await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
 
         string GetSkillDesc(int orderNumber, long characterLevel, EquipmentRarityFlags equipmentRarityFlags)
         {
             if (equipmentRarityFlags == 0)
             {
-                return $"Lv.{orderNumber} ({characterLevel}级解锁)";
+                return $"Lv.{orderNumber}";
             }
 
             var lvl = equipmentRarityFlags switch
@@ -295,7 +301,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
                 EquipmentRarityFlags.LR => "Ex.3",
                 _ => "未知"
             };
-            return $"{lvl} ({equipmentRarityFlags.ToString()}解锁)";
+            return $"{lvl}";
         }
     }
 
@@ -354,6 +360,22 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
     }
 
+    private const string tableStyle = """
+                                      <style>
+                                      table {
+                                        font-family: arial, sans-serif;
+                                        border-collapse: collapse;
+                                        width: 100%;
+                                      }
+
+                                      td, th {
+                                        border: 1px solid #dddddd;
+                                        text-align: left;
+                                        padding: 4px;
+                                      }
+                                      </style>
+                                      """;
+
     [CqMessageMatch(@"^/主线\s+(?<quest>\d+-\d+)$")]
     public async Task QueryMainQuerst(CqGroupMessagePostContext context, string quest)
     {
@@ -367,8 +389,8 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             return;
         }
 
-        var msg = new StringBuilder();
-        msg.AppendLine($"主线 {quest} 战斗力: {questMb.BaseBattlePower:N0} 潜能宝珠: {questMb.PotentialJewelPerDay:N0}");
+        var msg = new StringBuilder(tableStyle);
+        msg.AppendLine($"<h1>主线 {quest}</h1> <span>战斗力: {CalcNumber(questMb.BaseBattlePower)}</span> <span>潜能宝珠: {CalcNumber(questMb.PotentialJewelPerDay)}</span>");
         var enemies = new List<BossBattleEnemyMB>();
         for (var i = 1; i < 6; i++)
         {
@@ -378,14 +400,38 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
         BuildEnemyInfo(enemies, msg);
 
-        await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
+        var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
+        {
+            Content = msg.ToString(),
+            Quality = 100,
+            Format = ImageFormat.Jpeg,
+            Width = 1000,
+            MinimumFontSize = 24,
+        });
+   
+        var cqImageMsg = CqImageMsg.FromBytes(bytes);
+        await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
     }
 
     private static void BuildEnemyInfo(IReadOnlyList<IBattleEnemy> enemies, StringBuilder msg)
     {
+        msg.AppendLine(@"<table><tr>
+<th>稀有</th>
+<th>Lv</th>
+<th>名称</th>
+<th>素</th>
+<th>速度</th>
+<th>共鸣</th>
+<th>攻击</th>
+<th>防御</th>
+<th>力量</th>
+<th>技力</th>
+<th>魔力</th>
+<th>耐力</th>
+</tr>");
         foreach (var enemyMb in enemies)
         {
-            msg.AppendLine();
+            // msg.AppendLine();
             var rarity = enemyMb.CharacterRarityFlags.GetDesc();
             var lv = enemyMb.EnemyRank;
             var name = TextResourceTable.Get(enemyMb.NameKey);
@@ -393,18 +439,58 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             var connect = "";
             if (enemies.MaxBy(d => d.BattleParameter.Defense) == enemyMb)
             {
-                connect = $"共鸣(高)";
+                connect = $"高";
             }
             else if (enemies.MinBy(d => d.BattleParameter.Defense) == enemyMb)
             {
-                connect = $"共鸣(低)";
+                connect = $"低";
             }
+            
+            msg.AppendLine(@$"<tr>
+<td>{rarity}</td><td>{lv}</td>
+<td>{name}</td><td>{ele}</td>
+<td>{enemyMb.BattleParameter.Speed}</td>
+<td>{connect}</td>
+<td>{CalcNumber(enemyMb.BattleParameter.AttackPower)}</td>
+<td>{CalcNumber(enemyMb.BattleParameter.Defense)}</td>
+<td>{CalcNumber(enemyMb.BaseParameter.Muscle)}</td>
+<td>{CalcNumber(enemyMb.BaseParameter.Energy)}</td>
+<td>{CalcNumber(enemyMb.BaseParameter.Intelligence)}</td>
+<td>{CalcNumber(enemyMb.BaseParameter.Health)}</td>
+</tr>");
 
-            msg.AppendLine($"[{rarity}] Lv.{lv} {name} ({ele}) 速度: {enemyMb.BattleParameter.Speed} {connect}");
-            msg.AppendLine($"力: {enemyMb.BaseParameter.Muscle:N0} 技: {enemyMb.BaseParameter.Energy:N0} 魔: {enemyMb.BaseParameter.Intelligence:N0} 耐: {enemyMb.BaseParameter.Health:N0}");
         }
+        
+        msg.AppendLine("</table>");
     }
 
+    /// <summary>
+    /// 将一个数字转换为可读的字符串，如 1000000 -> 100万，1000000000 -> 10亿，可以设置精确到的小数点位数
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    private static string CalcNumber(long value, int precision = 0)
+    {
+        var unit = new[] {"", "万", "亿", "万亿"};
+        var index = 0;
+        var d = (double) value;
+        while (d >= 10000)
+        {
+            d /= 10000;
+            index++;
+        }
+
+        var num = d.ToString($"F7");
+        num = num.Substring(0, 5);
+        // 去掉最后的小数点
+        if (num.EndsWith("."))
+        {
+            num = num.Substring(0, num.Length - 1);
+        }
+        
+        return $"{num}{unit[index]}";
+    }
+    
     [CqMessageMatch(@"^/(?<towerTypeStr>(无穷|红|黄|绿|蓝))塔\s+(?<quest>\d+)$")]
     public async Task QueryTowerInfo(CqGroupMessagePostContext context, string towerTypeStr, string quest)
     {
@@ -428,8 +514,8 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             return;
         }
 
-        var msg = new StringBuilder();
-        msg.AppendLine($"{towerTypeStr}塔 {quest} ");
+        var msg = new StringBuilder(tableStyle);
+        msg.AppendLine($"<h1>{towerTypeStr}塔 {quest}</h1>");
         var enemies = new List<TowerBattleEnemyMB>();
         foreach (var enemyId in questMb.EnemyIds)
         {
@@ -438,7 +524,17 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
         BuildEnemyInfo(enemies, msg);
 
-        await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
+        var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
+        {
+            Content = msg.ToString(),
+            Quality = 100,
+            Format = ImageFormat.Jpeg,
+            Width = 1000,
+            MinimumFontSize = 24,
+        });
+   
+        var cqImageMsg = CqImageMsg.FromBytes(bytes);
+        await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
     }
 
     [CqMessageMatch(@"^/(?<rankType>战力|等级|主线|塔)排名\s+(?<server>日|韩|亚|美|欧|国际)(?<worldStr>\d+)$")]
@@ -466,8 +562,8 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             return;
         }
 
-        var msg = new StringBuilder();
-        msg.AppendLine($"{server}{world} {rankType}排名");
+        var msg = new StringBuilder(tableStyle);
+        msg.AppendLine($"<h1>{server}{world} {rankType}排名</h1>");
         var infos = rankType switch
         {
             "战力" => playerRanking.data.rankings.bp,
@@ -484,13 +580,25 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             "塔" => p => p.tower_id.ToString(),
             _ => p => p.bp.ToString("N0")
         };
+        msg.AppendLine("<table><tbody>");
         for (var i = 0; i < infos.Count; i++)
         {
             var playerInfo = infos[i];
-            msg.AppendLine($"No.{i + 1:00}\t{playerInfo.name}:\t{selector(playerInfo)}");
+            msg.AppendLine($"<tr><td>No.{i + 1:00}</td><td>{playerInfo.name}</td><td>{selector(playerInfo)}</td></tr>");
         }
+        msg.AppendLine("</tbody></table>");
 
-        await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
+        var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
+        {
+            Content = msg.ToString(),
+            Quality = 100,
+            Format = ImageFormat.Jpeg,
+            MinimumFontSize = 24,
+        });
+   
+        var cqImageMsg = CqImageMsg.FromBytes(bytes);
+        await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
+        // await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
     }
 
     [CqMessageMatch(@"^/竞技场排名\s+(?<server>日|韩|亚|美|欧|国际)(?<worldStr>\d+)$")]
