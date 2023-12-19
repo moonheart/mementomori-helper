@@ -1,0 +1,116 @@
+﻿<MudPaper>
+    <MudSimpleTable Dense="true">
+        <tbody>
+        <tr>
+            <th>进攻符石</th>
+            <td>
+                <MudChip>符石1</MudChip>
+                <MudChip>符石1</MudChip>
+                <MudChip>符石1</MudChip>
+                <MudChip>符石1</MudChip>
+                <MudChip>符石1</MudChip>
+                <MudChip>符石1</MudChip>
+            </td>
+        </tr>
+        <tr>
+            <th>防御符石</th>
+            <td>
+                <MudChip>符石1</MudChip>
+                <MudChip>符石1</MudChip>
+                <MudChip>符石1</MudChip>
+                <MudChip>符石1</MudChip>
+                <MudChip>符石1</MudChip>
+                <MudChip>符石1</MudChip>
+            </td>
+        </tr>
+        </tbody>
+    </MudSimpleTable>
+
+    <MudCard>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudList>
+                    <MudListItem>
+                        <MudCard>
+                            <MudStack>
+                                <MudStack Row="true">
+                                    <MudImage Src="_content/MementoMori.BlazorShared/assets/CharacterIcon/CHR_000008/CHR_000008_00_s.png"></MudImage>
+                                    <MudPaper>
+                                        <MudStack>
+                                            <MudStack Row="true">
+                                                <MudField Label="力" Variant="Variant.Outlined">
+                                                    123123123
+                                                </MudField>
+                                                <MudField Label="战" Variant="Variant.Outlined">
+                                                    23424234
+                                                </MudField>
+                                                <MudField Label="魔" Variant="Variant.Outlined">
+                                                    23424234
+                                                </MudField>
+                                                <MudField Label="耐" Variant="Variant.Outlined">
+                                                    23523432
+                                                </MudField>
+                                            </MudStack>
+                                            <MudStack Row="true">
+                                                <MudField Label="力" Variant="Variant.Outlined">
+                                                    123123123
+                                                </MudField>
+                                                <MudField Label="战" Variant="Variant.Outlined">
+                                                    23424234
+                                                </MudField>
+                                                <MudField Label="魔" Variant="Variant.Outlined">
+                                                    23424234
+                                                </MudField>
+                                                <MudField Label="耐" Variant="Variant.Outlined">
+                                                    23523432
+                                                </MudField>
+                                                <MudField Label="耐" Variant="Variant.Outlined">
+                                                    23523432
+                                                </MudField>
+                                            </MudStack>
+                                        </MudStack>
+
+                                    </MudPaper>
+                                </MudStack>
+                                <MudPaper>
+                                    <MudStack Row="true">
+                                        @for (var i = 0; i < 6; i++)
+                                        {
+                                            <MudStack>
+                                                <MudText>装备名称</MudText>
+                                                <MudField Label="基础属性" Variant="Variant.Outlined">
+                                                    <MudField Label="攻击力">1531351</MudField>
+                                                </MudField>
+                                                <MudField Label="附加属性" Variant="Variant.Outlined">
+                                                    <MudField Label="力量">1531351</MudField>
+                                                    <MudField Label="耐力">1531351</MudField>
+                                                    <MudField Label="战技">1531351</MudField>
+                                                </MudField>
+                                                <MudField Label="神装效果" Variant="Variant.Outlined">
+                                                    <MudField Label="圣装 4">攻：544545</MudField>
+                                                    <MudField Label="魔装 4">攻：544545</MudField>
+                                                </MudField>
+                                                <MudField Label="符石" Variant="Variant.Outlined">
+                                                    <MudField Label="攻击力符石">攻：544545</MudField>
+                                                    <MudField Label="攻击力符石">攻：544545</MudField>
+                                                    <MudField Label="攻击力符石">攻：544545</MudField>
+                                                    <MudField Label="攻击力符石">攻：544545</MudField>
+                                                </MudField>
+                                            </MudStack>
+                                        }
+                                    </MudStack>
+                                </MudPaper>
+                            </MudStack>
+                        </MudCard>
+                    </MudListItem>
+                </MudList>
+            </MudItem>
+            <MudItem xs="6"></MudItem>
+        </MudGrid>
+    </MudCard>
+
+</MudPaper>
+
+@code {
+
+}
