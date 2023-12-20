@@ -32,9 +32,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EleCho.GoCqHttpSdk", "refs\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EleCho.GoCqHttpSdk.MessageMatching", "refs\elecho.gocqhttpsdk\src\EleCho.GoCqHttpSdk.MessageMatching\EleCho.GoCqHttpSdk.MessageMatching.csproj", "{E639DAC7-E8A5-461E-B199-9DCB87B3469A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MementoMori.BlazorShared", "MementoMori.BlazorShared\MementoMori.BlazorShared.csproj", "{CF31329A-C865-4519-97FD-30ACA0B3E1B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MementoMori.BlazorShared", "MementoMori.BlazorShared\MementoMori.BlazorShared.csproj", "{CF31329A-C865-4519-97FD-30ACA0B3E1B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MementoMori.Maui", "MementoMori.Maui\MementoMori.Maui.csproj", "{C16BBD62-E945-4F87-97D0-353ACC1BE488}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MementoMori.Maui", "MementoMori.Maui\MementoMori.Maui.csproj", "{C16BBD62-E945-4F87-97D0-353ACC1BE488}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -37,7 +37,7 @@ public static class UserSyncDataExtensions
         };
         return userCharacterInfo;
     }
-    
+
     public static UserCharacterInfo GetUserCharacterInfoByUserCharacterGuid(this UserSyncData userSyncData, string userCharacterGuid)
     {
         UserCharacterDtoInfo userCharacterDtoInfoByGuid = userSyncData.GetUserCharacterDtoInfoByGuid(userCharacterGuid);
@@ -45,19 +45,21 @@ public static class UserSyncDataExtensions
         {
             return null;
         }
+
         return userSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(userCharacterDtoInfoByGuid);
     }
-    
+
     public static UserCharacterDtoInfo GetUserCharacterDtoInfoByGuid(this UserSyncData userSyncData, string userCharacterGuid)
     {
         return userSyncData.UserCharacterDtoInfos.FirstOrDefault(d => d.Guid == userCharacterGuid);
     }
 
-    
+
     public static bool IsLevelLinkMember(this UserSyncData userSyncData, string userCharacterGuid)
     {
         return userSyncData.UserLevelLinkMemberDtoInfos.Exists(d => d.UserCharacterGuid == userCharacterGuid);
     }
+
     public static long GetLevelLinkLevel(this UserSyncData userSyncData, long characterId)
     {
         CharacterMB byId = Masters.CharacterTable.GetById(characterId);
@@ -75,9 +77,10 @@ public static class UserSyncDataExtensions
         return 0;
     }
 
-    public static List<UserEquipmentDtoInfo> GetUserEquipmentDtoInfosByCharacterGuid(this UserSyncData userSyncData, string characterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
+    public static List<UserEquipmentDtoInfo> GetUserEquipmentDtoInfosByCharacterGuid(this UserSyncData userSyncData, string characterGuid,
+        LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
     {
-        if(userSyncData.LockedEquipmentCharacterGuidListMap.TryGetValue(lockEquipmentDeckType, out var guids) && !guids.IsNullOrEmpty())
+        if (userSyncData.LockedEquipmentCharacterGuidListMap.TryGetValue(lockEquipmentDeckType, out var guids) && !guids.IsNullOrEmpty())
         {
             return userSyncData.GetLockedUserEquipmentDtoInfosByCharacterGuid(characterGuid, lockEquipmentDeckType);
         }
@@ -91,7 +94,8 @@ public static class UserSyncDataExtensions
         return userEquipmentDtoInfos;
     }
 
-    public static List<UserEquipmentDtoInfo> GetLockedUserEquipmentDtoInfosByCharacterGuid(this UserSyncData syncData, string characterGuid, LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
+    public static List<UserEquipmentDtoInfo> GetLockedUserEquipmentDtoInfosByCharacterGuid(this UserSyncData syncData, string characterGuid,
+        LockEquipmentDeckType lockEquipmentDeckType = LockEquipmentDeckType.None)
     {
         var userEquipmentDtoInfos = new List<UserEquipmentDtoInfo>();
         if (characterGuid.IsNullOrEmpty() || !syncData.LockedUserEquipmentDtoInfoListMap.TryGetValue(lockEquipmentDeckType, out var userEquipmentDtoInfos1))
@@ -115,11 +119,13 @@ public static class UserSyncDataExtensions
         {
             userEquipmentDtoInfos[equipmentSlotType] = null;
         }
+
         if (string.IsNullOrEmpty(characterGuid))
         {
             return userEquipmentDtoInfos;
         }
-        foreach (var userEquipmentDtoInfo in userSyncData.UserEquipmentDtoInfos.Where(d=>d.CharacterGuid == characterGuid))
+
+        foreach (var userEquipmentDtoInfo in userSyncData.UserEquipmentDtoInfos.Where(d => d.CharacterGuid == characterGuid))
         {
             var equipmentMb = Masters.EquipmentTable.GetById(userEquipmentDtoInfo.EquipmentId);
             userEquipmentDtoInfos[equipmentMb.SlotType] = userEquipmentDtoInfo;
@@ -127,7 +133,7 @@ public static class UserSyncDataExtensions
 
         return userEquipmentDtoInfos;
     }
-    
+
     public static int GetChangedSetEquipmentCount(this UserSyncData userSyncData, string userCharacterGuid, long equipmentSetId, EquipmentSlotType slotType)
     {
         if (userCharacterGuid.IsNullOrEmpty() || equipmentSetId <= 0)
@@ -149,6 +155,7 @@ public static class UserSyncDataExtensions
 
             count++;
         }
+
         return count;
     }
 
@@ -157,4 +164,24 @@ public static class UserSyncDataExtensions
         return usersyncData?.UserItemDtoInfo?.ToList().Find(x => x.ItemType == itemType && (itemId == 0 || x.ItemId == itemId))?.ItemCount ?? 0;
     }
 
+    public static List<(UserItemDtoInfo, SphereMB)> GetSpheres(this UserSyncData userSyncData)
+    {
+        return userSyncData.UserItemDtoInfo.ToList().FindAll(x => x.ItemType == ItemType.Sphere && x.ItemCount > 0).Select(x =>
+        {
+            var sphereMb = Masters.SphereTable.GetById(x.ItemId);
+            return (x, sphereMb);
+        }).ToList();
+    }
+
+    public static List<UserCharacterDtoInfo> GetDeckUserCharacterDtoInfos(this UserSyncData userSyncData, DeckUseContentType deckUseContentType)
+    {
+        var userDeckDtoInfo = userSyncData.UserDeckDtoInfos.Find(d => d.DeckUseContentType == deckUseContentType);
+        if (userDeckDtoInfo == null)
+        {
+            return new List<UserCharacterDtoInfo>();
+        }
+
+        var guids = userDeckDtoInfo.GetUserCharacterGuids();
+        return userSyncData.UserCharacterDtoInfos.Where(d => guids.Contains(d.Guid)).ToList();
+    }
 }

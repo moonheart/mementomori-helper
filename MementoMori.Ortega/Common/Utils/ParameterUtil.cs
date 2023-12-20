@@ -24,6 +24,20 @@ namespace MementoMori.Ortega.Common.Utils
 			}
 		}
 
+        public static (string key, string value) GetBaseOrBattleParameterChangeText(BattleParameterChangeInfo battleParameterChangeInfo, BaseParameterChangeInfo baseParameterChangeInfo)
+        {
+            if (battleParameterChangeInfo != null)
+            {
+                return (Masters.TextResourceTable.Get(battleParameterChangeInfo.BattleParameterType), GetBaseParameterValueText(battleParameterChangeInfo.ChangeParameterType, (long) battleParameterChangeInfo.Value));
+            }
+
+            if (baseParameterChangeInfo != null)
+            {
+                return (Masters.TextResourceTable.Get(baseParameterChangeInfo.BaseParameterType), GetBaseParameterValueText(baseParameterChangeInfo.ChangeParameterType, (long) baseParameterChangeInfo.Value));
+            }
+            return (null, null);
+        }
+
 		public static string GetBaseParameterValueText(BaseParameterChangeInfo baseParameterChangeInfo)
 		{
 			return GetBaseParameterValueText(baseParameterChangeInfo.ChangeParameterType, baseParameterChangeInfo.Value);

@@ -1,55 +1,46 @@
 ﻿using MementoMori.Ortega.Common;
 using MementoMori.Ortega.Share.Enums;
+using MementoMori.Ortega.Share.Master.Data;
 
 namespace MementoMori.WebUI.UI
 {
     public class AtlasManager
     {
         private const string AssetsPath = "_content/MementoMori.BlazorShared/assets";
+
         public string GetCharacterIcon(long characterId)
         {
             return $"{AssetsPath}/CharacterIcon/CHR_{characterId:000000}/CHR_{characterId:000000}_00_s.png";
         }
-        
-        public Sprite GetCharacterFrame(CharacterRarityFlags characterRarityFlags)
+
+        public string GetCharacterFrame(CharacterRarityFlags characterRarityFlags)
         {
             if (characterRarityFlags > CharacterRarityFlags.LR)
             {
                 characterRarityFlags = CharacterRarityFlags.LR;
             }
-            var sprite = new Sprite();
-            GetFrameCharacter(characterRarityFlags, sprite);
-            return sprite;
+
+            return characterRarityFlags switch
+            {
+                CharacterRarityFlags.None => $"{AssetsPath}/Atlas/frame_common_watercolor.png",
+                < CharacterRarityFlags.LR => $"{AssetsPath}/Atlas/frame_common_slice.png",
+                _ => $"{AssetsPath}/Atlas/frame_common_lr_slice.png"
+            };
         }
 
-        private Sprite GetFrameCharacter(CharacterRarityFlags rarityFlags, Sprite sprite)
+        public string GetItemFrame(ItemRarityFlags itemRarityFlags)
         {
-            if (rarityFlags == CharacterRarityFlags.None)
+            if (itemRarityFlags > ItemRarityFlags.LR)
             {
-                sprite.Width = 146;
-                sprite.Height = 150;
-                sprite.X = 176;
-                sprite.Y = 567;
-                sprite.Url = $"{AssetsPath}/Atlas/frame_common_watercolor.png";
-                return sprite;
-            }
-            if (rarityFlags < CharacterRarityFlags.LR)
-            {
-                sprite.Width = 62;
-                sprite.Height = 62;
-                sprite.X = 694;
-                sprite.Y = 738;
-                sprite.Url = $"{AssetsPath}/Atlas/frame_common_slice.png";
-                return sprite;
+                itemRarityFlags = ItemRarityFlags.LR;
             }
 
-            sprite.Width = 62;
-            sprite.Height = 62;
-            sprite.X = 787;
-            sprite.Y = 962;
-            sprite.Url = $"{AssetsPath}/Atlas/frame_common_lr_slice.png";
-
-            return sprite;
+            return itemRarityFlags switch
+            {
+                ItemRarityFlags.None => $"{AssetsPath}/Atlas/frame_common_watercolor.png",
+                < ItemRarityFlags.LR => $"{AssetsPath}/Atlas/frame_common_slice.png",
+                _ => $"{AssetsPath}/Atlas/frame_common_lr_slice.png"
+            };
         }
 
         public string GetCharacterFrameDecoration(CharacterRarityFlags characterRarityFlags)
@@ -62,12 +53,15 @@ namespace MementoMori.WebUI.UI
             return null;
         }
 
-
         public string GetIconCharacterElement(ElementType elementType)
         {
             return $"_content/MementoMori.BlazorShared/assets/Atlas/icon_element_{(int) elementType}.png";
         }
 
-
+        public string GetSphereIcon(SphereMB sphereMb, bool isMini = false)
+        {
+            var filename = $"SPH_{sphereMb.CategoryId:00}{(int) (isMini ? SphereType.EquipmentIcon : sphereMb.SphereType):00}";
+            return $"{AssetsPath}/Sphere/{filename}.png";
+        }
     }
 }

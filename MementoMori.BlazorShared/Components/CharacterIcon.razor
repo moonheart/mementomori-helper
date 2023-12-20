@@ -11,10 +11,11 @@
     var deco = AtlasManager.GetCharacterFrameDecoration(UserCharacterInfo.RarityFlags);
     var characterMb = Masters.CharacterTable.GetById(UserCharacterInfo.CharacterId);
     var element = AtlasManager.GetIconCharacterElement(characterMb.ElementType);
-    var scale = Size / 128.0;
+    var scale = Size / 128.0; // 128 默认大小
     var isLevelLinkMember = AccountManager.Current.Funcs.UserSyncData.IsLevelLinkMember(UserCharacterInfo.Guid);
     var level = isLevelLinkMember ? AccountManager.Current.Funcs.UserSyncData.GetLevelLinkLevel(UserCharacterInfo.CharacterId) : UserCharacterInfo.Level;
-    var filter = UserCharacterInfo.RarityFlags switch {
+    var filter = UserCharacterInfo.RarityFlags switch
+    {
         CharacterRarityFlags.None => "none",
         CharacterRarityFlags.N => "url(#svgTintN)",
         CharacterRarityFlags.R => "url(#svgTintR)",
@@ -25,53 +26,54 @@
         CharacterRarityFlags.SSRPlus => "url(#svgTintSSR)",
         CharacterRarityFlags.UR => "url(#svgTintUR)",
         CharacterRarityFlags.URPlus => "url(#svgTintUR)",
-        _ => "none",
-        };
+        _ => "none"
+    };
 }
-
-<div class="character-icon" style="transform:scale(@(scale));">
-    <div class="icon-background"></div>
-    <div class="icon-avatar" style="background-image: url(@AtlasManager.GetCharacterIcon(UserCharacterInfo.CharacterId));"></div>
-    <div class="icon-border" style="border-image-source: url(@sprite.Url);filter: @(filter);"></div>
-    <span class="icon-level" style="color: @(isLevelLinkMember ? "#abe4e6" : "white");">Lv @level</span>
-    @if (!string.IsNullOrEmpty(deco))
-    {
-        <img class="icon-deco" src="@deco"/>
-    }
-    @if (!string.IsNullOrEmpty(element))
-    {
-        <img class="icon-element" src="@element"/>
-    }
-    @if (UserCharacterInfo.RarityFlags > CharacterRarityFlags.LR)
-    {
-        var icon = "_content/MementoMori.BlazorShared/assets/Atlas/icon_rarity_plus_star_1.png";
-        if (characterMb.RarityFlags >= CharacterRarityFlags.LRPlus6)
+<div style="width:@(Size)px; height:@(Size)px;">
+    <div class="character-icon" style="transform:scale(@(scale));">
+        <div class="icon-background"></div>
+        <div class="icon-avatar" style="background-image: url(@AtlasManager.GetCharacterIcon(UserCharacterInfo.CharacterId));"></div>
+        <div class="icon-border" style="border-image-source: url(@sprite);filter: @(filter);"></div>
+        <span class="icon-level" style="color: @(isLevelLinkMember ? "#abe4e6" : "white");">Lv @level</span>
+        @if (!string.IsNullOrEmpty(deco))
         {
-            icon = "_content/MementoMori.BlazorShared/assets/Atlas/icon_rarity_plus_star_2.png";
+            <img class="icon-deco" src="@deco"/>
         }
-
-        var count = UserCharacterInfo.RarityFlags switch
+        @if (!string.IsNullOrEmpty(element))
         {
-            CharacterRarityFlags.LRPlus => 1,
-            CharacterRarityFlags.LRPlus2 => 2,
-            CharacterRarityFlags.LRPlus3 => 3,
-            CharacterRarityFlags.LRPlus4 => 4,
-            CharacterRarityFlags.LRPlus5 => 5,
-            CharacterRarityFlags.LRPlus6 => 1,
-            CharacterRarityFlags.LRPlus7 => 2,
-            CharacterRarityFlags.LRPlus8 => 3,
-            CharacterRarityFlags.LRPlus9 => 4,
-            CharacterRarityFlags.LRPlus10 => 5,
-            _ => 0
+            <img class="icon-element" src="@element"/>
+        }
+        @if (UserCharacterInfo.RarityFlags > CharacterRarityFlags.LR)
+        {
+            var icon = "_content/MementoMori.BlazorShared/assets/Atlas/icon_rarity_plus_star_1.png";
+            if (characterMb.RarityFlags >= CharacterRarityFlags.LRPlus6)
+            {
+                icon = "_content/MementoMori.BlazorShared/assets/Atlas/icon_rarity_plus_star_2.png";
+            }
+
+            var count = UserCharacterInfo.RarityFlags switch
+            {
+                CharacterRarityFlags.LRPlus => 1,
+                CharacterRarityFlags.LRPlus2 => 2,
+                CharacterRarityFlags.LRPlus3 => 3,
+                CharacterRarityFlags.LRPlus4 => 4,
+                CharacterRarityFlags.LRPlus5 => 5,
+                CharacterRarityFlags.LRPlus6 => 1,
+                CharacterRarityFlags.LRPlus7 => 2,
+                CharacterRarityFlags.LRPlus8 => 3,
+                CharacterRarityFlags.LRPlus9 => 4,
+                CharacterRarityFlags.LRPlus10 => 5,
+                _ => 0
             };
 
-        <div class="icon-rarity-star-container">
-            @for (var i = 0; i < count; i++)
-            {
-                <img class="icon-rarity-star" src="@icon"/>
-            }
-        </div>
-    }
+            <div class="icon-rarity-star-container">
+                @for (var i = 0; i < count; i++)
+                {
+                    <img class="icon-rarity-star" src="@icon"/>
+                }
+            </div>
+        }
+    </div>
 </div>
 
 @code {

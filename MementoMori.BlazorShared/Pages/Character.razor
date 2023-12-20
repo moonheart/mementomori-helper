@@ -218,18 +218,7 @@
                                                 {
                                                     var sphereMb = Masters.SphereTable.GetById(id);
                                                     var name = $"{Masters.TextResourceTable.Get(sphereMb.NameKey)} Lv{sphereMb.Lv}";
-                                                    string key;
-                                                    string value;
-                                                    if (sphereMb.BattleParameterChangeInfo != null)
-                                                    {
-                                                        key = Masters.TextResourceTable.Get(sphereMb.BattleParameterChangeInfo.BattleParameterType);
-                                                        value = ParameterUtil.GetBaseParameterValueText(sphereMb.BattleParameterChangeInfo.ChangeParameterType, (long) sphereMb.BattleParameterChangeInfo.Value);
-                                                    }
-                                                    else
-                                                    {
-                                                        key = Masters.TextResourceTable.Get(sphereMb.BaseParameterChangeInfo.BaseParameterType);
-                                                        value = ParameterUtil.GetBaseParameterValueText(sphereMb.BaseParameterChangeInfo.ChangeParameterType, (long) sphereMb.BaseParameterChangeInfo.Value);
-                                                    }
+                                                    var (key, value) = ParameterUtil.GetBaseOrBattleParameterChangeText(sphereMb.BattleParameterChangeInfo, sphereMb.BaseParameterChangeInfo);
                                                     <MudField Label="@name">@key @value</MudField>
                                                 }
                                             </MudStack>
