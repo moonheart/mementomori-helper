@@ -46,62 +46,41 @@
                     <MudListItem>
                         @foreach (var characterDto in UserCharacterDtoInfos)
                         {
+                            var characterIcon = AtlasManager.GetCharacterIcon(characterDto.CharacterId);
                             var (baseParameter, battleParameter) = BattlePowerCalculatorUtil.CalcCharacterBattleParameter(AccountInfo.UserId, characterDto.Guid);
 
                             <MudCard>
                                 <MudStack>
                                     <MudStack Row="true">
-                                        <MudImage Src="_content/MementoMori.BlazorShared/assets/CharacterIcon/CHR_000008/CHR_000008_00_s.png"></MudImage>
+                                        <MudImage Src="@characterIcon" ObjectFit="ObjectFit.Contain"></MudImage>
                                         <MudPaper>
-                                            <MudStack>
-                                                <MudStack Row="true" Class="flex-wrap">
+                                            <MudStack Spacing="0" Row="true" Class="flex-wrap">
                                                     @foreach (var type in EnumUtil.GetValueList<BaseParameterType>())
                                                     {
-                                                        var name = Masters.TextResourceTable.Get(type);
+                                                        var name = Tr(type);
                                                         var value = baseParameter.GetValue(type);
-                                                        <MudField Label="@name" Style="min-width: 60px">
+                                                        <MudField Label="@name" Style="min-width: 60px" InnerPadding="false">
                                                             @(value.ToString("N0"))
                                                         </MudField>
                                                     }
-                                                </MudStack>
-                                                <MudStack Row="true" Class="flex-wrap">
                                                     @foreach (var type in EnumUtil.GetValueList<BattleParameterType>())
                                                     {
-                                                        var name = Masters.TextResourceTable.Get(type);
+                                                        var name = Tr(type);
                                                         var value = battleParameter.GetParameter(type);
-                                                        <MudField Label="@name" Style="min-width: 90px">
+                                                        <MudField Label="@name" Style="min-width: 60px" InnerPadding="false">
                                                             @(value.ToString("N0"))
                                                         </MudField>
                                                     }
-                                                </MudStack>
                                             </MudStack>
                                         </MudPaper>
                                     </MudStack>
                                     <MudPaper>
-                                        <MudStack Row="true">
-                                            @for (var i = 0; i < 6; i++)
+                                        <MudStack Row="true" Spacing="1">
+                                            @foreach (var (slotType, equipment) in Funcs.UserSyncData.GetUserEquipmentDtoInfoSlotTypeDictionaryByCharacterGuid(characterDto.Guid))
                                             {
-                                                <MudStack>
-                                                    <MudText>装备名称</MudText>
-                                                    <MudField Label="基础属性" Variant="Variant.Outlined">
-                                                        <MudField Label="攻击力">1531351</MudField>
-                                                    </MudField>
-                                                    <MudField Label="附加属性" Variant="Variant.Outlined">
-                                                        <MudField Label="力量">1531351</MudField>
-                                                        <MudField Label="耐力">1531351</MudField>
-                                                        <MudField Label="战技">1531351</MudField>
-                                                    </MudField>
-                                                    <MudField Label="神装效果" Variant="Variant.Outlined">
-                                                        <MudField Label="圣装 4">攻：544545</MudField>
-                                                        <MudField Label="魔装 4">攻：544545</MudField>
-                                                    </MudField>
-                                                    <MudField Label="符石" Variant="Variant.Outlined">
-                                                        <MudField Label="攻击力符石">攻：544545</MudField>
-                                                        <MudField Label="攻击力符石">攻：544545</MudField>
-                                                        <MudField Label="攻击力符石">攻：544545</MudField>
-                                                        <MudField Label="攻击力符石">攻：544545</MudField>
-                                                    </MudField>
-                                                </MudStack>
+                                                var equipmentMb = Masters.EquipmentTable.GetById(equipment.EquipmentId);
+                                                var changedSetEquipmentCount = Funcs.UserSyncData.GetChangedSetEquipmentCount(equipment.CharacterGuid, equipmentMb.EquipmentSetId, slotType);
+                                                <EquipmentInfo EquipmentDtoInfo="equipment" ChangedSetEquipmentCount="changedSetEquipmentCount" MiniMode="true" />
                                             }
                                         </MudStack>
                                     </MudPaper>

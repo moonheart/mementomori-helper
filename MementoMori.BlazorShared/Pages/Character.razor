@@ -5,18 +5,13 @@
 @using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Data.DtoInfo
 @using MementoMori.Ortega.Share.Enums
-@using System.Collections.ObjectModel
-@using DynamicData.Binding
 @using MementoMori.Ortega.Common.Utils
 @using MementoMori.Ortega.Custom
-@using MementoMori.Ortega.Share.Calculators
 @using MementoMori.Ortega.Share.Data.Battle
 @using MementoMori.Ortega.Share.Data.Character
-@using MementoMori.Ortega.Share.Data.Equipment
 @using MementoMori.Ortega.Share.Utils
 @using MementoMori.Common.Localization
 @using MementoMori.BlazorShared.Components
-@using ReactiveUI
 
 <PageTitle>@Masters.TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")</PageTitle>
 @if (!string.IsNullOrEmpty(alertMessage))
@@ -82,148 +77,10 @@
                                     continue;
                                 }
                                 var equipmentMb = Masters.EquipmentTable.GetById(equipmentDtoInfo.EquipmentId);
-                                var equipmentName = Masters.TextResourceTable.Get(equipmentMb.NameKey);
-                                var baseEffect = EquipmentUtil.GetEquipmentReinforcementBaseParameter(equipmentDtoInfo.EquipmentId, equipmentDtoInfo.ReinforcementLv);
-                                var sacredType = equipmentDtoInfo.GetSacredTreasureType();
+                                var changedSetEquipmentCount = ViewModel.UserSyncData.GetChangedSetEquipmentCount(_selectedCharactor.Guid, equipmentMb.EquipmentSetId, slotType);
 
                                 <MudTabPanel Text="@slotName">
-                                    <MudField Variant="Variant.Outlined" Label="@ResourceStrings.Name">
-                                        <MudStack Row="true">
-                                            <MudText>@equipmentName</MudText>
-                                            <MudText>@(Masters.TextResourceTable.Get(equipmentMb.RarityFlags))</MudText>
-                                            <MudText>@(equipmentDtoInfo.ReinforcementLv)/@(equipmentMb.EquipmentLv)</MudText>
-                                        </MudStack>
-                                    </MudField>
-                                    <MudField Variant="Variant.Outlined" Label="@(Masters.TextResourceTable.Get("[CharacterEquipmentBasicEffect]"))">
-                                        <MudStack Row="true">
-                                            <MudField Label="@(Masters.TextResourceTable.Get(baseEffect.BattleParameterType))">
-                                                @(Math.Round(baseEffect.Value))
-                                            </MudField>
-                                        </MudStack>
-                                    </MudField>
-                                    <MudField Variant="Variant.Outlined" Label="@(Masters.TextResourceTable.Get("[CharacterEquipmentAdditionalEffect]"))">
-                                        <MudStack Row="true">
-                                            @foreach (var type in EnumUtil.GetValueList<BaseParameterType>())
-                                            {
-                                                <MudField Label="@(Masters.TextResourceTable.Get(type))">
-                                                    @(equipmentDtoInfo.GetAdditionalParameter(type))
-                                                </MudField>
-                                            }
-                                        </MudStack>
-                                    </MudField>
-                                    @if (sacredType != SacredTreasureType.None)
-                                    {
-                                        <MudField Variant="Variant.Outlined" Label="@(Masters.TextResourceTable.Get("[EquipmentSacredTreasureBonusLabel]"))">
-                                            <MudStack Row="true">
-                                                @if (sacredType == SacredTreasureType.DualStatus || sacredType == SacredTreasureType.Legend)
-                                                {
-                                                    var info = @EquipmentUtil.GetSacredParameter(equipmentMb.SlotType, equipmentDtoInfo.LegendSacredTreasureLv, SacredTreasureType.Legend);
-                                                    var value = info.Value.ToString();
-                                                    if (info.ChangeParameterType == ChangeParameterType.AdditionPercent)
-                                                    {
-                                                        value = $"{info.Value / 100}%";
-                                                    }
-                                                    <MudField Label="@Masters.TextResourceTable.Get("[CommonItemLegendGenialLevelFormat]", equipmentDtoInfo.LegendSacredTreasureLv)">
-                                                        @(Masters.TextResourceTable.Get(info.BattleParameterType)) @(value)
-                                                    </MudField>
-                                                }
-                                                @if (sacredType == SacredTreasureType.DualStatus || sacredType == SacredTreasureType.Matchless)
-                                                {
-                                                    var info = EquipmentUtil.GetSacredParameter(equipmentMb.SlotType, equipmentDtoInfo.MatchlessSacredTreasureLv, SacredTreasureType.Matchless);
-                                                    var value = info.Value.ToString();
-                                                    if (info.ChangeParameterType == ChangeParameterType.AdditionPercent)
-                                                    {
-                                                        value = $"{info.Value / 100}%";
-                                                    }
-                                                    <MudField Label="@Masters.TextResourceTable.Get("[CommonItemMatchlessGenialLevelFormat]", equipmentDtoInfo.MatchlessSacredTreasureLv)">
-                                                        @(Masters.TextResourceTable.Get(info.BattleParameterType)) @(value)
-                                                    </MudField>
-                                                }
-                                            </MudStack>
-                                        </MudField>
-                                    }
-                                    @if (equipmentMb.EquipmentSetId > 0)
-                                    {
-                                        var equipmentSetMb = Masters.EquipmentSetTable.GetById(equipmentMb.EquipmentSetId);
-                                        var setName = Masters.TextResourceTable.Get(equipmentSetMb.NameKey);
-                                        var changedSetEquipmentCount = ViewModel.UserSyncData.GetChangedSetEquipmentCount(_selectedCharactor.Guid, equipmentMb.EquipmentSetId, slotType);
-
-                                        <MudField Variant="Variant.Outlined" Label="@($"{setName} {Masters.TextResourceTable.Get("[CharacterEquipmentSeriesEffect]")}")">
-                                            <MudStack Row="true">
-                                                @foreach (var info in equipmentSetMb.EffectList)
-                                                {
-                                                    string key;
-                                                    string value;
-                                                    if (info.BattleParameterChangeInfo != null)
-                                                    {
-                                                        key = Masters.TextResourceTable.Get(info.BattleParameterChangeInfo.BattleParameterType);
-                                                        value = ParameterUtil.GetBaseParameterValueText(info.BattleParameterChangeInfo.ChangeParameterType, info.BattleParameterChangeInfo.Value);
-                                                    }
-                                                    else
-                                                    {
-                                                        key = Masters.TextResourceTable.Get(info.BaseParameterChangeInfo.BaseParameterType);
-                                                        value = ParameterUtil.GetBaseParameterValueText(info.BaseParameterChangeInfo.ChangeParameterType, info.BaseParameterChangeInfo.Value);
-                                                    }
-                                                    <MudField Label="@Masters.TextResourceTable.Get("[EquipmentSet]", info.RequiredEquipmentCount)" Disabled="changedSetEquipmentCount < info.RequiredEquipmentCount">
-                                                        @key @value
-                                                    </MudField>
-                                                }
-                                            </MudStack>
-                                        </MudField>
-                                    }
-                                    @if (equipmentMb.ExclusiveEffectId > 0)
-                                    {
-                                        var effectMb = Masters.EquipmentExclusiveEffectTable.GetById(equipmentMb.ExclusiveEffectId);
-                                        var skillDescriptionMb = Masters.EquipmentExclusiveSkillDescriptionTable.GetById(equipmentMb.EquipmentExclusiveSkillDescriptionId);
-                                        var desKeys = new[] {skillDescriptionMb.Description1Key, skillDescriptionMb.Description2Key, skillDescriptionMb.Description3Key};
-
-                                        <MudField Label="@(Masters.TextResourceTable.Get("[CharacterEquipmentExclusiveSkillEffect]"))" Variant="Variant.Outlined">
-                                            @for (var i = 0; i < OrtegaConst.Equipment.ActiveExclusiveSkillRaritys.Count; i++)
-                                            {
-                                                var r = OrtegaConst.Equipment.ActiveExclusiveSkillRaritys[i];
-                                                var label = $"Lv.{i + 1}";
-                                                if (equipmentMb.RarityFlags < r)
-                                                {
-                                                    label = $"{label} {Masters.TextResourceTable.Get("[EquipmentExclusiveSkillReleaseConditionFormat]", Masters.TextResourceTable.Get(r))}";
-                                                }
-
-                                                var i1 = i;
-                                                <MudField Label="@label" Disabled="@(equipmentMb.RarityFlags < r)">
-                                                    @Masters.TextResourceTable.Get(desKeys[i1])
-                                                </MudField>
-                                            }
-                                        </MudField>
-                                        <MudField Label="@(Masters.TextResourceTable.Get("[CharacterEquipmentExclusivePassiveEffect]"))" Variant="Variant.Outlined">
-                                            <MudStack Row="true">
-                                                @foreach (var info in effectMb.BaseParameterChangeInfoList ?? Array.Empty<BaseParameterChangeInfo>())
-                                                {
-                                                    var key = Masters.TextResourceTable.Get(info.BaseParameterType);
-                                                    var value = ParameterUtil.GetBaseParameterValueText(info.ChangeParameterType, info.Value);
-                                                    <MudField Label="@key">@value</MudField>
-                                                }
-                                                @foreach (var info in effectMb.BattleParameterChangeInfoList ?? Array.Empty<BattleParameterChangeInfo>())
-                                                {
-                                                    var key = Masters.TextResourceTable.Get(info.BattleParameterType);
-                                                    var value = ParameterUtil.GetBaseParameterValueText(info.ChangeParameterType, info.Value);
-                                                    <MudField Label="@key">@value</MudField>
-                                                }
-                                            </MudStack>
-                                        </MudField>
-                                    }
-                                    @{
-                                        var sphereIds = new[] {equipmentDtoInfo.SphereId1, equipmentDtoInfo.SphereId2, equipmentDtoInfo.SphereId3, equipmentDtoInfo.SphereId4};
-                                        <MudField Label="@(Masters.TextResourceTable.Get("[CommonSphereLabel]"))" Variant="Variant.Outlined">
-                                            <MudStack Row="true">
-                                                @foreach (var id in sphereIds.Where(d => d > 0))
-                                                {
-                                                    var sphereMb = Masters.SphereTable.GetById(id);
-                                                    var name = $"{Masters.TextResourceTable.Get(sphereMb.NameKey)} Lv{sphereMb.Lv}";
-                                                    var (key, value) = ParameterUtil.GetBaseOrBattleParameterChangeText(sphereMb.BattleParameterChangeInfo, sphereMb.BaseParameterChangeInfo);
-                                                    <MudField Label="@name">@key @value</MudField>
-                                                }
-                                            </MudStack>
-                                        </MudField>
-                                    }
+                                    <EquipmentInfo EquipmentDtoInfo="equipmentDtoInfo" ChangedSetEquipmentCount="changedSetEquipmentCount"></EquipmentInfo>
                                 </MudTabPanel>
                             }
                         </MudTabs>
@@ -237,41 +94,8 @@
         <MudPaper Class="d-flex gap-2 flex-wrap" Elevation="0">
             @foreach (var character in (_userSyncData?.UserCharacterDtoInfos ?? new List<UserCharacterDtoInfo>()).OrderByDescending(d => d.RarityFlags))
             {
-                var cmb = Masters.CharacterTable.GetById(character.CharacterId);
-                var name = Masters.TextResourceTable.Get(cmb.NameKey);
-
-                var jobName = Masters.TextResourceTable.Get(cmb.JobFlags);
-                var rarity = Masters.TextResourceTable.Get(character.RarityFlags);
-
-                var elemntColor = cmb.ElementType switch{
-                    ElementType.Blue=> Colors.Blue.Default,
-                    ElementType.Red=>Colors.Red.Darken1,
-                    ElementType.Green=> Colors.Green.Darken1,
-                    ElementType.Yellow=> Colors.Yellow.Darken1,
-                    ElementType.Light=> Colors.Yellow.Lighten4,
-                    ElementType.Dark=> Colors.Purple.Darken3,
-                    _ => ""
-                    };
-                var battlePower = BattlePowerCalculatorUtil.GetUserCharacterBattlePower(ViewModel.UserId, character);
-
                 <MudPaper Elevation="0" Width="72px" Height="72px" @onclick="() => SelectCharacter(character)" Style="cursor: pointer">
                     <CharacterIcon Size="72" UserCharacterInfo="@Funcs.UserSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(character)" />
-                    @* <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="0"> *@
-                    @*     <MudPaper Elevation="0" Style="@($"background: {elemntColor}")" Class="rounded-circle pa-2"/> *@
-                    @*     <MudText>Lv@(character.Level)</MudText> *@
-                    @*     <MudSpacer/> *@
-                    @*     <MudIcon Class="ml-1" Size="Size.Small" Icon="@(character.IsLocked ? Icons.Material.Filled.Lock : Icons.Material.Filled.LockOpen)"/> *@
-                    @* </MudStack> *@
-                    @* <MudStack Row="true" AlignItems="AlignItems.Center"> *@
-                    @*     <MudText Typo="Typo.h6">@name</MudText> *@
-                    @* </MudStack> *@
-                    @* <MudStack Row="true" AlignItems="AlignItems.Center"> *@
-                    @*     <MudText>@Masters.TextResourceTable.Get("[CommonBattlePowerLabel]") @battlePower</MudText> *@
-                    @* </MudStack> *@
-                    @* <MudStack Row="true" AlignItems="AlignItems.Center"> *@
-                    @*     <MudText>@jobName</MudText> *@
-                    @*     <MudText>@rarity</MudText> *@
-                    @* </MudStack> *@
                 </MudPaper>
             }
         </MudPaper>
@@ -283,7 +107,6 @@
     private BaseParameter _baseParameter;
     private BattleParameter _battleParameter;
     private UserCharacterDtoInfo _selectedCharactor;
-    private List<UserEquipmentDtoInfo> _equipment;
     private MementoMoriFuncs ViewModel;
     string alertMessage = "";
 
@@ -311,7 +134,6 @@
             var parameter = BattlePowerCalculatorUtil.CalcCharacterBattleParameter(ViewModel.UserId, info.Guid);
             _baseParameter = parameter.Item1;
             _battleParameter = parameter.Item2;
-            _equipment = _userSyncData.GetUserEquipmentDtoInfosByCharacterGuid(info.Guid);
             alertMessage = string.Empty;
         }
     }
