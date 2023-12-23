@@ -475,6 +475,14 @@ public partial class MementoMoriFuncs : ReactiveObject
         }
     }
 
+    private bool IsDungeonBattleHardModeAvailable
+    {
+        get
+        {
+            return UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId >= OpenContentTable.GetByOpenCommandType(OpenCommandType.DungeonBattleHardMode).OpenContentValue;
+        }
+    }
+
     private bool IsGuildRaidQuickAvailable
     {
         get

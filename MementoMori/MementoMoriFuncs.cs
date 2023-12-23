@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Linq;
 using System.Xml;
+using DynamicData.Binding;
 using MementoMori.Common.Localization;
 using MementoMori.Exceptions;
 using MementoMori.Jobs;
@@ -15,11 +16,13 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.Auth;
+using MementoMori.Ortega.Share.Data.DungeonBattle;
 using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Data.Mission;
 using MementoMori.Ortega.Share.Data.Notice;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Extensions;
+using MementoMori.Ortega.Share.Master.Data;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -195,6 +198,10 @@ public partial class MementoMoriFuncs
             return;
         }
 
+        var layerPaths = new Dictionary<int, List<List<DungeonBattleGrid>>>();
+        var layerBestPaths = new Dictionary<int, List<DungeonBattleGrid>>();
+        var gridData = new Dictionary<string, GetBattleGridDataResponse>();
+
         var shouldStop = false;
         while (!cancellationToken.IsCancellationRequested && !shouldStop)
         {
@@ -209,9 +216,24 @@ public partial class MementoMoriFuncs
                     Grid = d, GridMb = dungeonBattleGridMb, Power = power
                 };
             }).ToList();
+            var gridDict = grids.ToDictionary(d => d.Grid.DungeonGridGuid, d => d.GridMb);
+            foreach (var dungeonBattleGrid in battleInfoResponse.CurrentDungeonBattleLayer.DungeonGrids)
+            {
+                if (gridData.ContainsKey(dungeonBattleGrid.DungeonGridGuid)) continue;
+                if (!gridDict[dungeonBattleGrid.DungeonGridGuid].IsBattleType()) continue;
+                var data = await GetResponse<GetBattleGridDataRequest, GetBattleGridDataResponse>(new GetBattleGridDataRequest()
+                    {CurrentTermId = battleInfoResponse.CurrentTermId, DungeonGridGuid = dungeonBattleGrid.DungeonGridGuid});
+                gridData[dungeonBattleGrid.DungeonGridGuid] = data;
+            }
             // 当前节点状态
             var currentGrid = grids.First(d =>
                 d.Grid.DungeonGridGuid == battleInfoResponse.UserDungeonDtoInfo.CurrentGridGuid);
+            // grids 是石台列表, 共11层, 每层的石台数量分别为 1,2,3,2,3,2,3,2,3,2,1
+            var allGrids = battleInfoResponse.CurrentDungeonBattleLayer.DungeonGrids
+                .GroupBy(d=>d.Y)
+                .OrderBy(d=>d.Key)
+                .Select(d=> d.OrderBy(d=>d.X).ToArray())
+                .ToArray();
             var layer = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount;
             var state = battleInfoResponse.UserDungeonDtoInfo.CurrentGridState;
             var memo = currentGrid.GridMb.Memo;
@@ -271,72 +293,179 @@ public partial class MementoMoriFuncs
                     });
             }
 
+            DungeonBattleGrid SelectNextGrid()
+            {
+                // 如果当前层还没有计算过最佳路径，或者最佳路径不包含当前节点，重新计算
+                if (!layerBestPaths.TryGetValue(layer, out var bestPath) || bestPath.All(d=>d.DungeonGridGuid != currentGrid.Grid.DungeonGridGuid))
+                {
+                    if (!layerPaths.TryGetValue(layer, out var allPaths))
+                    {
+                        allPaths = CalcAllPathsToEndFromGrid(currentGrid.Grid);
+                        layerPaths[layer] = allPaths;
+                    }
+
+                    allPaths.Sort(Comparison);
+
+                    int Comparison(List<DungeonBattleGrid> x, List<DungeonBattleGrid> y)
+                    {
+                        // 活动节点优先
+                        var countX = CountEventGridCount(x);
+                        var countY = CountEventGridCount(y);
+                        if (countX > countY) return -1;
+                        if (countX < countY) return 1;
+                        
+                        // 然后商店节点，并且有目标物品
+                        countX = CountShopGridCount(x);
+                        countY = CountShopGridCount(y);
+                        if (countX > countY) return -1;
+                        if (countX < countY) return 1;
+                        
+                        // 然后宝箱节点
+                        countX = CountTreasureChestGridCount(x);
+                        countY = CountTreasureChestGridCount(y);
+                        if (countX > countY) return -1;
+                        if (countX < countY) return 1;
+                        
+                        // 然后战斗节点
+                        countX = CountBattleGridCount(x);
+                        countY = CountBattleGridCount(y);
+                        if (countX > countY) return -1;
+                        if (countX < countY) return 1;
+                        
+                        // 然后回复节点
+                        countX = CountRecoveryGridCount(x);
+                        countY = CountRecoveryGridCount(y);
+                        if (countX > countY) return -1;
+                        if (countX < countY) return 1;
+                        
+                        // 然后复活节点
+                        countX = CountRevivalGridCount(x);
+                        countY = CountRevivalGridCount(y);
+                        if (countX > countY) return -1;
+                        if (countX < countY) return 1;
+
+                        return 0;
+                    }
+                    
+                    bestPath = allPaths[0];
+                    layerBestPaths[layer] = bestPath;
+                }
+
+                var currentIndex = bestPath.FindIndex(d=>d.DungeonGridGuid == currentGrid.Grid.DungeonGridGuid);
+                if (currentIndex == bestPath.Count - 1)
+                {
+                    // 已经到达最后一个节点
+                    return null;
+                }
+                else
+                {
+                    return bestPath[currentIndex + 1];
+                }
+            }
+            
+            List<List<DungeonBattleGrid>> CalcAllPathsToEndFromGrid(DungeonBattleGrid currentGrid)
+            {
+                List<List<DungeonBattleGrid>> allPaths = new List<List<DungeonBattleGrid>>();
+                CalcPaths(currentGrid, new List<DungeonBattleGrid>(), allPaths);
+                return allPaths;
+            }
+                
+            void CalcPaths(DungeonBattleGrid currentGrid, List<DungeonBattleGrid> currentPath, List<List<DungeonBattleGrid>> allPaths)
+            {
+                currentPath.Add(currentGrid);
+
+                if (currentGrid.Y == 10) // 到达最后一层
+                {
+                    allPaths.Add(new List<DungeonBattleGrid>(currentPath));
+                }
+                else
+                {
+                    // 获取下一层相邻的石台
+                    var nextLayer = allGrids[currentGrid.Y + 1];
+                    foreach (var nextGrid in nextLayer)
+                    {
+                        if (IsAdjacent(currentGrid, nextGrid))
+                        {
+                            CalcPaths(nextGrid, currentPath, allPaths);
+                        }
+                    }
+                }
+
+                currentPath.RemoveAt(currentPath.Count-1); // 回溯
+            }
+                
+            bool IsAdjacent(DungeonBattleGrid currentGrid, DungeonBattleGrid nextGrid)
+            {
+                // 判断两个石台是否相邻
+                if(allGrids[currentGrid.Y].Length > allGrids[nextGrid.Y].Length)
+                {
+                    return nextGrid.X == currentGrid.X || nextGrid.X == currentGrid.X - 1;
+                }
+                else
+                {
+                    return nextGrid.X == currentGrid.X || nextGrid.X == currentGrid.X + 1;
+                }
+            }
+
+            long CountEventGridCount(List<DungeonBattleGrid> pathGrids)
+            {
+                var eventGrids = pathGrids.Where(d=>gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleElite ||
+                                               gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleNormal ||
+                                               gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleSpecial).ToList();
+
+                // 计算全路径能获得的活动道具数量
+                var totalEventItemCount = 0L;
+                foreach (var d in eventGrids)
+                {
+                    if (gridData.TryGetValue(d.DungeonGridGuid, out var data))
+                    {
+                        totalEventItemCount += (data.NormalRewardItemList.FirstOrDefault(x => x.ItemType == battleInfoResponse.EventItemType && x.ItemId == battleInfoResponse.EventItemId)?.ItemCount ?? 0L);
+                    }
+                }
+
+                return totalEventItemCount;
+            }
+            
+            int CountShopGridCount(ICollection<DungeonBattleGrid> grids)
+            {
+                return grids.Count(d=>gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.Shop &&
+                                      GameConfig.DungeonBattle.ShopTargetItems.Any(x =>
+                                          battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(y => y.GridGuid == d.DungeonGridGuid).TradeShopItemList.Any(
+                                              y => // 商店有目标物品
+                                                  y.SalePercent >= x.MinDiscountPercent && y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
+            }
+            
+            int CountTreasureChestGridCount(ICollection<DungeonBattleGrid> grids)
+            {
+                return grids.Count(d=>gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.TreasureChest);
+            }
+            
+            int CountBattleGridCount(ICollection<DungeonBattleGrid> grids)
+            {
+                return grids.Count(d=> gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleNormal ||
+                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleElite ||
+                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleBoss ||
+                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleBossNoRelic ||
+                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleElite ||
+                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleNormal ||
+                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleSpecial ||
+                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleAndRelicReinforce);
+            }
+            
+            int CountRecoveryGridCount(ICollection<DungeonBattleGrid> grids)
+            {
+                return grids.Count(d=>gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.Recovery);
+            }
+            
+            int CountRevivalGridCount(ICollection<DungeonBattleGrid> grids)
+            {
+                return grids.Count(d=>gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.Revival);
+            }
+            
             switch (state)
             {
                 case DungeonBattleGridState.Done:
-                    // 当前已完成，选择下一个节点
-                    var nextGrid = grids.FirstOrDefault(d => false);
-                    // 先检查是不是活动节点
-                    if (battleInfoResponse.IsEvent())
-                    {
-                        var eventGrids = grids.Where(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
-                                                          && (d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleElite ||
-                                                              d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleNormal ||
-                                                              d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleSpecial)).ToList();
-                        if (eventGrids.Count > 1)
-                        {
-                            var counts = new List<long>();
-                            foreach (var d in eventGrids)
-                                counts.Add((await GetResponse<GetBattleGridDataRequest, GetBattleGridDataResponse>(new GetBattleGridDataRequest()
-                                        {CurrentTermId = battleInfoResponse.CurrentTermId, DungeonGridGuid = d.Grid.DungeonGridGuid})).NormalRewardItemList
-                                    .FirstOrDefault(x => x.ItemType == battleInfoResponse.EventItemType && x.ItemId == battleInfoResponse.EventItemId)?.ItemCount ?? 0L);
-                            var maxIndex = counts
-                                .Select((value, index) => new {Value = value, Index = index})
-                                .OrderByDescending(item => item.Value)
-                                .First()
-                                .Index;
-                            nextGrid = eventGrids[maxIndex];
-                        }
-                        else if (eventGrids.Count == 1)
-                        {
-                            nextGrid = eventGrids[0];
-                        }
-                    }
-
-                    // 先看下一行有没有商店节点,并且有目标物品
-                    if (GameConfig.DungeonBattle.ShopTargetItems.Count > 0)
-                        nextGrid ??= grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
-                                                               && d.GridMb.DungeonGridType == DungeonBattleGridType.Shop
-                                                               && GameConfig.DungeonBattle.ShopTargetItems.Any(x =>
-                                                                   battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(y => y.GridGuid == d.Grid.DungeonGridGuid).TradeShopItemList.Any(
-                                                                       y => // 商店有目标物品
-                                                                           y.SalePercent >= x.MinDiscountPercent && y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
-                    // todo: 递归计算下一节点是否有宝箱
-
-                    // 然后看有没有宝箱节点
-                    if (GameConfig.DungeonBattle.PreferTreasureChest)
-                        nextGrid ??= grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 && d.GridMb.DungeonGridType == DungeonBattleGridType.TreasureChest);
-
-                    // 然后选择战斗节点
-                    nextGrid ??= grids.Where(d => d.Grid.Y == currentGrid.Grid.Y + 1 // 下一行
-                                                  && (d.GridMb.DungeonGridType == DungeonBattleGridType.BattleNormal ||
-                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.BattleElite ||
-                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.BattleBoss ||
-                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.BattleBossNoRelic ||
-                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleElite ||
-                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleNormal ||
-                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.EventBattleSpecial ||
-                                                      d.GridMb.DungeonGridType == DungeonBattleGridType.BattleAndRelicReinforce
-                                                  ) // 战斗类型的
-                    ).MinBy(d => d.Power);
-
-                    // 然后选择回复节点
-                    nextGrid ??= grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 && d.GridMb.DungeonGridType == DungeonBattleGridType.Recovery);
-                    // 然后选择复活节点
-                    nextGrid ??= grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1 && d.GridMb.DungeonGridType == DungeonBattleGridType.Revival);
-                    // 然后其他
-                    nextGrid ??= grids.FirstOrDefault(d => d.Grid.Y == currentGrid.Grid.Y + 1);
-
+                    var nextGrid = SelectNextGrid();
                     if (nextGrid == null)
                     {
                         if (!battleInfoResponse.UserDungeonDtoInfo.IsDoneRewardClearLayer(battleInfoResponse.CurrentDungeonBattleLayer.LayerCount))
@@ -359,7 +488,7 @@ public partial class MementoMoriFuncs
                         else
                         {
                             var diff = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount == 2
-                                ? DungeonBattleDifficultyType.Hard
+                                ? (IsDungeonBattleHardModeAvailable ? DungeonBattleDifficultyType.Hard : DungeonBattleDifficultyType.Normal)
                                 : DungeonBattleDifficultyType.Normal;
                             var proceedLayerResponse = await GetResponse<ProceedLayerRequest, ProceedLayerResponse>(
                                 new ProceedLayerRequest()
@@ -371,7 +500,7 @@ public partial class MementoMoriFuncs
                     }
                     else
                     {
-                        switch (nextGrid.GridMb.DungeonGridType)
+                        switch (gridDict[nextGrid.DungeonGridGuid].DungeonGridType)
                         {
                             case DungeonBattleGridType.JoinCharacter:
                             {
@@ -381,7 +510,7 @@ public partial class MementoMoriFuncs
                                     {
                                         var execGuestResponse = await GetResponse<ExecGuestRequest, ExecGuestResponse>(new ExecGuestRequest()
                                         {
-                                            DungeonGridGuid = nextGrid.Grid.DungeonGridGuid,
+                                            DungeonGridGuid = nextGrid.DungeonGridGuid,
                                             GuestMBId = info.CharacterId,
                                             CurrentTermId = battleInfoResponse.CurrentTermId
                                         });
@@ -399,7 +528,7 @@ public partial class MementoMoriFuncs
                                 var selectGridResponse = await GetResponse<SelectGridRequest, SelectGridResponse>(new SelectGridRequest()
                                 {
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
-                                    DungeonGridGuid = nextGrid.Grid.DungeonGridGuid
+                                    DungeonGridGuid = nextGrid.DungeonGridGuid
                                 });
                                 break;
                             }
@@ -560,7 +689,11 @@ public partial class MementoMoriFuncs
                         }
                     }
             }
+            
+
         }
+
+        
     }
 
     public async Task<GetUserDataResponse> UserGetUserData()
