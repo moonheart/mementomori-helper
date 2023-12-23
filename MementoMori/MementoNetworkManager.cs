@@ -63,6 +63,8 @@ public class MementoNetworkManager
     public static string NoticeBannerImageUriFormat { get; private set; }
     public static AppAssetVersionInfo AppAssetVersionInfo { get; private set; }
 
+    public MeMoriHttpClientHandler MoriHttpClientHandler => _meMoriHttpClientHandler;
+
     private readonly ILogger<MementoNetworkManager> _logger;
     private IWritableOptions<AuthOption> _authOption;
     private static bool initialized;
@@ -74,7 +76,7 @@ public class MementoNetworkManager
         _apiAuth = new Uri(string.IsNullOrEmpty(authOption.Value.AuthUrl) ? "https://prd1-auth.mememori-boi.com/api/" : authOption.Value.AuthUrl);
 
         _meMoriHttpClientHandler = new MeMoriHttpClientHandler {AppVersion = authOption.Value.AppVersion};
-        _httpClient = new HttpClient(_meMoriHttpClientHandler);
+        _httpClient = new HttpClient(MoriHttpClientHandler);
         if (!Debugger.IsAttached) _httpClient.Timeout = TimeSpan.FromSeconds(10);
         _unityHttpClient = new HttpClient();
         if (!Debugger.IsAttached) _unityHttpClient.Timeout = TimeSpan.FromSeconds(30);
@@ -94,7 +96,7 @@ public class MementoNetworkManager
         AppAssetVersionInfo = response.AppAssetVersionInfo;
         _authOption.Update(x => x.AppVersion = AppAssetVersionInfo.Version);
         initialized = true;
-        _meMoriHttpClientHandler.AppVersion = AppAssetVersionInfo.Version;
+        MoriHttpClientHandler.AppVersion = AppAssetVersionInfo.Version;
     }
 
     private async Task AutoUpdateMasterData()
@@ -122,7 +124,7 @@ public class MementoNetworkManager
         _logger.LogInformation(ResourceStrings.Downloading_master_directory___);
         var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN", UserId = 0});
 
-        var url = string.Format(dataUriResponse.MasterUriFormat, _meMoriHttpClientHandler.OrtegaMasterVersion, "master-catalog");
+        var url = string.Format(dataUriResponse.MasterUriFormat, MoriHttpClientHandler.OrtegaMasterVersion, "master-catalog");
         var bytes = await _unityHttpClient.GetByteArrayAsync(url);
         var masterBookCatalog = MessagePackSerializer.Deserialize<MasterBookCatalog>(bytes);
         Directory.CreateDirectory("./Master");
@@ -139,7 +141,7 @@ public class MementoNetworkManager
 
             hasUpdate = true;
             
-            var mbUrl = string.Format(dataUriResponse.MasterUriFormat, _meMoriHttpClientHandler.OrtegaMasterVersion, name);
+            var mbUrl = string.Format(dataUriResponse.MasterUriFormat, MoriHttpClientHandler.OrtegaMasterVersion, name);
             var fileBytes = await _unityHttpClient.GetByteArrayAsync(mbUrl);
             await File.WriteAllBytesAsync(localPath, fileBytes);
         }
@@ -178,7 +180,7 @@ public class MementoNetworkManager
     public async Task DownloadAssets(string gameOs, string assetsPath, string assetsTmpPath, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Downloading asset catalog...");
-        var name = $"{gameOs}/{_meMoriHttpClientHandler.OrtegaAssetVersion}.json";
+        var name = $"{gameOs}/{MoriHttpClientHandler.OrtegaAssetVersion}.json";
         var assetCatalogUrl = string.Format(AssetCatalogFixedUriFormat, name);
         _logger.LogInformation($"download {assetCatalogUrl}");
 
@@ -408,7 +410,7 @@ public class MementoNetworkManager
                 {
                     _logger.LogInformation($"found latest version {handler.AppVersion}");
                     _authOption.Update(x => { x.AppVersion = handler.AppVersion; });
-                    _meMoriHttpClientHandler.AppVersion = handler.AppVersion;
+                    MoriHttpClientHandler.AppVersion = handler.AppVersion;
                     return;
                 }
             }

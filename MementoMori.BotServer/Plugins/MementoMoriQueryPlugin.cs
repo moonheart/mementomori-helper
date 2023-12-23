@@ -18,6 +18,7 @@ using MementoMori.Ortega.Share.Data.Notice;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master.Data;
 using Newtonsoft.Json.Linq;
+using ReactiveUI;
 using Refit;
 using static MementoMori.Ortega.Share.Masters;
 
@@ -51,6 +52,34 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         _mentemoriIcu = RestService.For<IMentemoriIcu>(_botOptions.Value.MentemoriIcuUri);
         _ = AutoNotice();
         _ = AutoDmmVersionCheck();
+        // _networkManager.MoriHttpClientHandler.WhenAnyValue(d => d.OrtegaMasterVersion).Subscribe(NotifyNewMasterVersion);
+        // _networkManager.MoriHttpClientHandler.WhenAnyValue(d => d.OrtegaAssetVersion).Subscribe(NotifyNewAssetVersion);
+    }
+
+    private void NotifyNewMasterVersion(string masterVersion)
+    {
+        while (!_sessionAccessor.Session.IsConnected)
+        {
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+        }
+        var msg = $"发现新的 Ortega Master 版本 {masterVersion}";
+        foreach (var group in _botOptions.Value.OpenedGroups)
+        {
+            _sessionAccessor.Session.SendGroupMessage(group, new CqMessage(msg));
+        }
+    }
+
+    private void NotifyNewAssetVersion(string assetVersion)
+    {
+        while (!_sessionAccessor.Session.IsConnected)
+        {
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+        }
+        var msg = $"发现新的 Ortega Asset 版本 {assetVersion}";
+        foreach (var group in _botOptions.Value.OpenedGroups)
+        {
+            _sessionAccessor.Session.SendGroupMessage(group, new CqMessage(msg));
+        }
     }
 
     private async Task AutoNotice()
@@ -237,6 +266,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
                 {
                     continue;
                 }
+
                 msg.AppendFormat($"<tr><td>{GetSkillDesc(skillInfo.OrderNumber, skillInfo.CharacterLevel, skillInfo.EquipmentRarityFlags)}</td><td>{description}</td></tr>");
             }
         }
@@ -256,7 +286,6 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
                 msg.AppendFormat($"<tr><td>{GetSkillDesc(skillInfo.OrderNumber, skillInfo.CharacterLevel, skillInfo.EquipmentRarityFlags)}</td><td>{description}</td></tr>");
             }
-
         }
 
         var equipmentMbs = EquipmentTable.GetArray().Where(d => d.Category == EquipmentCategory.Exclusive && (d.RarityFlags & EquipmentRarityFlags.SSR) != 0 && d.EquipmentLv == 180).ToList();
@@ -274,7 +303,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         }
 
         msg.AppendLine("</table>");
-        
+
         var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
         {
             Content = msg.ToString(),
@@ -283,7 +312,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             Width = 1000,
             MinimumFontSize = 24,
         });
-   
+
         var cqImageMsg = CqImageMsg.FromBytes(bytes);
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
 
@@ -408,7 +437,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             Width = 1000,
             MinimumFontSize = 24,
         });
-   
+
         var cqImageMsg = CqImageMsg.FromBytes(bytes);
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
     }
@@ -445,7 +474,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             {
                 connect = $"低";
             }
-            
+
             msg.AppendLine(@$"<tr>
 <td>{rarity}</td><td>{lv}</td>
 <td>{name}</td><td>{ele}</td>
@@ -458,9 +487,8 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 <td>{CalcNumber(enemyMb.BaseParameter.Intelligence)}</td>
 <td>{CalcNumber(enemyMb.BaseParameter.Health)}</td>
 </tr>");
-
         }
-        
+
         msg.AppendLine("</table>");
     }
 
@@ -487,10 +515,10 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         {
             num = num.Substring(0, num.Length - 1);
         }
-        
+
         return $"{num}{unit[index]}";
     }
-    
+
     [CqMessageMatch(@"^/(?<towerTypeStr>(无穷|红|黄|绿|蓝))塔\s+(?<quest>\d+)$")]
     public async Task QueryTowerInfo(CqGroupMessagePostContext context, string towerTypeStr, string quest)
     {
@@ -532,7 +560,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             Width = 1000,
             MinimumFontSize = 24,
         });
-   
+
         var cqImageMsg = CqImageMsg.FromBytes(bytes);
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
     }
@@ -586,6 +614,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             var playerInfo = infos[i];
             msg.AppendLine($"<tr><td>No.{i + 1:00}</td><td>{playerInfo.name}</td><td>{selector(playerInfo)}</td></tr>");
         }
+
         msg.AppendLine("</tbody></table>");
 
         var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
@@ -595,7 +624,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
             Format = ImageFormat.Jpeg,
             MinimumFontSize = 24,
         });
-   
+
         var cqImageMsg = CqImageMsg.FromBytes(bytes);
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
         // await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));

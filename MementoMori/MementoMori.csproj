@@ -20,7 +20,10 @@
         <PackageReference Include="ReactiveUI.Fody" Version="19.5.1" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
         <PackageReference Include="System.Reactive" Version="6.0.0" />
-    </ItemGroup>
+        <PackageReference Include="PropertyChanged.SourceGenerator" Version="1.0.8">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference> </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\MementoMori.Ortega\MementoMori.Ortega.csproj" />
     </ItemGroup>

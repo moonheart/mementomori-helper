@@ -2,14 +2,15 @@
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
+using PropertyChanged.SourceGenerator;
 
 namespace MementoMori;
 
-public class MeMoriHttpClientHandler : HttpClientHandler
+public partial class MeMoriHttpClientHandler : HttpClientHandler
 {
     public string OrtegaAccessToken { get; private set; }
-    public string OrtegaMasterVersion { get; private set; }
-    public string OrtegaAssetVersion { get; private set; }
+    [Notify] private string _ortegaMasterVersion;
+    [Notify] private string _ortegaAssetVersion;
 
     public string AppVersion
     {
