@@ -94,8 +94,6 @@ namespace MementoMori.Ortega.Share.Data.Global
 					return ruRU;
 				case LanguageType.deDE:
 					return deDE;
-				case LanguageType.arEG:
-					return arEG;
 				default:
 					return string.Empty;
 			}

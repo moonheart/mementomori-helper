@@ -30,6 +30,8 @@ namespace MementoMori.Ortega.Share.Data.Player
 
         public bool IsBlock { get; set; }
 
+        public bool IsRecruit { get; set; }
+
         public TimeSpan LastLoginTime { get; set; }
 
         public long LatestQuestId { get; set; }

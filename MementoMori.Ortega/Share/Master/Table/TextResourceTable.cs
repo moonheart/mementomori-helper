@@ -217,7 +217,6 @@ namespace MementoMori.Ortega.Share.Master.Table
                 case LanguageType.viVN: return MessagePackSerializer.Deserialize<TextResourceViVnMB[]>(data);
                 case LanguageType.ruRU: return MessagePackSerializer.Deserialize<TextResourceRuRuMB[]>(data);
                 case LanguageType.deDE: return MessagePackSerializer.Deserialize<TextResourceDeDeMB[]>(data);
-                case LanguageType.arEG: return MessagePackSerializer.Deserialize<TextResourceArEgMB[]>(data);
                 default: return MessagePackSerializer.Deserialize<TextResourceZhTwMB[]>(data);
             }
         }
@@ -239,7 +238,6 @@ namespace MementoMori.Ortega.Share.Master.Table
                 case LanguageType.viVN: return "TextResourceViVnMB";
                 case LanguageType.ruRU: return "TextResourceRuRuMB";
                 case LanguageType.deDE: return "TextResourceDeDeMB";
-                case LanguageType.arEG: return "TextResourceArEgMB";
                 default: return "TextResourceZhTwMB";
             }
         }

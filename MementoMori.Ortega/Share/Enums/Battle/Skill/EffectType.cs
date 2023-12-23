@@ -53,6 +53,8 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
         [Description("必ず回避")] NonHit = 2013,
         [Description("不死身")] Immortal = 2014,
         [Description("印")] SkillMark = 2015,
+        [Description("攻撃ダメージ遮断")] DamageBlock,
+        [Description("持続ダメージ遮断")] TransientDamageBlock,
         [Description("スキル1強化")] ActiveSkill1Enhance = 2100,
         [Description("スキル2強化")] ActiveSkill2Enhance = 2101,
         [Description("カウンタ変更11")] DamageReflectEnhance11 = 2111,

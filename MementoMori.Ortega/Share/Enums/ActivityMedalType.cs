@@ -14,6 +14,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("課金ミッション")]
 		Currency,
 		[Description("期間限定")]
-		Limited
+		Limited,
+        [Description("ギルド")]
+        Guild
 	}
 }

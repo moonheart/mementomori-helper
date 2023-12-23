@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using MementoMori.Ortega.Share.Master.Attributes;
+using MementoMori.Ortega.Share.Utils;
 using MessagePack;
 
 namespace MementoMori.Ortega.Share.Master.Data
@@ -104,5 +105,19 @@ namespace MementoMori.Ortega.Share.Master.Data
         public PlayerRankMB() : base(0L, false, "")
         {
         }
+        
+        public bool IsInTime(DateTime jstDateTime)
+        {
+            if (!string.IsNullOrEmpty(this.StartTimeFixJST))
+            {
+                bool flag = this.StartTimeFixJST.ToDateTime() <= jstDateTime;
+                if (!flag)
+                {
+                    return flag;
+                }
+            }
+            return true;
+        }
+
     }
 }

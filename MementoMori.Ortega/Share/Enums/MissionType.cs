@@ -70,6 +70,7 @@ namespace MementoMori.Ortega.Share.Enums
 		LimitedSeventhDayTab4,
         PanelSheet1 = 901,
         PanelSheet2,
-        PanelSheet3
+        PanelSheet3,
+        Guild = 10
 	}
 }

@@ -18,7 +18,6 @@ namespace MementoMori.Ortega.Share.Enums
         [Description("インドネシア語")] idID = 10,
         [Description("ベトナム語")] viVN = 11,
         [Description("ロシア語")] ruRU = 12,
-        [Description("ドイツ語")] deDE = 13,
-        [Description("アラビア語")] arEG = 14
+        [Description("ドイツ語")] deDE = 13
     }
 }

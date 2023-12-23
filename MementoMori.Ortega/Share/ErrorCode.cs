@@ -853,6 +853,22 @@ namespace MementoMori.Ortega.Share
 		GuildExistNgWordInGuildName,
 		[Description("ギルド名保存処理に失敗しました。")]
 		GuildFailToSaveGuildName,
+		[Description("プレイヤーが見つかりません。")]
+		RecruitGuildMemberNotFoundPlayer = 253000,
+		[Description("ギルドメンバー数が上限です。")]
+		RecruitGuildMemberUpperLimitMember,
+		[Description("勧誘数が上限です。")]
+		RecruitGuildMemberUpperLimitRecruitCount,
+		[Description("プレイヤー側の勧誘数が上限です。")]
+		RecruitGuildMemberUpperLimitRecruitCountOnPlayerSide,
+		[Description("勧誘条件を満たしていません。")]
+		RecruitGuildMemberNotMeetRequired,
+		[Description("同じギルドに所属しているプレイヤーです。")]
+		RecruitGuildMemberSameGuildPlayer,
+		[Description("ギルド機能がが開放されていないプレイヤーです。")]
+		RecruitGuildMemberNotOpenGuild,
+		[Description("プレイヤーが見つかりません。")]
+		RecruitGuildMemberSearchNotFoundPlayer = 253010,
 		[Description("ユーザーデータが見つかりません。")]
 		ShopCurrencyMissionDtoNotFound = 261000,
 		[Description("ゲリラパックのデータが見つかりません。")]
@@ -941,6 +957,8 @@ namespace MementoMori.Ortega.Share
 		ShopBuyProductNotEnoughCondition,
 		[Description("表示期間条件が不正です。")]
 		ShopInvalidDisplayPeriodType,
+		[Description("IOS側の一時的な問題で復元処理を利用してください。")]
+		ShopIosVerifyReceiptProblem,
 		[Description("ユーザーのステータスデータが見つかりません。")]
 		ChatUserStatusDtoNotFound = 271000,
 		[Description("ユーザーのアカウントデータが見つかりません。")]

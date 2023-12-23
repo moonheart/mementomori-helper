@@ -1362,7 +1362,6 @@ ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Void Ortega
 				[LanguageType.viVN] = "VN",
 				[LanguageType.ruRU] = "RU",
 				[LanguageType.deDE] = "DE",
-				[LanguageType.arEG] = "EG"
 			};
 		}
 	}

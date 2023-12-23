@@ -26,8 +26,13 @@ namespace MementoMori.Ortega.Share.Master.Table
 			throw new NullReferenceException();
 		}
 
-		public PlayerRankTable()
-		{
-		}
+        public long GetMaxPlayerRank(DateTime nowJstDateTime)
+        {
+            // bool flag;
+            // if (!flag)
+            // {
+            // }
+            throw new NullReferenceException();
+        }
 	}
 }

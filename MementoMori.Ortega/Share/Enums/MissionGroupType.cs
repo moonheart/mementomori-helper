@@ -12,6 +12,7 @@ namespace MementoMori.Ortega.Share.Enums
         [Description("カムバック")] Comeback,
         [Description("新キャラ")] NewCharacter,
         [Description("イベント")] Limited,
-        [Description("パネル")] Panel = 9
+        [Description("パネル")] Panel = 9,
+        [Description("ギルドミッション")] Guild
     }
 }

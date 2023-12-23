@@ -5,112 +5,85 @@ using MessagePack;
 
 namespace MementoMori.Ortega.Share.Master.Data
 {
-	[MessagePackObject(true)]
-	[Description("期間限定ログインボーナス")]
-	public class LimitedLoginBonusMB : MasterBookBase, IHasStartEndTime
-	{
-		[Description("訴求文言")]
-		[PropertyOrder(8)]
-		public string AppealTextKey
-		{
-			get;
-		}
+    [MessagePackObject(true)]
+    [Description("期間限定ログインボーナス")]
+    public class LimitedLoginBonusMB : MasterBookBase, IHasStartEndTime
+    {
+        [PropertyOrder(9)]
+        [Description("訴求文言")]
+        public string AppealTextKey { get; }
 
-		[Description("キャラ画像Id")]
-		[PropertyOrder(4)]
-		public int CharacterImageId
-		{
-			get;
-		}
+        [PropertyOrder(5)]
+        [Description("キャラ画像Id")]
+        public int CharacterImageId { get; }
 
-		[Description("報酬背景画像ID")]
-		[PropertyOrder(5)]
-		public int RewardBackgroundImageId
-		{
-			get;
-		}
+        [PropertyOrder(3)]
+        [Description("猶予日数")]
+        public int DelayDays { get; }
 
-		[PropertyOrder(3)]
-		[Description("報酬リストID")]
-		public long RewardListId
-		{
-			get;
-		}
+        [PropertyOrder(6)]
+        [Description("報酬背景画像ID")]
+        public int RewardBackgroundImageId { get; }
 
-		[Description("特別報酬訴求文言")]
-		[PropertyOrder(9)]
-		public string SpecialRewardAppealTextKey
-		{
-			get;
-		}
+        [PropertyOrder(4)]
+        [Description("報酬リストID")]
+        public long RewardListId { get; }
 
-		[Description("特別報酬背景画像ID")]
-		[PropertyOrder(6)]
-		public int SpecialRewardBackgroundImageId
-		{
-			get;
-		}
+        [PropertyOrder(10)]
+        [Description("特別報酬訴求文言")]
+        public string SpecialRewardAppealTextKey { get; }
 
-		[Description("特別報酬カウントテキスト色")]
-		[PropertyOrder(12)]
-		public string SpecialRewardCountTextColor
-		{
-			get;
-		}
+        [PropertyOrder(7)]
+        [Description("特別報酬背景画像ID")]
+        public int SpecialRewardBackgroundImageId { get; }
 
-		[Description("特別報酬ラベル色")]
-		[PropertyOrder(10)]
-		public string SpecialRewardLabelTextColor
-		{
-			get;
-		}
+        [PropertyOrder(13)]
+        [Description("特別報酬カウントテキスト色")]
+        public string SpecialRewardCountTextColor { get; }
 
-		[Description("特別報酬ラベルアウトライン色")]
-		[PropertyOrder(11)]
-		public string SpecialRewardLabelTextOutlineColor
-		{
-			get;
-		}
+        [PropertyOrder(11)]
+        [Description("特別報酬ラベル色")]
+        public string SpecialRewardLabelTextColor { get; }
 
-		[Description("タイトル")]
-		[PropertyOrder(7)]
-		public string TitleTextKey
-		{
-			get;
-		}
+        [PropertyOrder(12)]
+        [Description("特別報酬ラベルアウトライン色")]
+        public string SpecialRewardLabelTextOutlineColor { get; }
 
-		[SerializationConstructor]
-		public LimitedLoginBonusMB(long id, bool? isIgnore, string memo, string startTime, string endTime, long rewardListId, int characterImageId, int rewardBackgroundImageId, int specialRewardBackgroundImageId, string titleTextKey, string appealTextKey, string specialRewardAppealTextKey, string specialRewardLabelTextColor, string specialRewardLabelTextOutlineColor, string specialRewardCountTextColor)
-			:base(id, isIgnore, memo)
-		{
-			StartTime = startTime;
-			EndTime = endTime;
-			RewardListId = rewardListId;
-			CharacterImageId = characterImageId;
-			RewardBackgroundImageId = rewardBackgroundImageId;
-			SpecialRewardBackgroundImageId = specialRewardBackgroundImageId;
-			TitleTextKey = titleTextKey;
-			AppealTextKey = appealTextKey;
-			SpecialRewardAppealTextKey = specialRewardAppealTextKey;
-			SpecialRewardLabelTextColor = specialRewardLabelTextColor;
-			SpecialRewardLabelTextOutlineColor = specialRewardLabelTextOutlineColor;
-			SpecialRewardCountTextColor = specialRewardCountTextColor;
-		}
+        [PropertyOrder(8)]
+        [Description("タイトル")]
+        public string TitleTextKey { get; }
 
-		public LimitedLoginBonusMB() :base(0L, false, ""){}
+        [SerializationConstructor]
+        public LimitedLoginBonusMB(long id, bool? isIgnore, string memo, string startTime, string endTime, int delayDays, long rewardListId, int characterImageId, int rewardBackgroundImageId,
+            int specialRewardBackgroundImageId, string titleTextKey, string appealTextKey, string specialRewardAppealTextKey, string specialRewardLabelTextColor,
+            string specialRewardLabelTextOutlineColor, string specialRewardCountTextColor)
+            : base(id, isIgnore, memo)
+        {
+            StartTime = startTime;
+            EndTime = endTime;
+            DelayDays = delayDays;
+            RewardListId = rewardListId;
+            CharacterImageId = characterImageId;
+            RewardBackgroundImageId = rewardBackgroundImageId;
+            SpecialRewardBackgroundImageId = specialRewardBackgroundImageId;
+            TitleTextKey = titleTextKey;
+            AppealTextKey = appealTextKey;
+            SpecialRewardAppealTextKey = specialRewardAppealTextKey;
+            SpecialRewardLabelTextColor = specialRewardLabelTextColor;
+            SpecialRewardLabelTextOutlineColor = specialRewardLabelTextOutlineColor;
+            SpecialRewardCountTextColor = specialRewardCountTextColor;
+        }
 
-		[PropertyOrder(1)]
-		[Description("開始日時")]
-		public string StartTime
-		{
-			get;
-		}
+        public LimitedLoginBonusMB() : base(0L, false, "")
+        {
+        }
 
-		[Description("終了日時")]
-		[PropertyOrder(2)]
-		public string EndTime
-		{
-			get;
-		}
-	}
+        [PropertyOrder(1)]
+        [Description("開始日時")]
+        public string StartTime { get; }
+
+        [Description("終了日時")]
+        [PropertyOrder(2)]
+        public string EndTime { get; }
+    }
 }

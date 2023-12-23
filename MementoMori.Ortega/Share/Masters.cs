@@ -343,6 +343,8 @@ namespace MementoMori.Ortega.Share
 
         public static GuildLevelTable GuildLevelTable { get; } = new();
 
+        public static GuildMissionTable GuildMissionTable { get; }
+
         public static GuildRaidBossTable GuildRaidBossTable { get; } = new();
 
         public static GuildRaidRewardTable GuildRaidRewardTable { get; } = new();

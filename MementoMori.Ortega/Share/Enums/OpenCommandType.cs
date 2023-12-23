@@ -127,6 +127,10 @@ namespace MementoMori.Ortega.Share.Enums
 		FriendCode = 200,
 		[Description("ランキング到達報酬")]
 		AchieveRanking = 220,
+        [Description("貢献メダル達成報酬の一括受け取り説明テキスト")]
+        ReceiveAllActivityMedalRewardText = 240,
+        [Description("貢献メダル達成報酬の一括受け取り")]
+        ReceiveAllActivityMedalReward,
 		[Description("武具固定")]
 		LockEquipment = 1000
 	}

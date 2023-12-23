@@ -172,7 +172,6 @@ public class MementoNetworkManager
             "id" => LanguageType.idID,
             "vi" => LanguageType.viVN,
             "ru" => LanguageType.ruRU,
-            "ar" => LanguageType.arEG,
             _ => LanguageType.enUS
         };
     }

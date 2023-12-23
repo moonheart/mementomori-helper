@@ -82,7 +82,6 @@ namespace MementoMori.Ortega.Share.Data
 		{
 			switch (type)
 			{
-				case LanguageType.arEG: return arEG;
 				case LanguageType.deDE: return deDE;
 				case LanguageType.enUS: return enUS;
 				case LanguageType.esMX: return esMX;

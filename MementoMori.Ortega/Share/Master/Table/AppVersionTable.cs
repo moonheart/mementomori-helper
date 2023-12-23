@@ -20,27 +20,35 @@ namespace MementoMori.Ortega.Share.Master.Table
 			throw new NullReferenceException();
 		}
 
-		public bool IsLessThan(DeviceType deviceType, string version)
-		{
-			// int num = 0;
-			// if (num < (int)deviceType)
-			// {
-			// 	if ("{il2cpp array field il2cppMethodInfo->}" != deviceType)
-			// 	{
-			// 		num++;
-			// 	}
-			// 	bool flag = Version.TryParse(num, num);
-			// }
-			// int num2 = 0;
-			// if (!(num == num2) && Version.TryParse(version, num))
-			// {
-			// 	return num < num;
-			// }
-			throw new NullReferenceException();
-		}
 
-		public AppVersionTable()
-		{
-		}
+        public bool IsLessThan(string version)
+        {
+            // GameManager instance = SingletonMonoBehaviour.Instance;
+            // int num = 0;
+            // int deviceType = (int)instance.GetDeviceType();
+            // num++;
+            // bool flag = Version.TryParse(num, num);
+            // int num2 = 0;
+            // if (!(num == num2) && Version.TryParse(version, num))
+            // {
+            //     return num < num;
+            // }
+            throw new NullReferenceException();
+        }
+
+        public bool IsDisableGuildRecruit()
+        {
+            return this.IsLessThan("2.5.0");
+        }
+
+        public bool IsDisableGuildMission()
+        {
+            return this.IsLessThan("2.5.0");
+        }
+
+        public bool IsDisableGuildMemberDisplayOnlineStatus()
+        {
+            return this.IsLessThan("2.6.0");
+        }
 	}
 }

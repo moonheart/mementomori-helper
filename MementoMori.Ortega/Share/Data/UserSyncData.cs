@@ -118,6 +118,8 @@ namespace MementoMori.Ortega.Share.Data
 
         public List<UserOpenContentDtoInfo> UserOpenContentDtoInfos { get; set; }
 
+        public UserRecruitGuildMemberSettingDtoInfo UserRecruitGuildMemberSettingDtoInfo { get; set; }
+        
         public List<UserSettingsDtoInfo> UserSettingsDtoInfoList { get; set; }
 
         public List<UserShopAchievementPackDtoInfo> UserShopAchievementPackDtoInfos { get; set; }
