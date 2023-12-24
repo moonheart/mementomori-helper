@@ -11,14 +11,15 @@
     var frame = AtlasManager.GetItemFrame(SphereMb.RarityFlags);
     var scale = Size / 128.0; // 128 默认大小
     var level = SphereMb.Lv;
-    var filter = SphereMb.RarityFlags switch {
+    var filter = SphereMb.RarityFlags switch
+    {
         ItemRarityFlags.None => "none",
         ItemRarityFlags.R => "url(#svgTintR)",
         ItemRarityFlags.SR => "url(#svgTintSR)",
         ItemRarityFlags.SSR => "url(#svgTintSSR)",
         ItemRarityFlags.UR => "url(#svgTintUR)",
-        _ => "none",
-        };
+        _ => "none"
+    };
 }
 
 <div style="width:@(Size)px; height:@(Size)px; display:inline-box">
@@ -27,9 +28,13 @@
         <div class="icon-avatar" style="background-image: url(@AtlasManager.GetSphereIcon(SphereMb));"></div>
         <div class="icon-border" style="border-image-source: url(@frame);filter: @(filter);"></div>
         <span class="icon-level" style="color: @("white");">Lv @level</span>
-        <span class="icon-count" style="color: @("white");">@Count</span>
+        @if (Count > 0)
+        {
+            <span class="icon-count" style="color: @("white");">@Count</span>
+        }
     </div>
 </div>
+
 @code {
 
     [Parameter]

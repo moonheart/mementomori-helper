@@ -7,6 +7,7 @@
 @using MementoMori.Ortega.Share.Enums
 @using MementoMori.Ortega.Share.Master.Data
 @using MementoMori.Ortega.Share.Utils
+
 <MudStack Spacing="Spacing">
     <MudField Variant="Variant.Outlined" Label="@ResourceStrings.Name" InnerPadding="InnerPadding">
         <MudStack Row="true" Spacing="Spacing">
@@ -94,7 +95,7 @@
             </MudStack>
         </MudField>
     }
-    @if (equipmentMb.ExclusiveEffectId > 0)
+    @if (!MiniMode && equipmentMb.ExclusiveEffectId > 0)
     {
         var effectMb = Masters.EquipmentExclusiveEffectTable.GetById(equipmentMb.ExclusiveEffectId);
         var skillDescriptionMb = Masters.EquipmentExclusiveSkillDescriptionTable.GetById(equipmentMb.EquipmentExclusiveSkillDescriptionId);
@@ -142,7 +143,9 @@
                     var sphereMb = Masters.SphereTable.GetById(id);
                     var name = $"{Tr(sphereMb.NameKey)} Lv{sphereMb.Lv}";
                     var (key, value) = ParameterUtil.GetBaseOrBattleParameterChangeText(sphereMb.BattleParameterChangeInfo, sphereMb.BaseParameterChangeInfo);
-                    <MudField InnerPadding="InnerPadding" Label="@name">@key @value</MudField>
+                    <div>
+                    <SphereIcon SphereMb="sphereMb" Size="@(MiniMode ? 48 : 48)"></SphereIcon>
+                    </div>
                 }
             </MudStack>
         </MudField>

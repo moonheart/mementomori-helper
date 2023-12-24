@@ -43,8 +43,8 @@
     .character-icon .icon-level {
         position: absolute;
         top: 2px;
-        right: 10px;
-        font-size: 32px;
+        left: 10px;
+        font-size: 40px;
         z-index: 11;
         text-shadow: 0px 0px 5px black;
     }
