@@ -710,4 +710,29 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, msg);
     }
+    
+    [CqMessageMatch(@"^/更新主数据$")]
+    public async Task UpdateMasterData(CqGroupMessagePostContext context)
+    {
+        if (!IsGroupAllowed(context)) return;
+        if (!IsSenderAdmin(context)) return;
+        _logger.LogInformation($"{nameof(UpdateMasterData)}");
+        var msg = "";
+        if (await _networkManager.DownloadMasterCatalog())
+        {
+            _networkManager.SetCultureInfo(_networkManager.CultureInfo);
+            msg = "更新完成";
+        }
+        else
+        {
+            msg = "暂无更新";
+        }
+        
+        await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg));
+    }
+    
+    private bool IsSenderAdmin(CqGroupMessagePostContext context)
+    {
+        return _botOptions.Value.AdminIds.Contains(context.Sender.UserId);
+    }
 }
