@@ -391,6 +391,7 @@ public class MementoNetworkManager
                         handler.AppVersion = newVersion.ToString(3);
                         _logger.LogInformation($"trying {handler.AppVersion}");
                         minorAddCount--;
+                        buildAddCount = 5;
                         continue;
                     }
 
@@ -400,6 +401,8 @@ public class MementoNetworkManager
                         handler.AppVersion = newVersion.ToString(3);
                         _logger.LogInformation($"trying {handler.AppVersion}");
                         majorAddCount--;
+                        buildAddCount = 5;
+                        minorAddCount = 5;
                         continue;
                     }
 
