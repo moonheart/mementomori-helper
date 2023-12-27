@@ -1871,6 +1871,14 @@ public partial class MementoMoriFuncs : ReactiveObject
         {
             return Array.Empty<TowerType>();
         }
+        
+        foreach (var limitedEventMb in LimitedEventTable.GetArray().Where(d=>d.LimitedEventType == LimitedEventType.ElementTowerAllRelease))
+        {
+            if (NetworkManager.TimeManager.IsInTime(limitedEventMb))
+            {
+                return new[] {TowerType.Infinite, TowerType.Blue, TowerType.Green, TowerType.Red, TowerType.Yellow};
+            }
+        }
 
         var now = DateTimeOffset.UtcNow.ToOffset(TimeManager.DiffFromUtc) - TimeSpan.FromHours(4);
         var dayOfWeek = now.DayOfWeek;
