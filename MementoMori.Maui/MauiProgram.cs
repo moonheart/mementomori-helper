@@ -14,6 +14,7 @@ using Quartz;
 using System.Globalization;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
+using MudBlazor;
 
 namespace MementoMori.Maui
 {
@@ -36,6 +37,7 @@ namespace MementoMori.Maui
             builder.Configuration.AddJsonFile("appsettings.user.json", true, true);
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddMudServices();
+            builder.Services.AddMudMarkdownServices();
 
             builder.Services.AddSingleton<AtlasManager>();
             builder.Services.AddSingleton<AccountManager>();

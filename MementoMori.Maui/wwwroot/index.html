@@ -6,6 +6,7 @@
     <title>MementoMori.Maui</title>
     <base href="/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="_content/MudBlazor.Markdown/MudBlazor.Markdown.min.css" rel="stylesheet" />
     <link href="_content/MementoMori.BlazorShared/css/site.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="MementoMori.Maui.styles.css" />
@@ -48,13 +49,14 @@
         </svg>
         <svg xmlns="http://www.w3.org/2000/svg">
             <filter id="svgTintN">
-                <feColorMatrix type="matrix" values="0.06666666666666667 0.06666666666666667 0.06666666666666667  0 0 0.0196078431372549 0.0196078431372549 0.0196078431372549  0 0 0.01568627450980392 0.01568627450980392 0.01568627450980392  0 0  0 0 0 1 0"/>
+                <feColorMatrix type="matrix" values="0.06666666666666667 0.06666666666666667 0.06666666666666667  0 0 0.0196078431372549 0.0196078431372549 0.0196078431372549  0 0 0.01568627450980392 0.01568627450980392 0.01568627450980392  0 0  0 0 0 1 0" />
             </filter>
         </svg>
     </div>
 
     <script src="_framework/blazor.webview.js" autostart="false"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="_content/MudBlazor.Markdown/MudBlazor.Markdown.min.js"></script>
     <script>
         window.downloadFileFromStream = async (fileName, contentStreamReference) => {
             const arrayBuffer = await contentStreamReference.arrayBuffer();

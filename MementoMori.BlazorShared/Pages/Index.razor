@@ -32,16 +32,18 @@
 @if (!string.IsNullOrEmpty(newVersionMessage))
 {
     <MudItem md="12">
-        <MudAlert Severity="Severity.Warning">@newVersionMessage
-                <MudButton Href="https://github.com/moonheart/mementomori-helper/releases"
+        <MudAlert Severity="Severity.Warning">
+                <MudText>@newVersionMessage</MudText>
+            <MudButton Href="https://github.com/moonheart/mementomori-helper/releases"
                        Target="_blank"
                        Variant="Variant.Outlined"
                        Style="text-transform:none"
                        StartIcon="@Icons.Custom.Brands.GitHub"
                        Color="Color.Primary">
-                    mementomori-helper
+                mementomori-helper
             </MudButton>
-            </MudAlert>
+            <MudMarkdown Value="@releaseBody"/>
+        </MudAlert>
     </MudItem>
 }
 @if (!string.IsNullOrEmpty(alertMessage))
@@ -456,7 +458,7 @@
     private long selectedTargetTowerLayer;
     string alertMessage = "";
     string newVersionMessage = "";
-
+    string releaseBody = "";
 
     private List<PlayerDataInfo> playerDataInfos = new();
 
@@ -533,6 +535,7 @@
             var json = await httpClient.GetStringAsync(githubUrl);
             var release = JObject.Parse(json);
             var version = release["tag_name"].ToString();
+            releaseBody = release["body"].ToString();
             var newVersion = Version.Parse(version.TrimStart('v'));
             Assembly assembly = Assembly.GetEntryAssembly();
             var currentVersion = assembly.GetName().Version;

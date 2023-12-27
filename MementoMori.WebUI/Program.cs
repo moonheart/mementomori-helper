@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Net.Http.Headers;
 using Index = MementoMori.BlazorShared.Pages.Index;
 using Ortega.Common.Manager;
+using MudBlazor;
 
 internal class Program
 {
@@ -42,6 +43,7 @@ internal class Program
         builder.Configuration.AddJsonFile("appsettings.user.json", true, true);
 
         builder.Services.AddMudServices();
+        builder.Services.AddMudMarkdownServices();
 
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
