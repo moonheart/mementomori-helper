@@ -1800,6 +1800,11 @@ public partial class MementoMoriFuncs : ReactiveObject
     public async Task GetMissionInfo()
     {
         var missionGroupTypes = new List<MissionGroupType>() {MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main};
+        var response1 = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
+        if (response1.GuildId > 0)
+        {
+            missionGroupTypes.Add(MissionGroupType.Guild);
+        }
         var panelMission = Mypage.MypageInfo.MypageIconInfos.FirstOrDefault(d => d.TransferDetailInfo.TransferSpotType == TransferSpotType.PanelMission);
         if (panelMission != null) missionGroupTypes.Add(MissionGroupType.Panel);
         var response = await GetResponse<GetMissionInfoRequest, GetMissionInfoResponse>(new GetMissionInfoRequest()

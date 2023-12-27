@@ -113,6 +113,7 @@ namespace MementoMori.Ortega.Share
                 TowerBattleQuestTable,
                 TradeShopSphereTable,
                 TradeShopTabTable,
+                GuildMissionTable,
                 TotalActivityMedalRewardTable,
                 TreasureChestCeilingTable,
                 TreasureChestItemTable,
@@ -343,7 +344,7 @@ namespace MementoMori.Ortega.Share
 
         public static GuildLevelTable GuildLevelTable { get; } = new();
 
-        public static GuildMissionTable GuildMissionTable { get; }
+        public static GuildMissionTable GuildMissionTable { get; } = new();
 
         public static GuildRaidBossTable GuildRaidBossTable { get; } = new();
 
