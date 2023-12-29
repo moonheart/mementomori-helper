@@ -1853,7 +1853,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             LanguageType = NetworkManager.LanguageType,
             UserId = _authOption.UserId
         });
-        NoticeInfoList = response.NoticeInfoList;
+        NoticeInfoList = response.NoticeInfoList.Where(d=>d.Id % 10 != 6).ToList();
         var response2 = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()
         {
             AccessType = NoticeAccessType.MyPage,
@@ -1862,7 +1862,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             LanguageType = NetworkManager.LanguageType,
             UserId = _authOption.UserId
         });
-        EventInfoList = response2.NoticeInfoList;
+        EventInfoList = response2.NoticeInfoList.Where(d=>d.Id % 10 != 6).ToList();
     }
 
     public TowerType[] GetAvailableTower()
