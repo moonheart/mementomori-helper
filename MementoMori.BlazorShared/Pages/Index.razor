@@ -165,6 +165,7 @@
                 {
                     <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@Funcs.BountyRequestForceAll" Label="@ResourceStrings.ForceDispatch"></MudSwitch>
                 }
+                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.BountyQuestRewardAuto">@TextResourceTable.Get("[CommonHeaderBountyQuestLabel]") @TextResourceTable.Get("[BountyQuestAllReceive]")</MudButton>
                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.BountyQuestStartAuto">@TextResourceTable.Get("[BountyQuestAutoPlacement]")</MudButton>
                 <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="Funcs.RemakeBountyRequest" StartIcon="@Icons.Material.Filled.Refresh">
                     @TextResourceTable.Get("[CommonAlternativesItemFormat]", TextResourceTable.Get("[CommonCurrencyName]"), 20)
@@ -302,7 +303,7 @@
                             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.SetupLocalGvgDefense">@($"{TextResourceTable.Get("[CommonHeaderGvgLabel]")} {ResourceStrings.Deploy_defense}")</MudButton>
                             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.ReceiveGvgReward">@($"{TextResourceTable.Get("[CommonHeaderGvgLabel]")} {TextResourceTable.Get("[GuildRewardTitle]")}")</MudButton>
                             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.AutoLocalRaid">@TextResourceTable.Get("[CommonHeaderLocalRaidLabel]")</MudButton>
-                            <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.BountyQuestRewardAuto">@TextResourceTable.Get("[CommonHeaderBountyQuestLabel]") @TextResourceTable.Get("[CommonClaimAll]")</MudButton>
+                            <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.BountyQuestRewardAuto">@TextResourceTable.Get("[CommonHeaderBountyQuestLabel]") @TextResourceTable.Get("[BountyQuestAllReceive]")</MudButton>
                             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.BountyQuestStartAuto">@TextResourceTable.Get("[CommonHeaderBountyQuestLabel]") @TextResourceTable.Get("[BountyQuestAutoPlacement]")</MudButton>
                             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.AutoBuyShopItem">@ResourceStrings.ShopAutoBuyItems</MudButton>
                             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.AutoUseItems">@ResourceStrings.UseNormalItems</MudButton>
