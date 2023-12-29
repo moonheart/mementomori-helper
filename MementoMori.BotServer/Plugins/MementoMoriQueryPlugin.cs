@@ -519,7 +519,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         return $"{num}{unit[index]}";
     }
 
-    [CqMessageMatch(@"^/(?<towerTypeStr>(无穷|红|黄|绿|蓝))塔\s+(?<quest>\d+)$")]
+    [CqMessageMatch(@"^/(?<towerTypeStr>(无穷|红|黄|金|绿|翠|蓝))塔\s+(?<quest>\d+)$")]
     public async Task QueryTowerInfo(CqGroupMessagePostContext context, string towerTypeStr, string quest)
     {
         if (!IsGroupAllowed(context)) return;
@@ -529,8 +529,10 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         {
             "无穷" => TowerType.Infinite,
             "红" => TowerType.Red,
-            "黄" => TowerType.Blue,
+            "黄" => TowerType.Yellow,
+            "金" => TowerType.Yellow,
             "绿" => TowerType.Green,
+            "翠" => TowerType.Green,
             "蓝" => TowerType.Blue,
         };
         var questId = long.Parse(quest);
