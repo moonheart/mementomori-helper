@@ -595,6 +595,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                         RivalPlayerId = playerInfo.PlayerInfo.PlayerId
                     });
 
+                    await _battleLogManager.SaveBattleLog(pvpStartResponse.BattleResult, "battleleague", pvpStartResponse.RivalPlayerInfo.PlayerName, autoDeletePreserveCount: 100);
+
                     log(pvpStartResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker()
                         ? $"{TextResourceTable.Get("[CommonWinLabel]")}: {pvpStartResponse.RivalPlayerInfo.PlayerName}"
                         : $"{TextResourceTable.Get("[CommonLoseLabel]")}: {pvpStartResponse.RivalPlayerInfo.PlayerName}");
@@ -778,6 +780,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                     {
                         RivalPlayerId = targetPlayerId
                     });
+
+                    await _battleLogManager.SaveBattleLog(leagueStartResponse.BattleResult, "legendleague", leagueStartResponse.RivalPlayerInfo.PlayerName);
 
                     log(leagueStartResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker()
                         ? $"{TextResourceTable.Get("[CommonWinLabel]")}: {leagueStartResponse.RivalPlayerInfo.PlayerName}"
@@ -1654,21 +1658,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var result = win ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]");
                     log(string.Format(ResourceStrings.AutoBossExecMessage, info, result, totalCount, winCount, errCount));
 
-                    if (GameConfig.RecordBattleLog)
-                    {
-                        Directory.CreateDirectory(GameConfig.BattleLogDir);
-                        var res = win ? "win" : "lose";
-                        var filename =
-                            $"main-{bossResponse.BattleResult.QuestId}-{res}-{bossResponse.BattleResult.BattleTime.StartBattle}-{bossResponse.BattleResult.SimulationResult.BattleToken}.json";
-                        var path = Path.Combine(GameConfig.BattleLogDir, filename);
-                        await File.WriteAllTextAsync(path, bossResponse.BattleResult.ToJson(true));
-                        if (!win)
-                        {
-                            // keep only 100 lose logs
-                            var files = Directory.GetFiles(GameConfig.BattleLogDir, $"main-*lose*.json").OrderDescending();
-                            foreach (var file in files.Skip(20)) File.Delete(file);
-                        }
-                    }
+                    await _battleLogManager.SaveBattleLog(bossResponse.BattleResult, "main", bossResponse.BattleResult.QuestId.ToString(), autoDeletePrefix: "main-*lose");
 
                     if (win)
                     {
@@ -1722,21 +1712,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     totalCount++;
                     if (win) winCount++;
 
-                    if (GameConfig.RecordBattleLog)
-                    {
-                        Directory.CreateDirectory(GameConfig.BattleLogDir);
-                        var res = win ? "win" : "lose";
-                        var filename =
-                            $"tower-{SelectedAutoTowerType}-{bossQuickResponse.BattleResult.QuestId}-{res}-{bossQuickResponse.BattleResult.BattleTime.StartBattle}-{bossQuickResponse.BattleResult.SimulationResult.BattleToken}.json";
-                        var path = Path.Combine(GameConfig.BattleLogDir, filename);
-                        await File.WriteAllTextAsync(path, bossQuickResponse.BattleResult.ToJson(true));
-                        if (!win)
-                        {
-                            // keep only 100 lose logs
-                            var files = Directory.GetFiles(GameConfig.BattleLogDir, $"tower-{SelectedAutoTowerType}-*lose*.json").OrderDescending();
-                            foreach (var file in files.Skip(20)) File.Delete(file);
-                        }
-                    }
+                    await _battleLogManager.SaveBattleLog(bossQuickResponse.BattleResult, $@"tower-{SelectedAutoTowerType}", bossQuickResponse.BattleResult.QuestId.ToString(), $"tower-{SelectedAutoTowerType}-*lose");
 
                     var name = TextResourceTable.Get(SelectedAutoTowerType);
                     var result = win ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]");
@@ -1851,7 +1827,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             CategoryType = NoticeCategoryType.NoticeTab,
             CountryCode = countryCode,
             LanguageType = NetworkManager.LanguageType,
-            UserId = _authOption.UserId
+            UserId = AuthOption.UserId
         });
         NoticeInfoList = response.NoticeInfoList.Where(d=>d.Id % 10 != 6).ToList();
         var response2 = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()
@@ -1860,7 +1836,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             CategoryType = NoticeCategoryType.EventTab,
             CountryCode = countryCode,
             LanguageType = NetworkManager.LanguageType,
-            UserId = _authOption.UserId
+            UserId = AuthOption.UserId
         });
         EventInfoList = response2.NoticeInfoList.Where(d=>d.Id % 10 != 6).ToList();
     }

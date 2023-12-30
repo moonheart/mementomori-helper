@@ -48,14 +48,8 @@ internal class Program
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
 
-        //builder.Services.AddRazorPages();
-        //builder.Services.AddServerSideBlazor();
-
-        builder.Services.AddSingleton<AtlasManager>();
-        builder.Services.AddSingleton<AccountManager>();
-        builder.Services.AddTransient<MementoNetworkManager>();
-        builder.Services.AddTransient<MementoMoriFuncs>();
-        builder.Services.AddSingleton<TimeZoneAwareJobRegister>();
+        builder.Services.AddMementoMori();
+        builder.Services.AddMementoMoriBlazorShared();
         builder.Services.AddHttpClient();
 
         builder.Services.AddOptions();

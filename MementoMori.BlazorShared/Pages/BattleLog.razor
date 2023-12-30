@@ -123,6 +123,8 @@
         TowerRed,
         TowerGreen,
         TowerYellow,
+        BattleLeague,
+        LegendLeague
     }
 
     private Dictionary<BattleLogType,string> logTypePrefixes = new()
@@ -133,6 +135,8 @@
         { BattleLogType.TowerRed, "tower-Red-" },
         { BattleLogType.TowerGreen, "tower-Green-" },
         { BattleLogType.TowerYellow, "tower-Yellow-" },
+        { BattleLogType.BattleLeague, "battleleague-" },
+        { BattleLogType.LegendLeague, "legendleague-" },
     };
 
     private BattleLogType _selectedBattleLogType = BattleLogType.Main;

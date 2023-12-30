@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using AutoCtor;
+using Injectio.Attributes;
 using MementoMori.Common.Localization;
 using MementoMori.Option;
 using MementoMori.Ortega.Share.Extensions;
@@ -15,25 +12,18 @@ using ReactiveUI;
 
 namespace MementoMori;
 
-public class AccountManager : ReactiveObject
+[RegisterSingleton<AccountManager>]
+[AutoConstruct]
+public partial class AccountManager : ReactiveObject
 {
     private readonly IWritableOptions<AuthOption> _authOption;
     private readonly IWritableOptions<GameConfig> _gameConfig;
-
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<AccountManager> _logger;
 
     private readonly ConcurrentDictionary<long, Account> _accounts = new();
     private CultureInfo _currentCulture;
     private long _currentUserId;
-
-    public AccountManager(IWritableOptions<AuthOption> authOption, IWritableOptions<GameConfig> gameConfig, IServiceProvider serviceProvider, ILogger<AccountManager> logger)
-    {
-        _authOption = authOption;
-        _gameConfig = gameConfig;
-        _serviceProvider = serviceProvider;
-        _logger = logger;
-    }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     public Account Get(long userId)

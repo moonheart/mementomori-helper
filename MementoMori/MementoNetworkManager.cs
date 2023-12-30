@@ -2,18 +2,12 @@
 using MementoMori.Extensions;
 using MementoMori.Ortega.Share.Data.ApiInterface;
 using MementoMori.Ortega.Share.Data;
-using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share;
 using MessagePack;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
 using MementoMori.Ortega.Share.Data.Auth;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
@@ -21,25 +15,26 @@ using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
+using AutoCtor;
 using Grpc.Net.Client;
+using Injectio.Attributes;
 using MementoMori.Common.Localization;
 using MementoMori.MagicOnion;
 using MementoMori.Option;
 using MementoMori.Ortega.Network.MagicOnion.Client;
-using Microsoft.Extensions.FileProviders;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Ortega.Common.Manager;
 
 namespace MementoMori;
 
-public class MementoNetworkManager
+[RegisterTransient<MementoNetworkManager>]
+[AutoConstruct]
+public partial class MementoNetworkManager
 {
     private const string GameOs = "Android";
 
-    private readonly MeMoriHttpClientHandler _meMoriHttpClientHandler;
-    private readonly HttpClient _httpClient;
-    private readonly HttpClient _unityHttpClient;
+    private MeMoriHttpClientHandler _meMoriHttpClientHandler = null;
+    private HttpClient _httpClient;
+    private HttpClient _unityHttpClient = null;
     public TimeManager TimeManager { get; } = new();
 
     private LoginRequest _lastLoginRequest;
@@ -51,8 +46,6 @@ public class MementoNetworkManager
 
 
     private Uri _apiAuth;
-    // private Uri _apiAuth = new("https://stg1-auth.mememori-boi.com/api/");
-
     private Uri _apiHost;
     private GrpcChannel _grpcChannel;
     private string AuthTokenOfMagicOnion;
@@ -66,16 +59,15 @@ public class MementoNetworkManager
     public MeMoriHttpClientHandler MoriHttpClientHandler => _meMoriHttpClientHandler;
 
     private readonly ILogger<MementoNetworkManager> _logger;
-    private IWritableOptions<AuthOption> _authOption;
+    private readonly IWritableOptions<AuthOption> _authOption;
     private static bool initialized;
 
-    public MementoNetworkManager(ILogger<MementoNetworkManager> logger, IWritableOptions<AuthOption> authOption)
+    [AutoPostConstruct]
+    public void AutoPostConstruct()
     {
-        _logger = logger;
-        _authOption = authOption;
-        _apiAuth = new Uri(string.IsNullOrEmpty(authOption.Value.AuthUrl) ? "https://prd1-auth.mememori-boi.com/api/" : authOption.Value.AuthUrl);
+        _apiAuth = new Uri(string.IsNullOrEmpty(_authOption.Value.AuthUrl) ? "https://prd1-auth.mememori-boi.com/api/" : _authOption.Value.AuthUrl);
 
-        _meMoriHttpClientHandler = new MeMoriHttpClientHandler {AppVersion = authOption.Value.AppVersion};
+        _meMoriHttpClientHandler = new MeMoriHttpClientHandler {AppVersion = _authOption.Value.AppVersion};
         _httpClient = new HttpClient(MoriHttpClientHandler);
         if (!Debugger.IsAttached) _httpClient.Timeout = TimeSpan.FromSeconds(10);
         _unityHttpClient = new HttpClient();

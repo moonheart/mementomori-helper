@@ -1,10 +1,13 @@
-﻿using MementoMori.Ortega.Common;
+﻿using AutoCtor;
+using Injectio.Attributes;
+using MementoMori.Ortega.Common;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master.Data;
 
 namespace MementoMori.WebUI.UI
 {
-    public class AtlasManager
+    [RegisterSingleton]
+    public partial class AtlasManager
     {
         private const string AssetsPath = "_content/MementoMori.BlazorShared/assets";
 

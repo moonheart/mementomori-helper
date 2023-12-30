@@ -39,11 +39,8 @@ namespace MementoMori.Maui
             builder.Services.AddMudServices();
             builder.Services.AddMudMarkdownServices();
 
-            builder.Services.AddSingleton<AtlasManager>();
-            builder.Services.AddSingleton<AccountManager>();
-            builder.Services.AddTransient<MementoNetworkManager>();
-            builder.Services.AddTransient<MementoMoriFuncs>();
-            builder.Services.AddSingleton<TimeZoneAwareJobRegister>();
+            builder.Services.AddMementoMori();
+            builder.Services.AddMementoMoriBlazorShared();
             builder.Services.AddHttpClient();
 
             builder.Services.AddOptions();

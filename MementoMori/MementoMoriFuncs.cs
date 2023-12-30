@@ -1,6 +1,5 @@
-﻿using System.Reactive.Linq;
-using System.Xml;
-using DynamicData.Binding;
+﻿using AutoCtor;
+using Injectio.Attributes;
 using MementoMori.Common.Localization;
 using MementoMori.Exceptions;
 using MementoMori.Jobs;
@@ -21,18 +20,15 @@ using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Data.Mission;
 using MementoMori.Ortega.Share.Data.Notice;
 using MementoMori.Ortega.Share.Enums;
-using MementoMori.Ortega.Share.Extensions;
-using MementoMori.Ortega.Share.Master.Data;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using BountyQuestGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.GetListResponse;
-using Formatting = Newtonsoft.Json.Formatting;
 
 namespace MementoMori;
 
+[RegisterTransient<MementoMoriFuncs>]
+[AutoConstruct]
 public partial class MementoMoriFuncs
 {
     public TimeManager TimeManager => NetworkManager.TimeManager;
@@ -61,7 +57,8 @@ public partial class MementoMoriFuncs
     [Reactive]
     public bool IsNotClearDungeonBattleMap { get; set; }
 
-    private readonly AuthOption _authOption;
+    private readonly IWritableOptions<AuthOption> _AuthOption;
+    private AuthOption AuthOption => _AuthOption.Value;
     private GameConfig GameConfig => _writableGameConfig.Value;
     private readonly ILogger<MementoMoriFuncs> _logger;
 
@@ -70,18 +67,13 @@ public partial class MementoMoriFuncs
     private readonly TimeZoneAwareJobRegister _timeZoneAwareJobRegister;
     private readonly IWritableOptions<GameConfig> _writableGameConfig;
     private readonly IWritableOptions<PlayersOption> _playersOption;
+    private readonly BattleLogManager _battleLogManager;
 
     private PlayerOption PlayerOption => _playersOption.Value.TryGetValue(NetworkManager.PlayerId, out var opt) ? opt : new PlayerOption();
 
-    public MementoMoriFuncs(IWritableOptions<AuthOption> authOption, ILogger<MementoMoriFuncs> logger,
-        TimeZoneAwareJobRegister timeZoneAwareJobRegister, IWritableOptions<GameConfig> writableGameConfig, AccountManager accountManager, IWritableOptions<PlayersOption> playersOption)
+    [AutoPostConstruct]
+    private void Initialize()
     {
-        _logger = logger;
-        _timeZoneAwareJobRegister = timeZoneAwareJobRegister;
-        _writableGameConfig = writableGameConfig;
-        _accountManager = accountManager;
-        _playersOption = playersOption;
-        _authOption = authOption.Value;
         Mypage = new GetMypageResponse();
         NoticeInfoList = new List<NoticeInfo>();
         UserSyncData = new UserSyncData();
@@ -92,12 +84,12 @@ public partial class MementoMoriFuncs
         var createUserResponse = await GetResponse<CreateUserRequest, CreateUserResponse>(new CreateUserRequest()
         {
             AdverisementId = Guid.NewGuid().ToString("D"),
-            AppVersion = _authOption.AppVersion,
+            AppVersion = AuthOption.AppVersion,
             CountryCode = "CN",
             DeviceToken = "",
-            ModelName = _authOption.ModelName,
+            ModelName = AuthOption.ModelName,
             DisplayLanguage = NetworkManager.LanguageType,
-            OSVersion = _authOption.OSVersion,
+            OSVersion = AuthOption.OSVersion,
             SteamTicket = ""
         });
         var clientKey = createUserResponse.ClientKey;
@@ -121,10 +113,10 @@ public partial class MementoMoriFuncs
         var reqBody = new LoginRequest()
         {
             ClientKey = _accountManager.GetAccountInfo(UserId).ClientKey,
-            DeviceToken = _authOption.DeviceToken,
-            AppVersion = _authOption.AppVersion,
-            OSVersion = _authOption.OSVersion,
-            ModelName = _authOption.ModelName,
+            DeviceToken = AuthOption.DeviceToken,
+            AppVersion = AuthOption.AppVersion,
+            OSVersion = AuthOption.OSVersion,
+            ModelName = AuthOption.ModelName,
             AdverisementId = Guid.NewGuid().ToString("D"),
             UserId = UserId
         };

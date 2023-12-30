@@ -1,0 +1,49 @@
+﻿@using MementoMori.Ortega.Share.Data.Character
+@using MementoMori.WebUI.UI
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.Ortega.Custom
+@using MementoMori.Ortega.Share.Master.Data
+@inject AccountManager AccountManager
+@inject AtlasManager AtlasManager
+
+@{
+    var frame = AtlasManager.GetItemFrame(SphereMb.RarityFlags);
+    var scale = Size / 128.0; // 128 默认大小
+    var level = SphereMb.Lv;
+    var filter = SphereMb.RarityFlags switch
+    {
+        ItemRarityFlags.None => "none",
+        ItemRarityFlags.R => "url(#svgTintR)",
+        ItemRarityFlags.SR => "url(#svgTintSR)",
+        ItemRarityFlags.SSR => "url(#svgTintSSR)",
+        ItemRarityFlags.UR => "url(#svgTintUR)",
+        _ => "none"
+    };
+}
+
+<div style="width:@(Size)px; height:@(Size)px; display:inline-box">
+    <div class="character-icon" style="transform:scale(@(scale));">
+        <div class="icon-background"></div>
+        <div class="icon-avatar" style="background-image: url(@AtlasManager.GetSphereIcon(SphereMb));"></div>
+        <div class="icon-border" style="border-image-source: url(@frame);filter: @(filter);"></div>
+        <span class="icon-level" style="color: @("white");">Lv @level</span>
+        @if (Count > 0)
+        {
+            <span class="icon-count" style="color: @("white");">@Count</span>
+        }
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public SphereMB SphereMb { get; set; }
+
+    [Parameter]
+    public long Count { get; set; }
+
+    [Parameter]
+    public int Size { get; set; } = 128;
+
+}

@@ -1,4 +1,6 @@
 ﻿using System.Text.RegularExpressions;
+using AutoCtor;
+using Injectio.Attributes;
 using MementoMori.Common.Localization;
 using MementoMori.Option;
 using MementoMori.Ortega.Share;
@@ -7,18 +9,13 @@ using Quartz;
 
 namespace MementoMori.Jobs;
 
-public class TimeZoneAwareJobRegister
+[AutoConstruct]
+[RegisterSingleton<TimeZoneAwareJobRegister>]
+public partial class TimeZoneAwareJobRegister
 {
     private readonly ISchedulerFactory _schedulerFactory;
     private readonly IWritableOptions<GameConfig> _gameConfig;
     private readonly AccountManager _accountManager;
-
-    public TimeZoneAwareJobRegister(ISchedulerFactory schedulerFactory, IWritableOptions<GameConfig> gameOptions, AccountManager accountManager)
-    {
-        _schedulerFactory = schedulerFactory;
-        _gameConfig = gameOptions;
-        _accountManager = accountManager;
-    }
 
     public async Task RegisterAllJobs()
     {

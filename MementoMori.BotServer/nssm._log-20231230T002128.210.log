@@ -1,0 +1,218 @@
+2023-12-29 21:31:32.843:       start retrieve notices
+2023-12-29 21:31:33.747: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 21:31:33.747:       start retrieve notices
+2023-12-29 21:41:16.305: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 21:41:16.305:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 21:41:16.305: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 21:41:16.305:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 21:41:17.091: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 21:41:17.091:       Received HTTP response headers after 786.1041ms - 200
+2023-12-29 21:41:17.091: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 21:41:17.091:       End processing HTTP request after 786.1564ms - 200
+2023-12-29 21:41:33.997: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 21:41:33.997:       start retrieve notices
+2023-12-29 21:41:35.200: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 21:41:35.200:       start retrieve notices
+2023-12-29 21:51:17.100: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 21:51:17.100:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 21:51:17.100: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 21:51:17.100:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 21:51:17.873: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 21:51:17.873:       Received HTTP response headers after 773.3469ms - 200
+2023-12-29 21:51:17.873: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 21:51:17.873:       End processing HTTP request after 773.4009ms - 200
+2023-12-29 21:51:35.481: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 21:51:35.481:       start retrieve notices
+2023-12-29 21:51:36.373: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 21:51:36.373:       start retrieve notices
+2023-12-29 22:01:17.886: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 22:01:17.886:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 22:01:17.886: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 22:01:17.886:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 22:01:18.545: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 22:01:18.545:       Received HTTP response headers after 658.5208ms - 200
+2023-12-29 22:01:18.545: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 22:01:18.545:       End processing HTTP request after 658.5752ms - 200
+2023-12-29 22:01:36.647: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 22:01:36.647:       start retrieve notices
+2023-12-29 22:01:37.869: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 22:01:37.869:       start retrieve notices
+2023-12-29 22:10:52.509: info: MementoMori.MementoNetworkManager[0]
+2023-12-29 22:10:52.509:       auto updating master data
+2023-12-29 22:10:52.509: info: MementoMori.MementoNetworkManager[0]
+2023-12-29 22:10:52.509:       下载 master 目录中...
+2023-12-29 22:10:54.615: info: MementoMori.MementoNetworkManager[0]
+2023-12-29 22:10:54.615:       下载 master 目录完成
+2023-12-29 22:11:18.545: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 22:11:18.545:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 22:11:18.545: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 22:11:18.545:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 22:11:19.326: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 22:11:19.326:       Received HTTP response headers after 781.0847ms - 200
+2023-12-29 22:11:19.326: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 22:11:19.326:       End processing HTTP request after 781.1274ms - 200
+2023-12-29 22:11:38.173: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 22:11:38.173:       start retrieve notices
+2023-12-29 22:11:38.417: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 22:11:38.417:       start retrieve notices
+2023-12-29 22:21:19.340: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 22:21:19.340:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 22:21:19.340: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 22:21:19.340:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 22:21:20.038: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 22:21:20.038:       Received HTTP response headers after 699.0734ms - 200
+2023-12-29 22:21:20.038: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 22:21:20.038:       End processing HTTP request after 699.1228ms - 200
+2023-12-29 22:21:38.726: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 22:21:38.727:       start retrieve notices
+2023-12-29 22:21:39.728: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 22:21:39.728:       start retrieve notices
+2023-12-29 22:31:20.039: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 22:31:20.039:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 22:31:20.039: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 22:31:20.039:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 22:31:20.622: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 22:31:20.622:       Received HTTP response headers after 583.5946ms - 200
+2023-12-29 22:31:20.622: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 22:31:20.622:       End processing HTTP request after 583.6541ms - 200
+2023-12-29 22:31:40.051: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 22:31:40.051:       start retrieve notices
+2023-12-29 22:31:41.064: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 22:31:41.064:       start retrieve notices
+2023-12-29 22:41:20.623: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 22:41:20.623:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 22:41:20.623: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 22:41:20.623:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 22:41:21.293: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 22:41:21.293:       Received HTTP response headers after 670.8313ms - 200
+2023-12-29 22:41:21.293: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 22:41:21.293:       End processing HTTP request after 670.8834ms - 200
+2023-12-29 22:41:41.352: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 22:41:41.352:       start retrieve notices
+2023-12-29 22:41:42.467: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 22:41:42.467:       start retrieve notices
+2023-12-29 22:51:21.299: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 22:51:21.299:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 22:51:21.299: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 22:51:21.299:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 22:51:21.881: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 22:51:21.881:       Received HTTP response headers after 582.3036ms - 200
+2023-12-29 22:51:21.881: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 22:51:21.881:       End processing HTTP request after 582.3528ms - 200
+2023-12-29 22:51:42.757: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 22:51:42.757:       start retrieve notices
+2023-12-29 22:51:43.757: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 22:51:43.757:       start retrieve notices
+2023-12-29 23:01:21.892: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 23:01:21.892:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 23:01:21.892: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 23:01:21.892:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 23:01:22.679: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 23:01:22.679:       Received HTTP response headers after 786.9968ms - 200
+2023-12-29 23:01:22.679: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 23:01:22.679:       End processing HTTP request after 787.0469ms - 200
+2023-12-29 23:01:44.088: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 23:01:44.088:       start retrieve notices
+2023-12-29 23:01:45.022: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 23:01:45.022:       start retrieve notices
+2023-12-29 23:10:54.623: info: MementoMori.MementoNetworkManager[0]
+2023-12-29 23:10:54.623:       auto updating master data
+2023-12-29 23:10:54.623: info: MementoMori.MementoNetworkManager[0]
+2023-12-29 23:10:54.623:       下载 master 目录中...
+2023-12-29 23:10:56.666: info: MementoMori.MementoNetworkManager[0]
+2023-12-29 23:10:56.666:       下载 master 目录完成
+2023-12-29 23:11:22.688: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 23:11:22.688:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 23:11:22.688: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 23:11:22.688:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 23:11:23.444: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 23:11:23.444:       Received HTTP response headers after 756.2827ms - 200
+2023-12-29 23:11:23.444: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 23:11:23.444:       End processing HTTP request after 756.352ms - 200
+2023-12-29 23:11:45.288: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 23:11:45.288:       start retrieve notices
+2023-12-29 23:11:45.549: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 23:11:45.549:       start retrieve notices
+2023-12-29 23:21:23.456: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 23:21:23.456:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 23:21:23.456: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 23:21:23.456:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 23:21:24.176: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 23:21:24.176:       Received HTTP response headers after 719.9469ms - 200
+2023-12-29 23:21:24.176: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 23:21:24.176:       End processing HTTP request after 719.9972ms - 200
+2023-12-29 23:21:45.858: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 23:21:45.858:       start retrieve notices
+2023-12-29 23:21:46.974: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 23:21:46.974:       start retrieve notices
+2023-12-29 23:31:24.189: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 23:31:24.189:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 23:31:24.189: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 23:31:24.189:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 23:31:24.889: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 23:31:24.889:       Received HTTP response headers after 699.4279ms - 200
+2023-12-29 23:31:24.889: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 23:31:24.889:       End processing HTTP request after 699.4877ms - 200
+2023-12-29 23:31:47.256: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 23:31:47.256:       start retrieve notices
+2023-12-29 23:31:48.571: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 23:31:48.571:       start retrieve notices
+2023-12-29 23:41:24.897: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 23:41:24.897:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 23:41:24.897: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 23:41:24.897:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 23:41:25.519: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 23:41:25.519:       Received HTTP response headers after 621.9636ms - 200
+2023-12-29 23:41:25.519: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 23:41:25.519:       End processing HTTP request after 622.0149ms - 200
+2023-12-29 23:41:48.907: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 23:41:48.907:       start retrieve notices
+2023-12-29 23:41:49.797: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 23:41:49.797:       start retrieve notices
+2023-12-29 23:51:25.531: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-29 23:51:25.531:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 23:51:25.531: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-29 23:51:25.531:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-29 23:51:26.244: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-29 23:51:26.244:       Received HTTP response headers after 712.6622ms - 200
+2023-12-29 23:51:26.244: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-29 23:51:26.244:       End processing HTTP request after 712.7157ms - 200
+2023-12-29 23:51:50.045: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 23:51:50.045:       start retrieve notices
+2023-12-29 23:51:51.142: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-29 23:51:51.142:       start retrieve notices
+2023-12-30 00:01:26.250: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-30 00:01:26.250:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-30 00:01:26.250: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-30 00:01:26.250:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-30 00:01:26.923: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-30 00:01:26.923:       Received HTTP response headers after 674.0569ms - 200
+2023-12-30 00:01:26.923: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-30 00:01:26.923:       End processing HTTP request after 674.1153ms - 200
+2023-12-30 00:01:51.418: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-30 00:01:51.418:       start retrieve notices
+2023-12-30 00:01:52.309: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-30 00:01:52.309:       start retrieve notices
+2023-12-30 00:10:56.670: info: MementoMori.MementoNetworkManager[0]
+2023-12-30 00:10:56.670:       auto updating master data
+2023-12-30 00:10:56.670: info: MementoMori.MementoNetworkManager[0]
+2023-12-30 00:10:56.670:       下载 master 目录中...
+2023-12-30 00:10:58.451: info: MementoMori.MementoNetworkManager[0]
+2023-12-30 00:10:58.451:       下载 master 目录完成
+2023-12-30 00:11:26.923: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-30 00:11:26.923:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-30 00:11:26.923: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-30 00:11:26.923:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-30 00:11:27.516: info: System.Net.Http.HttpClient.Default.ClientHandler[101]
+2023-12-30 00:11:27.516:       Received HTTP response headers after 592.9987ms - 200
+2023-12-30 00:11:27.516: info: System.Net.Http.HttpClient.Default.LogicalHandler[101]
+2023-12-30 00:11:27.516:       End processing HTTP request after 593.0515ms - 200
+2023-12-30 00:11:52.575: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-30 00:11:52.575:       start retrieve notices
+2023-12-30 00:11:52.801: info: MementoMori.BotServer.Plugins.MementoMoriQueryPlugin[0]
+2023-12-30 00:11:52.801:       start retrieve notices
+2023-12-30 00:21:27.518: info: System.Net.Http.HttpClient.Default.LogicalHandler[100]
+2023-12-30 00:21:27.518:       Start processing HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+2023-12-30 00:21:27.518: info: System.Net.Http.HttpClient.Default.ClientHandler[100]
+2023-12-30 00:21:27.518:       Sending HTTP request GET https://apidgp-gameplayer.games.dmm.com/gameplayer/filelist/29066
+info: System.Net.Http.HttpClient.Default.ClientHandler[101]
