@@ -89,6 +89,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
         <PackageReference Include="Quartz" Version="3.7.0" />
         <PackageReference Include="Quartz.AspNetCore" Version="3.7.0" />
+		<PackageReference Include="Sentry.Maui" Version="3.41.3" />
     </ItemGroup>
 
     <ItemGroup>

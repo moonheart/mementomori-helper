@@ -25,6 +25,13 @@ namespace MementoMori.Maui
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseSentry(o =>
+                {
+                    o.Dsn = "https://89589ae6d459add80b04ac7f9069f9ee@sentry.moonheartmoon.com/2";
+                    o.TracesSampleRate = 1.0;
+                    o.AutoSessionTracking = true;
+                    o.IsGlobalModeEnabled = true;
+                })
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

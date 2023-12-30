@@ -44,6 +44,10 @@
 	<PackageReference Include="Injectio" Version="3.1.0" PrivateAssets="all"/>
   </ItemGroup>
 
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+        <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.3" />
+    </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\MementoMori\MementoMori.csproj" />
   </ItemGroup>
