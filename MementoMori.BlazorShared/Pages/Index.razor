@@ -165,7 +165,7 @@
                 {
                     <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@Funcs.BountyRequestForceAll" Label="@ResourceStrings.ForceDispatch"></MudSwitch>
                 }
-                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.BountyQuestRewardAuto">@TextResourceTable.Get("[CommonHeaderBountyQuestLabel]") @TextResourceTable.Get("[BountyQuestAllReceive]")</MudButton>
+                <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.BountyQuestRewardAuto">@TextResourceTable.Get("[BountyQuestAllReceive]")</MudButton>
                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.BountyQuestStartAuto">@TextResourceTable.Get("[BountyQuestAutoPlacement]")</MudButton>
                 <MudButton Variant="Variant.Filled" Size="Size.Small" @onclick="Funcs.RemakeBountyRequest" StartIcon="@Icons.Material.Filled.Refresh">
                     @TextResourceTable.Get("[CommonAlternativesItemFormat]", TextResourceTable.Get("[CommonCurrencyName]"), 20)
@@ -363,7 +363,7 @@
                             <MudSelect T="string" Label="@TextResourceTable.Get("[CommonEquipmentLabel]")" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="@Funcs.EquipmentId">
                                 @foreach (var e in _characterEquipments)
                                 {
-                                    <MudSelectItem T="string" Value="e.EquipmentGuid">@($"{e.EquipmentName}/{e.UserEquipmentDtoInfo.ReinforcementLv} {e.CharacterName}")</MudSelectItem>
+                                    <MudSelectItem T="string" Value="e.EquipmentGuid">@($"{e.CharacterName} {e.EquipmentName}/{e.UserEquipmentDtoInfo.ReinforcementLv}")</MudSelectItem>
                                 }
                             </MudSelect>
                             <MudSelect T="string" @bind-Value="@Funcs.EquipmentTrainingTargetType" Label="@TextResourceTable.Get("[CommonBaseParameterLabel]")" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
@@ -478,13 +478,17 @@
                     var chaMb = CharacterTable.GetById(cha.CharacterId);
                     var name = TextResourceTable.Get(chaMb.NameKey);
                     var equipmentMb = EquipmentTable.GetById(d.EquipmentId);
+                    if (equipmentMb.EquipmentLv < 180)
+                    {
+                        return null;
+                    }
                     var equipmentName = TextResourceTable.Get(equipmentMb.NameKey);
                     equipmentName = $"{equipmentName}/{@TextResourceTable.Get(BaseParameterType.Health)}{d.AdditionalParameterHealth}/{@TextResourceTable.Get(BaseParameterType.Intelligence)}{d.AdditionalParameterIntelligence}/{@TextResourceTable.Get(BaseParameterType.Muscle)}{d.AdditionalParameterMuscle}/{@TextResourceTable.Get(BaseParameterType.Energy)}{d.AdditionalParameterEnergy} ";
                     return new CharacterEquipment()
                     {
                         CharacterGuid = d.CharacterGuid, CharacterName = name, EquipmentGuid = d.Guid, EquipmentName = equipmentName, UserEquipmentDtoInfo = d
                     };
-                }).OrderBy(d => d.CharacterGuid).ToList() ?? new List<CharacterEquipment>();
+                }).Where(d=>d != null).OrderBy(d => d.CharacterGuid).ToList() ?? new List<CharacterEquipment>();
             });
         }
         catch (Exception e)
