@@ -60,6 +60,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Docker meta
@@ -100,6 +102,7 @@ jobs:
           push: true
           tags: moonheartmoon/mementomori-webui:dev
           context: .
+          platforms: linux/amd64,linux/arm64
           file: ./MementoMori.WebUI/Dockerfile
 
   publish-maui-android:
