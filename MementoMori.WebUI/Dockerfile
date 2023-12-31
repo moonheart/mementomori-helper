@@ -10,13 +10,13 @@ COPY ["MementoMori.WebUI/MementoMori.WebUI.csproj", "MementoMori.WebUI/"]
 COPY ["MementoMori.Common/MementoMori.Common.csproj", "MementoMori.Common/"]
 COPY ["MementoMori/MementoMori.csproj", "MementoMori/"]
 COPY ["MementoMori.Ortega/MementoMori.Ortega.csproj", "MementoMori.Ortega/"]
-RUN dotnet workload restore "MementoMori.WebUI/MementoMori.WebUI.csproj" && dotnet restore "MementoMori.WebUI/MementoMori.WebUI.csproj"
+RUN dotnet restore "MementoMori.WebUI/MementoMori.WebUI.csproj" -p:TargetFramework=net8.0
 COPY . .
 WORKDIR "/src/MementoMori.WebUI"
-RUN dotnet build "MementoMori.WebUI.csproj" -c Release -o /app/build
+RUN dotnet build -f net8.0 "MementoMori.WebUI.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "MementoMori.WebUI.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish -f net8.0 "MementoMori.WebUI.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
