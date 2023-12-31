@@ -4,20 +4,21 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
+ARG TARGETARCH
 WORKDIR /src
 COPY ["MementoMori.WebUI/MementoMori.WebUI.csproj", "MementoMori.WebUI/"]
 COPY ["MementoMori.Common/MementoMori.Common.csproj", "MementoMori.Common/"]
 COPY ["MementoMori.BlazorShared/MementoMori.BlazorShared.csproj", "MementoMori.BlazorShared/"]
 COPY ["MementoMori/MementoMori.csproj", "MementoMori/"]
 COPY ["MementoMori.Ortega/MementoMori.Ortega.csproj", "MementoMori.Ortega/"]
-RUN dotnet restore "MementoMori.WebUI/MementoMori.WebUI.csproj"
+RUN dotnet restore "MementoMori.WebUI/MementoMori.WebUI.csproj" -a $TARGETARCH
 COPY . .
 WORKDIR "/src/MementoMori.WebUI"
-RUN dotnet build "MementoMori.WebUI.csproj" -c Release -o /app/build
+RUN dotnet build "MementoMori.WebUI.csproj" -c Release -o /app/build -a $TARGETARCH
 
 FROM build AS publish
-RUN dotnet publish "MementoMori.WebUI.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "MementoMori.WebUI.csproj" -c Release -o /app/publish /p:UseAppHost=false -a $TARGETARCH
 
 FROM base AS final
 WORKDIR /app
