@@ -11,7 +11,7 @@ COPY ["MementoMori.Common/MementoMori.Common.csproj", "MementoMori.Common/"]
 COPY ["MementoMori.BlazorShared/MementoMori.BlazorShared.csproj", "MementoMori.BlazorShared/"]
 COPY ["MementoMori/MementoMori.csproj", "MementoMori/"]
 COPY ["MementoMori.Ortega/MementoMori.Ortega.csproj", "MementoMori.Ortega/"]
-RUN dotnet restore "MementoMori.WebUI/MementoMori.WebUI.csproj" -p:TargetFramework=net8.0
+RUN dotnet workload restore "MementoMori.WebUI/MementoMori.WebUI.csproj" && dotnet restore "MementoMori.WebUI/MementoMori.WebUI.csproj" -p:TargetFramework=net8.0
 COPY . .
 WORKDIR "/src/MementoMori.WebUI"
 RUN dotnet build --no-restore -f net8.0 "MementoMori.WebUI.csproj" -c Release -o /app/build -p:TargetFramework=net8.0
