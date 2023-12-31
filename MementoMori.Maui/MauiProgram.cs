@@ -48,6 +48,7 @@ namespace MementoMori.Maui
 
             builder.Services.AddMementoMori();
             builder.Services.AddMementoMoriBlazorShared();
+            builder.Services.AddMementoMoriMaui();
             builder.Services.AddHttpClient();
 
             builder.Services.AddOptions();
@@ -63,7 +64,7 @@ namespace MementoMori.Maui
 #endif
 
             var app = builder.Build();
-            Services.Setup(app.Services);
+            Common.Services.Setup(app.Services);
 
             return app;
         }

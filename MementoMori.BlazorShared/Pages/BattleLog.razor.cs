@@ -1,10 +1,4 @@
-﻿using System.Text;
-using AutoCtor;
-#if ANDROID 
-using Microsoft.Maui.ApplicationModel.DataTransfer;
-using Microsoft.Maui.Storage;
-#endif
-using MementoMori.Ortega.Share.Data.Battle.Result;
+﻿using MementoMori.Ortega.Share.Data.Battle.Result;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
 
@@ -55,22 +49,14 @@ public partial class BattleLog
     {
         if (string.IsNullOrEmpty(filename)) return;
         if (!ReadLogContent(filename, out var json)) return;
-#if ANDROID
         try
         {
-            var tempPath = Path.Combine(FileSystem.CacheDirectory, filename);
-            await File.WriteAllTextAsync(tempPath, json);
-            await Share.Default.RequestAsync(new ShareFileRequest() { File = new ShareFile(tempPath) });
+            await FileSaver.SaveFile(json, filename);
         }
         catch (Exception e)
         {
             await DialogService.ShowMessageBox("错误", e.ToString());
         }
-#else
-        var bytes = Encoding.UTF8.GetBytes(json);
-        using var streamRef = new DotNetStreamReference(new MemoryStream(bytes));
-        await JS.InvokeVoidAsync("downloadFileFromStream", filename, streamRef);
-#endif
     }
 
     private bool ReadLogContent(string filename, out string json)

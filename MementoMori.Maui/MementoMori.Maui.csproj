@@ -90,6 +90,7 @@
         <PackageReference Include="Quartz" Version="3.7.0" />
         <PackageReference Include="Quartz.AspNetCore" Version="3.7.0" />
 		<PackageReference Include="Sentry.Maui" Version="3.41.3" />
+        <PackageReference Include="Injectio" Version="3.1.0" PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup>

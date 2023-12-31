@@ -50,6 +50,7 @@ internal class Program
 
         builder.Services.AddMementoMori();
         builder.Services.AddMementoMoriBlazorShared();
+        builder.Services.AddMementoMoriWebUI();
         builder.Services.AddHttpClient();
 
         builder.Services.AddOptions();

@@ -31,6 +31,7 @@
         <PackageReference Include="Quartz.AspNetCore" Version="3.7.0" />
       <PackageReference Include="ReactiveUI.Blazor" Version="19.5.1" />
       <PackageReference Include="Sentry.AspNetCore" Version="3.40.1" />
+      <PackageReference Include="Injectio" Version="3.1.0" PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup>

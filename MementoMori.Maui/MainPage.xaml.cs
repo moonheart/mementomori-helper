@@ -19,8 +19,8 @@ namespace MementoMori.Maui
 
         private async Task InitializeMemento()
         {
-            var accountManager = Services.Get<AccountManager>();
-            var networkManager = Services.Get<MementoNetworkManager>();
+            var accountManager = Common.Services.Get<AccountManager>();
+            var networkManager = Common.Services.Get<MementoNetworkManager>();
             UpdateInfo("Initializing...");
             accountManager.MigrateToAccountArray();
             accountManager.CurrentCulture = CultureInfo.CurrentCulture;
