@@ -188,7 +188,7 @@ namespace MementoMori.Ortega.Share.Data
             if (userSyncData.PresentCount != null) PresentCount = userSyncData.PresentCount;
             if (userSyncData.PrivacySettingsType != null) PrivacySettingsType = userSyncData.PrivacySettingsType;
             if (userSyncData.ReceivableAchieveRankingRewardIdMap.IsNotNullOrEmpty())
-                ReceivableAchieveRankingRewardIdMap = ReceivableAchieveRankingRewardIdMap.Merge(userSyncData.ReceivableAchieveRankingRewardIdMap);
+                ReceivableAchieveRankingRewardIdMap = userSyncData.ReceivableAchieveRankingRewardIdMap;
             if (userSyncData.ReceivedAchieveRankingRewardIdList.IsNotNullOrEmpty())
                 ReceivedAchieveRankingRewardIdList = userSyncData.ReceivedAchieveRankingRewardIdList;
             if (userSyncData.ReceivedAutoBattleRewardLastTime != null) ReceivedAutoBattleRewardLastTime = userSyncData.ReceivedAutoBattleRewardLastTime;

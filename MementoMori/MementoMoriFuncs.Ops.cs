@@ -64,6 +64,7 @@ using MementoMori.Ortega.Share.Data.Auth;
 using MementoMori.Ortega.Share.Data.TradeShop;
 using static MementoMori.Ortega.Share.Masters;
 using DynamicData;
+using MementoMori.Ortega.Share.Data.ApiInterface.Ranking;
 using MementoMori.Ortega.Share.Data.Battle;
 
 namespace MementoMori;
@@ -2266,6 +2267,27 @@ public partial class MementoMoriFuncs : ReactiveObject
         });
     }
 
+    public async Task ReceiveAchievementReward()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            await GetResponse<GetPlayerRankingRequest, GetPlayerRankingResponse>(new GetPlayerRankingRequest());
+            foreach (var (rankingDataType, mbId) in UserSyncData.ReceivableAchieveRankingRewardIdMap)
+            {
+                foreach (var mb in AchieveRankingRewardTable.GetByRankingDataType(rankingDataType))
+                {
+                    if (mb.Id >= mbId || UserSyncData.ReceivedAchieveRankingRewardIdList.Contains(mb.Id))
+                    {
+                        continue;
+                    }
+                    var response = await GetResponse<ReceiveAchieveRankingRewardRequest, ReceiveAchieveRankingRewardResponse>(new ReceiveAchieveRankingRewardRequest() { AchieveRankingRewardMBId = mb.Id });
+                    log($"{TextResourceTable.Get(mb.AchieveTargetDescriptionKey)}");
+                    response.RewardItemList.PrintUserItems(log);
+                }
+            }
+        });
+    }
+
 
     public async Task ExecuteAllQuickAction()
     {
@@ -2282,6 +2304,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ReceiveGvgReward();
         await GuildCheckin();
         await GuildRaid();
+        await ReceiveAchievementReward();
         await BountyQuestRewardAuto();
         await BountyQuestStartAuto();
         if (GameConfig.AutoJob.AutoDungeonBattle) await AutoDungeonBattle();
