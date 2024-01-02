@@ -2288,6 +2288,65 @@ public partial class MementoMoriFuncs : ReactiveObject
         });
     }
 
+    public async Task AutoSetGachaRelic()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var targetRelicType = PlayerOption.GachaConfig.TargetRelicType;
+            if (targetRelicType == GachaRelicType.None) return;
+            
+            var listResponse = await GetResponse<GachaGetListRequest, GachaGetListResponse>(new GachaGetListRequest());
+            if (!listResponse.IsFreeChangeRelicGacha) return;
+
+            var gachaCaseInfo = listResponse.GachaCaseInfoList.Find(d=>d.GachaGroupType == GachaGroupType.HolyAngel);
+            if (gachaCaseInfo == null) return;
+
+            if (gachaCaseInfo.GachaRelicType == targetRelicType) return;
+
+            await GetResponse<ChangeGachaRelicRequest, ChangeGachaRelicResponse>(new ChangeGachaRelicRequest(){GachaRelicType = targetRelicType});
+
+            var name = targetRelicType switch
+            {
+                GachaRelicType.ChaliceOfHeavenly => TextResourceTable.Get("[ItemName45]"),
+                GachaRelicType.SilverOrderOfTheBlueSky => TextResourceTable.Get("[ItemName46]"),
+                GachaRelicType.DivineWingsOfDesire => TextResourceTable.Get("[ItemName47]"),
+                GachaRelicType.FruitOfTheGarden => TextResourceTable.Get("[ItemName48]"),
+                _ => ""
+            };
+            
+            log($"{TextResourceTable.Get("[GachaRelicChangeTitle]")} {name} {ResourceStrings.Success}");
+        }); 
+    }
+
+    public async Task BuyGachaRelic()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var targetRelicType = PlayerOption.GachaConfig.TargetRelicType;
+            if (targetRelicType == GachaRelicType.None) return;
+            
+            var listResponse = await GetResponse<GachaGetListRequest, GachaGetListResponse>(new GachaGetListRequest());
+            if (!listResponse.IsFreeChangeRelicGacha) return;
+
+            var gachaCaseInfo = listResponse.GachaCaseInfoList.Find(d=>d.GachaGroupType == GachaGroupType.HolyAngel);
+            if (gachaCaseInfo == null) return;
+
+            if (gachaCaseInfo.GachaRelicType == targetRelicType) return;
+
+            await GetResponse<ChangeGachaRelicRequest, ChangeGachaRelicResponse>(new ChangeGachaRelicRequest(){GachaRelicType = targetRelicType});
+
+            var name = targetRelicType switch
+            {
+                GachaRelicType.ChaliceOfHeavenly => TextResourceTable.Get("[ItemName45]"),
+                GachaRelicType.SilverOrderOfTheBlueSky => TextResourceTable.Get("[ItemName46]"),
+                GachaRelicType.DivineWingsOfDesire => TextResourceTable.Get("[ItemName47]"),
+                GachaRelicType.FruitOfTheGarden => TextResourceTable.Get("[ItemName48]"),
+                _ => ""
+            };
+            
+            log($"{TextResourceTable.Get("[GachaRelicChangeTitle]")} {name} {ResourceStrings.Success}");
+        }); 
+    }
 
     public async Task ExecuteAllQuickAction()
     {

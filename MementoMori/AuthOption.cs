@@ -57,6 +57,10 @@ public class GameConfig
     public class GachaConfigModel
     {
         public List<UserItem> AutoGachaConsumeUserItems { get; set; } = new();
+
+        public GachaRelicType TargetRelicType { get; set; } = GachaRelicType.None;
+
+        public bool AutoGachaRelic { get; set; }
     }
 
     public class ShopConfig
@@ -81,6 +85,7 @@ public class GameConfig
         public bool AutoOpenGuildRaid { get; set; }
         public bool AutoLocalRaid { get; set; }
         public bool AutoDeployGuildDefense { get; set; }
+        public bool AutoChangeGachaRelic { get; set; }
 
         public string DailyJobCron { get; set; } = "0 10 4 ? * *";
         public string HourlyJobCron { get; set; } = "0 30 0,4,8,12,16,20 ? * *";
@@ -90,6 +95,7 @@ public class GameConfig
         public string AutoBuyShopItemJobCron { get; set; } = "0 9 9,12,15,18 ? * *";
         public string AutoLocalRaidJobCron { get; set; } = "0 31 12,19 ? * *";
         public string AutoDeployGuildDefenseJobCron { get; set; } = "0 20 19 ? * *";
+        public string AutoChangeGachaRelicJobCron { get; set; } = "0 0 5 ? * MON *";
     }
 
     public class BountyQuestAutoModel
@@ -124,7 +130,7 @@ public class GameConfig
         //     new WeightedItem(ItemType.CharacterTrainingMaterial, 1, 2), // 经验珠
         //     new WeightedItem(ItemType.EquipmentReinforcementItem, 1, 1), // 强化水
         // };
-        
+
         public bool SelfCreateRoom { get; set; }
 
         public int WaitSeconds { get; set; } = 3;
@@ -210,7 +216,10 @@ public class GameConfig
 
 
     public AutoJobModel AutoJob { get; set; } = new();
+
+    [Obsolete("Use config in PlayerOption")]
     public GachaConfigModel GachaConfig { get; set; } = new();
+
     public DungeonBattleRelicSortInfo[] DungeonBattleRelicSort { get; set; }
     public int AutoRequestDelay { get; set; }
     public bool RecordBattleLog { get; set; } = true;
@@ -218,8 +227,10 @@ public class GameConfig
     public BountyQuestAutoModel BountyQuestAuto { get; set; } = new();
     public DungeonBattleConfig DungeonBattle { get; set; } = new();
     public ShopConfig Shop { get; set; } = new();
+
     [Obsolete("Use config in PlayerOption")]
     public LocalRaidConfig LocalRaid { get; set; } = new();
+
     public LoginConfig Login { get; set; } = new();
     public ItemsConfig Items { get; set; } = new();
 }
@@ -234,6 +245,8 @@ public class PlayerOption
     public PvpOption BattleLeague { get; set; } = new();
     public PvpOption LegendLeague { get; set; } = new();
     public GameConfig.LocalRaidConfig LocalRaid { get; set; } = new();
+
+    public GameConfig.GachaConfigModel GachaConfig { get; set; } = new();
 }
 
 public class PvpOption

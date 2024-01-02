@@ -25,25 +25,7 @@
         <AutoJobNextExecution />
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText>@Masters.TextResourceTable.Get("[CommonFooterGachaButtonLabel]") (Global)</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudField Label="@ResourceStrings.AutoGachaConsumeItems" Variant="Variant.Outlined">
-                    <MudSelect T="UserItem" Label="" MultiSelection="true" Dense="true" Comparer="@(new UserItemComparer())"
-                               @bind-SelectedValues="GachaConfigAutoGachaConsumeUserItems" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
-                        @foreach (var item in _gachaConsumeItems)
-                        {
-                            <MudSelectItem T="UserItem" Value="@item">@ItemUtil.GetItemName(item)</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudField>
-
-            </MudCardContent>
-        </MudCard>
+        <GachaSettings />
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
         <MudCard>
@@ -157,7 +139,6 @@
 
 @code {
 
-    List<UserItem> _gachaConsumeItems = new();
     List<UserItem> _bountyQuestRewardItems = new();
     List<UserItem> _dungeonBattleShopItems = new();
     private IEnumerable<UserItem> _selected;
@@ -174,9 +155,6 @@
     {
         await base.OnInitializedAsync();
 
-        _gachaConsumeItems = Masters.ItemTable.GetArray()
-            .Where(d => d.ItemType == ItemType.GachaTicket || d.ItemType == ItemType.FriendPoint || d.ItemType == ItemType.Gold)
-            .Select(d => new UserItem() {ItemId = d.ItemId, ItemType = d.ItemType}).ToList();
         _bountyQuestRewardItems.AddRange(new[]
         {
             new UserItem() {ItemType = ItemType.Gold, ItemId = 1},
@@ -239,12 +217,6 @@
         _dungeonBattleSelectItemDialog = false;
     }
 
-
-    IEnumerable<UserItem> GachaConfigAutoGachaConsumeUserItems
-    {
-        get => WritableGameConfig.Value.GachaConfig.AutoGachaConsumeUserItems;
-        set => WritableGameConfig.Update(x => x.GachaConfig.AutoGachaConsumeUserItems = value.ToList());
-    }
 
     IEnumerable<UserItem> BountyQuestAutoTargetItems
     {
