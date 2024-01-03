@@ -46,6 +46,11 @@
       <AndroidKeyStore>True</AndroidKeyStore>
       <AndroidSigningKeyAlias>mementomori-helper</AndroidSigningKeyAlias>
       <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
+      <ApplicationId>io.github.moonheart.mementomorihelper</ApplicationId>
+      <ApplicationTitle>MementoMori Helper</ApplicationTitle>
+      <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
+      <ApplicationVersion>1</ApplicationVersion>
+      <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
@@ -54,6 +59,38 @@
       <AndroidKeyStore>True</AndroidKeyStore>
       <AndroidSigningKeyAlias>mementomori-helper</AndroidSigningKeyAlias>
       <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
+      <ApplicationTitle>MementoMori Helper</ApplicationTitle>
+      <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
+      <ApplicationTitle>MementoMori Helper</ApplicationTitle>
+      <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
+      <ApplicationTitle>MementoMori Helper</ApplicationTitle>
+      <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
+      <ApplicationTitle>MementoMori Helper</ApplicationTitle>
+      <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
+      <ApplicationTitle>MementoMori Helper</ApplicationTitle>
+      <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
+      <ApplicationTitle>MementoMori Helper</ApplicationTitle>
+      <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
+      <ApplicationTitle>MementoMori Helper</ApplicationTitle>
+      <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
     </PropertyGroup>
 
     <ItemGroup>
@@ -90,7 +127,7 @@
         <PackageReference Include="Quartz" Version="3.7.0" />
         <PackageReference Include="Quartz.AspNetCore" Version="3.7.0" />
 		<PackageReference Include="Sentry.Maui" Version="3.41.3" />
-        <PackageReference Include="Injectio" Version="3.1.0" PrivateAssets="all"/>
+        <PackageReference Include="Injectio" Version="3.1.0" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>
