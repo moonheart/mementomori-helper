@@ -107,6 +107,7 @@ internal class AssetDownloader : BackgroundService
         while (true)
             try
             {
+                await _networkManager.Initialize();
                 await _networkManager.DownloadAssets(_downloaderOption.GameOs, _downloaderOption.DownloadPath, "./Assets-tmp", stoppingToken);
                 isDownloaded = true;
                 break;
