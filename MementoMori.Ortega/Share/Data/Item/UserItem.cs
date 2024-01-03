@@ -23,8 +23,7 @@ namespace MementoMori.Ortega.Share.Data.Item
 
         public bool IsCurrency()
         {
-            ItemType itemType = this.ItemType;
-            return true;
+            return ItemType == ItemType.CurrencyFree || ItemType == ItemType.CurrencyPaid;
         }
 
         public bool IsEqual(IUserItem userItem)

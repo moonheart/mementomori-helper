@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoCtor;
 using MementoMori.Option;
 using Quartz;
 
 namespace MementoMori.Jobs;
 
-internal class AutoBuyShopItemJob : IJob
+[AutoConstruct]
+internal partial class AutoBuyShopItemJob : IJob
 {
     private AccountManager _accountManager;
-
-    public AutoBuyShopItemJob(AccountManager accountManager)
-    {
-        _accountManager = accountManager;
-    }
 
     public async Task Execute(IJobExecutionContext context)
     {

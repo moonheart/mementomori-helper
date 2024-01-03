@@ -6,6 +6,7 @@
 @using MementoMori.Ortega.Share.Data.Item
 @using MementoMori.Common.Localization
 @using MementoMori.Ortega.Share.Enums
+@using MementoMori.Ortega.Share.Extensions
 @inherits MementoMori.WebUI.Models.AccountComponent
 @inject IWritableOptions<GameConfig> WritableGameConfig
 
@@ -14,6 +15,9 @@
         <CardHeaderContent>
             <MudText>@Masters.TextResourceTable.Get("[CommonFooterGachaButtonLabel]") (Global)</MudText>
         </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton Variant="Variant.Outlined" Size="Size.Small" Icon="@Icons.Material.Filled.Save" OnClick="() => SavePlayerSetting()"></MudIconButton>
+        </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
         <MudField Label="@ResourceStrings.AutoGachaConsumeItems" Variant="Variant.Outlined">
@@ -25,7 +29,7 @@
                 }
             </MudSelect>
         </MudField>
-        <MudField Label="@Tr("[TradeShopTabName11]")" Variant="Variant.Outlined">
+        <MudField Label="@($"{Tr("[TradeShopTabName11]")} ({Funcs?.UserSyncData?.UserStatusDtoInfo?.Name})")" Variant="Variant.Outlined">
             <MudSelect T="GachaRelicType" Label="@Tr("[GachaRelicChangeTitle]")" @bind-Value="_targetRelicType" Dense="true">
                 <MudSelectItem T="GachaRelicType" Value="GachaRelicType.None">None</MudSelectItem>
                 <MudSelectItem T="GachaRelicType" Value="GachaRelicType.ChaliceOfHeavenly">@Tr("[ItemName45]")</MudSelectItem>
@@ -33,7 +37,7 @@
                 <MudSelectItem T="GachaRelicType" Value="GachaRelicType.DivineWingsOfDesire">@Tr("[ItemName47]")</MudSelectItem>
                 <MudSelectItem T="GachaRelicType" Value="GachaRelicType.FruitOfTheGarden">@Tr("[ItemName48]")</MudSelectItem>
             </MudSelect>
-            <MudSwitch Label="Auto Buy 3 times" @bind-Checked="_isAutoGacha"></MudSwitch>
+            <MudSwitch Color="Color.Primary" Label="@ResourceStrings.Auto_draw_10_times__up_to_3_draws_" @bind-Checked="_isAutoGacha"></MudSwitch>
         </MudField>
     </MudCardContent>
 </MudCard>
@@ -57,6 +61,8 @@
             .Where(d => d.ItemType == ItemType.GachaTicket || d.ItemType == ItemType.FriendPoint || d.ItemType == ItemType.Gold)
             .Select(d => new UserItem() {ItemId = d.ItemId, ItemType = d.ItemType}).ToList();
 
+        _targetRelicType = PlayersOptions.Value[NetworkManager.PlayerId].GachaConfig.TargetRelicType;
+        _isAutoGacha = PlayersOptions.Value[NetworkManager.PlayerId].GachaConfig.AutoGachaRelic;
         return Task.CompletedTask;
     }
 
@@ -76,6 +82,21 @@
             return HashCode.Combine(obj.ItemId, (int) obj.ItemType);
         }
     }
+
+    private void SavePlayerSetting()
+    {
+        PlayersOptions.Update(opt =>
+        {
+            var playerOpt = opt.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
+            playerOpt.GachaConfig.TargetRelicType = _targetRelicType;
+            playerOpt.GachaConfig.AutoGachaRelic= _isAutoGacha;
+        });
+
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add(ResourceStrings.Save_successful, Severity.Success);
+    }
+
 
 
 }

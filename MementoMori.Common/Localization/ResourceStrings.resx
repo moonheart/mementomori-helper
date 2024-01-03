@@ -515,4 +515,7 @@
   <data name="Seconds of pre-battle wait time" xml:space="preserve">
       <value>Seconds of pre-battle wait time</value>
   </data>
+  <data name="Auto draw 10 times (up to 3 draws)" xml:space="preserve">
+      <value>Auto draw 10 times (up to 3 draws)</value>
+  </data>
 </root>

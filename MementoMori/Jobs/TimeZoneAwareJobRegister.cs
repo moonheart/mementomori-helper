@@ -36,6 +36,8 @@ public partial class TimeZoneAwareJobRegister
         RemoveJob<AutoBuyShopItemJob>(scheduler, userId);
         RemoveJob<LocalRaidJob>(scheduler, userId);
         RemoveJob<GuildBattleDeployDefenseJob>(scheduler, userId);
+        RemoveJob<AutoChangeGachaRelicJob>(scheduler, userId);
+        RemoveJob<AutoDrawGachaRelicJob>(scheduler, userId);
     }
 
     public async Task RegisterJobs(long userId)
@@ -66,6 +68,10 @@ public partial class TimeZoneAwareJobRegister
             AddJob<LocalRaidJob>(scheduler, _gameConfig.Value.AutoJob.AutoLocalRaidJobCron, Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]"), userId,
                 networkManager.TimeManager.DiffFromUtc);
             AddJob<GuildBattleDeployDefenseJob>(scheduler, _gameConfig.Value.AutoJob.AutoDeployGuildDefenseJobCron, ResourceStrings.Deploy_defense, userId,
+                networkManager.TimeManager.DiffFromUtc);
+            AddJob<AutoChangeGachaRelicJob>(scheduler, _gameConfig.Value.AutoJob.AutoChangeGachaRelicJobCron, Masters.TextResourceTable.Get("[GachaRelicChangeTitle]"), userId,
+                networkManager.TimeManager.DiffFromUtc);
+            AddJob<AutoDrawGachaRelicJob>(scheduler, _gameConfig.Value.AutoJob.AutoDrawGachaRelicJobCron, ResourceStrings.Auto_draw_10_times__up_to_3_draws_, userId,
                 networkManager.TimeManager.DiffFromUtc);
         }
         catch (Exception e)

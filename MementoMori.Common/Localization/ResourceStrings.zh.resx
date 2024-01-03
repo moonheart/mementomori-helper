@@ -515,4 +515,7 @@
   <data name="Seconds of pre-battle wait time" xml:space="preserve">
       <value>开启战斗前等待的秒数</value>
   </data>
+  <data name="Auto draw 10 times (up to 3 draws)" xml:space="preserve">
+      <value>自动抽满10次（最多抽3次）</value>
+  </data>
 </root>

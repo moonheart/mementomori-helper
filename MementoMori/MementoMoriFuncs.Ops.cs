@@ -2304,47 +2304,41 @@ public partial class MementoMoriFuncs : ReactiveObject
             if (gachaCaseInfo.GachaRelicType == targetRelicType) return;
 
             await GetResponse<ChangeGachaRelicRequest, ChangeGachaRelicResponse>(new ChangeGachaRelicRequest(){GachaRelicType = targetRelicType});
-
-            var name = targetRelicType switch
-            {
-                GachaRelicType.ChaliceOfHeavenly => TextResourceTable.Get("[ItemName45]"),
-                GachaRelicType.SilverOrderOfTheBlueSky => TextResourceTable.Get("[ItemName46]"),
-                GachaRelicType.DivineWingsOfDesire => TextResourceTable.Get("[ItemName47]"),
-                GachaRelicType.FruitOfTheGarden => TextResourceTable.Get("[ItemName48]"),
-                _ => ""
-            };
             
-            log($"{TextResourceTable.Get("[GachaRelicChangeTitle]")} {name} {ResourceStrings.Success}");
+            log($"{TextResourceTable.Get("[GachaRelicChangeTitle]")} {targetRelicType.GetName()} {ResourceStrings.Success}");
         }); 
     }
 
-    public async Task BuyGachaRelic()
+    public async Task DrawGachaRelic()
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var targetRelicType = PlayerOption.GachaConfig.TargetRelicType;
-            if (targetRelicType == GachaRelicType.None) return;
-            
-            var listResponse = await GetResponse<GachaGetListRequest, GachaGetListResponse>(new GachaGetListRequest());
-            if (!listResponse.IsFreeChangeRelicGacha) return;
+            if (!PlayerOption.GachaConfig.AutoGachaRelic) return;
 
+            var listResponse = await GetResponse<GachaGetListRequest, GachaGetListResponse>(new GachaGetListRequest());
             var gachaCaseInfo = listResponse.GachaCaseInfoList.Find(d=>d.GachaGroupType == GachaGroupType.HolyAngel);
             if (gachaCaseInfo == null) return;
 
-            if (gachaCaseInfo.GachaRelicType == targetRelicType) return;
+            if (gachaCaseInfo.GachaBonusDrawCount >= 10) return;
 
-            await GetResponse<ChangeGachaRelicRequest, ChangeGachaRelicResponse>(new ChangeGachaRelicRequest(){GachaRelicType = targetRelicType});
+            var gachaCaseMb = GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
+            log(gachaCaseMb.GachaRelicType.GetName());
 
-            var name = targetRelicType switch
+            for (int i = 0; i < 3; i++)
             {
-                GachaRelicType.ChaliceOfHeavenly => TextResourceTable.Get("[ItemName45]"),
-                GachaRelicType.SilverOrderOfTheBlueSky => TextResourceTable.Get("[ItemName46]"),
-                GachaRelicType.DivineWingsOfDesire => TextResourceTable.Get("[ItemName47]"),
-                GachaRelicType.FruitOfTheGarden => TextResourceTable.Get("[ItemName48]"),
-                _ => ""
-            };
-            
-            log($"{TextResourceTable.Get("[GachaRelicChangeTitle]")} {name} {ResourceStrings.Success}");
+                var currency = UserSyncData.GetUserItemCount(ItemType.CurrencyFree) + UserSyncData.GetUserItemCount(ItemType.CurrencyPaid);
+                var gachaButtonInfo = gachaCaseInfo.GachaButtonInfoList.Find(d => d.ConsumeUserItem.IsCurrency() && d.ConsumeUserItem.ItemCount == 300);
+                if (gachaButtonInfo == null) break;
+
+                if (gachaCaseInfo.GachaBonusDrawCount >= 10 || currency < 300)
+                {
+                    break;
+                }
+
+                var drawResponse = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = gachaButtonInfo.GachaButtonId});
+                drawResponse.GachaRewardItemList.PrintUserItems(log);
+                drawResponse.BonusRewardItemList.PrintUserItems(log);
+            }
         }); 
     }
 

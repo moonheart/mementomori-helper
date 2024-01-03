@@ -16,7 +16,7 @@
             <MudText>@Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]") (@(Funcs?.UserSyncData?.UserStatusDtoInfo?.Name))</MudText>
         </CardHeaderContent>
         <CardHeaderActions>
-            <MudButton Variant="Variant.Outlined" OnClick="SaveLocalRaidConfig">@Masters.TextResourceTable.Get("[CommonSaveLabel]")</MudButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Variant="Variant.Outlined" OnClick="SaveLocalRaidConfig"></MudIconButton>
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>

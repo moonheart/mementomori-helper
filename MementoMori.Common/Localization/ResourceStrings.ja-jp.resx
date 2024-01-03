@@ -409,4 +409,7 @@
     <data name="Seconds of pre-battle wait time" xml:space="preserve">
         <value>バトル前の待機秒数</value>
     </data>
+    <data name="Auto draw 10 times (up to 3 draws)" xml:space="preserve">
+        <value>自動で10回引く（最大3回）</value>
+    </data>
 </root>

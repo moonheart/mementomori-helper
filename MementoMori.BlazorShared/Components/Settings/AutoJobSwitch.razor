@@ -14,15 +14,17 @@
     <MudCardContent>
         <MudSwitch Label="@ResourceStrings.DisableAllJobs" @bind-Checked="AutoJob__DisableAll" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@ResourceStrings.ReinforceEquipmentOnce" @bind-Checked="AutoJob__AutoReinforcementEquipmentOneTime" Color="Color.Primary"></MudSwitch>
-        <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")" @bind-Checked="AutoJob__AutoPvp" Color="Color.Primary"></MudSwitch>
-        <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]")" @bind-Checked="AutoJob__AutoLegendLeague" Color="Color.Primary"></MudSwitch>
-        <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")" @bind-Checked="AutoJob__AutoDungeonBattle" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@Tr("[CommonHeaderLocalPvpLabel]")" @bind-Checked="AutoJob__AutoPvp" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@Tr("[CommonHeaderGlobalPvpLabel]")" @bind-Checked="AutoJob__AutoLegendLeague" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@Tr("[CommonHeaderDungeonBattleLabel]")" @bind-Checked="AutoJob__AutoDungeonBattle" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@ResourceStrings.UseNormalItems" @bind-Checked="AutoJob__AutoUseItems" Color="Color.Primary"></MudSwitch>
-        <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonFooterGachaButtonLabel]")" @bind-Checked="AutoJob__AutoFreeGacha" Color="Color.Primary"></MudSwitch>
-        <MudSwitch Label="@Masters.TextResourceTable.Get("[CharacterMenuTabCharacterRankUp]")" @bind-Checked="AutoJob__AutoRankUpCharacter" Color="Color.Primary"></MudSwitch>
-        <MudSwitch Label="@Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")" @bind-Checked="AutoJob__AutoOpenGuildRaid" Color="Color.Primary"></MudSwitch>
-        <MudSwitch Label="@Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]")" @bind-Checked="AutoJob__AutoLocalRaid" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@Tr("[CommonFooterGachaButtonLabel]")" @bind-Checked="AutoJob__AutoFreeGacha" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@Tr("[CharacterMenuTabCharacterRankUp]")" @bind-Checked="AutoJob__AutoRankUpCharacter" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@Tr("[GuildRaidReleaseConfirmTitle]")" @bind-Checked="AutoJob__AutoOpenGuildRaid" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@Tr("[CommonHeaderLocalRaidLabel]")" @bind-Checked="AutoJob__AutoLocalRaid" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@ResourceStrings.Deploy_defense" @bind-Checked="AutoJob__AutoDeployGuildDefense" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@Tr("[GachaRelicChangeTitle]")" @bind-Checked="AutoJob__AutoChangeGachaRelic" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@ResourceStrings.Auto_draw_10_times__up_to_3_draws_" @bind-Checked="AutoJob__AutoDrawGachaRelic" Color="Color.Primary"></MudSwitch>
     </MudCardContent>
 </MudCard>
 
@@ -95,6 +97,18 @@
     {
         get => WritableGameConfig.Value.AutoJob.AutoDeployGuildDefense;
         set => WritableGameConfig.Update(x => x.AutoJob.AutoDeployGuildDefense = value);
+    }
+
+    public bool AutoJob__AutoChangeGachaRelic
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoChangeGachaRelic;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoChangeGachaRelic = value);
+    }
+
+    public bool AutoJob__AutoDrawGachaRelic
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoDrawGachaRelic;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoDrawGachaRelic = value);
     }
 
 }

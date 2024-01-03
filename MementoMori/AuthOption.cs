@@ -86,6 +86,7 @@ public class GameConfig
         public bool AutoLocalRaid { get; set; }
         public bool AutoDeployGuildDefense { get; set; }
         public bool AutoChangeGachaRelic { get; set; }
+        public bool AutoDrawGachaRelic { get; set; }
 
         public string DailyJobCron { get; set; } = "0 10 4 ? * *";
         public string HourlyJobCron { get; set; } = "0 30 0,4,8,12,16,20 ? * *";
@@ -96,6 +97,7 @@ public class GameConfig
         public string AutoLocalRaidJobCron { get; set; } = "0 31 12,19 ? * *";
         public string AutoDeployGuildDefenseJobCron { get; set; } = "0 20 19 ? * *";
         public string AutoChangeGachaRelicJobCron { get; set; } = "0 0 5 ? * MON *";
+        public string AutoDrawGachaRelicJobCron { get; set; } = "0 0 6 ? * SUN *";
     }
 
     public class BountyQuestAutoModel

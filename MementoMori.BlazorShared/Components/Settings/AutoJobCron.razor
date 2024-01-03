@@ -12,14 +12,16 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <MudTextField Label="@($"{ResourceStrings.DailyJob} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__DailyJobCron" Variant="Variant.Outlined"></MudTextField>
-        <MudTextField Label="@($"{ResourceStrings.RewardClaimJob} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__HourlyJobCron" Variant="Variant.Outlined"></MudTextField>
-        <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__PvpJobCron" Variant="Variant.Outlined"></MudTextField>
-        <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__LegendLeagueJobCron" Variant="Variant.Outlined"></MudTextField>
-        <MudTextField Label="@($"{Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__GuildRaidBossReleaseCron" Variant="Variant.Outlined"></MudTextField>
-        <MudTextField Label="@($"{ResourceStrings.ShopAutoBuyItems} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoBuyShopItemJobCron" Variant="Variant.Outlined"></MudTextField>
-        <MudTextField Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoLocalRaidJobCron" Variant="Variant.Outlined"></MudTextField>
-        <MudTextField Label="@($"{ResourceStrings.Deploy_defense} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoDeployGuildDefenseJobCron" Variant="Variant.Outlined"></MudTextField>
+        <MudTextField Margin="Margin.Dense" Label="@($"{ResourceStrings.DailyJob} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__DailyJobCron" Variant="Variant.Outlined"></MudTextField>
+        <MudTextField Margin="Margin.Dense" Label="@($"{ResourceStrings.RewardClaimJob} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__HourlyJobCron" Variant="Variant.Outlined"></MudTextField>
+        <MudTextField Margin="Margin.Dense" Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__PvpJobCron" Variant="Variant.Outlined"></MudTextField>
+        <MudTextField Margin="Margin.Dense" Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__LegendLeagueJobCron" Variant="Variant.Outlined"></MudTextField>
+        <MudTextField Margin="Margin.Dense" Label="@($"{Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__GuildRaidBossReleaseCron" Variant="Variant.Outlined"></MudTextField>
+        <MudTextField Margin="Margin.Dense" Label="@($"{ResourceStrings.ShopAutoBuyItems} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoBuyShopItemJobCron" Variant="Variant.Outlined"></MudTextField>
+        <MudTextField Margin="Margin.Dense" Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoLocalRaidJobCron" Variant="Variant.Outlined"></MudTextField>
+        <MudTextField Margin="Margin.Dense" Label="@($"{ResourceStrings.Deploy_defense} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoDeployGuildDefenseJobCron" Variant="Variant.Outlined"></MudTextField>
+        <MudTextField Margin="Margin.Dense" Label="@($"{Tr("[GachaRelicChangeTitle]")} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoChangeGachaRelicJobCron" Variant="Variant.Outlined"></MudTextField>
+        <MudTextField Margin="Margin.Dense" Label="@($"{ResourceStrings.Auto_draw_10_times__up_to_3_draws_} {ResourceStrings.CronExpression}")" @bind-Value="AutoJob__AutoDrawGachaRelicJobCron" Variant="Variant.Outlined"></MudTextField>
     </MudCardContent>
 </MudCard>
 
@@ -101,6 +103,26 @@
         set
         {
             WritableGameConfig.Update(x => x.AutoJob.AutoDeployGuildDefenseJobCron = value);
+            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+    }
+
+    public string AutoJob__AutoChangeGachaRelicJobCron
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoChangeGachaRelicJobCron;
+        set
+        {
+            WritableGameConfig.Update(x => x.AutoJob.AutoChangeGachaRelicJobCron = value);
+            TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+    }
+
+    public string AutoJob__AutoDrawGachaRelicJobCron
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoDrawGachaRelicJobCron;
+        set
+        {
+            WritableGameConfig.Update(x => x.AutoJob.AutoDrawGachaRelicJobCron = value);
             TimeZoneAwareJobRegister.RegisterAllJobs().ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
