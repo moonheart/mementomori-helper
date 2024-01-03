@@ -61,8 +61,8 @@
             .Where(d => d.ItemType == ItemType.GachaTicket || d.ItemType == ItemType.FriendPoint || d.ItemType == ItemType.Gold)
             .Select(d => new UserItem() {ItemId = d.ItemId, ItemType = d.ItemType}).ToList();
 
-        _targetRelicType = PlayersOptions.Value[NetworkManager.PlayerId].GachaConfig.TargetRelicType;
-        _isAutoGacha = PlayersOptions.Value[NetworkManager.PlayerId].GachaConfig.AutoGachaRelic;
+        _targetRelicType = PlayersOptions.Value.TryGetValue(NetworkManager.PlayerId, out var v1)? v1.GachaConfig.TargetRelicType : GachaRelicType.None;
+        _isAutoGacha = PlayersOptions.Value.TryGetValue(NetworkManager.PlayerId, out var v2) ? v2.GachaConfig.AutoGachaRelic : false;
         return Task.CompletedTask;
     }
 
