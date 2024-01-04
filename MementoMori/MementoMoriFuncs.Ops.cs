@@ -2302,6 +2302,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             if (gachaCaseInfo == null) return;
 
             if (gachaCaseInfo.GachaRelicType == targetRelicType) return;
+            if (gachaCaseInfo.GachaBonusDrawCount > 0) return;
 
             await GetResponse<ChangeGachaRelicRequest, ChangeGachaRelicResponse>(new ChangeGachaRelicRequest(){GachaRelicType = targetRelicType});
             
