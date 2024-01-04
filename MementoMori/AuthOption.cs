@@ -88,7 +88,7 @@ public class GameConfig
         public bool AutoChangeGachaRelic { get; set; }
         public bool AutoDrawGachaRelic { get; set; }
 
-        public string DailyJobCron { get; set; } = "0 10 4 ? * *";
+        public string DailyJobCron { get; set; } = "0 50 4 ? * *";
         public string HourlyJobCron { get; set; } = "0 30 0,4,8,12,16,20 ? * *";
         public string PvpJobCron { get; set; } = "0 0 20 ? * *";
         public string LegendLeagueJobCron { get; set; } = "0 10 20 ? * *";
@@ -96,7 +96,7 @@ public class GameConfig
         public string AutoBuyShopItemJobCron { get; set; } = "0 9 9,12,15,18 ? * *";
         public string AutoLocalRaidJobCron { get; set; } = "0 31 12,19 ? * *";
         public string AutoDeployGuildDefenseJobCron { get; set; } = "0 20 19 ? * *";
-        public string AutoChangeGachaRelicJobCron { get; set; } = "0 0 5 ? * MON *";
+        public string AutoChangeGachaRelicJobCron { get; set; } = "0 40 4 ? * MON *";
         public string AutoDrawGachaRelicJobCron { get; set; } = "0 0 6 ? * SUN *";
     }
 
