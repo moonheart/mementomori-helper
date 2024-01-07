@@ -190,7 +190,7 @@ namespace MementoMori.Ortega.Share.Data
             if (userSyncData.ReceivableAchieveRankingRewardIdMap.IsNotNullOrEmpty())
                 ReceivableAchieveRankingRewardIdMap = userSyncData.ReceivableAchieveRankingRewardIdMap;
             if (userSyncData.ReceivedAchieveRankingRewardIdList.IsNotNullOrEmpty())
-                ReceivedAchieveRankingRewardIdList = userSyncData.ReceivedAchieveRankingRewardIdList;
+                ReceivedAchieveRankingRewardIdList = ReceivedAchieveRankingRewardIdList.Merge(userSyncData.ReceivedAchieveRankingRewardIdList);
             if (userSyncData.ReceivedAutoBattleRewardLastTime != null) ReceivedAutoBattleRewardLastTime = userSyncData.ReceivedAutoBattleRewardLastTime;
             if (userSyncData.ReleaseLockEquipmentCooldownTimeStampMap.IsNotNullOrEmpty())
                 ReleaseLockEquipmentCooldownTimeStampMap = ReleaseLockEquipmentCooldownTimeStampMap.Merge(userSyncData.ReleaseLockEquipmentCooldownTimeStampMap);

@@ -2276,10 +2276,8 @@ public partial class MementoMoriFuncs : ReactiveObject
             {
                 foreach (var mb in AchieveRankingRewardTable.GetByRankingDataType(rankingDataType))
                 {
-                    if (mb.Id >= mbId || UserSyncData.ReceivedAchieveRankingRewardIdList.Contains(mb.Id))
-                    {
-                        continue;
-                    }
+                    if (mb.Id > mbId || UserSyncData.ReceivedAchieveRankingRewardIdList.Contains(mb.Id)) continue;
+
                     var response = await GetResponse<ReceiveAchieveRankingRewardRequest, ReceiveAchieveRankingRewardResponse>(new ReceiveAchieveRankingRewardRequest() { AchieveRankingRewardMBId = mb.Id });
                     log($"{TextResourceTable.Get(mb.AchieveTargetDescriptionKey)}");
                     response.RewardItemList.PrintUserItems(log);
