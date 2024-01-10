@@ -1347,7 +1347,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                             {
                                 TradeShopTabId = tabInfo.TradeShopTabId, TradeShopItemInfos = new List<TradeShopItemInfo>() {new() {TradeShopItemId = shopItem.TradeShopItemId, TradeCount = 1}}
                             });
-                        response.TradeShopItems.Select(d => d.GiveItem).PrintUserItems(log);
+                        response.UserSyncData.GivenItemCountInfoList.PrintUserItems(log);
                     }
                     catch (ApiErrorException e)
                     {
