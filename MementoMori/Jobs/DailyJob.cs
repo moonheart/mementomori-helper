@@ -1,15 +1,13 @@
-﻿using Quartz;
+﻿using AutoCtor;
+
+using Quartz;
 
 namespace MementoMori.Jobs;
 
-public class DailyJob: IJob
+[AutoConstruct]
+public partial class DailyJob: IJob
 {
-    private AccountManager _accountManager;
-
-    public DailyJob(AccountManager accountManager)
-    {
-        _accountManager = accountManager;
-    }
+    private readonly AccountManager _accountManager;
 
     public async Task Execute(IJobExecutionContext context)
     {

@@ -6,26 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MementoMori.Option;
+using AutoCtor;
 
 namespace MementoMori.Jobs;
 
-internal class GuildRaidBossReleaseJob : IJob
+[AutoConstruct]
+internal partial class GuildRaidBossReleaseJob : IJob
 {
-    private AccountManager _accountManager;
     private readonly IWritableOptions<GameConfig> _gameConfig;
-
-    public GuildRaidBossReleaseJob(IWritableOptions<GameConfig> gameConfig, AccountManager accountManager)
-    {
-        _accountManager = accountManager;
-        _gameConfig = gameConfig;
-    }
+    private readonly AccountManager _accountManager;
 
     public async Task Execute(IJobExecutionContext context)
     {
-        if (!_gameConfig.Value.AutoJob.AutoOpenGuildRaid)
-        {
-            return;
-        }
+        if (!_gameConfig.Value.AutoJob.AutoOpenGuildRaid) return;
         var userId = context.MergedJobDataMap.GetLongValue("userId");
         if (userId <= 0) return;
         var account = _accountManager.Get(userId);

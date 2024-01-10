@@ -12,7 +12,7 @@ namespace MementoMori.Jobs;
 [AutoConstruct]
 internal partial class AutoChangeGachaRelicJob : IJob
 {
-    private AccountManager _accountManager;
+    private readonly AccountManager _accountManager;
     private readonly IWritableOptions<GameConfig> _gameConfig;
 
     public async Task Execute(IJobExecutionContext context)

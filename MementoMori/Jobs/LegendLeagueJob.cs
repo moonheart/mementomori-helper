@@ -1,18 +1,14 @@
-﻿using MementoMori.Option;
+﻿using AutoCtor;
+using MementoMori.Option;
 using Quartz;
 
 namespace MementoMori.Jobs;
 
-public class LegendLeagueJob : IJob
+[AutoConstruct]
+public partial class LegendLeagueJob : IJob
 {
-    private AccountManager _accountManager;
+    private readonly AccountManager _accountManager;
     private readonly IWritableOptions<GameConfig> _gameConfig;
-
-    public LegendLeagueJob(AccountManager accountManager, IWritableOptions<GameConfig> gameConfig)
-    {
-        _accountManager = accountManager;
-        _gameConfig = gameConfig;
-    }
 
     public async Task Execute(IJobExecutionContext context)
     {

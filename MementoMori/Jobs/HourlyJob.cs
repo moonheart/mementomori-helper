@@ -1,19 +1,16 @@
-﻿using MementoMori.Option;
+﻿using AutoCtor;
+using MementoMori.Option;
 using Microsoft.Extensions.Options;
 using Quartz;
 
 namespace MementoMori.Jobs;
 
-public class HourlyJob : IJob
+[AutoConstruct]
+public partial class HourlyJob : IJob
 {
-    private AccountManager _accountManager;
     private readonly IWritableOptions<GameConfig> _gameConfig;
+    private readonly AccountManager _accountManager;
 
-    public HourlyJob(IWritableOptions<GameConfig> gameConfig, AccountManager accountManager)
-    {
-        _gameConfig = gameConfig;
-        _accountManager = accountManager;
-    }
 
     public async Task Execute(IJobExecutionContext context)
     {

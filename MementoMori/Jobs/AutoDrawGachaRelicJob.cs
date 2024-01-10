@@ -13,7 +13,7 @@ namespace MementoMori.Jobs;
 [AutoConstruct]
 internal partial class AutoDrawGachaRelicJob : IJob
 {
-    private AccountManager _accountManager;
+    private readonly AccountManager _accountManager;
     private readonly IWritableOptions<GameConfig> _gameConfig;
 
     public async Task Execute(IJobExecutionContext context)

@@ -12,7 +12,7 @@ namespace MementoMori.Jobs;
 [AutoConstruct]
 internal partial class AutoBuyShopItemJob : IJob
 {
-    private AccountManager _accountManager;
+    private readonly AccountManager _accountManager;
 
     public async Task Execute(IJobExecutionContext context)
     {
