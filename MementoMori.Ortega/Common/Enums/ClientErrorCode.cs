@@ -238,6 +238,7 @@
 		LevelLinkCannotOpenSlot,
 		LevelLinkNotSelectCharacter,
 		LevelLinkNotExistSelectableCharacter,
+        LevelLinkReachedMaxLevel,
 		TowerBattleDayChallengeLimit = 1500001,
 		TowerBattleCannotSelectCharacter,
 		BountyQuestAutoSelect = 1600001,

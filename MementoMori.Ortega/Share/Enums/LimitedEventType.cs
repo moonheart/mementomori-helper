@@ -10,10 +10,6 @@ namespace MementoMori.Ortega.Share.Enums
         [Description("属性の塔全開放")]
         ElementTowerAllRelease,
         [Description("シリアルコード入力")]
-        SerialCode,
-        [Description("レジェンドリーグアイコン報酬")]
-        LegendLeagueIconReward,
-        [Description("レジェンドリーグアイコン報酬ダイアログ表示切替")]
-        DialogGlobalPvpSpecialPlayerIconListViewControllerOld = 1000
+        SerialCode
     }
 }

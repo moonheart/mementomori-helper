@@ -6,6 +6,7 @@
 		World,
 		Guild,
 		Private,
-		Friend
+		Friend,
+        Block
 	}
 }

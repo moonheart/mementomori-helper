@@ -38,6 +38,8 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
         [Description("被連携ダメージ時")] ReceiveResonanceDamage,
         [Description("被ダメージ量判定(自分の情報だけ参照)")] CheckReceiveDamageSelf = 41,
         [Description("被ダメージ量判定")] CheckReceiveDamage,
+        [Description("被持続ダメージ量判定(P41)時パッシブトリガー")] NextCheckReceiveDamageSelf,
+        [Description("被ダメージ量判定")] NextCheckReceiveDamage,
         [Description("被致命的ダメージ時回復")] RecoveryFromInstantDeathDamage = 52,
         [Description("特殊ダメージ死亡(毒、共鳴など)")] SpecialDamageDead = 62
     }

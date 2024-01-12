@@ -68,6 +68,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("アイテム消費-キャラ抽選宝箱")]
 		CharacterGachaBoxItem,
 		[Description("新規ユーザー")]
-		NewUser
+		NewUser,
+        [Description("チャット画面-ブロック")]
+        BlockInChatRoom = 33
 	}
 }
