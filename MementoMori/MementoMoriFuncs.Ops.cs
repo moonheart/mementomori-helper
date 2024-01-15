@@ -1780,7 +1780,11 @@ public partial class MementoMoriFuncs : ReactiveObject
         var response1 = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
         if (response1.GuildId > 0)
         {
-            missionGroupTypes.Add(MissionGroupType.Guild);
+            var currentGuildMissionMb = GuildMissionTable.GetCurrentGuildMissionMB(TimeManager.ServerNow);
+            if (currentGuildMissionMb != null)
+            {
+                missionGroupTypes.Add(MissionGroupType.Guild);
+            }
         }
         var panelMission = Mypage.MypageInfo.MypageIconInfos.FirstOrDefault(d => d.TransferDetailInfo.TransferSpotType == TransferSpotType.PanelMission);
         if (panelMission != null) missionGroupTypes.Add(MissionGroupType.Panel);
