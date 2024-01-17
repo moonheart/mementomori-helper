@@ -18,8 +18,8 @@ public partial class BattleLogManager
         {
             Directory.CreateDirectory(_writableGameConfig.Value.BattleLogDir);
             var res = battleResult.SimulationResult.BattleEndInfo.IsWinAttacker() ? "win" : "lose";
-            var filename =
-                $"{prefix}-{middle}-{res}-{battleResult.BattleTime.StartBattle}-{battleResult.SimulationResult.BattleToken}.json";
+            var filename = $"{prefix}-{middle}-{res}-{battleResult.BattleTime.StartBattle}-{battleResult.SimulationResult.BattleToken}.json";
+            filename = Path.GetInvalidFileNameChars().Aggregate(filename, (current, invalidFileNameChar) => current.Replace(invalidFileNameChar, '_'));
             var path = Path.Combine(_writableGameConfig.Value.BattleLogDir, filename);
             await File.WriteAllTextAsync(path, battleResult.ToJson(true));
             // keep only 100 lose logs
