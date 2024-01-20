@@ -360,22 +360,7 @@
                         </MudPaper>
                     </MudTabPanel>
                     <MudTabPanel Text="@TextResourceTable.Get("[CommonForgedLabel]")">
-                        <MudPaper Elevation="0" Class="pa-2">
-                            <MudSelect T="string" Label="@TextResourceTable.Get("[CommonEquipmentLabel]")" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="@Funcs.EquipmentId">
-                                @foreach (var e in _characterEquipments)
-                                {
-                                    <MudSelectItem T="string" Value="e.EquipmentGuid">@($"{e.CharacterName} {e.EquipmentName}/{e.UserEquipmentDtoInfo.ReinforcementLv}")</MudSelectItem>
-                                }
-                            </MudSelect>
-                            <MudSelect T="string" @bind-Value="@Funcs.EquipmentTrainingTargetType" Label="@TextResourceTable.Get("[CommonBaseParameterLabel]")" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
-                                <MudSelectItem T="string" Value="@("Health")">@TextResourceTable.Get(BaseParameterType.Health)</MudSelectItem>
-                                <MudSelectItem T="string" Value="@("Intelligence")">@TextResourceTable.Get(BaseParameterType.Intelligence)</MudSelectItem>
-                                <MudSelectItem T="string" Value="@("Muscle")">@TextResourceTable.Get(BaseParameterType.Muscle)</MudSelectItem>
-                                <MudSelectItem T="string" Value="@("Energy")">@TextResourceTable.Get(BaseParameterType.Energy)</MudSelectItem>
-                            </MudSelect>
-                            <MudTextField T="long" @bind-Value="@Funcs.EquipmentTrainingTargetValue" Label="@ResourceStrings.TargetValue" Variant="Variant.Text"></MudTextField>
-                            <MudButton Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.AutoEquipmentTraning">@TextResourceTable.Get("[CommonForgedLabel]")</MudButton>
-                        </MudPaper>
+                        <EquipmentTraining />
                     </MudTabPanel>
                     <MudTabPanel Text="Debug">
                         <MudPaper Elevation="0" Class="pa-2">
@@ -454,8 +439,6 @@
 </MudGrid>
 
 @code {
-    private List<CharacterEquipment> _characterEquipments = new();
-
     private long selectedTargetQuerstId;
     private long selectedTargetTowerLayer;
     string alertMessage = "";
@@ -470,27 +453,6 @@
         {
             alertMessage = Funcs.LoginOk ? string.Empty : ResourceStrings.PleaseLogin;
             Funcs.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
-            Funcs.WhenAnyValue(d => d.UserSyncData).Subscribe(data =>
-            {
-                _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>
-                {
-                    if (d == null) throw new ArgumentNullException(nameof(d));
-                    var cha = data.UserCharacterDtoInfos.ToList().Find(x => x.Guid == d.CharacterGuid);
-                    var chaMb = CharacterTable.GetById(cha.CharacterId);
-                    var name = TextResourceTable.Get(chaMb.NameKey);
-                    var equipmentMb = EquipmentTable.GetById(d.EquipmentId);
-                    if (equipmentMb.EquipmentLv < 180)
-                    {
-                        return null;
-                    }
-                    var equipmentName = TextResourceTable.Get(equipmentMb.NameKey);
-                    equipmentName = $"{equipmentName}/{@TextResourceTable.Get(BaseParameterType.Health)}{d.AdditionalParameterHealth}/{@TextResourceTable.Get(BaseParameterType.Intelligence)}{d.AdditionalParameterIntelligence}/{@TextResourceTable.Get(BaseParameterType.Muscle)}{d.AdditionalParameterMuscle}/{@TextResourceTable.Get(BaseParameterType.Energy)}{d.AdditionalParameterEnergy} ";
-                    return new CharacterEquipment()
-                    {
-                        CharacterGuid = d.CharacterGuid, CharacterName = name, EquipmentGuid = d.Guid, EquipmentName = equipmentName, UserEquipmentDtoInfo = d
-                    };
-                }).Where(d=>d != null).OrderBy(d => d.CharacterGuid).ToList() ?? new List<CharacterEquipment>();
-            });
         }
         catch (Exception e)
         {

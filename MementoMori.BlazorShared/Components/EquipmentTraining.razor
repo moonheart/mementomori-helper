@@ -1,0 +1,75 @@
+﻿@using static MementoMori.Ortega.Share.Masters
+@using MementoMori.Common.Localization
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.WebUI.Models
+@using ReactiveUI
+
+@inherits AccountComponent
+
+<MudPaper Elevation="0" Class="pa-2">
+    <MudSelect T="string" Label="@TextResourceTable.Get("[CommonEquipmentLabel]")" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="@Funcs.TrainingEquipmentGuid" Dense="true">
+        @foreach (var e in _characterEquipments)
+        {
+            <MudSelectItem T="string" Value="e.EquipmentGuid">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.subtitle2">@($"{e.CharacterName} {e.EquipmentName}/{e.UserEquipmentDtoInfo.ReinforcementLv}")</MudText>
+                    <div>
+                        @foreach (var item in Enum.GetValues<BaseParameterType>())
+                        {
+                            <MudText Inline="true" Typo="Typo.caption">
+                                @($"{@TextResourceTable.Get(item)}{@e.UserEquipmentDtoInfo.GetAdditionalParameter(item)}")
+                            </MudText>
+                        }
+                    </div>
+                </MudStack>
+            </MudSelectItem>
+        }
+    </MudSelect>
+    <MudSelect Dense="true" T="BaseParameterType" @bind-Value="@Funcs.EquipmentTrainingTargetType" Label="@TextResourceTable.Get("[CommonBaseParameterLabel]")" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+        @foreach (var item in Enum.GetValues<BaseParameterType>())
+        {
+            <MudSelectItem T="BaseParameterType" Value="@item">
+                @TextResourceTable.Get(item)
+            </MudSelectItem>
+        }
+    </MudSelect>
+    @{
+        var characterEquipment = _characterEquipments.FirstOrDefault(d=>d.EquipmentGuid == Funcs.TrainingEquipmentGuid);
+        var equipmentMb = EquipmentTable.GetById(characterEquipment?.UserEquipmentDtoInfo.EquipmentId ?? 0);
+    }
+    <MudSlider T="double" Min="0d" Max="0.6d" @bind-Value="@Funcs.EquipmentTrainingTargetPercent" Step="0.01">
+        @(((equipmentMb?.AdditionalParameterTotal ?? 0) * Funcs.EquipmentTrainingTargetPercent).ToString("F0")) (@Funcs.EquipmentTrainingTargetPercent.ToString("P0"))
+    </MudSlider>
+    <MudButton Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.AutoEquipmentTraning">@TextResourceTable.Get("[CommonForgedLabel]")</MudButton>
+</MudPaper>
+
+@code {
+    private List<CharacterEquipment> _characterEquipments = new();
+
+    protected override Task AccountChanged()
+    {
+        Funcs.WhenAnyValue(d => d.UserSyncData).Subscribe(data =>
+        {
+            _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>
+            {
+                if (d == null) throw new ArgumentNullException(nameof(d));
+                var cha = data.UserCharacterDtoInfos.ToList().Find(x => x.Guid == d.CharacterGuid);
+                var chaMb = CharacterTable.GetById(cha.CharacterId);
+                var name = TextResourceTable.Get(chaMb.NameKey);
+                var equipmentMb = EquipmentTable.GetById(d.EquipmentId);
+                if (equipmentMb.EquipmentLv < 180)
+                {
+                    return null;
+                }
+                var equipmentName = TextResourceTable.Get(equipmentMb.NameKey);
+                // equipmentName = $"{equipmentName}/{@TextResourceTable.Get(BaseParameterType.Health)}{d.AdditionalParameterHealth}/{@TextResourceTable.Get(BaseParameterType.Intelligence)}{d.AdditionalParameterIntelligence}/{@TextResourceTable.Get(BaseParameterType.Muscle)}{d.AdditionalParameterMuscle}/{@TextResourceTable.Get(BaseParameterType.Energy)}{d.AdditionalParameterEnergy} ";
+                return new CharacterEquipment()
+                {
+                    CharacterGuid = d.CharacterGuid, CharacterName = name, EquipmentGuid = d.Guid, EquipmentName = equipmentName, UserEquipmentDtoInfo = d
+                };
+            }).Where(d=>d != null).OrderBy(d => d.CharacterGuid).ToList() ?? new List<CharacterEquipment>();
+        });
+        return Task.CompletedTask;
+    }
+
+}

@@ -78,13 +78,13 @@ public partial class MementoMoriFuncs : ReactiveObject
     public bool IsQuickActionExecuting { get; private set; }
 
     [Reactive]
-    public string EquipmentId { get; set; }
+    public string TrainingEquipmentGuid { get; set; }
 
     [Reactive]
-    public string EquipmentTrainingTargetType { get; set; }
+    public BaseParameterType EquipmentTrainingTargetType { get; set; }
 
     [Reactive]
-    public long EquipmentTrainingTargetValue { get; set; }
+    public double EquipmentTrainingTargetPercent { get; set; }
 
     [Reactive]
     public TowerType SelectedAutoTowerType { get; set; }
@@ -1750,23 +1750,25 @@ public partial class MementoMoriFuncs : ReactiveObject
             while (!token.IsCancellationRequested)
             {
                 // await UserGetUserData();
-                var equipment = UserSyncData.UserEquipmentDtoInfos.First(d => d.Guid == EquipmentId);
-                var m =
-                    $"{TextResourceTable.Get("[CommonForgedLabel]")} {totalCount}, {TextResourceTable.Get(BaseParameterType.Health)} {equipment.AdditionalParameterHealth},{TextResourceTable.Get(BaseParameterType.Intelligence)} {equipment.AdditionalParameterIntelligence},{TextResourceTable.Get(BaseParameterType.Muscle)} {equipment.AdditionalParameterMuscle},{TextResourceTable.Get(BaseParameterType.Energy)} {equipment.AdditionalParameterEnergy}";
+                var equipment = UserSyncData.UserEquipmentDtoInfos.First(d => d.Guid == TrainingEquipmentGuid);
+                var equipmentMb = EquipmentTable.GetById(equipment.EquipmentId);
+                var currentParameter = equipment.GetAdditionalParameter(EquipmentTrainingTargetType);
+                var m = $"{TextResourceTable.Get("[CommonForgedLabel]")} {totalCount}, {TextResourceTable.Get(EquipmentTrainingTargetType)} {currentParameter} ({(double)currentParameter/equipmentMb.AdditionalParameterTotal:P})";
                 log(m);
+                var targetValue = equipmentMb.AdditionalParameterTotal * EquipmentTrainingTargetPercent;
                 switch (EquipmentTrainingTargetType)
                 {
-                    case "Health" when equipment.AdditionalParameterHealth >= EquipmentTrainingTargetValue:
+                    case BaseParameterType.Health when equipment.AdditionalParameterHealth >= targetValue:
                         return;
-                    case "Energy" when equipment.AdditionalParameterEnergy >= EquipmentTrainingTargetValue:
+                    case BaseParameterType.Energy when equipment.AdditionalParameterEnergy >= targetValue:
                         return;
-                    case "Intelligence" when equipment.AdditionalParameterIntelligence >= EquipmentTrainingTargetValue:
+                    case BaseParameterType.Intelligence when equipment.AdditionalParameterIntelligence >= targetValue:
                         return;
-                    case "Muscle" when equipment.AdditionalParameterMuscle >= EquipmentTrainingTargetValue:
+                    case BaseParameterType.Muscle when equipment.AdditionalParameterMuscle >= targetValue:
                         return;
                 }
 
-                var response = await GetResponse<TrainingRequest, TrainingResponse>(new TrainingRequest() {EquipmentGuid = EquipmentId, ParameterLockedList = new List<BaseParameterType>()});
+                var response = await GetResponse<TrainingRequest, TrainingResponse>(new TrainingRequest() {EquipmentGuid = TrainingEquipmentGuid, ParameterLockedList = new List<BaseParameterType>()});
                 totalCount++;
                 var t = 1;
                 await Task.Delay(t);
