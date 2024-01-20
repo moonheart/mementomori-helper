@@ -35,8 +35,8 @@
                           Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Restore" OnAdornmentClick="() => AutoJob__AutoBuyShopItemJobCron = defaultValue.AutoBuyShopItemJobCron"></MudTextField>
             <MudTextField Margin="Margin.Dense" Label="@($"{Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]")}")" @bind-Value="AutoJob__AutoLocalRaidJobCron" Variant="Variant.Outlined"
                           Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Restore" OnAdornmentClick="() => AutoJob__AutoLocalRaidJobCron = defaultValue.AutoLocalRaidJobCron"></MudTextField>
-            <MudTextField Margin="Margin.Dense" Label="@($"{ResourceStrings.Deploy_defense}")" @bind-Value="AutoJob__AutoDeployGuildDefenseJobCron" Variant="Variant.Outlined"
-                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Restore" OnAdornmentClick="() => AutoJob__AutoDeployGuildDefenseJobCron = defaultValue.AutoDeployGuildDefenseJobCron"></MudTextField>
+            @* <MudTextField Margin="Margin.Dense" Label="@($"{ResourceStrings.Deploy_defense}")" @bind-Value="AutoJob__AutoDeployGuildDefenseJobCron" Variant="Variant.Outlined" *@
+            @*               Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Restore" OnAdornmentClick="() => AutoJob__AutoDeployGuildDefenseJobCron = defaultValue.AutoDeployGuildDefenseJobCron"></MudTextField> *@
             <MudTextField Margin="Margin.Dense" Label="@($"{Tr("[GachaRelicChangeTitle]")}")" @bind-Value="AutoJob__AutoChangeGachaRelicJobCron" Variant="Variant.Outlined"
                           Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Restore" OnAdornmentClick="() => AutoJob__AutoChangeGachaRelicJobCron = defaultValue.AutoChangeGachaRelicJobCron"></MudTextField>
             <MudTextField Margin="Margin.Dense" Label="@($"{ResourceStrings.Auto_draw_10_times__up_to_3_draws_}")" @bind-Value="AutoJob__AutoDrawGachaRelicJobCron" Variant="Variant.Outlined"
