@@ -733,6 +733,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             log($"{TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]")}");
+            await UserGetUserData();
             if (UserSyncData.CanJoinTodayLegendLeague != true)
             {
                 log(TextResourceTable.Get("[GlobalPvpIsNotParticipateToastMessage]"));
