@@ -9,6 +9,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("有償ダイヤ購入")]
 		CurrencySum,
 		[Description("有償ダイヤ連日購入")]
-		CurrencySumDays
+		CurrencySumDays,
+        [Description("有償ダイヤ購入 ギルド特典")]
+        CurrencySumGuild
 	}
 }

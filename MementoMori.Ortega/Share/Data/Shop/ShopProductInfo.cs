@@ -14,10 +14,6 @@ namespace MementoMori.Ortega.Share.Data.Shop
 		[Description("商品MBのId")]
 		public long MbId { get; set; }
 
-		[Description("商品MBのProductId")]
-		[Obsolete("1.2.2強制アップデート後削除")]
-		public long ProductId { get; set; }
-
 		[Description("達成パック用データ")]
 		public ShopProductAchievementPack ShopProductAchievementPack { get; set; }
 

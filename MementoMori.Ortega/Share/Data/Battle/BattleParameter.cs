@@ -13,16 +13,16 @@ namespace MementoMori.Ortega.Share.Data.Battle
         public long AttackPower { get; set; }
 
         [Description("回避")]
-        public int Avoidance { get; set; }
+        public long Avoidance { get; set; }
 
         [Description("クリティカル")]
-        public int Critical { get; set; }
+        public long Critical { get; set; }
 
         [Description("クリダメ強化")]
         public long CriticalDamageEnhance { get; set; }
 
         [Description("クリティカル耐性")]
-        public int CriticalResist { get; set; }
+        public long CriticalResist { get; set; }
 
         [Description("ダメージ強化")]
         public long DamageEnhance { get; set; }
@@ -31,10 +31,10 @@ namespace MementoMori.Ortega.Share.Data.Battle
         public int DamageReflect { get; set; }
 
         [Description("弱体効果命中\u200b")]
-        public int DebuffHit { get; set; }
+        public long DebuffHit { get; set; }
 
         [Description("弱体効果耐性")]
-        public int DebuffResist { get; set; }
+        public long DebuffResist { get; set; }
 
         [Description("防御力")]
         public long Defense { get; set; }
@@ -43,7 +43,7 @@ namespace MementoMori.Ortega.Share.Data.Battle
         public long DefensePenetration { get; set; }
 
         [Description("命中")]
-        public int Hit { get; set; }
+        public long Hit { get; set; }
 
         [Description("HP")]
         public long HP { get; set; }
@@ -136,18 +136,18 @@ namespace MementoMori.Ortega.Share.Data.Battle
             battleParameter.AttackPower = (long) (battleParameter.AttackPower * rate);
             battleParameter.PhysicalDamageRelax = (long) (battleParameter.PhysicalDamageRelax * rate);
             battleParameter.MagicDamageRelax = (long) (battleParameter.MagicDamageRelax * rate);
-            battleParameter.Hit = (int) (battleParameter.Hit * rate);
-            battleParameter.Avoidance = (int) (battleParameter.Avoidance * rate);
-            battleParameter.Critical = (int) (battleParameter.Critical * rate);
-            battleParameter.CriticalResist = (int) (battleParameter.CriticalResist * rate);
+            battleParameter.Hit = (long) (battleParameter.Hit * rate);
+            battleParameter.Avoidance = (long) (battleParameter.Avoidance * rate);
+            battleParameter.Critical = (long) (battleParameter.Critical * rate);
+            battleParameter.CriticalResist = (long) (battleParameter.CriticalResist * rate);
             battleParameter.CriticalDamageEnhance = (long) (battleParameter.CriticalDamageEnhance * rate);
             battleParameter.PhysicalCriticalDamageRelax = (int) (battleParameter.PhysicalCriticalDamageRelax * rate);
             battleParameter.MagicCriticalDamageRelax = (int) (battleParameter.MagicCriticalDamageRelax * rate);
             battleParameter.DefensePenetration = (long) (battleParameter.DefensePenetration * rate);
             battleParameter.Defense = (long) (battleParameter.Defense * rate);
             battleParameter.DamageEnhance = (long) (battleParameter.DamageEnhance * rate);
-            battleParameter.DebuffHit = (int) (battleParameter.DebuffHit * rate);
-            battleParameter.DebuffResist = (int) (battleParameter.DebuffResist * rate);
+            battleParameter.DebuffHit = (long) (battleParameter.DebuffHit * rate);
+            battleParameter.DebuffResist = (long) (battleParameter.DebuffResist * rate);
             battleParameter.DamageReflect = (int) (battleParameter.DamageReflect * rate);
             battleParameter.HpDrain = (int) (battleParameter.HpDrain * rate);
             battleParameter.Speed = (int) (battleParameter.Speed * rate);
