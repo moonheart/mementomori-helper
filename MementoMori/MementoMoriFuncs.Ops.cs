@@ -556,8 +556,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             {
                 try
                 {
-                    var pvpInfoResponse = await GetResponse<GetPvpInfoRequest, GetPvpInfoResponse>(
-                        new GetPvpInfoRequest());
+                    var pvpInfoResponse = await GetResponse<GetPvpInfoRequest, GetPvpInfoResponse>(new GetPvpInfoRequest());
 
                     if (UserSyncData.UserBattlePvpDtoInfo.PvpTodayCount >= OrtegaConst.BattlePvp.MaxPvpBattleFreeCount)
                     {
@@ -733,13 +732,6 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ExecuteQuickAction(async (log, token) =>
         {
             log($"{TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]")}");
-            await UserGetUserData();
-            if (UserSyncData.CanJoinTodayLegendLeague != true)
-            {
-                log(TextResourceTable.Get("[GlobalPvpIsNotParticipateToastMessage]"));
-                return;
-            }
-
             var count = 100;
             var characterDetailInfoDict = new Dictionary<long, List<(string, CharacterDetailInfo)>>();
             while (!token.IsCancellationRequested && count-- > 0)
