@@ -1,2 +1,0 @@
-         at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
-         at System.Net.Security.SslStream.Fo
