@@ -104,6 +104,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
         async Task GetNotice(NoticeAccessType noticeAccessType, NoticeCategoryType noticeCategoryType, Func<BotOptions, List<long>> getList)
         {
+            var noticeApiHost = _botOptions.Value.NoticeApiHost;
             _logger.LogInformation("start retrieve notices");
             var listResponse = await _networkManager.GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()
             {
@@ -112,7 +113,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
                 CountryCode = OrtegaConst.Addressable.LanguageNameDictionary[_networkManager.LanguageType],
                 LanguageType = _networkManager.LanguageType,
                 UserId = 0
-            });
+            }, apiHost: new Uri(noticeApiHost));
 
             var noticeInfos = listResponse.NoticeInfoList.OrderByDescending(d => d.Id).ToList();
             var noticeToPush = new List<NoticeInfo>();

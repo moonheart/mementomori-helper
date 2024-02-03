@@ -11,4 +11,5 @@ public class BotOptions
     public List<long> LastEvents { get; set; } = new();
     public long LastDmmGameId { get; set; }
     public string DmmApiUrl { get; set; }
+    public string NoticeApiHost { get; set; }
 }
