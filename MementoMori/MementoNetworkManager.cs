@@ -273,17 +273,18 @@ public partial class MementoNetworkManager
         return ortegaMagicOnionClient;
     }
 
-    public async Task<TResp> GetResponse<TReq, TResp>(TReq req, Action<string> log = null, Action<UserSyncData> userData = null, Uri apiHost = null)
+    public async Task<TResp> GetResponse<TReq, TResp>(TReq req, Action<string> log = null, Action<UserSyncData> userData = null, Uri apiAuth = null, Uri apiHost = null)
         where TReq : ApiRequestBase
         where TResp : ApiResponseBase
     {
         apiHost ??= _apiHost;
+        apiAuth ??= _apiAuth;
         log ??= Console.WriteLine;
         var authAttr = typeof(TReq).GetCustomAttribute<OrtegaAuthAttribute>();
         var apiAttr = typeof(TReq).GetCustomAttribute<OrtegaApiAttribute>();
         Uri uri;
         if (authAttr != null)
-            uri = new Uri(_apiAuth, authAttr.Uri);
+            uri = new Uri(apiAuth, authAttr.Uri);
         else if (apiAttr != null)
             uri = new Uri(apiHost ?? throw new InvalidOperationException(ResourceStrings.PleaseLogin), apiAttr.Uri);
         else
