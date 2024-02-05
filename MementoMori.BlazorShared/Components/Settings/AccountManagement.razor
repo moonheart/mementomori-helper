@@ -50,7 +50,7 @@
     <DialogContent>
         <MudTextField Label="@ResourceStrings.Name" @bind-Value="_addAccountName"></MudTextField>
         <MudNumericField Label="@ResourceStrings.Account" @bind-Value="_addAccountUserId"></MudNumericField>
-        <MudTextField Label="@ResourceStrings.Password" @bind-Value="_addAccountPassword"></MudTextField>
+        <MudTextField Label="@ResourceStrings.Password" InputType="InputType.Password" @bind-Value="_addAccountPassword"></MudTextField>
         <MudSwitch Label="@ResourceStrings.AutoLogin" @bind-Checked="_addAccountAutoLogin" Color="Color.Primary"></MudSwitch>
     </DialogContent>
     <DialogActions>
@@ -62,7 +62,7 @@
     <DialogContent>
         <MudTextField Label="@ResourceStrings.Name" @bind-Value="_settingAccountName"></MudTextField>
         <MudNumericField Disabled="true" Label="@ResourceStrings.Account" @bind-Value="_settingAccountUserId"></MudNumericField>
-        <MudTextField Label="ClientKey" @bind-Value="_settingAccountClientKey"></MudTextField>
+        <MudTextField Label="ClientKey" InputType="InputType.Password" @bind-Value="_settingAccountClientKey"></MudTextField>
         <MudSwitch Label="@ResourceStrings.AutoLogin" @bind-Checked="_settingAccountAutoLogin" Color="Color.Primary"></MudSwitch>
     </DialogContent>
     <DialogActions>
