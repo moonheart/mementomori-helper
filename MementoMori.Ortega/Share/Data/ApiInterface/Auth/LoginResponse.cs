@@ -14,6 +14,7 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Auth
 
         public List<RemoteNotificationType> IgnoreTypes { get; set; }
 
+        public long MaxVip { get; set; }
         public List<PlayerDataInfo> PlayerDataInfoList { get; set; }
 
         public long RecommendWorldId { get; set; }
@@ -27,9 +28,5 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Auth
         public List<long> WorldIdList { get; set; }
 
         public UserSyncData UserSyncData { get; set; }
-
-        public LoginResponse()
-        {
-        }
     }
 }

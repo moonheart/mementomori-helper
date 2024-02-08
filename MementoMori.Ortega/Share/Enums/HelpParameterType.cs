@@ -8,6 +8,10 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("無し")]
 		None,
 		[Description("所属するワールド")]
-		BelongingWorlds
+		BelongingWorlds,
+        [Description("ギルドバトル最小配置数")]
+        GuildBattleMinPlacement,
+        [Description("グランドバトル最小配置数")]
+        GrandBattleMinPlacement
 	}
 }
