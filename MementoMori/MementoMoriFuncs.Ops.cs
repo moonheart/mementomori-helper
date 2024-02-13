@@ -1763,8 +1763,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
                 var response = await GetResponse<TrainingRequest, TrainingResponse>(new TrainingRequest() {EquipmentGuid = TrainingEquipmentGuid, ParameterLockedList = new List<BaseParameterType>()});
                 totalCount++;
-                var t = 1;
-                await Task.Delay(t);
+                await Task.Delay(GameConfig.AutoRequestDelay, token);
             }
         });
     }
