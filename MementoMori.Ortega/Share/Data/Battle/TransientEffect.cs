@@ -16,8 +16,10 @@ namespace MementoMori.Ortega.Share.Data.Battle
         [Description("ヒット種別")]
         public HitType HitType { get; set; }
 
-        public TransientEffect()
-        {
-        }
+        [Description("付加されたバフ・デバフの効果")]
+        public List<EffectGroup> AddEffectGroups { get; set; } = new();
+
+        [Description("削除されたバフ・デバフの効果")]
+        public List<EffectGroup> RemoveEffectGroups { get; set; } = new();
     }
 }
