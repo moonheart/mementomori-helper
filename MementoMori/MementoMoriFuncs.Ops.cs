@@ -2234,9 +2234,19 @@ public partial class MementoMoriFuncs : ReactiveObject
                     return localRaidQuestMbs.Select(d =>
                     {
                         var count = 0D;
+                        var isFirst = !response.ClearCountDict.ContainsKey(d.Id);
                         foreach (var rewardItem in rewardItems)
                         {
                             foreach (var reward in d.FixedBattleRewards)
+                            {
+                                if (reward.IsEqual(rewardItem.ItemType, rewardItem.ItemId))
+                                {
+                                    count += reward.ItemCount / GetMaxItemCount(rewardItem) * rewardItem.Weight;
+                                }
+                            }
+
+                            if (!isFirst) continue;
+                            foreach (var reward in d.FirstBattleRewards)
                             {
                                 if (reward.IsEqual(rewardItem.ItemType, rewardItem.ItemId))
                                 {
