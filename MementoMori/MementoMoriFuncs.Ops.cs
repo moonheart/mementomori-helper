@@ -609,6 +609,10 @@ public partial class MementoMoriFuncs : ReactiveObject
                     log(e.Message);
                     break;
                 }
+                finally
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(Random.Shared.Next(2, 5)));
+                }
             }
         });
     }
@@ -787,6 +791,10 @@ public partial class MementoMoriFuncs : ReactiveObject
                 {
                     log(e.Message);
                     break;
+                }
+                finally
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(Random.Shared.Next(2, 5)));
                 }
             }
         });
