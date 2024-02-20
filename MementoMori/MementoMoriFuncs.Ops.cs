@@ -2128,20 +2128,40 @@ public partial class MementoMoriFuncs : ReactiveObject
                     });
                 }
             }
-
-            var client = NetworkManager.GetOnionClient();
             var createRoom = _playersOption.Value.TryGetValue(NetworkManager.PlayerId, out var c) && c.LocalRaid.SelfCreateRoom;
-            LocalRaidBaseReceiver localRaidReceiver = createRoom ? new LocalRaidCreateRoomReceiver(client, log, PlayerOption.LocalRaid.WaitSeconds, token) : new LocalRaidJoinRoomReceiver(client, log, token);
-            client.SetupLocalRaid(localRaidReceiver, localRaidReceiver);
-            await client.Connect();
-            while (client.GetState() != HubClientState.Ready)
+
+            OrtegaMagicOnionClient client = null;
+            LocalRaidBaseReceiver localRaidReceiver = null;
+            var maxRetry = 10;
+            while (!token.IsCancellationRequested)
             {
-                if (token.IsCancellationRequested) return;
-                log("Waiting for connection...");
-                await Task.Delay(1000);
+                client = NetworkManager.GetOnionClient();
+                localRaidReceiver = createRoom ? new LocalRaidCreateRoomReceiver(client, log, PlayerOption.LocalRaid.WaitSeconds, token) : new LocalRaidJoinRoomReceiver(client, log, token);
+                client.SetupLocalRaid(localRaidReceiver, localRaidReceiver);
+                var connectCts = new CancellationTokenSource();
+                await client.Connect();
+                connectCts.CancelAfter(TimeSpan.FromMinutes(1));
+                while (client.GetState() != HubClientState.Ready && !connectCts.IsCancellationRequested)
+                {
+                    if (token.IsCancellationRequested) return;
+                    log("Waiting for connection...");
+                    await Task.Delay(1000);
+                }
+
+                if (client.GetState() == HubClientState.Ready)
+                {
+                    break;
+                }
+
+                await client.DisposeAsync();
+                if (maxRetry-- < 0)
+                {
+                    log("Failed to connect to the server.");
+                    return;
+                }
             }
 
-            CancellationTokenSource keepaliveCts = new CancellationTokenSource();
+            CancellationTokenSource keepaliveCts = new CancellationTokenSource();;
             _ = Task.Run(async () =>
             {
                 while (!keepaliveCts.IsCancellationRequested)
