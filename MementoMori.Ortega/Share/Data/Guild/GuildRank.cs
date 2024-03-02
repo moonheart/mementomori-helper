@@ -12,6 +12,8 @@ namespace MementoMori.Ortega.Share.Data.Guild
 
 		public long GuildStock { get; set; }
 
+        public long GuildTowerMaxFloor { get; set; }
+
 		public bool IsApplying { get; set; }
 
 		public long Rank { get; set; }

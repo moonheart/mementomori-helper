@@ -7,7 +7,7 @@ namespace MementoMori.Ortega.Share.Enums
 	{
 		[Description("販売")]
 		Sell,
-		[Description("合成")]
-		Compose
+		[Description("ゴールド交換")]
+		GoldExchange
 	}
 }

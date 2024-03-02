@@ -77,6 +77,8 @@ namespace MementoMori.Ortega.Share.Enums
 		SpecialIcon,
 		[Description("アイコンの断片")]
 		IconFragment,
+		[Description("タイプ強化アイテム")]
+		GuildTowerJobReinforcementMaterial,
 		[Description("イベント交換所アイテム")]
 		EventExchangePlaceItem = 50
 	}

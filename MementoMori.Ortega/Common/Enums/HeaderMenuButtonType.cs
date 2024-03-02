@@ -4,6 +4,7 @@
 	{
 		Help,
 		Shop,
+        EquipmentPictureBook,
 		Ranking
 	}
 }

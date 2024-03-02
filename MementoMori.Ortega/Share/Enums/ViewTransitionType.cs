@@ -14,6 +14,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("放置バトルMAP")]
 		Map,
 		[Description("ミッション")]
-		Mission
+		Mission,
+		[Description("ギルドツリー強化ダイアログ")]
+		GuildTowerReinforcement
 	}
 }

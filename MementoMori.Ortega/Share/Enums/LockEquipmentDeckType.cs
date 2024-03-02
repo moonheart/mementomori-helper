@@ -3,6 +3,8 @@
 	public enum LockEquipmentDeckType
 	{
 		None,
-		League
+		League,
+		GuildTowerLatestBattle,
+		GuildTowerLatestRegistration
 	}
 }

@@ -32,6 +32,12 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("マスターが[PlayerName]をギルドから追放しました")]
 		GuildMemberRemove,
 		[Description("[BeforePlayerName]が[AfterPlayerName]にプレイヤー名を変更しました")]
-		ChangePlayerName
+		ChangePlayerName,
+		[Description("[プレイヤー名]がギルドツリーの第[数値]階層を突破しました！")]
+		GuildTowerClearSpecialFloor,
+		[Description("ギルドツリーでコンボが開始されました！\nギルドツリーに挑戦してコンボ数を増やそう！")]
+		GuildTowerStartCombo,
+		[Description("ギルドツリーで{プレイヤー名}の活躍で{数値}コンボを達成しました！")]
+		GuildTowerAchieveCombo
 	}
 }

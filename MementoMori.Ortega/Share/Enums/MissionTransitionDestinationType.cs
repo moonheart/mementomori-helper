@@ -76,6 +76,10 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("パネル図鑑")]
 		PanelPictureBook = 2101,
 		[Description("楽曲再生")]
-		MusicPlayer = 2201
+		MusicPlayer = 2201,
+		[Description("ギルドツリーメイン画面")]
+		GuildTower = 2301,
+		[Description("ギルドツリーLV強化ダイアログ")]
+		GuildTowerReinforceJob
 	}
 }

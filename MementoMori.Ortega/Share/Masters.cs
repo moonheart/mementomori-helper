@@ -76,6 +76,11 @@ namespace MementoMori.Ortega.Share
                 GuildLevelTable,
                 GuildRaidBossTable,
                 GuildRaidRewardTable,
+                GuildTowerEventTable,
+                GuildTowerEnemyTable,
+                GuildTowerChallengeRewardTable,
+                GuildTowerReinforcementJobLevelTable,
+                GuildTowerFloorTable,
                 ItemTable,
                 MonthlyLoginBonusRewardListTable,
                 MonthlyLoginBonusTable,
@@ -349,6 +354,16 @@ namespace MementoMori.Ortega.Share
         public static GuildRaidBossTable GuildRaidBossTable { get; } = new();
 
         public static GuildRaidRewardTable GuildRaidRewardTable { get; } = new();
+
+        public static GuildTowerChallengeRewardTable GuildTowerChallengeRewardTable { get; } = new();
+
+        public static GuildTowerEnemyTable GuildTowerEnemyTable { get; } = new();
+
+        public static GuildTowerEventTable GuildTowerEventTable { get; } = new();
+
+        public static GuildTowerFloorTable GuildTowerFloorTable { get; } = new();
+
+        public static GuildTowerReinforcementJobLevelTable GuildTowerReinforcementJobLevelTable { get; } = new();
 
         public static ItemTable ItemTable { get; } = new();
 

@@ -69,7 +69,9 @@ namespace MementoMori.Ortega.Share.Enums
 		CharacterGachaBoxItem,
 		[Description("新規ユーザー")]
 		NewUser,
-        [Description("チャット画面-ブロック")]
-        BlockInChatRoom = 33
+		[Description("ギルドタワー")]
+		GuildTower,
+		[Description("チャット画面-ブロック")]
+		BlockInChatRoom
 	}
 }

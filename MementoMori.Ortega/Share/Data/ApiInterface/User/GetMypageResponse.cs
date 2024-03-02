@@ -18,11 +18,15 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.User
 
 		public bool ExistNotReceivedMissionReward { get; set; }
 
+        public long LatestAnnounceChatRegistrationLocalTimestamp { get; set; }
+
 		public MissionGuideInfo MissionGuideInfo { get; set; }
 
 		public DisplayMypageInfo MypageInfo { get; set; }
 
 		public List<long> NotOrderedBountyQuestIdList { get; set; }
+        
+        public List<long> UnreadIndividualNotificationIdList { get; set; }
 
 		public List<UserFriendDtoInfo> UserFriendDtoInfoList { get; set; }
 

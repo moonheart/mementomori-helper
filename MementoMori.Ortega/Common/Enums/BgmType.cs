@@ -22,6 +22,7 @@
 		BattleQlipha,
 		BattlePvp,
 		BattleDungeonAndLocalRaid,
+        GuildTower,
 		EventTitle = 1001,
 		AmbBountyQuest = 901,
 		AmbLocalPvp,

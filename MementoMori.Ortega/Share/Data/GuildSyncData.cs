@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using MementoMori.Ortega.Share.Data.Guild;
+using MementoMori.Ortega.Share.Data.GuildTower;
 using MementoMori.Ortega.Share.Data.Player;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
@@ -24,6 +25,8 @@ namespace MementoMori.Ortega.Share.Data
 		public GuildInfo GuildInfo { get; set; }
 
 		public List<PlayerInfo> GuildPlayerInfoList { get; set; }
+        
+        public GuildTowerBadgeInfo GuildTowerBadgeInfo { get; set; }
 
 		public long JoinGuildTime { get; set; }
 

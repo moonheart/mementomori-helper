@@ -268,6 +268,28 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("パネル図鑑遷移")]
 		PictureBookTransitionPanel = 21010100,
 		[Description("楽曲再生画面遷移回数")]
-		MusicPlayerTransitionCount = 22010100
+		MusicPlayerTransitionCount = 22010100,
+		[Description("ギルドツリーで1つのタイプのキャラを〇体以上使って戦闘に勝利")]
+		GuildTowerWinUnitSameJobTypeBase = 23010100,
+		[Description("ギルドツリーで1つのタイプのキャラを1体以上使って戦闘に勝利")]
+		GuildTowerWin1UnitSameJobType,
+		[Description("ギルドツリーで1つのタイプのキャラを2体以上使って戦闘に勝利")]
+		GuildTowerWin2UnitSameJobType,
+		[Description("ギルドツリーで1つのタイプのキャラを3体以上使って戦闘に勝利")]
+		GuildTowerWin3UnitSameJobType,
+		[Description("ギルドツリーで1つのタイプのキャラを4体以上使って戦闘に勝利")]
+		GuildTowerWin4UnitSameJobType,
+		[Description("ギルドツリーで1つのタイプのキャラを5体以上使って戦闘に勝利")]
+		GuildTowerWin5UnitSameJobType,
+		[Description("ギルドツリーの勝利回数")]
+		GuildTowerWinCount = 23010200,
+		[Description("ギルドツリーでの最大達成コンボ数")]
+		GuildTowerMaxComboCount = 23010300,
+		[Description("開花の種の獲得数")]
+		GuildTowerGetJobReinforcementMaterialCount = 23010400,
+		[Description("全てのタイプのギルドツリー強化Lvの内で最大到達のレベル")]
+		GuildTowerMaxJobLevel = 23020100,
+		[Description("全てのタイプのギルドツリー強化Lvの内で最低到達のレベル")]
+		GuildTowerMinJobLevel = 23020200
 	}
 }

@@ -28,6 +28,7 @@
 		DungeonBattleOpenFormation,
 		GvgCastleInfo,
 		GvgBattle,
-		LocalRaidReport
+		LocalRaidReport,
+        GuildTowerReinforcement
 	}
 }

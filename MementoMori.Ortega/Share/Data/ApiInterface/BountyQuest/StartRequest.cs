@@ -4,18 +4,12 @@ using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest
 {
-	[OrtegaApi("bountyQuest/start", true, false)]
-	[MessagePackObject(true)]
-	public class StartRequest : ApiRequestBase
-	{
-		public List<BountyQuestStartInfo> BountyQuestStartInfos
-		{
-			get;
-			set;
-		}
+    [OrtegaApi("bountyQuest/start", true, false)]
+    [MessagePackObject(true)]
+    public class StartRequest : ApiRequestBase
+    {
+        public List<BountyQuestStartInfo> BountyQuestStartInfos { get; set; }
 
-		public StartRequest()
-		{
-		}
-	}
+        public bool IsSplit { get; set; }
+    }
 }

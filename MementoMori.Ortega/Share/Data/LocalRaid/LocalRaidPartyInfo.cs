@@ -26,6 +26,8 @@ namespace MementoMori.Ortega.Share.Data.LocalRaid
 
 		public long TotalBattlePower { get; set; }
 
+        public bool IsAutoStart { get; set; }
+
 		public bool IsReady
 		{
 			get

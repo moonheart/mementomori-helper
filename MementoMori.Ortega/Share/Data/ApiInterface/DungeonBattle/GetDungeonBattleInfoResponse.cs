@@ -1,5 +1,6 @@
 ﻿using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.DungeonBattle;
+using MementoMori.Ortega.Share.Data.Item;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
 
@@ -33,6 +34,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.DungeonBattle
         public List<UserDungeonBattleShopDtoInfo> UserDungeonBattleShopDtoInfos { get; set; }
 
         public UserDungeonBattleDtoInfo UserDungeonDtoInfo { get; set; }
+
+        public List<UserItem> SkipRewardList { get; set; }
 
         public long UtcEndTimeStamp { get; set; }
 

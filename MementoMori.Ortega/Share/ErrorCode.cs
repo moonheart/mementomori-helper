@@ -243,6 +243,8 @@ namespace MementoMori.Ortega.Share
 		DungeonBattleDungeonBattleMapDtoNotFound,
 		[Description("ユーザーの時空の洞窟敵情報がありません")]
 		DungeonBattleUserDungeonBattleEnemyDtoNotFound,
+		[Description("ユーザーの時空の洞窟敵情報がありません")]
+		DungeonBattleUserDungeonBattleSkipRewardDtoNotFound,
 		[Description("開催期間内のタームが無い")]
 		DungeonBattleNoActiveTerm = 122001,
 		[Description("開催期間外(※時間経過で期間外になった)")]
@@ -325,6 +327,10 @@ namespace MementoMori.Ortega.Share
 		DungeonBattleCanNotSelectGrid,
 		[Description("バトル報酬が存在しません。")]
 		DungeonBattleNotFoundBattleReward,
+		[Description("時空の洞窟をスキップできません。")]
+		DungeonBattleCanNotSkip,
+		[Description("移動先のマスが見つからない。")]
+		DungeonBattleSkipGridNotFound,
 		[Description("ユーザーのバトルリーグデータがありません")]
 		BattlePvpUserBattlePvpDtoNotFound = 131000,
 		[Description("ユーザーのステータスデータがありません")]
@@ -731,6 +737,8 @@ namespace MementoMori.Ortega.Share
 		EquipmentNotFoundLockCharacter,
 		[Description("無効な装備固定誘導ダイアログ種別です。")]
 		EquipmentInvalidLeadLockEquipmentDialogType,
+		[Description("選択されたキャラクター数が登録可能数を超過しています。")]
+		EquipmentOverMaxRegisterLockCharacterCount = 232048,
 		[Description("ユーザのフレンドデータが存在しません。")]
 		FriendUserFriendDtoNotFound = 241000,
 		[Description("ユーザのステータスデータが存在しません。")]
@@ -807,6 +815,8 @@ namespace MementoMori.Ortega.Share
 		GuildUserGuildDtoNotFound,
 		[Description("ギルドオプションデータがありません。")]
 		GuildSystemChatOptionNotFound,
+		[Description("標準化ギルド名データがありません。")]
+		StandardGuildNameDtoNotFound,
 		[Description("ギルドIDが無効です。")]
 		GuildInvalidGuildId = 252000,
 		[Description("権限が不足しています。")]
@@ -865,7 +875,7 @@ namespace MementoMori.Ortega.Share
 		RecruitGuildMemberNotMeetRequired,
 		[Description("同じギルドに所属しているプレイヤーです。")]
 		RecruitGuildMemberSameGuildPlayer,
-		[Description("ギルド機能がが開放されていないプレイヤーです。")]
+		[Description("ギルド機能が開放されていないプレイヤーです。")]
 		RecruitGuildMemberNotOpenGuild,
 		[Description("プレイヤーが見つかりません。")]
 		RecruitGuildMemberSearchNotFoundPlayer = 253010,
@@ -963,6 +973,8 @@ namespace MementoMori.Ortega.Share
 		ChatUserStatusDtoNotFound = 271000,
 		[Description("ユーザーのアカウントデータが見つかりません。")]
 		ChatUserAccountDtoNotFound,
+		[Description("ユーザーのギルドデータが見つかりません。")]
+		ChatUserGuildDtoNotFound,
 		[Description("対象ユーザにブロックされています。")]
 		ChatBlockedByTargetPlayer = 272000,
 		[Description("時間の指定が無効です。")]
@@ -973,6 +985,24 @@ namespace MementoMori.Ortega.Share
 		ChatSendMessageRestriction,
 		[Description("チャット禁止中です")]
 		ChatSendMessageBanChat,
+		[Description("ギルドに参加していません。")]
+		ChatNotBelongToGuild,
+		[Description("指定されたチャット情報が存在しません。")]
+		ChatNotFoundChatInfo,
+		[Description("チャットを投稿した本人ではありません。")]
+		ChatNotSendPlayer,
+		[Description("無効なリアクション種別です。")]
+		ChatNotDefinedReactionType,
+		[Description("リアクションを付けることができないチャットです。")]
+		ChatCanNotReact,
+		[Description("既にアナウンスチャットに登録されています。")]
+		ChatAlreadyRegistered,
+		[Description("マスター・サブマスターのみ使用可能です。")]
+		ChatNotLeaderOrSubLeader,
+		[Description("アナウンスに登録可能な最大数を超過しています。")]
+		ChatOverMaxRegisterAnnounceChatCount,
+		[Description("アナウンスチャットのインターバル中です。")]
+		ChatGuildChatAnnounceInterval,
 		[Description("未受け取りのプレゼントは削除できません。")]
 		PresentDeleteNotReceivedPresent = 282001,
 		[Description("削除済みのプレゼントは受け取れません。")]
@@ -1121,6 +1151,8 @@ namespace MementoMori.Ortega.Share
 		MissionNotFoundBingoReward,
 		[Description("前のシートをクリアしていません。")]
 		MissionNotClearedPrevSheetMission,
+		[Description("ギルドタワーイベント終了後にギルドに加入したためミッションを開けません。")]
+		MissionJoinGuildAfterEndEvent = 352030,
 		[Description("ユーザーの放置バトルデータが存在しません。")]
 		TradeShopUserBattleAutoDtoNotFound = 361000,
 		[Description("ユーザーの放置バトルデータが存在しません。")]
@@ -1195,6 +1227,72 @@ namespace MementoMori.Ortega.Share
 		TutorialSkipTutorialIdIsNullOrEmpty,
 		[Description("スキップの条件を満たしていません")]
 		TutorialNotEnoughSkipCondition,
+		[Description("ユーザーのギルドタワー情報が存在しません。")]
+		GuildTowerUserGuildTowerDtoNotFound = 410000,
+		[Description("ユーザーのキャラ情報が存在しません。")]
+		GuildTowerUserCharacterDtoNotFound,
+		[Description("ユーザーのギルド情報が存在しません。")]
+		GuildTowerUserGuildDtoNotFound,
+		[Description("ユーザー情報が存在しません。")]
+		GuildTowerUserStatusDtoNotFound,
+		[Description("ギルドタワー情報が存在しません。")]
+		GuildTowerGuildTowerDtoNotFound,
+		[Description("ギルドタワー前勝利データが存在しません。")]
+		GuildTowerUserGuildTowerPreviousEntryInfoDtoNotFound,
+		[Description("ギルドタワーギルドデータが存在しません。")]
+		GuildTowerGuildDtoNotFound,
+		[Description("ギルドツリーイベントが開催されていません。")]
+		GuildTowerNotOpenEvent = 412000,
+		[Description("ユーザーがギルドに所属していません。")]
+		GuildTowerNotBelongToGuild,
+		[Description("ギルドタワーの挑戦回数が足りません。")]
+		GuildTowerNotEnoughChallengeCount,
+		[Description("存在しないキャラが含まれています。")]
+		GuildTowerNotFoundCharacter,
+		[Description("エントリータイプが不正です。")]
+		GuildTowerInvalidGuildTowerEntryType,
+		[Description("持ってないキャラが含まれています。")]
+		GuildTowerInvalidCharacter,
+		[Description("登録キャラリストが空いています。")]
+		GuildTowerEmptyEntryCharacter,
+		[Description("日付が変わるまでは使えません。")]
+		GuildTowerNotChangeDay,
+		[Description("挑戦できる階層ではありません。")]
+		GuildTowerInvalidChallengeFloor,
+		[Description("選択できない難易度です。")]
+		GuildTowerInvalidDifficulty,
+		[Description("不正な職業種別です。")]
+		GuildTowerInvalidJobFlags = 412100,
+		[Description("次の職業レベルデータが存在しません。")]
+		GuildTowerNotFoundNextJobLevelData,
+		[Description("職業強化に失敗しました。")]
+		GuildTowerFailedToReinforceJob,
+		[Description("レベルキャップ制限により強化出来ません。")]
+		GuildTowerLimitReinforcementJobLevelCap,
+		[Description("最大レベルのためこれ以上強化できません。")]
+		GuildTowerReachedMaxReinforcementJobLevel,
+		[Description("登録してないキャラが含まれています。")]
+		GuildTowerInvalidEntryCharacter,
+		[Description("ほかのギルドメンバーのバトルが終わっていません。")]
+		GuildTowerNotYetEndBattle,
+		[Description("ギルドタワーのギルド全体の挑戦回数が足りません。")]
+		GuildTowerNotEnoughGuildChallengeCount,
+		[Description("ギルドに参加した日は挑戦できません。")]
+		GuildTowerCannotChallengeOnJoinGuildDate,
+		[Description("タイプ強化を行ったプレイヤーが存在しません。")]
+		GuildTowerNotFoundReinforceJobPlayer,
+		[Description("クリアされた階層です。")]
+		GuildTowerAlreadyClearFloor,
+		[Description("まだクリアされていない階層の報酬は受け取れません。")]
+		GuildTowerCanNotReceiveNotClearedFloorReward = 412200,
+		[Description("既に受け取り済みの階層報酬です。")]
+		GuildTowerAlreadyReceivedFloorReward,
+		[Description("イベント終了後にギルドに加入したため階層報酬を受け取ることができません。")]
+		GuildTowerJoinedGuildAfterEndEvent,
+		[Description("個別通知キャッシュ情報が存在しません")]
+		IndividualNotificationCacheDtoNotFound = 421000,
+		[Description("ユーザーの個別通知情報が存在しません")]
+		IndividualNotificationDtoNotFound,
 		[Description("存在しないTreasureChestです。")]
 		ItemOpenTreasureChestIdNotFound = 602004,
 		[Description("存在しないTreasureChestです。")]
@@ -1225,6 +1323,10 @@ namespace MementoMori.Ortega.Share
 		ItemOpenTreasureChestCeilingTargetItemNotFound,
 		[Description("特別アイコンアイテムが存在しません。")]
 		ItemSpecialIconItemNotFound,
+		[Description("ゴールド交換は解放されていません。")]
+		ItemGoldExchangeNotOpen,
+		[Description("不正なリクエストです")]
+		ItemUsingInvalidItems,
 		[Description("LocalRaidで解散に失敗した")]
 		MagicOnionLocalRaidDisbandRoomFailed = 900102,
 		[Description("LocalRaidで他の部屋に参加しているので参加に失敗した")]

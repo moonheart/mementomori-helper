@@ -4,9 +4,6 @@
 	{
 		None,
 		MyPage,
-		MyPagePictureBook,
-		CharacterMenu,
-		CharacterTraining,
-		NewCharacterMission
+		MyPagePictureBook
 	}
 }

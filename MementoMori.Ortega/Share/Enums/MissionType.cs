@@ -68,9 +68,10 @@ namespace MementoMori.Ortega.Share.Enums
 		LimitedSeventhDayTab2,
 		LimitedSeventhDayTab3,
 		LimitedSeventhDayTab4,
-        PanelSheet1 = 901,
-        PanelSheet2,
-        PanelSheet3,
-        Guild = 10
+		PanelSheet1 = 901,
+		PanelSheet2,
+		PanelSheet3,
+		Guild = 10,
+		GuildTower
 	}
 }

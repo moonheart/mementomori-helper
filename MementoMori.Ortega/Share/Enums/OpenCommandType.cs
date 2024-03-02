@@ -109,6 +109,8 @@ namespace MementoMori.Ortega.Share.Enums
 		ShopEventExchange,
 		[Description("グランドバトル（ショップ）")]
 		ShopGrandBattle,
+		[Description("時空の洞窟スキップ")]
+		DungeonBattleSkip,
 		[Description("レベルリンク")]
 		LevelLink = 80,
 		[Description("チュートリアルスキップ")]
@@ -127,10 +129,12 @@ namespace MementoMori.Ortega.Share.Enums
 		FriendCode = 200,
 		[Description("ランキング到達報酬")]
 		AchieveRanking = 220,
-        [Description("貢献メダル達成報酬の一括受け取り説明テキスト")]
-        ReceiveAllActivityMedalRewardText = 240,
-        [Description("貢献メダル達成報酬の一括受け取り")]
-        ReceiveAllActivityMedalReward,
+		[Description("貢献メダル達成報酬の一括受け取り説明テキスト")]
+		ReceiveAllActivityMedalRewardText = 240,
+		[Description("貢献メダル達成報酬の一括受け取り")]
+		ReceiveAllActivityMedalReward,
+		[Description("ゴールド交換")]
+		GoldExchange = 260,
 		[Description("武具固定")]
 		LockEquipment = 1000
 	}

@@ -72,6 +72,8 @@ namespace MementoMori.Ortega.Share.Data
         
         public long? ReceivedAutoBattleRewardLastTime { get; set; }
 
+        public List<long> ReceivedGuildTowerFloorRewardIdList { get; set; } = new();
+
         public Dictionary<LockEquipmentDeckType, long> ReleaseLockEquipmentCooldownTimeStampMap { get; set; }
 
         public Dictionary<string, long> ShopCurrencyMissionProgressMap { get; set; }
