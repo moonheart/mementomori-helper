@@ -43,9 +43,11 @@ namespace MementoMori.Ortega.Share.Enums
 		GuildRaidEvent,
 		[Description("シリアルコード付与アイテム")]
 		SerialCode,
-        [Description("毎日ダイヤ購入特典(ギルド) ギルドメンバーへの配布")]
-        DailyDiamondPurchaseBonusForGuildMember,
-        [Description("毎日ダイヤ購入特典(ギルド) 未受け取り報酬")]
-        DailyDiamondPurchaseBonusGuildNotReceived
+		[Description("毎日ダイヤ購入特典(ギルド) ギルドメンバーへの配布")]
+		DailyDiamondPurchaseBonusForGuildMember,
+		[Description("毎日ダイヤ購入特典(ギルド) 未受け取り報酬")]
+		DailyDiamondPurchaseBonusGuildNotReceived,
+		[Description("アンケート報酬")]
+		SurveyReward
 	}
 }

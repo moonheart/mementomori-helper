@@ -22,6 +22,8 @@
 		PurchaseSubscriptionWait,
 		FetchProductWait,
 		WaitingPurchase,
-		RestoreTransactionWait
+		RestoreTransactionWait,
+		RequestSelectShopProductWait,
+		RequestCancelShopProductWait
 	}
 }

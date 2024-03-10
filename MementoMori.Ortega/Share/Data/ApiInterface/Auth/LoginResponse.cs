@@ -1,4 +1,5 @@
 ﻿using MementoMori.Ortega.Share.Data.Auth;
+using MementoMori.Ortega.Share.Data.Shop;
 using MementoMori.Ortega.Share.Data.Title;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
@@ -27,6 +28,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Auth
 
         public List<long> WorldIdList { get; set; }
 
+        public Dictionary<long, List<SelectShopProductInfo>> SelectShopProductInfoDict { get; set; }
+        
         public Dictionary<long, string> SpecialWorldDict { get; set; }
 
         public UserSyncData UserSyncData { get; set; }

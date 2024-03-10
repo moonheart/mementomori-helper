@@ -72,6 +72,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("ギルドタワー")]
 		GuildTower,
 		[Description("チャット画面-ブロック")]
-		BlockInChatRoom
+		BlockInChatRoom,
+		[Description("ギルドタワー-ランキング画面")]
+		GuildTowerRanking
 	}
 }

@@ -224,6 +224,8 @@
 		ExchangeNotExistSelectableItem,
 		AutoBattleQuickNotEnoughCurrency = 1100001,
 		AutoBattleQuickNotEnoughRemainingCount,
+		AutoBattleNotExistMapWorld = 1100101,
+		AutoBattleNotOpenMapWorld,
 		ChatSelectPlayerMessageNotInGuild = 1200001,
 		ChatNotInput,
 		ChatNotSelectPlayerMessage,

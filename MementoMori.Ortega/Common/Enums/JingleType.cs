@@ -9,6 +9,7 @@
 		BattleChapterClear,
 		NextChapter,
 		BattleSecondContinentChapterClear,
+		BattleThirdContinentChapterClear,
 		CharacterEquip = 3005,
 		GachaCharacterResultOpen = 7002,
 		GachaDestinyResultOpen = 7006,
