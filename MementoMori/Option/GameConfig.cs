@@ -3,33 +3,6 @@ using MementoMori.Ortega.Share.Enums;
 
 namespace MementoMori;
 
-public class AuthOption
-{
-    [Obsolete]
-    public string ClientKey { get; set; }
-
-    public string AuthUrl { get; set; }
-    public string DeviceToken { get; set; }
-    public string AppVersion { get; set; }
-    public string OSVersion { get; set; }
-    public string ModelName { get; set; }
-
-    [Obsolete]
-    public long UserId { get; set; }
-
-    public long LastLoginUserId { get; set; }
-
-    public List<AccountInfo> Accounts { get; set; } = new();
-}
-
-public class AccountInfo
-{
-    public string Name { get; set; }
-    public long UserId { get; set; }
-    public string ClientKey { get; set; }
-    public bool AutoLogin { get; set; }
-}
-
 public class GameConfig
 {
     public class ShopDiscountItem : IUserItem
@@ -235,52 +208,4 @@ public class GameConfig
 
     public LoginConfig Login { get; set; } = new();
     public ItemsConfig Items { get; set; } = new();
-}
-
-public class PlayersOption : Dictionary<long, PlayerOption>
-{
-}
-
-public class PlayerOption
-{
-    public long PlayerId { get; set; }
-    public PvpOption BattleLeague { get; set; } = new();
-    public PvpOption LegendLeague { get; set; } = new();
-    public GameConfig.LocalRaidConfig LocalRaid { get; set; } = new();
-
-    public GameConfig.GachaConfigModel GachaConfig { get; set; } = new();
-}
-
-public class PvpOption
-{
-    public TargetSelectStrategy SelectStrategy { get; set; } = TargetSelectStrategy.Random;
-    public List<CharacterFilter> CharacterFilters { get; set; } = new();
-    public List<long> ExcludePlayerIds { get; set; } = new();
-}
-
-public enum TargetSelectStrategy
-{
-    Random,
-    LowestBattlePower,
-    HighestBattlePower
-}
-
-public class CharacterFilter
-{
-    public long CharacterId { get; set; }
-    public CharacterFilterStrategy FilterStrategy { get; set; } = CharacterFilterStrategy.Character;
-    public BattleParameterType BattleParameterType { get; set; } = BattleParameterType.AttackPower;
-}
-
-public enum CharacterFilterStrategy
-{
-    /// <summary>
-    /// 不包含这个角色
-    /// </summary>
-    Character,
-
-    /// <summary>
-    /// 这个角色的属性比自己的角色的高
-    /// </summary>
-    PropertyMoreThanSelf
 }
