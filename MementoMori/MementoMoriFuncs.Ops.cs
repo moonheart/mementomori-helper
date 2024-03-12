@@ -1249,6 +1249,7 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
+            HashSet<long> ignoredButtonId = [];
             while (await DoFreeGacha())
             {
             }
@@ -1264,14 +1265,23 @@ public partial class MementoMoriFuncs : ReactiveObject
                     var buttonInfo = gachaCaseInfo.GachaButtonInfoList.OrderByDescending(d => d.LotteryCount)
                         .FirstOrDefault(d => GameConfig.GachaConfig.AutoGachaConsumeUserItems.Exists(consumeUserItem => CheckCount(d, userItems, consumeUserItem.ItemType, consumeUserItem.ItemId)));
                     if (buttonInfo == null) continue;
+                    if (ignoredButtonId.Contains(buttonInfo.GachaButtonId)) continue;
 
                     var gachaCaseMb = GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
                     var itemMb = ItemTable.GetByItemTypeAndItemId(buttonInfo.ConsumeUserItem.ItemType, buttonInfo.ConsumeUserItem.ItemId);
                     var name = TextResourceTable.Get(itemMb.NameKey);
                     log(string.Format(ResourceStrings.GachaExecInfo, gachaCaseMb.Memo, buttonInfo.LotteryCount, name, buttonInfo.ConsumeUserItem.ItemCount));
-                    var response = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = buttonInfo.GachaButtonId});
-                    response.GachaRewardItemList.PrintUserItems(log);
-                    response.BonusRewardItemList.PrintUserItems(log);
+                    try
+                    {
+                        var response = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = buttonInfo.GachaButtonId});
+                        response.GachaRewardItemList.PrintUserItems(log);
+                        response.BonusRewardItemList.PrintUserItems(log);
+                    }
+                    catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.GachaHaveMaxCharacter)
+                    {
+                        ignoredButtonId.Add(buttonInfo.GachaButtonId);
+                    }
+
                     return true;
                 }
 
