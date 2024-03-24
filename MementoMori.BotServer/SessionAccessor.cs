@@ -1,33 +1,48 @@
-﻿using EleCho.GoCqHttpSdk;
+﻿using AutoCtor;
+using EleCho.GoCqHttpSdk;
+using EleCho.GoCqHttpSdk.MessageMatching;
 using MementoMori.BotServer.Options;
+using MementoMori.BotServer.Plugins;
 using MementoMori.Option;
 
 namespace MementoMori.BotServer;
 
 [InjectSingleton]
-public class SessionAccessor
+[AutoConstruct]
+public partial class SessionAccessor
 {
     private readonly IWritableOptions<BotOptions> _botOptions;
     private static CqWsSession? _session;
 
     private static readonly object _lock = new();
 
-    public SessionAccessor(IWritableOptions<BotOptions> botOptions)
-    {
-        _botOptions = botOptions;
-    }
+    public Action<CqWsSession>? OnConnected;
 
     public CqWsSession Session
     {
         get
         {
-            if (_session != null) return _session;
+            if (_session is {IsConnected: true}) return _session;
             lock (_lock)
             {
-                _session ??= new CqWsSession(new CqWsSessionOptions()
+                if (_session is {IsConnected: true})
+                {
+                    return _session;
+                }
+
+                _session = new CqWsSession(new CqWsSessionOptions()
                 {
                     BaseUri = new Uri(_botOptions.Value.BaseUri)
                 });
+                
+                OnConnected?.Invoke(_session);
+
+                _ = _session.StartAsync();
+
+                while (!_session.IsConnected)
+                {
+                    Thread.Sleep(100);
+                }
             }
 
             return _session;

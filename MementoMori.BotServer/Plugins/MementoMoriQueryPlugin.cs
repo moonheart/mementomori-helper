@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using AutoCtor;
 using EleCho.GoCqHttpSdk;
 using EleCho.GoCqHttpSdk.Message;
 using EleCho.GoCqHttpSdk.MessageMatching;
@@ -25,30 +26,20 @@ using static MementoMori.Ortega.Share.Masters;
 namespace MementoMori.BotServer.Plugins;
 
 [InjectSingleton]
+[AutoConstruct]
 public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 {
     private readonly IWritableOptions<BotOptions> _botOptions;
     private readonly SessionAccessor _sessionAccessor;
-    private readonly IMentemoriIcu _mentemoriIcu;
+    private IMentemoriIcu _mentemoriIcu;
     private readonly MementoNetworkManager _networkManager;
     private readonly ILogger<MementoMoriQueryPlugin> _logger;
     private readonly LiteDbAccessor _dbAccessor;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public MementoMoriQueryPlugin(
-        IWritableOptions<BotOptions> botOptions,
-        SessionAccessor sessionAccessor,
-        MementoNetworkManager networkManager,
-        ILogger<MementoMoriQueryPlugin> logger,
-        LiteDbAccessor dbAccessor,
-        IHttpClientFactory httpClientFactory)
+    [AutoPostConstruct]
+    public void MementoMoriQueryPlugin1()
     {
-        _botOptions = botOptions;
-        _sessionAccessor = sessionAccessor;
-        _networkManager = networkManager;
-        _logger = logger;
-        _dbAccessor = dbAccessor;
-        _httpClientFactory = httpClientFactory;
         _mentemoriIcu = RestService.For<IMentemoriIcu>(_botOptions.Value.MentemoriIcuUri);
         _ = AutoNotice();
         _ = AutoDmmVersionCheck();

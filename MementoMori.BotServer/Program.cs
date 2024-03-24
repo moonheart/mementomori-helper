@@ -13,9 +13,10 @@ namespace MementoMori.BotServer
                 {
                     services.ConfigureWritable<AuthOption>(context.Configuration.GetSection("Auth"));
                     services.ConfigureWritable<BotOptions>(context.Configuration.GetSection("Bot"));
+                    services.ConfigureWritable<GameConfig>(context.Configuration.GetSection("Game"));
                     services.AddHttpClient();
-                    services.Discover();
                     services.AddSingleton<MementoNetworkManager>();
+                    services.Discover();
                     services.AddHostedService<Worker>();
                 })
                 .Build();
