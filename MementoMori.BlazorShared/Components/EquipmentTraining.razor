@@ -1,10 +1,10 @@
 ﻿@using static MementoMori.Ortega.Share.Masters
 @using MementoMori.Common.Localization
 @using MementoMori.Ortega.Share.Enums
-@using MementoMori.WebUI.Models
 @using ReactiveUI
+@using MementoMori.BlazorShared.Models
 
-@inherits AccountComponent
+@inherits MementoMori.BlazorShared.Models.AccountComponent
 
 <MudPaper Elevation="0" Class="pa-2">
     <MudSelect T="string" Label="@TextResourceTable.Get("[CommonEquipmentLabel]")" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="@Funcs.TrainingEquipmentGuid" Dense="true">

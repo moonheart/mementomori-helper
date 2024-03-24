@@ -108,13 +108,21 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public long UserId { get; set; }
 
-    public async Task Login(PlayerDataInfo playerDataInfo = null)
+    public async Task Login(PlayerDataInfo playerDataInfo = null, bool autoLoginThisWorld = false)
     {
         Logining = true;
         try
         {
             if (playerDataInfo == null) playerDataInfo = _lastPlayerDataInfo;
             if (playerDataInfo == null) throw new Exception("playerDataInfo is null");
+            _AuthOption.Update(d =>
+            {
+                var account = d.Accounts.Find(x => x.UserId == UserId);
+                if (account != null)
+                {
+                    account.AutoLoginWorldId = autoLoginThisWorld ? playerDataInfo.WorldId : 0;
+                }
+            });
             await AuthLogin(playerDataInfo);
         }
         catch (Exception e)
@@ -136,10 +144,13 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public async Task AutoLogin(bool manual = false)
     {
-        if (!manual && !_accountManager.GetAccountInfo(UserId).AutoLogin) return;
+        var accountInfo = _accountManager.GetAccountInfo(UserId);
+        if (!manual && !accountInfo.AutoLogin) return;
         AddLog(ResourceStrings.AutoLoginonStartup);
         var playerDataInfos = await GetPlayerDataInfo();
-        var playerDataInfo = Enumerable.MaxBy(playerDataInfos, d => d.LastLoginTime);
+        var playerDataInfo = accountInfo.AutoLoginWorldId > 0
+            ? playerDataInfos.Find(d => d.WorldId == accountInfo.AutoLoginWorldId)
+            : Enumerable.MaxBy(playerDataInfos, d => d.LastLoginTime);
         if (playerDataInfo == null) return;
         await Login(playerDataInfo);
     }

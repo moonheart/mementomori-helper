@@ -214,6 +214,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Automatically select this world when auto logging in 的本地化字符串。
+        /// </summary>
+        public static string Automatically_select_this_world_when_auto_logging_in {
+            get {
+                return ResourceManager.GetString("Automatically select this world when auto logging in", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Auto Request Delay 的本地化字符串。
         /// </summary>
         public static string AutoRequestDelay {

@@ -518,4 +518,7 @@
   <data name="Auto draw 10 times (up to 3 draws)" xml:space="preserve">
       <value>自动抽满10次（最多抽3次）</value>
   </data>
+  <data name="Automatically select this world when auto logging in" xml:space="preserve">
+      <value>自动登录时自动选择此世界</value>
+  </data>
 </root>

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using ReactiveUI;
 
-namespace MementoMori.WebUI.Models;
+namespace MementoMori.BlazorShared.Models;
 
 public class AccountComponent : ComponentBase
 {

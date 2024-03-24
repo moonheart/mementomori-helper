@@ -518,4 +518,7 @@
   <data name="Auto draw 10 times (up to 3 draws)" xml:space="preserve">
       <value>Auto draw 10 times (up to 3 draws)</value>
   </data>
+  <data name="Automatically select this world when auto logging in" xml:space="preserve">
+      <value>Automatically select this world when auto logging in</value>
+  </data>
 </root>

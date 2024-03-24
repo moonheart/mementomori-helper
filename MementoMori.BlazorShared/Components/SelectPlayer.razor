@@ -1,14 +1,15 @@
 ﻿@using MementoMori.Ortega.Share.Data.Auth
 @using MementoMori.Common.Localization
 @using MementoMori.Ortega.Share
+@using MementoMori.BlazorShared.Models
 
 <MudDialog>
     <DialogContent>
-        <MudList Clickable="true" @bind-SelectedValue="selectedPlayerDataInfo">
+        <MudList Clickable="true" @bind-SelectedValue="playerDataInfo.PlayerDataInfo">
             <MudListSubheader>
-                @if (selectedPlayerDataInfo != null)
+                @if (playerDataInfo.PlayerDataInfo != null)
                 {
-                    <MudText>@ResourceStrings.Selected: @(((PlayerDataInfo)selectedPlayerDataInfo).Name)</MudText>
+                    <MudText>@ResourceStrings.Selected: @(((PlayerDataInfo)playerDataInfo.PlayerDataInfo).Name)</MudText>
                 }
                 else
                 {
@@ -28,6 +29,7 @@
         </MudList>
     </DialogContent>
     <DialogActions>
+        <MudSwitch @bind-Checked="playerDataInfo.AutoLoginThisWorld" Color="Color.Primary">@ResourceStrings.Automatically_select_this_world_when_auto_logging_in</MudSwitch>
         <MudButton OnClick="ConfirmSelection">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
     </DialogActions>
 </MudDialog>
@@ -40,11 +42,16 @@
     [Parameter]
     public List<PlayerDataInfo> PlayerDataInfos { get; set; }
 
-    private object selectedPlayerDataInfo;
+    private PlayerDataInfoEx playerDataInfo = new();
+    
+    protected override void OnParametersSet()
+    {
+        playerDataInfo.PlayerDataInfo = PlayerDataInfos.MaxBy(d => d.LastLoginTime);
+    }
 
     private void ConfirmSelection()
     {
-        MudDialog.Close(selectedPlayerDataInfo);
+        MudDialog.Close(playerDataInfo);
     }
 
 }

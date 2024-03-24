@@ -412,4 +412,7 @@
     <data name="Auto draw 10 times (up to 3 draws)" xml:space="preserve">
         <value>자동으로 10회 뽑기 (최대 3회)</value>
     </data>
+    <data name="Automatically select this world when auto logging in" xml:space="preserve">
+        <value>자동 로그인 시 이 세계를 자동으로 선택합니다</value>
+    </data>
 </root>

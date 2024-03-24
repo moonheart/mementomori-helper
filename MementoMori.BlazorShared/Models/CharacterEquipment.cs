@@ -1,6 +1,6 @@
 ﻿using MementoMori.Ortega.Share.Data.DtoInfo;
 
-namespace MementoMori.WebUI.Models;
+namespace MementoMori.BlazorShared.Models;
 
 public class CharacterEquipment
 {

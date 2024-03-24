@@ -3,13 +3,12 @@
 @inject IWritableOptions<GameConfig> GameConfig
 @inject IHttpClientFactory HttpClientFactory
 
-@inherits AccountComponent
+@inherits MementoMori.BlazorShared.Models.AccountComponent
 @page "/"
 @using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Data
 @using MementoMori.Ortega.Share.Enums
 @using MementoMori.WebUI.Extensions
-@using MementoMori.WebUI.Models
 @using MementoMori.BlazorShared.Components
 @using Newtonsoft.Json.Linq
 @using ReactiveUI
@@ -25,6 +24,7 @@
 @using Microsoft.Extensions.Options
 @using static MementoMori.Ortega.Share.Masters
 @using System.Reflection
+@using MementoMori.BlazorShared.Models
 
 <PageTitle>@TextResourceTable.Get("[CommonFooterHomeButtonLabel]")</PageTitle>
 
@@ -487,9 +487,9 @@
         var dialog = await DialogService.ShowAsync<SelectPlayer>(ResourceStrings.SelectPlayer, parameters, new DialogOptions() {CloseButton = true});
         var result = await dialog.Result;
 
-        if (!result.Canceled && result.Data is PlayerDataInfo playerDataInfo)
+        if (!result.Canceled && result.Data is PlayerDataInfoEx playerDataInfoEx && playerDataInfoEx.PlayerDataInfo is PlayerDataInfo playerDataInfo)
         {
-            await Funcs.Login(playerDataInfo);
+            await Funcs.Login(playerDataInfo, playerDataInfoEx.AutoLoginThisWorld);
         }
     }
 

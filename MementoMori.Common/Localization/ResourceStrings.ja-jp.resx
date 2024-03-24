@@ -412,4 +412,7 @@
     <data name="Auto draw 10 times (up to 3 draws)" xml:space="preserve">
         <value>自動で10回引く（最大3回）</value>
     </data>
+    <data name="Automatically select this world when auto logging in" xml:space="preserve">
+        <value>自動ログイン時、このワールドを自動選択します</value>
+    </data>
 </root>
