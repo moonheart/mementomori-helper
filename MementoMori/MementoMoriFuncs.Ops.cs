@@ -1688,8 +1688,6 @@ public partial class MementoMoriFuncs : ReactiveObject
                         if (selectedTargetQuerstId > 0 && selectedTargetQuerstId == targetQuestId) break;
                         var nextQuestResponse = await GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
                     }
-
-                    if (GameConfig.AutoRequestDelay > 0) await Task.Delay(GameConfig.AutoRequestDelay, token);
                 }
                 catch (Exception e)
                 {
@@ -1746,8 +1744,6 @@ public partial class MementoMoriFuncs : ReactiveObject
                         log(string.Format(ResourceStrings.AutoTowerElementExecMsg, name, targetQuestId, result, totalCount, winCount, errCount, towerBattleDtoInfo.TodayClearNewFloorCount));
 
                     if (win && targetStopLayer > 0 && targetStopLayer == targetQuestId) break;
-
-                    if (GameConfig.AutoRequestDelay > 0) await Task.Delay(GameConfig.AutoRequestDelay, token);
                 }
                 catch (Exception e)
                 {
