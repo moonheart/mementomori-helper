@@ -10,6 +10,7 @@ using HtmlConverter.Options;
 using LiteDB;
 using MementoMori.BotServer.Api;
 using MementoMori.BotServer.Options;
+using MementoMori.BotServer.Utils;
 using MementoMori.Extensions;
 using MementoMori.Option;
 using MementoMori.Ortega;
@@ -130,14 +131,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
                 msg.AppendLine();
                 var mainText = $"<div>{noticeInfo.MainText}</div>"; //.Replace("<br>", "\r\n");
                 msg.AppendLine(mainText);
-                var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
-                {
-                    Content = msg.ToString(),
-                    Quality = 100,
-                    Format = ImageFormat.Jpeg,
-                    Width = 600,
-                    MinimumFontSize = 24,
-                });
+                var bytes = ImageUtil.HtmlToImage(msg.ToString());
                 foreach (var group in _botOptions.Value.OpenedGroups)
                 {
                     // await Task.Delay(TimeSpan.FromSeconds(1));
@@ -296,14 +290,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
         msg.AppendLine("</table>");
 
-        var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
-        {
-            Content = msg.ToString(),
-            Quality = 100,
-            Format = ImageFormat.Jpeg,
-            Width = 1000,
-            MinimumFontSize = 24,
-        });
+        var bytes = ImageUtil.HtmlToImage(msg.ToString(), 1100);
 
         var cqImageMsg = CqImageMsg.FromBytes(bytes);
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
@@ -421,14 +408,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
         BuildEnemyInfo(enemies, msg);
 
-        var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
-        {
-            Content = msg.ToString(),
-            Quality = 100,
-            Format = ImageFormat.Jpeg,
-            Width = 1000,
-            MinimumFontSize = 24,
-        });
+        var bytes = ImageUtil.HtmlToImage(msg.ToString(), 1100);
 
         var cqImageMsg = CqImageMsg.FromBytes(bytes);
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
@@ -546,14 +526,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
         BuildEnemyInfo(enemies, msg);
 
-        var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
-        {
-            Content = msg.ToString(),
-            Quality = 100,
-            Format = ImageFormat.Jpeg,
-            Width = 1000,
-            MinimumFontSize = 24,
-        });
+        var bytes = ImageUtil.HtmlToImage(msg.ToString(), 1100);
 
         var cqImageMsg = CqImageMsg.FromBytes(bytes);
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
@@ -611,13 +584,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
         msg.AppendLine("</tbody></table>");
 
-        var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
-        {
-            Content = msg.ToString(),
-            Quality = 100,
-            Format = ImageFormat.Jpeg,
-            MinimumFontSize = 24,
-        });
+        var bytes = ImageUtil.HtmlToImage(msg.ToString(), null);
 
         var cqImageMsg = CqImageMsg.FromBytes(bytes);
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
@@ -677,14 +644,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
                 notice.AppendLine();
                 var mainText = $"<div>{noticeInfo.MainText}</div>";
                 notice.AppendLine(mainText);
-                var bytes = HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
-                {
-                    Content = notice.ToString(),
-                    Quality = 100,
-                    Format = ImageFormat.Jpeg,
-                    Width = 600,
-                    MinimumFontSize = 24,
-                });
+                var bytes = ImageUtil.HtmlToImage(notice.ToString());
                 var cqImageMsg = CqImageMsg.FromBytes(bytes);
                 msg = new CqMessage(cqImageMsg, new CqTextMsg(noticeInfo.Title));
             }
