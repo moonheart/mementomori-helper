@@ -34,7 +34,7 @@ public partial class SessionAccessor
                 {
                     BaseUri = new Uri(_botOptions.Value.BaseUri)
                 });
-                
+
                 OnConnected?.Invoke(_session);
 
                 _ = _session.StartAsync();

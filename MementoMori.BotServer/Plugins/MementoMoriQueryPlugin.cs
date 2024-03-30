@@ -153,6 +153,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
                 var httpClient = _httpClientFactory.CreateClient();
                 while (true)
                 {
+                    await Task.Delay(1000);
                     var dmmGameId = _botOptions.Value.LastDmmGameId + 1;
                     var dmmUrl = $"{_botOptions.Value.DmmApiUrl}/gameplayer/filelist/{dmmGameId}";
                     var json = await httpClient.GetStringAsync(dmmUrl);

@@ -36,6 +36,10 @@ namespace MementoMori.BotServer
             while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
+                if (!_sessionAccessor.Session.IsConnected)
+                {
+                    _logger.LogWarning("session not connected");
+                }
             }
 
             await _sessionAccessor.Session.StopAsync();
