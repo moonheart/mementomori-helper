@@ -291,7 +291,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
         msg.AppendLine("</table>");
 
-        var bytes = ImageUtil.HtmlToImage(msg.ToString(), 1100);
+        var bytes = ImageUtil.HtmlToImage(msg.ToString(), 1200);
 
         var cqImageMsg = CqImageMsg.FromBytes(bytes);
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
@@ -409,7 +409,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
         BuildEnemyInfo(enemies, msg);
 
-        var bytes = ImageUtil.HtmlToImage(msg.ToString(), 1100);
+        var bytes = ImageUtil.HtmlToImage(msg.ToString(), 1200);
 
         var cqImageMsg = CqImageMsg.FromBytes(bytes);
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
@@ -426,6 +426,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 <th>共鸣</th>
 <th>攻击</th>
 <th>防御</th>
+<th>血量</th>
 <th>力量</th>
 <th>技力</th>
 <th>魔力</th>
@@ -455,6 +456,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 <td>{connect}</td>
 <td>{CalcNumber(enemyMb.BattleParameter.AttackPower)}</td>
 <td>{CalcNumber(enemyMb.BattleParameter.Defense)}</td>
+<td>{CalcNumber(enemyMb.BattleParameter.HP)}</td>
 <td>{CalcNumber(enemyMb.BaseParameter.Muscle)}</td>
 <td>{CalcNumber(enemyMb.BaseParameter.Energy)}</td>
 <td>{CalcNumber(enemyMb.BaseParameter.Intelligence)}</td>
@@ -527,7 +529,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
         BuildEnemyInfo(enemies, msg);
 
-        var bytes = ImageUtil.HtmlToImage(msg.ToString(), 1100);
+        var bytes = ImageUtil.HtmlToImage(msg.ToString(), 1200);
 
         var cqImageMsg = CqImageMsg.FromBytes(bytes);
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
