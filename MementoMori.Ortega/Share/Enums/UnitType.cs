@@ -18,7 +18,7 @@ namespace MementoMori.Ortega.Share.Enums
 		TowerBattleEnemy,
 		[Description("幻影の神殿の敵")]
 		LocalRaidEnemy,
-		[Description("ギルドタワーの敵")]
+		[Description("ギルドツリーの敵")]
 		GuildTowerEnemy
 	}
 }

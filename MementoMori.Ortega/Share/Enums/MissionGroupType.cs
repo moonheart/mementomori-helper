@@ -23,7 +23,7 @@ namespace MementoMori.Ortega.Share.Enums
 		Panel = 9,
 		[Description("ギルドミッション")]
 		Guild,
-		[Description("ギルドタワー")]
+		[Description("ギルドツリー")]
 		GuildTower
 	}
 }

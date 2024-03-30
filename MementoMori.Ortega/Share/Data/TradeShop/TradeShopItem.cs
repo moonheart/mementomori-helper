@@ -36,13 +36,18 @@ namespace MementoMori.Ortega.Share.Data.TradeShop
         [Description("並び順")]
         public int SortOrder { get; set; }
 
+        [Description("条件キャラID")]
+        public long RequiredCharacterId { get; set; }
+
+        [Description("購入不可フラグ")]
+        public bool Disabled { get; set; }
+
+        [Description("終了日時")]
+        public long ExpirationTimeStamp { get; set; }
+
         public bool IsSoldOut()
         {
             return LimitTradeCount > 0 && TradeCount >= LimitTradeCount;
-        }
-
-        public TradeShopItem()
-        {
         }
     }
 }

@@ -27,7 +27,7 @@ namespace MementoMori.Ortega.Share.Enums
 		DungeonBattle,
 		[Description("ギルドレイド")]
 		GuildRaid = 11,
-		[Description("ギルドタワー")]
+		[Description("ギルドツリー")]
 		GuildTower
 	}
 }

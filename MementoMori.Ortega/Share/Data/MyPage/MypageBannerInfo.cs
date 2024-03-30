@@ -10,6 +10,8 @@ namespace MementoMori.Ortega.Share.Data.MyPage
 
 		public long ImageId { get; set; }
 
+        public long MBId { get; set; }
+        
 		public int SortOrder { get; set; }
 
 		public TransferDetailInfo TransferDetailInfo { get; set; }

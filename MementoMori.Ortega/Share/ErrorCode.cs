@@ -1151,7 +1151,7 @@ namespace MementoMori.Ortega.Share
 		MissionNotFoundBingoReward,
 		[Description("前のシートをクリアしていません。")]
 		MissionNotClearedPrevSheetMission,
-		[Description("ギルドタワーイベント終了後にギルドに加入したためミッションを開けません。")]
+		[Description("ギルドツリーイベント終了後にギルドに加入したためミッションを開けません。")]
 		MissionJoinGuildAfterEndEvent = 352030,
 		[Description("ユーザーの放置バトルデータが存在しません。")]
 		TradeShopUserBattleAutoDtoNotFound = 361000,
@@ -1227,7 +1227,7 @@ namespace MementoMori.Ortega.Share
 		TutorialSkipTutorialIdIsNullOrEmpty,
 		[Description("スキップの条件を満たしていません")]
 		TutorialNotEnoughSkipCondition,
-		[Description("ユーザーのギルドタワー情報が存在しません。")]
+		[Description("ユーザーのギルドツリー情報が存在しません。")]
 		GuildTowerUserGuildTowerDtoNotFound = 410000,
 		[Description("ユーザーのキャラ情報が存在しません。")]
 		GuildTowerUserCharacterDtoNotFound,
@@ -1235,17 +1235,17 @@ namespace MementoMori.Ortega.Share
 		GuildTowerUserGuildDtoNotFound,
 		[Description("ユーザー情報が存在しません。")]
 		GuildTowerUserStatusDtoNotFound,
-		[Description("ギルドタワー情報が存在しません。")]
+		[Description("ギルドツリー情報が存在しません。")]
 		GuildTowerGuildTowerDtoNotFound,
-		[Description("ギルドタワー前勝利データが存在しません。")]
+		[Description("ギルドツリー前勝利データが存在しません。")]
 		GuildTowerUserGuildTowerPreviousEntryInfoDtoNotFound,
-		[Description("ギルドタワーギルドデータが存在しません。")]
+		[Description("ギルドツリーギルドデータが存在しません。")]
 		GuildTowerGuildDtoNotFound,
 		[Description("ギルドツリーイベントが開催されていません。")]
 		GuildTowerNotOpenEvent = 412000,
 		[Description("ユーザーがギルドに所属していません。")]
 		GuildTowerNotBelongToGuild,
-		[Description("ギルドタワーの挑戦回数が足りません。")]
+		[Description("ギルドツリーの挑戦回数が足りません。")]
 		GuildTowerNotEnoughChallengeCount,
 		[Description("存在しないキャラが含まれています。")]
 		GuildTowerNotFoundCharacter,
@@ -1275,7 +1275,7 @@ namespace MementoMori.Ortega.Share
 		GuildTowerInvalidEntryCharacter,
 		[Description("ほかのギルドメンバーのバトルが終わっていません。")]
 		GuildTowerNotYetEndBattle,
-		[Description("ギルドタワーのギルド全体の挑戦回数が足りません。")]
+		[Description("ギルドツリーのギルド全体の挑戦回数が足りません。")]
 		GuildTowerNotEnoughGuildChallengeCount,
 		[Description("ギルドに参加した日は挑戦できません。")]
 		GuildTowerCannotChallengeOnJoinGuildDate,

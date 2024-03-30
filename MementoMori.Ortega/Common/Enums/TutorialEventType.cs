@@ -23,7 +23,6 @@
 		ShowBossBattleButtonArrow,
 		ReleaseMyPage,
 		PreLoadMapObject,
-		MoveSecondWorld,
-		MoveThirdWorld
+		MoveWorld
 	}
 }

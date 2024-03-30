@@ -30,7 +30,7 @@ namespace MementoMori.Ortega.Share.Enums
 		ReceivableGuildMission,
 		[Description("新しいギルドメンバー勧誘がある場合")]
 		NewRecruitGuildMember,
-		[Description("ギルドタワーミッションの受取可能な報酬がある場合")]
+		[Description("ギルドツリーミッションの受取可能な報酬がある場合")]
 		ReceivableGuildTowerMission
 	}
 }

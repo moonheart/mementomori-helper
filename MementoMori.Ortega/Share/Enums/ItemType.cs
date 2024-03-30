@@ -73,7 +73,7 @@ namespace MementoMori.Ortega.Share.Enums
 		PanelUnlockItem,
 		[Description("楽曲チケット")]
 		MusicTicket,
-		[Description("アイコンアイテム")]
+		[Description("特別プレイヤーアイコン")]
 		SpecialIcon,
 		[Description("アイコンの断片")]
 		IconFragment,
