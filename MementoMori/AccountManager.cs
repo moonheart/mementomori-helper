@@ -138,6 +138,15 @@ public partial class AccountManager : ReactiveObject
     {
         Get(userId).AccountInfo = GetAccountInfo(userId);
     }
+    
+    public void RemoveAccount(long userId)
+    {
+        _accounts.TryRemove(userId, out _);
+        _authOption.Update(opt =>
+        {
+            opt.Accounts.RemoveAll(x => x.UserId == userId);
+        });
+    }
 }
 
 public class Account

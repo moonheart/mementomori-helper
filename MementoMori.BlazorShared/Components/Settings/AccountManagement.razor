@@ -1,7 +1,9 @@
 ﻿@inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject IWritableOptions<AuthOption> authOption
+@inject TimeZoneAwareJobRegister timeZoneAwareJobRegister;
 @using MementoMori.Common.Localization
+@using MementoMori.Jobs
 @using MementoMori.Option
 @using MementoMori.Ortega.Share
 @inherits MementoMori.BlazorShared.Models.AccountComponent
@@ -177,7 +179,8 @@
         {
             return;
         }
-        authOption.Update(opt => { opt.Accounts.RemoveAll(d => d.UserId == userId); });
+        AccountManager.RemoveAccount(userId);
+        await timeZoneAwareJobRegister.DeregisterJobs(userId);
         AccountManager.CurrentUserId = 0;
         _accounts = authOption.Value.Accounts.ToList();
         StateHasChanged();
