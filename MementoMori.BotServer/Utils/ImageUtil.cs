@@ -12,8 +12,8 @@ public static class ImageUtil
         return HtmlConverter.Core.HtmlConverter.ConvertHtmlToImage(new ImageConfiguration
         {
             Content = html,
-            Quality = 100,
-            Format = ImageFormat.Jpeg,
+            Quality = 90,
+            Format = ImageFormat.Jpg,
             Width = width,
             MinimumFontSize = 24,
         });
