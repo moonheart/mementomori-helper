@@ -7,107 +7,81 @@ using MessagePack;
 
 namespace MementoMori.Ortega.Share.Master.Data
 {
-	[MessagePackObject(true)]
-	[Description("フレンドキャンペーン")]
-	public class FriendCampaignMB : MasterBookBase, IHasStartEndTime, ICharacterImage
-	{
-		[PropertyOrder(3)]
-		[Description("コード入力有効期間")]
-		public int CodeExpirationPeriod
-		{
-			get;
-		}
+    [MessagePackObject(true)]
+    [Description("フレンドキャンペーン")]
+    public class FriendCampaignMB : MasterBookBase, IHasStartEndTime, ICharacterImage
+    {
+        [PropertyOrder(3)]
+        [Description("コード入力有効期間")]
+        public int CodeExpirationPeriod { get; }
 
-		[Description("招待コード入力上限数")]
-		[PropertyOrder(10)]
-		public int CodeLimitCount
-		{
-			get;
-		}
+        [DateTimeString]
+        [PropertyOrder(4)]
+        [Description("コード入力開始時間")]
+        public string CodeStartTime { get; }
 
-		[Description("対象フレンドミッションリスト")]
-		[PropertyOrder(8)]
-		public IReadOnlyList<long> FriendMissionIdList
-		{
-			get;
-		}
+        [PropertyOrder(11)]
+        [Description("招待コード入力上限数")]
+        public int CodeLimitCount { get; }
 
-		[Nest(false, 0)]
-		[PropertyOrder(11)]
-		[Description("招待コード入力報酬リスト")]
-		public IReadOnlyList<UserItem> RewardItemList
-		{
-			get;
-		}
+        [PropertyOrder(9)]
+        [Description("対象フレンドミッションリスト")]
+        public IReadOnlyList<long> FriendMissionIdList { get; }
 
-		[PropertyOrder(9)]
-		[Description("キャンペーンタイトル")]
-		public string Title
-		{
-			get;
-		}
+        [Nest(false, 0)]
+        [PropertyOrder(12)]
+        [Description("招待コード入力報酬リスト")]
+        public IReadOnlyList<UserItem> RewardItemList { get; }
 
-		[SerializationConstructor]
-		public FriendCampaignMB(long id, bool? isIgnore, string memo, string startTime, string endTime, int codeExpirationPeriod, long characterImageId, float characterImageX, float characterImageY, float characterImageSize, IReadOnlyList<long> friendMissionIdList, string title, int codeLimitCount, IReadOnlyList<UserItem> rewardItemList)
-			:base(id, isIgnore, memo)
-		{
-			StartTime = startTime;
-			EndTime = endTime;
-			CodeExpirationPeriod = codeExpirationPeriod;
-			CharacterImageId = characterImageId;
-			CharacterImageX = characterImageX;
-			CharacterImageY = characterImageY;
-			CharacterImageSize = characterImageSize;
-			FriendMissionIdList = friendMissionIdList;
-			Title = title;
-			CodeLimitCount = codeLimitCount;
-			RewardItemList = rewardItemList;
-		}
+        [PropertyOrder(10)]
+        [Description("キャンペーンタイトル")]
+        public string Title { get; }
 
-		public FriendCampaignMB() : base(0, false, "")
-		{
-		}
+        [SerializationConstructor]
+        public FriendCampaignMB(long id, bool? isIgnore, string memo, string startTime, string endTime, int codeExpirationPeriod, string codeStartTime, long characterImageId, float characterImageX, float characterImageY,
+            float characterImageSize, IReadOnlyList<long> friendMissionIdList, string title, int codeLimitCount, IReadOnlyList<UserItem> rewardItemList)
+            : base(id, isIgnore, memo)
+        {
+            StartTime = startTime;
+            EndTime = endTime;
+            CodeExpirationPeriod = codeExpirationPeriod;
+            CodeStartTime = codeStartTime;
+            CharacterImageId = characterImageId;
+            CharacterImageX = characterImageX;
+            CharacterImageY = characterImageY;
+            CharacterImageSize = characterImageSize;
+            FriendMissionIdList = friendMissionIdList;
+            Title = title;
+            CodeLimitCount = codeLimitCount;
+            RewardItemList = rewardItemList;
+        }
 
-		[PropertyOrder(4)]
-		[Description("キャラ画像Id")]
-		public long CharacterImageId
-		{
-			get;
-		}
+        public FriendCampaignMB() : base(0, false, "")
+        {
+        }
 
-		[PropertyOrder(5)]
-		[Description("キャラ画像座標X")]
-		public float CharacterImageX
-		{
-			get;
-		}
+        [PropertyOrder(5)]
+        [Description("キャラ画像Id")]
+        public long CharacterImageId { get; }
 
-		[PropertyOrder(6)]
-		[Description("キャラ画像座標Y")]
-		public float CharacterImageY
-		{
-			get;
-		}
+        [PropertyOrder(6)]
+        [Description("キャラ画像座標X")]
+        public float CharacterImageX { get; }
 
-		[Description("キャラ画像サイズ")]
-		[PropertyOrder(7)]
-		public float CharacterImageSize
-		{
-			get;
-		}
+        [PropertyOrder(7)]
+        [Description("キャラ画像座標Y")]
+        public float CharacterImageY { get; }
 
-		[Description("終了時刻")]
-		[PropertyOrder(2)]
-		public string EndTime
-		{
-			get;
-		}
+        [PropertyOrder(8)]
+        [Description("キャラ画像サイズ")]
+        public float CharacterImageSize { get; }
 
-		[PropertyOrder(1)]
-		[Description("開始時刻")]
-		public string StartTime
-		{
-			get;
-		}
-	}
+        [PropertyOrder(2)]
+        [Description("終了時刻")]
+        public string EndTime { get; }
+
+        [PropertyOrder(1)]
+        [Description("開始時刻")]
+        public string StartTime { get; }
+    }
 }

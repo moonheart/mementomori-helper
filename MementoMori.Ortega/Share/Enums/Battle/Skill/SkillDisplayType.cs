@@ -35,6 +35,8 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		RemoveEffect,
 		[Description("即時発動")]
 		BurstEffect,
+		[Description("自傷ダメージ")]
+		SelfInjuryDamage,
 		[Description("復活")]
 		Resurrection = 20
 	}

@@ -135,6 +135,8 @@ namespace MementoMori.Ortega.Share.Enums
 		ReceiveAllActivityMedalReward,
 		[Description("ゴールド交換")]
 		GoldExchange = 260,
+		[Description("星導交換所")]
+		StarsGuidanceTradeShop = 280,
 		[Description("武具固定")]
 		LockEquipment = 1000
 	}

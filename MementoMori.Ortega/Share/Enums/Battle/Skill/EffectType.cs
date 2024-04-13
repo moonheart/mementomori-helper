@@ -305,12 +305,12 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		Combustion,
 		[Description("火傷")]
 		Burn,
-		[Description("毒（特殊）")]
-		SpecialPoison = 8101,
-		[Description("出血（特殊）")]
-		SpecialBleeding,
-		[Description("浸食（特殊）")]
-		SpecialCombustion,
+		[Description("毒（自傷）")]
+		SelfInjuryPoison = 8101,
+		[Description("出血（自傷）")]
+		SelfInjuryBleeding,
+		[Description("浸食（自傷）")]
+		SelfInjuryCombustion,
 		[Description("ダメージ連携11")]
 		DamageResonanceFromSelfAndDamageReduction = 8111,
 		[Description("ダメージ連携21")]

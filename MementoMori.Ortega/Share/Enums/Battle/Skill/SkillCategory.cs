@@ -31,6 +31,8 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		PhysicalFixDamage,
 		[Description("魔法 (固定攻撃)")]
 		MagicFixDamage,
+		[Description("自傷ダメージ")]
+		SelfInjuryDamage,
 		[Description("復活")]
 		Resurrection = 50,
 		[Description("ステータス吸収")]

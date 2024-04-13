@@ -309,6 +309,7 @@
 		PurchaseIAPInitializeFailedServiceDisconnect,
 		PurchaseProcessFailed,
 		PurchaseCompleteFailed,
+		PurchaseIAPInitializeTimeout,
 		MusicPlayerNotSelectedMusicItem = 2400001,
 		MusicPlayerNotSelectedPlayableMusicItem,
 		MusicPlayerNotSelectedAddableMusicItemInPlaylist,
@@ -337,6 +338,10 @@
 		GuildTowerNotChallengeableGuildJoinDay,
 		GuildTowerNotExistGuildChallengeCount,
 		GuildTowerReinforceJobResetNotSelectMaterial,
-		GuildTowerMissionJoinGuildAfterEventEnd
+		GuildTowerMissionJoinGuildAfterEventEnd,
+		StarsGuidanceTradeNotSelectConsumeItem = 2600001,
+		StarsGuidanceTradeNotEnoughConsumeItem,
+		StarsGuidanceTradeOverTodayExchangeCount,
+		StarsGuidanceTradeAlreadyReachedMaxExchangeCount
 	}
 }

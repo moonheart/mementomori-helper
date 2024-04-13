@@ -1293,6 +1293,16 @@ namespace MementoMori.Ortega.Share
 		IndividualNotificationCacheDtoNotFound = 421000,
 		[Description("ユーザーの個別通知情報が存在しません")]
 		IndividualNotificationDtoNotFound,
+		[Description("星導交換所情報が存在しません")]
+		StarsGuidanceTradeShopDtoNotFound = 431000,
+		[Description("星導交換所が開催されていません。")]
+		StarsGuidanceTradeShopNotOpen = 432000,
+		[Description("星導交換所機能は使えません。")]
+		StarsGuidanceTradeShopUnavailable,
+		[Description("交換元アイテム情報が不正です。")]
+		StarsGuidanceTradeShopConsumeItemInvalid,
+		[Description("交換制限を超えました。")]
+		StarsGuidanceTradeShopOverLimitTradeCount,
 		[Description("存在しないTreasureChestです。")]
 		ItemOpenTreasureChestIdNotFound = 602004,
 		[Description("存在しないTreasureChestです。")]
@@ -1467,6 +1477,8 @@ namespace MementoMori.Ortega.Share
 		MagicOnionGlobalGvgCheckCanJoinBattleAndNoticeNotLeaderAndNotSubLeader,
 		[Description("GlobalGvgが開放されていない")]
 		MagicOnionGlobalGvgNotOpen,
+		[Description("GlobalGvgでキャラクターのキャッシュデータが存在しないためパーティ追加に失敗しました。")]
+		MagicOnionGlobalGvgAddCastlePartyNotFoundCharacterCache,
 		[Description("認証に失敗しました。")]
 		MagicOnionAuthenticationFail = 1000000,
 		[Description("プレイヤーの情報を見つけません。")]
@@ -1517,6 +1529,8 @@ namespace MementoMori.Ortega.Share
 		MagicOnionBeforeDeclarationTime,
 		[Description("ギルドバトルが開催されていません。")]
 		MagicOnionNotOpenGuildBattle,
+		[Description("キャラクターのキャッシュデータが存在しないためパーティの配置に失敗しました。")]
+		MagicOnionLocalGvgAddPartyNotFoundCharacterCache,
 		[Description("プッシュ通知対象外の端末です。")]
 		PushNotificationNotSupportedDeviceType = 4000000,
 		[Description("プッシュ通知の登録に必要な情報が取得できません。")]

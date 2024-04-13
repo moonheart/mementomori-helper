@@ -15,7 +15,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 		public int AutoBattlePlayerExpBonus { get; }
 
 		[Nest(false, 0)]
-		[PropertyOrder(28)]
+		[PropertyOrder(29)]
 		[Description("VIPデイリー報酬リスト")]
 		public IReadOnlyList<UserItem> DailyRewardItemList { get; }
 
@@ -47,7 +47,11 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("星の導きガチャのログが見れるか否か")]
 		public bool IsStarsGuidanceGachaLogAvailable { get; }
 
-		[PropertyOrder(25)]
+		[PropertyOrder(23)]
+		[Description("星導交換が可能か否か")]
+		public bool IsStarsGuidanceTradeShopAvailable { get; }
+
+		[PropertyOrder(26)]
 		[Description("研磨時にロックが可能か否か\u200b")]
 		public bool IsLockEquipmentTrainingAvailable { get; }
 
@@ -59,7 +63,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("ギルドレイドの一括掃討が可能か否か")]
 		public bool IsMultipleQuickStartGuildRaidAvailable { get; }
 
-		[PropertyOrder(23)]
+		[PropertyOrder(24)]
 		[Description("ボス/無窮の塔掃討が可能か否か")]
 		public bool IsQuickBossBattleAvailable { get; }
 
@@ -67,7 +71,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("ギルドレイドの掃討が可能か否か")]
 		public bool IsQuickStartGuildRaidAvailable { get; }
 
-		[PropertyOrder(24)]
+		[PropertyOrder(25)]
 		[Description("神装強化の装備返還が可能か否か\u200b")]
 		public bool IsRefundEquipmentMergeAvailable { get; }
 
@@ -112,7 +116,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 		public int QuickBattlePlayerExpBonus { get; }
 
 		[Nest(false, 0)]
-		[PropertyOrder(26)]
+		[PropertyOrder(27)]
 		[Description("VIP到達時報酬リスト")]
 		public IReadOnlyList<UserItem> ReachRewardItemList { get; }
 
@@ -121,12 +125,12 @@ namespace MementoMori.Ortega.Share.Master.Data
 		public long RequiredExp { get; }
 
 		[Nest(true, 0)]
-		[PropertyOrder(27)]
+		[PropertyOrder(28)]
 		[Description("VIPギフトリスト")]
 		public IReadOnlyList<VipGiftInfo> VipGiftInfoList { get; }
 
         [SerializationConstructor]
-        public VipMB(long id, bool? isIgnore, string memo, int autoBattlePlayerExpBonus, IReadOnlyList<UserItem> dailyRewardItemList, int dungeonBattleCoinBonus, int dungeonBattleGoldBonus, long dungeonBattleMissedCompensationCount, bool isDestinyGachaAvailable, bool isDestinyGachaLogAvailable, bool isStarsGuidanceGachaAvailable, bool isStarsGuidanceGachaLogAvailable, bool isLockEquipmentTrainingAvailable, bool isMultipleBountyQuestAvailable, bool isQuickBossBattleAvailable, bool isQuickStartGuildRaidAvailable, bool isMultipleQuickStartGuildRaidAvailable, bool isRefundEquipmentMergeAvailable, long loginBonusMissedCompensationCount, long lv, long maxBossBattleUseCurrencyCount, int maxCharacterBoxPlus, long maxGuildRaidChallengeCount, long maxQuickUseCurrencyCount, int maxShopItemCountPlus, int maxSoloQuestCount, int maxTeamQuestCount, int quickBattlePlayerExpBonus, IReadOnlyList<UserItem> reachRewardItemList, long requiredExp, IReadOnlyList<VipGiftInfo> vipGiftInfoList)
+        public VipMB(long id, bool? isIgnore, string memo, int autoBattlePlayerExpBonus, IReadOnlyList<UserItem> dailyRewardItemList, int dungeonBattleCoinBonus, int dungeonBattleGoldBonus, long dungeonBattleMissedCompensationCount, bool isDestinyGachaAvailable, bool isDestinyGachaLogAvailable, bool isStarsGuidanceGachaAvailable, bool isStarsGuidanceGachaLogAvailable, bool isStarsGuidanceTradeShopAvailable, bool isLockEquipmentTrainingAvailable, bool isMultipleBountyQuestAvailable, bool isQuickBossBattleAvailable, bool isQuickStartGuildRaidAvailable, bool isMultipleQuickStartGuildRaidAvailable, bool isRefundEquipmentMergeAvailable, long loginBonusMissedCompensationCount, long lv, long maxBossBattleUseCurrencyCount, int maxCharacterBoxPlus, long maxGuildRaidChallengeCount, long maxQuickUseCurrencyCount, int maxShopItemCountPlus, int maxSoloQuestCount, int maxTeamQuestCount, int quickBattlePlayerExpBonus, IReadOnlyList<UserItem> reachRewardItemList, long requiredExp, IReadOnlyList<VipGiftInfo> vipGiftInfoList)
         :base( id, isIgnore, memo)
         {
             AutoBattlePlayerExpBonus = autoBattlePlayerExpBonus;
@@ -157,6 +161,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             VipGiftInfoList = vipGiftInfoList;
             IsStarsGuidanceGachaAvailable = isStarsGuidanceGachaAvailable;
             IsStarsGuidanceGachaLogAvailable = isStarsGuidanceGachaLogAvailable;
+            IsStarsGuidanceTradeShopAvailable = isStarsGuidanceTradeShopAvailable;
         }
 
         public VipMB():base( 0, false, "")

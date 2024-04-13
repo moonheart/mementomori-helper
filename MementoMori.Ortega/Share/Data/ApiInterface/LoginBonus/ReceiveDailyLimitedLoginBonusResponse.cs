@@ -8,11 +8,9 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus
     public class ReceiveDailyLimitedLoginBonusResponse : ApiResponseBase, IUserSyncApiResponse
     {
         public List<LimitedLoginBonusRewardItem> RewardItemList { get; set; }
+        
+        public List<long> ReceivedSwitchingDailyRewardIdList { get; set; }
 
         public UserSyncData UserSyncData { get; set; }
-
-        public ReceiveDailyLimitedLoginBonusResponse()
-        {
-        }
     }
 }

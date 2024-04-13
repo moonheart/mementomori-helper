@@ -69,6 +69,8 @@ namespace MementoMori.Ortega.Share.Enums
 		GuildMemberRecruit = 200,
 		[Description("個別通知ダイアログ")]
 		IndividualNotification = 210,
+		[Description("星導交換所")]
+		StarsGuidanceTradeShop = 220,
 		[Description("フレンド")]
 		Friend = 4
 	}

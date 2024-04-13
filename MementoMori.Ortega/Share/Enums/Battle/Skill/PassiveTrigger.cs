@@ -71,6 +71,10 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		ActionStart,
 		[Description("行動終了時")]
 		ActionEnd,
+		[Description("被自傷ダメージ時")]
+		SelfInjury,
+		[Description("自分以外の味方の被自傷ダメージ時")]
+		AllySelfInjury,
 		[Description("被ダメージ量判定(自分の情報だけ参照)")]
 		CheckReceiveDamageSelf = 41,
 		[Description("被ダメージ量判定")]

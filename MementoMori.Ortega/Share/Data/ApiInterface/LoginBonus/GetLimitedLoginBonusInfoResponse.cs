@@ -13,5 +13,7 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus
         public List<int> ReceivedDateList { get; set; }
 
         public int TotalLoginCount { get; set; }
+        
+        public List<long> ReceivedSwitchingDailyRewardIdList { get; set; }
     }
 }

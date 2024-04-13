@@ -18,10 +18,14 @@
 		MaxTeamQuestCount,
 		DestinyGachaAvailable,
 		DestinyGachaLogAvailable,
+		StarsGuidanceGachaAvailable,
+		StarsGuidanceLogAvailable,
+		StarsGuidanceTradeAvailable,
 		LockEquipmentTrainingAvailable,
 		MultipleBountyQuestAvailable,
 		QuickBossAndTowerBattleAvailable,
 		QuickStartGuildRaidAvailable,
-		RefundEquipmentMergeAvailable
+		RefundEquipmentMergeAvailable,
+		MultipleQuickStartGuildRaidAvailable
 	}
 }
