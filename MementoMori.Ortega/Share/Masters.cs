@@ -90,7 +90,6 @@ namespace MementoMori.Ortega.Share
                 LevelLinkTable,
                 LimitedLoginBonusTable,
                 LimitedLoginBonusRewardListTable,
-                LimitedLoginBonusSwitchingDailyRewardTable,
                 LimitedMissionTable,
                 LimitedEventTable,
                 NewCharacterMissionTable,
@@ -161,10 +160,18 @@ namespace MementoMori.Ortega.Share
         {
 	        foreach (var allTable in GetAllTables())
 	        {
-		        if (!allTable.Load())
-		        {
-			        return false;
-		        }
+                try
+                {
+
+                    if (!allTable.Load())
+                    {
+                        return false;
+                    }
+                }
+                catch (FileNotFoundException e)
+                {
+                    // ignored
+                }
 	        }
 
 	        return true;
@@ -383,8 +390,6 @@ namespace MementoMori.Ortega.Share
         public static LimitedLoginBonusTable LimitedLoginBonusTable { get; } = new();
 
         public static LimitedLoginBonusRewardListTable LimitedLoginBonusRewardListTable { get; } = new();
-
-        public static LimitedLoginBonusSwitchingDailyRewardTable LimitedLoginBonusSwitchingDailyRewardTable { get; }
 
         public static LimitedMissionTable LimitedMissionTable { get; } = new();
 
