@@ -64,8 +64,10 @@ using MementoMori.Ortega.Share.Data.Auth;
 using MementoMori.Ortega.Share.Data.TradeShop;
 using static MementoMori.Ortega.Share.Masters;
 using DynamicData;
+using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
 using MementoMori.Ortega.Share.Data.ApiInterface.Ranking;
 using MementoMori.Ortega.Share.Data.Battle;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MementoMori;
 
@@ -1252,7 +1254,102 @@ public partial class MementoMoriFuncs : ReactiveObject
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var useFriendCodeResponse = await GetResponse<UseFriendCodeRequest, UseFriendCodeResponse>(new UseFriendCodeRequest() {FriendCode = ""});
+            var iconInfo = Mypage.MypageInfo.GetMypageIconInfoByTransferSpotType(TransferSpotType.FriendCampaign);
+            if (iconInfo != null)
+            {
+                var response = await GetResponse<GetFriendCampaignInfoRequest, GetFriendCampaignInfoResponse>(new GetFriendCampaignInfoRequest());
+                var friendCampaignMb = Enumerable.MaxBy(FriendCampaignTable.GetArray(), d => d.Id);
+                if (friendCampaignMb != null)
+                {
+                    var userFriendMissionDtoInfo = response.UserFriendMissionDtoInfoList.Find(d => d.AchievementType == MissionAchievementType.UseFriendCode);
+                    if (userFriendMissionDtoInfo == null)
+                    {
+                        userFriendMissionDtoInfo = new UserFriendMissionDtoInfo()
+                        {
+                            MissionStatusHistory = new Dictionary<MissionStatusType, List<long>>()
+                            {
+                                [MissionStatusType.Locked] = friendCampaignMb.FriendMissionIdList.ToList(),
+                                [MissionStatusType.Progress] = [],
+                                [MissionStatusType.NotReceived] = [],
+                                [MissionStatusType.Received] = [],
+                            }
+                        };
+                    }
+                    var friendCode = response.FriendCode;
+                    foreach (var id in userFriendMissionDtoInfo.MissionStatusHistory[MissionStatusType.NotReceived])
+                    {
+                        await ReceiveReward(id);
+                    }
+                    foreach (var id in userFriendMissionDtoInfo.MissionStatusHistory[MissionStatusType.Progress])
+                    {
+                        await UseCode();
+                        await ReceiveReward(id);
+                    }
+                    foreach (var id in userFriendMissionDtoInfo.MissionStatusHistory[MissionStatusType.Locked])
+                    {
+                        await UseCode();
+                        await ReceiveReward(id);
+                    }
+                        
+                    async Task UseCode()
+                    {
+                        var networkManager = _serviceProvider.GetService<MementoNetworkManager>();
+                        var funcs = _serviceProvider.GetService<MementoMoriFuncs>();
+                        funcs.NetworkManager = networkManager;
+
+                        var timeserverId = _lastPlayerDataInfo.WorldId / 1000;
+                        var timeServerMb = TimeServerTable.GetById(timeserverId);
+                        var countryCode = timeServerMb.CountryCodeList.FirstOrDefault() ?? "CN";
+
+                        log("Creating new account...");
+                        var createUserResponse = await networkManager.GetResponse<CreateUserRequest, CreateUserResponse>(new CreateUserRequest()
+                        {
+                            AdverisementId = Guid.NewGuid().ToString("D"),
+                            AppVersion = AuthOption.AppVersion,
+                            CountryCode = countryCode,
+                            DeviceToken = "",
+                            ModelName = AuthOption.ModelName,
+                            DisplayLanguage = NetworkManager.LanguageType,
+                            OSVersion = AuthOption.OSVersion,
+                            SteamTicket = ""
+                        });
+
+                        funcs.UserId = createUserResponse.UserId;
+                        networkManager.UserId = createUserResponse.UserId;
+
+                        var createWorldPlayerResponse = await networkManager.GetResponse<CreateWorldPlayerRequest, CreateWorldPlayerResponse>(
+                            new CreateWorldPlayerRequest()
+                            {
+                                WorldId = createUserResponse.RecommendWorldId,
+                                Comment = "Nice to meet you!",
+                                Name = "New Player"
+                            });
+
+                        // get server host
+                        await networkManager.SetServerHost(createUserResponse.RecommendWorldId);
+
+                        // do login
+                        var loginPlayerResp = await networkManager.GetResponse<LoginPlayerRequest, LoginPlayerResponse>(new LoginPlayerRequest
+                        {
+                            PlayerId = createWorldPlayerResponse.PlayerId, Password = createWorldPlayerResponse.Password
+                        }, log);
+
+                        log($"Using friend code {friendCode}...");
+                        var res3 = await networkManager.GetResponse<UseFriendCodeRequest, UseFriendCodeResponse>(new UseFriendCodeRequest() {FriendCode = friendCode});
+                    }
+
+                    async Task ReceiveReward(long missionId)
+                        {
+                            var res = await GetResponse<RewardFriendMissionRequest, RewardFriendMissionResponse>(new RewardFriendMissionRequest()
+                            {
+                                AchievementType = MissionAchievementType.UseFriendCode,
+                                FriendMissionId = missionId,
+                                FriendCampaignId = friendCampaignMb.Id
+                            });
+                            res.RewardItemList.PrintUserItems(log);
+                        }
+                }
+            }
         });
     }
 

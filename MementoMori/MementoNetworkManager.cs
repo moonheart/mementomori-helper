@@ -255,9 +255,7 @@ public partial class MementoNetworkManager
         TimeManager.SetTimeServerMb(timeServerMb);
 
         // get server host
-        var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest() {WorldId = playerDataInfo.WorldId}, log);
-        _apiHost = new Uri(resp.ApiHost);
-        _grpcChannel = GrpcChannel.ForAddress(new Uri($"https://{resp.MagicOnionHost}:{resp.MagicOnionPort}"));
+        await SetServerHost(playerDataInfo.WorldId, log);
 
         // do login
         var loginPlayerResp = await GetResponse<LoginPlayerRequest, LoginPlayerResponse>(new LoginPlayerRequest
@@ -266,6 +264,13 @@ public partial class MementoNetworkManager
         }, log);
         PlayerId = playerDataInfo.PlayerId;
         AuthTokenOfMagicOnion = loginPlayerResp.AuthTokenOfMagicOnion;
+    }
+
+    public async Task SetServerHost(long worldId, Action<string> log = null)
+    {
+        var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest() {WorldId = worldId}, log);
+        _apiHost = new Uri(resp.ApiHost);
+        _grpcChannel = GrpcChannel.ForAddress(new Uri($"https://{resp.MagicOnionHost}:{resp.MagicOnionPort}"));
     }
 
     public OrtegaMagicOnionClient GetOnionClient()

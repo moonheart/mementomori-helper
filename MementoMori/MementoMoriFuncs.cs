@@ -68,6 +68,7 @@ public partial class MementoMoriFuncs
     private readonly IWritableOptions<GameConfig> _writableGameConfig;
     private readonly IWritableOptions<PlayersOption> _playersOption;
     private readonly BattleLogManager _battleLogManager;
+    private readonly IServiceProvider _serviceProvider;
 
     private PlayerOption PlayerOption => _playersOption.Value.TryGetValue(NetworkManager.PlayerId, out var opt) ? opt : new PlayerOption();
 
