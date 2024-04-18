@@ -10,7 +10,7 @@
 
 Under construction
 
-[Feedback and Communication](https://t.me/+gTRe8AxKxIdkOTg9)
+[Telegram](https://t.me/+gTRe8AxKxIdkOTg9) [Discord](https://discord.gg/mJ3fWxrypx)
 
 ## **Disclaimer**
 
