@@ -400,7 +400,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                                 log($"{ResourceStrings.UseOverLimitItem}: {name}×{useCount}, {count}/{maxItemCount}");
                                 var response = await GetResponse<UseAutoBattleRewardItemRequest, UseAutoBattleRewardItemResponse>(new UseAutoBattleRewardItemRequest()
                                 {
-                                    ItemType = (QuestQuickTicketType) itemMb.ItemType,
+                                    ItemType = (QuestQuickTicketType) (itemMb.ItemId),
                                     UseCount = useCount
                                 });
                                 response.RewardItemList.PrintUserItems(log);
