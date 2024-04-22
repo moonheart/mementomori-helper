@@ -54,6 +54,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         {
             Thread.Sleep(TimeSpan.FromSeconds(1));
         }
+
         var msg = $"发现新的 Ortega Master 版本 {masterVersion}";
         foreach (var group in _botOptions.Value.OpenedGroups)
         {
@@ -67,6 +68,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         {
             Thread.Sleep(TimeSpan.FromSeconds(1));
         }
+
         var msg = $"发现新的 Ortega Asset 版本 {assetVersion}";
         foreach (var group in _botOptions.Value.OpenedGroups)
         {
@@ -225,7 +227,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
     }
 
-    [CqMessageMatch(@"^/技能\s+(?<idStr>\d+)$")]
+    [CqMessageMatch(@"^/技能\s*(?<idStr>\d+)$")]
     public async Task QueryCharacterSkills(CqGroupMessagePostContext context, string idStr)
     {
         if (!IsGroupAllowed(context)) return;
@@ -334,7 +336,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
     }
 
-    [CqMessageMatch(@"^/角色\s+(?<idStr>\d+)$")]
+    [CqMessageMatch(@"^/角色\s*(?<idStr>\d+)$")]
     public async Task QueryCharacter(CqGroupMessagePostContext context, string idStr)
     {
         if (!IsGroupAllowed(context)) return;
@@ -385,7 +387,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
                                       </style>
                                       """;
 
-    [CqMessageMatch(@"^/主线\s+(?<quest>\d+-\d+)$")]
+    [CqMessageMatch(@"^/主线\s*(?<quest>\d+-\d+)$")]
     public async Task QueryMainQuerst(CqGroupMessagePostContext context, string quest)
     {
         if (!IsGroupAllowed(context)) return;
@@ -494,7 +496,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         return $"{num}{unit[index]}";
     }
 
-    [CqMessageMatch(@"^/(?<towerTypeStr>(无穷|红|黄|金|绿|翠|蓝))塔\s+(?<quest>\d+)$")]
+    [CqMessageMatch(@"^/(?<towerTypeStr>(无穷|红|黄|金|绿|翠|蓝))塔\s*(?<quest>\d+)$")]
     public async Task QueryTowerInfo(CqGroupMessagePostContext context, string towerTypeStr, string quest)
     {
         if (!IsGroupAllowed(context)) return;
@@ -535,7 +537,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(cqImageMsg));
     }
 
-    [CqMessageMatch(@"^/(?<rankType>战力|等级|主线|塔)排名\s+(?<server>日|韩|亚|美|欧|国际)(?<worldStr>\d+)$")]
+    [CqMessageMatch(@"^/(?<rankType>战力|等级|主线|塔)排名\s*(?<server>日|韩|亚|美|欧|国际)(?<worldStr>\d+)$")]
     public async Task GetPlayerRanking(CqGroupMessagePostContext context, string rankType, string server, string worldStr)
     {
         if (!IsGroupAllowed(context)) return;
@@ -594,7 +596,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         // await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg.ToString()));
     }
 
-    [CqMessageMatch(@"^/竞技场排名\s+(?<server>日|韩|亚|美|欧|国际)(?<worldStr>\d+)$")]
+    [CqMessageMatch(@"^/竞技场排名\s*(?<server>日|韩|亚|美|欧|国际)(?<worldStr>\d+)$")]
     public async Task GetArenaRanking(CqGroupMessagePostContext context, string server, string worldStr)
     {
         if (!IsGroupAllowed(context)) return;
@@ -632,10 +634,12 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         if (!IsGroupAllowed(context)) return;
         _logger.LogInformation($"{nameof(RecentNotice)} {noticeIdStr}");
         CqMessage msg;
-        if (long.TryParse(noticeIdStr, out var noticeId))
+        if (int.TryParse(noticeIdStr, out var noticeId))
         {
             using var db = _dbAccessor.GetDb();
-            var noticeInfo = db.GetCollection<NoticeInfo>().FindById(noticeId);
+            var noticeInfo = noticeId is > 0 and <= 20
+                ? db.GetCollection<NoticeInfo>().FindAll().OrderByDescending(d=>d.Id).Take(30).ToList().Where(d => d.Id % 10 != 6).Skip(noticeId - 1).FirstOrDefault()
+                : db.GetCollection<NoticeInfo>().FindById(noticeId);
             if (noticeInfo == null)
             {
                 msg = new CqMessage("未找到此公告");
@@ -655,11 +659,12 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         else
         {
             using var db = _dbAccessor.GetDb();
-            var noticeInfos = db.GetCollection<NoticeInfo>().Query().OrderByDescending(d => d.Id).Limit(20).ToList();
+            var noticeInfos = db.GetCollection<NoticeInfo>().Query().OrderByDescending(d => d.Id).Limit(30).ToList();
             var list = new StringBuilder();
-            foreach (var noticeInfo in noticeInfos.Where(d => d.Id % 10 != 6).Take(10))
+            for (var i = 0; i < noticeInfos.Where(d => d.Id % 10 != 6).Take(15).ToArray().Length; i++)
             {
-                list.AppendLine($"({noticeInfo.Id}) {noticeInfo.Title}");
+                var noticeInfo = noticeInfos.Where(d => d.Id % 10 != 6).Take(15).ToArray()[i];
+                list.AppendLine($"({i + 1}) {noticeInfo.Title}");
             }
 
             msg = new CqMessage(list.ToString());
@@ -667,7 +672,7 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
 
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, msg);
     }
-    
+
     [CqMessageMatch(@"^/更新主数据$")]
     public async Task UpdateMasterData(CqGroupMessagePostContext context)
     {
@@ -684,10 +689,10 @@ public partial class MementoMoriQueryPlugin : CqMessageMatchPostPlugin
         {
             msg = "暂无更新";
         }
-        
+
         await _sessionAccessor.Session.SendGroupMessageAsync(context.GroupId, new CqMessage(msg));
     }
-    
+
     private bool IsSenderAdmin(CqGroupMessagePostContext context)
     {
         return _botOptions.Value.AdminIds.Contains(context.Sender.UserId);
