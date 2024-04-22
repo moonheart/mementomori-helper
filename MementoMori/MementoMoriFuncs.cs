@@ -29,7 +29,7 @@ namespace MementoMori;
 
 [RegisterTransient<MementoMoriFuncs>]
 [AutoConstruct]
-public partial class MementoMoriFuncs
+public partial class MementoMoriFuncs: IDisposable
 {
     public TimeManager TimeManager => NetworkManager.TimeManager;
 
@@ -713,5 +713,10 @@ public partial class MementoMoriFuncs
             UserSyncData.UserItemEditorMergeUserSyncData(data);
             this.RaisePropertyChanged(nameof(UserSyncData));
         });
+    }
+
+    public void Dispose()
+    {
+        _cancellationTokenSource?.Dispose();
     }
 }

@@ -28,7 +28,7 @@ namespace MementoMori;
 
 [RegisterTransient<MementoNetworkManager>]
 [AutoConstruct]
-public partial class MementoNetworkManager
+public partial class MementoNetworkManager: IDisposable
 {
     private const string GameOs = "Android";
 
@@ -49,6 +49,7 @@ public partial class MementoNetworkManager
     private Uri _apiHost;
     private GrpcChannel _grpcChannel;
     private string AuthTokenOfMagicOnion;
+    CancellationTokenSource cts = new();
 
     public static string AssetCatalogUriFormat { get; private set; }
     public static string AssetCatalogFixedUriFormat { get; private set; }
@@ -94,18 +95,18 @@ public partial class MementoNetworkManager
 
     private async Task AutoUpdateMasterData()
     {
-        while (true)
+        while (!cts.IsCancellationRequested)
         {
             try
             {
-                await Task.Delay(TimeSpan.FromHours(1));
+                await Task.Delay(TimeSpan.FromHours(1), cts.Token);
                 _logger.LogInformation("auto updating master data");
                 if (await DownloadMasterCatalog())
                 {
                     Masters.LoadAllMasters();
                 }
             }
-            catch (Exception e)
+            catch (Exception e) when (e is not TaskCanceledException)
             {
                 _logger.LogError(e, "error auto update master data");
             }
@@ -431,5 +432,15 @@ UPDATEREDO:
 
             throw new InvalidOperationException("no ortegastatuscode");
         }
+    }
+
+    public void Dispose()
+    {
+        cts.Cancel();
+        cts.Dispose();
+        _meMoriHttpClientHandler?.Dispose();
+        _httpClient?.Dispose();
+        _unityHttpClient?.Dispose();
+        _grpcChannel?.Dispose();
     }
 }
