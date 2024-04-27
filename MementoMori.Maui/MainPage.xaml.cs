@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.ObjectModel;
+using System.Globalization;
 using MementoMori.Common;
 using Microsoft.AspNetCore.Components;
 
@@ -6,15 +7,18 @@ namespace MementoMori.Maui
 {
     public partial class MainPage : ContentPage
     {
+        public ObservableCollection<string> Logs = new();
         public MainPage()
         {
             InitializeComponent();
-            _ = InitializeMemento();
+            LogList.ItemsSource = Logs;
+            Task.Run(InitializeMemento);
         }
 
         private void UpdateInfo(string msg)
         {
-            this.Dispatcher.DispatchAsync(() => { infoLabel.Text = msg; });
+            Logs.Add(msg);
+            this.Dispatcher.DispatchAsync(() => { LogList.ScrollTo(msg, ScrollToPosition.MakeVisible, true); });
         }
 
         private async Task InitializeMemento()
@@ -24,20 +28,31 @@ namespace MementoMori.Maui
             UpdateInfo("Initializing...");
             accountManager.MigrateToAccountArray();
             accountManager.CurrentCulture = CultureInfo.CurrentCulture;
-            await networkManager.Initialize();
+            await networkManager.Initialize(UpdateInfo);
             UpdateInfo("Downloading master catalog...");
-            await networkManager.DownloadMasterCatalog();
+            await networkManager.DownloadMasterCatalog(UpdateInfo);
+            UpdateInfo("Loading master catalog...");
             networkManager.SetCultureInfo(CultureInfo.CurrentCulture);
             UpdateInfo("Auto login...");
             await accountManager.AutoLogin();
-            infoLabel.IsVisible = false;
-            blazorWebView.IsVisible = true;
+            // return;
+            Logs.Clear();
+
+            Dispatcher.Dispatch(() =>
+            {
+                LogList.IsVisible = false;
+                blazorWebView.IsVisible = true;
+            });
+
             await blazorWebView.TryDispatchAsync(sp =>
             {
                 var navi = sp.GetRequiredService<NavigationManager>();
                 navi.NavigateTo(navi.Uri, true);
             });
-            blazorWebView.Focus();
+            Dispatcher.Dispatch(() =>
+            {
+                blazorWebView.Focus();
+            });
         }
     }
 }

@@ -12,7 +12,13 @@
                 <RootComponent Selector="#app" ComponentType="{x:Type local:Routes}" />
             </BlazorWebView.RootComponents>
         </BlazorWebView>
-        <Label Margin="50" x:Name="infoLabel"></Label>
+        <ListView x:Name="LogList" RowHeight="20" SelectionMode="None">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Label FontSize="12" LineHeight="14" Text="{Binding}"></Label>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 
 </ContentPage>
