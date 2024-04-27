@@ -28,7 +28,7 @@ namespace MementoMori;
 
 [RegisterTransient<MementoNetworkManager>]
 [AutoConstruct]
-public partial class MementoNetworkManager: IDisposable
+public partial class MementoNetworkManager : IDisposable
 {
     private const string GameOs = "Android";
 
@@ -80,9 +80,9 @@ public partial class MementoNetworkManager: IDisposable
         _ = AutoUpdateMasterData();
     }
 
-    public async Task Initialize()
+    public async Task Initialize(Action<string> log = null)
     {
-        var response = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() { CountryCode = "CN" });
+        var response = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN"}, log);
         AssetCatalogUriFormat = response.AssetCatalogUriFormat;
         AssetCatalogFixedUriFormat = response.AssetCatalogFixedUriFormat;
         MasterUriFormat = response.MasterUriFormat;
@@ -113,34 +113,49 @@ public partial class MementoNetworkManager: IDisposable
         }
     }
 
-    public async Task<bool> DownloadMasterCatalog()
+    public async Task<bool> DownloadMasterCatalog(Action<string> log = null)
     {
-        _logger.LogInformation(ResourceStrings.Downloading_master_directory___);
+        log ??= Console.WriteLine;
+        log(ResourceStrings.Downloading_master_directory___);
         var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN", UserId = 0});
 
         var url = string.Format(dataUriResponse.MasterUriFormat, MoriHttpClientHandler.OrtegaMasterVersion, "master-catalog");
         var bytes = await _unityHttpClient.GetByteArrayAsync(url);
+        log("Retrieving master catalog...");
         var masterBookCatalog = MessagePackSerializer.Deserialize<MasterBookCatalog>(bytes);
         Directory.CreateDirectory("./Master");
         var hasUpdate = false;
+        HashSet<string> allowedLangMb = ["TextResourceJaJpMB", "TextResourceZhTwMB", "TextResourceEnUsMB", "TextResourceKoKrMB"];
         foreach (var (name, info) in masterBookCatalog.MasterBookInfoMap)
         {
+            if (name.StartsWith("TextResource") && !allowedLangMb.Contains(name))
+            {
+                continue;
+            }
+
             var localPath = $"./Master/{name}";
             if (File.Exists(localPath))
             {
                 var md5 = await CalcFileMd5(localPath);
-                if (md5 == info.Hash) continue;
+                if (md5 == info.Hash)
+                {
+                    log($"{name} not changed, skip...");
+                    continue;
+                }
+
                 File.Delete(localPath);
             }
 
             hasUpdate = true;
-            
+
+            log($"Updating {name}...");
             var mbUrl = string.Format(dataUriResponse.MasterUriFormat, MoriHttpClientHandler.OrtegaMasterVersion, name);
             var fileBytes = await _unityHttpClient.GetByteArrayAsync(mbUrl);
             await File.WriteAllBytesAsync(localPath, fileBytes);
+            log($"Finished updating {name}...");
         }
 
-        _logger.LogInformation(ResourceStrings.Download_master_directory_completed);
+        log(ResourceStrings.Download_master_directory_completed);
         return hasUpdate;
     }
 
@@ -305,10 +320,10 @@ public partial class MementoNetworkManager: IDisposable
                 throw new NotSupportedException();
 
             var bytes = MessagePackSerializer.Serialize(req);
-UPDATEREDO:
+            UPDATEREDO:
             try
             {
-                using var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) { Headers = { { "content-type", "application/json; charset=UTF-8" } } });
+                using var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
                 if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
 
                 await using var stream = await respMsg.Content.ReadAsStreamAsync();
