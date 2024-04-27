@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using MementoMori.Ortega.Share.Enums;
+using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.ApiInterface.User
 {
@@ -6,5 +7,6 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.User
 	[OrtegaApi("user/getMypage", true, false)]
 	public class GetMypageRequest : ApiRequestBase
 	{
+        public LanguageType LanguageType { get; set; }
 	}
 }

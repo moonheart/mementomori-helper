@@ -22,6 +22,8 @@ namespace MementoMori.Ortega.Share.Data.Battle
 
         public int LinkTargetGuid { get; set; }
 
+        public int GranterGuid { get; set; }
+
         public bool IsExtendEffectTurn { get; set; }
 
         public EffectGroup DeepCopy()

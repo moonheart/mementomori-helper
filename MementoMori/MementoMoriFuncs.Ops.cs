@@ -1227,7 +1227,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public async Task GetMyPage()
     {
-        await ExecuteQuickAction(async (log, token) => { Mypage = await GetResponse<GetMypageRequest, GetMypageResponse>(new GetMypageRequest()); });
+        await ExecuteQuickAction(async (log, token) => { Mypage = await GetResponse<GetMypageRequest, GetMypageResponse>(new GetMypageRequest(){LanguageType = NetworkManager.LanguageType}); });
     }
 
     public async Task Debug()

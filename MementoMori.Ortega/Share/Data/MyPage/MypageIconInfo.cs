@@ -19,7 +19,13 @@ namespace MementoMori.Ortega.Share.Data.MyPage
 
 		public long ImageId { get; set; }
 
-		public bool IsDisplayBadge { get; set; }
+        public bool IsBlackout { get; set; }
+
+        public bool IsDisplayBadge { get; set; }
+
+        public long NotOpenEventStoreIconId { get; set; }
+
+        public long OpenContentLocalTimestamp { get; set; }
 
 		public int SortOrder { get; set; }
 

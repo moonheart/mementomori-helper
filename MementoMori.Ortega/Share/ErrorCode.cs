@@ -969,6 +969,8 @@ namespace MementoMori.Ortega.Share
 		ShopInvalidDisplayPeriodType,
 		[Description("IOS側の一時的な問題で復元処理を利用してください。")]
 		ShopIosVerifyReceiptProblem,
+        [Description("レシートデータが見つかりません。")]
+        ShopNotFoundReceipt,
 		[Description("ユーザーのステータスデータが見つかりません。")]
 		ChatUserStatusDtoNotFound = 271000,
 		[Description("ユーザーのアカウントデータが見つかりません。")]
