@@ -521,4 +521,13 @@
   <data name="Automatically select this world when auto logging in" xml:space="preserve">
       <value>自动登录时自动选择此世界</value>
   </data>
+  <data name="Remove friends inactive for 7 days" xml:space="preserve">
+      <value>自动移除7天未登录好友</value>
+  </data>
+  <data name="Auto accept friend requests" xml:space="preserve">
+      <value>自动同意好友申请</value>
+  </data>
+  <data name="Auto send friend requests" xml:space="preserve">
+      <value>自动发送好友申请</value>
+  </data>
 </root>

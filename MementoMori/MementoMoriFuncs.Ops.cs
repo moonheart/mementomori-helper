@@ -1232,7 +1232,10 @@ public partial class MementoMoriFuncs : ReactiveObject
 
     public async Task Debug()
     {
-        await ExecuteQuickAction(async (log, token) => { });
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            await AutoFriendManage();
+        });
     }
 
     public async Task LogDebug()
@@ -2491,6 +2494,59 @@ public partial class MementoMoriFuncs : ReactiveObject
         }); 
     }
 
+    public async Task AutoFriendManage()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var manageOption = PlayerOption.FriendManage;
+            if (manageOption.AutoRemoveInactiveFriend)
+            {
+                var info = await GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest() {FriendInfoType = FriendInfoType.Friend});
+                foreach (var playerInfo in info.PlayerInfoList)
+                {
+                    if (manageOption.AutoRemoveWhitelist.Contains(playerInfo.PlayerId))
+                    {
+                        continue;
+                    }
+
+                    if (playerInfo.LastLoginTime < TimeSpan.FromDays(7))
+                    {
+                        continue;
+                    }
+
+                    var removeFriendResponse = await GetResponse<RemoveFriendRequest, RemoveFriendResponse>(new RemoveFriendRequest(){TargetPlayerId = playerInfo.PlayerId});
+                    log($"{ResourceStrings.Remove_friends_inactive_for_7_days}: {playerInfo.PlayerName}");
+                }
+            }
+
+            if (manageOption.AutoAcceptFriendRequest)
+            {
+                var info = await GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest() { FriendInfoType = FriendInfoType.ApprovalPending });
+                if (info.FriendNum < 40 && info.PlayerInfoList.Count > 0)
+                {
+                    var response = await GetResponse<ReplyAllFriendRequest, ReplyAllFriendResponse>(new ReplyAllFriendRequest() { IsApproval = true });
+                    log($"{ResourceStrings.Auto_accept_friend_requests}: {response.ProcessedNum}");
+                }
+            }
+
+            if (manageOption.AutoSendFriendRequest)
+            {
+                var info = await GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest() {FriendInfoType = FriendInfoType.Recommend});
+                if (info.FriendNum < 40 && info.PlayerInfoList.Count > 0)
+                {
+                    var response = await GetResponse<BulkApplyFriendsRequest, BulkApplyFriendsResponse>(new BulkApplyFriendsRequest()
+                        {TargetPlayerIdList = info.PlayerInfoList.Select(d => d.PlayerId).ToList()});
+                    foreach (var l in response.AppliedPlayerIdList)
+                    {
+                        var name = info.PlayerInfoList.Find(d => d.PlayerId == l).PlayerName;
+                        log($"{ResourceStrings.Auto_send_friend_requests}: {name}");
+                    }
+                }
+            }
+
+        }); 
+    }
+
     public async Task ExecuteAllQuickAction()
     {
         await GetLoginBonus();
@@ -2506,6 +2562,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ReceiveGvgReward();
         await GuildCheckin();
         await GuildRaid();
+        await AutoFriendManage();
         await ReceiveAchievementReward();
         await BountyQuestRewardAuto();
         await BountyQuestStartAuto();

@@ -106,11 +106,29 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Auto accept friend requests 的本地化字符串。
+        /// </summary>
+        public static string Auto_accept_friend_requests {
+            get {
+                return ResourceManager.GetString("Auto accept friend requests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Auto draw 10 times (up to 3 draws) 的本地化字符串。
         /// </summary>
         public static string Auto_draw_10_times__up_to_3_draws_ {
             get {
                 return ResourceManager.GetString("Auto draw 10 times (up to 3 draws)", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Auto send friend requests 的本地化字符串。
+        /// </summary>
+        public static string Auto_send_friend_requests {
+            get {
+                return ResourceManager.GetString("Auto send friend requests", resourceCulture);
             }
         }
         
@@ -1065,6 +1083,15 @@ namespace MementoMori.Common.Localization {
         public static string ReinforceEquipmentOnce {
             get {
                 return ResourceManager.GetString("ReinforceEquipmentOnce", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Remove friends inactive for 7 days 的本地化字符串。
+        /// </summary>
+        public static string Remove_friends_inactive_for_7_days {
+            get {
+                return ResourceManager.GetString("Remove friends inactive for 7 days", resourceCulture);
             }
         }
         

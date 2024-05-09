@@ -6,6 +6,8 @@ public class PlayerOption
     public PvpOption BattleLeague { get; set; } = new();
     public PvpOption LegendLeague { get; set; } = new();
     public GameConfig.LocalRaidConfig LocalRaid { get; set; } = new();
+    
+    public FriendManageOption FriendManage { get; set; } = new();
 
     public GameConfig.GachaConfigModel GachaConfig { get; set; } = new();
     public Dictionary<QuickActionType, bool> QuickActionSwitch { get; set; } = new()
@@ -35,4 +37,15 @@ public class PlayerOption
         { QuickActionType.RankUpCharacter, true },
         { QuickActionType.ReceiveAchievementReward, true },
     };
+}
+
+public class FriendManageOption
+{
+    public bool AutoRemoveInactiveFriend { get; set; }
+
+    public List<long> AutoRemoveWhitelist { get; set; } = [];
+    
+    public bool AutoSendFriendRequest { get; set; }
+    
+    public bool AutoAcceptFriendRequest { get; set; }
 }

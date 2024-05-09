@@ -415,4 +415,13 @@
     <data name="Automatically select this world when auto logging in" xml:space="preserve">
         <value>自動ログイン時、このワールドを自動選択します</value>
     </data>
+    <data name="Remove friends inactive for 7 days" xml:space="preserve">
+        <value>7日間ログインしていない友達を自動削除</value>
+    </data>
+    <data name="Auto accept friend requests" xml:space="preserve">
+        <value>友達申請を自動的に承認する</value>
+    </data>
+    <data name="Auto send friend requests" xml:space="preserve">
+        <value>自動で友達申請を送信する</value>
+    </data>
 </root>

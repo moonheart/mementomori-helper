@@ -415,4 +415,13 @@
     <data name="Automatically select this world when auto logging in" xml:space="preserve">
         <value>자동 로그인 시 이 세계를 자동으로 선택합니다</value>
     </data>
+    <data name="Remove friends inactive for 7 days" xml:space="preserve">
+        <value>7일간 로그인하지 않은 친구 자동 삭제</value>
+    </data>
+    <data name="Auto accept friend requests" xml:space="preserve">
+        <value>친구 신청 자동 수락</value>
+    </data>
+    <data name="Auto send friend requests" xml:space="preserve">
+        <value>자동으로 친구 요청을 보냅니다</value>
+    </data>
 </root>

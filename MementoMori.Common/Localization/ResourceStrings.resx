@@ -521,4 +521,13 @@
   <data name="Automatically select this world when auto logging in" xml:space="preserve">
       <value>Automatically select this world when auto logging in</value>
   </data>
+  <data name="Remove friends inactive for 7 days" xml:space="preserve">
+      <value>Remove friends inactive for 7 days</value>
+  </data>
+  <data name="Auto accept friend requests" xml:space="preserve">
+      <value>Auto accept friend requests</value>
+  </data>
+  <data name="Auto send friend requests" xml:space="preserve">
+      <value>Auto send friend requests</value>
+  </data>
 </root>
