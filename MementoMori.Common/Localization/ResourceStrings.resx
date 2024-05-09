@@ -530,4 +530,7 @@
   <data name="Auto send friend requests" xml:space="preserve">
       <value>Auto send friend requests</value>
   </data>
+  <data name="Auto remove whitelist" xml:space="preserve">
+      <value>Auto remove whitelist</value>
+  </data>
 </root>

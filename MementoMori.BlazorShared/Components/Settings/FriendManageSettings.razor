@@ -1,0 +1,91 @@
+﻿@using MementoMori.Ortega.Share
+@using MementoMori.Common.Localization
+@using MementoMori.Option
+@using MementoMori.Ortega.Share.Data.ApiInterface.Friend
+@using MementoMori.Ortega.Share.Data.Player
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.Ortega.Share.Extensions
+
+@inject ISnackbar Snackbar
+@inject IWritableOptions<PlayersOption> PlayersOptions
+@inherits MementoMori.BlazorShared.Models.AccountComponent
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>@Masters.TextResourceTable.Get("[FriendTabFriend]") (@(Funcs?.UserSyncData?.UserStatusDtoInfo?.Name))</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Variant="Variant.Outlined" OnClick="SaveFriendManageConfig"></MudIconButton>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudSwitch T="bool" Label="@ResourceStrings.Remove_friends_inactive_for_7_days" @bind-Checked="_autoRemoveFriend" Color="Color.Primary"></MudSwitch>
+        <MudSelect Label="@ResourceStrings.Auto_remove_whitelist" MultiSelection="true" T="FriendInfo" @bind-SelectedValues="_friendWhiteList" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
+            @foreach (var friend in _friendList)
+            {
+                <MudSelectItem Value="friend">
+                    <MudText>@($"{friend.Name}({friend.Id})")</MudText>
+                </MudSelectItem>
+            }
+        </MudSelect>
+        <MudSwitch T="bool" Label="@ResourceStrings.Auto_accept_friend_requests" @bind-Checked="_autoAcceptNewFriend" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@ResourceStrings.Auto_send_friend_requests" @bind-Checked="_autoApplyFriend" Color="Color.Primary"></MudSwitch>
+    </MudCardContent>
+</MudCard>
+
+
+@code {
+    bool _autoRemoveFriend;
+    bool _autoAcceptNewFriend;
+    bool _autoApplyFriend;
+
+    List<FriendInfo> _friendList = [];
+    IEnumerable<FriendInfo> _friendWhiteList = [];
+
+    protected override async Task AccountChanged()
+    {
+        var playerOpt = PlayersOptions.Value.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
+        var response = await Funcs.GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest() {FriendInfoType = FriendInfoType.Friend});
+        _friendList = response.PlayerInfoList.Select(d => new FriendInfo() {Id = d.PlayerId, Name = d.PlayerName, IsWhiteList = false}).ToList();
+        foreach (var l in playerOpt.FriendManage.AutoRemoveWhitelist)
+        {
+            var friendInfo = _friendList.Find(d=>d.Id == l);
+            if (friendInfo != null)
+            {
+                friendInfo.IsWhiteList = true;
+            }
+            else
+            {
+                _friendList.Add(new FriendInfo() {Id = l, Name = "Unknown", IsWhiteList = true});
+            }
+        }
+        _autoRemoveFriend = playerOpt.FriendManage.AutoRemoveInactiveFriend;
+        _autoAcceptNewFriend = playerOpt.FriendManage.AutoAcceptFriendRequest;
+        _autoApplyFriend = playerOpt.FriendManage.AutoSendFriendRequest;
+    }
+
+
+    private void SaveFriendManageConfig()
+    {
+        PlayersOptions.Update(opt =>
+        {
+            var playerOpt = opt.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
+            playerOpt.FriendManage.AutoRemoveWhitelist = _friendWhiteList.Select(d => d.Id).ToList();
+            playerOpt.FriendManage.AutoRemoveInactiveFriend = _autoRemoveFriend;
+            playerOpt.FriendManage.AutoAcceptFriendRequest = _autoAcceptNewFriend;
+            playerOpt.FriendManage.AutoSendFriendRequest = _autoApplyFriend;
+        });
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add(ResourceStrings.Save_successful, Severity.Success);
+    }
+
+    public class FriendInfo
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public bool IsWhiteList { get; set; }
+    }
+
+}

@@ -124,6 +124,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Auto remove whitelist 的本地化字符串。
+        /// </summary>
+        public static string Auto_remove_whitelist {
+            get {
+                return ResourceManager.GetString("Auto remove whitelist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Auto send friend requests 的本地化字符串。
         /// </summary>
         public static string Auto_send_friend_requests {

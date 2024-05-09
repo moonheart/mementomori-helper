@@ -530,4 +530,7 @@
   <data name="Auto send friend requests" xml:space="preserve">
       <value>自动发送好友申请</value>
   </data>
+  <data name="Auto remove whitelist" xml:space="preserve">
+      <value>自动移除的白名单</value>
+  </data>
 </root>

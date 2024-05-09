@@ -424,4 +424,7 @@
     <data name="Auto send friend requests" xml:space="preserve">
         <value>자동으로 친구 요청을 보냅니다</value>
     </data>
+    <data name="Auto remove whitelist" xml:space="preserve">
+        <value>자동으로 제거된 화이트리스트</value>
+    </data>
 </root>
