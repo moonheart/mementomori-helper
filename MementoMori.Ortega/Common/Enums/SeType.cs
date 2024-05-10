@@ -84,6 +84,7 @@
 		PanelMissionBingo,
 		PanelMissionFlashScreen,
 		MonologueIn = 15001,
-		MonologueOut
+		MonologueOut,
+		GuildTowerDifficultyUp = 16001
 	}
 }

@@ -12,6 +12,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("有償ダイヤ(Android)")]
 		PaidAndroid,
 		[Description("有償ダイヤ(DMM)")]
-		PaidDMM = 5
+		PaidDMM = 5,
+		[Description("有償ダイヤ(Apk)")]
+		PaidApk = 7
 	}
 }

@@ -218,6 +218,7 @@
 		ShopMonthlyBoostNotPrePurchasePeriod,
 		ShopMonthlyBoostAlreadyPrePurchased,
 		ShopNotEnoughGold,
+		ShopGrowthPackClosed,
 		ExchangeNotEnoughUserItem = 1000001,
 		ExchangeSoldOut,
 		ExchangeNotSelectedConsumeItem,

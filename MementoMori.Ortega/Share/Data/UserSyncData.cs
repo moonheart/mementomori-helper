@@ -80,6 +80,8 @@ namespace MementoMori.Ortega.Share.Data
 
         public List<ShopProductGuerrillaPack> ShopProductGuerrillaPackList { get; set; }
 
+        public long StripePoint { get; set; }
+
         public long? TimeServerId { get; set; }
 
         public Dictionary<long, long> TreasureChestCeilingCountMap { get; set; }

@@ -80,6 +80,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("タイプ強化アイテム")]
 		GuildTowerJobReinforcementMaterial,
 		[Description("イベント交換所アイテム")]
-		EventExchangePlaceItem = 50
+		EventExchangePlaceItem = 50,
+		[Description("Stripeクーポン")]
+		StripeCoupon = 1001
 	}
 }

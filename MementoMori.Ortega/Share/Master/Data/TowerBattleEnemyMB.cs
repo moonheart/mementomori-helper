@@ -7,9 +7,11 @@ using MessagePack;
 
 namespace MementoMori.Ortega.Share.Master.Data
 {
-    [Description("無窮の塔\u3000敵データ")]
-    [NotUseOnBatch]
     [MessagePackObject(true)]
+    [NotUseOnAuth]
+    [NotUseOnBatch]
+    [NotUseOnSerialCodeInput]
+    [Description("無窮の塔\u3000敵データ")]
     public class TowerBattleEnemyMB : MasterBookBase, IBattleEnemy
     {
         [PropertyOrder(12)]

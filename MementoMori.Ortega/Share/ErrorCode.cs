@@ -59,6 +59,8 @@ namespace MementoMori.Ortega.Share
 		AuthInvalidCountryCode = 10301,
 		[Description("国情報の識別に失敗しました。")]
 		AuthTimeServerDecisionFailed,
+		[Description("野良APK版で利用できない国コードが含まれています。")]
+		AuthInvalidCountryCodeOnApk = 10310,
 		[Description("リクエストが不正です")]
 		AuthLoginInvalidRequest = 10401,
 		[Description("ログインしようとしているアカウントは既に削除されました。")]
@@ -969,8 +971,16 @@ namespace MementoMori.Ortega.Share
 		ShopInvalidDisplayPeriodType,
 		[Description("IOS側の一時的な問題で復元処理を利用してください。")]
 		ShopIosVerifyReceiptProblem,
-        [Description("レシートデータが見つかりません。")]
-        ShopNotFoundReceipt,
+		[Description("レシートデータが見つかりません。")]
+		ShopNotFoundReceipt,
+		[Description("課金処理セッションが切れました。")]
+		ShopNotFoundSession,
+		[Description("支払いが完了されてないです。")]
+		ShopNotPaid,
+		[Description("使用可能なクーポンデータが存在しません。")]
+		ShopNotFoundCouponData,
+		[Description("使用済みのクーポンです。")]
+		ShopAlreadyUsedCoupon,
 		[Description("ユーザーのステータスデータが見つかりません。")]
 		ChatUserStatusDtoNotFound = 271000,
 		[Description("ユーザーのアカウントデータが見つかりません。")]
@@ -1572,6 +1582,34 @@ namespace MementoMori.Ortega.Share
 		[Description("DMM月額課金サービスデータがそんざいしません。")]
 		DmmApiRequestNotFoundDmmSubscription,
 		[Description("DMMのデバイスではありません。")]
-		DmmApiRequestNotDmmDeviceType
+		DmmApiRequestNotDmmDeviceType,
+		[Description("Stripe プレイヤーIDが存在しません。")]
+		StripeNotFoundGivePlayerId = 5010000,
+		[Description("Stripe MbIDが存在しません。")]
+		StripeNotFoundMbId,
+		[Description("Stripe ProductIdが存在しません。")]
+		StripeNotFoundProductId,
+		[Description("Stripe ShopProductTypeが存在しません。")]
+		StripeNotFoundShopProductType,
+		[Description("Stripe DeviceTypeが存在しません。")]
+		StripeNotFoundDeviceType,
+		[Description("Stripe InvoiceIdが存在しません。")]
+		StripeNotFoundInvoiceId,
+		[Description("Stripe 決済されてないです。")]
+		StripeNotPaidPaymentStatus,
+		[Description("Stripe 課金処理に問題が発生しました。")]
+		StripeNotFoundCurrencyDataBase,
+		[Description("Stripe 課金処理情報が存在しません。")]
+		StripeNotFoundPaymentInfo,
+		[Description("Stripe 存在しない国課金コードです。")]
+		StripeNotFoundCurrencyCode,
+		[Description("Stripe 決済できない金額です。")]
+		StripeInvalidPrice,
+		[Description("Stripe 顧客情報が存在しません。")]
+		StripeNotFoundCustomerInfo,
+		[Description("Stripe ポイントが足りません。")]
+		StripeNotEnoughPoint,
+		[Description("Stripe セッションデータがありません。")]
+		StripeNotFoundSession
 	}
 }

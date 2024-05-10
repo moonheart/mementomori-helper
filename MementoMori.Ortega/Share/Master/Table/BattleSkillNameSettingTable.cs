@@ -4,7 +4,7 @@ namespace MementoMori.Ortega.Share.Master.Table
 {
 	public class BattleSkillNameSettingTable : TableBase<BattleSkillNameSettingMB>
 	{
-		public BattleSkillNameSettingMB GetByActiveSkillId(long activeSkillId)
+        public BattleSkillNameSettingMB GetByRootActiveSkillId(long rootActiveSkillId)
 		{
 			int num = 0;
 			num++;

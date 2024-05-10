@@ -2,7 +2,8 @@
 {
 	public enum GuildTowerRankingType
 	{
-		Floor,
-		StarCount
+		ReinforcementJob,
+		StarCount,
+		Floor
 	}
 }

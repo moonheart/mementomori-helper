@@ -30,6 +30,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Auth
 
         public Dictionary<long, List<SelectShopProductInfo>> SelectShopProductInfoDict { get; set; }
         
+        public StripeShopProductInfo StripeShopProductInfo { get; set; }
+        
         public Dictionary<long, string> SpecialWorldDict { get; set; }
 
         public UserSyncData UserSyncData { get; set; }

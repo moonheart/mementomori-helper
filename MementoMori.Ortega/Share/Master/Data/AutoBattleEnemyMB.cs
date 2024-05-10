@@ -7,9 +7,11 @@ using MessagePack;
 
 namespace MementoMori.Ortega.Share.Master.Data
 {
-	[Description("放置バトル敵データ")]
+    [MessagePackObject(true)]
+    [NotUseOnAuth]
     [NotUseOnBatch]
-	[MessagePackObject(true)]
+    [NotUseOnSerialCodeInput]
+    [Description("放置バトル敵データ")]
 	public class AutoBattleEnemyMB : MasterBookBase, IBattleEnemy
 	{
 		[PropertyOrder(12)]

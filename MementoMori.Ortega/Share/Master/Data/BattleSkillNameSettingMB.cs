@@ -10,8 +10,8 @@ namespace MementoMori.Ortega.Share.Master.Data
     public class BattleSkillNameSettingMB : MasterBookBase
     {
         [PropertyOrder(1)]
-        [Description("アクティブスキルID(ActiveSkillMB)")]
-        public long ActiveSkillId { get; }
+        [Description("ルートスキルID")]
+        public long RootActiveSkillId { get; }
 
         [PropertyOrder(2)]
         [Description("改行位置設定 JP")]
@@ -70,10 +70,10 @@ namespace MementoMori.Ortega.Share.Master.Data
         public int NewLineIndexEG { get; }
 
         [SerializationConstructor]
-        public BattleSkillNameSettingMB(long id, bool? isIgnore, string memo, long activeSkillId, int newLineIndexJP, int newLineIndexUS, int newLineIndexKR, int newLineIndexTW, int newLineIndexFR, int newLineIndexCN, int newLineIndexMX, int newLineIndexBR, int newLineIndexTH, int newLineIndexID, int newLineIndexVN, int newLineIndexRU, int newLineIndexDE, int newLineIndexEG)
+        public BattleSkillNameSettingMB(long id, bool? isIgnore, string memo, long rootActiveSkillId, int newLineIndexJP, int newLineIndexUS, int newLineIndexKR, int newLineIndexTW, int newLineIndexFR, int newLineIndexCN, int newLineIndexMX, int newLineIndexBR, int newLineIndexTH, int newLineIndexID, int newLineIndexVN, int newLineIndexRU, int newLineIndexDE, int newLineIndexEG)
             : base(id, isIgnore, memo)
         {
-            ActiveSkillId = activeSkillId;
+            RootActiveSkillId = rootActiveSkillId;
             NewLineIndexJP = newLineIndexJP;
             NewLineIndexUS = newLineIndexUS;
             NewLineIndexKR = newLineIndexKR;

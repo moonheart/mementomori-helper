@@ -15,6 +15,7 @@
 		Restore,
 		RestoreError,
 		ShowCompleteDialogWait,
+		ShowContractPrivilegeCompleteDialogWait,
 		ShowDeferredDialog,
 		ServiceDisconnect,
 		RequestGetDmmPointWait,
@@ -24,6 +25,10 @@
 		WaitingPurchase,
 		RestoreTransactionWait,
 		RequestSelectShopProductWait,
-		RequestCancelShopProductWait
+		RequestCancelShopProductWait,
+		RequestStartStripePaymentWait,
+		PurchaseStripeWait,
+		CancelSessionDialogWait,
+		RecoveryPaidSessionWait
 	}
 }

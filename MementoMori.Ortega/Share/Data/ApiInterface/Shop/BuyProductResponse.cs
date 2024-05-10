@@ -14,6 +14,8 @@ public class BuyProductResponse : ApiResponseBase, IUserSyncApiResponse
     public AcquisitionShopRewardInfo RewardInfo { get; set; }
 
     public ShopProductInfo ShopProductInfo { get; set; }
+    
+    public UserStripePointHistoryInfo UserStripePointHistoryInfo { get; set; }
 
     public UserSyncData UserSyncData { get; set; }
 }
