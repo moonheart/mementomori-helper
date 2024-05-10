@@ -154,7 +154,7 @@ public partial class MementoMoriFuncs : ReactiveObject
             ? playerDataInfos.Find(d => d.WorldId == accountInfo.AutoLoginWorldId)
             : Enumerable.MaxBy(playerDataInfos, d => d.LastLoginTime);
         if (playerDataInfo == null) return;
-        await Login(playerDataInfo);
+        await Login(playerDataInfo, !manual);
     }
 
     public async Task Logout()
