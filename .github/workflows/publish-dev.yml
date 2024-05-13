@@ -12,7 +12,7 @@ jobs:
   publish:
     strategy:
       matrix:
-        rid: [ win-x64, linux-x64, linux-arm64, osx-x64, osx-arm64 ]
+        rid: [ win-x64, linux-x64, linux-arm64, linux-arm, osx-x64, osx-arm64 ]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -103,7 +103,7 @@ jobs:
           push: true
           tags: moonheartmoon/mementomori-webui:dev
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64v8,linux/arm32v7
           file: ./MementoMori.WebUI/Dockerfile
 
   publish-maui-android:
