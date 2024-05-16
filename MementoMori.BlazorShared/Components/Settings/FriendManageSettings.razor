@@ -48,19 +48,26 @@
         var playerOpt = PlayersOptions.Value.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
         if (NetworkManager.PlayerId > 0)
         {
-            var response = await Funcs.GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest() {FriendInfoType = FriendInfoType.Friend});
-            _friendList = response.PlayerInfoList.Select(d => new FriendInfo() {Id = d.PlayerId, Name = d.PlayerName, IsWhiteList = false}).ToList();
-            foreach (var l in playerOpt.FriendManage.AutoRemoveWhitelist)
+            try
             {
-                var friendInfo = _friendList.Find(d => d.Id == l);
-                if (friendInfo != null)
+                var response = await Funcs.GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest() {FriendInfoType = FriendInfoType.Friend});
+                _friendList = response.PlayerInfoList.Select(d => new FriendInfo() {Id = d.PlayerId, Name = d.PlayerName, IsWhiteList = false}).ToList();
+                foreach (var l in playerOpt.FriendManage.AutoRemoveWhitelist)
                 {
-                    friendInfo.IsWhiteList = true;
+                    var friendInfo = _friendList.Find(d => d.Id == l);
+                    if (friendInfo != null)
+                    {
+                        friendInfo.IsWhiteList = true;
+                    }
+                    else
+                    {
+                        _friendList.Add(new FriendInfo() {Id = l, Name = "Unknown", IsWhiteList = true});
+                    }
                 }
-                else
-                {
-                    _friendList.Add(new FriendInfo() {Id = l, Name = "Unknown", IsWhiteList = true});
-                }
+            }
+            catch
+            {
+                // ignored
             }
         }
 
