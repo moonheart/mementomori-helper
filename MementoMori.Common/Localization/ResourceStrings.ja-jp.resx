@@ -427,4 +427,7 @@
     <data name="Auto remove whitelist" xml:space="preserve">
         <value>自動削除ホワイトリスト</value>
     </data>
+    <data name="Auto challenge retry count" xml:space="preserve">
+        <value>自動挑戦リトライ回数</value>
+    </data>
 </root>

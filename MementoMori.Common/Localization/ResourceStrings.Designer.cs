@@ -115,6 +115,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Auto challenge retry count 的本地化字符串。
+        /// </summary>
+        public static string Auto_challenge_retry_count {
+            get {
+                return ResourceManager.GetString("Auto challenge retry count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Auto draw 10 times (up to 3 draws) 的本地化字符串。
         /// </summary>
         public static string Auto_draw_10_times__up_to_3_draws_ {

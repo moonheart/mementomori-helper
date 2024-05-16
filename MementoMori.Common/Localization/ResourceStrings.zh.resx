@@ -533,4 +533,7 @@
   <data name="Auto remove whitelist" xml:space="preserve">
       <value>自动移除的白名单</value>
   </data>
+  <data name="Auto challenge retry count" xml:space="preserve">
+      <value>自动挑战重试次数</value>
+  </data>
 </root>

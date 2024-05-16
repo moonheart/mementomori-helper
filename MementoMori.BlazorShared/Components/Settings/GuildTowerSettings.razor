@@ -1,0 +1,66 @@
+﻿@using MementoMori.Ortega.Share
+@using MementoMori.Common.Localization
+@using MementoMori.Option
+@using MementoMori.Ortega.Share.Data.ApiInterface.Friend
+@using MementoMori.Ortega.Share.Data.Player
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.Ortega.Share.Extensions
+
+@inject ISnackbar Snackbar
+@inject IWritableOptions<PlayersOption> PlayersOptions
+@inherits MementoMori.BlazorShared.Models.AccountComponent
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>@Masters.TextResourceTable.Get("[GuildTowerTitle]") (@(Funcs?.UserSyncData?.UserStatusDtoInfo?.Name))</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Variant="Variant.Outlined" OnClick="SaveFriendManageConfig"></MudIconButton>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudSwitch T="bool" Label="@Tr("[GuildTowerEntryTitle]")" @bind-Checked="_autoEntry" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@Tr("[GuildTowerChallengeButton]")" @bind-Checked="_autoChallenge" Color="Color.Primary"></MudSwitch>
+        <MudNumericField T="int" @bind-Value="_autoChallengeRetryCount" Label="@ResourceStrings.Auto_challenge_retry_count"></MudNumericField>
+        <MudSwitch T="bool" Label="@Tr("[GuildTowerJobReinforceLabel]")" @bind-Checked="_autoReinforcement" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@Tr("[GuildTowerStageRewardLabel]")" @bind-Checked="_autoReceiveReward" Color="Color.Primary"></MudSwitch>
+    </MudCardContent>
+</MudCard>
+
+
+@code {
+    bool _autoEntry;
+    bool _autoChallenge;
+    int _autoChallengeRetryCount;
+    bool _autoReinforcement;
+    bool _autoReceiveReward;
+
+
+    protected override async Task AccountChanged()
+    {
+        var playerOpt = PlayersOptions.Value.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
+        _autoEntry = playerOpt.GuildTower.AutoEntry;
+        _autoChallenge = playerOpt.GuildTower.AutoChallenge;
+        _autoChallengeRetryCount = playerOpt.GuildTower.AutoChallengeRetryCount;
+        _autoReinforcement = playerOpt.GuildTower.AutoReinforcement;
+        _autoReceiveReward = playerOpt.GuildTower.AutoReceiveReward;
+    }
+
+
+    private void SaveFriendManageConfig()
+    {
+        PlayersOptions.Update(opt =>
+        {
+            var playerOpt = opt.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
+            playerOpt.GuildTower.AutoEntry = _autoEntry;
+            playerOpt.GuildTower.AutoChallenge = _autoChallenge;
+            playerOpt.GuildTower.AutoChallengeRetryCount = _autoChallengeRetryCount;
+            playerOpt.GuildTower.AutoReinforcement = _autoReinforcement;
+            playerOpt.GuildTower.AutoReceiveReward = _autoReceiveReward;
+        });
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add(ResourceStrings.Save_successful, Severity.Success);
+    }
+}

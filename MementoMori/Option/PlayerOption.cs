@@ -8,6 +8,8 @@ public class PlayerOption
     public GameConfig.LocalRaidConfig LocalRaid { get; set; } = new();
     
     public FriendManageOption FriendManage { get; set; } = new();
+    
+    public GuildTowerOption GuildTower { get; set; } = new();
 
     public GameConfig.GachaConfigModel GachaConfig { get; set; } = new();
     public Dictionary<QuickActionType, bool> QuickActionSwitch { get; set; } = new()
@@ -37,6 +39,15 @@ public class PlayerOption
         { QuickActionType.RankUpCharacter, true },
         { QuickActionType.ReceiveAchievementReward, true },
     };
+}
+
+public class GuildTowerOption
+{
+    public bool AutoEntry { get; set; }
+    public bool AutoChallenge { get; set; }
+    public int AutoChallengeRetryCount { get; set; } = 10;
+    public bool AutoReinforcement { get; set; }
+    public bool AutoReceiveReward { get; set; }
 }
 
 public class FriendManageOption

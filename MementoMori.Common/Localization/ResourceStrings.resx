@@ -533,4 +533,7 @@
   <data name="Auto remove whitelist" xml:space="preserve">
       <value>Auto remove whitelist</value>
   </data>
+  <data name="Auto challenge retry count" xml:space="preserve">
+      <value>Auto challenge retry count</value>
+  </data>
 </root>
