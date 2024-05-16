@@ -10,9 +10,13 @@ namespace MementoMori.Ortega.Share.Data.GuildTower
 
 		public GuildTowerCharacterConditionType CharacterConditionType { get; set; }
 
-		public long AttackPower { get; set; }
+		public long AttackPowerAddition { get; set; }
 
-		public long HP { get; set; }
+		public long AttackPowerMultiplier { get; set; }
+
+		public long HPAddition { get; set; }
+
+		public long HPMultiplier { get; set; }
 
 		public int Critical { get; set; }
 

@@ -231,6 +231,7 @@ namespace MementoMori.Ortega.Share.Data
             if (userSyncData.UserTowerBattleDtoInfos.IsNotNullOrEmpty())
                 UserTowerBattleDtoInfos = UserTowerBattleDtoInfos.Merge(userSyncData.UserTowerBattleDtoInfos, (a, b) => a.TowerType == b.TowerType);
             if (userSyncData.UserVipGiftDtoInfos.IsNotNullOrEmpty()) UserVipGiftDtoInfos = userSyncData.UserVipGiftDtoInfos;
+            if (userSyncData.ReceivedGuildTowerFloorRewardIdList.IsNotNullOrEmpty()) ReceivedGuildTowerFloorRewardIdList = ReceivedGuildTowerFloorRewardIdList.Merge(userSyncData.ReceivedGuildTowerFloorRewardIdList);
         }
 
         public UserSyncData()

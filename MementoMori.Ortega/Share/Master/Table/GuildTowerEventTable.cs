@@ -1,22 +1,20 @@
 ﻿using MementoMori.Ortega.Share.Master.Data;
+using MementoMori.Ortega.Share.Utils;
 
 namespace MementoMori.Ortega.Share.Master.Table
 {
 	public class GuildTowerEventTable : TableBase<GuildTowerEventMB>
 	{
-		public GuildTowerEventMB GetByInTime(OrtegaTimeManager timeManager)
+		public GuildTowerEventMB? GetByInTime(Func<IHasStartEndTime, bool> func)
 		{
-			// bool flag;
-			// if (!flag)
-			// {
-			// 	int num = 0;
-			// 	bool flag2;
-			// 	if (!flag2)
-			// 	{
-			// 		num++;
-			// 	}
-			// }
-			throw new IndexOutOfRangeException();
+            foreach (var mb in _datas)
+            {
+                if (func(mb))
+                {
+                    return mb;
+                }
+            }
+            return null;
 		}
 
 		public GuildTowerEventMB GetByInDisplayTime(OrtegaTimeManager timeManager)

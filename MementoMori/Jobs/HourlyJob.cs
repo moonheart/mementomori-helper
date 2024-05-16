@@ -23,6 +23,7 @@ public partial class HourlyJob : IJob
         await account.Funcs.PresentReceiveItem();
         await account.Funcs.GetAutoBattleReward();
         await account.Funcs.GuildRaid();
+        await account.Funcs.AutoGuildTower();
         await account.Funcs.ReceiveGvgReward();
         await account.Funcs.BulkTransferFriendPoint();
         await account.Funcs.BountyQuestRewardAuto();
