@@ -2581,7 +2581,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 {
                     return;
                 }
-                var guids = UserSyncData.UserCharacterDtoInfos.OrderByDescending(d=>BattlePowerCalculatorUtil.CalcCharacterBattleParameter(UserId, d.Guid)).Take(20).Select(d=>d.Guid).ToList();
+                var guids = UserSyncData.UserCharacterDtoInfos.OrderByDescending(d=>BattlePowerCalculatorUtil.GetUserCharacterBattlePower(UserId, d.Guid)).Take(20).Select(d=>d.Guid).ToList();
                 var entryCharacterResponse = await GetResponse<EntryCharacterRequest, EntryCharacterResponse>(new(){CharacterGuidList = guids, GuildTowerEntryType = GuildTowerEntryType.Entry, IsContinueEntry = false});
                 log(TextResourceTable.Get("[GuildTowerEntryToastMessage]"));
                 guildTowerInfo = await GetResponse<GetGuildTowerInfoRequest, GetGuildTowerInfoResponse>(new (){});
