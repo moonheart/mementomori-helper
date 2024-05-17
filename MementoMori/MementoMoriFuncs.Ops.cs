@@ -2670,6 +2670,10 @@ public partial class MementoMoriFuncs : ReactiveObject
                     {
                         var consumedMaterialCount = reinforcementJobData.GetConsumedMaterialCount(userItem.ItemType, userItem.ItemId);
                         var toConsumeCount = Math.Min(userItem.ItemCount - consumedMaterialCount, count);
+                        if (toConsumeCount == 0)
+                        {
+                            break;
+                        }
                         log($"{TextResourceTable.Get("[GuildTowerJobReinforceLabel]")} {TextResourceTable.Get(reinforcementJobData.JobFlags)}");
                         var reinforceJobResponse = await GetResponse<ReinforceJobRequest, ReinforceJobResponse>(new ()
                         {
