@@ -22,6 +22,7 @@ using MementoMori.Common.Localization;
 using MementoMori.MagicOnion;
 using MementoMori.Option;
 using MementoMori.Ortega.Network.MagicOnion.Client;
+using Microsoft.VisualStudio.Threading;
 using Newtonsoft.Json.Linq;
 
 namespace MementoMori;
@@ -296,79 +297,73 @@ public partial class MementoNetworkManager : IDisposable
     }
 
 
-    private static readonly SemaphoreSlim semaphoreSlim = new(1, 1);
+    private static readonly AsyncSemaphore asyncSemaphore = new(1);
 
     public async Task<TResp> GetResponse<TReq, TResp>(TReq req, Action<string> log = null, Action<UserSyncData> userData = null, Uri apiAuth = null, Uri apiHost = null)
         where TReq : ApiRequestBase
         where TResp : ApiResponseBase
     {
-        await semaphoreSlim.WaitAsync();
+        using var releaser = await asyncSemaphore.EnterAsync();
         await Task.Delay(_gameConfig.Value.AutoRequestDelay);
+
+        apiHost ??= _apiHost;
+        apiAuth ??= _apiAuth;
+        log ??= Console.WriteLine;
+        var authAttr = typeof(TReq).GetCustomAttribute<OrtegaAuthAttribute>();
+        var apiAttr = typeof(TReq).GetCustomAttribute<OrtegaApiAttribute>();
+        Uri uri;
+        if (authAttr != null)
+            uri = new Uri(apiAuth, authAttr.Uri);
+        else if (apiAttr != null)
+            uri = new Uri(apiHost ?? throw new InvalidOperationException(ResourceStrings.PleaseLogin), apiAttr.Uri);
+        else
+            throw new NotSupportedException();
+
+        var bytes = MessagePackSerializer.Serialize(req);
+        UPDATEREDO:
         try
         {
-            apiHost ??= _apiHost;
-            apiAuth ??= _apiAuth;
-            log ??= Console.WriteLine;
-            var authAttr = typeof(TReq).GetCustomAttribute<OrtegaAuthAttribute>();
-            var apiAttr = typeof(TReq).GetCustomAttribute<OrtegaApiAttribute>();
-            Uri uri;
-            if (authAttr != null)
-                uri = new Uri(apiAuth, authAttr.Uri);
-            else if (apiAttr != null)
-                uri = new Uri(apiHost ?? throw new InvalidOperationException(ResourceStrings.PleaseLogin), apiAttr.Uri);
-            else
-                throw new NotSupportedException();
+            using var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
+            if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
 
-            var bytes = MessagePackSerializer.Serialize(req);
-            UPDATEREDO:
-            try
+            await using var stream = await respMsg.Content.ReadAsStreamAsync();
+            if (respMsg.Headers.TryGetValues("ortegastatuscode", out var headers2))
             {
-                using var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
-                if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
-
-                await using var stream = await respMsg.Content.ReadAsStreamAsync();
-                if (respMsg.Headers.TryGetValues("ortegastatuscode", out var headers2))
+                var ortegastatuscode = headers2.FirstOrDefault() ?? "";
+                if (ortegastatuscode != "0")
                 {
-                    var ortegastatuscode = headers2.FirstOrDefault() ?? "";
-                    if (ortegastatuscode != "0")
+                    var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(stream);
+
+                    if (apiErrResponse.ErrorCode == ErrorCode.CommonRequireClientUpdate)
                     {
-                        var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(stream);
-
-                        if (apiErrResponse.ErrorCode == ErrorCode.CommonRequireClientUpdate)
-                        {
-                            await GetLatestAvailableVersion();
-                            goto UPDATEREDO;
-                        }
-
-                        if (apiErrResponse.ErrorCode == ErrorCode.InvalidRequestHeader) log(ResourceStrings.Login_expired__please_log_in_again);
-
-                        if (apiErrResponse.ErrorCode == ErrorCode.AuthLoginInvalidRequest) log(ResourceStrings.Login_failed__please_check_your_account_configuration);
-
-                        if (apiErrResponse.ErrorCode == ErrorCode.CommonNoSession) log(Masters.TextResourceTable.GetErrorCodeMessage(ErrorCode.CommonNoSession));
-
-                        var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
-                        log(uri.ToString());
-                        log($"{errorCodeMessage}");
-                        log(req.ToJson());
-                        log(apiErrResponse.ToJson());
-                        throw new ApiErrorException(apiErrResponse.ErrorCode);
+                        await GetLatestAvailableVersion();
+                        goto UPDATEREDO;
                     }
+
+                    if (apiErrResponse.ErrorCode == ErrorCode.InvalidRequestHeader) log(ResourceStrings.Login_expired__please_log_in_again);
+
+                    if (apiErrResponse.ErrorCode == ErrorCode.AuthLoginInvalidRequest) log(ResourceStrings.Login_failed__please_check_your_account_configuration);
+
+                    if (apiErrResponse.ErrorCode == ErrorCode.CommonNoSession) log(Masters.TextResourceTable.GetErrorCodeMessage(ErrorCode.CommonNoSession));
+
+                    var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
+                    log(uri.ToString());
+                    log($"{errorCodeMessage}");
+                    log(req.ToJson());
+                    log(apiErrResponse.ToJson());
+                    throw new ApiErrorException(apiErrResponse.ErrorCode);
                 }
-
-                var response = MessagePackSerializer.Deserialize<TResp>(stream);
-                // if (Debugger.IsAttached) log(response.ToJson());
-                if (response is IUserSyncApiResponse userSyncApiResponse) userData?.Invoke(userSyncApiResponse.UserSyncData);
-
-                return response;
             }
-            catch (TaskCanceledException e)
-            {
-                throw new Exception(ResourceStrings.Request_timed_out__check_your_network);
-            }
+
+            var response = MessagePackSerializer.Deserialize<TResp>(stream);
+            // if (Debugger.IsAttached) log(response.ToJson());
+            if (response is IUserSyncApiResponse userSyncApiResponse) userData?.Invoke(userSyncApiResponse.UserSyncData);
+
+            return response;
         }
-        finally
+        catch (TaskCanceledException e)
         {
-            semaphoreSlim.Release();
+            throw new Exception(ResourceStrings.Request_timed_out__check_your_network);
         }
     }
 
