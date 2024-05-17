@@ -2721,6 +2721,7 @@ public partial class MementoMoriFuncs : ReactiveObject
         await ReceiveGvgReward();
         await GuildCheckin();
         await GuildRaid();
+        await AutoGuildTower();
         await AutoFriendManage();
         await ReceiveAchievementReward();
         await BountyQuestRewardAuto();

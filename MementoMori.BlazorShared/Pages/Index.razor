@@ -303,6 +303,7 @@
                             @* <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.SetupLocalGvgDefense">@($"{Tr("[CommonHeaderGvgLabel]")} {ResourceStrings.Deploy_defense}")</MudButton> *@
                             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.ReceiveGvgReward">@($"{Tr("[CommonHeaderGvgLabel]")} {Tr("[GuildRewardTitle]")}")</MudButton>
                             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.AutoLocalRaid">@Tr("[CommonHeaderLocalRaidLabel]")</MudButton>
+                            <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.AutoGuildTower">@Tr("[GuildTowerTitle]")</MudButton>
                             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.BountyQuestRewardAuto">@Tr("[CommonHeaderBountyQuestLabel]") @Tr("[BountyQuestAllReceive]")</MudButton>
                             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.BountyQuestStartAuto">@Tr("[CommonHeaderBountyQuestLabel]") @Tr("[BountyQuestAutoPlacement]")</MudButton>
                             <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.AutoBuyShopItem">@ResourceStrings.ShopAutoBuyItems</MudButton>
