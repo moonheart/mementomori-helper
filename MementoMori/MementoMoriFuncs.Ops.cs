@@ -2610,6 +2610,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         ).First().Key;
 
                     bool isWin = false;
+                    bool isFloorClearedByOther = false;
                     // from max difficulty to min difficulty
                     for (var i = nextFloor.SelectableDifficultyList.Count - 1; i >= 0; i--)
                     {
@@ -2628,22 +2629,30 @@ public partial class MementoMoriFuncs : ReactiveObject
                         retryCount = Math.Min(retryCount, 1000);
                         for (int j = 0; j < retryCount; j++)
                         {
-                            var battleResponse = await GetResponse<BattleRequest, BattleResponse>(battleRequest);
-                            var msg =
-                                $"{TextResourceTable.Get("[GuildTowerStageFormat]", nextFloor.FloorCount)} {TextResourceTable.Get("[GuildTowerDifficultyLabel]")} {nextFloor.SelectableDifficultyList[i]}";
-                            if (battleResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker())
+                            try
                             {
-                                isWin = true;
-                                log($"{TextResourceTable.Get("[GuildTowerTitle]")} {msg} {TextResourceTable.Get("[LocalRaidBattleWinMessage]")}");
-                                battleResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
-                                battleResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                                var battleResponse = await GetResponse<BattleRequest, BattleResponse>(battleRequest);
+                                var msg =
+                                    $"{TextResourceTable.Get("[GuildTowerStageFormat]", nextFloor.FloorCount)} {TextResourceTable.Get("[GuildTowerDifficultyLabel]")} {nextFloor.SelectableDifficultyList[i]}";
+                                if (battleResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker())
+                                {
+                                    isWin = true;
+                                    log($"{TextResourceTable.Get("[GuildTowerTitle]")} {msg} {TextResourceTable.Get("[LocalRaidBattleWinMessage]")}");
+                                    battleResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
+                                    battleResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
+                                    break;
+                                }
+
+                                log($"{TextResourceTable.Get("[GuildTowerTitle]")} {msg} {TextResourceTable.Get("[LocalRaidBattleLoseMessage]")}");
+                            }
+                            catch (ApiErrorException e) when(e.ErrorCode == ErrorCode.GuildTowerAlreadyClearFloor)
+                            {
+                                isFloorClearedByOther = true;
                                 break;
                             }
-
-                            log($"{TextResourceTable.Get("[GuildTowerTitle]")} {msg} {TextResourceTable.Get("[LocalRaidBattleLoseMessage]")}");
                         }
 
-                        if (isWin)
+                        if (isWin || isFloorClearedByOther)
                         {
                             break;
                         }
