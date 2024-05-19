@@ -24,7 +24,7 @@ internal class Program
         PlatformRegistrationManager.SetRegistrationNamespaces(RegistrationNamespace.Blazor);
         SentrySdk.ConfigureScope(scope =>
         {
-            scope.User = new User()
+            scope.User = new SentryUser()
             {
                 IpAddress = "{{auto}}"
             };
