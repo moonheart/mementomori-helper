@@ -2061,6 +2061,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                 {
                     var notReceived1 = info1.SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
                     missionIds.AddRange(notReceived1);
+                    await RewardMission();
 
                     var unfinishedIds1 = info1
                         .SelectMany(d => d.MissionStatusHistory)
@@ -2071,6 +2072,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                     {
                         var notReceived2 = info2.SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
                         missionIds.AddRange(notReceived2);
+                        await RewardMission();
 
                         var unfinishedIds2 = info2
                             .SelectMany(d => d.MissionStatusHistory)
@@ -2081,6 +2083,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         {
                             var notReceived3 = info3.SelectMany(x => x.MissionStatusHistory[MissionStatusType.NotReceived]).ToList();
                             missionIds.AddRange(notReceived3);
+                            await RewardMission();
                         }
                     }
                 }
@@ -2088,12 +2091,23 @@ public partial class MementoMoriFuncs : ReactiveObject
                 {
                     var notReceived = missionInfo.UserMissionDtoInfoDict.Values.SelectMany(d => d.SelectMany(x => x.GetNotReceivedIdList()));
                     missionIds.AddRange(notReceived);
+                    await RewardMission();
                 }
             }
 
-            var rewardMissionResponse = await GetResponse<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest() {TargetMissionIdList = missionIds});
-            rewardMissionResponse.RewardInfo.ItemList.PrintUserItems(log);
-            rewardMissionResponse.RewardInfo.CharacterList.PrintCharacterDtos(log);
+
+            async Task RewardMission()
+            {
+                if (missionIds.Count == 0)
+                {
+                    return;
+                }
+
+                var rewardMissionResponse = await GetResponse<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest() {TargetMissionIdList = missionIds});
+                rewardMissionResponse.RewardInfo.ItemList.PrintUserItems(log);
+                rewardMissionResponse.RewardInfo.CharacterList.PrintCharacterDtos(log);
+                missionIds.Clear();
+            }
         });
     }
 
