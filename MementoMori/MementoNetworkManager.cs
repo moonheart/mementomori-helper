@@ -65,6 +65,8 @@ public partial class MementoNetworkManager : IDisposable
     private readonly IWritableOptions<GameConfig> _gameConfig;
     private static bool initialized;
 
+    private static Task? _masterDataUpdateTask;
+
     [AutoPostConstruct]
     public void AutoPostConstruct()
     {
@@ -78,7 +80,8 @@ public partial class MementoNetworkManager : IDisposable
         _unityHttpClient.DefaultRequestHeaders.Add("User-Agent", "UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)");
         _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", "2021.3.10f1");
 
-        _ = AutoUpdateMasterData();
+        if (_masterDataUpdateTask == null)
+            _masterDataUpdateTask = Task.Run(AutoUpdateMasterData);
     }
 
     public async Task Initialize(Action<string> log = null)
