@@ -128,8 +128,12 @@ public static class UserSyncDataExtensions
         return count;
     }
 
-    public static long GetUserItemCount(this UserSyncData usersyncData, ItemType itemType, long itemId = 0)
+    public static long GetUserItemCount(this UserSyncData usersyncData, ItemType itemType, long itemId = 0, bool isAnyCurrency = false)
     {
+        if (isAnyCurrency && (itemType == ItemType.CurrencyFree || itemType == ItemType.CurrencyPaid))
+        {
+            return usersyncData?.UserItemDtoInfo?.ToList().Where(x => x.ItemType == ItemType.CurrencyFree || x.ItemType == ItemType.CurrencyPaid).Sum(d => d.ItemCount) ?? 0;
+        }
         return usersyncData?.UserItemDtoInfo?.ToList().Where(x => x.ItemType == itemType && (itemId == 0 || x.ItemId == itemId)).Sum(d => d.ItemCount) ?? 0;
     }
 

@@ -36,16 +36,7 @@
                         @foreach (var item in tradeShopTabMb.ConsumeItemInfos)
                         {
                             var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(item.ItemType, item.ItemId);
-                            long count;
-                            if (itemMb.ItemType == ItemType.CurrencyFree)
-                            {
-                                count = ViewModel.UserSyncData.GetUserItemCount(ItemType.CurrencyFree) + ViewModel.UserSyncData.GetUserItemCount(ItemType.CurrencyPaid);
-                            }
-                            else
-                            {
-                                count = ViewModel.UserSyncData.GetUserItemCount(item.ItemType, item.ItemId);
-                            }
-
+                            long count = ViewModel.UserSyncData.GetUserItemCount(item.ItemType, item.ItemId, true);
                             var text = $"{Masters.TextResourceTable.Get(itemMb.NameKey)} × {count}";
                             <MudChip Text="@text"></MudChip>
                         }
@@ -76,11 +67,11 @@
                                     consumeText += $" {consumeItemName2} × {item.ConsumeItem2.ItemCount}";
                                 }
 
-                                var itemCount = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == item.ConsumeItem1.ItemType && d.ItemId == item.ConsumeItem1.ItemId)?.ItemCount ?? 0;
+                                var itemCount = ViewModel.UserSyncData.GetUserItemCount(item.ConsumeItem1.ItemType, item.ConsumeItem1.ItemId, true);
                                 var buyMaxCount = itemCount / item.ConsumeItem1.ItemCount;
                                 if (item.ConsumeItem2 != null)
                                 {
-                                    itemCount = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == item.ConsumeItem2.ItemType && d.ItemId == item.ConsumeItem2.ItemId)?.ItemCount ?? 0;
+                                    itemCount = ViewModel.UserSyncData.GetUserItemCount(item.ConsumeItem2.ItemType, item.ConsumeItem2.ItemId, true);
                                     buyMaxCount = Math.Min(buyMaxCount, itemCount / item.ConsumeItem2.ItemCount);
                                 }
 
@@ -200,16 +191,11 @@
 
     private void BuyItem(TradeShopTabInfo tab, TradeShopItem tradeShopItem)
     {
-        var itemCount = ViewModel.UserSyncData.GetUserItemCount(tradeShopItem.ConsumeItem1.ItemType, tradeShopItem.ConsumeItem1.ItemId);
-        if (tradeShopItem.ConsumeItem1.ItemType == ItemType.CurrencyFree)
-        {
-            itemCount += ViewModel.UserSyncData.GetUserItemCount(ItemType.CurrencyPaid);
-        }
-
+        var itemCount = ViewModel.UserSyncData.GetUserItemCount(tradeShopItem.ConsumeItem1.ItemType, tradeShopItem.ConsumeItem1.ItemId, true);
         var buyMaxCount = itemCount / tradeShopItem.ConsumeItem1.ItemCount;
         if (tradeShopItem.ConsumeItem2 != null)
         {
-            itemCount = ViewModel.UserSyncData.GetUserItemCount(tradeShopItem.ConsumeItem2.ItemType, tradeShopItem.ConsumeItem2.ItemId);
+            itemCount = ViewModel.UserSyncData.GetUserItemCount(tradeShopItem.ConsumeItem2.ItemType, tradeShopItem.ConsumeItem2.ItemId, true);
             buyMaxCount = Math.Min(buyMaxCount, itemCount / tradeShopItem.ConsumeItem2.ItemCount);
         }
 

@@ -5,6 +5,7 @@
 @using MementoMori.Extensions
 @using MementoMori.WebUI.Extensions
 @using MementoMori.Common.Localization
+@using MementoMori.Ortega.Custom
 @using MementoMori.BlazorShared.Components
 @inject IDialogService DialogService
 
@@ -40,7 +41,7 @@
                         <MudField Label="@Masters.TextResourceTable.Get("[CommonPossessionLabel]")" Variant="Variant.Outlined">
                         @foreach (var userItem in gachaCaseInfo.GachaButtonInfoList.Select(d => d.ConsumeUserItem).DistinctBy(d=>new {d.ItemType, d.ItemId}))
                         {
-                            var label = $"{userItem.GetItemName()} × {ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == userItem.ItemType && d.ItemId == userItem.ItemId)?.ItemCount ?? 0}";
+                            var label = $"{userItem.GetItemName()} × {ViewModel.UserSyncData.GetUserItemCount(userItem.ItemType, userItem.ItemId, true)}";
                             <MudChip>@label</MudChip>
                         }
                     </MudField>
@@ -50,7 +51,7 @@
                     @foreach (var button in gachaCaseInfo.GachaButtonInfoList)
                     {
                         var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(button.ConsumeUserItem.ItemType, button.ConsumeUserItem.ItemId);
-                        var count = ViewModel.UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == button.ConsumeUserItem.ItemType && d.ItemId == button.ConsumeUserItem.ItemId)?.ItemCount ?? 0;
+                        var count = ViewModel.UserSyncData.GetUserItemCount(button.ConsumeUserItem.ItemType, button.ConsumeUserItem.ItemId, true);
                         var disabled = count < button.ConsumeUserItem.ItemCount;
 
                         <MudButton Disabled="disabled" Variant="Variant.Filled" Class="mr-2" Color="Color.Secondary" OnClick="() => DoGacha(button.GachaButtonId)">@(Masters.TextResourceTable.Get(itemMb.NameKey)) × @button.ConsumeUserItem.ItemCount</MudButton>

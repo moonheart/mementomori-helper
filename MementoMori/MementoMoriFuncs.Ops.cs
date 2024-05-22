@@ -391,7 +391,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         {
                             if (presentItem.Key.ItemType == ItemType.QuestQuickTicket)
                             {
-                                var count = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == presentItem.Key.ItemType && d.ItemId == presentItem.Key.ItemId)?.ItemCount ?? 0;
+                                var count = UserSyncData.GetUserItemCount(presentItem.Key.ItemType, presentItem.Key.ItemId);
                                 var itemMb = ItemTable.GetByItemTypeAndItemId(presentItem.Key.ItemType, presentItem.Key.ItemId);
                                 var maxItemCount = itemMb.MaxItemCount;
                                 if (count < maxItemCount) continue;
@@ -411,7 +411,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
                             if (presentItem.Key.ItemType == ItemType.Equipment)
                             {
-                                var count = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == presentItem.Key.ItemType && d.ItemId == presentItem.Key.ItemId)?.ItemCount ?? 0;
+                                var count = UserSyncData.GetUserItemCount(presentItem.Key.ItemType, presentItem.Key.ItemId);
                                 var maxItemCount = 999;
                                 if (count < maxItemCount) continue;
 
@@ -2173,7 +2173,7 @@ public partial class MementoMoriFuncs : ReactiveObject
                         {
                             if (treasureChestMb.ChestKeyItemId > 0)
                             {
-                                var keyCount = UserSyncData.UserItemDtoInfo.FirstOrDefault(d => d.ItemType == ItemType.TreasureChestKey && d.ItemId == treasureChestMb.ChestKeyItemId)?.ItemCount ?? 0;
+                                var keyCount = UserSyncData.GetUserItemCount(ItemType.TreasureChestKey, treasureChestMb.ChestKeyItemId);
                                 var available = Math.Min(userItemDtoInfo.ItemCount, keyCount);
                                 if (available > 0)
                                 {
@@ -2498,7 +2498,7 @@ public partial class MementoMoriFuncs : ReactiveObject
 
             for (int i = 0; i < 3; i++)
             {
-                var currency = UserSyncData.GetUserItemCount(ItemType.CurrencyFree) + UserSyncData.GetUserItemCount(ItemType.CurrencyPaid);
+                var currency = UserSyncData.GetUserItemCount(ItemType.CurrencyFree, isAnyCurrency: true);
                 var gachaButtonInfo = gachaCaseInfo.GachaButtonInfoList.Find(d => d.ConsumeUserItem.IsCurrency() && d.ConsumeUserItem.ItemCount == 300);
                 if (gachaButtonInfo == null) break;
 
