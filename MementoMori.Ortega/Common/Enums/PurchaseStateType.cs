@@ -11,6 +11,7 @@
 		PurchasingError,
 		Pending,
 		RequestBuyProductWait,
+		RequestSecretBuyProductWait,
 		RequestBuyProductError,
 		Restore,
 		RestoreError,

@@ -11,41 +11,41 @@ namespace MementoMori.Ortega.Share.Master.Data
 	[MessagePackObject(true)]
 	public class LocalRaidEventScheduleMB : MasterBookBase, IHasStartEndTime
 	{
-		[PropertyOrder(1)]
-		[Description("LocalRaidEventQuestGroupMBのIdリスト")]
-		public IReadOnlyList<long> LocalRaidEventQuestGroupIds { get; }
+        [Nest(false, 0)]
+        [PropertyOrder(1)]
+        [Description("報酬増加時間リスト")]
+        public IReadOnlyList<LocalRaidStartEndTime> LocalRaidStartEndTimes { get; }
 
-		[Nest(false, 0)]
-		[PropertyOrder(2)]
-		[Description("報酬増加時間リスト")]
-		public IReadOnlyList<LocalRaidStartEndTime> LocalRaidStartEndTimes { get; }
+        [PropertyOrder(2)]
+        [Description("報酬増加倍率(100%=10000)")]
+        public int RewardBonusRate { get; }
 
-		[PropertyOrder(3)]
-		[Description("報酬増加倍率(100%=10000)")]
-		public int RewardBonusRate { get; }
+        [PropertyOrder(4)]
+        [Description("開始日時")]
+        public string StartTime { get; }
 
-		[PropertyOrder(4)]
-		[Description("開始日時")]
-		public string StartTime { get; }
+        [PropertyOrder(5)]
+        [Description("終了日時")]
+        public string EndTime { get; }
 
-		[PropertyOrder(5)]
-		[Description("終了日時")]
-		public string EndTime { get; }
+        [PropertyOrder(6)]
+        [Description("イベントチュートリアルダイアログのID")]
+        public long LocalRaidEventTutorialId { get; }
 
-		[PropertyOrder(6)]
-		[Description("イベントチュートリアルダイアログのID")]
-		public long LocalRaidEventTutorialId { get; }
+        [PropertyOrder(3)]
+        [Description("イベント追加挑戦回数")]
+        public int EventBattleCount { get; }
 
 		[SerializationConstructor]
-		public LocalRaidEventScheduleMB(long id, bool? isIgnore, string memo, IReadOnlyList<long> localRaidEventQuestGroupIds, IReadOnlyList<LocalRaidStartEndTime> localRaidStartEndTimes, int rewardBonusRate, string startTime, string endTime, long localRaidEventTutorialId)
+		public LocalRaidEventScheduleMB(long id, bool? isIgnore, string memo, IReadOnlyList<LocalRaidStartEndTime> localRaidStartEndTimes, int rewardBonusRate, int eventBattleCount, string startTime, string endTime, long localRaidEventTutorialId)
 			:base(id, isIgnore, memo)
 		{
-			LocalRaidEventQuestGroupIds = localRaidEventQuestGroupIds;
 			LocalRaidStartEndTimes = localRaidStartEndTimes;
 			RewardBonusRate = rewardBonusRate;
 			StartTime = startTime;
 			EndTime = endTime;
 			LocalRaidEventTutorialId = localRaidEventTutorialId;
+            EventBattleCount = eventBattleCount;
 		}
 
 		public LocalRaidEventScheduleMB() :base(0L, false, ""){}

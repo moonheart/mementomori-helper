@@ -33,14 +33,16 @@ namespace MementoMori.Ortega.Share.Data.Shop
         [Description("ゲリラパックID")]
         public long ShopGuerrillaPackId { get; set; }
 
+        [Description("ゲリラパック解放タイプ")]
+        public ShopGuerrillaPackOpenType ShopGuerrillaPackOpenType { get; set; }
+
+        [Description("ゲリラパック解放値")]
+        public int ShopGuerrillaPackOpenValue { get; set; }
+
         [Description("訴求文言キー")]
         public string TextKey { get; set; }
 
         [Description("報酬リスト")]
         public List<UserItem> UserItemList { get; set; }
-
-        public ShopProductGuerrillaPack()
-        {
-        }
     }
 }

@@ -10,10 +10,6 @@ namespace MementoMori.Ortega.Share.Master.Data
     [Description("よくある質問リスト")]
     public class FaqListMB : MasterBookBase
     {
-        [Description("質問項目タイトルKey 2.15.0削除予定")]
-        [PropertyOrder(1)]
-        public string QuestionTitleKey { get; set; }
-
         [Nest(false, 0)]
         [PropertyOrder(1)]
         [Description("質問項目タイトル")]
@@ -25,10 +21,9 @@ namespace MementoMori.Ortega.Share.Master.Data
         public TranslatedText TransferUrl { get; set; }
 
         [SerializationConstructor]
-        public FaqListMB(long id, bool? isIgnore, string memo, string questionTitleKey, TranslatedText questionTitle, TranslatedText transferUrl)
+        public FaqListMB(long id, bool? isIgnore, string memo, TranslatedText questionTitle, TranslatedText transferUrl)
             : base(id, isIgnore, memo)
         {
-            QuestionTitleKey = questionTitleKey;
             QuestionTitle = questionTitle;
             TransferUrl = transferUrl;
         }
