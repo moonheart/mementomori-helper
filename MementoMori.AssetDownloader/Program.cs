@@ -9,7 +9,11 @@ internal class Program
     {
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-        builder.Services.AddLogging(log => log.AddSimpleConsole(c => c.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] "));
+        builder.Services.AddLogging(log => log.ClearProviders().AddSimpleConsole(c =>
+        {
+            c.SingleLine = true;
+            c.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] ";
+        }));
         builder.Services.AddOptions();
         builder.Services.Configure<DownloaderOption>(builder.Configuration);
         builder.Services.ConfigureWritable<AuthOption>(builder.Configuration.GetSection("Auth"));

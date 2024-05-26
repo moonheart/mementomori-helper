@@ -29,7 +29,8 @@ internal class AssetDownloader : BackgroundService
     private readonly HttpClient _httpClient = new(new HttpClientHandler()
     {
         AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-    }) {DefaultRequestHeaders = {{"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"}}};
+    })
+    { DefaultRequestHeaders = { { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" } } };
 
     public AssetDownloader(MementoNetworkManager networkManager, IOptions<DownloaderOption> downloaderOption, ILogger<AssetDownloader> logger)
     {
@@ -46,8 +47,8 @@ internal class AssetDownloader : BackgroundService
             Directory.SetCurrentDirectory(_downloaderOption.WorkingDir);
             try
             {
+                await DownloadAssetsFromBoi(stoppingToken);
                 await DownloadAssetsInApk(stoppingToken);
-                // await DownloadAssetsFromBoi(stoppingToken);
             }
             catch (Exception e)
             {
@@ -126,7 +127,7 @@ internal class AssetDownloader : BackgroundService
         while (true)
             try
             {
-                await _networkManager.Initialize();
+                await _networkManager.Initialize(s => _logger.LogInformation(s));
                 await _networkManager.DownloadAssets(_downloaderOption.GameOs, processedAssetsPath, assetsToBeExtractPath, stoppingToken);
                 isDownloaded = true;
                 break;
@@ -146,7 +147,7 @@ internal class AssetDownloader : BackgroundService
             var files = Directory.GetFiles(assetsToBeExtractPath);
             if (files.Length == 0)
             {
-                _logger.LogInformation("No assets downloaded, skip");
+                _logger.LogInformation("No assets from boi to be downloaded, skip");
                 return;
             }
 
@@ -232,7 +233,7 @@ internal class AssetDownloader : BackgroundService
         var files = Directory.GetFiles(assetsToBeExtractPath);
         if (files.Length == 0)
         {
-            _logger.LogInformation("No assets downloaded, skip");
+            _logger.LogInformation("No assets in apk to be downloaded, skip");
             return;
         }
 
@@ -242,7 +243,7 @@ internal class AssetDownloader : BackgroundService
 
         // save version
         await File.WriteAllTextAsync(_downloaderOption.ApkVersionFile, version, stoppingToken);
-
+        Directory.Delete(apkExtractPath, true);
         _logger.LogInformation("Download assets in apk finished");
     }
 
@@ -264,18 +265,19 @@ internal class AssetDownloader : BackgroundService
             await CopyFilesRecursively(aListApi, dir, target, ct);
         }
 
+        var listReponse = await aListApi.FsList(targetPath);
+        var existedFiles = listReponse?.Content?.Where(f => !f.IsDir).Select(f => f.Name).ToHashSet() ?? [];
+
         foreach (var file in source.GetFiles())
         {
             if (ct.IsCancellationRequested)
                 return;
-            var targetFile = Path.Combine(targetPath, file.Name);
-            var fsGetResponse = await aListApi.FsGet(targetFile);
-            if (fsGetResponse != null)
-                // found, skip
+            if (existedFiles.Contains(file.Name))
             {
-                _logger.LogInformation($"Skip {file.FullName} because it already exists in {targetFile}");
+                _logger.LogInformation($"Skip {file.FullName}");
                 continue;
             }
+            var targetFile = Path.Combine(targetPath, file.Name);
 
             var contentType = file.Extension switch
             {
@@ -284,7 +286,7 @@ internal class AssetDownloader : BackgroundService
                 ".mp4" => "video/mp4",
                 _ => "application/octet-stream"
             };
-            _logger.LogInformation($"Uploading {file.FullName} to {targetFile} with content type {contentType}");
+            _logger.LogInformation($"Uploading to {targetFile} with content type {contentType}");
             await aListApi.FsPut(targetFile, await File.ReadAllBytesAsync(file.FullName), contentType);
         }
     }

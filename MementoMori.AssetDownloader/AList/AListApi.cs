@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -22,7 +24,8 @@ internal class AListApi
     private async Task<TResp?> Post<TReq, TResp>(string url, TReq request)
     {
         var response = await _httpClient.PostAsJsonAsync(url, request);
-        var result = await response.Content.ReadFromJsonAsync<Response<TResp>>();
+        var content = await response.Content.ReadAsStringAsync();
+        var result = JsonSerializer.Deserialize<Response<TResp>>(content, new JsonSerializerOptions(JsonSerializerDefaults.Web));
         return result == null ? default : result.Data;
     }
 
@@ -65,7 +68,16 @@ internal class AListApi
         httpRequestMessage.Content.Headers.Add("Content-Length", data.Length.ToString());
 
         var response = await _httpClient.SendAsync(httpRequestMessage);
-        var result = await response.Content.ReadFromJsonAsync<Response<object>>();
+        var content = await response.Content.ReadAsStringAsync();
+        var result = JsonSerializer.Deserialize<Response<object>>(content, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+    }
+
+    public async Task<FsListResponse?> FsList(string path)
+    {
+        return await Post<FsListRequest, FsListResponse>("api/fs/list", new FsListRequest
+        {
+            Path = path, Page = 1, PerPage = 1000, Refresh = false
+        });
     }
 }
 
@@ -85,7 +97,46 @@ internal class FsGetRequest
     public string Path { get; set; }
 }
 
-internal class FsGetResponse
+internal class FsGetResponse : FsItem
+{
+    [JsonPropertyName("raw_url")]
+    public string RawUrl { get; set; }
+
+    public string Readme { get; set; }
+    public string Provider { get; set; }
+    public object? Related { get; set; }
+}
+
+internal class FsMkdirRequest
+{
+    public string Path { get; set; }
+}
+
+internal class FsMkdirResponse
+{
+}
+
+internal class FsListRequest
+{
+    public string Path { get; set; }
+    public string Password { get; set; }
+    public int Page { get; set; }
+    [JsonPropertyName("per_page")]
+    public int PerPage { get; set; }
+    public bool Refresh { get; set; }
+}
+
+internal class FsListResponse
+{
+    public string Provider { get; set; }
+    public bool Write { get; set; }
+    public string Readme { get; set; }
+    public int Total { get; set; }
+    public List<FsItem> Content { get; set; }
+
+}
+
+internal class FsItem
 {
     public string Name { get; set; }
     public long Size { get; set; }
@@ -98,21 +149,6 @@ internal class FsGetResponse
     public string Thumb { get; set; }
     public int Type { get; set; }
 
-    [JsonPropertyName("raw_url")]
-    public string RawUrl { get; set; }
-
-    public string Readme { get; set; }
-    public string Provider { get; set; }
-    public string Related { get; set; }
-}
-
-internal class FsMkdirRequest
-{
-    public string Path { get; set; }
-}
-
-internal class FsMkdirResponse
-{
 }
 
 internal class Response<T>
