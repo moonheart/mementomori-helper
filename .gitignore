@@ -21,6 +21,7 @@ BattleLogs/
 MementoMori.AssetDownloader/Assets
 MementoMori.AssetDownloader/Assets*
 MementoMori.AssetDownloader/apk*
+MementoMori.AssetDownloader/data/
 publish-linux-x64
 publish-win-x64
 publish-android

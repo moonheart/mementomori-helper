@@ -20,6 +20,12 @@ internal class AssetDownloader : BackgroundService
     private readonly DownloaderOption _downloaderOption;
     private readonly ILogger<AssetDownloader> _logger;
 
+    private const string processedAssetsPath = "./Assets/";
+    private const string assetsToBeExtractPath = "./Assets-tmp/";
+    private const string exportedAssetsPath = "./Assets-export/";
+    private const string apkDownloadPath = "./apks/";
+    private const string apkExtractPath = "./apks-extract/";
+
     private readonly HttpClient _httpClient = new(new HttpClientHandler()
     {
         AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
@@ -36,8 +42,21 @@ internal class AssetDownloader : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await DownloadAssetsFromBoi(stoppingToken);
-            // await DownloadAssetsInApk(stoppingToken);
+            var oldCwd = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(_downloaderOption.WorkingDir);
+            try
+            {
+                await DownloadAssetsInApk(stoppingToken);
+                // await DownloadAssetsFromBoi(stoppingToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            finally
+            {
+                Directory.SetCurrentDirectory(oldCwd);
+            }
 
             await Task.Delay(TimeSpan.FromMinutes(60), stoppingToken);
         }
@@ -45,13 +64,13 @@ internal class AssetDownloader : BackgroundService
 
     private async Task ConvertAndUpload(CancellationToken stoppingToken)
     {
-        if (Directory.Exists("./Assets-export"))
-            Directory.Delete("./Assets-export", true);
+        if (Directory.Exists(exportedAssetsPath))
+            Directory.Delete(exportedAssetsPath, true);
 
         var processStartInfo = new ProcessStartInfo()
         {
             FileName = _downloaderOption.AssetStutioCliPath,
-            Arguments = "./Assets-tmp -t tex2d,audio,video -o ./Assets-export",
+            Arguments = $"{assetsToBeExtractPath} -t tex2d,audio,video -o {exportedAssetsPath}",
             WorkingDirectory = Directory.GetCurrentDirectory()
         };
 
@@ -72,22 +91,22 @@ internal class AssetDownloader : BackgroundService
             }
         }
 
-        // var aListApi = new AListApi(_downloaderOption.AListUrl);
-        // await aListApi.AuthLogin(_downloaderOption.AlistUsername, _downloaderOption.AlistPassword);
-        // var fsGetResponse = await aListApi.FsGet(_downloaderOption.AListTargetPath);
-        // if (fsGetResponse == null)
-        //     // not found, create directory
-        //     await aListApi.FsMkdir(_downloaderOption.AListTargetPath);
-        //
-        // // upload files to AList
-        // _logger.LogInformation("Upload files to AList");
-        // await CopyFilesRecursively(aListApi, new DirectoryInfo("./Assets-export"), _downloaderOption.AListTargetPath);
+        var aListApi = new AListApi(_downloaderOption.AListUrl);
+        await aListApi.AuthLogin(_downloaderOption.AlistUsername, _downloaderOption.AlistPassword);
+        var fsGetResponse = await aListApi.FsGet(_downloaderOption.AListTargetPath);
+        if (fsGetResponse == null)
+            // not found, create directory
+            await aListApi.FsMkdir(_downloaderOption.AListTargetPath);
+
+        // upload files to AList
+        _logger.LogInformation("Upload files to AList");
+        await CopyFilesRecursively(aListApi, new DirectoryInfo(exportedAssetsPath), _downloaderOption.AListTargetPath, stoppingToken);
 
         // copy temp files in ./Assets-tmp to ./Assets
-        _logger.LogInformation($"Copy temp files to {_downloaderOption.DownloadPath}");
-        foreach (var file in Directory.GetFiles("./Assets-tmp"))
+        _logger.LogInformation($"Copy temp files to {processedAssetsPath}");
+        foreach (var file in Directory.GetFiles(assetsToBeExtractPath))
         {
-            var targetFile = Path.Combine(_downloaderOption.DownloadPath, Path.GetFileName(file));
+            var targetFile = Path.Combine(processedAssetsPath, Path.GetFileName(file));
             if (File.Exists(targetFile))
                 File.Delete(targetFile);
 
@@ -96,8 +115,8 @@ internal class AssetDownloader : BackgroundService
 
         // delete temp files
         _logger.LogInformation("Delete temp files");
-        Directory.Delete("./Assets-tmp", true);
-        // Directory.Delete("./Assets-export", true);
+        Directory.Delete(assetsToBeExtractPath, true);
+        Directory.Delete("./Assets-export", true);
     }
 
     private async Task DownloadAssetsFromBoi(CancellationToken stoppingToken)
@@ -108,7 +127,7 @@ internal class AssetDownloader : BackgroundService
             try
             {
                 await _networkManager.Initialize();
-                await _networkManager.DownloadAssets(_downloaderOption.GameOs, _downloaderOption.DownloadPath, "./Assets-tmp", stoppingToken);
+                await _networkManager.DownloadAssets(_downloaderOption.GameOs, processedAssetsPath, assetsToBeExtractPath, stoppingToken);
                 isDownloaded = true;
                 break;
             }
@@ -124,7 +143,7 @@ internal class AssetDownloader : BackgroundService
 
         if (isDownloaded)
         {
-            var files = Directory.GetFiles("./Assets-tmp");
+            var files = Directory.GetFiles(assetsToBeExtractPath);
             if (files.Length == 0)
             {
                 _logger.LogInformation("No assets downloaded, skip");
@@ -156,11 +175,12 @@ internal class AssetDownloader : BackgroundService
             lastVersion = (await File.ReadAllTextAsync(_downloaderOption.ApkVersionFile)).Trim();
         _logger.LogInformation($"Last version is {lastVersion}");
 
-        var html = await _httpClient.GetStringAsync("https://apkpure.com/mementomori-afkrpg/jp.boi.mementomori.android");
-        var match = Regex.Match(html, @"version_name:\s+'(?<version>.+?)'");
+        var html = await _httpClient.GetStringAsync("https://mememori-game.com/apps/vars.js");
+        // '/apps/mementomori_2.14.1.apk'
+        var match = Regex.Match(html, @"/apps/mementomori_(?<version>\d+.\d+.\d+).apk");
         if (!match.Success)
         {
-            _logger.LogError("Failed to get version from apkpure");
+            _logger.LogError("Failed to get version from https://mememori-game.com/apps/vars.js");
             return;
         }
 
@@ -172,52 +192,44 @@ internal class AssetDownloader : BackgroundService
             return;
         }
 
-        var apkUrl = $"https://d.apkpure.com/b/XAPK/jp.boi.mementomori.android?version=latest";
-        if (!Directory.Exists("./apks"))
-            Directory.CreateDirectory("./apks");
-        var apkPath = Path.Combine("./apks/", "mementomori.zip");
-        if (File.Exists(apkPath))
-            File.Delete(apkPath);
+        var apkUrl = $"https://mememori-game.com/apps/mementomori_{version}.apk";
+        if (!Directory.Exists(apkDownloadPath))
+            Directory.CreateDirectory(apkDownloadPath);
+        var apkPath = Path.Combine(apkDownloadPath, $"mementomori_{version}.apk");
 
-        _logger.LogInformation($"Downloading apk from {apkUrl}");
-        await using (var apkStream = await _httpClient.GetStreamAsync(apkUrl))
+        if (!File.Exists(apkPath))
         {
-            await using (var fileStream = File.Create(apkPath))
+            _logger.LogInformation($"Downloading apk from {apkUrl}");
+            await using (var apkStream = await _httpClient.GetStreamAsync(apkUrl))
             {
-                await apkStream.CopyToAsync(fileStream, stoppingToken);
+                await using (var fileStream = File.Create(apkPath))
+                {
+                    await apkStream.CopyToAsync(fileStream, stoppingToken);
+                }
             }
         }
 
         _logger.LogInformation("Extracting assets from apk");
 
         // unzip file
-        ZipFile.ExtractToDirectory(apkPath, "./apk-tmp", true);
-        // check if UnityDataAssetPack.apk exist
-        var unityDataAssetPackApkPath = "./apk-tmp/UnityDataAssetPack.apk";
-        if (!File.Exists(unityDataAssetPackApkPath))
-        {
-            _logger.LogError("UnityDataAssetPack.apk not found in apk");
-            return;
-        }
-
-        // unzip UnityDataAssetPack.apk
-        ZipFile.ExtractToDirectory(unityDataAssetPackApkPath, "./apk-tmp", true);
+        Directory.CreateDirectory(apkExtractPath);
+        ZipFile.ExtractToDirectory(apkPath, apkExtractPath, true);
 
         // copy files in ./apk-tmp/assets/aa/Android to ./Assets-tmp, if file exists in ./Assets, skip
-        _logger.LogInformation("Copy files to ./Assets-tmp");
-        if (!Directory.Exists("./Assets-tmp"))
-            Directory.CreateDirectory("./Assets-tmp");
-        foreach (var file in Directory.GetFiles("./apk-tmp/assets/aa/Android/"))
+        _logger.LogInformation($"Copy files to {assetsToBeExtractPath}");
+        if (!Directory.Exists(assetsToBeExtractPath))
+            Directory.CreateDirectory(assetsToBeExtractPath);
+        foreach (var file in Directory.GetFiles(Path.Combine(apkExtractPath, "assets/aa/Android/")))
         {
-            var finalPath = Path.Combine(_downloaderOption.DownloadPath, Path.GetFileName(file));
+            var finalPath = Path.Combine(processedAssetsPath, Path.GetFileName(file));
             if (File.Exists(finalPath))
                 continue;
 
-            var tmpPath = Path.Combine("./Assets-tmp", Path.GetFileName(file));
+            var tmpPath = Path.Combine(assetsToBeExtractPath, Path.GetFileName(file));
             File.Copy(file, tmpPath, true);
         }
 
-        var files = Directory.GetFiles("./Assets-tmp");
+        var files = Directory.GetFiles(assetsToBeExtractPath);
         if (files.Length == 0)
         {
             _logger.LogInformation("No assets downloaded, skip");
@@ -234,10 +246,12 @@ internal class AssetDownloader : BackgroundService
         _logger.LogInformation("Download assets in apk finished");
     }
 
-    private async Task CopyFilesRecursively(AListApi aListApi, DirectoryInfo source, string targetPath)
+    private async Task CopyFilesRecursively(AListApi aListApi, DirectoryInfo source, string targetPath, CancellationToken ct)
     {
         foreach (var dir in source.GetDirectories())
         {
+            if (ct.IsCancellationRequested)
+                return;
             var target = Path.Combine(targetPath, dir.Name);
             var fsGetResponse = await aListApi.FsGet(target);
             if (fsGetResponse == null)
@@ -247,11 +261,13 @@ internal class AssetDownloader : BackgroundService
                 await aListApi.FsMkdir(target);
             }
 
-            await CopyFilesRecursively(aListApi, dir, target);
+            await CopyFilesRecursively(aListApi, dir, target, ct);
         }
 
         foreach (var file in source.GetFiles())
         {
+            if (ct.IsCancellationRequested)
+                return;
             var targetFile = Path.Combine(targetPath, file.Name);
             var fsGetResponse = await aListApi.FsGet(targetFile);
             if (fsGetResponse != null)
