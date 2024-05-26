@@ -1,6 +1,6 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/runtime:7.0 AS base
+FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
 RUN apt-get update && apt-get install -y wget && \
 	wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
 	dpkg -i packages-microsoft-prod.deb && \
@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y wget && \
 
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["MementoMori.AssetDownloader/MementoMori.AssetDownloader.csproj", "MementoMori.AssetDownloader/"]
 COPY ["MementoMori.Common/MementoMori.Common.csproj", "MementoMori.Common/"]
@@ -30,6 +30,6 @@ FROM build AS publish
 RUN dotnet publish "MementoMori.AssetDownloader.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
-WORKDIR /app
+WORKDIR /app/
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "MementoMori.AssetDownloader.dll"]
+ENTRYPOINT ["dotnet", "/app/MementoMori.AssetDownloader.dll"]
