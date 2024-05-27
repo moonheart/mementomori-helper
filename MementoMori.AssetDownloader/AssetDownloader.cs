@@ -101,7 +101,7 @@ internal class AssetDownloader : BackgroundService
 
         // upload files to AList
         _logger.LogInformation("Upload files to AList");
-        await CopyFilesRecursively(aListApi, new DirectoryInfo(exportedAssetsPath), _downloaderOption.AListTargetPath, stoppingToken);
+        await CopyFilesRecursively(aListApi, new DirectoryInfo(exportedAssetsPath), _downloaderOption.AListTargetPath, false, stoppingToken);
 
         // copy temp files in ./Assets-tmp to ./Assets
         _logger.LogInformation($"Copy temp files to {processedAssetsPath}");
@@ -223,7 +223,8 @@ internal class AssetDownloader : BackgroundService
         foreach (var file in Directory.GetFiles(Path.Combine(apkExtractPath, "assets/aa/Android/")))
         {
             var finalPath = Path.Combine(processedAssetsPath, Path.GetFileName(file));
-            if (File.Exists(finalPath))
+            var finalFile = new FileInfo(finalPath);
+            if (finalFile.Exists && finalFile.Length == new FileInfo(file).Length)
                 continue;
 
             var tmpPath = Path.Combine(assetsToBeExtractPath, Path.GetFileName(file));
@@ -247,7 +248,7 @@ internal class AssetDownloader : BackgroundService
         _logger.LogInformation("Download assets in apk finished");
     }
 
-    private async Task CopyFilesRecursively(AListApi aListApi, DirectoryInfo source, string targetPath, CancellationToken ct)
+    private async Task CopyFilesRecursively(AListApi aListApi, DirectoryInfo source, string targetPath, bool checkExist, CancellationToken ct)
     {
         foreach (var dir in source.GetDirectories())
         {
@@ -262,11 +263,11 @@ internal class AssetDownloader : BackgroundService
                 await aListApi.FsMkdir(target);
             }
 
-            await CopyFilesRecursively(aListApi, dir, target, ct);
+            await CopyFilesRecursively(aListApi, dir, target, checkExist, ct);
         }
 
         var listReponse = await aListApi.FsList(targetPath);
-        var existedFiles = listReponse?.Content?.Where(f => !f.IsDir).Select(f => f.Name).ToHashSet() ?? [];
+        var existedFiles = checkExist ? listReponse?.Content?.Where(f => !f.IsDir).Select(f => f.Name).ToHashSet() ?? [] : [];
 
         foreach (var file in source.GetFiles())
         {

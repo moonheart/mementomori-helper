@@ -24,6 +24,8 @@ using MementoMori.Option;
 using MementoMori.Ortega.Network.MagicOnion.Client;
 using Microsoft.VisualStudio.Threading;
 using Newtonsoft.Json.Linq;
+using MementoMori.AddressableTools;
+using MementoMori.AddressableTools.Catalog;
 
 namespace MementoMori;
 
@@ -72,7 +74,7 @@ public partial class MementoNetworkManager : IDisposable
     {
         _apiAuth = new Uri(string.IsNullOrEmpty(_authOption.Value.AuthUrl) ? "https://prd1-auth.mememori-boi.com/api/" : _authOption.Value.AuthUrl);
 
-        _meMoriHttpClientHandler = new MeMoriHttpClientHandler {AppVersion = _authOption.Value.AppVersion};
+        _meMoriHttpClientHandler = new MeMoriHttpClientHandler { AppVersion = _authOption.Value.AppVersion };
         _httpClient = new HttpClient(MoriHttpClientHandler);
         if (!Debugger.IsAttached) _httpClient.Timeout = TimeSpan.FromSeconds(10);
         _unityHttpClient = new HttpClient();
@@ -86,7 +88,7 @@ public partial class MementoNetworkManager : IDisposable
 
     public async Task Initialize(Action<string> log = null)
     {
-        var response = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN"}, log);
+        var response = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() { CountryCode = "CN" }, log);
         AssetCatalogUriFormat = response.AssetCatalogUriFormat;
         AssetCatalogFixedUriFormat = response.AssetCatalogFixedUriFormat;
         MasterUriFormat = response.MasterUriFormat;
@@ -121,7 +123,7 @@ public partial class MementoNetworkManager : IDisposable
     {
         log ??= Console.WriteLine;
         log(ResourceStrings.Downloading_master_directory___);
-        var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN", UserId = 0});
+        var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() { CountryCode = "CN", UserId = 0 });
 
         var url = string.Format(dataUriResponse.MasterUriFormat, MoriHttpClientHandler.OrtegaMasterVersion, "master-catalog");
         var bytes = await _unityHttpClient.GetByteArrayAsync(url);
@@ -197,25 +199,29 @@ public partial class MementoNetworkManager : IDisposable
         _logger.LogInformation($"download {assetCatalogUrl}");
 
         var content = await _unityHttpClient.GetStringAsync(assetCatalogUrl, cancellationToken);
-        var jObject = JObject.Parse(content);
-        var internalIds = jObject["m_InternalIds"]?.ToObject<string[]>();
-        if (internalIds == null)
-        {
-            _logger.LogInformation("Download asset catalog failed, unable to retrieve m_InternalIds");
-            return;
-        }
+        var catalog = AddressablesJsonParser.FromString(content);
+        var locations = catalog.Resources.SelectMany(d => d.Value).Where(d => d.ProviderId == "Ortega.Common.OrtegaAssestBundleProvider").ToList();
 
         Directory.CreateDirectory(assetsPath);
         Directory.CreateDirectory(assetsTmpPath);
         _logger.LogInformation("Downloading assets...");
-        await Parallel.ForEachAsync(internalIds, cancellationToken, async (internalId, token) =>
+        await Parallel.ForEachAsync(locations, cancellationToken, async (location, token) =>
         {
             if (cancellationToken.IsCancellationRequested) return;
-            if (!internalId.StartsWith("0#/")) return;
 
-            var bundleId = internalId.Substring(3);
+            var bundleId = location.PrimaryKey;
             var localPath = Path.Combine(assetsPath, bundleId);
-            if (File.Exists(localPath)) return;
+            if (location.Data is ClassJsonObject classJsonObject)
+            {
+                var json = JObject.Parse(classJsonObject.JsonText);
+                var bundleSize = json.GetValue("m_BundleSize").Value<int>();
+                var fileinfo = new FileInfo(localPath);
+                if (fileinfo.Exists && fileinfo.Length == bundleSize) return;
+            }
+            else
+            {
+                if (File.Exists(localPath)) return;
+            }
 
             var bundleUrl = string.Format(AssetCatalogFixedUriFormat, $"{GameOs}/{bundleId}");
             _logger.LogInformation($"download {bundleUrl}");
@@ -288,7 +294,7 @@ public partial class MementoNetworkManager : IDisposable
 
     public async Task SetServerHost(long worldId, Action<string> log = null)
     {
-        var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest() {WorldId = worldId}, log);
+        var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest() { WorldId = worldId }, log);
         _apiHost = new Uri(resp.ApiHost);
         _grpcChannel = GrpcChannel.ForAddress(new Uri($"https://{resp.MagicOnionHost}:{resp.MagicOnionPort}"));
     }
@@ -323,10 +329,10 @@ public partial class MementoNetworkManager : IDisposable
             throw new NotSupportedException();
 
         var bytes = MessagePackSerializer.Serialize(req);
-        UPDATEREDO:
+    UPDATEREDO:
         try
         {
-            using var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
+            using var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) { Headers = { { "content-type", "application/json; charset=UTF-8" } } });
             if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
 
             await using var stream = await respMsg.Content.ReadAsStreamAsync();
@@ -377,7 +383,7 @@ public partial class MementoNetworkManager : IDisposable
         var minorAddCount = 5;
         var majorAddCount = 5;
 
-        var handler = new MeMoriHttpClientHandler {AppVersion = _authOption.Value.AppVersion};
+        var handler = new MeMoriHttpClientHandler { AppVersion = _authOption.Value.AppVersion };
         var client = new HttpClient(handler);
 
         while (true)
@@ -385,8 +391,8 @@ public partial class MementoNetworkManager : IDisposable
             var path = typeof(GetDataUriRequest).GetCustomAttribute<OrtegaAuthAttribute>()!.Uri;
             var uri = new Uri(_apiAuth, path);
 
-            var bytes = MessagePackSerializer.Serialize(new GetDataUriRequest() {CountryCode = OrtegaConst.Addressable.LanguageNameDictionary[LanguageType], UserId = UserId});
-            using var respMsg = await client.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
+            var bytes = MessagePackSerializer.Serialize(new GetDataUriRequest() { CountryCode = OrtegaConst.Addressable.LanguageNameDictionary[LanguageType], UserId = UserId });
+            using var respMsg = await client.PostAsync(uri, new ByteArrayContent(bytes) { Headers = { { "content-type", "application/json; charset=UTF-8" } } });
             if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
 
             await using var stream = await respMsg.Content.ReadAsStreamAsync();
