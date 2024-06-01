@@ -71,7 +71,7 @@ internal class AssetDownloader : BackgroundService
         var processStartInfo = new ProcessStartInfo()
         {
             FileName = _downloaderOption.AssetStutioCliPath,
-            Arguments = $"{assetsToBeExtractPath} -t tex2d,audio,video -o {exportedAssetsPath}",
+            Arguments = $"{assetsToBeExtractPath} -t {_downloaderOption.ExportAssetType} -o {exportedAssetsPath}",
             WorkingDirectory = Directory.GetCurrentDirectory()
         };
 
@@ -91,6 +91,15 @@ internal class AssetDownloader : BackgroundService
                 throw new Exception("Failed to execute AssetStudioCLI");
             }
         }
+        
+        // delete duplicate files, end with _#\d+
+        foreach (var file in Directory.GetFiles(exportedAssetsPath, "*", SearchOption.AllDirectories))
+        {
+            var filename = Path.GetFileNameWithoutExtension(file);
+            if (Regex.IsMatch(filename, @"_#\d+$"))
+                File.Delete(file);
+        }
+        
 
         var aListApi = new AListApi(_downloaderOption.AListUrl);
         await aListApi.AuthLogin(_downloaderOption.AlistUsername, _downloaderOption.AlistPassword);
@@ -101,7 +110,7 @@ internal class AssetDownloader : BackgroundService
 
         // upload files to AList
         _logger.LogInformation("Upload files to AList");
-        await CopyFilesRecursively(aListApi, new DirectoryInfo(exportedAssetsPath), _downloaderOption.AListTargetPath, false, stoppingToken);
+        await CopyFilesRecursively(aListApi, new DirectoryInfo(exportedAssetsPath), _downloaderOption.AListTargetPath, true, stoppingToken);
 
         // copy temp files in ./Assets-tmp to ./Assets
         _logger.LogInformation($"Copy temp files to {processedAssetsPath}");
@@ -127,8 +136,11 @@ internal class AssetDownloader : BackgroundService
         while (true)
             try
             {
-                await _networkManager.Initialize(s => _logger.LogInformation(s));
-                await _networkManager.DownloadAssets(_downloaderOption.GameOs, processedAssetsPath, assetsToBeExtractPath, stoppingToken);
+                if (!_downloaderOption.SkipDownloadFromBoi)
+                {
+                    await _networkManager.Initialize(s => _logger.LogInformation(s));
+                    await _networkManager.DownloadAssets(_downloaderOption.GameOs, processedAssetsPath, assetsToBeExtractPath, stoppingToken);
+                }
                 isDownloaded = true;
                 break;
             }
@@ -267,13 +279,14 @@ internal class AssetDownloader : BackgroundService
         }
 
         var listReponse = await aListApi.FsList(targetPath);
-        var existedFiles = checkExist ? listReponse?.Content?.Where(f => !f.IsDir).Select(f => f.Name).ToHashSet() ?? [] : [];
+        var existedFiles = checkExist ? listReponse?.Content?.Where(f => !f.IsDir).ToList() ?? [] : [];
 
         foreach (var file in source.GetFiles())
         {
             if (ct.IsCancellationRequested)
                 return;
-            if (existedFiles.Contains(file.Name))
+            var existedFile = existedFiles.FirstOrDefault(f => f.Name == file.Name);
+            if (existedFile != null && file.Length != existedFile.Size)
             {
                 _logger.LogInformation($"Skip {file.FullName}");
                 continue;

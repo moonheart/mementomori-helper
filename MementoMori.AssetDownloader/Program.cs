@@ -36,4 +36,7 @@ internal class DownloaderOption
     public string AlistPassword { get; set; }
     public string AListTargetPath { get; set; }
     public string ApkVersionFile { get; set; }
+    public string ExportAssetType { get; set; } = "tex2d,audio,video,textAsset,sprite";
+    
+    public bool SkipDownloadFromBoi { get; set; }
 }
