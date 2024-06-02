@@ -91,15 +91,18 @@ internal class AssetDownloader : BackgroundService
                 throw new Exception("Failed to execute AssetStudioCLI");
             }
         }
-        
+
         // delete duplicate files, end with _#\d+
         foreach (var file in Directory.GetFiles(exportedAssetsPath, "*", SearchOption.AllDirectories))
         {
             var filename = Path.GetFileNameWithoutExtension(file);
             if (Regex.IsMatch(filename, @"_#\d+$"))
+            {
+                _logger.LogInformation($"Delete duplicate file {file}");
                 File.Delete(file);
+            }
         }
-        
+
 
         var aListApi = new AListApi(_downloaderOption.AListUrl);
         await aListApi.AuthLogin(_downloaderOption.AlistUsername, _downloaderOption.AlistPassword);
@@ -286,7 +289,7 @@ internal class AssetDownloader : BackgroundService
             if (ct.IsCancellationRequested)
                 return;
             var existedFile = existedFiles.FirstOrDefault(f => f.Name == file.Name);
-            if (existedFile != null && file.Length != existedFile.Size)
+            if (existedFile != null && file.Length == existedFile.Size)
             {
                 _logger.LogInformation($"Skip {file.FullName}");
                 continue;
