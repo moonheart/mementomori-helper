@@ -375,11 +375,11 @@ public partial class MementoMoriFuncs : ReactiveObject
             var usedItem = false;
             do
             {
-                var getListResponse = await GetResponse<PresentGetListRequest, PresentGetListResponse>(new PresentGetListRequest {LanguageType = LanguageType.zhTW});
+                var getListResponse = await GetResponse<PresentGetListRequest, PresentGetListResponse>(new PresentGetListRequest { LanguageType = LanguageType.zhTW });
                 if (getListResponse.userPresentDtoInfos.Any(d => !d.IsReceived))
                     try
                     {
-                        var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(new ReceiveItemRequest() {LanguageType = LanguageType.zhTW});
+                        var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(new ReceiveItemRequest() { LanguageType = LanguageType.zhTW });
                         usedItem = false;
                         log($"{TextResourceTable.Get("[MyPagePresentBoxButtonTitle]")} {TextResourceTable.Get("[MyPagePresentBoxButtonAllReceive]")}");
                         resp.ResultItems.Select(d => d.Item).PrintUserItems(log);
@@ -387,8 +387,12 @@ public partial class MementoMoriFuncs : ReactiveObject
                     catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.PresentReceiveOverLimitCountPresent)
                     {
                         log(e.Message);
-                        var containsExchangeItem = false;
-                        foreach (var presentItem in getListResponse.userPresentDtoInfos.SelectMany(d => d.ItemList).GroupBy(d => new { d.Item.ItemType, d.Item.ItemId }))
+                        var grp = getListResponse.userPresentDtoInfos.SelectMany(d => d.ItemList).GroupBy(d => new { d.Item.ItemType, d.Item.ItemId });
+                        if (grp.Count(d => d.Key.ItemType != ItemType.ExchangePlaceItem) == 0)
+                        {
+                            break;
+                        }
+                        foreach (var presentItem in grp)
                         {
                             if (presentItem.Key.ItemType == ItemType.QuestQuickTicket)
                             {
@@ -425,16 +429,6 @@ public partial class MementoMoriFuncs : ReactiveObject
                                 break;
                             }
 
-                            if (presentItem.Key.ItemType == ItemType.ExchangePlaceItem)
-                            {
-                                containsExchangeItem = true;
-                                continue;
-                            }
-                        }
-
-                        if (!usedItem && containsExchangeItem)
-                        {
-                            usedItem = true;
                         }
                     }
                 else

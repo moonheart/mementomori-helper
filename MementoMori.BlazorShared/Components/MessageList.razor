@@ -35,6 +35,7 @@
                 }
                 InvokeAsync(StateHasChanged);
             });
+            await InvokeAsync(StateHasChanged);
         }
         catch
         {
@@ -42,7 +43,7 @@
         }
         finally
         {
-            await InvokeAsync(StateHasChanged);
+            @* await InvokeAsync(StateHasChanged); *@
         }
     }
 
