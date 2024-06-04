@@ -387,7 +387,8 @@ public partial class MementoMoriFuncs : ReactiveObject
                     catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.PresentReceiveOverLimitCountPresent)
                     {
                         log(e.Message);
-                        foreach (var presentItem in getListResponse.userPresentDtoInfos.SelectMany(d => d.ItemList).GroupBy(d => new {d.Item.ItemType, d.Item.ItemId}))
+                        var containsExchangeItem = false;
+                        foreach (var presentItem in getListResponse.userPresentDtoInfos.SelectMany(d => d.ItemList).GroupBy(d => new { d.Item.ItemType, d.Item.ItemId }))
                         {
                             if (presentItem.Key.ItemType == ItemType.QuestQuickTicket)
                             {
@@ -418,11 +419,22 @@ public partial class MementoMoriFuncs : ReactiveObject
                                 var name = TextResourceTable.Get(EquipmentTable.GetById(presentItem.Key.ItemId).NameKey);
                                 var useCount = (int) Math.Floor(maxItemCount * 0.1);
                                 log($"{ResourceStrings.UseOverLimitItem}: {name}×{useCount}, {count}/{maxItemCount}");
-                                var response = await GetResponse<CastRequest, CastResponse>(new CastRequest {UserEquipment = new UserEquipment(presentItem.Key.ItemId, useCount)});
+                                var response = await GetResponse<CastRequest, CastResponse>(new CastRequest { UserEquipment = new UserEquipment(presentItem.Key.ItemId, useCount) });
                                 response.ResultItemList.PrintUserItems(log);
                                 usedItem = true;
                                 break;
                             }
+
+                            if (presentItem.Key.ItemType == ItemType.ExchangePlaceItem)
+                            {
+                                containsExchangeItem = true;
+                                continue;
+                            }
+                        }
+
+                        if (!usedItem && containsExchangeItem)
+                        {
+                            usedItem = true;
                         }
                     }
                 else
