@@ -430,4 +430,7 @@
     <data name="Auto challenge retry count" xml:space="preserve">
         <value>自動挑戦リトライ回数</value>
     </data>
+    <data name="Auto unequip gear during events" xml:space="preserve">
+        <value>イベント時に装備を自動解除</value>
+    </data>
 </root>

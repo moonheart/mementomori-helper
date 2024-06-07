@@ -13,19 +13,19 @@
 
 <MudGrid>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <AccountManagement />
+        <AccountManagement/>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <AutoJobSwitch />
+        <AutoJobSwitch/>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <AutoJobCron />
+        <AutoJobCron/>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <AutoJobNextExecution />
+        <AutoJobNextExecution/>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <GachaSettings />
+        <GachaSettings/>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
         <MudCard>
@@ -49,28 +49,10 @@
         </MudCard>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText>@Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]") (Global)</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudSwitch Label="@ResourceStrings.PreferTreasureChest" @bind-Checked="DungeonBattlePreferTreasureChest" Color="Color.Primary"/>
-                <MudNumericField Label="@ResourceStrings.MaxUseRecoveryItem" @bind-Value="DungeonBattleMaxUseFruitOfHealing" Min="0" Max="99"/>
-                <MudField Label="@ResourceStrings.DungeonBattleTargetItems" Variant="Variant.Outlined">
-                    @foreach (var item in DungeonBattleShopTargetItems)
-                    {
-                        var text = $"{ItemUtil.GetItemName(item.ItemType, item.ItemId)} {item.MinDiscountPercent}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}";
-                        <MudChip OnClose="() => DungeonBattleRemoveItem(item)">@text</MudChip>
-                    }
-                </MudField>
-                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="ShowDungeonBattleSelectItemDialog">@ResourceStrings.Add</MudButton>
-            </MudCardContent>
-        </MudCard>
+        <DungeonBattleSettings />
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <LocalRaidSettings />
+        <LocalRaidSettings/>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
         <MudCard>
@@ -97,7 +79,7 @@
         </MudCard>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <ItemsSetting />
+        <ItemsSetting/>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
         <PvpSettings LeagueType="0"></PvpSettings>
@@ -106,10 +88,10 @@
         <PvpSettings LeagueType="1"></PvpSettings>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <FriendManageSettings />
+        <FriendManageSettings/>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <GuildTowerSettings />
+        <GuildTowerSettings/>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
         <MudCard>
@@ -127,30 +109,11 @@
     </MudItem>
 </MudGrid>
 
-<MudDialog @bind-IsVisible="_dungeonBattleSelectItemDialog" Options="@(new DialogOptions() {CloseButton = true})">
-    <DialogContent>
-        <MudSelect T="UserItem" @bind-Value="_dungeonBattleSelectedItem">
-            @foreach (var item in _dungeonBattleShopItems)
-            {
-                <MudSelectItem T="UserItem" Value="item">@(ItemUtil.GetItemName(item))</MudSelectItem>
-            }
-        </MudSelect>
-        <MudSlider Min="0" Max="100" Step="10" @bind-Value="_dungeonBattleSelectedDiscount">@($"{ResourceStrings.DiscountPercentageforProducts} {_dungeonBattleSelectedDiscount}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}")</MudSlider>
-    </DialogContent>
-    <DialogActions>
-        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="ConfirmDungeonBattleSelectItem">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
-    </DialogActions>
-</MudDialog>
-
 
 @code {
 
-    List<UserItem> _bountyQuestRewardItems = new();
-    List<UserItem> _dungeonBattleShopItems = new();
     private IEnumerable<UserItem> _selected;
-    UserItem _dungeonBattleSelectedItem;
-    int _dungeonBattleSelectedDiscount;
-    bool _dungeonBattleSelectItemDialog;
+    List<UserItem> _bountyQuestRewardItems = new();
 
     protected override async Task AccountChanged()
     {
@@ -176,53 +139,7 @@
             new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 27},
             new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 28}
         });
-        _dungeonBattleShopItems.AddRange(new[]
-        {
-            new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}
-        });
     }
-
-    #region DungeonBattle
-
-    private void DungeonBattleRemoveItem(GameConfig.ShopDiscountItem item)
-    {
-        var tmp = DungeonBattleShopTargetItems.ToList();
-        tmp.Remove(item);
-        DungeonBattleShopTargetItems = tmp;
-    }
-
-    private void ShowDungeonBattleSelectItemDialog()
-    {
-        _dungeonBattleSelectItemDialog = true;
-        _dungeonBattleSelectedItem = null;
-        _dungeonBattleSelectedDiscount = 0;
-    }
-
-    private void ConfirmDungeonBattleSelectItem()
-    {
-        if (_dungeonBattleSelectedItem == null)
-        {
-            return;
-        }
-        var tmp = DungeonBattleShopTargetItems.ToList();
-        var existing = tmp.Find(d => d.ItemType == _dungeonBattleSelectedItem.ItemType && d.ItemId == _dungeonBattleSelectedItem.ItemId);
-        if (existing != null)
-        {
-            existing.MinDiscountPercent = _dungeonBattleSelectedDiscount;
-        }
-        else
-        {
-            tmp.Add(new GameConfig.ShopDiscountItem()
-            {
-                ItemId = _dungeonBattleSelectedItem.ItemId,
-                ItemType = _dungeonBattleSelectedItem.ItemType,
-                MinDiscountPercent = _dungeonBattleSelectedDiscount
-            });
-        }
-        DungeonBattleShopTargetItems = tmp;
-        _dungeonBattleSelectItemDialog = false;
-    }
-
 
     IEnumerable<UserItem> BountyQuestAutoTargetItems
     {
@@ -230,25 +147,6 @@
         set => WritableGameConfig.Update(x => x.BountyQuestAuto.TargetItems = value.ToList());
     }
 
-    IEnumerable<GameConfig.ShopDiscountItem> DungeonBattleShopTargetItems
-    {
-        get => WritableGameConfig.Value.DungeonBattle.ShopTargetItems;
-        set => WritableGameConfig.Update(x => x.DungeonBattle.ShopTargetItems = value.ToList());
-    }
-
-    bool DungeonBattlePreferTreasureChest
-    {
-        get => WritableGameConfig.Value.DungeonBattle.PreferTreasureChest;
-        set => WritableGameConfig.Update(x => x.DungeonBattle.PreferTreasureChest = value);
-    }
-
-    int DungeonBattleMaxUseFruitOfHealing
-    {
-        get => WritableGameConfig.Value.DungeonBattle.MaxUseRecoveryItem;
-        set => WritableGameConfig.Update(x => x.DungeonBattle.MaxUseRecoveryItem = value);
-    }
-
-    #endregion
 
     #region Shop
 

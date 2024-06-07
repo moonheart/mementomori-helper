@@ -120,6 +120,8 @@ public class GameConfig
 
         public bool PreferTreasureChest { get; set; }
         public int MaxUseRecoveryItem { get; set; }
+        
+        public bool AutoRemoveEquipment { get; set; }
     }
 
     [Obsolete]

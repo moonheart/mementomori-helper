@@ -536,4 +536,7 @@
   <data name="Auto challenge retry count" xml:space="preserve">
       <value>自动挑战重试次数</value>
   </data>
+  <data name="Auto unequip gear during events" xml:space="preserve">
+      <value>有活动时自动脱穿装备</value>
+  </data>
 </root>

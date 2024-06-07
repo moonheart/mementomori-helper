@@ -151,6 +151,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Auto unequip gear during events 的本地化字符串。
+        /// </summary>
+        public static string Auto_unequip_gear_during_events {
+            get {
+                return ResourceManager.GetString("Auto unequip gear during events", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Error count reached {0} times, abort 的本地化字符串。
         /// </summary>
         public static string AutoBossErrorMessage {

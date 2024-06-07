@@ -536,4 +536,7 @@
   <data name="Auto challenge retry count" xml:space="preserve">
       <value>Auto challenge retry count</value>
   </data>
+  <data name="Auto unequip gear during events" xml:space="preserve">
+      <value>Auto unequip gear during events</value>
+  </data>
 </root>

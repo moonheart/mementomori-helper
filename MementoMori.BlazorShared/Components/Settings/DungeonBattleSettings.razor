@@ -1,0 +1,133 @@
+﻿@using MementoMori.Common.Localization
+@using MementoMori.Option
+@using MementoMori.Ortega.Common.Utils
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Data.Item
+@using MementoMori.Ortega.Share.Enums
+@inject IWritableOptions<GameConfig> WritableGameConfig
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>@Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]") (Global)</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudSwitch Label="@ResourceStrings.PreferTreasureChest" @bind-Checked="DungeonBattlePreferTreasureChest" Color="Color.Primary"/>
+        <MudSwitch Label="@ResourceStrings.Auto_unequip_gear_during_events" @bind-Checked="AutoRemoveEquipment" Color="Color.Primary" />
+        <MudNumericField Label="@ResourceStrings.MaxUseRecoveryItem" @bind-Value="DungeonBattleMaxUseFruitOfHealing" Min="0" Max="99"/>
+        <MudField Label="@ResourceStrings.DungeonBattleTargetItems" Variant="Variant.Outlined">
+            @foreach (var item in DungeonBattleShopTargetItems)
+            {
+                var text = $"{ItemUtil.GetItemName(item.ItemType, item.ItemId)} {item.MinDiscountPercent}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}";
+                <MudChip OnClose="() => DungeonBattleRemoveItem(item)">@text</MudChip>
+            }
+        </MudField>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="ShowDungeonBattleSelectItemDialog">@ResourceStrings.Add</MudButton>
+    </MudCardContent>
+</MudCard>
+
+<MudDialog @bind-IsVisible="_dungeonBattleSelectItemDialog" Options="@(new DialogOptions() {CloseButton = true})">
+    <DialogContent>
+        <MudSelect T="UserItem" @bind-Value="_dungeonBattleSelectedItem">
+            @foreach (var item in _dungeonBattleShopItems)
+            {
+                <MudSelectItem T="UserItem" Value="item">@(ItemUtil.GetItemName(item))</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSlider Min="0" Max="100" Step="10" @bind-Value="_dungeonBattleSelectedDiscount">@($"{ResourceStrings.DiscountPercentageforProducts} {_dungeonBattleSelectedDiscount}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}")</MudSlider>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="ConfirmDungeonBattleSelectItem">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    #region DungeonBattle
+
+    List<UserItem> _dungeonBattleShopItems = new();
+    bool _dungeonBattleSelectItemDialog;
+    UserItem _dungeonBattleSelectedItem;
+    int _dungeonBattleSelectedDiscount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _dungeonBattleShopItems.AddRange(new[]
+        {
+            new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}
+        });
+    }
+
+
+    private void DungeonBattleRemoveItem(GameConfig.ShopDiscountItem item)
+    {
+        var tmp = DungeonBattleShopTargetItems.ToList();
+        tmp.Remove(item);
+        DungeonBattleShopTargetItems = tmp;
+    }
+
+    private void ShowDungeonBattleSelectItemDialog()
+    {
+        _dungeonBattleSelectItemDialog = true;
+        _dungeonBattleSelectedItem = null;
+        _dungeonBattleSelectedDiscount = 0;
+    }
+
+    private void ConfirmDungeonBattleSelectItem()
+    {
+        if (_dungeonBattleSelectedItem == null)
+        {
+            return;
+        }
+
+        var tmp = DungeonBattleShopTargetItems.ToList();
+        var existing = tmp.Find(d => d.ItemType == _dungeonBattleSelectedItem.ItemType && d.ItemId == _dungeonBattleSelectedItem.ItemId);
+        if (existing != null)
+        {
+            existing.MinDiscountPercent = _dungeonBattleSelectedDiscount;
+        }
+        else
+        {
+            tmp.Add(new GameConfig.ShopDiscountItem()
+            {
+                ItemId = _dungeonBattleSelectedItem.ItemId,
+                ItemType = _dungeonBattleSelectedItem.ItemType,
+                MinDiscountPercent = _dungeonBattleSelectedDiscount
+            });
+        }
+
+        DungeonBattleShopTargetItems = tmp;
+        _dungeonBattleSelectItemDialog = false;
+    }
+
+
+    IEnumerable<GameConfig.ShopDiscountItem> DungeonBattleShopTargetItems
+    {
+        get => WritableGameConfig.Value.DungeonBattle.ShopTargetItems;
+        set => WritableGameConfig.Update(x => x.DungeonBattle.ShopTargetItems = value.ToList());
+    }
+
+    bool DungeonBattlePreferTreasureChest
+    {
+        get => WritableGameConfig.Value.DungeonBattle.PreferTreasureChest;
+        set => WritableGameConfig.Update(x => x.DungeonBattle.PreferTreasureChest = value);
+    }
+
+    bool AutoRemoveEquipment
+    {
+        get => WritableGameConfig.Value.DungeonBattle.AutoRemoveEquipment;
+        set => WritableGameConfig.Update(x => x.DungeonBattle.AutoRemoveEquipment = value);
+    }
+
+    int DungeonBattleMaxUseFruitOfHealing
+    {
+        get => WritableGameConfig.Value.DungeonBattle.MaxUseRecoveryItem;
+        set => WritableGameConfig.Update(x => x.DungeonBattle.MaxUseRecoveryItem = value);
+    }
+
+    #endregion
+
+}

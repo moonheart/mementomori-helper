@@ -138,7 +138,7 @@ public partial class MementoMoriFuncs: IDisposable
     {
         // 脱装备进副本，然后穿装备
         var competitionInfoResponse = await GetResponse<GetCompetitionInfoRequest, GetCompetitionInfoResponse>(new GetCompetitionInfoRequest());
-        if (competitionInfoResponse.IsDungeonBattleEventOpen)
+        if (competitionInfoResponse.IsDungeonBattleEventOpen && _writableGameConfig.Value.DungeonBattle.AutoRemoveEquipment)
         {
             var equips = UserSyncData.UserEquipmentDtoInfos.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).GroupBy(d => d.CharacterGuid).ToList();
             foreach (var g in equips)
