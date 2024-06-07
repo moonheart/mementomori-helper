@@ -9,7 +9,7 @@ namespace MementoMori.WebUI.UI
     [RegisterSingleton]
     public partial class AtlasManager
     {
-        public const string AssetsUrl = "https://list.moonheart.dev/p/public/mmtm";
+        public const string AssetsUrl = "https://list.moonheart.dev/d/public/mmtm";
 
         public string GetCharacterIcon(long characterId)
         {
