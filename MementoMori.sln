@@ -26,8 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{B17F2195
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MementoMori.BotServer", "MementoMori.BotServer\MementoMori.BotServer.csproj", "{14D5D348-5AB2-478D-8BC3-34494ADB70BB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EleCho.GoCqHttpSdk", "refs\elecho.gocqhttpsdk\src\EleCho.GoCqHttpSdk\EleCho.GoCqHttpSdk.csproj", "{723002FD-CA22-4C24-A846-3D83C1AEF5A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EleCho.GoCqHttpSdk.MessageMatching", "refs\elecho.gocqhttpsdk\src\EleCho.GoCqHttpSdk.MessageMatching\EleCho.GoCqHttpSdk.MessageMatching.csproj", "{E639DAC7-E8A5-461E-B199-9DCB87B3469A}"
@@ -67,10 +65,6 @@ Global
 		{748143DA-CCCD-4A14-A63D-D18E2354478B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{748143DA-CCCD-4A14-A63D-D18E2354478B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{748143DA-CCCD-4A14-A63D-D18E2354478B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14D5D348-5AB2-478D-8BC3-34494ADB70BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14D5D348-5AB2-478D-8BC3-34494ADB70BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14D5D348-5AB2-478D-8BC3-34494ADB70BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14D5D348-5AB2-478D-8BC3-34494ADB70BB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{723002FD-CA22-4C24-A846-3D83C1AEF5A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{723002FD-CA22-4C24-A846-3D83C1AEF5A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{723002FD-CA22-4C24-A846-3D83C1AEF5A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
