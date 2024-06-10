@@ -70,6 +70,10 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		[Description("自分のデバフ所有数が指定値以上")]
 		OverSelfDeBuffCount,
 		[Description("自分のデバフ所有数が指定値未満")]
-		UnderSelfDeBuffCount
+		UnderSelfDeBuffCount,
+        [Description("相手のJobFlagsが指定値")]
+        TargetJobFlags,
+        [Description("相手のElementTypeが指定値")]
+        TargetElementType
 	}
 }

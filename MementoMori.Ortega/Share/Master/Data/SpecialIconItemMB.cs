@@ -33,8 +33,12 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("名称キー")]
         public string NameKey { get; }
 
+        [PropertyOrder(7)]
+        [Description("バッジ表示フラグ")]
+        public bool DisplayBadge { get; }
+
         [SerializationConstructor]
-        public SpecialIconItemMB(long id, bool? isIgnore, string memo, long characterId, string descriptionKey, string displayNameKey, long iconId, ItemRarityFlags itemRarityFlags, string nameKey)
+        public SpecialIconItemMB(long id, bool? isIgnore, string memo, long characterId, string descriptionKey, string displayNameKey, long iconId, ItemRarityFlags itemRarityFlags, string nameKey, bool displayBadge)
             : base(id, isIgnore, memo)
         {
             CharacterId = characterId;
@@ -43,6 +47,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             IconId = iconId;
             ItemRarityFlags = itemRarityFlags;
             NameKey = nameKey;
+            DisplayBadge = displayBadge;
         }
 
         public SpecialIconItemMB() : base(0, null, null)

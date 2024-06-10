@@ -117,6 +117,14 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		DamageReflectEnhance13,
 		[Description("カウンタ変更14")]
 		DamageReflectEnhance14,
+		[Description("カウンタ変更15")]
+		DamageReflectEnhance15,
+		[Description("カウンタ変更16")]
+		DamageReflectEnhance16,
+		[Description("カウンタ変更17")]
+		DamageReflectEnhance17,
+		[Description("カウンタ変更18")]
+		DamageReflectEnhance18,
 		[Description("カウンタ変更21")]
 		DamageReflectEnhance21 = 2121,
 		[Description("カウンタ変更22")]
@@ -125,6 +133,14 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		DamageReflectEnhance23,
 		[Description("カウンタ変更24")]
 		DamageReflectEnhance24,
+		[Description("カウンタ変更25")]
+		DamageReflectEnhance25,
+		[Description("カウンタ変更26")]
+		DamageReflectEnhance26,
+		[Description("カウンタ変更27")]
+		DamageReflectEnhance27,
+		[Description("カウンタ変更28")]
+		DamageReflectEnhance28,
 		[Description("カウンタ変更31")]
 		DamageReflectEnhance31 = 2131,
 		[Description("カウンタ変更32")]
@@ -133,6 +149,14 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		DamageReflectEnhance33,
 		[Description("カウンタ変更34")]
 		DamageReflectEnhance34,
+		[Description("カウンタ変更35")]
+		DamageReflectEnhance35,
+		[Description("カウンタ変更36")]
+		DamageReflectEnhance36,
+		[Description("カウンタ変更37")]
+		DamageReflectEnhance37,
+		[Description("カウンタ変更38")]
+		DamageReflectEnhance38,
 		[Description("全てのスキルのクールタイムを回復")]
 		AllSkillCoolTimeRecovery = 3001,
 		[Description("スキル1のクールタイムを回復")]

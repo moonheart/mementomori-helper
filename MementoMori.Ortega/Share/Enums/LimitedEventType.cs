@@ -10,8 +10,6 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("属性の塔全開放")]
 		ElementTowerAllRelease,
 		[Description("シリアルコード入力")]
-		SerialCode,
-		[Description("課金で古いシステムを使用する")]
-		InAppPurchaseOldSystem = 9999
+		SerialCode
 	}
 }

@@ -627,12 +627,20 @@ namespace MementoMori.Ortega.Share
 		GachaOtherCharacterStarsGuidanceSelectList,
 		[Description("星の導きガチャの解放条件を満たしていません。")]
 		GachaNotEnoughVipLevelOrMaxQuestIdStarsGuidanceGacha,
+        [Description("選択ピックアップの対象外のキャラクターが選択されています。")]
+        GachaOtherCharacterPickupSelectList,
+        [Description("ピックアップの対象のキャラクターが選択されていません。")]
+        GachaNotSelectedPickupCharacter,
+        [Description("不正なセレクトリスト種別です。")]
+        GachaInvalidSelectListType,
 		[Description("ユーザーのステータスデータが存在しません。")]
 		GachaUserStatusDtoNotFound = 200500,
 		[Description("ユーザーの放置バトルデータが存在しません。")]
 		GachaUserBattleAutoDtoNotFound,
 		[Description("ユーザーのチュートリアルデータが存在しません。")]
 		GachaUserTutorialDtoNotFound,
+        [Description("ユーザーのセレクトリストデータが存在しません。")]
+        GachaUserGachaSelectListDtoNotFound,
 		[Description("バトルログが見つかりません。")]
 		BattleCommonBattleLogNotFound = 220000,
 		[Description("ユーザの装備データが存在しません。")]

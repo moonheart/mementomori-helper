@@ -137,6 +137,8 @@ namespace MementoMori.Ortega.Share.Enums
 		GoldExchange = 260,
 		[Description("星導交換所")]
 		StarsGuidanceTradeShop = 280,
+        [Description("神装強化(一括選択機能)")]
+        BulkEquipmentAscend = 300,
 		[Description("武具固定")]
 		LockEquipment = 1000
 	}

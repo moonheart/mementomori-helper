@@ -28,6 +28,14 @@ namespace MementoMori.Ortega.Share.Data.Title
 
         public float AnchorMaxY { get; set; }
 
+        public long CharacterId { get; set; }
+
+        public bool IsCharacterLiveMode { get; set; }
+
+        public float LamentStartTimeJP { get; set; }
+
+        public float LamentStartTimeUS { get; set; }
+
         public int GetBgmNumber(LanguageType languageType)
         {
             if (languageType == LanguageType.jaJP)
@@ -36,6 +44,15 @@ namespace MementoMori.Ortega.Share.Data.Title
             }
 
             return this.BgmNumberUS;
+        }
+        
+        public float GetLamentStartTime(LanguageType languageType)
+        {
+            if (languageType == LanguageType.jaJP)
+            {
+                return this.LamentStartTimeJP;
+            }
+            return this.LamentStartTimeUS;
         }
     }
 }

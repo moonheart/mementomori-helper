@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using MementoMori.Ortega.Share.Data.Gacha;
+using MementoMori.Ortega.Share.Enums;
 using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.ApiInterface.Gacha
@@ -13,6 +14,10 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Gacha
 
         public GachaElementInfo GachaElementInfo { get; set; }
 
+        public Dictionary<GachaSelectListType, List<long>> GachaSelectListCharacterIdMap { get; set; }
+        
+        public List<GachaStarsGuidanceLogInfo> GachaStarsGuidanceLogInfoList { get; set; }
+        
         public bool IsGetFirstBonusRelicGacha { get; set; }
 
         public bool IsGetSecondBonusRelicGacha { get; set; }

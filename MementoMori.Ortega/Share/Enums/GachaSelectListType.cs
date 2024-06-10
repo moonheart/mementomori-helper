@@ -10,6 +10,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("プライズ共通")]
 		Default,
 		[Description("運命")]
-		Destiny
+		Destiny,
+        [Description("選択ピックアップ")]
+        SelectablePickUp
 	}
 }

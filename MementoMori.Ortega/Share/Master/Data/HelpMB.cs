@@ -28,22 +28,17 @@ namespace MementoMori.Ortega.Share.Master.Data
         public long TutorialDescriptionId { get; }
 
         [PropertyOrder(5)]
-        [Description("表示デバイスタイプ Old")]
-        public IReadOnlyList<DeviceType> DisplayDeviceTypeList { get; }
-
-        [PropertyOrder(5)]
         [Description("表示デバイスタイプ")]
         public IReadOnlyList<int> DisplayDeviceTypes { get; }
 
         [SerializationConstructor]
-        public HelpMB(long id, bool? isIgnore, string memo, string helpTitle, IReadOnlyList<HelpPartInfo> helpPartInfoList, long tutorialDescriptionId, bool isDisplayed, IReadOnlyList<DeviceType> displayDeviceTypeList, IReadOnlyList<int> displayDeviceTypes)
+        public HelpMB(long id, bool? isIgnore, string memo, string helpTitle, IReadOnlyList<HelpPartInfo> helpPartInfoList, long tutorialDescriptionId, bool isDisplayed, IReadOnlyList<int> displayDeviceTypes)
             : base(id, isIgnore, memo)
         {
             HelpTitle = helpTitle;
             HelpPartInfoList = helpPartInfoList;
             TutorialDescriptionId = tutorialDescriptionId;
             IsDisplayed = isDisplayed;
-            DisplayDeviceTypeList = displayDeviceTypeList;
             DisplayDeviceTypes = displayDeviceTypes;
         }
 
