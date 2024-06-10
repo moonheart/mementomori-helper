@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using MementoMori.Ortega.Share.Data.Gacha;
+﻿using MementoMori.Ortega.Share.Data.Gacha;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
 
