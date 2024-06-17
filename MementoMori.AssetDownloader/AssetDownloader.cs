@@ -35,6 +35,7 @@ internal class AssetDownloader : BackgroundService
     public AssetDownloader(MementoNetworkManager networkManager, IOptions<DownloaderOption> downloaderOption, ILogger<AssetDownloader> logger)
     {
         _networkManager = networkManager;
+        _networkManager.DisableAutoUpdateMasterData = true;
         _downloaderOption = downloaderOption.Value;
         _logger = logger;
     }

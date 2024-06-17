@@ -69,6 +69,8 @@ public partial class MementoNetworkManager : IDisposable
 
     private static Task? _masterDataUpdateTask;
 
+    public bool DisableAutoUpdateMasterData { get; set; }
+
     [AutoPostConstruct]
     public void AutoPostConstruct()
     {
@@ -105,11 +107,14 @@ public partial class MementoNetworkManager : IDisposable
         {
             try
             {
-                await Task.Delay(TimeSpan.FromHours(1), cts.Token);
-                _logger.LogInformation("auto updating master data");
-                if (await DownloadMasterCatalog())
+                if (!DisableAutoUpdateMasterData)
                 {
-                    Masters.LoadAllMasters();
+                    await Task.Delay(TimeSpan.FromHours(1), cts.Token);
+                    _logger.LogInformation("auto updating master data");
+                    if (await DownloadMasterCatalog())
+                    {
+                        Masters.LoadAllMasters();
+                    }   
                 }
             }
             catch (Exception e) when (e is not TaskCanceledException)
