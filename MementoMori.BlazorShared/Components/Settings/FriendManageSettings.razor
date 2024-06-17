@@ -20,7 +20,7 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudSwitch T="bool" Label="@ResourceStrings.Remove_friends_inactive_for_7_days" @bind-Checked="_autoRemoveFriend" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@ResourceStrings.Remove_friends_inactive_for_7_days" @bind-Checked="_autoRemoveFriend" ValueChanged="autoDeleteChanged" Color="Color.Primary"></MudSwitch>
         <MudSelect Label="@ResourceStrings.Auto_remove_whitelist" MultiSelection="true" T="FriendInfo" @bind-SelectedValues="_friendWhiteList" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
             @foreach (var friend in _friendList)
             {
@@ -48,27 +48,7 @@
         var playerOpt = PlayersOptions.Value.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
         if (NetworkManager.PlayerId > 0)
         {
-            try
-            {
-                var response = await Funcs.GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest() {FriendInfoType = FriendInfoType.Friend});
-                _friendList = response.PlayerInfoList.Select(d => new FriendInfo() {Id = d.PlayerId, Name = d.PlayerName, IsWhiteList = false}).ToList();
-                foreach (var l in playerOpt.FriendManage.AutoRemoveWhitelist)
-                {
-                    var friendInfo = _friendList.Find(d => d.Id == l);
-                    if (friendInfo != null)
-                    {
-                        friendInfo.IsWhiteList = true;
-                    }
-                    else
-                    {
-                        _friendList.Add(new FriendInfo() {Id = l, Name = "Unknown", IsWhiteList = true});
-                    }
-                }
-            }
-            catch
-            {
-                // ignored
-            }
+            await autoDeleteChanged(playerOpt.FriendManage.AutoRemoveInactiveFriend);
         }
 
         _autoRemoveFriend = playerOpt.FriendManage.AutoRemoveInactiveFriend;
@@ -97,6 +77,35 @@
         public long Id { get; set; }
         public string Name { get; set; }
         public bool IsWhiteList { get; set; }
+    }
+
+    private async Task autoDeleteChanged(bool obj)
+    {
+        try
+        {
+            if (obj)
+            {
+                var playerOpt = PlayersOptions.Value.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
+                var response = await Funcs.GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest() {FriendInfoType = FriendInfoType.Friend});
+                _friendList = response.PlayerInfoList.Select(d => new FriendInfo() {Id = d.PlayerId, Name = d.PlayerName, IsWhiteList = false}).ToList();
+                foreach (var l in playerOpt.FriendManage.AutoRemoveWhitelist)
+                {
+                    var friendInfo = _friendList.Find(d => d.Id == l);
+                    if (friendInfo != null)
+                    {
+                        friendInfo.IsWhiteList = true;
+                    }
+                    else
+                    {
+                        _friendList.Add(new FriendInfo() {Id = l, Name = "Unknown", IsWhiteList = true});
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            // ignored
+        }
     }
 
 }
