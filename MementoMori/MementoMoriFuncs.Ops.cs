@@ -50,6 +50,7 @@ using ShopGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetLi
 using ShopGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListResponse;
 using TradeShopGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.TradeShop.GetListRequest;
 using TradeShopGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.TradeShop.GetListResponse;
+using System.Globalization;
 using System.Xml.Linq;
 using MementoMori.Common.Localization;
 using MementoMori.MagicOnion;
@@ -1954,9 +1955,12 @@ public partial class MementoMoriFuncs : ReactiveObject
         MonthlyLoginBonusInfo = response;
     }
 
-    public async Task GetNoticeInfoList()
+    public async Task GetNoticeInfoList(CultureInfo cultureInfo)
     {
+        NetworkManager.CultureInfo = cultureInfo;
+
         var countryCode = OrtegaConst.Addressable.LanguageNameDictionary[NetworkManager.LanguageType];
+
         var response = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()
         {
             AccessType = NoticeAccessType.Title,
@@ -1974,7 +1978,10 @@ public partial class MementoMoriFuncs : ReactiveObject
             LanguageType = NetworkManager.LanguageType,
             UserId = AuthOption.UserId
         });
-        EventInfoList = response2.NoticeInfoList.Where(d=>d.Id % 10 != 6).ToList();
+        EventInfoList = response2.NoticeInfoList
+            .GroupBy(n => n.Title)
+            .Select(g => g.First())
+            .ToList();
     }
 
     public TowerType[] GetAvailableTower()
