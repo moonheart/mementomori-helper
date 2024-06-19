@@ -3,16 +3,14 @@ name: Publish dev Build
 on:
   push:
     branches:
-      - master
-    tags:
-      - "v*.*.*"
+      - custom
   workflow_dispatch:
 
 jobs:
   publish:
     strategy:
       matrix:
-        rid: [ win-x64, linux-x64, linux-arm64, linux-arm, osx-x64, osx-arm64 ]
+        rid: [win-x64, linux-x64, linux-arm64, linux-arm, osx-x64, osx-arm64]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -22,8 +20,8 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
-#      - name: Restore dependencies
-#        run: dotnet restore
+      #      - name: Restore dependencies
+      #        run: dotnet restore
       - name: Set Version in csproj
         # replace <Version>0.0.0</Version> with <Version>tag</Version>, where tag is the tag name, tag should trim start "v"
         run: sed -i "s/<Version>.*<\/Version>/<Version>$(echo ${{github.ref_name}} | sed 's@v@@g')<\/Version>/g" ./MementoMori.WebUI/MementoMori.WebUI.csproj
@@ -33,9 +31,9 @@ jobs:
       - name: Archive Release ${{matrix.rid}}
         uses: thedoctor0/zip-release@0.7.1
         with:
-          type: 'zip'
-          filename: 'publish-${{matrix.rid}}.zip'
-          path: './publish-${{matrix.rid}}/'
+          type: "zip"
+          filename: "publish-${{matrix.rid}}.zip"
+          path: "./publish-${{matrix.rid}}/"
       - name: Create Dev Release
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
@@ -53,7 +51,7 @@ jobs:
             ./publish-${{matrix.rid}}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+
   publish-docker:
     runs-on: ubuntu-22.04
     steps:
@@ -64,47 +62,25 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          # list of Docker images to use as base name for tags
-          images: |
-            moonheartmoon/mementomori-webui         
-          # generate Docker tags based on the following events/attributes
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}} 
-            type=sha          
-      - name: Login to Docker Hub
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set Version in csproj
         # replace <Version>0.0.0</Version> with <Version>tag</Version>, where tag is the tag name, tag should trim start "v"
         run: sed -i "s/<Version>.*<\/Version>/<Version>$(echo ${{github.ref_name}} | sed 's@v@@g')<\/Version>/g" ./MementoMori.WebUI/MementoMori.WebUI.csproj
         if: startsWith(github.ref, 'refs/tags/')
       - name: Build and push
         uses: docker/build-push-action@v5
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ghcr.io/veirt/mementomori-webui:latest
           context: .
           platforms: linux/amd64,linux/arm64
           file: ./MementoMori.WebUI/Dockerfile
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        if: startsWith(github.ref, 'refs/heads/master')
-        with:
-          push: true
-          tags: moonheartmoon/mementomori-webui:dev
-          context: .
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
-          file: ./MementoMori.WebUI/Dockerfile
 
   publish-maui-android:
     runs-on: windows-latest
@@ -143,4 +119,3 @@ jobs:
             ./publish-android/io.github.moonheart.mementomorihelper-Signed.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
