@@ -1,9 +1,16 @@
-﻿version: '3'
-services:
-  mementomori-botserver:
-    image: moonheartmoon/mementomori-botserver
-    container_name: mementomori-botserver
+﻿services:
+  mementomori-helper:
+    container_name: mementomori-helper
+    ports:
+      - "5290:8080"
+    build:
+      context: .
+      dockerfile: MementoMori.WebUI/Dockerfile
+      args:
+        TARGETARCH: x64
+    environment:
+      - BUILDPLATFORM=linux
     restart: unless-stopped
     volumes:
-      - ${PWD}/appsettings.json:/app/appsettings.json
-      - ${PWD}/MementoMoriBot.db:/app/MementoMoriBot.db
+      - ./Master:/app/Master
+      - ${PWD}/appsettings.user.json:/app/appsettings.user.json:rw
