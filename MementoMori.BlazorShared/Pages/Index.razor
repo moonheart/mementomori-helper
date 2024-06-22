@@ -387,7 +387,7 @@
                 <Header>
                     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
                         <MudSpacer/>
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="() => Funcs.GetNoticeInfoList(AccountManager.CurrentCulture)">@ResourceStrings.Sync</MudButton>
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" @onclick="@Funcs.GetNoticeInfoList">@ResourceStrings.Sync</MudButton>
                     </MudStack>
                 </Header>
                 <ChildContent>
@@ -470,7 +470,7 @@
         await base.OnInitializedAsync();
         _ = CheckLatestVersion();
 
-        await Funcs.GetNoticeInfoList(AccountManager.CurrentCulture);
+        _ = Funcs.GetNoticeInfoList();
     }
 
     private void ShowNotice(NoticeInfo context)

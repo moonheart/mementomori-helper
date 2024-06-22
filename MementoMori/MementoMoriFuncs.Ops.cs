@@ -1955,10 +1955,8 @@ public partial class MementoMoriFuncs : ReactiveObject
         MonthlyLoginBonusInfo = response;
     }
 
-    public async Task GetNoticeInfoList(CultureInfo cultureInfo)
+    public async Task GetNoticeInfoList()
     {
-        NetworkManager.CultureInfo = cultureInfo;
-
         var countryCode = OrtegaConst.Addressable.LanguageNameDictionary[NetworkManager.LanguageType];
 
         var response = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()
