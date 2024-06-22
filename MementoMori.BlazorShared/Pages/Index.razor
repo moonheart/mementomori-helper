@@ -465,10 +465,12 @@
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
+        await base.OnInitializedAsync();
         _ = CheckLatestVersion();
+
+        await Funcs.GetNoticeInfoList(AccountManager.CurrentCulture);
     }
 
     private void ShowNotice(NoticeInfo context)
