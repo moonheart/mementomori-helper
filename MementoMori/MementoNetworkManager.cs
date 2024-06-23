@@ -76,7 +76,7 @@ public partial class MementoNetworkManager : IDisposable
     {
         _apiAuth = new Uri(string.IsNullOrEmpty(_authOption.Value.AuthUrl) ? "https://prd1-auth.mememori-boi.com/api/" : _authOption.Value.AuthUrl);
 
-        _meMoriHttpClientHandler = new MeMoriHttpClientHandler { AppVersion = _authOption.Value.AppVersion };
+        _meMoriHttpClientHandler = new MeMoriHttpClientHandler {AppVersion = _authOption.Value.AppVersion};
         _httpClient = new HttpClient(MoriHttpClientHandler);
         if (!Debugger.IsAttached) _httpClient.Timeout = TimeSpan.FromSeconds(10);
         _unityHttpClient = new HttpClient();
@@ -90,7 +90,7 @@ public partial class MementoNetworkManager : IDisposable
 
     public async Task Initialize(Action<string> log = null)
     {
-        var response = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() { CountryCode = "CN" }, log);
+        var response = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN"}, log);
         AssetCatalogUriFormat = response.AssetCatalogUriFormat;
         AssetCatalogFixedUriFormat = response.AssetCatalogFixedUriFormat;
         MasterUriFormat = response.MasterUriFormat;
@@ -107,14 +107,14 @@ public partial class MementoNetworkManager : IDisposable
         {
             try
             {
+                await Task.Delay(TimeSpan.FromHours(1), cts.Token);
                 if (!DisableAutoUpdateMasterData)
                 {
-                    await Task.Delay(TimeSpan.FromHours(1), cts.Token);
                     _logger.LogInformation("auto updating master data");
                     if (await DownloadMasterCatalog())
                     {
                         Masters.LoadAllMasters();
-                    }   
+                    }
                 }
             }
             catch (Exception e) when (e is not TaskCanceledException)
@@ -128,7 +128,7 @@ public partial class MementoNetworkManager : IDisposable
     {
         log ??= Console.WriteLine;
         log(ResourceStrings.Downloading_master_directory___);
-        var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() { CountryCode = "CN", UserId = 0 });
+        var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN", UserId = 0});
 
         var url = string.Format(dataUriResponse.MasterUriFormat, MoriHttpClientHandler.OrtegaMasterVersion, "master-catalog");
         var bytes = await _unityHttpClient.GetByteArrayAsync(url);
@@ -172,6 +172,7 @@ public partial class MementoNetworkManager : IDisposable
 
     public void SetCultureInfo(CultureInfo cultureInfo)
     {
+        CultureInfo = cultureInfo;
         Masters.TextResourceTable.SetLanguageType(parseLanguageType(cultureInfo));
         Masters.LoadAllMasters();
     }
@@ -299,7 +300,7 @@ public partial class MementoNetworkManager : IDisposable
 
     public async Task SetServerHost(long worldId, Action<string> log = null)
     {
-        var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest() { WorldId = worldId }, log);
+        var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest() {WorldId = worldId}, log);
         _apiHost = new Uri(resp.ApiHost);
         _grpcChannel = GrpcChannel.ForAddress(new Uri($"https://{resp.MagicOnionHost}:{resp.MagicOnionPort}"));
     }
@@ -334,10 +335,10 @@ public partial class MementoNetworkManager : IDisposable
             throw new NotSupportedException();
 
         var bytes = MessagePackSerializer.Serialize(req);
-    UPDATEREDO:
+        UPDATEREDO:
         try
         {
-            using var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) { Headers = { { "content-type", "application/json; charset=UTF-8" } } });
+            using var respMsg = await _httpClient.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
             if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
 
             await using var stream = await respMsg.Content.ReadAsStreamAsync();
@@ -388,7 +389,7 @@ public partial class MementoNetworkManager : IDisposable
         var minorAddCount = 5;
         var majorAddCount = 5;
 
-        var handler = new MeMoriHttpClientHandler { AppVersion = _authOption.Value.AppVersion };
+        var handler = new MeMoriHttpClientHandler {AppVersion = _authOption.Value.AppVersion};
         var client = new HttpClient(handler);
 
         while (true)
@@ -396,8 +397,8 @@ public partial class MementoNetworkManager : IDisposable
             var path = typeof(GetDataUriRequest).GetCustomAttribute<OrtegaAuthAttribute>()!.Uri;
             var uri = new Uri(_apiAuth, path);
 
-            var bytes = MessagePackSerializer.Serialize(new GetDataUriRequest() { CountryCode = OrtegaConst.Addressable.LanguageNameDictionary[LanguageType], UserId = UserId });
-            using var respMsg = await client.PostAsync(uri, new ByteArrayContent(bytes) { Headers = { { "content-type", "application/json; charset=UTF-8" } } });
+            var bytes = MessagePackSerializer.Serialize(new GetDataUriRequest() {CountryCode = OrtegaConst.Addressable.LanguageNameDictionary[LanguageType], UserId = UserId});
+            using var respMsg = await client.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
             if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
 
             await using var stream = await respMsg.Content.ReadAsStreamAsync();
