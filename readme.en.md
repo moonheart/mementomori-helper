@@ -303,20 +303,23 @@ When there is an event: Choose the mission with the highest number of event item
 
 When there is no event: Select missions based on the configured reward weights in the options.
 
-#### Reward Weights
+### Reward Weight
 
-Go to Options - Welcome Temple to set reward weights. The calculation method is as follows:
+By going to Options - Phantom Temple, you can set the reward weight. The calculation method is as follows:
+
+$$Sort = weight \times \frac{N^{lv\_current}_{star\_current}}{N^{lv\_max}_{star\_max}}$$
 
 Suppose the settings are as follows:
 
-- Gem Exchange Voucher: 5
-- Potential Bead: 3
+- Rune Exchange Coupon: 5
+- Potential Orb: 3
 
-There are two missions:
-- Mission A rewards Gem Exchange Voucher x10, with a weight of 50.
-- Mission B rewards Potential Bead x30, with a weight of 90.
+There are two tasks:
 
-The system will choose Mission B for battle because it has a higher total weight.
+- Task A rewards with Rune Exchange Coupon x10. The reward for a 127-level 10-star task is Rune Exchange Coupon x100, calculated as $0.5 = 5 \times \frac{10}{100}$.
+- Task B rewards with Potential Orb x30. The reward for a 127-level 10-star task is Potential Orb x2000, calculated as $0.045 = 3 \times \frac{30}{2000}$.
+
+Ultimately, Task A will be chosen for the battle.
 
 ### Fountain of Wishes All Claim
 
@@ -399,6 +402,9 @@ To run multiple instances, modify the port number in `appsettings.user.json`. Fo
 
 ```json5
 {
+  {
+    // original contents
+  },
   "Kestrel": {
     "Endpoints": {
       "Http": {

@@ -172,6 +172,7 @@ public partial class MementoNetworkManager : IDisposable
 
     public void SetCultureInfo(CultureInfo cultureInfo)
     {
+        CultureInfo = cultureInfo;
         Masters.TextResourceTable.SetLanguageType(parseLanguageType(cultureInfo));
         Masters.LoadAllMasters();
     }
