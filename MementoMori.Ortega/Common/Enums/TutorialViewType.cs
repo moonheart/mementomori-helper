@@ -43,6 +43,8 @@
 		CharacterEvolutionResultView,
 		EquipmentAscendMaterialSelectView,
 		SacredTreasureFusionResultView,
-		UseItemView
+		UseItemView,
+		EquipmentAscendMaterialAndLevelSelectView,
+		EquipmentSacredLevelSelectView
 	}
 }

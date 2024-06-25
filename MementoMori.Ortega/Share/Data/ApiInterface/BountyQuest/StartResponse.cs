@@ -5,29 +5,13 @@ using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest
 {
-	[MessagePackObject(true)]
-	public class StartResponse : ApiResponseBase, IUserSyncApiResponse
-	{
-		public List<BountyQuestInfo> GuerrillaBountyQuestInfos
-		{
-			get;
-			set;
-		}
+    [MessagePackObject(true)]
+    public class StartResponse : ApiResponseBase, IUserSyncApiResponse
+    {
+        public List<BountyQuestInfo> GuerrillaBountyQuestInfos { get; set; }
 
-		public List<UserBountyQuestDtoInfo> UserBountyQuestDtoInfos
-		{
-			get;
-			set;
-		}
+        public List<UserBountyQuestDtoInfo> UserBountyQuestDtoInfos { get; set; }
 
-		public UserSyncData UserSyncData
-		{
-			get;
-			set;
-		}
-
-		public StartResponse()
-		{
-		}
-	}
+        public UserSyncData UserSyncData { get; set; }
+    }
 }

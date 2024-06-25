@@ -41,6 +41,7 @@
 		RankUp,
 		EquipmentRefineHighlight,
 		MoveWorld,
+		EquipmentAscendLevelSelect,
 		LevelLink = 350,
 		LevelLinkSlot1,
 		NextChapter = 400,
