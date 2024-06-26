@@ -71,6 +71,8 @@ namespace MementoMori.Ortega.Share.Enums
 		IndividualNotification = 210,
 		[Description("星導交換所")]
 		StarsGuidanceTradeShop = 220,
+        [Description("初回インストール時のワールド指定")]
+        TitleWorld = 230,
 		[Description("フレンド")]
 		Friend = 4
 	}
