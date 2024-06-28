@@ -92,7 +92,7 @@ public partial class MementoMoriFuncs: IDisposable
             DisplayLanguage = NetworkManager.LanguageType,
             OSVersion = AuthOption.OSVersion,
             SteamTicket = "",
-            AuthToken = 58653214
+            AuthToken = 98753214
         });
         var clientKey = createUserResponse.ClientKey;
         // var accessTokenResponse = await GetResponse<CreateAccessTokenRequest, CreateAccessTokenResponse>(new CreateAccessTokenRequest()
