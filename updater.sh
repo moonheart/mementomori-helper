@@ -110,7 +110,7 @@ if [ -z "$latestRelease" ] || [ "$latestVersionStr" = "null" ]; then
             echo -e "${RED}错误：无法获取最新版本,请检查网络连接是否正常.${NC}"
             ;;
         zh_TW|zh_HK)
-            echo -e "${RED}錯誤：無法獲取最新版本,請檢查網絡連接是否正常.${NC}"
+            echo -e "${RED}錯誤：無法獲取最新版本,請檢視網路連接狀態.${NC}"
             ;;
         ja_JP)
             echo -e "${RED}エラー：最新バージョンを取得できません。ネットワーク接続を確認してください。${NC}"
