@@ -39,4 +39,5 @@ internal class DownloaderOption
     public string ExportAssetType { get; set; } = "tex2d,audio,video,textAsset,sprite";
     
     public bool SkipDownloadFromBoi { get; set; }
+    public string[] ForceUploadFiles { get; set; } = [];
 }

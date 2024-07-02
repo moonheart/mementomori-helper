@@ -145,6 +145,7 @@ internal class AssetDownloader : BackgroundService
                     await _networkManager.Initialize(s => _logger.LogInformation(s));
                     await _networkManager.DownloadAssets(_downloaderOption.GameOs, processedAssetsPath, assetsToBeExtractPath, stoppingToken);
                 }
+
                 isDownloaded = true;
                 break;
             }
@@ -289,12 +290,20 @@ internal class AssetDownloader : BackgroundService
         {
             if (ct.IsCancellationRequested)
                 return;
-            var existedFile = existedFiles.FirstOrDefault(f => f.Name == file.Name);
-            if (existedFile != null && file.Length == existedFile.Size)
+            if (!_downloaderOption.ForceUploadFiles.Any(forceFile =>
+                {
+                    var fullPath = Path.GetFullPath(Path.Combine(exportedAssetsPath, forceFile));
+                    return fullPath == file.FullName;
+                }))
             {
-                _logger.LogInformation($"Skip {file.FullName}");
-                continue;
+                var existedFile = existedFiles.FirstOrDefault(f => f.Name == file.Name);
+                if (existedFile != null && file.Length == existedFile.Size)
+                {
+                    _logger.LogInformation($"Skip {file.FullName}");
+                    continue;
+                }
             }
+
             var targetFile = Path.Combine(targetPath, file.Name);
 
             var contentType = file.Extension switch
