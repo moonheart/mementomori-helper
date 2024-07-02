@@ -1,139 +1,18 @@
-﻿using AutoCtor;
-using Injectio.Attributes;
-using MementoMori.Common.Localization;
+﻿using MementoMori.Common.Localization;
 using MementoMori.Exceptions;
-using MementoMori.Jobs;
-using MementoMori.Option;
 using MementoMori.Ortega.Common.Utils;
 using MementoMori.Ortega.Share;
-using MementoMori.Ortega.Share.Data;
-using MementoMori.Ortega.Share.Data.ApiInterface;
-using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
 using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
 using MementoMori.Ortega.Share.Data.ApiInterface.DungeonBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
-using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
-using MementoMori.Ortega.Share.Data.ApiInterface.User;
-using MementoMori.Ortega.Share.Data.Auth;
 using MementoMori.Ortega.Share.Data.DungeonBattle;
 using MementoMori.Ortega.Share.Data.Equipment;
-using MementoMori.Ortega.Share.Data.Mission;
-using MementoMori.Ortega.Share.Data.Notice;
 using MementoMori.Ortega.Share.Enums;
-using Microsoft.Extensions.Logging;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using BountyQuestGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest.GetListResponse;
 
 namespace MementoMori;
 
-[RegisterTransient<MementoMoriFuncs>]
-[AutoConstruct]
-public partial class MementoMoriFuncs: IDisposable
+public partial class MementoMoriFuncs
 {
-    public TimeManager TimeManager => NetworkManager.TimeManager;
-
-    [Reactive]
-    public UserSyncData UserSyncData { get; private set; }
-
-    [Reactive]
-    public Dictionary<MissionGroupType, MissionInfo> MissionInfoDict { get; set; }
-
-    [Reactive]
-    public GetMypageResponse Mypage { get; private set; }
-
-    [Reactive]
-    public BountyQuestGetListResponse BountyQuestResponseInfo { get; private set; }
-
-    [Reactive]
-    public GetMonthlyLoginBonusInfoResponse MonthlyLoginBonusInfo { get; private set; }
-
-    [Reactive]
-    public List<NoticeInfo> NoticeInfoList { get; set; }
-
-    [Reactive]
-    public List<NoticeInfo> EventInfoList { get; set; }
-
-    [Reactive]
-    public bool IsNotClearDungeonBattleMap { get; set; }
-
-    private readonly IWritableOptions<AuthOption> _AuthOption;
-    private AuthOption AuthOption => _AuthOption.Value;
-    private GameConfig GameConfig => _writableGameConfig.Value;
-    private readonly ILogger<MementoMoriFuncs> _logger;
-
-    public MementoNetworkManager NetworkManager { get; set; }
-    private readonly AccountManager _accountManager;
-    private readonly TimeZoneAwareJobRegister _timeZoneAwareJobRegister;
-    private readonly IWritableOptions<GameConfig> _writableGameConfig;
-    private readonly IWritableOptions<PlayersOption> _playersOption;
-    private readonly BattleLogManager _battleLogManager;
-    private readonly IServiceProvider _serviceProvider;
-
-    private PlayerOption PlayerOption => _playersOption.Value.TryGetValue(NetworkManager.PlayerId, out var opt) ? opt : new PlayerOption();
-
-    [AutoPostConstruct]
-    private void Initialize()
-    {
-        Mypage = new GetMypageResponse();
-        NoticeInfoList = new List<NoticeInfo>();
-        UserSyncData = new UserSyncData();
-    }
-
-    public async Task<string> GetClientKey(string password)
-    {
-        var createUserResponse = await GetResponse<CreateUserRequest, CreateUserResponse>(new CreateUserRequest()
-        {
-            AdverisementId = Guid.NewGuid().ToString("D"),
-            AppVersion = AuthOption.AppVersion,
-            CountryCode = "CN",
-            DeviceToken = "",
-            ModelName = AuthOption.ModelName,
-            DisplayLanguage = NetworkManager.LanguageType,
-            OSVersion = AuthOption.OSVersion,
-            SteamTicket = "",
-            AuthToken = 98753214
-        });
-        var clientKey = createUserResponse.ClientKey;
-        // var accessTokenResponse = await GetResponse<CreateAccessTokenRequest, CreateAccessTokenResponse>(new CreateAccessTokenRequest()
-        // {
-        //     ClientKey = clientKey, UserId = createUserResponse.UserId
-        // });
-        var getComebackUserDataResponse = await GetResponse<GetComebackUserDataRequest, GetComebackUserDataResponse>(new GetComebackUserDataRequest()
-        {
-            FromUserId = createUserResponse.UserId, Password = password, SnsType = SnsType.OrtegaId, UserId = UserId
-        });
-        var comebackUserResponse = await GetResponse<ComebackUserRequest, ComebackUserResponse>(new ComebackUserRequest()
-        {
-            FromUserId = createUserResponse.UserId, OneTimeToken = getComebackUserDataResponse.OneTimeToken, ToUserId = UserId
-        });
-        return comebackUserResponse.ClientKey;
-    }
-
-    public async Task<List<PlayerDataInfo>> GetPlayerDataInfo()
-    {
-        var reqBody = new LoginRequest()
-        {
-            ClientKey = _accountManager.GetAccountInfo(UserId).ClientKey,
-            DeviceToken = AuthOption.DeviceToken,
-            AppVersion = AuthOption.AppVersion,
-            OSVersion = AuthOption.OSVersion,
-            ModelName = AuthOption.ModelName,
-            AdverisementId = Guid.NewGuid().ToString("D"),
-            UserId = UserId
-        };
-        return await NetworkManager.GetPlayerDataInfoList(reqBody, AddLog);
-    }
-
-    public async Task AuthLogin(PlayerDataInfo playerDataInfo)
-    {
-        _lastPlayerDataInfo = playerDataInfo;
-        await NetworkManager.Login(playerDataInfo.WorldId, AddLog);
-        LoginOk = true;
-        await UserGetUserData();
-        await _timeZoneAwareJobRegister.RegisterJobs(UserId);
-    }
-
     public async Task AutoDungeonBattle(Action<string> log, CancellationToken cancellationToken)
     {
         // 脱装备进副本，然后穿装备
@@ -219,14 +98,15 @@ public partial class MementoMoriFuncs: IDisposable
                     {CurrentTermId = battleInfoResponse.CurrentTermId, DungeonGridGuid = dungeonBattleGrid.DungeonGridGuid});
                 gridData[dungeonBattleGrid.DungeonGridGuid] = data;
             }
+
             // 当前节点状态
             var currentGrid = grids.First(d =>
                 d.Grid.DungeonGridGuid == battleInfoResponse.UserDungeonDtoInfo.CurrentGridGuid);
             // grids 是石台列表, 共11层, 每层的石台数量分别为 1,2,3,2,3,2,3,2,3,2,1
             var allGrids = battleInfoResponse.CurrentDungeonBattleLayer.DungeonGrids
-                .GroupBy(d=>d.Y)
-                .OrderBy(d=>d.Key)
-                .Select(d=> d.OrderBy(d=>d.X).ToArray())
+                .GroupBy(d => d.Y)
+                .OrderBy(d => d.Key)
+                .Select(d => d.OrderBy(d => d.X).ToArray())
                 .ToArray();
             var layer = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount;
             var state = battleInfoResponse.UserDungeonDtoInfo.CurrentGridState;
@@ -290,7 +170,7 @@ public partial class MementoMoriFuncs: IDisposable
             DungeonBattleGrid SelectNextGrid()
             {
                 // 如果当前层还没有计算过最佳路径，或者最佳路径不包含当前节点，重新计算
-                if (!layerBestPaths.TryGetValue(layer, out var bestPath) || bestPath.All(d=>d.DungeonGridGuid != currentGrid.Grid.DungeonGridGuid))
+                if (!layerBestPaths.TryGetValue(layer, out var bestPath) || bestPath.All(d => d.DungeonGridGuid != currentGrid.Grid.DungeonGridGuid))
                 {
                     if (!layerPaths.TryGetValue(layer, out var allPaths))
                     {
@@ -307,31 +187,31 @@ public partial class MementoMoriFuncs: IDisposable
                         var countY = CountEventGridCount(y);
                         if (countX > countY) return -1;
                         if (countX < countY) return 1;
-                        
+
                         // 然后商店节点，并且有目标物品
                         countX = CountShopGridCount(x);
                         countY = CountShopGridCount(y);
                         if (countX > countY) return -1;
                         if (countX < countY) return 1;
-                        
+
                         // 然后宝箱节点
                         countX = CountTreasureChestGridCount(x);
                         countY = CountTreasureChestGridCount(y);
                         if (countX > countY) return -1;
                         if (countX < countY) return 1;
-                        
+
                         // 然后战斗节点
                         countX = CountBattleGridCount(x);
                         countY = CountBattleGridCount(y);
                         if (countX > countY) return -1;
                         if (countX < countY) return 1;
-                        
+
                         // 然后回复节点
                         countX = CountRecoveryGridCount(x);
                         countY = CountRecoveryGridCount(y);
                         if (countX > countY) return -1;
                         if (countX < countY) return 1;
-                        
+
                         // 然后复活节点
                         countX = CountRevivalGridCount(x);
                         countY = CountRevivalGridCount(y);
@@ -340,12 +220,12 @@ public partial class MementoMoriFuncs: IDisposable
 
                         return 0;
                     }
-                    
+
                     bestPath = allPaths[0];
                     layerBestPaths[layer] = bestPath;
                 }
 
-                var currentIndex = bestPath.FindIndex(d=>d.DungeonGridGuid == currentGrid.Grid.DungeonGridGuid);
+                var currentIndex = bestPath.FindIndex(d => d.DungeonGridGuid == currentGrid.Grid.DungeonGridGuid);
                 if (currentIndex == bestPath.Count - 1)
                 {
                     // 已经到达最后一个节点
@@ -356,14 +236,14 @@ public partial class MementoMoriFuncs: IDisposable
                     return bestPath[currentIndex + 1];
                 }
             }
-            
+
             List<List<DungeonBattleGrid>> CalcAllPathsToEndFromGrid(DungeonBattleGrid currentGrid)
             {
                 List<List<DungeonBattleGrid>> allPaths = new List<List<DungeonBattleGrid>>();
                 CalcPaths(currentGrid, new List<DungeonBattleGrid>(), allPaths);
                 return allPaths;
             }
-                
+
             void CalcPaths(DungeonBattleGrid currentGrid, List<DungeonBattleGrid> currentPath, List<List<DungeonBattleGrid>> allPaths)
             {
                 currentPath.Add(currentGrid);
@@ -385,13 +265,13 @@ public partial class MementoMoriFuncs: IDisposable
                     }
                 }
 
-                currentPath.RemoveAt(currentPath.Count-1); // 回溯
+                currentPath.RemoveAt(currentPath.Count - 1); // 回溯
             }
-                
+
             bool IsAdjacent(DungeonBattleGrid currentGrid, DungeonBattleGrid nextGrid)
             {
                 // 判断两个石台是否相邻
-                if(allGrids[currentGrid.Y].Length > allGrids[nextGrid.Y].Length)
+                if (allGrids[currentGrid.Y].Length > allGrids[nextGrid.Y].Length)
                 {
                     return nextGrid.X == currentGrid.X || nextGrid.X == currentGrid.X - 1;
                 }
@@ -403,9 +283,9 @@ public partial class MementoMoriFuncs: IDisposable
 
             long CountEventGridCount(List<DungeonBattleGrid> pathGrids)
             {
-                var eventGrids = pathGrids.Where(d=>gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleElite ||
-                                               gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleNormal ||
-                                               gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleSpecial).ToList();
+                var eventGrids = pathGrids.Where(d => gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleElite ||
+                                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleNormal ||
+                                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleSpecial).ToList();
 
                 // 计算全路径能获得的活动道具数量
                 var totalEventItemCount = 0L;
@@ -413,49 +293,50 @@ public partial class MementoMoriFuncs: IDisposable
                 {
                     if (gridData.TryGetValue(d.DungeonGridGuid, out var data))
                     {
-                        totalEventItemCount += (data.NormalRewardItemList.FirstOrDefault(x => x.ItemType == battleInfoResponse.EventItemType && x.ItemId == battleInfoResponse.EventItemId)?.ItemCount ?? 0L);
+                        totalEventItemCount +=
+                            (data.NormalRewardItemList.FirstOrDefault(x => x.ItemType == battleInfoResponse.EventItemType && x.ItemId == battleInfoResponse.EventItemId)?.ItemCount ?? 0L);
                     }
                 }
 
                 return totalEventItemCount;
             }
-            
+
             int CountShopGridCount(ICollection<DungeonBattleGrid> grids)
             {
-                return grids.Count(d=>gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.Shop &&
-                                      GameConfig.DungeonBattle.ShopTargetItems.Any(x =>
-                                          battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(y => y.GridGuid == d.DungeonGridGuid).TradeShopItemList.Any(
-                                              y => // 商店有目标物品
-                                                  y.SalePercent >= x.MinDiscountPercent && y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
+                return grids.Count(d => gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.Shop &&
+                                        GameConfig.DungeonBattle.ShopTargetItems.Any(x =>
+                                            battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(y => y.GridGuid == d.DungeonGridGuid).TradeShopItemList.Any(
+                                                y => // 商店有目标物品
+                                                    y.SalePercent >= x.MinDiscountPercent && y.GiveItem.ItemType == x.ItemType && y.GiveItem.ItemId == x.ItemId))); // 商店的
             }
-            
+
             int CountTreasureChestGridCount(ICollection<DungeonBattleGrid> grids)
             {
-                return grids.Count(d=>gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.TreasureChest);
+                return grids.Count(d => gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.TreasureChest);
             }
-            
+
             int CountBattleGridCount(ICollection<DungeonBattleGrid> grids)
             {
-                return grids.Count(d=> gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleNormal ||
-                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleElite ||
-                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleBoss ||
-                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleBossNoRelic ||
-                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleElite ||
-                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleNormal ||
-                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleSpecial ||
-                                      gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleAndRelicReinforce);
+                return grids.Count(d => gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleNormal ||
+                                        gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleElite ||
+                                        gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleBoss ||
+                                        gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleBossNoRelic ||
+                                        gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleElite ||
+                                        gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleNormal ||
+                                        gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.EventBattleSpecial ||
+                                        gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.BattleAndRelicReinforce);
             }
-            
+
             int CountRecoveryGridCount(ICollection<DungeonBattleGrid> grids)
             {
-                return grids.Count(d=>gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.Recovery);
+                return grids.Count(d => gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.Recovery);
             }
-            
+
             int CountRevivalGridCount(ICollection<DungeonBattleGrid> grids)
             {
-                return grids.Count(d=>gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.Revival);
+                return grids.Count(d => gridDict[d.DungeonGridGuid].DungeonGridType == DungeonBattleGridType.Revival);
             }
-            
+
             switch (state)
             {
                 case DungeonBattleGridState.Done:
@@ -683,41 +564,30 @@ public partial class MementoMoriFuncs: IDisposable
                         }
                     }
             }
-            
-
         }
-
-        
     }
 
-    public async Task<GetUserDataResponse> UserGetUserData()
+    private bool IsDungeonBattleHardModeAvailable
     {
-        var req = new GetUserDataRequest { };
-        var data = await GetResponse<GetUserDataRequest, GetUserDataResponse>(req);
-        UserSyncData = data.UserSyncData;
-        IsNotClearDungeonBattleMap = data.IsNotClearDungeonBattleMap;
-        return data;
-    }
-
-    private async Task<bool> IsValidMonthlyBoost()
-    {
-        return UserSyncData.UserShopMonthlyBoostDtoInfos.Exists(d => d.ExpirationTimeStamp > DateTimeOffset.Now.ToUnixTimeMilliseconds());
-        // return false;
-    }
-
-    public async Task<TResp> GetResponse<TReq, TResp>(TReq req)
-        where TReq : ApiRequestBase
-        where TResp : ApiResponseBase
-    {
-        return await NetworkManager.GetResponse<TReq, TResp>(req, AddLog, data =>
+        get
         {
-            UserSyncData.UserItemEditorMergeUserSyncData(data);
-            this.RaisePropertyChanged(nameof(UserSyncData));
-        });
+            return UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId >= Masters.OpenContentTable.GetByOpenCommandType(OpenCommandType.DungeonBattleHardMode).OpenContentValue;
+        }
     }
 
-    public void Dispose()
+    public async Task AutoDungeonBattle()
     {
-        _cancellationTokenSource?.Dispose();
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            try
+            {
+                await AutoDungeonBattle(log, token);
+                log($"{Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")}{ResourceStrings.Finished}");
+            }
+            catch (Exception e)
+            {
+                log(e.ToString());
+            }
+        });
     }
 }
