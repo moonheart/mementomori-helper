@@ -3,10 +3,23 @@
 @using MementoMori.Ortega.Share.Enums
 @using ReactiveUI
 @using MementoMori.BlazorShared.Models
+@using MementoMori.Ortega.Custom
+@using MementoMori.Ortega.Share.Data.Character
+@using MementoMori.Ortega.Share.Data.DtoInfo
+@using MementoMori.Ortega.Share.Master.Data
+@using MoreLinq.Extensions
 
 @inherits MementoMori.BlazorShared.Models.AccountComponent
 
 <MudPaper Elevation="0" Class="pa-2">
+    <MudSelect Dense="true" Variant="Variant.Outlined" Label="@Tr("[CommonFooterCharacterButtonLabel]")" T="CharacterInfo" @bind-SelectedValue="_selectedCharacterGuid" ValueChanged="SelectedCharacterChanged">
+        @foreach (var info in _characterGuids)
+        {
+            <MudSelectItem T="CharacterInfo" Value="info">
+                @info.Name lv @info.Lv
+            </MudSelectItem>
+        }
+    </MudSelect>
     <MudSelect T="string" Label="@TextResourceTable.Get("[CommonEquipmentLabel]")" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="@Funcs.TrainingEquipmentGuid" Dense="true">
         @foreach (var e in _characterEquipments)
         {
@@ -34,7 +47,7 @@
         }
     </MudSelect>
     @{
-        var characterEquipment = _characterEquipments.FirstOrDefault(d=>d.EquipmentGuid == Funcs.TrainingEquipmentGuid);
+        var characterEquipment = _characterEquipments.FirstOrDefault(d => d.EquipmentGuid == Funcs.TrainingEquipmentGuid);
         var equipmentMb = EquipmentTable.GetById(characterEquipment?.UserEquipmentDtoInfo.EquipmentId ?? 0);
     }
     <MudSlider T="double" Min="0d" Max="0.6d" @bind-Value="@Funcs.EquipmentTrainingTargetPercent" Step="0.01">
@@ -45,31 +58,61 @@
 
 @code {
     private List<CharacterEquipment> _characterEquipments = new();
+    private string? _selectedCharacterGuid;
+    private List<CharacterInfo> _characterGuids = new();
 
     protected override Task AccountChanged()
     {
         Funcs.WhenAnyValue(d => d.UserSyncData).Subscribe(data =>
         {
-            _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>
+            _selectedCharacterGuid = data?.UserCharacterDtoInfos?.FirstOrDefault()?.Guid;
+            var chas = data?.UserEquipmentDtoInfos.GroupBy(d => d.CharacterGuid).ToDictionary(d => d.Key);
+            _characterGuids = data?.UserCharacterDtoInfos?.Where(d => chas.ContainsKey(d.Guid)).Select(d =>
+            {
+                var isLevelLinkMember = AccountManager.Current.Funcs.UserSyncData.IsLevelLinkMember(d.Guid);
+                var level = isLevelLinkMember ? AccountManager.Current.Funcs.UserSyncData.GetLevelLinkLevel(d.CharacterId) : d.Level;
+                var characterName = CharacterTable.GetCharacterName(d.CharacterId);
+                return new CharacterInfo(characterName, level, d.Guid, CharacterTable.GetById(d.CharacterId).JobFlags);
+            }).OrderByDescending(d => d.Lv).ToList() ?? [];
+        });
+        return Task.CompletedTask;
+    }
+
+    private void SelectedCharacterChanged(CharacterInfo obj)
+    {
+        var data = Funcs.UserSyncData;
+        _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>
             {
                 if (d == null) throw new ArgumentNullException(nameof(d));
                 var cha = data.UserCharacterDtoInfos.ToList().Find(x => x.Guid == d.CharacterGuid);
-                var chaMb = CharacterTable.GetById(cha.CharacterId);
-                var name = TextResourceTable.Get(chaMb.NameKey);
+                var name = CharacterTable.GetCharacterName(cha.CharacterId);
                 var equipmentMb = EquipmentTable.GetById(d.EquipmentId);
                 if (equipmentMb.EquipmentLv < 180)
                 {
                     return null;
                 }
+
                 var equipmentName = TextResourceTable.Get(equipmentMb.NameKey);
-                // equipmentName = $"{equipmentName}/{@TextResourceTable.Get(BaseParameterType.Health)}{d.AdditionalParameterHealth}/{@TextResourceTable.Get(BaseParameterType.Intelligence)}{d.AdditionalParameterIntelligence}/{@TextResourceTable.Get(BaseParameterType.Muscle)}{d.AdditionalParameterMuscle}/{@TextResourceTable.Get(BaseParameterType.Energy)}{d.AdditionalParameterEnergy} ";
                 return new CharacterEquipment()
                 {
                     CharacterGuid = d.CharacterGuid, CharacterName = name, EquipmentGuid = d.Guid, EquipmentName = equipmentName, UserEquipmentDtoInfo = d
                 };
-            }).Where(d=>d != null).OrderBy(d => d.CharacterGuid).ToList() ?? new List<CharacterEquipment>();
-        });
-        return Task.CompletedTask;
+            }).Where(d => d != null)
+            .Where(d => d.CharacterGuid == obj.Guid)
+            .OrderBy(d => d.CharacterGuid).ToList() ?? [];
+        Funcs.TrainingEquipmentGuid = _characterEquipments.FirstOrDefault()?.EquipmentGuid;
+        Funcs.EquipmentTrainingTargetType = obj.Job switch
+        {
+            JobFlags.Warrior => BaseParameterType.Muscle,
+            JobFlags.Sorcerer => BaseParameterType.Intelligence,
+            JobFlags.Sniper => BaseParameterType.Energy,
+            _ => BaseParameterType.Health
+        };
+        Funcs.EquipmentTrainingTargetPercent = 0.55;
+
+        this.InvokeAsync(() => StateHasChanged());
     }
+
+    private record CharacterInfo(string Name, long Lv, string Guid, JobFlags Job);
 
 }
