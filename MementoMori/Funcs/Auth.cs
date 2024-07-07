@@ -2,11 +2,15 @@
 using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
 using MementoMori.Ortega.Share.Data.Auth;
 using MementoMori.Ortega.Share.Enums;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace MementoMori;
 
 public partial class MementoMoriFuncs
 {
+    private readonly IHttpClientFactory _httpClientFactory;
+
     public async Task AuthLogin(PlayerDataInfo playerDataInfo)
     {
         _lastPlayerDataInfo = playerDataInfo;
@@ -81,7 +85,7 @@ public partial class MementoMoriFuncs
             DisplayLanguage = NetworkManager.LanguageType,
             OSVersion = AuthOption.OSVersion,
             SteamTicket = "",
-            AuthToken = 98753214
+            AuthToken = await GetAuthToken()
         });
         var clientKey = createUserResponse.ClientKey;
         // var accessTokenResponse = await GetResponse<CreateAccessTokenRequest, CreateAccessTokenResponse>(new CreateAccessTokenRequest()
@@ -97,5 +101,19 @@ public partial class MementoMoriFuncs
             FromUserId = createUserResponse.UserId, OneTimeToken = getComebackUserDataResponse.OneTimeToken, ToUserId = UserId
         });
         return comebackUserResponse.ClientKey;
+    }
+
+    private async Task<int> GetAuthToken()
+    {
+        try
+        {
+            var json = await _httpClientFactory.CreateClient().GetStringAsync("https://list.moonheart.dev/d/public/mmtm/AddressableLocalAssets/ScriptableObjects/AuthToken/AuthTokenData.json");
+            return JObject.Parse(json)["_authToken"]?.Value<int>() ?? 0;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "failed to get authToken");
+            return 0;
+        }
     }
 }
