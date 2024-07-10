@@ -75,6 +75,14 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		SelfInjury,
 		[Description("自分以外の味方の被自傷ダメージ時")]
 		AllySelfInjury,
+        [Description("被行動阻害時")]
+        ReceiveConfuseActionDebuff,
+        [Description("与行動阻害時")]
+        GiveConfuseActionDebuff,
+        [Description("第三者味方の被行動阻害時")]
+        AllyReceiveConfuseActionDebuff,
+        [Description("ターン開始時B")]
+        TurnStartBType,
 		[Description("被ダメージ量判定(自分の情報だけ参照)")]
 		CheckReceiveDamageSelf = 41,
 		[Description("被ダメージ量判定")]

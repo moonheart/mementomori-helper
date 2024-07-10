@@ -58,6 +58,8 @@
 		Character1 = 1001,
 		Character2,
 		Character3,
-		Character23 = 1023
+		Character23 = 1023,
+		GuildRecruitList = 1100,
+		GuildRecruitWaitSetting
 	}
 }

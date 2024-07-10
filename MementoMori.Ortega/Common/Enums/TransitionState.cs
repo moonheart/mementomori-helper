@@ -12,6 +12,7 @@
 		MyPageMenu,
 		MyPageCommunity,
 		MyPageDeepLink,
+		MyPageGuildRecruitTutorial,
 		AutoBattleQuestInfo,
 		AutoBattleQuestChangeWithNext,
 		AutoBattleQuestChangeWithTap,
@@ -28,7 +29,8 @@
 		DungeonBattleOpenFormation,
 		GvgCastleInfo,
 		GvgBattle,
+		GvgMvp,
 		LocalRaidReport,
-        GuildTowerReinforcement
+		GuildTowerReinforcement
 	}
 }

@@ -20,6 +20,7 @@
 		CommonFooterGuildButton,
 		CommonAcquisitionItem = 1201,
 		CommonCharacterRankUpResult,
+		CommonRankingReward,
 		BattleBossBattleButton = 2001,
 		BattleChallengeBattleButton,
 		BattleResultWin,
@@ -85,6 +86,8 @@
 		PanelMissionFlashScreen,
 		MonologueIn = 15001,
 		MonologueOut,
-		GuildTowerDifficultyUp = 16001
+		GuildTowerDifficultyUp = 16001,
+		GvGKOWithEffect = 17001,
+		GvgYesterdayMvp = 18001
 	}
 }

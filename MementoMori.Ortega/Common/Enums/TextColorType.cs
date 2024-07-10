@@ -20,6 +20,7 @@
 		Unique3,
 		Unique4,
 		Unique5,
+		Unique6,
 		Original = -1
 	}
 }

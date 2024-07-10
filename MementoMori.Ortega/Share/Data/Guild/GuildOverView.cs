@@ -7,7 +7,11 @@ namespace MementoMori.Ortega.Share.Data.Guild
 	[MessagePackObject(true)]
 	public class GuildOverView
 	{
-		public GuildActivityPolicyType ActivityPolicyType { get; set; }
+        public GuildCommunicationPolicyType CommunicationPolicyType { get; set; }
+
+        public GuildEventPolicyType EventPolicyType { get; set; }
+
+        public GuildBattlePolicyType GuildBattlePolicyType { get; set; }
 
 		public string GuildDescription{ get; set; }
 

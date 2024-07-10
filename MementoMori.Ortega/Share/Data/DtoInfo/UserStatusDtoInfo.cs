@@ -49,6 +49,8 @@ namespace MementoMori.Ortega.Share.Data.DtoInfo
 
         public long VipExp { get; set; }
 
+        public long LastLeaveGuildTime { get; set; }
+
         public List<long> GetFavoriteUserCharacterIds()
         {
             return new List<long>()

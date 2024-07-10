@@ -45,6 +45,9 @@
 		SacredTreasureFusionResultView,
 		UseItemView,
 		EquipmentAscendMaterialAndLevelSelectView,
-		EquipmentSacredLevelSelectView
+		EquipmentSacredLevelSelectView,
+		GuildRecruitListView,
+		GuildRecruitWaitSettingView,
+		MyPagePlayerInformationView
 	}
 }

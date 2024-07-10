@@ -74,6 +74,10 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("チャット画面-ブロック")]
 		BlockInChatRoom,
 		[Description("ギルドツリー-ランキング画面")]
-		GuildTowerRanking
+		GuildTowerRanking,
+		[Description("ギルドバトルMVP")]
+		GuildBattleMvp,
+		[Description("グランドバトルMVP")]
+		GrandBattleMvp
 	}
 }

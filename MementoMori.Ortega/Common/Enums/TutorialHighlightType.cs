@@ -7,6 +7,8 @@
 		ItemBoxButtons,
 		Character3,
 		Character23,
-		RefineParameter
+		RefineParameter,
+		RecruitWaitSetting,
+		RecruitWaitPlayStyle
 	}
 }

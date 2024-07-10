@@ -889,6 +889,14 @@ namespace MementoMori.Ortega.Share
 		RecruitGuildMemberNotOpenGuild,
 		[Description("プレイヤーが見つかりません。")]
 		RecruitGuildMemberSearchNotFoundPlayer = 253010,
+		[Description("サブマスターは1ギルドに1名のみ任命可能です。")]
+		GuildAlreadyExistSubLeader,
+		[Description("指揮官は1ギルドに1名のみ任命可能です。")]
+		GuildAlreadyExistCommander,
+		[Description("勧誘コメントの最大文字数を超過しています。")]
+		RecruitGuildMemberOverMessageMaxLength,
+		[Description("既に勧誘済みです。")]
+		RecruitGuildMemberAlreadyRecruited,
 		[Description("ユーザーデータが見つかりません。")]
 		ShopCurrencyMissionDtoNotFound = 261000,
 		[Description("ゲリラパックのデータが見つかりません。")]
@@ -1013,8 +1021,8 @@ namespace MementoMori.Ortega.Share
 		ChatCanNotReact,
 		[Description("既にアナウンスチャットに登録されています。")]
 		ChatAlreadyRegistered,
-		[Description("マスター・サブマスターのみ使用可能です。")]
-		ChatNotLeaderOrSubLeader,
+		[Description("権限あるメンバーのみ使用可能です。")]
+		ChatAnnounceHasNoAuthority,
 		[Description("アナウンスに登録可能な最大数を超過しています。")]
 		ChatOverMaxRegisterAnnounceChatCount,
 		[Description("アナウンスチャットのインターバル中です。")]
@@ -1045,6 +1053,8 @@ namespace MementoMori.Ortega.Share
 		LocalGvgNotMatchingYet,
 		[Description("受け取れる報酬が見つかりませんでした。")]
 		LocalGvgNotFoundReceivableReward,
+		[Description("指定されたパーティが存在しません。")]
+		LocalGvgNotFoundParty,
 		[Description("ユーザーのギルドデータが見つかりません。")]
 		GlobalGvgUserGuildDtoNotFound = 301000,
 		[Description("ギルドデータが見つかりません。")]
@@ -1055,6 +1065,8 @@ namespace MementoMori.Ortega.Share
 		GlobalGvgReceiveRewardInvalidRequest,
 		[Description("受け取れる報酬が見つかりませんでした。")]
 		GlobalGvgNotFoundReceivableReward = 302003,
+		[Description("指定されたパーティが存在しません。")]
+		GlobalGvgNotFoundParty,
 		[Description("ユーザのレベルリンクデータが見つかりません")]
 		LevelLinkUserLevelLinkDtoNotFound = 311000,
 		[Description("ユーザのキャラクターデータが見つかりません")]
@@ -1489,8 +1501,8 @@ namespace MementoMori.Ortega.Share
 		MagicOnionGlobalGvgCheckCanJoinBattleAndNoticeNotJoinGuild,
 		[Description("GlobalGvgでギルドに加入した日は参加できないエラー")]
 		MagicOnionGlobalGvgCheckCanJoinBattleAndNoticeJoinGuildToDay,
-		[Description("GlobalGvgでリーダーかサブリーダー以外は操作できないエラー")]
-		MagicOnionGlobalGvgCheckCanJoinBattleAndNoticeNotLeaderAndNotSubLeader,
+		[Description("GlobalGvgで権限がないメンバーは操作できないエラー")]
+		MagicOnionGlobalGvgCheckCanJoinBattleAndNoticeHasNoPermission,
 		[Description("GlobalGvgが開放されていない")]
 		MagicOnionGlobalGvgNotOpen,
 		[Description("GlobalGvgでキャラクターのキャッシュデータが存在しないためパーティ追加に失敗しました。")]
@@ -1533,8 +1545,8 @@ namespace MementoMori.Ortega.Share
 		MagicOnionCannotAttackOtherGuild,
 		[Description("ギルドに加入した日はLocalGvgに参加できません。")]
 		MagicOnionCannotPlayLocalGvgInFirstDay,
-		[Description("この機能はリーダーかサブリーダーのみ実行できます。")]
-		MagicOnionNotLeader,
+		[Description("この機能は権限あるメンバーのみ実行できます。")]
+		MagicOnionHasNoPermission,
 		[Description("ギルドバトルの参加条件を満たしていないです。")]
 		MagicOnionNotJoinedGuildBattle,
 		[Description("宣戦する条件を満たしていないです。")]
@@ -1547,6 +1559,14 @@ namespace MementoMori.Ortega.Share
 		MagicOnionNotOpenGuildBattle,
 		[Description("キャラクターのキャッシュデータが存在しないためパーティの配置に失敗しました。")]
 		MagicOnionLocalGvgAddPartyNotFoundCharacterCache,
+		[Description("拠点メモは設定できません。")]
+		MagicOnionCanNotSetCastleMemo,
+		[Description("拠点メモの設定の権限がありません。")]
+		MagicOnionHasNoPermissionSetCastleMemo,
+		[Description("拠点メモメッセージの最大文字数を超過しています。")]
+		MagicOnionOverCastleMemoMessageMaxLength,
+		[Description("既に他のメンバーにより、拠点メモがリセット済みです。")]
+		MagicOnionAlreadyResetCastleMemo,
 		[Description("プッシュ通知対象外の端末です。")]
 		PushNotificationNotSupportedDeviceType = 4000000,
 		[Description("プッシュ通知の登録に必要な情報が取得できません。")]

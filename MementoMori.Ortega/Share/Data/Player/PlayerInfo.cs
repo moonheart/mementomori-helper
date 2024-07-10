@@ -54,6 +54,22 @@ namespace MementoMori.Ortega.Share.Data.Player
 
         public LegendLeagueClassType PrevLegendLeagueClass { get; set; }
 
+        public long RecruitGuildMemberTimeStamp { get; set; }
+
+        public PlayerRecruitType PlayerRecruitType { get; set; }
+
+        public PlayerCommunicationPolicyType CommunicationPolicyType { get; set; }
+
+        public PlayerEventPolicyType EventPolicyType { get; set; }
+
+        public PlayerGuildBattlePolicyType GuildBattlePolicyType { get; set; }
+
+        public long BattleLeagueRankingToday { get; set; }
+
+        public long LegendLeagueRankingToday { get; set; }
+
+        public long LegendLeaguePointToday { get; set; }
+
         public List<long> GetAutoBattleCharacterIds()
         {
             throw new NotImplementedException();

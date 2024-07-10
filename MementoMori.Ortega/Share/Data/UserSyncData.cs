@@ -118,6 +118,7 @@ namespace MementoMori.Ortega.Share.Data
 
         public List<UserFriendMissionDtoInfo> UserFriendMissionDtoInfoList { get; set; }
 
+        public Dictionary<GuidanceType, long> UserGuidanceTimeMap { get; set; }
         public List<UserNotificationDtoInfo> UserNotificationDtoInfoInfos { get; set; }
 
         public List<UserOpenContentDtoInfo> UserOpenContentDtoInfos { get; set; }
@@ -219,6 +220,7 @@ namespace MementoMori.Ortega.Share.Data
             if (userSyncData.UserMissionDtoInfos.IsNotNullOrEmpty()) UserMissionDtoInfos = userSyncData.UserMissionDtoInfos;
             if (userSyncData.UserMissionOccurrenceHistoryDtoInfo != null) UserMissionOccurrenceHistoryDtoInfo = userSyncData.UserMissionOccurrenceHistoryDtoInfo;
             if (userSyncData.UserFriendMissionDtoInfoList.IsNotNullOrEmpty()) UserFriendMissionDtoInfoList = userSyncData.UserFriendMissionDtoInfoList;
+            if (userSyncData.UserGuidanceTimeMap.IsNotNullOrEmpty()) UserGuidanceTimeMap = UserGuidanceTimeMap.Merge(userSyncData.UserGuidanceTimeMap);
             if (userSyncData.UserNotificationDtoInfoInfos.IsNotNullOrEmpty()) UserNotificationDtoInfoInfos = userSyncData.UserNotificationDtoInfoInfos;
             if (userSyncData.UserOpenContentDtoInfos.IsNotNullOrEmpty()) UserOpenContentDtoInfos = userSyncData.UserOpenContentDtoInfos;
             if (userSyncData.UserSettingsDtoInfoList.IsNotNullOrEmpty()) UserSettingsDtoInfoList = userSyncData.UserSettingsDtoInfoList;
