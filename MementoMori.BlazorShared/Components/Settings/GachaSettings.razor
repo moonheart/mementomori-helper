@@ -43,13 +43,25 @@
 </MudCard>
 
 @code {
+
     IEnumerable<UserItem> GachaConfigAutoGachaConsumeUserItems
     {
         get => WritableGameConfig.Value.GachaConfig.AutoGachaConsumeUserItems;
         set => WritableGameConfig.Update(x => x.GachaConfig.AutoGachaConsumeUserItems = value.ToList());
     }
 
-    List<UserItem> _gachaConsumeItems = new();
+    List<UserItem> _gachaConsumeItems =
+    [
+        new UserItem {ItemType = ItemType.FriendPoint, ItemId = 1},
+        new UserItem {ItemType = ItemType.Gold, ItemId = 1},
+        new UserItem {ItemType = ItemType.GachaTicket, ItemId = 1},
+        new UserItem {ItemType = ItemType.GachaTicket, ItemId = 2},
+        new UserItem {ItemType = ItemType.GachaTicket, ItemId = 3},
+        new UserItem {ItemType = ItemType.GachaTicket, ItemId = 4},
+        new UserItem {ItemType = ItemType.GachaTicket, ItemId = 5},
+        new UserItem {ItemType = ItemType.GachaTicket, ItemId = 6},
+        new UserItem {ItemType = ItemType.GachaTicket, ItemId = 7}
+    ];
 
     GachaRelicType _targetRelicType = GachaRelicType.None;
 
@@ -57,18 +69,14 @@
 
     protected override Task AccountChanged()
     {
-        _gachaConsumeItems = Masters.ItemTable.GetArray()
-            .Where(d => d.ItemType == ItemType.GachaTicket || d.ItemType == ItemType.FriendPoint || d.ItemType == ItemType.Gold)
-            .Select(d => new UserItem() {ItemId = d.ItemId, ItemType = d.ItemType}).ToList();
-
-        _targetRelicType = PlayersOptions.Value.TryGetValue(NetworkManager.PlayerId, out var v1)? v1.GachaConfig.TargetRelicType : GachaRelicType.None;
-        _isAutoGacha = PlayersOptions.Value.TryGetValue(NetworkManager.PlayerId, out var v2) ? v2.GachaConfig.AutoGachaRelic : false;
+        _targetRelicType = PlayersOptions.Value.TryGetValue(NetworkManager.PlayerId, out var v1) ? v1.GachaConfig.TargetRelicType : GachaRelicType.None;
+        _isAutoGacha = PlayersOptions.Value.TryGetValue(NetworkManager.PlayerId, out var v2) && v2.GachaConfig.AutoGachaRelic;
         return Task.CompletedTask;
     }
 
     private class UserItemComparer : IEqualityComparer<UserItem>
     {
-        public bool Equals(UserItem x, UserItem y)
+        public bool Equals(UserItem? x, UserItem? y)
         {
             if (ReferenceEquals(x, y)) return true;
             if (ReferenceEquals(x, null)) return false;
@@ -89,14 +97,12 @@
         {
             var playerOpt = opt.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
             playerOpt.GachaConfig.TargetRelicType = _targetRelicType;
-            playerOpt.GachaConfig.AutoGachaRelic= _isAutoGacha;
+            playerOpt.GachaConfig.AutoGachaRelic = _isAutoGacha;
         });
 
         Snackbar.Clear();
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
         Snackbar.Add(ResourceStrings.Save_successful, Severity.Success);
     }
-
-
 
 }
