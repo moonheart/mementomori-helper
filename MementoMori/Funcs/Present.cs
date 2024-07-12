@@ -22,9 +22,10 @@ public partial class MementoMoriFuncs
             {
                 var getListResponse = await GetResponse<GetListRequest, GetListResponse>(new GetListRequest {LanguageType = LanguageType.zhTW});
                 if (getListResponse.userPresentDtoInfos.Any(d => !d.IsReceived))
+                {
                     try
                     {
-                        var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(new ReceiveItemRequest() {LanguageType = LanguageType.zhTW});
+                        var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(new ReceiveItemRequest {LanguageType = LanguageType.zhTW});
                         usedItem = false;
                         log($"{Masters.TextResourceTable.Get("[MyPagePresentBoxButtonTitle]")} {Masters.TextResourceTable.Get("[MyPagePresentBoxButtonAllReceive]")}");
                         resp.ResultItems.Select(d => d.Item).PrintUserItems(log);
@@ -33,10 +34,7 @@ public partial class MementoMoriFuncs
                     {
                         log(e.Message);
                         var grp = getListResponse.userPresentDtoInfos.SelectMany(d => d.ItemList).GroupBy(d => new {d.Item.ItemType, d.Item.ItemId});
-                        if (grp.Count(d => d.Key.ItemType != ItemType.ExchangePlaceItem) == 0)
-                        {
-                            break;
-                        }
+                        if (grp.Count(d => d.Key.ItemType != ItemType.ExchangePlaceItem) == 0) break;
 
                         foreach (var presentItem in grp)
                         {
@@ -48,11 +46,11 @@ public partial class MementoMoriFuncs
                                 if (count < maxItemCount) continue;
 
                                 var name = Masters.TextResourceTable.Get(itemMb.NameKey);
-                                var useCount = (int) Math.Floor(maxItemCount * 0.1);
+                                var useCount = (int) Math.Floor(maxItemCount * 0.3);
                                 log($"{ResourceStrings.UseOverLimitItem}: {name}×{useCount}, {count}/{maxItemCount}");
-                                var response = await GetResponse<UseAutoBattleRewardItemRequest, UseAutoBattleRewardItemResponse>(new UseAutoBattleRewardItemRequest()
+                                var response = await GetResponse<UseAutoBattleRewardItemRequest, UseAutoBattleRewardItemResponse>(new UseAutoBattleRewardItemRequest
                                 {
-                                    ItemType = (QuestQuickTicketType) (itemMb.ItemId),
+                                    ItemType = (QuestQuickTicketType) itemMb.ItemId,
                                     UseCount = useCount
                                 });
                                 response.RewardItemList.PrintUserItems(log);
@@ -67,7 +65,7 @@ public partial class MementoMoriFuncs
                                 if (count < maxItemCount) continue;
 
                                 var name = Masters.TextResourceTable.Get(Masters.EquipmentTable.GetById(presentItem.Key.ItemId).NameKey);
-                                var useCount = (int) Math.Floor(maxItemCount * 0.1);
+                                var useCount = (int) Math.Floor(maxItemCount * 0.3);
                                 log($"{ResourceStrings.UseOverLimitItem}: {name}×{useCount}, {count}/{maxItemCount}");
                                 var response = await GetResponse<CastRequest, CastResponse>(new CastRequest {UserEquipment = new UserEquipment(presentItem.Key.ItemId, useCount)});
                                 response.ResultItemList.PrintUserItems(log);
@@ -76,6 +74,7 @@ public partial class MementoMoriFuncs
                             }
                         }
                     }
+                }
                 else
                     log(Masters.TextResourceTable.GetErrorCodeMessage(ErrorCode.PresentReceiveAlreadyReceivedPresent));
             } while (usedItem);
