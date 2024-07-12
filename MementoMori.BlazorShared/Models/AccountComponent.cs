@@ -9,9 +9,9 @@ public class AccountComponent : ComponentBase
     [Inject]
     public AccountManager AccountManager { get; set; }
 
-    protected AccountInfo AccountInfo;
-    protected MementoMoriFuncs Funcs;
-    protected MementoNetworkManager NetworkManager;
+    protected AccountInfo? AccountInfo;
+    protected MementoMoriFuncs? Funcs;
+    protected MementoNetworkManager? NetworkManager;
 
     protected virtual Task AccountChanged()
     {

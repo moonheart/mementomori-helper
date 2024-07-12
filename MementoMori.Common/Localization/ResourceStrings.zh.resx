@@ -539,4 +539,20 @@
   <data name="Auto unequip gear during events" xml:space="preserve">
       <value>有活动时自动脱穿装备</value>
   </data>
+  <data name="Set to 0 for any amount" xml:space="preserve">
+      <value>设置为 0 表示任意数量</value>
+  </data>
+  <data name="Amount consumed" xml:space="preserve">
+      <value>消耗数量</value>
+  </data>
+  <data name="Any amount" xml:space="preserve">
+      <value>任意数量</value>
+  </data>
+  <data name="No setting means buying any item" xml:space="preserve">
+      <value>不设置表示购买任意物品</value>
+  </data>
+  <data name="No setting means using any item for purchase" xml:space="preserve">
+      <value>不设置表示使用任意物品进行购买
+</value>
+  </data>
 </root>

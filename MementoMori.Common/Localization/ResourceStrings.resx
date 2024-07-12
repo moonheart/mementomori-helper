@@ -539,4 +539,19 @@
   <data name="Auto unequip gear during events" xml:space="preserve">
       <value>Auto unequip gear during events</value>
   </data>
+  <data name="Set to 0 for any amount" xml:space="preserve">
+      <value>Set to 0 for any amount</value>
+  </data>
+  <data name="Amount consumed" xml:space="preserve">
+      <value>Amount consumed</value>
+  </data>
+  <data name="Any amount" xml:space="preserve">
+      <value>Any amount</value>
+  </data>
+  <data name="No setting means buying any item" xml:space="preserve">
+      <value>No setting means buying any item</value>
+  </data>
+  <data name="No setting means using any item for purchase" xml:space="preserve">
+      <value>No setting means using any item for purchase</value>
+  </data>
 </root>

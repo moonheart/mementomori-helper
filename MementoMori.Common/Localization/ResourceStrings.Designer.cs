@@ -97,6 +97,24 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Amount consumed 的本地化字符串。
+        /// </summary>
+        public static string Amount_consumed {
+            get {
+                return ResourceManager.GetString("Amount consumed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Any amount 的本地化字符串。
+        /// </summary>
+        public static string Any_amount {
+            get {
+                return ResourceManager.GetString("Any amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Any Items 的本地化字符串。
         /// </summary>
         public static string AnyItems {
@@ -898,6 +916,24 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 No setting means buying any item 的本地化字符串。
+        /// </summary>
+        public static string No_setting_means_buying_any_item {
+            get {
+                return ResourceManager.GetString("No setting means buying any item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 No setting means using any item for purchase 的本地化字符串。
+        /// </summary>
+        public static string No_setting_means_using_any_item_for_purchase {
+            get {
+                return ResourceManager.GetString("No setting means using any item for purchase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 No Available {0} 的本地化字符串。
         /// </summary>
         public static string NoAvailable {
@@ -1236,6 +1272,15 @@ namespace MementoMori.Common.Localization {
         public static string SelectPlayer {
             get {
                 return ResourceManager.GetString("SelectPlayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Set to 0 for any amount 的本地化字符串。
+        /// </summary>
+        public static string Set_to_0_for_any_amount {
+            get {
+                return ResourceManager.GetString("Set to 0 for any amount", resourceCulture);
             }
         }
         

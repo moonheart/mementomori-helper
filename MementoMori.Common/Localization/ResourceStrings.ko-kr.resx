@@ -433,4 +433,19 @@
     <data name="Auto unequip gear during events" xml:space="preserve">
         <value>이벤트 시 자동 장비 해제</value>
     </data>
+    <data name="Set to 0 for any amount" xml:space="preserve">
+        <value>0으로 설정하면 임의의 양이 됩니다</value>
+    </data>
+    <data name="Amount consumed" xml:space="preserve">
+        <value>소모량</value>
+    </data>
+    <data name="Any amount" xml:space="preserve">
+        <value>임의 수량</value>
+    </data>
+    <data name="No setting means buying any item" xml:space="preserve">
+        <value>설정하지 않으면 임의의 아이템을 구매</value>
+    </data>
+    <data name="No setting means using any item for purchase" xml:space="preserve">
+        <value>설정하지 않으면 임의의 아이템으로 구매</value>
+    </data>
 </root>

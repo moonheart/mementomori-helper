@@ -1,0 +1,61 @@
+﻿@using MementoMori.Common.Localization
+@using MementoMori.Option
+@using MementoMori.Ortega.Common.Utils
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Data.Item
+@using MementoMori.Ortega.Share.Enums
+@inject IWritableOptions<GameConfig> WritableGameConfig
+
+@inherits MementoMori.BlazorShared.Models.AccountComponent
+
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <!--商城-->
+            <MudText>@Masters.TextResourceTable.Get("[CommonHeaderExchangeLabel]") (Global)</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudButton OnClick="ShopAutoBuyRestoreDefault">@ResourceStrings.ResettoDefault</MudButton>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudField Label="@ResourceStrings.ShopAutoBuyItems" Variant="Variant.Outlined">
+            @foreach (var item in ShopAutoBuyItems)
+            {
+                var buy = item.BuyItem == null ? ResourceStrings.AnyItems : $"{ItemUtil.GetItemName(item.BuyItem.ItemType, item.BuyItem.ItemId)}×{item.BuyItem.ItemCount}";
+                var amountDesc = item.ConsumeItem?.ItemCount == 0 ? ResourceStrings.Any_amount : item.ConsumeItem?.ItemCount.ToString();
+                var consume = item.ConsumeItem == null ? ResourceStrings.AnyItems : $"{ItemUtil.GetItemName(item.ConsumeItem.ItemType, item.ConsumeItem.ItemId)}×{amountDesc}";
+                var text = string.Format(ResourceStrings.BuyWith, consume, buy);
+                <MudChip OnClose="() => RemoveShopAutoBuyItem(item)">@text @($"{item.MinDiscountPercent}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}")</MudChip>
+            }
+        </MudField>
+    </MudCardContent>
+</MudCard>
+
+
+@code {
+
+    public List<GameConfig.ShopAutoBuyItem> ShopAutoBuyItems
+    {
+        get => WritableGameConfig.Value.Shop.AutoBuyItems;
+        set => WritableGameConfig.Update(x => x.Shop.AutoBuyItems = value);
+    }
+
+    private void RemoveShopAutoBuyItem(GameConfig.ShopAutoBuyItem item)
+    {
+        var tmp = ShopAutoBuyItems.ToList();
+        tmp.Remove(item);
+        ShopAutoBuyItems = tmp;
+    }
+
+    private void ShopAutoBuyRestoreDefault()
+    {
+        ShopAutoBuyItems = new List<GameConfig.ShopAutoBuyItem>()
+        {
+            new() {BuyItem = new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1, ItemCount = 1}, ShopTabId = 1, MinDiscountPercent = 20},
+            new() {ShopTabId = 1, ConsumeItem = new UserItem() {ItemType = ItemType.Gold, ItemId = 1}}
+        };
+    }
+
+}

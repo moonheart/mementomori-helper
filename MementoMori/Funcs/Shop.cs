@@ -1,10 +1,14 @@
 ﻿using MementoMori.Exceptions;
+using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.Share.Data.ApiInterface.Shop;
 using MementoMori.Ortega.Share.Data.ApiInterface.TradeShop;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
+using MementoMori.Ortega.Share.Data.Item;
 using MementoMori.Ortega.Share.Data.TradeShop;
-using GetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListRequest;
-using GetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListResponse;
+using ShopGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListRequest;
+using ShopGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListResponse;
+using TradeShopGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.TradeShop.GetListRequest;
+using TradeShopGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.TradeShop.GetListResponse;
 
 namespace MementoMori;
 
@@ -14,7 +18,7 @@ public partial class MementoMoriFuncs
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            var listResponse = await GetResponse<GetListRequest, GetListResponse>(new GetListRequest());
+            var listResponse = await GetResponse<ShopGetListRequest, ShopGetListResponse>(new ShopGetListRequest());
             var shopProductInfo = listResponse.ShopTabInfoList.SelectMany(d => d.ShopProductInfoList).FirstOrDefault(d => d.ShopProductType == ShopProductType.MonthlyBoost);
             if (shopProductInfo != null && shopProductInfo.ShopProductMonthlyBoost.ExpirationTimeStamp >= DateTimeOffset.Now.ToUnixTimeMilliseconds())
             {
@@ -40,9 +44,7 @@ public partial class MementoMoriFuncs
             var autoBuyItems = GameConfig.Shop.AutoBuyItems;
             if (autoBuyItems.Count == 0) return;
 
-            var listResponse =
-                await GetResponse<Ortega.Share.Data.ApiInterface.TradeShop.GetListRequest, Ortega.Share.Data.ApiInterface.TradeShop.GetListResponse>(
-                    new Ortega.Share.Data.ApiInterface.TradeShop.GetListRequest());
+            var listResponse = await GetResponse<TradeShopGetListRequest, TradeShopGetListResponse>(new TradeShopGetListRequest());
 
             log(ResourceStrings.ShopAutoBuyItems);
             foreach (var tabInfo in listResponse.TradeShopTabInfoList)
@@ -55,37 +57,49 @@ public partial class MementoMoriFuncs
 
                     var shopAutoBuyItem = autoBuyItems.Find(d =>
                     {
+                        // skip if not match tab
                         if (d.ShopTabId != tabInfo.TradeShopTabId) return false;
+
+                        // skip if not match item
                         if (d.BuyItem == null && d.ConsumeItem == null) return false;
-                        if (d.BuyItem == null && (
-                                (d.ConsumeItem.ItemType == shopItem.ConsumeItem1.ItemType && d.ConsumeItem.ItemId == shopItem.ConsumeItem1.ItemId)
-                                || (shopItem.ConsumeItem2 != null && d.ConsumeItem.ItemType == shopItem.ConsumeItem2.ItemType && d.ConsumeItem.ItemId == shopItem.ConsumeItem2.ItemId)))
-                            return true;
-                        if (d.ConsumeItem == null && d.BuyItem.ItemType == shopItem.GiveItem.ItemType && d.BuyItem.ItemId == shopItem.GiveItem.ItemId)
-                            return true;
-                        if (d.BuyItem != null && d.ConsumeItem != null && d.BuyItem.IsEqual(shopItem.GiveItem.ItemType, shopItem.GiveItem.ItemId) && (
-                                d.ConsumeItem.IsEqual(shopItem.ConsumeItem1.ItemType, shopItem.ConsumeItem1.ItemId)
-                                || (shopItem.ConsumeItem2 != null && d.ConsumeItem.IsEqual(shopItem.ConsumeItem2.ItemType, shopItem.ConsumeItem2.ItemId))))
+
+                        // if buy item is not specified and consume item is matched, buy it
+                        if (d.BuyItem == null && (d.ConsumeItem.IsConsumeEqual(shopItem.ConsumeItem1) || d.ConsumeItem.IsConsumeEqual(shopItem.ConsumeItem2)))
                             return true;
 
+                        // if buy item is matched and consume item is not specified, buy it
+                        if (d.ConsumeItem == null && shopItem.GiveItem.IsEqual(d.BuyItem))
+                            return true;
+
+                        // if both buy item and consume item are matched, buy it
+                        if (d.BuyItem != null
+                            && d.ConsumeItem != null
+                            && d.BuyItem.IsEqual(shopItem.GiveItem)
+                            && (d.ConsumeItem.IsConsumeEqual(shopItem.ConsumeItem1) || d.ConsumeItem.IsConsumeEqual(shopItem.ConsumeItem2)))
+                            return true;
+
+                        // otherwise, skip
                         return false;
                     });
 
                     if (shopAutoBuyItem == null) continue;
 
-                    if (shopItem.ConsumeItem1.ItemCount > UserSyncData.UserItemDtoInfo.GetCount(shopItem.ConsumeItem1.ItemType, shopItem.ConsumeItem1.ItemId))
+                    // check if user has enough items to consume
+                    if (shopItem.ConsumeItem1.ItemCount > UserSyncData.GetUserItemCount(shopItem.ConsumeItem1.ItemType, shopItem.ConsumeItem1.ItemId, true))
                         continue;
-                    if (shopItem.ConsumeItem2 != null && shopItem.ConsumeItem2.ItemCount > UserSyncData.UserItemDtoInfo.GetCount(shopItem.ConsumeItem2.ItemType, shopItem.ConsumeItem2.ItemId))
+                    if (shopItem.ConsumeItem2 != null && shopItem.ConsumeItem2.ItemCount > UserSyncData.GetUserItemCount(shopItem.ConsumeItem2.ItemType, shopItem.ConsumeItem2.ItemId, true))
                         continue;
 
+                    // check if discount is enough
                     if (shopItem.SalePercent < shopAutoBuyItem.MinDiscountPercent) continue;
 
                     try
                     {
+                        // buy item
                         var response = await GetResponse<BuyItemRequest, BuyItemResponse>(
                             new BuyItemRequest
                             {
-                                TradeShopTabId = tabInfo.TradeShopTabId, TradeShopItemInfos = new List<TradeShopItemInfo> {new() {TradeShopItemId = shopItem.TradeShopItemId, TradeCount = 1}}
+                                TradeShopTabId = tabInfo.TradeShopTabId, TradeShopItemInfos = [new TradeShopItemInfo {TradeShopItemId = shopItem.TradeShopItemId, TradeCount = 1}]
                             });
                         response.UserSyncData.GivenItemCountInfoList.PrintUserItems(log);
                     }
@@ -100,9 +114,9 @@ public partial class MementoMoriFuncs
         });
     }
 
-    private async Task<bool> IsValidMonthlyBoost()
+    private Task<bool> IsValidMonthlyBoost()
     {
-        return UserSyncData.UserShopMonthlyBoostDtoInfos.Exists(d => d.ExpirationTimeStamp > DateTimeOffset.Now.ToUnixTimeMilliseconds());
+        return Task.FromResult(UserSyncData.UserShopMonthlyBoostDtoInfos.Exists(d => d.ExpirationTimeStamp > DateTimeOffset.Now.ToUnixTimeMilliseconds()));
         // return false;
     }
 
@@ -119,5 +133,17 @@ public partial class MementoMoriFuncs
             else
                 log($"{TextResourceTable.GetErrorCodeMessage(ErrorCode.VipGetDailyGiftAlreadyGet)}");
         });
+    }
+}
+
+public static class ShopFuncExtensions
+{
+    public static bool IsConsumeEqual(this UserItem thisItem, IUserItem thatItem)
+    {
+        if (thisItem == null) return false;
+        if (thatItem == null) return false;
+        if (!thisItem.IsEqual(thatItem.ItemType, thatItem.ItemId)) return false;
+        if (thisItem.ItemCount == 0 || thatItem.ItemCount == 0) return true;
+        return thisItem.ItemCount == thatItem.ItemCount;
     }
 }
