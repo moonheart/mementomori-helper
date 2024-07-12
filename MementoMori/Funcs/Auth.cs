@@ -1,7 +1,5 @@
-﻿using MementoMori.Common.Localization;
-using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
+﻿using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
 using MementoMori.Ortega.Share.Data.Auth;
-using MementoMori.Ortega.Share.Enums;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
@@ -28,7 +26,7 @@ public partial class MementoMoriFuncs
         var playerDataInfos = await GetPlayerDataInfo();
         var playerDataInfo = accountInfo.AutoLoginWorldId > 0
             ? playerDataInfos.Find(d => d.WorldId == accountInfo.AutoLoginWorldId)
-            : Enumerable.MaxBy(playerDataInfos, d => d.LastLoginTime);
+            : playerDataInfos.MaxBy(d => d.LastLoginTime);
         if (playerDataInfo == null) return;
         await Login(playerDataInfo, !manual);
     }
@@ -49,10 +47,7 @@ public partial class MementoMoriFuncs
             _AuthOption.Update(d =>
             {
                 var account = d.Accounts.Find(x => x.UserId == UserId);
-                if (account != null)
-                {
-                    account.AutoLoginWorldId = autoLoginThisWorld ? playerDataInfo.WorldId : 0;
-                }
+                if (account != null) account.AutoLoginWorldId = autoLoginThisWorld ? playerDataInfo.WorldId : 0;
             });
             await AuthLogin(playerDataInfo);
         }
@@ -75,7 +70,7 @@ public partial class MementoMoriFuncs
 
     public async Task<string> GetClientKey(string password)
     {
-        var createUserResponse = await GetResponse<CreateUserRequest, CreateUserResponse>(new CreateUserRequest()
+        var createUserResponse = await GetResponse<CreateUserRequest, CreateUserResponse>(new CreateUserRequest
         {
             AdverisementId = Guid.NewGuid().ToString("D"),
             AppVersion = AuthOption.AppVersion,
@@ -92,11 +87,11 @@ public partial class MementoMoriFuncs
         // {
         //     ClientKey = clientKey, UserId = createUserResponse.UserId
         // });
-        var getComebackUserDataResponse = await GetResponse<GetComebackUserDataRequest, GetComebackUserDataResponse>(new GetComebackUserDataRequest()
+        var getComebackUserDataResponse = await GetResponse<GetComebackUserDataRequest, GetComebackUserDataResponse>(new GetComebackUserDataRequest
         {
             FromUserId = createUserResponse.UserId, Password = password, SnsType = SnsType.OrtegaId, UserId = UserId
         });
-        var comebackUserResponse = await GetResponse<ComebackUserRequest, ComebackUserResponse>(new ComebackUserRequest()
+        var comebackUserResponse = await GetResponse<ComebackUserRequest, ComebackUserResponse>(new ComebackUserRequest
         {
             FromUserId = createUserResponse.UserId, OneTimeToken = getComebackUserDataResponse.OneTimeToken, ToUserId = UserId
         });

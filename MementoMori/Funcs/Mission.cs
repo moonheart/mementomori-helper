@@ -1,10 +1,6 @@
-﻿using MementoMori.Common.Localization;
-using MementoMori.Extensions;
-using MementoMori.Ortega.Share;
-using MementoMori.Ortega.Share.Data.ApiInterface.Guild;
+﻿using MementoMori.Ortega.Share.Data.ApiInterface.Guild;
 using MementoMori.Ortega.Share.Data.ApiInterface.Mission;
 using MementoMori.Ortega.Share.Data.ApiInterface.Ranking;
-using MementoMori.Ortega.Share.Enums;
 
 namespace MementoMori;
 
@@ -12,27 +8,20 @@ public partial class MementoMoriFuncs
 {
     public async Task GetMissionInfo()
     {
-        var missionGroupTypes = new List<MissionGroupType>() {MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main};
+        var missionGroupTypes = new List<MissionGroupType> {MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main};
         var response1 = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
         if (response1.GuildId > 0)
         {
-            var currentGuildMissionMb = Masters.GuildMissionTable.GetCurrentGuildMissionMB(TimeManager.ServerNow);
-            if (currentGuildMissionMb != null)
-            {
-                missionGroupTypes.Add(MissionGroupType.Guild);
-            }
+            var currentGuildMissionMb = GuildMissionTable.GetCurrentGuildMissionMB(TimeManager.ServerNow);
+            if (currentGuildMissionMb != null) missionGroupTypes.Add(MissionGroupType.Guild);
 
-            var guildTowerEventMb = Masters.GuildTowerEventTable.GetByInTime(TimeManager.IsInTime);
-            if (guildTowerEventMb != null)
-            {
-                missionGroupTypes.Add(MissionGroupType.GuildTower);
-            }
+            var guildTowerEventMb = GuildTowerEventTable.GetByInTime(TimeManager.IsInTime);
+            if (guildTowerEventMb != null) missionGroupTypes.Add(MissionGroupType.GuildTower);
         }
 
         var panelMission = Mypage.MypageInfo.MypageIconInfos.FirstOrDefault(d => d.TransferDetailInfo.TransferSpotType == TransferSpotType.PanelMission);
         if (panelMission != null) missionGroupTypes.Add(MissionGroupType.Panel);
-        var response = await GetResponse<GetMissionInfoRequest, GetMissionInfoResponse>(new GetMissionInfoRequest()
-            {TargetMissionGroupList = missionGroupTypes});
+        var response = await GetResponse<GetMissionInfoRequest, GetMissionInfoResponse>(new GetMissionInfoRequest {TargetMissionGroupList = missionGroupTypes});
         MissionInfoDict = response.MissionInfoDict;
     }
 
@@ -85,12 +74,9 @@ public partial class MementoMoriFuncs
 
             async Task RewardMission()
             {
-                if (missionIds.Count == 0)
-                {
-                    return;
-                }
+                if (missionIds.Count == 0) return;
 
-                var rewardMissionResponse = await GetResponse<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest() {TargetMissionIdList = missionIds});
+                var rewardMissionResponse = await GetResponse<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest {TargetMissionIdList = missionIds});
                 rewardMissionResponse.RewardInfo.ItemList.PrintUserItems(log);
                 rewardMissionResponse.RewardInfo.CharacterList.PrintCharacterDtos(log);
                 missionIds.Clear();
@@ -108,15 +94,17 @@ public partial class MementoMoriFuncs
                 if (pair.Value.UserMissionActivityDtoInfo == null) continue;
 
                 foreach (var (rewardId, statusType) in pair.Value.UserMissionActivityDtoInfo.RewardStatusDict)
+                {
                     if (statusType == MissionActivityRewardStatusType.NotReceived)
                     {
-                        var rewardMb = Masters.TotalActivityMedalRewardTable.GetById(rewardId);
+                        var rewardMb = TotalActivityMedalRewardTable.GetById(rewardId);
                         log(string.Format(ResourceStrings.RewardMissionMsg, pair.Key, rewardMb.RequiredActivityMedalCount));
-                        var response = await GetResponse<RewardMissionActivityRequest, RewardMissionActivityResponse>(new RewardMissionActivityRequest()
+                        var response = await GetResponse<RewardMissionActivityRequest, RewardMissionActivityResponse>(new RewardMissionActivityRequest
                             {MissionGroupType = pair.Key, RequiredCount = rewardMb.RequiredActivityMedalCount});
                         response.RewardInfo.ItemList.PrintUserItems(log);
                         response.RewardInfo.CharacterList.PrintCharacterDtos(log);
                     }
+                }
             }
         });
     }
@@ -128,12 +116,13 @@ public partial class MementoMoriFuncs
             await GetResponse<GetPlayerRankingRequest, GetPlayerRankingResponse>(new GetPlayerRankingRequest());
             foreach (var (rankingDataType, mbId) in UserSyncData.ReceivableAchieveRankingRewardIdMap)
             {
-                foreach (var mb in Masters.AchieveRankingRewardTable.GetByRankingDataType(rankingDataType))
+                foreach (var mb in AchieveRankingRewardTable.GetByRankingDataType(rankingDataType))
                 {
                     if (mb.Id > mbId || UserSyncData.ReceivedAchieveRankingRewardIdList.Contains(mb.Id)) continue;
 
-                    var response = await GetResponse<ReceiveAchieveRankingRewardRequest, ReceiveAchieveRankingRewardResponse>(new ReceiveAchieveRankingRewardRequest() { AchieveRankingRewardMBId = mb.Id });
-                    log($"{Masters.TextResourceTable.Get(mb.AchieveTargetDescriptionKey)}");
+                    var response = await GetResponse<ReceiveAchieveRankingRewardRequest, ReceiveAchieveRankingRewardResponse>(new ReceiveAchieveRankingRewardRequest
+                        {AchieveRankingRewardMBId = mb.Id});
+                    log($"{TextResourceTable.Get(mb.AchieveTargetDescriptionKey)}");
                     response.RewardItemList.PrintUserItems(log);
                 }
             }

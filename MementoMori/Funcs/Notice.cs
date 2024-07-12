@@ -1,6 +1,4 @@
-﻿using MementoMori.Ortega.Share;
-using MementoMori.Ortega.Share.Data.ApiInterface.Notice;
-using MementoMori.Ortega.Share.Enums;
+﻿using MementoMori.Ortega.Share.Data.ApiInterface.Notice;
 
 namespace MementoMori;
 
@@ -10,7 +8,7 @@ public partial class MementoMoriFuncs
     {
         var countryCode = OrtegaConst.Addressable.LanguageNameDictionary[NetworkManager.LanguageType];
 
-        var response = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()
+        var response = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest
         {
             AccessType = NoticeAccessType.Title,
             CategoryType = NoticeCategoryType.NoticeTab,
@@ -19,7 +17,7 @@ public partial class MementoMoriFuncs
             UserId = AuthOption.UserId
         });
         NoticeInfoList = response.NoticeInfoList.Where(d => d.Id % 10 != 6).ToList();
-        var response2 = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest()
+        var response2 = await GetResponse<GetNoticeInfoListRequest, GetNoticeInfoListResponse>(new GetNoticeInfoListRequest
         {
             AccessType = NoticeAccessType.MyPage,
             CategoryType = NoticeCategoryType.EventTab,

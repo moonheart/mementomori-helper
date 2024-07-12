@@ -1,47 +1,42 @@
-﻿using MementoMori.Common.Localization;
-using MementoMori.Extensions;
-using MementoMori.Ortega.Common.Utils;
-using MementoMori.Ortega.Share;
+﻿using MementoMori.Ortega.Common.Utils;
 using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest;
 using MementoMori.Ortega.Share.Data.BountyQuest;
-using MementoMori.Ortega.Share.Enums;
 using MementoMori.Utils;
 
 namespace MementoMori;
 
 public partial class MementoMoriFuncs
 {
+    private bool IsBountyQuestAvailable => UserSyncData?.UserBattleBossDtoInfo?.BossClearMaxQuestId >= OpenContentTable.GetByOpenCommandType(OpenCommandType.BountyQuest).OpenContentValue;
+
     public async Task BountyQuestStartAuto()
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            if (!IsBountyQuestAvailable)
-            {
-                return;
-            }
+            if (!IsBountyQuestAvailable) return;
 
             var response1 = await GetResponse<GetListRequest, GetListResponse>(new GetListRequest());
             if (GameConfig.BountyQuestAuto.TargetItems.Count > 0 && !BountyRequestForceAll)
             {
                 var itemNames = string.Join(",", GameConfig.BountyQuestAuto.TargetItems.Select(ItemUtil.GetItemName));
-                log($"{Masters.TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}: {ResourceStrings.DesignatedTargetProp} {itemNames}");
-                log($"{Masters.TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}: {ResourceStrings.DispatchingTargetPropMission}");
+                log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}: {ResourceStrings.DesignatedTargetProp} {itemNames}");
+                log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}: {ResourceStrings.DispatchingTargetPropMission}");
                 var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData, GameConfig.BountyQuestAuto);
                 foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
                 {
                     var startResponse = await GetResponse<StartRequest, StartResponse>(
-                        new StartRequest {BountyQuestStartInfos = new List<BountyQuestStartInfo>() {bountyQuestStartInfo}});
+                        new StartRequest {BountyQuestStartInfos = new List<BountyQuestStartInfo> {bountyQuestStartInfo}});
                     log($"{ResourceStrings.Dispatched} {bountyQuestStartInfo.BountyQuestId}");
                 }
             }
             else
             {
-                log($"{Masters.TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}: {ResourceStrings.DispatchingAll}");
+                log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}: {ResourceStrings.DispatchingAll}");
                 var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, UserSyncData, GameConfig.BountyQuestAuto, true);
                 foreach (var bountyQuestStartInfo in bountyQuestStartInfos)
                 {
                     var startResponse = await GetResponse<StartRequest, StartResponse>(
-                        new StartRequest {BountyQuestStartInfos = new List<BountyQuestStartInfo>() {bountyQuestStartInfo}});
+                        new StartRequest {BountyQuestStartInfos = new List<BountyQuestStartInfo> {bountyQuestStartInfo}});
                     log($"{ResourceStrings.Dispatched} {bountyQuestStartInfo.BountyQuestId}");
                 }
             }
@@ -54,12 +49,9 @@ public partial class MementoMoriFuncs
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            if (!IsBountyQuestAvailable)
-            {
-                return;
-            }
+            if (!IsBountyQuestAvailable) return;
 
-            log($"{Masters.TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}:\n");
+            log($"{TextResourceTable.Get("[CommonHeaderBountyQuestLabel]")}:\n");
             var getListResponse = await GetResponse<GetListRequest, GetListResponse>(
                 new GetListRequest());
 
@@ -69,14 +61,12 @@ public partial class MementoMoriFuncs
 
             if (questIds.Count > 0)
             {
-                var rewardResponse = await GetResponse<RewardRequest, RewardResponse>(new RewardRequest() {BountyQuestIds = questIds, ConsumeCurrency = 0, IsQuick = false});
+                var rewardResponse = await GetResponse<RewardRequest, RewardResponse>(new RewardRequest {BountyQuestIds = questIds, ConsumeCurrency = 0, IsQuick = false});
                 rewardResponse.RewardItems.PrintUserItems(log);
                 await GetResponse<GetListRequest, GetListResponse>(new GetListRequest());
             }
             else
-            {
                 log(ResourceStrings.NothingToReceive);
-            }
 
             await GetBountyRequestInfo();
         });
@@ -84,10 +74,7 @@ public partial class MementoMoriFuncs
 
     public async Task GetBountyRequestInfo()
     {
-        if (!IsBountyQuestAvailable)
-        {
-            return;
-        }
+        if (!IsBountyQuestAvailable) return;
 
         var response = await GetResponse<GetListRequest, GetListResponse>(new GetListRequest());
         BountyQuestResponseInfo = response;
@@ -101,13 +88,6 @@ public partial class MementoMoriFuncs
             await GetBountyRequestInfo();
         }
         else
-        {
-            AddLog(string.Format(ResourceStrings.NoAvailable, Masters.TextResourceTable.Get("[BountyQuestTypeSolo]")));
-        }
-    }
-
-    private bool IsBountyQuestAvailable
-    {
-        get { return UserSyncData?.UserBattleBossDtoInfo?.BossClearMaxQuestId >= Masters.OpenContentTable.GetByOpenCommandType(OpenCommandType.BountyQuest).OpenContentValue; }
+            AddLog(string.Format(ResourceStrings.NoAvailable, TextResourceTable.Get("[BountyQuestTypeSolo]")));
     }
 }

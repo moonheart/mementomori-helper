@@ -1,9 +1,5 @@
-﻿using MementoMori.Common.Localization;
-using MementoMori.Exceptions;
-using MementoMori.Extensions;
-using MementoMori.Ortega.Share;
+﻿using MementoMori.Exceptions;
 using MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle;
-using MementoMori.Ortega.Share.Enums;
 
 namespace MementoMori;
 
@@ -19,18 +15,19 @@ public partial class MementoMoriFuncs
             var winCount = 0;
             var errCount = 0;
             while (!token.IsCancellationRequested)
+            {
                 try
                 {
                     var towerBattleDtoInfo = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == SelectedAutoTowerType);
                     if (SelectedAutoTowerType != TowerType.Infinite && towerBattleDtoInfo.TodayClearNewFloorCount >= 10)
                     {
-                        log($"{SelectedAutoTowerType} {Masters.TextResourceTable.Get("[ClientErrorMessage1700007]")}");
+                        log($"{SelectedAutoTowerType} {TextResourceTable.Get("[ClientErrorMessage1700007]")}");
                         break;
                     }
 
                     var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == SelectedAutoTowerType);
                     var targetQuestId = tower.MaxTowerBattleId + 1;
-                    var bossQuickResponse = await GetResponse<StartRequest, StartResponse>(new StartRequest()
+                    var bossQuickResponse = await GetResponse<StartRequest, StartResponse>(new StartRequest
                     {
                         TargetTowerType = SelectedAutoTowerType, TowerBattleQuestId = targetQuestId
                     });
@@ -41,8 +38,8 @@ public partial class MementoMoriFuncs
                     await _battleLogManager.SaveBattleLog(bossQuickResponse.BattleResult, $@"tower-{SelectedAutoTowerType}", bossQuickResponse.BattleResult.QuestId.ToString(),
                         $"tower-{SelectedAutoTowerType}-*lose");
 
-                    var name = Masters.TextResourceTable.Get(SelectedAutoTowerType);
-                    var result = win ? Masters.TextResourceTable.Get("[LocalRaidBattleWinMessage]") : Masters.TextResourceTable.Get("[LocalRaidBattleLoseMessage]");
+                    var name = TextResourceTable.Get(SelectedAutoTowerType);
+                    var result = win ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]");
 
                     if (SelectedAutoTowerType == TowerType.Infinite)
                         log(string.Format(ResourceStrings.AutoTowerInfiniteExecMsg, name, targetQuestId, result, totalCount, winCount, errCount));
@@ -63,22 +60,17 @@ public partial class MementoMoriFuncs
 
                     if (e is ApiErrorException) await AuthLogin(_lastPlayerDataInfo);
                 }
+            }
         });
     }
 
     public TowerType[] GetAvailableTower()
     {
-        if (!LoginOk)
+        if (!LoginOk) return Array.Empty<TowerType>();
+
+        foreach (var limitedEventMb in LimitedEventTable.GetArray().Where(d => d.LimitedEventType == LimitedEventType.ElementTowerAllRelease))
         {
-            return Array.Empty<TowerType>();
-        }
-        
-        foreach (var limitedEventMb in Masters.LimitedEventTable.GetArray().Where(d=>d.LimitedEventType == LimitedEventType.ElementTowerAllRelease))
-        {
-            if (NetworkManager.TimeManager.IsInTime(limitedEventMb))
-            {
-                return new[] {TowerType.Infinite, TowerType.Blue, TowerType.Green, TowerType.Red, TowerType.Yellow};
-            }
+            if (NetworkManager.TimeManager.IsInTime(limitedEventMb)) return new[] {TowerType.Infinite, TowerType.Blue, TowerType.Green, TowerType.Red, TowerType.Yellow};
         }
 
         var now = DateTimeOffset.UtcNow.ToOffset(TimeManager.DiffFromUtc) - TimeSpan.FromHours(4);
@@ -104,12 +96,12 @@ public partial class MementoMoriFuncs
             try
             {
                 var tower = UserSyncData.UserTowerBattleDtoInfos.First(d => d.TowerType == TowerType.Infinite);
-                log($"{Masters.TextResourceTable.Get("[CommonHeaderTowerBattleLabel]")}:\n");
+                log($"{TextResourceTable.Get("[CommonHeaderTowerBattleLabel]")}:\n");
 
                 if (IsBossBattleQuickAvailable)
                 {
                     var bossQuickResponse = await GetResponse<TowerBattleQuickRequest, TowerBattleQuickResponse>(
-                        new TowerBattleQuickRequest()
+                        new TowerBattleQuickRequest
                         {
                             TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId, QuickCount = 3
                         });
@@ -121,10 +113,10 @@ public partial class MementoMoriFuncs
                 }
                 else
                 {
-                    for (int i = 0; i < 3; i++)
+                    for (var i = 0; i < 3; i++)
                     {
                         var bossQuickResponse = await GetResponse<StartRequest, StartResponse>(
-                            new StartRequest()
+                            new StartRequest
                             {
                                 TargetTowerType = TowerType.Infinite, TowerBattleQuestId = tower.MaxTowerBattleId
                             });

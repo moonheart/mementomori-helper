@@ -1,14 +1,11 @@
-﻿using MementoMori.Ortega.Share;
-using MementoMori.Ortega.Share.Data.ApiInterface;
+﻿namespace MementoMori.Exceptions;
 
-namespace MementoMori.Exceptions;
-
-public class ApiErrorException: Exception
+public class ApiErrorException : Exception
 {
-    public ErrorCode ErrorCode { get; }
-    public ApiErrorException(ErrorCode errorCode): base(Masters.TextResourceTable.GetErrorCodeMessage(errorCode))
+    public ApiErrorException(ErrorCode errorCode) : base(TextResourceTable.GetErrorCodeMessage(errorCode))
     {
         ErrorCode = errorCode;
-
     }
+
+    public ErrorCode ErrorCode { get; }
 }

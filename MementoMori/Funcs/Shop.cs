@@ -1,12 +1,8 @@
-﻿using MementoMori.Common.Localization;
-using MementoMori.Exceptions;
-using MementoMori.Extensions;
-using MementoMori.Ortega.Share;
+﻿using MementoMori.Exceptions;
 using MementoMori.Ortega.Share.Data.ApiInterface.Shop;
 using MementoMori.Ortega.Share.Data.ApiInterface.TradeShop;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using MementoMori.Ortega.Share.Data.TradeShop;
-using MementoMori.Ortega.Share.Enums;
 using GetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListRequest;
 using GetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListResponse;
 
@@ -23,14 +19,12 @@ public partial class MementoMoriFuncs
             if (shopProductInfo != null && shopProductInfo.ShopProductMonthlyBoost.ExpirationTimeStamp >= DateTimeOffset.Now.ToUnixTimeMilliseconds())
             {
                 if (shopProductInfo.ShopProductMonthlyBoost.IsAlreadyReceive)
-                {
-                    log($"{Masters.TextResourceTable.Get("[CommonMonthlyBoosterLabel]")} {Masters.TextResourceTable.Get("[ShopMonthlyBoostRewardDetailReceivedMessage]")}");
-                }
+                    log($"{TextResourceTable.Get("[CommonMonthlyBoosterLabel]")} {TextResourceTable.Get("[ShopMonthlyBoostRewardDetailReceivedMessage]")}");
                 else
                 {
                     var receiveRewardResponse = await GetResponse<ReceiveRewardRequest, ReceiveRewardResponse>(new ReceiveRewardRequest
                         {MBId = shopProductInfo.MbId, ProductId = shopProductInfo.ShopProductMonthlyBoost.ProductId, ShopProductType = ShopProductType.MonthlyBoost});
-                    log($"{Masters.TextResourceTable.Get("[CommonMonthlyBoosterLabel]")} {Masters.TextResourceTable.Get("[ShopMonthlyBoostRewardDetailReceivedMessage]")}");
+                    log($"{TextResourceTable.Get("[CommonMonthlyBoosterLabel]")} {TextResourceTable.Get("[ShopMonthlyBoostRewardDetailReceivedMessage]")}");
                     receiveRewardResponse.RewardInfo.ItemList.PrintUserItems(log);
                     receiveRewardResponse.RewardInfo.BonusItemList.PrintUserItems(log);
                     receiveRewardResponse.RewardInfo.CharacterList.PrintCharacterDtos(log);
@@ -46,7 +40,9 @@ public partial class MementoMoriFuncs
             var autoBuyItems = GameConfig.Shop.AutoBuyItems;
             if (autoBuyItems.Count == 0) return;
 
-            var listResponse = await GetResponse<Ortega.Share.Data.ApiInterface.TradeShop.GetListRequest, Ortega.Share.Data.ApiInterface.TradeShop.GetListResponse>(new Ortega.Share.Data.ApiInterface.TradeShop.GetListRequest());
+            var listResponse =
+                await GetResponse<Ortega.Share.Data.ApiInterface.TradeShop.GetListRequest, Ortega.Share.Data.ApiInterface.TradeShop.GetListResponse>(
+                    new Ortega.Share.Data.ApiInterface.TradeShop.GetListRequest());
 
             log(ResourceStrings.ShopAutoBuyItems);
             foreach (var tabInfo in listResponse.TradeShopTabInfoList)
@@ -89,7 +85,7 @@ public partial class MementoMoriFuncs
                         var response = await GetResponse<BuyItemRequest, BuyItemResponse>(
                             new BuyItemRequest
                             {
-                                TradeShopTabId = tabInfo.TradeShopTabId, TradeShopItemInfos = new List<TradeShopItemInfo>() {new() {TradeShopItemId = shopItem.TradeShopItemId, TradeCount = 1}}
+                                TradeShopTabId = tabInfo.TradeShopTabId, TradeShopItemInfos = new List<TradeShopItemInfo> {new() {TradeShopItemId = shopItem.TradeShopItemId, TradeCount = 1}}
                             });
                         response.UserSyncData.GivenItemCountInfoList.PrintUserItems(log);
                     }
@@ -117,13 +113,11 @@ public partial class MementoMoriFuncs
             if (UserSyncData.ExistVipDailyGift == true)
             {
                 var bonus = await GetResponse<GetDailyGiftRequest, GetDailyGiftResponse>(new GetDailyGiftRequest());
-                log($"{Masters.TextResourceTable.Get("[VipDailyRewardLabelFormat]", UserSyncData.UserStatusDtoInfo.Vip)}\n");
+                log($"{TextResourceTable.Get("[VipDailyRewardLabelFormat]", UserSyncData.UserStatusDtoInfo.Vip)}\n");
                 bonus.ItemList.PrintUserItems(log);
             }
             else
-            {
-                log($"{Masters.TextResourceTable.GetErrorCodeMessage(ErrorCode.VipGetDailyGiftAlreadyGet)}");
-            }
+                log($"{TextResourceTable.GetErrorCodeMessage(ErrorCode.VipGetDailyGiftAlreadyGet)}");
         });
     }
 }

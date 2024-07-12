@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using AutoCtor;
 using Injectio.Attributes;
-using MementoMori.Common.Localization;
 using MementoMori.Option;
 using MementoMori.Ortega.Share.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,14 +15,41 @@ namespace MementoMori;
 [AutoConstruct]
 public partial class AccountManager : ReactiveObject
 {
+    private readonly ConcurrentDictionary<long, Account> _accounts = new();
     private readonly IWritableOptions<AuthOption> _authOption;
     private readonly IWritableOptions<GameConfig> _gameConfig;
-    private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<AccountManager> _logger;
-
-    private readonly ConcurrentDictionary<long, Account> _accounts = new();
+    private readonly IServiceProvider _serviceProvider;
     private CultureInfo _currentCulture;
     private long _currentUserId;
+
+    public Account Current => Get(CurrentUserId);
+
+    public CultureInfo CurrentCulture
+    {
+        get => _currentCulture;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _currentCulture, value);
+            foreach (var account in _accounts.Values)
+            {
+                account.NetworkManager.SetCultureInfo(value);
+            }
+
+            CultureInfo.DefaultThreadCurrentCulture = value;
+            CultureInfo.DefaultThreadCurrentUICulture = value;
+        }
+    }
+
+    public long CurrentUserId
+    {
+        get
+        {
+            if (_currentUserId <= 0) _currentUserId = _authOption.Value.Accounts.FirstOrDefault()?.UserId ?? 0;
+            return _currentUserId;
+        }
+        set => this.RaiseAndSetIfChanged(ref _currentUserId, value);
+    }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     public Account Get(long userId)
@@ -44,8 +70,6 @@ public partial class AccountManager : ReactiveObject
 
         return _accounts[userId];
     }
-
-    public Account Current => Get(CurrentUserId);
 
     public bool Contains(long userId)
     {
@@ -71,18 +95,6 @@ public partial class AccountManager : ReactiveObject
         return _authOption.Value.Accounts.FirstOrDefault(x => x.UserId == userId);
     }
 
-    public CultureInfo CurrentCulture
-    {
-        get => _currentCulture;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _currentCulture, value);
-            foreach (var account in _accounts.Values) account.NetworkManager.SetCultureInfo(value);
-            CultureInfo.DefaultThreadCurrentCulture = value;
-            CultureInfo.DefaultThreadCurrentUICulture = value;
-        }
-    }
-
     public Dictionary<long, Account> GetAll()
     {
         return _accounts.ToDictionary(x => x.Key, x => x.Value);
@@ -91,9 +103,10 @@ public partial class AccountManager : ReactiveObject
     public void MigrateToAccountArray()
     {
         if (_authOption.Value.Accounts.Count == 0 && _authOption.Value.UserId > 0 && !_authOption.Value.ClientKey.IsNullOrEmpty())
+        {
             _authOption.Update(opt =>
             {
-                opt.Accounts = new List<AccountInfo>()
+                opt.Accounts = new List<AccountInfo>
                 {
                     new()
                     {
@@ -104,6 +117,7 @@ public partial class AccountManager : ReactiveObject
                     }
                 };
             });
+        }
     }
 
     public async Task AutoLogin()
@@ -124,28 +138,15 @@ public partial class AccountManager : ReactiveObject
         }
     }
 
-    public long CurrentUserId
-    {
-        get
-        {
-            if (_currentUserId <= 0) _currentUserId = _authOption.Value.Accounts.FirstOrDefault()?.UserId ?? 0;
-            return _currentUserId;
-        }
-        set => this.RaiseAndSetIfChanged(ref _currentUserId, value);
-    }
-
     public void UpdateAccountInfo(long userId)
     {
         Get(userId).AccountInfo = GetAccountInfo(userId);
     }
-    
+
     public void RemoveAccount(long userId)
     {
         _accounts.TryRemove(userId, out _);
-        _authOption.Update(opt =>
-        {
-            opt.Accounts.RemoveAll(x => x.UserId == userId);
-        });
+        _authOption.Update(opt => { opt.Accounts.RemoveAll(x => x.UserId == userId); });
     }
 }
 

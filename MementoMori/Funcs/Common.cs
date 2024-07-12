@@ -12,7 +12,6 @@ using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.Auth;
 using MementoMori.Ortega.Share.Data.Mission;
 using MementoMori.Ortega.Share.Data.Notice;
-using MementoMori.Ortega.Share.Enums;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -24,6 +23,24 @@ namespace MementoMori;
 [AutoConstruct]
 public partial class MementoMoriFuncs : ReactiveObject, IDisposable
 {
+    private const int Max_Err_Count = 20;
+    private readonly AccountManager _accountManager;
+
+    private readonly IWritableOptions<AuthOption> _AuthOption;
+    private readonly BattleLogManager _battleLogManager;
+    private readonly ILogger<MementoMoriFuncs> _logger;
+    private readonly IWritableOptions<PlayersOption> _playersOption;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly TimeZoneAwareJobRegister _timeZoneAwareJobRegister;
+    private readonly IWritableOptions<GameConfig> _writableGameConfig;
+
+    private CancellationTokenSource _cancellationTokenSource;
+
+    private ConcurrentQueue<Func<Action<string>, CancellationToken, Task>> _funcs = new();
+
+    private PlayerDataInfo _lastPlayerDataInfo;
+
+    private readonly List<Task> _tasks = new();
     public TimeManager TimeManager => NetworkManager.TimeManager;
 
     [Reactive]
@@ -50,68 +67,12 @@ public partial class MementoMoriFuncs : ReactiveObject, IDisposable
     [Reactive]
     public bool IsNotClearDungeonBattleMap { get; set; }
 
-    private readonly IWritableOptions<AuthOption> _AuthOption;
     private AuthOption AuthOption => _AuthOption.Value;
     private GameConfig GameConfig => _writableGameConfig.Value;
-    private readonly ILogger<MementoMoriFuncs> _logger;
 
     public MementoNetworkManager NetworkManager { get; set; }
-    private readonly AccountManager _accountManager;
-    private readonly TimeZoneAwareJobRegister _timeZoneAwareJobRegister;
-    private readonly IWritableOptions<GameConfig> _writableGameConfig;
-    private readonly IWritableOptions<PlayersOption> _playersOption;
-    private readonly BattleLogManager _battleLogManager;
-    private readonly IServiceProvider _serviceProvider;
 
     private PlayerOption PlayerOption => _playersOption.Value.TryGetValue(NetworkManager.PlayerId, out var opt) ? opt : new PlayerOption();
-
-    [AutoPostConstruct]
-    private void Initialize()
-    {
-        Mypage = new GetMypageResponse();
-        NoticeInfoList = new List<NoticeInfo>();
-        UserSyncData = new UserSyncData();
-    }
-
-    public async Task<List<PlayerDataInfo>> GetPlayerDataInfo()
-    {
-        var reqBody = new LoginRequest()
-        {
-            ClientKey = _accountManager.GetAccountInfo(UserId).ClientKey,
-            DeviceToken = AuthOption.DeviceToken,
-            AppVersion = AuthOption.AppVersion,
-            OSVersion = AuthOption.OSVersion,
-            ModelName = AuthOption.ModelName,
-            AdverisementId = Guid.NewGuid().ToString("D"),
-            UserId = UserId
-        };
-        return await NetworkManager.GetPlayerDataInfoList(reqBody, AddLog);
-    }
-
-    public async Task<GetUserDataResponse> UserGetUserData()
-    {
-        var req = new GetUserDataRequest { };
-        var data = await GetResponse<GetUserDataRequest, GetUserDataResponse>(req);
-        UserSyncData = data.UserSyncData;
-        IsNotClearDungeonBattleMap = data.IsNotClearDungeonBattleMap;
-        return data;
-    }
-
-    public async Task<TResp> GetResponse<TReq, TResp>(TReq req)
-        where TReq : ApiRequestBase
-        where TResp : ApiResponseBase
-    {
-        return await NetworkManager.GetResponse<TReq, TResp>(req, AddLog, data =>
-        {
-            UserSyncData.UserItemEditorMergeUserSyncData(data);
-            this.RaisePropertyChanged(nameof(UserSyncData));
-        });
-    }
-
-    public void Dispose()
-    {
-        _cancellationTokenSource?.Dispose();
-    }
 
     [Reactive]
     public bool Logining { get; private set; }
@@ -140,15 +101,57 @@ public partial class MementoMoriFuncs : ReactiveObject, IDisposable
     [Reactive]
     public bool LoginOk { get; set; }
 
-    private CancellationTokenSource _cancellationTokenSource;
-
     public ObservableCollection<string> MesssageList { get; } = new();
 
-    private const int Max_Err_Count = 20;
-
-    private PlayerDataInfo _lastPlayerDataInfo;
-
     public long UserId { get; set; }
+
+    public void Dispose()
+    {
+        _cancellationTokenSource?.Dispose();
+    }
+
+    [AutoPostConstruct]
+    private void Initialize()
+    {
+        Mypage = new GetMypageResponse();
+        NoticeInfoList = new List<NoticeInfo>();
+        UserSyncData = new UserSyncData();
+    }
+
+    public async Task<List<PlayerDataInfo>> GetPlayerDataInfo()
+    {
+        var reqBody = new LoginRequest
+        {
+            ClientKey = _accountManager.GetAccountInfo(UserId).ClientKey,
+            DeviceToken = AuthOption.DeviceToken,
+            AppVersion = AuthOption.AppVersion,
+            OSVersion = AuthOption.OSVersion,
+            ModelName = AuthOption.ModelName,
+            AdverisementId = Guid.NewGuid().ToString("D"),
+            UserId = UserId
+        };
+        return await NetworkManager.GetPlayerDataInfoList(reqBody, AddLog);
+    }
+
+    public async Task<GetUserDataResponse> UserGetUserData()
+    {
+        var req = new GetUserDataRequest();
+        var data = await GetResponse<GetUserDataRequest, GetUserDataResponse>(req);
+        UserSyncData = data.UserSyncData;
+        IsNotClearDungeonBattleMap = data.IsNotClearDungeonBattleMap;
+        return data;
+    }
+
+    public async Task<TResp> GetResponse<TReq, TResp>(TReq req)
+        where TReq : ApiRequestBase
+        where TResp : ApiResponseBase
+    {
+        return await NetworkManager.GetResponse<TReq, TResp>(req, AddLog, data =>
+        {
+            UserSyncData.UserItemEditorMergeUserSyncData(data);
+            this.RaisePropertyChanged(nameof(UserSyncData));
+        });
+    }
 
     public async Task SyncUserData()
     {
@@ -164,10 +167,6 @@ public partial class MementoMoriFuncs : ReactiveObject, IDisposable
             if (MesssageList.Count > 100) MesssageList.RemoveAt(MesssageList.Count - 1);
         }
     }
-
-    private ConcurrentQueue<Func<Action<string>, CancellationToken, Task>> _funcs = new();
-
-    private List<Task> _tasks = new();
 
     public async Task ExecuteQuickAction(Func<Action<string>, CancellationToken, Task> func)
     {
@@ -202,7 +201,7 @@ public partial class MementoMoriFuncs : ReactiveObject, IDisposable
 
     public async Task GetMyPage()
     {
-        await ExecuteQuickAction(async (log, token) => { Mypage = await GetResponse<GetMypageRequest, GetMypageResponse>(new GetMypageRequest() {LanguageType = NetworkManager.LanguageType}); });
+        await ExecuteQuickAction(async (log, token) => { Mypage = await GetResponse<GetMypageRequest, GetMypageResponse>(new GetMypageRequest {LanguageType = NetworkManager.LanguageType}); });
     }
 
     public async Task Debug()

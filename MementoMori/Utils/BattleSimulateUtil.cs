@@ -1,13 +1,4 @@
-﻿using MementoMori.Ortega.Share;
-using MementoMori.Ortega.Share.Data.Battle;
-using MementoMori.Ortega.Share.Master.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MementoMori.Extensions;
-using MementoMori.Ortega.Share.Enums;
+﻿using MementoMori.Ortega.Share.Data.Battle;
 using MementoMori.Ortega.Share.Enums.Battle.Skill;
 
 namespace MementoMori.Utils;
@@ -16,8 +7,8 @@ public static class BattleSimulateUtil
 {
     public static string GetName(this EffectGroup effectGroup)
     {
-        var effectGroupMb = Masters.EffectGroupTable.GetById(effectGroup.EffectGroupId);
-        return Masters.TextResourceTable.Get(effectGroupMb.NameKey);
+        var effectGroupMb = EffectGroupTable.GetById(effectGroup.EffectGroupId);
+        return TextResourceTable.Get(effectGroupMb.NameKey);
     }
 
     public static List<string> GetEffectNames(this EffectGroup effectGroup)
@@ -28,43 +19,18 @@ public static class BattleSimulateUtil
     private static string GetEffectDesc(this Effect effect)
     {
         var desc = effect.EffectType.GetDesc();
-        if (effect.EffectType < EffectType.SpeedUp)
-        {
-            return $"None";
-        }
-        if (effect.EffectType < EffectType.HitRateUp)
-        {
-            return $"{desc} {effect.EffectValue}";
-        }
+        if (effect.EffectType < EffectType.SpeedUp) return "None";
+        if (effect.EffectType < EffectType.HitRateUp) return $"{desc} {effect.EffectValue}";
 
-        if (effect.EffectType < EffectType.DamageGuard)
-        {
-            return $"{desc} {effect.EffectValue}%";
+        if (effect.EffectType < EffectType.DamageGuard) return $"{desc} {effect.EffectValue}%";
 
-        }
+        if (effect.EffectType < EffectType.ActiveSkill1Enhance) return desc;
 
-        if (effect.EffectType < EffectType.ActiveSkill1Enhance)
-        {
-            return desc;
-        }
+        if (effect.EffectType < EffectType.SpeedDown) return desc;
 
-        if (effect.EffectType < EffectType.SpeedDown)
-        {
-            return desc;
-        }
-
-        if (effect.EffectType < EffectType.HitRateDown)
-        {
-            return $"{desc} {effect.EffectValue}";
-        }
-        if (effect.EffectType < EffectType.Stun)
-        {
-            return $"{desc} {effect.EffectValue}%";
-        }
-        if (effect.EffectType < EffectType.HpRecoveryForbidden)
-        {
-            return desc;
-        }
+        if (effect.EffectType < EffectType.HitRateDown) return $"{desc} {effect.EffectValue}";
+        if (effect.EffectType < EffectType.Stun) return $"{desc} {effect.EffectValue}%";
+        if (effect.EffectType < EffectType.HpRecoveryForbidden) return desc;
 
         return desc;
 
@@ -91,13 +57,6 @@ public static class BattleSimulateUtil
         // };
     }
 
-    public class UnitData
-    {
-        public string Name { get; set; }
-        public long Level { get; set; }
-        public bool IsAttacker { get; set; }
-    }
-
 
     public static UnitData GetUnitData(this BattleFieldCharacter battleFieldCharacter)
     {
@@ -105,8 +64,8 @@ public static class BattleSimulateUtil
         {
             case UnitType.Character:
             {
-                var characterMb = Masters.CharacterTable.GetById(battleFieldCharacter.UnitId);
-                var characterName = Masters.TextResourceTable.Get(characterMb.NameKey);
+                var characterMb = CharacterTable.GetById(battleFieldCharacter.UnitId);
+                var characterName = TextResourceTable.Get(characterMb.NameKey);
                 return new UnitData {Name = characterName, Level = battleFieldCharacter.CharacterLevel, IsAttacker = battleFieldCharacter.DefaultPosition.IsAttacker};
                 break;
             }
@@ -118,8 +77,8 @@ public static class BattleSimulateUtil
             //     break;
             case UnitType.BossBattleEnemy:
             {
-                var bossBattleEnemyMb = Masters.BossBattleEnemyTable.GetById(battleFieldCharacter.UnitId);
-                var bossBattleEnemyName = Masters.TextResourceTable.Get(bossBattleEnemyMb.NameKey);
+                var bossBattleEnemyMb = BossBattleEnemyTable.GetById(battleFieldCharacter.UnitId);
+                var bossBattleEnemyName = TextResourceTable.Get(bossBattleEnemyMb.NameKey);
                 return new UnitData {Name = bossBattleEnemyName, Level = bossBattleEnemyMb.EnemyRank, IsAttacker = battleFieldCharacter.DefaultPosition.IsAttacker};
                 break;
             }
@@ -130,5 +89,12 @@ public static class BattleSimulateUtil
             default:
                 throw new ArgumentOutOfRangeException("battleFieldCharacter.UnitType");
         }
+    }
+
+    public class UnitData
+    {
+        public string Name { get; set; }
+        public long Level { get; set; }
+        public bool IsAttacker { get; set; }
     }
 }

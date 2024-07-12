@@ -1,18 +1,18 @@
-﻿using MementoMori.Common.Localization;
-using MementoMori.Exceptions;
+﻿using MementoMori.Exceptions;
 using MementoMori.Ortega.Common.Utils;
-using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
 using MementoMori.Ortega.Share.Data.ApiInterface.DungeonBattle;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.DungeonBattle;
 using MementoMori.Ortega.Share.Data.Equipment;
-using MementoMori.Ortega.Share.Enums;
 
 namespace MementoMori;
 
 public partial class MementoMoriFuncs
 {
+    private bool IsDungeonBattleHardModeAvailable =>
+        UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId >= OpenContentTable.GetByOpenCommandType(OpenCommandType.DungeonBattleHardMode).OpenContentValue;
+
     public async Task AutoDungeonBattle(Action<string> log, CancellationToken cancellationToken)
     {
         // 脱装备进副本，然后穿装备
@@ -23,30 +23,31 @@ public partial class MementoMoriFuncs
             foreach (var g in equips)
             {
                 var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
-                var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
+                var name = TextResourceTable.Get(CharacterTable.GetById(characterDto.CharacterId).NameKey);
                 log(string.Format(ResourceStrings.RemoveEquipmentOfCharacter, name, characterDto.Level));
 
                 // 脱装备
-                var removeEquipmentResponse = await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
+                var removeEquipmentResponse = await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest
                 {
                     UserCharacterGuid = g.Key,
-                    EquipmentSlotTypes = g.Select(d => Masters.EquipmentTable.GetById(d.EquipmentId).SlotType).ToList()
+                    EquipmentSlotTypes = g.Select(d => EquipmentTable.GetById(d.EquipmentId).SlotType).ToList()
                 });
             }
 
             // 进副本
             await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(new GetDungeonBattleInfoRequest());
             if (competitionInfoResponse.IsDungeonBattleEventOpen)
+            {
                 foreach (var g in equips)
                 {
                     var characterDto = UserSyncData.UserCharacterDtoInfos.Find(d => d.Guid == g.Key);
-                    var name = Masters.TextResourceTable.Get(Masters.CharacterTable.GetById(characterDto.CharacterId).NameKey);
+                    var name = TextResourceTable.Get(CharacterTable.GetById(characterDto.CharacterId).NameKey);
                     log(string.Format(ResourceStrings.PutOnEquipmentOfCharacter, name, characterDto.Level));
                     // 穿装备
                     var changeInfos = g.Select(d =>
                     {
-                        var equipmentMb = Masters.EquipmentTable.GetById(d.EquipmentId);
-                        return new EquipmentChangeInfo()
+                        var equipmentMb = EquipmentTable.GetById(d.EquipmentId);
+                        return new EquipmentChangeInfo
                         {
                             EquipmentGuid = d.Guid,
                             EquipmentId = d.EquipmentId,
@@ -54,20 +55,21 @@ public partial class MementoMoriFuncs
                             IsInherit = false
                         };
                     });
-                    var changeEquipmentResponse = await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(new ChangeEquipmentRequest()
+                    var changeEquipmentResponse = await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(new ChangeEquipmentRequest
                     {
                         UserCharacterGuid = g.Key, EquipmentChangeInfos = changeInfos.ToList()
                     });
                 }
+            }
         }
 
         var battleInfoResponse = await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(new GetDungeonBattleInfoRequest());
 
-        log($"{ResourceStrings.Enter} {Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")}");
+        log($"{ResourceStrings.Enter} {TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")}");
 
         if (battleInfoResponse.UserDungeonDtoInfo.IsDoneRewardClearLayer(3))
         {
-            log($"{Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")} {ResourceStrings.Finished}");
+            log($"{TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")} {ResourceStrings.Finished}");
             return;
         }
 
@@ -82,7 +84,7 @@ public partial class MementoMoriFuncs
             battleInfoResponse = await GetResponse<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(new GetDungeonBattleInfoRequest());
             var grids = battleInfoResponse.CurrentDungeonBattleLayer.DungeonGrids.Select(d =>
             {
-                var dungeonBattleGridMb = Masters.DungeonBattleGridTable.GetById(d.DungeonGridId);
+                var dungeonBattleGridMb = DungeonBattleGridTable.GetById(d.DungeonGridId);
                 var power = battleInfoResponse.GridBattlePowerDict.TryGetValue(d.DungeonGridGuid, out var n) ? n : 0;
                 return new
                 {
@@ -94,7 +96,7 @@ public partial class MementoMoriFuncs
             {
                 if (gridData.ContainsKey(dungeonBattleGrid.DungeonGridGuid)) continue;
                 if (!gridDict[dungeonBattleGrid.DungeonGridGuid].IsBattleType()) continue;
-                var data = await GetResponse<GetBattleGridDataRequest, GetBattleGridDataResponse>(new GetBattleGridDataRequest()
+                var data = await GetResponse<GetBattleGridDataRequest, GetBattleGridDataResponse>(new GetBattleGridDataRequest
                     {CurrentTermId = battleInfoResponse.CurrentTermId, DungeonGridGuid = dungeonBattleGrid.DungeonGridGuid});
                 gridData[dungeonBattleGrid.DungeonGridGuid] = data;
             }
@@ -152,14 +154,14 @@ public partial class MementoMoriFuncs
                 }
 
                 var execBattleResponse = await GetResponse<ExecBattleRequest, ExecBattleResponse>(
-                    new ExecBattleRequest()
+                    new ExecBattleRequest
                     {
                         CurrentTermId = battleInfoResponse.CurrentTermId,
                         DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
                         CharacterGuids = battleCharacterGuids
                     });
                 var finishBattleResponse = await GetResponse<FinishBattleRequest, FinishBattleResponse>(
-                    new FinishBattleRequest()
+                    new FinishBattleRequest
                     {
                         DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
                         CurrentTermId = battleInfoResponse.CurrentTermId,
@@ -231,15 +233,13 @@ public partial class MementoMoriFuncs
                     // 已经到达最后一个节点
                     return null;
                 }
-                else
-                {
-                    return bestPath[currentIndex + 1];
-                }
+
+                return bestPath[currentIndex + 1];
             }
 
             List<List<DungeonBattleGrid>> CalcAllPathsToEndFromGrid(DungeonBattleGrid currentGrid)
             {
-                List<List<DungeonBattleGrid>> allPaths = new List<List<DungeonBattleGrid>>();
+                var allPaths = new List<List<DungeonBattleGrid>>();
                 CalcPaths(currentGrid, new List<DungeonBattleGrid>(), allPaths);
                 return allPaths;
             }
@@ -249,19 +249,14 @@ public partial class MementoMoriFuncs
                 currentPath.Add(currentGrid);
 
                 if (currentGrid.Y == 10) // 到达最后一层
-                {
                     allPaths.Add(new List<DungeonBattleGrid>(currentPath));
-                }
                 else
                 {
                     // 获取下一层相邻的石台
                     var nextLayer = allGrids[currentGrid.Y + 1];
                     foreach (var nextGrid in nextLayer)
                     {
-                        if (IsAdjacent(currentGrid, nextGrid))
-                        {
-                            CalcPaths(nextGrid, currentPath, allPaths);
-                        }
+                        if (IsAdjacent(currentGrid, nextGrid)) CalcPaths(nextGrid, currentPath, allPaths);
                     }
                 }
 
@@ -272,13 +267,8 @@ public partial class MementoMoriFuncs
             {
                 // 判断两个石台是否相邻
                 if (allGrids[currentGrid.Y].Length > allGrids[nextGrid.Y].Length)
-                {
                     return nextGrid.X == currentGrid.X || nextGrid.X == currentGrid.X - 1;
-                }
-                else
-                {
-                    return nextGrid.X == currentGrid.X || nextGrid.X == currentGrid.X + 1;
-                }
+                return nextGrid.X == currentGrid.X || nextGrid.X == currentGrid.X + 1;
             }
 
             long CountEventGridCount(List<DungeonBattleGrid> pathGrids)
@@ -294,7 +284,7 @@ public partial class MementoMoriFuncs
                     if (gridData.TryGetValue(d.DungeonGridGuid, out var data))
                     {
                         totalEventItemCount +=
-                            (data.NormalRewardItemList.FirstOrDefault(x => x.ItemType == battleInfoResponse.EventItemType && x.ItemId == battleInfoResponse.EventItemId)?.ItemCount ?? 0L);
+                            data.NormalRewardItemList.FirstOrDefault(x => x.ItemType == battleInfoResponse.EventItemType && x.ItemId == battleInfoResponse.EventItemId)?.ItemCount ?? 0L;
                     }
                 }
 
@@ -346,7 +336,7 @@ public partial class MementoMoriFuncs
                         if (!battleInfoResponse.UserDungeonDtoInfo.IsDoneRewardClearLayer(battleInfoResponse.CurrentDungeonBattleLayer.LayerCount))
                         {
                             // 获取当前层奖励
-                            var rewardClearLayerResponse = await GetResponse<RewardClearLayerRequest, RewardClearLayerResponse>(new RewardClearLayerRequest()
+                            var rewardClearLayerResponse = await GetResponse<RewardClearLayerRequest, RewardClearLayerResponse>(new RewardClearLayerRequest
                             {
                                 ClearedLayer = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount,
                                 CurrentTermId = battleInfoResponse.CurrentTermId,
@@ -360,18 +350,16 @@ public partial class MementoMoriFuncs
                             // 结束
                             return;
                         }
-                        else
-                        {
-                            var diff = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount == 2
-                                ? (IsDungeonBattleHardModeAvailable ? DungeonBattleDifficultyType.Hard : DungeonBattleDifficultyType.Normal)
-                                : DungeonBattleDifficultyType.Normal;
-                            var proceedLayerResponse = await GetResponse<ProceedLayerRequest, ProceedLayerResponse>(
-                                new ProceedLayerRequest()
-                                {
-                                    CurrentTermId = battleInfoResponse.CurrentTermId,
-                                    DungeonDifficultyType = diff
-                                });
-                        }
+
+                        var diff = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount == 2
+                            ? IsDungeonBattleHardModeAvailable ? DungeonBattleDifficultyType.Hard : DungeonBattleDifficultyType.Normal
+                            : DungeonBattleDifficultyType.Normal;
+                        var proceedLayerResponse = await GetResponse<ProceedLayerRequest, ProceedLayerResponse>(
+                            new ProceedLayerRequest
+                            {
+                                CurrentTermId = battleInfoResponse.CurrentTermId,
+                                DungeonDifficultyType = diff
+                            });
                     }
                     else
                     {
@@ -381,9 +369,10 @@ public partial class MementoMoriFuncs
                             {
                                 var infos = battleInfoResponse.UserDungeonBattleGuestCharacterDtoInfos.OrderByDescending(d => d.BattlePower).ToList();
                                 foreach (var info in infos)
+                                {
                                     try
                                     {
-                                        var execGuestResponse = await GetResponse<ExecGuestRequest, ExecGuestResponse>(new ExecGuestRequest()
+                                        var execGuestResponse = await GetResponse<ExecGuestRequest, ExecGuestResponse>(new ExecGuestRequest
                                         {
                                             DungeonGridGuid = nextGrid.DungeonGridGuid,
                                             GuestMBId = info.CharacterId,
@@ -395,12 +384,13 @@ public partial class MementoMoriFuncs
                                     {
                                         log(string.Format(ResourceStrings.CaveErrorSelectSupport, e.Message));
                                     }
+                                }
 
                                 break;
                             }
                             default:
                             {
-                                var selectGridResponse = await GetResponse<SelectGridRequest, SelectGridResponse>(new SelectGridRequest()
+                                var selectGridResponse = await GetResponse<SelectGridRequest, SelectGridResponse>(new SelectGridRequest
                                 {
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
                                     DungeonGridGuid = nextGrid.DungeonGridGuid
@@ -427,7 +417,7 @@ public partial class MementoMoriFuncs
                             break;
                         case DungeonBattleGridType.Recovery:
                             var execRecoveryResponse = await GetResponse<ExecRecoveryRequest, ExecRecoveryResponse>(
-                                new ExecRecoveryRequest()
+                                new ExecRecoveryRequest
                                 {
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
                                     DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
@@ -439,7 +429,9 @@ public partial class MementoMoriFuncs
                         case DungeonBattleGridType.Shop:
                             var tradeShopItemList = battleInfoResponse.UserDungeonBattleShopDtoInfos.Find(d => d.GridGuid == currentGrid.Grid.DungeonGridGuid).TradeShopItemList;
                             if (GameConfig.DungeonBattle.ShopTargetItems.Count > 0)
+                            {
                                 foreach (var tradeShopItem in tradeShopItemList)
+                                {
                                     if (GameConfig.DungeonBattle.ShopTargetItems.Any(d => d.ItemType == tradeShopItem.GiveItem.ItemType && d.ItemId == tradeShopItem.GiveItem.ItemId))
                                     {
                                         // 购买
@@ -451,9 +443,11 @@ public partial class MementoMoriFuncs
                                         });
                                         log(string.Format(ResourceStrings.CaveBuyItemSuccess, ItemUtil.GetItemName(tradeShopItem.GiveItem), tradeShopItem.GiveItem.ItemCount));
                                     }
+                                }
+                            }
 
                             var leaveShopResponse = await GetResponse<LeaveShopRequest, LeaveShopResponse>(
-                                new LeaveShopRequest()
+                                new LeaveShopRequest
                                 {
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
                                     DungeonGridGuid = currentGrid.Grid.DungeonGridGuid
@@ -462,7 +456,7 @@ public partial class MementoMoriFuncs
                         case DungeonBattleGridType.RelicReinforce:
                             var execReinforceRelicResponse =
                                 await GetResponse<ExecReinforceRelicRequest, ExecReinforceRelicResponse>(
-                                    new ExecReinforceRelicRequest()
+                                    new ExecReinforceRelicRequest
                                     {
                                         CurrentTermId = battleInfoResponse.CurrentTermId,
                                         DungeonGridGuid = currentGrid.Grid.DungeonGridGuid
@@ -480,7 +474,7 @@ public partial class MementoMoriFuncs
                             break;
                         case DungeonBattleGridType.Revival:
                             var execReviveResponse = await GetResponse<ExecReviveRequest, ExecReviveResponse>(
-                                new ExecReviveRequest()
+                                new ExecReviveRequest
                                 {
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
                                     DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
@@ -495,24 +489,24 @@ public partial class MementoMoriFuncs
                 case DungeonBattleGridState.Reward:
                 {
                     if (type == DungeonBattleGridType.BattleAndRelicReinforce)
-                    {
                         await RewardBattleReinforceRelic(battleInfoResponse.UserDungeonDtoInfo.RelicIds, battleInfoResponse.UserDungeonDtoInfo.RelicIds);
-                    }
                     else
                     {
                         // 选择加成奖励
                         var relicId = 0L;
 
                         foreach (var info in GameConfig.DungeonBattleRelicSort)
+                        {
                             if (battleInfoResponse.RewardRelicIds.Contains(info.Id))
                             {
                                 relicId = info.Id;
                                 break;
                             }
+                        }
 
                         var rewardBattleReceiveRelicResponse =
                             await GetResponse<RewardBattleReceiveRelicRequest, RewardBattleReceiveRelicResponse>(
-                                new RewardBattleReceiveRelicRequest()
+                                new RewardBattleReceiveRelicRequest
                                 {
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
                                     DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
@@ -532,7 +526,7 @@ public partial class MementoMoriFuncs
                 var relicId = 0L;
                 var upgradableRelics = newRelicIds.Where(d =>
                 {
-                    var mb = Masters.DungeonBattleRelicTable.GetByReinforceFrom(d);
+                    var mb = DungeonBattleRelicTable.GetByReinforceFrom(d);
                     if (mb == null)
                         // 不可升级
                         return false;
@@ -544,13 +538,14 @@ public partial class MementoMoriFuncs
                     return true;
                 }).ToList();
                 foreach (var info in GameConfig.DungeonBattleRelicSort)
+                {
                     if (upgradableRelics.Contains(info.Id))
                     {
                         relicId = info.Id;
                         try
                         {
                             var rewardBattleReceiveRelicResponse = await GetResponse<RewardBattleReinforceRelicRequest, RewardBattleReinforceRelicResponse>(
-                                new RewardBattleReinforceRelicRequest()
+                                new RewardBattleReinforceRelicRequest
                                 {
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
                                     DungeonGridGuid = currentGrid.Grid.DungeonGridGuid,
@@ -560,18 +555,11 @@ public partial class MementoMoriFuncs
                         }
                         catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.DungeonBattleAlreadyHaveRelic)
                         {
-                            log($"{Masters.TextResourceTable.GetErrorCodeMessage(e.ErrorCode)}, {ResourceStrings.CaveErrorRelicExist}");
+                            log($"{TextResourceTable.GetErrorCodeMessage(e.ErrorCode)}, {ResourceStrings.CaveErrorRelicExist}");
                         }
                     }
+                }
             }
-        }
-    }
-
-    private bool IsDungeonBattleHardModeAvailable
-    {
-        get
-        {
-            return UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId >= Masters.OpenContentTable.GetByOpenCommandType(OpenCommandType.DungeonBattleHardMode).OpenContentValue;
         }
     }
 
@@ -582,7 +570,7 @@ public partial class MementoMoriFuncs
             try
             {
                 await AutoDungeonBattle(log, token);
-                log($"{Masters.TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")}{ResourceStrings.Finished}");
+                log($"{TextResourceTable.Get("[CommonHeaderDungeonBattleLabel]")}{ResourceStrings.Finished}");
             }
             catch (Exception e)
             {

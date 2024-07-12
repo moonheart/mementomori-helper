@@ -1,11 +1,8 @@
-﻿using MementoMori.Common.Localization;
-using MementoMori.Exceptions;
-using MementoMori.Ortega.Share;
+﻿using MementoMori.Exceptions;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Equipment;
-using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master.Data;
 
 namespace MementoMori;
@@ -13,7 +10,7 @@ namespace MementoMori;
 public partial class MementoMoriFuncs
 {
     /// <summary>
-    /// 魔装继承
+    ///     魔装继承
     /// </summary>
     public async Task AutoEquipmentMatchlessInheritance()
     {
@@ -27,7 +24,7 @@ public partial class MementoMoriFuncs
                 // 找到所有 等级为S、魔装、未装备 的装备
                 var equipments = usersyncData.UserSyncData.UserEquipmentDtoInfos.Select(d => new
                 {
-                    Equipment = d, EquipmentMB = Masters.EquipmentTable.GetById(d.EquipmentId)
+                    Equipment = d, EquipmentMB = EquipmentTable.GetById(d.EquipmentId)
                 });
 
                 var sEquipments = equipments.Where(d =>
@@ -38,11 +35,11 @@ public partial class MementoMoriFuncs
 
                 if (sEquipments.Count == 0)
                 {
-                    log(Masters.TextResourceTable.Get("[ItemBoxButtonBulkCasting]"));
+                    log(TextResourceTable.Get("[ItemBoxButtonBulkCasting]"));
 
                     try
                     {
-                        var castManyResponse = await GetResponse<CastManyRequest, CastManyResponse>(new CastManyRequest()
+                        var castManyResponse = await GetResponse<CastManyRequest, CastManyResponse>(new CastManyRequest
                         {
                             RarityFlags = EquipmentRarityFlags.S | EquipmentRarityFlags.A | EquipmentRarityFlags.B |
                                           EquipmentRarityFlags.C
@@ -99,7 +96,7 @@ public partial class MementoMoriFuncs
         var equipItems = usersyncData.UserSyncData.UserItemDtoInfo.Where(d =>
         {
             if (d.ItemType != ItemType.Equipment) return false;
-            var equipmentMb = Masters.EquipmentTable.GetById(d.ItemId);
+            var equipmentMb = EquipmentTable.GetById(d.ItemId);
             if (equipmentMb.EquipmentLv == 1) return false;
             if (equipmentMb.SlotType != slotType) return false;
             if ((equipmentMb.RarityFlags & EquipmentRarityFlags.D) == 0) return false;
@@ -112,12 +109,12 @@ public partial class MementoMoriFuncs
             for (var i = 0; i < equipItem.ItemCount; i++)
             {
                 if (needMoreCount <= 0) break;
-                var equipmentMb = Masters.EquipmentTable.GetById(equipItem.ItemId);
+                var equipmentMb = EquipmentTable.GetById(equipItem.ItemId);
                 log($"{ResourceStrings.FindEquipmentCharacter} {equipmentMb.Memo}");
                 // 找到可以装备的一个角色
                 var userCharacterDtoInfo = usersyncData.UserSyncData.UserCharacterDtoInfos.Where(d =>
                 {
-                    var characterMb = Masters.CharacterTable.GetById(d.CharacterId);
+                    var characterMb = CharacterTable.GetById(d.CharacterId);
                     if ((characterMb.JobFlags & equipmentMb.EquippedJobFlags) == 0) return false; // 装备职业
 
                     if (d.Level >= equipmentMb.EquipmentLv) return true; // 装备等级
@@ -135,7 +132,7 @@ public partial class MementoMoriFuncs
                 // 获取角色某个位置的装备, 可能没有装备
                 var replacedEquip = usersyncData.UserSyncData.UserEquipmentDtoInfos.Where(d =>
                 {
-                    var byId = Masters.EquipmentTable.GetById(d.EquipmentId);
+                    var byId = EquipmentTable.GetById(d.EquipmentId);
                     return d.CharacterGuid == userCharacterDtoInfo.Guid &&
                            byId.SlotType == equipmentMb.SlotType;
                 }).FirstOrDefault();
@@ -143,10 +140,10 @@ public partial class MementoMoriFuncs
                 // 替换装备
                 var changeEquipmentResponse =
                     await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(
-                        new ChangeEquipmentRequest()
+                        new ChangeEquipmentRequest
                         {
                             UserCharacterGuid = userCharacterDtoInfo.Guid,
-                            EquipmentChangeInfos = new List<EquipmentChangeInfo>()
+                            EquipmentChangeInfos = new List<EquipmentChangeInfo>
                             {
                                 new()
                                 {
@@ -160,9 +157,9 @@ public partial class MementoMoriFuncs
                 // 恢复装备
                 if (replacedEquip == null)
                 {
-                    await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest()
+                    await GetResponse<RemoveEquipmentRequest, RemoveEquipmentResponse>(new RemoveEquipmentRequest
                     {
-                        EquipmentSlotTypes = new List<EquipmentSlotType>() {equipmentMb.SlotType},
+                        EquipmentSlotTypes = new List<EquipmentSlotType> {equipmentMb.SlotType},
                         UserCharacterGuid = userCharacterDtoInfo.Guid
                     });
                 }
@@ -170,10 +167,10 @@ public partial class MementoMoriFuncs
                 {
                     var changeEquipmentResponse1 =
                         await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(
-                            new ChangeEquipmentRequest()
+                            new ChangeEquipmentRequest
                             {
                                 UserCharacterGuid = userCharacterDtoInfo.Guid,
-                                EquipmentChangeInfos = new List<EquipmentChangeInfo>()
+                                EquipmentChangeInfos = new List<EquipmentChangeInfo>
                                 {
                                     new()
                                     {
@@ -193,7 +190,7 @@ public partial class MementoMoriFuncs
     }
 
     /// <summary>
-    /// 圣装继承
+    ///     圣装继承
     /// </summary>
     public async Task AutoEquipmentLegendInheritance()
     {
@@ -205,7 +202,7 @@ public partial class MementoMoriFuncs
                 // 找到所有 等级为S、魔装、未装备 的装备
                 var equipments = usersyncData.UserSyncData.UserEquipmentDtoInfos.Select(d => new
                 {
-                    Equipment = d, EquipmentMB = Masters.EquipmentTable.GetById(d.EquipmentId)
+                    Equipment = d, EquipmentMB = EquipmentTable.GetById(d.EquipmentId)
                 });
                 var sEquipments = equipments.Where(d =>
                         d.Equipment.CharacterGuid == "" && // 未装备
@@ -257,7 +254,7 @@ public partial class MementoMoriFuncs
 
         var userEquipmentDtoInfo = usersyncData.UserSyncData.UserEquipmentDtoInfos.Where(d =>
         {
-            var equipmentMb = Masters.EquipmentTable.GetById(d.EquipmentId);
+            var equipmentMb = EquipmentTable.GetById(d.EquipmentId);
             if (d.LegendSacredTreasureLv == 0 // 未被继承的装备
                 && d.MatchlessSacredTreasureLv == 0
                 && equipmentMb.EquipmentLv != 1
@@ -272,17 +269,15 @@ public partial class MementoMoriFuncs
         if (userEquipmentDtoInfo != null)
         {
             var inheritanceEquipmentResponse = await GetResponse<InheritanceEquipmentRequest, InheritanceEquipmentResponse>(
-                new InheritanceEquipmentRequest()
+                new InheritanceEquipmentRequest
                 {
                     InheritanceEquipmentGuid = userEquipmentDtoInfo.Guid,
                     SourceEquipmentGuid = info.Guid
                 });
-            log($"{Masters.TextResourceTable.Get("[EquipmentInheritanceButton]")}{ResourceStrings.Finished} {mb.Memo}=>{Masters.EquipmentTable.GetById(userEquipmentDtoInfo.EquipmentId).Memo}");
+            log($"{TextResourceTable.Get("[EquipmentInheritanceButton]")}{ResourceStrings.Finished} {mb.Memo}=>{EquipmentTable.GetById(userEquipmentDtoInfo.EquipmentId).Memo}");
         }
         else
-        {
             log(ResourceStrings.NoInheritableDRarityEquip);
-        }
 
         return usersyncData;
     }

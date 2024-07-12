@@ -1,10 +1,6 @@
-﻿using MementoMori.Common.Localization;
-using MementoMori.Extensions;
-using MementoMori.Ortega.Share;
-using MementoMori.Ortega.Share.Data.ApiInterface.Character;
+﻿using MementoMori.Ortega.Share.Data.ApiInterface.Character;
 using MementoMori.Ortega.Share.Data.Character;
 using MementoMori.Ortega.Share.Data.DtoInfo;
-using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Extensions;
 
 namespace MementoMori;
@@ -17,19 +13,21 @@ public partial class MementoMoriFuncs
         {
             foreach (var userCharacterBook in UserSyncData.UserCharacterBookDtoInfos)
             {
-                var stories = Masters.CharacterStoryTable.GetListByCharacterId(userCharacterBook.CharacterId);
+                var stories = CharacterStoryTable.GetListByCharacterId(userCharacterBook.CharacterId);
                 // var episodeIds = new List<long>();
                 foreach (var storyMB in stories)
+                {
                     if (storyMB.Level <= userCharacterBook.MaxCharacterLevel && storyMB.EpisodeId > userCharacterBook.MaxEpisodeId)
                     {
                         // episodeIds.Add(storyMB.Id);
-                        var resp = await GetResponse<GetCharacterStoryRewardRequest, GetCharacterStoryRewardResponse>(new GetCharacterStoryRewardRequest()
+                        var resp = await GetResponse<GetCharacterStoryRewardRequest, GetCharacterStoryRewardResponse>(new GetCharacterStoryRewardRequest
                         {
                             IsSkip = true,
-                            CharacterStoryIdList = new List<long>() {storyMB.Id}
+                            CharacterStoryIdList = new List<long> {storyMB.Id}
                         });
                         resp.RewardItemList.PrintUserItems(log);
                     }
+                }
 
                 // if (episodeIds.Count > 0)
                 // {
@@ -50,7 +48,7 @@ public partial class MementoMoriFuncs
         {
             await RankUp(CharacterRarityFlags.R, 3, log);
             await RankUp(CharacterRarityFlags.SR, 2, log);
-            log($"{Masters.TextResourceTable.Get("[CharacterMenuTabCharacterRankUp]")} {ResourceStrings.Finished}");
+            log($"{TextResourceTable.Get("[CharacterMenuTabCharacterRankUp]")} {ResourceStrings.Finished}");
         });
 
         async Task RankUp(CharacterRarityFlags rarityFlags, int count, Action<string> log)
@@ -74,18 +72,18 @@ public partial class MementoMoriFuncs
                     needCound--;
                 }
 
-                var response = await GetResponse<RankUpRequest, RankUpResponse>(new RankUpRequest()
+                var response = await GetResponse<RankUpRequest, RankUpResponse>(new RankUpRequest
                 {
-                    RankUpList = new List<CharacterRankUpMaterialInfo>()
+                    RankUpList = new List<CharacterRankUpMaterialInfo>
                     {
                         new() {TargetGuid = main.Guid, MaterialGuid1 = materials[0].Guid, MaterialGuid2 = materials.Count == 1 ? null : materials[1].Guid}
                     }
                 });
-                Masters.CharacterTable.GetCharacterName(main.CharacterId, out var name1, out var name2);
+                CharacterTable.GetCharacterName(main.CharacterId, out var name1, out var name2);
                 if (!name2.IsNullOrEmpty()) name1 = $"[{name2}] {name1}";
 
                 log(
-                    $"{Masters.TextResourceTable.Get("[ItemBoxButtonUse]")} {Masters.TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")} {name1} X {count}, {Masters.TextResourceTable.Get(main.RarityFlags)}");
+                    $"{TextResourceTable.Get("[ItemBoxButtonUse]")} {TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")} {name1} X {count}, {TextResourceTable.Get(main.RarityFlags)}");
             }
         }
     }

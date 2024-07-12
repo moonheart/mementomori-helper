@@ -1,6 +1,4 @@
-﻿using MementoMori.Ortega.Share.Enums;
-
-namespace MementoMori;
+﻿namespace MementoMori;
 
 public class CharacterFilter
 {

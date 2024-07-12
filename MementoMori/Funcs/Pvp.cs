@@ -1,13 +1,10 @@
 ﻿using MementoMori.Exceptions;
-using MementoMori.Extensions;
 using MementoMori.Ortega.Common.Enums;
 using MementoMori.Ortega.Common.Utils;
-using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
 using MementoMori.Ortega.Share.Data.ApiInterface.Character;
 using MementoMori.Ortega.Share.Data.Battle;
 using MementoMori.Ortega.Share.Data.Character;
-using MementoMori.Ortega.Share.Enums;
 
 namespace MementoMori;
 
@@ -17,7 +14,7 @@ public partial class MementoMoriFuncs
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log($"{Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")}:\n");
+            log($"{TextResourceTable.Get("[CommonHeaderLocalPvpLabel]")}:\n");
             var count = 100;
             var characterDetailInfoDict = new Dictionary<long, List<(string, CharacterDetailInfo)>>();
             while (!token.IsCancellationRequested && count-- > 0)
@@ -28,7 +25,7 @@ public partial class MementoMoriFuncs
 
                     if (UserSyncData.UserBattlePvpDtoInfo.PvpTodayCount >= OrtegaConst.BattlePvp.MaxPvpBattleFreeCount)
                     {
-                        log(Masters.TextResourceTable.GetErrorCodeMessage(ErrorCode.BattlePvpOverLegendLeagueChallengeMaxCount));
+                        log(TextResourceTable.GetErrorCodeMessage(ErrorCode.BattlePvpOverLegendLeagueChallengeMaxCount));
                         return;
                     }
 
@@ -46,18 +43,12 @@ public partial class MementoMoriFuncs
                     }
 
                     var targetPlayerId = await SelectLeagueTarget(log, PlayerOption.BattleLeague, list);
-                    if (targetPlayerId == 0)
-                    {
-                        continue;
-                    }
+                    if (targetPlayerId == 0) continue;
 
                     var playerInfo = pvpInfoResponse.MatchingRivalList.FirstOrDefault(d => d.PlayerInfo.PlayerId == targetPlayerId);
-                    if (playerInfo == null)
-                    {
-                        continue;
-                    }
+                    if (playerInfo == null) continue;
 
-                    var pvpStartResponse = await GetResponse<PvpStartRequest, PvpStartResponse>(new PvpStartRequest()
+                    var pvpStartResponse = await GetResponse<PvpStartRequest, PvpStartResponse>(new PvpStartRequest
                     {
                         RivalPlayerRank = playerInfo.CurrentRank,
                         RivalPlayerId = playerInfo.PlayerInfo.PlayerId
@@ -66,8 +57,8 @@ public partial class MementoMoriFuncs
                     await _battleLogManager.SaveBattleLog(pvpStartResponse.BattleResult, "battleleague", pvpStartResponse.RivalPlayerInfo.PlayerName, autoDeletePreserveCount: 100);
 
                     log(pvpStartResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker()
-                        ? $"{Masters.TextResourceTable.Get("[CommonWinLabel]")}: {pvpStartResponse.RivalPlayerInfo.PlayerName}"
-                        : $"{Masters.TextResourceTable.Get("[CommonLoseLabel]")}: {pvpStartResponse.RivalPlayerInfo.PlayerName}");
+                        ? $"{TextResourceTable.Get("[CommonWinLabel]")}: {pvpStartResponse.RivalPlayerInfo.PlayerName}"
+                        : $"{TextResourceTable.Get("[CommonLoseLabel]")}: {pvpStartResponse.RivalPlayerInfo.PlayerName}");
 
                     pvpStartResponse.BattleRewardResult.FixedItemList.PrintUserItems(log);
                     pvpStartResponse.BattleRewardResult.DropItemList.PrintUserItems(log);
@@ -95,10 +86,7 @@ public partial class MementoMoriFuncs
 
         foreach (var characterFilter in pvpOption.CharacterFilters)
         {
-            if (playerInfoList.Count == 0)
-            {
-                break;
-            }
+            if (playerInfoList.Count == 0) break;
 
             switch (characterFilter.FilterStrategy)
             {
@@ -127,21 +115,18 @@ public partial class MementoMoriFuncs
             }
         }
 
-        if (localplayerInfoList.Count == 0)
-        {
-            return 0;
-        }
+        if (localplayerInfoList.Count == 0) return 0;
 
         switch (pvpOption.SelectStrategy)
         {
             case TargetSelectStrategy.Random:
-                return Enumerable.MinBy(localplayerInfoList, d => Guid.NewGuid()).playerId;
+                return localplayerInfoList.MinBy(d => Guid.NewGuid()).playerId;
             case TargetSelectStrategy.LowestBattlePower:
-                return Enumerable.MinBy(localplayerInfoList, d => d.defenseBattlePower).playerId;
+                return localplayerInfoList.MinBy(d => d.defenseBattlePower).playerId;
             case TargetSelectStrategy.HighestBattlePower:
-                return Enumerable.MaxBy(localplayerInfoList, d => d.defenseBattlePower).playerId;
+                return localplayerInfoList.MaxBy(d => d.defenseBattlePower).playerId;
             default:
-                return Enumerable.MinBy(localplayerInfoList, d => Guid.NewGuid()).playerId;
+                return localplayerInfoList.MinBy(d => Guid.NewGuid()).playerId;
         }
     }
 
@@ -162,12 +147,12 @@ public partial class MementoMoriFuncs
                             var guids = allGuids.Where(d => !string.IsNullOrEmpty(d)).ToList();
                             if (guids.Count == 0)
                             {
-                                details = new List<(string, CharacterDetailInfo)>() {(null, null), (null, null), (null, null), (null, null), (null, null)};
+                                details = new List<(string, CharacterDetailInfo)> {(null, null), (null, null), (null, null), (null, null), (null, null)};
                                 characterDetailInfoDict.Add(playerId, details);
                             }
                             else
                             {
-                                var details1 = (await GetResponse<GetDetailsInfoRequest, GetDetailsInfoResponse>(new GetDetailsInfoRequest()
+                                var details1 = (await GetResponse<GetDetailsInfoRequest, GetDetailsInfoResponse>(new GetDetailsInfoRequest
                                 {
                                     DeckType = deckUseContentType, TargetPlayerId = playerId,
                                     TargetUserCharacterGuids = guids.ToList()
@@ -178,13 +163,9 @@ public partial class MementoMoriFuncs
                                 foreach (var guid1 in allGuids)
                                 {
                                     if (string.IsNullOrEmpty(guid1))
-                                    {
                                         details.Add((null, null));
-                                    }
                                     else
-                                    {
                                         details.Add((guid1, details1[index++]));
-                                    }
                                 }
 
                                 characterDetailInfoDict.Add(playerId, details);
@@ -203,7 +184,7 @@ public partial class MementoMoriFuncs
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log($"{Masters.TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]")}");
+            log($"{TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]")}");
             var count = 100;
             var characterDetailInfoDict = new Dictionary<long, List<(string, CharacterDetailInfo)>>();
             while (!token.IsCancellationRequested && count-- > 0)
@@ -214,13 +195,13 @@ public partial class MementoMoriFuncs
 
                     if (!leagueInfoResponse.IsInTimeCanChallenge)
                     {
-                        log(Masters.TextResourceTable.GetErrorCodeMessage(ClientErrorCode.PvpGlobalIsNotOpen));
+                        log(TextResourceTable.GetErrorCodeMessage(ClientErrorCode.PvpGlobalIsNotOpen));
                         return;
                     }
 
                     if (UserSyncData.UserBattleLegendLeagueDtoInfo != null && UserSyncData.UserBattleLegendLeagueDtoInfo.LegendLeagueTodayCount >= OrtegaConst.BattlePvp.MaxLegendLeagueBattleFreeCount)
                     {
-                        log(Masters.TextResourceTable.GetErrorCodeMessage(ErrorCode.BattlePvpOverLegendLeagueChallengeMaxCount));
+                        log(TextResourceTable.GetErrorCodeMessage(ErrorCode.BattlePvpOverLegendLeagueChallengeMaxCount));
                         return;
                     }
 
@@ -237,12 +218,9 @@ public partial class MementoMoriFuncs
                     }
 
                     var targetPlayerId = await SelectLeagueTarget(log, PlayerOption.LegendLeague, list);
-                    if (targetPlayerId == 0)
-                    {
-                        continue;
-                    }
+                    if (targetPlayerId == 0) continue;
 
-                    var leagueStartResponse = await GetResponse<LegendLeagueStartRequest, LegendLeagueStartResponse>(new LegendLeagueStartRequest()
+                    var leagueStartResponse = await GetResponse<LegendLeagueStartRequest, LegendLeagueStartResponse>(new LegendLeagueStartRequest
                     {
                         RivalPlayerId = targetPlayerId
                     });
@@ -250,10 +228,10 @@ public partial class MementoMoriFuncs
                     await _battleLogManager.SaveBattleLog(leagueStartResponse.BattleResult, "legendleague", leagueStartResponse.RivalPlayerInfo.PlayerName);
 
                     log(leagueStartResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker()
-                        ? $"{Masters.TextResourceTable.Get("[CommonWinLabel]")}: {leagueStartResponse.RivalPlayerInfo.PlayerName}"
-                        : $"{Masters.TextResourceTable.Get("[CommonLoseLabel]")}: {leagueStartResponse.RivalPlayerInfo.PlayerName}");
+                        ? $"{TextResourceTable.Get("[CommonWinLabel]")}: {leagueStartResponse.RivalPlayerInfo.PlayerName}"
+                        : $"{TextResourceTable.Get("[CommonLoseLabel]")}: {leagueStartResponse.RivalPlayerInfo.PlayerName}");
 
-                    log(Masters.TextResourceTable.Get("[GlobalPvpChangePointFormat]", leagueStartResponse.GetPoint));
+                    log(TextResourceTable.Get("[GlobalPvpChangePointFormat]", leagueStartResponse.GetPoint));
                 }
                 catch (ApiErrorException e)
                 {

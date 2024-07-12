@@ -1,6 +1,5 @@
 ﻿using AutoCtor;
 using Injectio.Attributes;
-using MementoMori.Extensions;
 using MementoMori.Option;
 using MementoMori.Ortega.Share.Data.Battle.Result;
 
@@ -24,7 +23,10 @@ public partial class BattleLogManager
             await File.WriteAllTextAsync(path, battleResult.ToJson(true));
             // keep only 100 lose logs
             var files = Directory.GetFiles(_writableGameConfig.Value.BattleLogDir, $"{autoDeletePrefix ?? prefix}-*.json").OrderDescending();
-            foreach (var file in files.Skip(autoDeletePreserveCount)) File.Delete(file);
+            foreach (var file in files.Skip(autoDeletePreserveCount))
+            {
+                File.Delete(file);
+            }
         }
     }
 }

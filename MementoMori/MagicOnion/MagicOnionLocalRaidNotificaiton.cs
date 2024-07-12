@@ -1,10 +1,9 @@
 ﻿using MementoMori.Ortega.Network.MagicOnion.Interface;
-using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.MagicOnionShare.Response;
 
 namespace MementoMori.MagicOnion;
 
-public class MagicOnionLocalRaidNotificaiton: IMagicOnionLocalRaidNotificaiton
+public class MagicOnionLocalRaidNotificaiton : IMagicOnionLocalRaidNotificaiton
 {
     public void OnError(ErrorCode errorCode)
     {

@@ -1,12 +1,8 @@
-﻿using MementoMori.Common.Localization;
-using MementoMori.Exceptions;
-using MementoMori.Extensions;
-using MementoMori.Ortega.Share;
+﻿using MementoMori.Exceptions;
 using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
 using MementoMori.Ortega.Share.Data.ApiInterface.Friend;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.DtoInfo;
-using MementoMori.Ortega.Share.Enums;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MementoMori;
@@ -20,7 +16,7 @@ public partial class MementoMoriFuncs
             try
             {
                 var resp = await GetResponse<BulkTransferFriendPointRequest, BulkTransferFriendPointResponse>(new BulkTransferFriendPointRequest());
-                log($"{Masters.TextResourceTable.Get("[ItemName9]")} {Masters.TextResourceTable.Get("[BulkReceiveAndSend]")} {ResourceStrings.Finished}");
+                log($"{TextResourceTable.Get("[ItemName9]")} {TextResourceTable.Get("[BulkReceiveAndSend]")} {ResourceStrings.Finished}");
             }
             catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.FriendAlreadyMaxReceived)
             {
@@ -37,20 +33,20 @@ public partial class MementoMoriFuncs
             if (iconInfo != null)
             {
                 var response = await GetResponse<GetFriendCampaignInfoRequest, GetFriendCampaignInfoResponse>(new GetFriendCampaignInfoRequest());
-                var friendCampaignMb = Enumerable.MaxBy(Masters.FriendCampaignTable.GetArray(), d => d.Id);
+                var friendCampaignMb = FriendCampaignTable.GetArray().MaxBy(d => d.Id);
                 if (friendCampaignMb != null)
                 {
                     var userFriendMissionDtoInfo = response.UserFriendMissionDtoInfoList.Find(d => d.AchievementType == MissionAchievementType.UseFriendCode);
                     if (userFriendMissionDtoInfo == null)
                     {
-                        userFriendMissionDtoInfo = new UserFriendMissionDtoInfo()
+                        userFriendMissionDtoInfo = new UserFriendMissionDtoInfo
                         {
-                            MissionStatusHistory = new Dictionary<MissionStatusType, List<long>>()
+                            MissionStatusHistory = new Dictionary<MissionStatusType, List<long>>
                             {
                                 [MissionStatusType.Locked] = friendCampaignMb.FriendMissionIdList.ToList(),
                                 [MissionStatusType.Progress] = [],
                                 [MissionStatusType.NotReceived] = [],
-                                [MissionStatusType.Received] = [],
+                                [MissionStatusType.Received] = []
                             }
                         };
                     }
@@ -80,11 +76,11 @@ public partial class MementoMoriFuncs
                         funcs.NetworkManager = networkManager;
 
                         var timeserverId = _lastPlayerDataInfo.WorldId / 1000;
-                        var timeServerMb = Masters.TimeServerTable.GetById(timeserverId);
+                        var timeServerMb = TimeServerTable.GetById(timeserverId);
                         var countryCode = timeServerMb.CountryCodeList.FirstOrDefault() ?? "CN";
 
                         log("Creating new account...");
-                        var createUserResponse = await networkManager.GetResponse<CreateUserRequest, CreateUserResponse>(new CreateUserRequest()
+                        var createUserResponse = await networkManager.GetResponse<CreateUserRequest, CreateUserResponse>(new CreateUserRequest
                         {
                             AdverisementId = Guid.NewGuid().ToString("D"),
                             AppVersion = AuthOption.AppVersion,
@@ -100,7 +96,7 @@ public partial class MementoMoriFuncs
                         networkManager.UserId = createUserResponse.UserId;
 
                         var createWorldPlayerResponse = await networkManager.GetResponse<CreateWorldPlayerRequest, CreateWorldPlayerResponse>(
-                            new CreateWorldPlayerRequest()
+                            new CreateWorldPlayerRequest
                             {
                                 WorldId = createUserResponse.RecommendWorldId,
                                 Comment = "Nice to meet you!",
@@ -117,12 +113,12 @@ public partial class MementoMoriFuncs
                         }, log);
 
                         log($"Using friend code {friendCode}...");
-                        var res3 = await networkManager.GetResponse<UseFriendCodeRequest, UseFriendCodeResponse>(new UseFriendCodeRequest() {FriendCode = friendCode});
+                        var res3 = await networkManager.GetResponse<UseFriendCodeRequest, UseFriendCodeResponse>(new UseFriendCodeRequest {FriendCode = friendCode});
                     }
 
                     async Task ReceiveReward(long missionId)
                     {
-                        var res = await GetResponse<RewardFriendMissionRequest, RewardFriendMissionResponse>(new RewardFriendMissionRequest()
+                        var res = await GetResponse<RewardFriendMissionRequest, RewardFriendMissionResponse>(new RewardFriendMissionRequest
                         {
                             AchievementType = MissionAchievementType.UseFriendCode,
                             FriendMissionId = missionId,
@@ -142,40 +138,34 @@ public partial class MementoMoriFuncs
             var manageOption = PlayerOption.FriendManage;
             if (manageOption.AutoRemoveInactiveFriend)
             {
-                var info = await GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest() {FriendInfoType = FriendInfoType.Friend});
+                var info = await GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest {FriendInfoType = FriendInfoType.Friend});
                 foreach (var playerInfo in info.PlayerInfoList)
                 {
-                    if (manageOption.AutoRemoveWhitelist.Contains(playerInfo.PlayerId))
-                    {
-                        continue;
-                    }
+                    if (manageOption.AutoRemoveWhitelist.Contains(playerInfo.PlayerId)) continue;
 
-                    if (playerInfo.LastLoginTime < TimeSpan.FromDays(7))
-                    {
-                        continue;
-                    }
+                    if (playerInfo.LastLoginTime < TimeSpan.FromDays(7)) continue;
 
-                    var removeFriendResponse = await GetResponse<RemoveFriendRequest, RemoveFriendResponse>(new RemoveFriendRequest() {TargetPlayerId = playerInfo.PlayerId});
+                    var removeFriendResponse = await GetResponse<RemoveFriendRequest, RemoveFriendResponse>(new RemoveFriendRequest {TargetPlayerId = playerInfo.PlayerId});
                     log($"{ResourceStrings.Remove_friends_inactive_for_7_days}: {playerInfo.PlayerName}");
                 }
             }
 
             if (manageOption.AutoAcceptFriendRequest)
             {
-                var info = await GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest() {FriendInfoType = FriendInfoType.ApprovalPending});
+                var info = await GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest {FriendInfoType = FriendInfoType.ApprovalPending});
                 if (info.FriendNum < 40 && info.PlayerInfoList.Count > 0)
                 {
-                    var response = await GetResponse<ReplyAllFriendRequest, ReplyAllFriendResponse>(new ReplyAllFriendRequest() {IsApproval = true});
+                    var response = await GetResponse<ReplyAllFriendRequest, ReplyAllFriendResponse>(new ReplyAllFriendRequest {IsApproval = true});
                     log($"{ResourceStrings.Auto_accept_friend_requests}: {response.ProcessedNum}");
                 }
             }
 
             if (manageOption.AutoSendFriendRequest)
             {
-                var info = await GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest() {FriendInfoType = FriendInfoType.Recommend});
+                var info = await GetResponse<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(new GetPlayerInfoListRequest {FriendInfoType = FriendInfoType.Recommend});
                 if (info.FriendNum < 40 && info.PlayerInfoList.Count > 0)
                 {
-                    var response = await GetResponse<BulkApplyFriendsRequest, BulkApplyFriendsResponse>(new BulkApplyFriendsRequest()
+                    var response = await GetResponse<BulkApplyFriendsRequest, BulkApplyFriendsResponse>(new BulkApplyFriendsRequest
                         {TargetPlayerIdList = info.PlayerInfoList.Select(d => d.PlayerId).ToList()});
                     foreach (var l in response.AppliedPlayerIdList)
                     {

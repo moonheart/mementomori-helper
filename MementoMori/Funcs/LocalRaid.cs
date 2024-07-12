@@ -1,11 +1,8 @@
-﻿using MementoMori.Extensions;
-using MementoMori.MagicOnion;
+﻿using MementoMori.MagicOnion;
 using MementoMori.Ortega.Common.Enums;
 using MementoMori.Ortega.Network.MagicOnion.Client;
-using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.ApiInterface.LocalRaid;
 using MementoMori.Ortega.Share.Data.Item;
-using MementoMori.Ortega.Share.Enums;
 
 namespace MementoMori;
 
@@ -15,7 +12,7 @@ public partial class MementoMoriFuncs
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            List<GameConfig.WeightedItem> rewardItems = PlayerOption.LocalRaid.RewardItems;
+            var rewardItems = PlayerOption.LocalRaid.RewardItems;
             if (rewardItems.Count == 0)
             {
                 rewardItems = GameConfig.LocalRaid.RewardItems;
@@ -27,7 +24,7 @@ public partial class MementoMoriFuncs
                         new GameConfig.WeightedItem(ItemType.CharacterTrainingMaterial, 2, 3), // 潜能宝珠
                         new GameConfig.WeightedItem(ItemType.EquipmentReinforcementItem, 2, 2.5), // 强化秘药
                         new GameConfig.WeightedItem(ItemType.CharacterTrainingMaterial, 1, 2), // 经验珠
-                        new GameConfig.WeightedItem(ItemType.EquipmentReinforcementItem, 1, 1), // 强化水
+                        new GameConfig.WeightedItem(ItemType.EquipmentReinforcementItem, 1, 1) // 强化水
                     });
                 }
             }
@@ -52,10 +49,7 @@ public partial class MementoMoriFuncs
                     await Task.Delay(1000);
                 }
 
-                if (client.GetState() == HubClientState.Ready)
-                {
-                    break;
-                }
+                if (client.GetState() == HubClientState.Ready) break;
 
                 await client.DisposeAsync();
                 if (maxRetry-- < 0)
@@ -65,7 +59,7 @@ public partial class MementoMoriFuncs
                 }
             }
 
-            CancellationTokenSource keepaliveCts = new CancellationTokenSource();
+            var keepaliveCts = new CancellationTokenSource();
             ;
             _ = Task.Run(async () =>
             {
@@ -87,22 +81,19 @@ public partial class MementoMoriFuncs
 
                     if (createRoom)
                     {
-                        log(Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonCreateRoom]"));
+                        log(TextResourceTable.Get("[LocalRaidRoomSearchButtonCreateRoom]"));
                         client.SendLocalRaidOpenRoom(LocalRaidRoomConditionsType.None, questId, 0, 0);
                     }
                     else
                     {
-                        log(Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
+                        log(TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
                         client.SendLocalRaidJoinRandomRoom(questId);
                     }
 
                     while (!token.IsCancellationRequested)
                     {
                         await Task.Delay(1000);
-                        if (localRaidReceiver.IsNoRemainingChallenges || localRaidReceiver.IsMaxTimeExceeded)
-                        {
-                            return;
-                        }
+                        if (localRaidReceiver.IsNoRemainingChallenges || localRaidReceiver.IsMaxTimeExceeded) return;
 
                         if (localRaidReceiver.IsBattleStarted)
                         {
@@ -111,7 +102,7 @@ public partial class MementoMoriFuncs
                             {
                                 var battleResultResponse = await GetResponse<GetLocalRaidBattleResultRequest, GetLocalRaidBattleResultResponse>(new GetLocalRaidBattleResultRequest());
                                 var isWinAttacker = battleResultResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
-                                log(isWinAttacker ? Masters.TextResourceTable.Get("[LocalRaidBattleWinMessage]") : Masters.TextResourceTable.Get("[LocalRaidBattleLoseMessage]"));
+                                log(isWinAttacker ? TextResourceTable.Get("[LocalRaidBattleWinMessage]") : TextResourceTable.Get("[LocalRaidBattleLoseMessage]"));
                                 battleResultResponse.BattleRewardResult?.FixedItemList?.PrintUserItems(log);
                                 battleResultResponse.BattleRewardResult?.DropItemList?.PrintUserItems(log);
                             }
@@ -136,13 +127,10 @@ public partial class MementoMoriFuncs
             {
                 if (response.OpenEventLocalRaidQuestIds.Count > 0)
                 {
-                    var localRaidQuestMbs = response.OpenEventLocalRaidQuestIds.Select(Masters.LocalRaidQuestTable.GetById).ToList();
+                    var localRaidQuestMbs = response.OpenEventLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
                     var localRaidQuestMb = localRaidQuestMbs.OrderByDescending(d =>
                     {
-                        if (response.ClearCountDict.TryGetValue(d.Id, out var c) && c > 0)
-                        {
-                            return d.FixedBattleRewards[0].ItemCount;
-                        }
+                        if (response.ClearCountDict.TryGetValue(d.Id, out var c) && c > 0) return d.FixedBattleRewards[0].ItemCount;
 
                         return d.FixedBattleRewards[0].ItemCount + d.FirstBattleRewards[0].ItemCount;
                     }).First();
@@ -150,11 +138,8 @@ public partial class MementoMoriFuncs
                 }
                 else
                 {
-                    var localRaidQuestMbs = response.OpenLocalRaidQuestIds.Select(Masters.LocalRaidQuestTable.GetById).ToList();
-                    if (rewardItems.Count == 0)
-                    {
-                        return localRaidQuestMbs.OrderByDescending(d => d.Level).First().Id;
-                    }
+                    var localRaidQuestMbs = response.OpenLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
+                    if (rewardItems.Count == 0) return localRaidQuestMbs.OrderByDescending(d => d.Level).First().Id;
 
                     return localRaidQuestMbs.Select(d =>
                     {
@@ -165,19 +150,13 @@ public partial class MementoMoriFuncs
                         {
                             foreach (var reward in d.FixedBattleRewards)
                             {
-                                if (reward.IsEqual(rewardItem.ItemType, rewardItem.ItemId))
-                                {
-                                    count += reward.ItemCount / GetMaxItemCount(rewardItem) * rewardItem.Weight;
-                                }
+                                if (reward.IsEqual(rewardItem.ItemType, rewardItem.ItemId)) count += reward.ItemCount / GetMaxItemCount(rewardItem) * rewardItem.Weight;
                             }
 
                             if (!isFirst) continue;
                             foreach (var reward in d.FirstBattleRewards)
                             {
-                                if (reward.IsEqual(rewardItem.ItemType, rewardItem.ItemId))
-                                {
-                                    count += reward.ItemCount / GetMaxItemCount(rewardItem) * rewardItem.Weight;
-                                }
+                                if (reward.IsEqual(rewardItem.ItemType, rewardItem.ItemId)) count += reward.ItemCount / GetMaxItemCount(rewardItem) * rewardItem.Weight;
                             }
                         }
 

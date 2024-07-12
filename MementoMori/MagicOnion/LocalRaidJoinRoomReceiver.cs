@@ -1,27 +1,19 @@
-﻿using System.Collections.Concurrent;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using MementoMori.Ortega.Common.Enums;
 using MementoMori.Ortega.Network.MagicOnion.Client;
 using MementoMori.Ortega.Network.MagicOnion.Interface;
-using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.LocalRaid;
 using MementoMori.Ortega.Share.MagicOnionShare.Response;
-using MementoMori.Ortega.Share.Master.Table;
 
 namespace MementoMori.MagicOnion;
 
 public abstract class LocalRaidBaseReceiver : IMagicOnionLocalRaidReceiver, IMagicOnionErrorReceiver
 {
     protected readonly OrtegaMagicOnionClient _ortegaMagicOnionClient;
-    protected Action<string> _log;
     protected readonly CancellationToken CancellationToken;
+    protected Action<string> _log;
     protected Stopwatch _startSw;
-    public long QuestId { get; set; }
-    public bool IsNoRemainingChallenges { get; protected set; }
-    public bool IsMaxTimeExceeded { get; protected set; }
-
-    public bool IsBattleStarted { get; set; }
 
     public LocalRaidBaseReceiver(OrtegaMagicOnionClient ortegaMagicOnionClient, Action<string> log, CancellationToken cancellationToken)
     {
@@ -29,6 +21,17 @@ public abstract class LocalRaidBaseReceiver : IMagicOnionLocalRaidReceiver, IMag
         _log = log;
         CancellationToken = cancellationToken;
         _startSw = Stopwatch.StartNew();
+    }
+
+    public long QuestId { get; set; }
+    public bool IsNoRemainingChallenges { get; protected set; }
+    public bool IsMaxTimeExceeded { get; protected set; }
+
+    public bool IsBattleStarted { get; set; }
+
+    public virtual void OnError(ErrorCode errorCode)
+    {
+        _log($"OnError: {TextResourceTable.GetErrorCodeMessage(errorCode)}");
     }
 
     public virtual void OnGetRoomList(OnGetRoomListResponse response)
@@ -68,7 +71,7 @@ public abstract class LocalRaidBaseReceiver : IMagicOnionLocalRaidReceiver, IMag
 
     public virtual void OnStartBattle()
     {
-        _log(Masters.TextResourceTable.Get("[LocalRaidRoomManagementBattleStartMessage]"));
+        _log(TextResourceTable.Get("[LocalRaidRoomManagementBattleStartMessage]"));
         IsBattleStarted = true;
     }
 
@@ -81,11 +84,6 @@ public abstract class LocalRaidBaseReceiver : IMagicOnionLocalRaidReceiver, IMag
     {
         _log("OnUpdatePartyCount");
     }
-
-    public virtual void OnError(ErrorCode errorCode)
-    {
-        _log($"OnError: {Masters.TextResourceTable.GetErrorCodeMessage(errorCode)}");
-    }
 }
 
 public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
@@ -97,9 +95,9 @@ public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
 
     public override async void OnDisbandRoom()
     {
-        _log(Masters.TextResourceTable.GetErrorCodeMessage(ClientErrorCode.LocalRaidDismissedRoom));
+        _log(TextResourceTable.GetErrorCodeMessage(ClientErrorCode.LocalRaidDismissedRoom));
         await Task.Delay(3000);
-        _log(Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
+        _log(TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
         try
         {
             _ortegaMagicOnionClient.SendLocalRaidJoinRandomRoom(QuestId);
@@ -113,7 +111,7 @@ public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
     public override async void OnLeaveRoom()
     {
         await Task.Delay(3000);
-        _log(Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
+        _log(TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
         try
         {
             _ortegaMagicOnionClient.SendLocalRaidJoinRandomRoom(QuestId);
@@ -126,7 +124,7 @@ public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
 
     public override async void OnRefuse()
     {
-        _log(Masters.TextResourceTable.Get("[LocalRaidRoomRefuseReceiveDialogMessage]"));
+        _log(TextResourceTable.Get("[LocalRaidRoomRefuseReceiveDialogMessage]"));
         await Task.Delay(3000);
         try
         {
@@ -146,7 +144,7 @@ public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
 
     public override async void OnError(ErrorCode errorCode)
     {
-        _log($"OnError: {Masters.TextResourceTable.GetErrorCodeMessage(errorCode)}");
+        _log($"OnError: {TextResourceTable.GetErrorCodeMessage(errorCode)}");
         try
         {
             switch (errorCode)
@@ -160,7 +158,7 @@ public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
                     }
 
                     await Task.Delay(3000);
-                    _log(Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
+                    _log(TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
                     _ortegaMagicOnionClient.SendLocalRaidJoinRandomRoom(QuestId);
                     break;
                 case ErrorCode.MagicOnionLocalRaidInviteNoRemainingChallenges:
@@ -206,10 +204,7 @@ public class LocalRaidCreateRoomReceiver : LocalRaidBaseReceiver
             {
                 while (!IsBattleStarted && !CancellationToken.IsCancellationRequested)
                 {
-                    if (partyInfo.IsReady)
-                    {
-                        _ortegaMagicOnionClient.SendLocalRaidStartBattle();
-                    }
+                    if (partyInfo.IsReady) _ortegaMagicOnionClient.SendLocalRaidStartBattle();
 
                     await Task.Delay(TimeSpan.FromSeconds(1));
                 }
@@ -225,7 +220,7 @@ public class LocalRaidCreateRoomReceiver : LocalRaidBaseReceiver
 
     public override void OnError(ErrorCode errorCode)
     {
-        _log($"OnError: {Masters.TextResourceTable.GetErrorCodeMessage(errorCode)}");
+        _log($"OnError: {TextResourceTable.GetErrorCodeMessage(errorCode)}");
         switch (errorCode)
         {
             case ErrorCode.MagicOnionLocalRaidJoinRandomRoomNotExistRoom:

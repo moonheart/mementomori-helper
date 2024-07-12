@@ -1,16 +1,90 @@
 ﻿using MementoMori.Ortega.Share.Data.Item;
-using MementoMori.Ortega.Share.Enums;
 
 namespace MementoMori;
 
 public class GameConfig
 {
+    public enum AutoUseItemType
+    {
+        Others,
+
+        /// <summary>
+        ///     一袋钻石
+        /// </summary>
+        DiamondBag,
+
+        /// <summary>
+        ///     未鉴定符石
+        /// </summary>
+        MysteryRune,
+
+        /// <summary>
+        ///     魔女的来信 R
+        /// </summary>
+        WitchLetterR,
+
+        /// <summary>
+        ///     魔女的来信 SR
+        /// </summary>
+        WitchLetterSr,
+
+        /// <summary>
+        ///     魔女的心片
+        /// </summary>
+        WitchShard,
+
+        /// <summary>
+        ///     小壶
+        /// </summary>
+        Pot,
+
+        /// <summary>
+        ///     大壶
+        /// </summary>
+        Amphora,
+
+        /// <summary>
+        ///     封印宝箱
+        /// </summary>
+        SealedChest,
+
+        /// <summary>
+        ///     魔女的来信礼盒
+        /// </summary>
+        WitchLetterGift,
+
+        /// <summary>
+        ///     命运盒
+        /// </summary>
+        ChestOfChance
+    }
+
+
+    public AutoJobModel AutoJob { get; set; } = new();
+
+    [Obsolete("Use config in PlayerOption")]
+    public GachaConfigModel GachaConfig { get; set; } = new();
+
+    public DungeonBattleRelicSortInfo[] DungeonBattleRelicSort { get; set; }
+    public int AutoRequestDelay { get; set; }
+    public bool RecordBattleLog { get; set; } = true;
+    public string BattleLogDir { get; set; } = "BattleLogs/";
+    public BountyQuestAutoModel BountyQuestAuto { get; set; } = new();
+    public DungeonBattleConfig DungeonBattle { get; set; } = new();
+    public ShopConfig Shop { get; set; } = new();
+
+    [Obsolete("Use config in PlayerOption")]
+    public LocalRaidConfig LocalRaid { get; set; } = new();
+
+    public LoginConfig Login { get; set; } = new();
+    public ItemsConfig Items { get; set; } = new();
+
     public class ShopDiscountItem : IUserItem
     {
+        public int MinDiscountPercent { get; set; }
         public long ItemCount { get; }
         public long ItemId { get; set; }
         public ItemType ItemType { get; set; }
-        public int MinDiscountPercent { get; set; }
     }
 
     public class ShopAutoBuyItem
@@ -39,10 +113,6 @@ public class GameConfig
     public class ShopConfig
     {
         public List<ShopAutoBuyItem> AutoBuyItems { get; set; } = new();
-
-        public ShopConfig()
-        {
-        }
     }
 
     public class AutoJobModel
@@ -89,10 +159,11 @@ public class GameConfig
             Weight = weight;
         }
 
+        public double Weight { get; set; }
+
         public long ItemCount { get; set; }
         public long ItemId { get; set; }
         public ItemType ItemType { get; set; }
-        public double Weight { get; set; }
     }
 
     public class LocalRaidConfig
@@ -120,7 +191,7 @@ public class GameConfig
 
         public bool PreferTreasureChest { get; set; }
         public int MaxUseRecoveryItem { get; set; }
-        
+
         public bool AutoRemoveEquipment { get; set; }
     }
 
@@ -135,79 +206,4 @@ public class GameConfig
     {
         public List<AutoUseItemType> AutoUseItemTypes { get; set; } = new();
     }
-
-    public enum AutoUseItemType
-    {
-        Others,
-
-        /// <summary>
-        /// 一袋钻石
-        /// </summary>
-        DiamondBag,
-
-        /// <summary>
-        /// 未鉴定符石
-        /// </summary>
-        MysteryRune,
-
-        /// <summary>
-        /// 魔女的来信 R
-        /// </summary>
-        WitchLetterR,
-
-        /// <summary>
-        /// 魔女的来信 SR
-        /// </summary>
-        WitchLetterSr,
-
-        /// <summary>
-        /// 魔女的心片
-        /// </summary>
-        WitchShard,
-
-        /// <summary>
-        /// 小壶
-        /// </summary>
-        Pot,
-
-        /// <summary>
-        /// 大壶
-        /// </summary>
-        Amphora,
-
-        /// <summary>
-        /// 封印宝箱
-        /// </summary>
-        SealedChest,
-
-        /// <summary>
-        /// 魔女的来信礼盒
-        /// </summary>
-        WitchLetterGift,
-
-        /// <summary>
-        /// 命运盒
-        /// </summary>
-        ChestOfChance
-    }
-
-
-    public AutoJobModel AutoJob { get; set; } = new();
-
-    [Obsolete("Use config in PlayerOption")]
-    public GachaConfigModel GachaConfig { get; set; } = new();
-
-    public DungeonBattleRelicSortInfo[] DungeonBattleRelicSort { get; set; }
-    public int AutoRequestDelay { get; set; }
-    public bool RecordBattleLog { get; set; } = true;
-    public string BattleLogDir { get; set; } = "BattleLogs/";
-    public BountyQuestAutoModel BountyQuestAuto { get; set; } = new();
-    public DungeonBattleConfig DungeonBattle { get; set; } = new();
-    public ShopConfig Shop { get; set; } = new();
-
-    [Obsolete("Use config in PlayerOption")]
-    public LocalRaidConfig LocalRaid { get; set; } = new();
-
-    public LoginConfig Login { get; set; } = new();
-    public ItemsConfig Items { get; set; } = new();
 }

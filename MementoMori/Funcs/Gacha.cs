@@ -1,12 +1,8 @@
-﻿using MementoMori.Common.Localization;
-using MementoMori.Exceptions;
-using MementoMori.Extensions;
+﻿using MementoMori.Exceptions;
 using MementoMori.Ortega.Custom;
-using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.ApiInterface.Gacha;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Gacha;
-using MementoMori.Ortega.Share.Enums;
 
 namespace MementoMori;
 
@@ -34,13 +30,13 @@ public partial class MementoMoriFuncs
                     if (buttonInfo == null) continue;
                     if (ignoredButtonId.Contains(buttonInfo.GachaButtonId)) continue;
 
-                    var gachaCaseMb = Masters.GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
-                    var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(buttonInfo.ConsumeUserItem.ItemType, buttonInfo.ConsumeUserItem.ItemId);
-                    var name = Masters.TextResourceTable.Get(itemMb.NameKey);
+                    var gachaCaseMb = GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
+                    var itemMb = ItemTable.GetByItemTypeAndItemId(buttonInfo.ConsumeUserItem.ItemType, buttonInfo.ConsumeUserItem.ItemId);
+                    var name = TextResourceTable.Get(itemMb.NameKey);
                     log(string.Format(ResourceStrings.GachaExecInfo, gachaCaseMb.Memo, buttonInfo.LotteryCount, name, buttonInfo.ConsumeUserItem.ItemCount));
                     try
                     {
-                        var response = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = buttonInfo.GachaButtonId});
+                        var response = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest {GachaButtonId = buttonInfo.GachaButtonId});
                         response.GachaRewardItemList.PrintUserItems(log);
                         response.BonusRewardItemList.PrintUserItems(log);
                     }
@@ -78,20 +74,20 @@ public partial class MementoMoriFuncs
         {
             var targetRelicType = PlayerOption.GachaConfig.TargetRelicType;
             if (targetRelicType == GachaRelicType.None) return;
-            
+
             var listResponse = await GetResponse<GetListRequest, GetListResponse>(new GetListRequest());
             if (!listResponse.IsFreeChangeRelicGacha) return;
 
-            var gachaCaseInfo = listResponse.GachaCaseInfoList.Find(d=>d.GachaGroupType == GachaGroupType.HolyAngel);
+            var gachaCaseInfo = listResponse.GachaCaseInfoList.Find(d => d.GachaGroupType == GachaGroupType.HolyAngel);
             if (gachaCaseInfo == null) return;
 
             if (gachaCaseInfo.GachaRelicType == targetRelicType) return;
             if (gachaCaseInfo.GachaBonusDrawCount > 0) return;
 
-            await GetResponse<ChangeGachaRelicRequest, ChangeGachaRelicResponse>(new ChangeGachaRelicRequest(){GachaRelicType = targetRelicType});
-            
-            log($"{Masters.TextResourceTable.Get("[GachaRelicChangeTitle]")} {targetRelicType.GetName()} {ResourceStrings.Success}");
-        }); 
+            await GetResponse<ChangeGachaRelicRequest, ChangeGachaRelicResponse>(new ChangeGachaRelicRequest {GachaRelicType = targetRelicType});
+
+            log($"{TextResourceTable.Get("[GachaRelicChangeTitle]")} {targetRelicType.GetName()} {ResourceStrings.Success}");
+        });
     }
 
     public async Task DrawGachaRelic()
@@ -101,29 +97,26 @@ public partial class MementoMoriFuncs
             if (!PlayerOption.GachaConfig.AutoGachaRelic) return;
 
             var listResponse = await GetResponse<GetListRequest, GetListResponse>(new GetListRequest());
-            var gachaCaseInfo = listResponse.GachaCaseInfoList.Find(d=>d.GachaGroupType == GachaGroupType.HolyAngel);
+            var gachaCaseInfo = listResponse.GachaCaseInfoList.Find(d => d.GachaGroupType == GachaGroupType.HolyAngel);
             if (gachaCaseInfo == null) return;
 
             if (gachaCaseInfo.GachaBonusDrawCount >= 10) return;
 
-            var gachaCaseMb = Masters.GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
+            var gachaCaseMb = GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
             log(gachaCaseMb.GachaRelicType.GetName());
 
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 3; i++)
             {
                 var currency = UserSyncData.GetUserItemCount(ItemType.CurrencyFree, isAnyCurrency: true);
                 var gachaButtonInfo = gachaCaseInfo.GachaButtonInfoList.Find(d => d.ConsumeUserItem.IsCurrency() && d.ConsumeUserItem.ItemCount == 300);
                 if (gachaButtonInfo == null) break;
 
-                if (gachaCaseInfo.GachaBonusDrawCount >= 10 || currency < 300)
-                {
-                    break;
-                }
+                if (gachaCaseInfo.GachaBonusDrawCount >= 10 || currency < 300) break;
 
-                var drawResponse = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = gachaButtonInfo.GachaButtonId});
+                var drawResponse = await GetResponse<DrawRequest, DrawResponse>(new DrawRequest {GachaButtonId = gachaButtonInfo.GachaButtonId});
                 drawResponse.GachaRewardItemList.PrintUserItems(log);
                 drawResponse.BonusRewardItemList.PrintUserItems(log);
             }
-        }); 
+        });
     }
 }

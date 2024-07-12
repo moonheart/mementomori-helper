@@ -1,10 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using AutoCtor;
 using Injectio.Attributes;
-using MementoMori.Common.Localization;
 using MementoMori.Option;
-using MementoMori.Ortega.Share;
-using Microsoft.Extensions.Options;
 using Quartz;
 
 namespace MementoMori.Jobs;
@@ -13,9 +10,9 @@ namespace MementoMori.Jobs;
 [RegisterSingleton<TimeZoneAwareJobRegister>]
 public partial class TimeZoneAwareJobRegister
 {
-    private readonly ISchedulerFactory _schedulerFactory;
-    private readonly IWritableOptions<GameConfig> _gameConfig;
     private readonly AccountManager _accountManager;
+    private readonly IWritableOptions<GameConfig> _gameConfig;
+    private readonly ISchedulerFactory _schedulerFactory;
 
     public async Task RegisterAllJobs()
     {
@@ -43,10 +40,7 @@ public partial class TimeZoneAwareJobRegister
     public async Task RegisterJobs(long userId)
     {
         var account = _accountManager.Get(userId);
-        if (!account.Funcs.LoginOk)
-        {
-            return;
-        }
+        if (!account.Funcs.LoginOk) return;
 
         var networkManager = account.NetworkManager;
         var scheduler = await _schedulerFactory.GetScheduler();
@@ -60,16 +54,17 @@ public partial class TimeZoneAwareJobRegister
         {
             AddJob<DailyJob>(scheduler, _gameConfig.Value.AutoJob.DailyJobCron, ResourceStrings.DailyJob, userId, networkManager.TimeManager.DiffFromUtc);
             AddJob<HourlyJob>(scheduler, _gameConfig.Value.AutoJob.HourlyJobCron, ResourceStrings.RewardClaimJob, userId, networkManager.TimeManager.DiffFromUtc);
-            AddJob<PvpJob>(scheduler, NormalizeCron(_gameConfig.Value.AutoJob.PvpJobCron), Masters.TextResourceTable.Get("[CommonHeaderLocalPvpLabel]"), userId, networkManager.TimeManager.DiffFromUtc);
-            AddJob<LegendLeagueJob>(scheduler, NormalizeCron(_gameConfig.Value.AutoJob.LegendLeagueJobCron), Masters.TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]"), userId, networkManager.TimeManager.DiffFromUtc);
-            AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.Value.AutoJob.GuildRaidBossReleaseCron, Masters.TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]"), userId,
+            AddJob<PvpJob>(scheduler, NormalizeCron(_gameConfig.Value.AutoJob.PvpJobCron), TextResourceTable.Get("[CommonHeaderLocalPvpLabel]"), userId, networkManager.TimeManager.DiffFromUtc);
+            AddJob<LegendLeagueJob>(scheduler, NormalizeCron(_gameConfig.Value.AutoJob.LegendLeagueJobCron), TextResourceTable.Get("[CommonHeaderGlobalPvpLabel]"), userId,
+                networkManager.TimeManager.DiffFromUtc);
+            AddJob<GuildRaidBossReleaseJob>(scheduler, _gameConfig.Value.AutoJob.GuildRaidBossReleaseCron, TextResourceTable.Get("[GuildRaidReleaseConfirmTitle]"), userId,
                 networkManager.TimeManager.DiffFromUtc);
             AddJob<AutoBuyShopItemJob>(scheduler, _gameConfig.Value.AutoJob.AutoBuyShopItemJobCron, ResourceStrings.ShopAutoBuyItems, userId, networkManager.TimeManager.DiffFromUtc);
-            AddJob<LocalRaidJob>(scheduler, _gameConfig.Value.AutoJob.AutoLocalRaidJobCron, Masters.TextResourceTable.Get("[CommonHeaderLocalRaidLabel]"), userId,
+            AddJob<LocalRaidJob>(scheduler, _gameConfig.Value.AutoJob.AutoLocalRaidJobCron, TextResourceTable.Get("[CommonHeaderLocalRaidLabel]"), userId,
                 networkManager.TimeManager.DiffFromUtc);
             // AddJob<GuildBattleDeployDefenseJob>(scheduler, _gameConfig.Value.AutoJob.AutoDeployGuildDefenseJobCron, ResourceStrings.Deploy_defense, userId,
             //     networkManager.TimeManager.DiffFromUtc);
-            AddJob<AutoChangeGachaRelicJob>(scheduler, _gameConfig.Value.AutoJob.AutoChangeGachaRelicJobCron, Masters.TextResourceTable.Get("[GachaRelicChangeTitle]"), userId,
+            AddJob<AutoChangeGachaRelicJob>(scheduler, _gameConfig.Value.AutoJob.AutoChangeGachaRelicJobCron, TextResourceTable.Get("[GachaRelicChangeTitle]"), userId,
                 networkManager.TimeManager.DiffFromUtc);
             AddJob<AutoDrawGachaRelicJob>(scheduler, _gameConfig.Value.AutoJob.AutoDrawGachaRelicJobCron, ResourceStrings.Auto_draw_10_times__up_to_3_draws_, userId,
                 networkManager.TimeManager.DiffFromUtc);

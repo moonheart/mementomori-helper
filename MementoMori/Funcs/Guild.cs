@@ -1,13 +1,9 @@
-﻿using MementoMori.Common.Localization;
-using MementoMori.Extensions;
-using MementoMori.MagicOnion;
+﻿using MementoMori.MagicOnion;
 using MementoMori.Ortega.Common.Enums;
 using MementoMori.Ortega.Custom;
-using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Data.ApiInterface.GlobalGvg;
 using MementoMori.Ortega.Share.Data.ApiInterface.Guild;
 using MementoMori.Ortega.Share.Data.ApiInterface.LocalGvg;
-using MementoMori.Ortega.Share.Enums;
 
 namespace MementoMori;
 
@@ -18,9 +14,9 @@ public partial class MementoMoriFuncs
         await ExecuteQuickAction(async (log, token) =>
         {
             var response1 = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
-            log($"{Masters.TextResourceTable.Get("[GuildId]")} {response1.GuildId}");
-            var response2 = await GetResponse<GetGuildBaseInfoRequest, GetGuildBaseInfoResponse>(new GetGuildBaseInfoRequest() {BelongGuildId = response1.GuildId});
-            log($"{Masters.TextResourceTable.Get("[MissionName533]")} {ResourceStrings.Finished}");
+            log($"{TextResourceTable.Get("[GuildId]")} {response1.GuildId}");
+            var response2 = await GetResponse<GetGuildBaseInfoRequest, GetGuildBaseInfoResponse>(new GetGuildBaseInfoRequest {BelongGuildId = response1.GuildId});
+            log($"{TextResourceTable.Get("[MissionName533]")} {ResourceStrings.Finished}");
             response2.UserSyncData.GivenItemCountInfoList.PrintUserItems(log);
         });
     }
@@ -32,14 +28,14 @@ public partial class MementoMoriFuncs
             var response1 = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
             if (response1.GuildId == 0)
             {
-                log(Masters.TextResourceTable.Get("[RankingNotGuild]"));
+                log(TextResourceTable.Get("[RankingNotGuild]"));
                 return;
             }
 
-            var response2 = await GetResponse<GetGuildBaseInfoRequest, GetGuildBaseInfoResponse>(new GetGuildBaseInfoRequest() {BelongGuildId = response1.GuildId});
+            var response2 = await GetResponse<GetGuildBaseInfoRequest, GetGuildBaseInfoResponse>(new GetGuildBaseInfoRequest {BelongGuildId = response1.GuildId});
             if (!response2.LocalGuildGvgInfo.IsOpen)
             {
-                log(Masters.TextResourceTable.GetErrorCodeMessage(ErrorCode.MagicOnionNotOpenGuildBattle));
+                log(TextResourceTable.GetErrorCodeMessage(ErrorCode.MagicOnionNotOpenGuildBattle));
                 return;
             }
 
@@ -54,7 +50,7 @@ public partial class MementoMoriFuncs
                 await Task.Delay(1000);
             }
 
-            CancellationTokenSource keepaliveCts = new CancellationTokenSource();
+            var keepaliveCts = new CancellationTokenSource();
             _ = Task.Run(async () =>
             {
                 while (!keepaliveCts.IsCancellationRequested)
@@ -76,7 +72,7 @@ public partial class MementoMoriFuncs
 
                 var castleInfos = localGvgReceiver.CastleInfos
                     .Where(d => d.GvgCastleState is GvgCastleState.None or GvgCastleState.InBattle && d.GuildId == response1.GuildId)
-                    .OrderByDescending(d => Masters.LocalGvgCastleTable.GetById(d.CastleId).CastleType)
+                    .OrderByDescending(d => LocalGvgCastleTable.GetById(d.CastleId).CastleType)
                     .ToList();
 
                 if (castleInfos.Count == 0)
@@ -127,8 +123,8 @@ public partial class MementoMoriFuncs
                         }
 
                         // log
-                        var name = Masters.TextResourceTable.Get(Masters.LocalGvgCastleTable.GetById(castleInfo.CastleId).NameKey);
-                        var characters = string.Join(", ", characterIds.Select(d => Masters.CharacterTable.GetById(d).GetCombinedName()));
+                        var name = TextResourceTable.Get(LocalGvgCastleTable.GetById(castleInfo.CastleId).NameKey);
+                        var characters = string.Join(", ", characterIds.Select(d => CharacterTable.GetById(d).GetCombinedName()));
                         log(string.Format(ResourceStrings.Successfully_deployed, name, characters));
                         client.SendGvgCloseCastleDialog(BattleType.GuildBattle, GvgDialogType.Deploy);
                         await Task.Delay(1000);
@@ -150,7 +146,7 @@ public partial class MementoMoriFuncs
     {
         await ExecuteQuickAction(async (log, token) =>
         {
-            log($"{Masters.TextResourceTable.Get("[CommonHeaderGvgLabel]")} {Masters.TextResourceTable.Get("[CommonHeaderGlobalGvgLabel]")} {Masters.TextResourceTable.Get("[GuildRewardTitle]")}");
+            log($"{TextResourceTable.Get("[CommonHeaderGvgLabel]")} {TextResourceTable.Get("[CommonHeaderGlobalGvgLabel]")} {TextResourceTable.Get("[GuildRewardTitle]")}");
             var guildIdResponse = await GetResponse<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
             if (guildIdResponse.GuildId <= 0) return;
 
@@ -161,7 +157,7 @@ public partial class MementoMoriFuncs
 
             if (guildBaseInfoResponse.LocalGuildGvgInfo.CanGetCastleRewardInfoList.IsNotNullOrEmpty())
             {
-                log($"{Masters.TextResourceTable.Get("[CommonHeaderGvgLabel]")} {Masters.TextResourceTable.Get("[GuildRewardTitle]")}");
+                log($"{TextResourceTable.Get("[CommonHeaderGvgLabel]")} {TextResourceTable.Get("[GuildRewardTitle]")}");
                 var localGvgRewardResponse = await GetResponse<ReceiveLocalGvgRewardRequest, ReceiveLocalGvgRewardResponse>(new ReceiveLocalGvgRewardRequest
                 {
                     CastleIdList = guildBaseInfoResponse.LocalGuildGvgInfo.CanGetCastleRewardInfoList.Select(d => d.CastleId).ToList()
@@ -171,7 +167,7 @@ public partial class MementoMoriFuncs
 
             if (guildBaseInfoResponse.GlobalGuildGvgInfo.CanGetCastleRewardInfoList.IsNotNullOrEmpty())
             {
-                log($"{Masters.TextResourceTable.Get("[CommonHeaderGlobalGvgLabel]")} {{TextResourceTable.Get(\"[GuildRewardTitle]\")}}");
+                log($"{TextResourceTable.Get("[CommonHeaderGlobalGvgLabel]")} {{TextResourceTable.Get(\"[GuildRewardTitle]\")}}");
                 var receiveGlobalGvgRewardResponse = await GetResponse<ReceiveGlobalGvgRewardRequest, ReceiveGlobalGvgRewardResponse>(new ReceiveGlobalGvgRewardRequest
                 {
                     CastleIdList = guildBaseInfoResponse.GlobalGuildGvgInfo.CanGetCastleRewardInfoList.Select(d => d.CastleId).ToList()

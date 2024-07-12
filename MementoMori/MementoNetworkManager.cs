@@ -1,31 +1,27 @@
-﻿using MementoMori.Exceptions;
-using MementoMori.Extensions;
-using MementoMori.Ortega.Share.Data.ApiInterface;
-using MementoMori.Ortega.Share.Data;
-using MementoMori.Ortega.Share;
-using MessagePack;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
-using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
-using MementoMori.Ortega.Share.Data.Auth;
-using MementoMori.Ortega.Share.Data.ApiInterface.User;
-using MementoMori.Ortega.Share.Enums;
-using MementoMori.Ortega.Share.Master;
-using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
+using System.Text;
 using AutoCtor;
 using Grpc.Net.Client;
 using Injectio.Attributes;
-using MementoMori.Common.Localization;
+using MementoMori.AddressableTools;
+using MementoMori.AddressableTools.Catalog;
+using MementoMori.Exceptions;
 using MementoMori.MagicOnion;
 using MementoMori.Option;
 using MementoMori.Ortega.Network.MagicOnion.Client;
+using MementoMori.Ortega.Share.Data;
+using MementoMori.Ortega.Share.Data.ApiInterface;
+using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
+using MementoMori.Ortega.Share.Data.ApiInterface.User;
+using MementoMori.Ortega.Share.Data.Auth;
+using MementoMori.Ortega.Share.Master;
+using MessagePack;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.Threading;
 using Newtonsoft.Json.Linq;
-using MementoMori.AddressableTools;
-using MementoMori.AddressableTools.Catalog;
 
 namespace MementoMori;
 
@@ -34,25 +30,34 @@ namespace MementoMori;
 public partial class MementoNetworkManager : IDisposable
 {
     private const string GameOs = "Android";
+    private static bool initialized;
 
-    private MeMoriHttpClientHandler _meMoriHttpClientHandler = null;
-    private HttpClient _httpClient;
-    private HttpClient _unityHttpClient = null;
-    public TimeManager TimeManager { get; } = new();
+    private static Task? _masterDataUpdateTask;
 
-    private LoginRequest _lastLoginRequest;
 
-    public long UserId { get; set; }
-    public long PlayerId { get; set; }
-    public CultureInfo CultureInfo { get; private set; } = new("zh-CN");
-    public LanguageType LanguageType => parseLanguageType(CultureInfo);
+    private static readonly AsyncSemaphore asyncSemaphore = new(1);
+    private readonly IWritableOptions<AuthOption> _authOption;
+    private readonly IWritableOptions<GameConfig> _gameConfig;
+
+    private readonly ILogger<MementoNetworkManager> _logger;
 
 
     private Uri _apiAuth;
     private Uri _apiHost;
     private GrpcChannel _grpcChannel;
+    private HttpClient _httpClient;
+
+    private LoginRequest _lastLoginRequest;
+
+    private HttpClient _unityHttpClient;
     private string AuthTokenOfMagicOnion;
-    CancellationTokenSource cts = new();
+    private readonly CancellationTokenSource cts = new();
+    public TimeManager TimeManager { get; } = new();
+
+    public long UserId { get; set; }
+    public long PlayerId { get; set; }
+    public CultureInfo CultureInfo { get; private set; } = new("zh-CN");
+    public LanguageType LanguageType => parseLanguageType(CultureInfo);
 
     public static string AssetCatalogUriFormat { get; private set; }
     public static string AssetCatalogFixedUriFormat { get; private set; }
@@ -60,23 +65,26 @@ public partial class MementoNetworkManager : IDisposable
     public static string NoticeBannerImageUriFormat { get; private set; }
     public static AppAssetVersionInfo AppAssetVersionInfo { get; private set; }
 
-    public MeMoriHttpClientHandler MoriHttpClientHandler => _meMoriHttpClientHandler;
-
-    private readonly ILogger<MementoNetworkManager> _logger;
-    private readonly IWritableOptions<AuthOption> _authOption;
-    private readonly IWritableOptions<GameConfig> _gameConfig;
-    private static bool initialized;
-
-    private static Task? _masterDataUpdateTask;
+    public MeMoriHttpClientHandler MoriHttpClientHandler { get; private set; }
 
     public bool DisableAutoUpdateMasterData { get; set; }
+
+    public void Dispose()
+    {
+        cts.Cancel();
+        cts.Dispose();
+        MoriHttpClientHandler?.Dispose();
+        _httpClient?.Dispose();
+        _unityHttpClient?.Dispose();
+        _grpcChannel?.Dispose();
+    }
 
     [AutoPostConstruct]
     public void AutoPostConstruct()
     {
         _apiAuth = new Uri(string.IsNullOrEmpty(_authOption.Value.AuthUrl) ? "https://prd1-auth.mememori-boi.com/api/" : _authOption.Value.AuthUrl);
 
-        _meMoriHttpClientHandler = new MeMoriHttpClientHandler {AppVersion = _authOption.Value.AppVersion};
+        MoriHttpClientHandler = new MeMoriHttpClientHandler {AppVersion = _authOption.Value.AppVersion};
         _httpClient = new HttpClient(MoriHttpClientHandler);
         if (!Debugger.IsAttached) _httpClient.Timeout = TimeSpan.FromSeconds(10);
         _unityHttpClient = new HttpClient();
@@ -90,7 +98,7 @@ public partial class MementoNetworkManager : IDisposable
 
     public async Task Initialize(Action<string> log = null)
     {
-        var response = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN"}, log);
+        var response = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest {CountryCode = "CN"}, log);
         AssetCatalogUriFormat = response.AssetCatalogUriFormat;
         AssetCatalogFixedUriFormat = response.AssetCatalogFixedUriFormat;
         MasterUriFormat = response.MasterUriFormat;
@@ -111,10 +119,7 @@ public partial class MementoNetworkManager : IDisposable
                 if (!DisableAutoUpdateMasterData)
                 {
                     _logger.LogInformation("auto updating master data");
-                    if (await DownloadMasterCatalog())
-                    {
-                        Masters.LoadAllMasters();
-                    }
+                    if (await DownloadMasterCatalog()) LoadAllMasters();
                 }
             }
             catch (Exception e) when (e is not TaskCanceledException)
@@ -128,7 +133,7 @@ public partial class MementoNetworkManager : IDisposable
     {
         log ??= Console.WriteLine;
         log(ResourceStrings.Downloading_master_directory___);
-        var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest() {CountryCode = "CN", UserId = 0});
+        var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest {CountryCode = "CN", UserId = 0});
 
         var url = string.Format(dataUriResponse.MasterUriFormat, MoriHttpClientHandler.OrtegaMasterVersion, "master-catalog");
         var bytes = await _unityHttpClient.GetByteArrayAsync(url);
@@ -139,10 +144,7 @@ public partial class MementoNetworkManager : IDisposable
         HashSet<string> allowedLangMb = ["TextResourceJaJpMB", "TextResourceZhTwMB", "TextResourceEnUsMB", "TextResourceKoKrMB"];
         foreach (var (name, info) in masterBookCatalog.MasterBookInfoMap)
         {
-            if (name.StartsWith("TextResource") && !allowedLangMb.Contains(name))
-            {
-                continue;
-            }
+            if (name.StartsWith("TextResource") && !allowedLangMb.Contains(name)) continue;
 
             var localPath = $"./Master/{name}";
             if (File.Exists(localPath))
@@ -173,8 +175,8 @@ public partial class MementoNetworkManager : IDisposable
     public void SetCultureInfo(CultureInfo cultureInfo)
     {
         CultureInfo = cultureInfo;
-        Masters.TextResourceTable.SetLanguageType(parseLanguageType(cultureInfo));
-        Masters.LoadAllMasters();
+        TextResourceTable.SetLanguageType(parseLanguageType(cultureInfo));
+        LoadAllMasters();
     }
 
     private LanguageType parseLanguageType(CultureInfo cultureInfo)
@@ -242,6 +244,7 @@ public partial class MementoNetworkManager : IDisposable
     private static async Task<T> ExecWithRetry<T>(Func<Task<T>> func, int retryCount = 10)
     {
         while (true)
+        {
             try
             {
                 return await func();
@@ -252,6 +255,7 @@ public partial class MementoNetworkManager : IDisposable
                 if (retryCount <= 0) throw;
                 await Task.Delay(1000);
             }
+        }
     }
 
     private async Task<string> CalcFileMd5(string path)
@@ -265,7 +269,10 @@ public partial class MementoNetworkManager : IDisposable
         }
 
         var sb = new StringBuilder();
-        foreach (var t in retVal) sb.Append(t.ToString("x2"));
+        foreach (var t in retVal)
+        {
+            sb.Append(t.ToString("x2"));
+        }
 
         return sb.ToString();
     }
@@ -283,7 +290,7 @@ public partial class MementoNetworkManager : IDisposable
         var playerDataInfo = authLoginResp.PlayerDataInfoList.First(x => x.WorldId == worldId);
 
         var timeServerId = playerDataInfo.WorldId / 1000;
-        var timeServerMb = Masters.TimeServerTable.GetById(timeServerId);
+        var timeServerMb = TimeServerTable.GetById(timeServerId);
         TimeManager.SetTimeServerMb(timeServerMb);
 
         // get server host
@@ -300,7 +307,7 @@ public partial class MementoNetworkManager : IDisposable
 
     public async Task SetServerHost(long worldId, Action<string> log = null)
     {
-        var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest() {WorldId = worldId}, log);
+        var resp = await GetResponse<GetServerHostRequest, GetServerHostResponse>(new GetServerHostRequest {WorldId = worldId}, log);
         _apiHost = new Uri(resp.ApiHost);
         _grpcChannel = GrpcChannel.ForAddress(new Uri($"https://{resp.MagicOnionHost}:{resp.MagicOnionPort}"));
     }
@@ -310,9 +317,6 @@ public partial class MementoNetworkManager : IDisposable
         var ortegaMagicOnionClient = new OrtegaMagicOnionClient(_grpcChannel, PlayerId, AuthTokenOfMagicOnion, new MagicOnionLocalRaidNotificaiton());
         return ortegaMagicOnionClient;
     }
-
-
-    private static readonly AsyncSemaphore asyncSemaphore = new(1);
 
     public async Task<TResp> GetResponse<TReq, TResp>(TReq req, Action<string> log = null, Action<UserSyncData> userData = null, Uri apiAuth = null, Uri apiHost = null)
         where TReq : ApiRequestBase
@@ -359,9 +363,9 @@ public partial class MementoNetworkManager : IDisposable
 
                     if (apiErrResponse.ErrorCode == ErrorCode.AuthLoginInvalidRequest) log(ResourceStrings.Login_failed__please_check_your_account_configuration);
 
-                    if (apiErrResponse.ErrorCode == ErrorCode.CommonNoSession) log(Masters.TextResourceTable.GetErrorCodeMessage(ErrorCode.CommonNoSession));
+                    if (apiErrResponse.ErrorCode == ErrorCode.CommonNoSession) log(TextResourceTable.GetErrorCodeMessage(ErrorCode.CommonNoSession));
 
-                    var errorCodeMessage = Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
+                    var errorCodeMessage = TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode);
                     log(uri.ToString());
                     log($"{errorCodeMessage}");
                     log(req.ToJson());
@@ -397,7 +401,7 @@ public partial class MementoNetworkManager : IDisposable
             var path = typeof(GetDataUriRequest).GetCustomAttribute<OrtegaAuthAttribute>()!.Uri;
             var uri = new Uri(_apiAuth, path);
 
-            var bytes = MessagePackSerializer.Serialize(new GetDataUriRequest() {CountryCode = OrtegaConst.Addressable.LanguageNameDictionary[LanguageType], UserId = UserId});
+            var bytes = MessagePackSerializer.Serialize(new GetDataUriRequest {CountryCode = OrtegaConst.Addressable.LanguageNameDictionary[LanguageType], UserId = UserId});
             using var respMsg = await client.PostAsync(uri, new ByteArrayContent(bytes) {Headers = {{"content-type", "application/json; charset=UTF-8"}}});
             if (!respMsg.IsSuccessStatusCode) throw new InvalidOperationException(respMsg.ToString());
 
@@ -408,10 +412,7 @@ public partial class MementoNetworkManager : IDisposable
                 if (ortegastatuscode != "0")
                 {
                     var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(stream);
-                    if (apiErrResponse.ErrorCode != ErrorCode.CommonRequireClientUpdate)
-                    {
-                        throw new InvalidOperationException(Masters.TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode));
-                    }
+                    if (apiErrResponse.ErrorCode != ErrorCode.CommonRequireClientUpdate) throw new InvalidOperationException(TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode));
 
                     var version = new Version(handler.AppVersion);
                     if (buildAddCount > 0)
@@ -446,26 +447,14 @@ public partial class MementoNetworkManager : IDisposable
 
                     throw new InvalidOperationException("reached max try out");
                 }
-                else
-                {
-                    _logger.LogInformation($"found latest version {handler.AppVersion}");
-                    _authOption.Update(x => { x.AppVersion = handler.AppVersion; });
-                    MoriHttpClientHandler.AppVersion = handler.AppVersion;
-                    return;
-                }
+
+                _logger.LogInformation($"found latest version {handler.AppVersion}");
+                _authOption.Update(x => { x.AppVersion = handler.AppVersion; });
+                MoriHttpClientHandler.AppVersion = handler.AppVersion;
+                return;
             }
 
             throw new InvalidOperationException("no ortegastatuscode");
         }
-    }
-
-    public void Dispose()
-    {
-        cts.Cancel();
-        cts.Dispose();
-        _meMoriHttpClientHandler?.Dispose();
-        _httpClient?.Dispose();
-        _unityHttpClient?.Dispose();
-        _grpcChannel?.Dispose();
     }
 }

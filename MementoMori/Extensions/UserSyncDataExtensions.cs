@@ -1,8 +1,6 @@
-﻿using MementoMori.Ortega.Share;
-using MementoMori.Ortega.Share.Data;
+﻿using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.Character;
 using MementoMori.Ortega.Share.Data.DtoInfo;
-using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master.Data;
 using MementoMori.Ortega.Share.Utils;
@@ -55,7 +53,7 @@ public static class UserSyncDataExtensions
 
     public static long GetLevelLinkLevel(this UserSyncData userSyncData, long characterId)
     {
-        var byId = Masters.CharacterTable.GetById(characterId);
+        var byId = CharacterTable.GetById(characterId);
         if (byId != null)
         {
             var RarityFlags = byId.RarityFlags;
@@ -97,13 +95,16 @@ public static class UserSyncDataExtensions
     {
         var equipmentSlotTypes = EnumUtil.GetValueList<EquipmentSlotType>();
         var userEquipmentDtoInfos = new Dictionary<EquipmentSlotType, UserEquipmentDtoInfo>();
-        foreach (var equipmentSlotType in equipmentSlotTypes) userEquipmentDtoInfos[equipmentSlotType] = null;
+        foreach (var equipmentSlotType in equipmentSlotTypes)
+        {
+            userEquipmentDtoInfos[equipmentSlotType] = null;
+        }
 
         if (string.IsNullOrEmpty(characterGuid)) return userEquipmentDtoInfos;
 
         foreach (var userEquipmentDtoInfo in userSyncData.UserEquipmentDtoInfos.Where(d => d.CharacterGuid == characterGuid))
         {
-            var equipmentMb = Masters.EquipmentTable.GetById(userEquipmentDtoInfo.EquipmentId);
+            var equipmentMb = EquipmentTable.GetById(userEquipmentDtoInfo.EquipmentId);
             userEquipmentDtoInfos[equipmentMb.SlotType] = userEquipmentDtoInfo;
         }
 
@@ -119,8 +120,10 @@ public static class UserSyncDataExtensions
         foreach (var (equipmentSlotType, userEquipmentDtoInfo) in dict)
         {
             if (equipmentSlotType != slotType)
-                if (Masters.EquipmentTable.GetById(userEquipmentDtoInfo.EquipmentId).EquipmentSetId != equipmentSetId)
+            {
+                if (EquipmentTable.GetById(userEquipmentDtoInfo.EquipmentId).EquipmentSetId != equipmentSetId)
                     continue;
+            }
 
             count++;
         }
@@ -131,9 +134,7 @@ public static class UserSyncDataExtensions
     public static long GetUserItemCount(this UserSyncData usersyncData, ItemType itemType, long itemId = 0, bool isAnyCurrency = false)
     {
         if (isAnyCurrency && (itemType == ItemType.CurrencyFree || itemType == ItemType.CurrencyPaid))
-        {
             return usersyncData?.UserItemDtoInfo?.ToList().Where(x => x.ItemType == ItemType.CurrencyFree || x.ItemType == ItemType.CurrencyPaid).Sum(d => d.ItemCount) ?? 0;
-        }
         return usersyncData?.UserItemDtoInfo?.ToList().Where(x => x.ItemType == itemType && (itemId == 0 || x.ItemId == itemId)).Sum(d => d.ItemCount) ?? 0;
     }
 
@@ -141,7 +142,7 @@ public static class UserSyncDataExtensions
     {
         return userSyncData.UserItemDtoInfo.ToList().FindAll(x => x.ItemType == ItemType.Sphere && x.ItemCount > 0).Select(x =>
         {
-            var sphereMb = Masters.SphereTable.GetById(x.ItemId);
+            var sphereMb = SphereTable.GetById(x.ItemId);
             return (x, sphereMb);
         }).ToList();
     }

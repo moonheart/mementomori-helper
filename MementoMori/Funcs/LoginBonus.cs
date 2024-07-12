@@ -1,7 +1,4 @@
-﻿using MementoMori.Extensions;
-using MementoMori.Ortega.Share;
-using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
-using MementoMori.Ortega.Share.Enums;
+﻿using MementoMori.Ortega.Share.Data.ApiInterface.LoginBonus;
 
 namespace MementoMori;
 
@@ -17,22 +14,21 @@ public partial class MementoMoriFuncs
             {
                 if (TimeManager.ServerNow.Hour >= 4)
                 {
-                    var bonus = await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(new ReceiveDailyLoginBonusRequest() {ReceiveDay = TimeManager.ServerNow.Day});
-                    log($"{Masters.TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")}:\n");
+                    var bonus = await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(new ReceiveDailyLoginBonusRequest {ReceiveDay = TimeManager.ServerNow.Day});
+                    log($"{TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")}:\n");
                     bonus.RewardItemList.PrintUserItems(log);
                 }
 
                 await GetMonthlyLoginBonusInfo();
             }
             else
-            {
-                log(Masters.TextResourceTable.GetErrorCodeMessage(ErrorCode.LoginBonusAlreadyReceivedDailyReward));
-            }
+                log(TextResourceTable.GetErrorCodeMessage(ErrorCode.LoginBonusAlreadyReceivedDailyReward));
 
-            var monthlyLoginBonusMb = Masters.MonthlyLoginBonusTable.GetById(MonthlyLoginBonusInfo.MonthlyLoginBonusId);
-            var monthlyLoginBonusRewardListMb = Masters.MonthlyLoginBonusRewardListTable.GetById(monthlyLoginBonusMb.RewardListId);
+            var monthlyLoginBonusMb = MonthlyLoginBonusTable.GetById(MonthlyLoginBonusInfo.MonthlyLoginBonusId);
+            var monthlyLoginBonusRewardListMb = MonthlyLoginBonusRewardListTable.GetById(monthlyLoginBonusMb.RewardListId);
             foreach (var loginCountRewardInfo in monthlyLoginBonusRewardListMb.LoginCountRewardList)
                 // 登录次数达到 && 没有领取过
+            {
                 if (loginCountRewardInfo.DayCount <= MonthlyLoginBonusInfo.ReceivedDailyRewardDayList.Count &&
                     !MonthlyLoginBonusInfo.ReceivedLoginCountRewardDayList.Contains(loginCountRewardInfo.DayCount))
                 {
@@ -40,9 +36,10 @@ public partial class MementoMoriFuncs
                     {
                         ReceiveDayCount = loginCountRewardInfo.DayCount
                     });
-                    log($"{Masters.TextResourceTable.Get("[LoginBonusCountFormat]", loginCountRewardInfo.DayCount, 30)}");
+                    log($"{TextResourceTable.Get("[LoginBonusCountFormat]", loginCountRewardInfo.DayCount, 30)}");
                     resp.RewardItemList.PrintUserItems(log);
                 }
+            }
 
             await GetMonthlyLoginBonusInfo();
 
@@ -55,9 +52,9 @@ public partial class MementoMoriFuncs
                     LimitedLoginBonusId = limitedLoginBonusId
                 });
 
-                var limitedLoginBonusMb = Masters.LimitedLoginBonusTable.GetById(limitedLoginBonusId);
-                var name = Masters.TextResourceTable.Get(limitedLoginBonusMb.TitleTextKey);
-                var loginBonusRewardListMb = Masters.LimitedLoginBonusRewardListTable.GetById(limitedLoginBonusId);
+                var limitedLoginBonusMb = LimitedLoginBonusTable.GetById(limitedLoginBonusId);
+                var name = TextResourceTable.Get(limitedLoginBonusMb.TitleTextKey);
+                var loginBonusRewardListMb = LimitedLoginBonusRewardListTable.GetById(limitedLoginBonusId);
                 foreach (var dailyLimitedLoginBonusItem in loginBonusRewardListMb.DailyRewardList)
                 {
                     if (limitedLoginBonusInfoResponse.ReceivedDateList.Contains(dailyLimitedLoginBonusItem.Date)) continue;
@@ -74,7 +71,7 @@ public partial class MementoMoriFuncs
                     !limitedLoginBonusInfoResponse.IsReceivedSpecialReward)
                 {
                     log(name);
-                    var response = await GetResponse<ReceiveSpecialLimitedLoginBonusRequest, ReceiveSpecialLimitedLoginBonusResponse>(new ReceiveSpecialLimitedLoginBonusRequest()
+                    var response = await GetResponse<ReceiveSpecialLimitedLoginBonusRequest, ReceiveSpecialLimitedLoginBonusResponse>(new ReceiveSpecialLimitedLoginBonusRequest
                     {
                         LimitedLoginBonusId = limitedLoginBonusId
                     });
