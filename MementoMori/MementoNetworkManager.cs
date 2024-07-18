@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using AutoCtor;
 using Grpc.Net.Client;
 using Injectio.Attributes;
@@ -389,6 +390,18 @@ public partial class MementoNetworkManager : IDisposable
     private async Task GetLatestAvailableVersion()
     {
         _logger.LogInformation("auto get latest version...");
+
+        var httpClient = new HttpClient();
+        var html = await httpClient.GetStringAsync("https://mememori-game.com/apps/vars.js");
+        // '/apps/mementomori_2.14.1.apk'
+        var match = Regex.Match(html, @"/apps/mementomori_(?<version>\d+.\d+.\d+).apk");
+        if (match.Success && Version.TryParse(match.Groups["version"].Value.Trim(), out var version))
+        {
+            _authOption.Update(x => { x.AppVersion = version.ToString(); });
+            MoriHttpClientHandler.AppVersion = version.ToString();
+            return;
+        }
+
         var buildAddCount = 5;
         var minorAddCount = 5;
         var majorAddCount = 5;
@@ -414,7 +427,7 @@ public partial class MementoNetworkManager : IDisposable
                     var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(stream);
                     if (apiErrResponse.ErrorCode != ErrorCode.CommonRequireClientUpdate) throw new InvalidOperationException(TextResourceTable.GetErrorCodeMessage(apiErrResponse.ErrorCode));
 
-                    var version = new Version(handler.AppVersion);
+                    version = new Version(handler.AppVersion);
                     if (buildAddCount > 0)
                     {
                         var newVersion = new Version(version.Major, version.Minor, version.Build + 1);
