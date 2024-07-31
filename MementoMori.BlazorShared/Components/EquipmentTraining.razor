@@ -1,15 +1,10 @@
-﻿@using static MementoMori.Ortega.Share.Masters
-@using MementoMori.Common.Localization
+﻿@using MementoMori.BlazorShared.Models
+@using MementoMori.Ortega.Custom
 @using MementoMori.Ortega.Share.Enums
 @using ReactiveUI
-@using MementoMori.BlazorShared.Models
-@using MementoMori.Ortega.Custom
-@using MementoMori.Ortega.Share.Data.Character
-@using MementoMori.Ortega.Share.Data.DtoInfo
-@using MementoMori.Ortega.Share.Master.Data
-@using MoreLinq.Extensions
+@using static Ortega.Share.Masters
 
-@inherits MementoMori.BlazorShared.Models.AccountComponent
+@inherits AccountComponent
 
 <MudPaper Elevation="0" Class="pa-2">
     <MudSelect Dense="true" Variant="Variant.Outlined" Label="@Tr("[CommonFooterCharacterButtonLabel]")" T="CharacterInfo" @bind-SelectedValue="_selectedCharacterGuid" ValueChanged="SelectedCharacterChanged">
@@ -30,7 +25,7 @@
                         @foreach (var item in Enum.GetValues<BaseParameterType>())
                         {
                             <MudText Inline="true" Typo="Typo.caption">
-                                @($"{@TextResourceTable.Get(item)}{@e.UserEquipmentDtoInfo.GetAdditionalParameter(item)}")
+                                @($"{TextResourceTable.Get(item)}{e.UserEquipmentDtoInfo.GetAdditionalParameter(item)}")
                             </MudText>
                         }
                     </div>
@@ -66,8 +61,8 @@
         Funcs.WhenAnyValue(d => d.UserSyncData).Subscribe(data =>
         {
             _selectedCharacterGuid = data?.UserCharacterDtoInfos?.FirstOrDefault()?.Guid;
-            var chas = data?.UserEquipmentDtoInfos.GroupBy(d => d.CharacterGuid).ToDictionary(d => d.Key);
-            _characterGuids = data?.UserCharacterDtoInfos?.Where(d => chas.ContainsKey(d.Guid)).Select(d =>
+            var chas = data?.UserEquipmentDtoInfos?.GroupBy(d => d.CharacterGuid).ToDictionary(d => d.Key);
+            _characterGuids = data?.UserCharacterDtoInfos?.Where(d => chas?.ContainsKey(d.Guid) ?? false).Select(d =>
             {
                 var isLevelLinkMember = AccountManager.Current.Funcs.UserSyncData.IsLevelLinkMember(d.Guid);
                 var level = isLevelLinkMember ? AccountManager.Current.Funcs.UserSyncData.GetLevelLinkLevel(d.CharacterId) : d.Level;
@@ -85,7 +80,7 @@
             {
                 if (d == null) throw new ArgumentNullException(nameof(d));
                 var cha = data.UserCharacterDtoInfos.ToList().Find(x => x.Guid == d.CharacterGuid);
-                var name = CharacterTable.GetCharacterName(cha.CharacterId);
+                var name = CharacterTable.GetCharacterName(cha?.CharacterId ?? 0);
                 var equipmentMb = EquipmentTable.GetById(d.EquipmentId);
                 if (equipmentMb.EquipmentLv < 180)
                 {
@@ -93,7 +88,7 @@
                 }
 
                 var equipmentName = TextResourceTable.Get(equipmentMb.NameKey);
-                return new CharacterEquipment()
+                return new CharacterEquipment
                 {
                     CharacterGuid = d.CharacterGuid, CharacterName = name, EquipmentGuid = d.Guid, EquipmentName = equipmentName, UserEquipmentDtoInfo = d
                 };
@@ -110,7 +105,7 @@
         };
         Funcs.EquipmentTrainingTargetPercent = 0.55;
 
-        this.InvokeAsync(() => StateHasChanged());
+        InvokeAsync(() => StateHasChanged());
     }
 
     private record CharacterInfo(string Name, long Lv, string Guid, JobFlags Job);
