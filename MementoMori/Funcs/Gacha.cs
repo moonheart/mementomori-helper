@@ -4,7 +4,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Gacha;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Gacha;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {

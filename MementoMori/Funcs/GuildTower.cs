@@ -5,7 +5,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Guild;
 using MementoMori.Ortega.Share.Data.ApiInterface.GuildTower;
 using MementoMori.Ortega.Share.Data.Item;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {

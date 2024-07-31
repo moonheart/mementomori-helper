@@ -10,7 +10,7 @@ using ShopGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetL
 using TradeShopGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.TradeShop.GetListRequest;
 using TradeShopGetListResponse = MementoMori.Ortega.Share.Data.ApiInterface.TradeShop.GetListResponse;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {

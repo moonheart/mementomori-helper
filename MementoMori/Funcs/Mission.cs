@@ -2,7 +2,7 @@
 using MementoMori.Ortega.Share.Data.ApiInterface.Mission;
 using MementoMori.Ortega.Share.Data.ApiInterface.Ranking;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {

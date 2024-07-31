@@ -5,7 +5,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Item;
 using MementoMori.Ortega.Share.Data.ApiInterface.Present;
 using MementoMori.Ortega.Share.Data.Item.Model;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {
@@ -79,9 +79,7 @@ public partial class MementoMoriFuncs
                 }
             }
             else
-            {
                 log(TextResourceTable.GetErrorCodeMessage(ErrorCode.PresentReceiveAlreadyReceivedPresent));
-            }
         });
     }
 }

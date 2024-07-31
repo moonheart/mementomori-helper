@@ -5,7 +5,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.GlobalGvg;
 using MementoMori.Ortega.Share.Data.ApiInterface.Guild;
 using MementoMori.Ortega.Share.Data.ApiInterface.LocalGvg;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {

@@ -2,7 +2,7 @@
 using MementoMori.Ortega.Share.Data.ApiInterface.Guild;
 using MementoMori.Ortega.Share.Data.ApiInterface.GuildRaid;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {

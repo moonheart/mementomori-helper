@@ -2,7 +2,7 @@
 using MementoMori.Ortega.Share.Data.ApiInterface.Item;
 using MementoMori.Ortega.Share.Master.Data;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {

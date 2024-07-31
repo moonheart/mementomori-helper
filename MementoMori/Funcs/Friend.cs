@@ -5,17 +5,17 @@ using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {
     public async Task BulkTransferFriendPoint()
     {
-        await ExecuteQuickAction(async (log, token) =>
+        await ExecuteQuickAction(async (log, _) =>
         {
             try
             {
-                var resp = await GetResponse<BulkTransferFriendPointRequest, BulkTransferFriendPointResponse>(new BulkTransferFriendPointRequest());
+                await GetResponse<BulkTransferFriendPointRequest, BulkTransferFriendPointResponse>(new BulkTransferFriendPointRequest());
                 log($"{TextResourceTable.Get("[ItemName9]")} {TextResourceTable.Get("[BulkReceiveAndSend]")} {ResourceStrings.Finished}");
             }
             catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.FriendAlreadyMaxReceived)
@@ -27,7 +27,7 @@ public partial class MementoMoriFuncs
 
     public async Task UseFriendCode()
     {
-        await ExecuteQuickAction(async (log, token) =>
+        await ExecuteQuickAction(async (log, _) =>
         {
             var iconInfo = Mypage.MypageInfo.GetMypageIconInfoByTransferSpotType(TransferSpotType.FriendCampaign);
             if (iconInfo != null)
@@ -107,13 +107,13 @@ public partial class MementoMoriFuncs
                         await networkManager.SetServerHost(createUserResponse.RecommendWorldId);
 
                         // do login
-                        var loginPlayerResp = await networkManager.GetResponse<LoginPlayerRequest, LoginPlayerResponse>(new LoginPlayerRequest
+                        await networkManager.GetResponse<LoginPlayerRequest, LoginPlayerResponse>(new LoginPlayerRequest
                         {
                             PlayerId = createWorldPlayerResponse.PlayerId, Password = createWorldPlayerResponse.Password
                         }, log);
 
                         log($"Using friend code {friendCode}...");
-                        var res3 = await networkManager.GetResponse<UseFriendCodeRequest, UseFriendCodeResponse>(new UseFriendCodeRequest {FriendCode = friendCode});
+                        await networkManager.GetResponse<UseFriendCodeRequest, UseFriendCodeResponse>(new UseFriendCodeRequest {FriendCode = friendCode});
                     }
 
                     async Task ReceiveReward(long missionId)
@@ -133,7 +133,7 @@ public partial class MementoMoriFuncs
 
     public async Task AutoFriendManage()
     {
-        await ExecuteQuickAction(async (log, token) =>
+        await ExecuteQuickAction(async (log, _) =>
         {
             var manageOption = PlayerOption.FriendManage;
             if (manageOption.AutoRemoveInactiveFriend)
@@ -145,7 +145,7 @@ public partial class MementoMoriFuncs
 
                     if (playerInfo.LastLoginTime < TimeSpan.FromDays(7)) continue;
 
-                    var removeFriendResponse = await GetResponse<RemoveFriendRequest, RemoveFriendResponse>(new RemoveFriendRequest {TargetPlayerId = playerInfo.PlayerId});
+                    await GetResponse<RemoveFriendRequest, RemoveFriendResponse>(new RemoveFriendRequest {TargetPlayerId = playerInfo.PlayerId});
                     log($"{ResourceStrings.Remove_friends_inactive_for_7_days}: {playerInfo.PlayerName}");
                 }
             }

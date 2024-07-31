@@ -1,17 +1,17 @@
-﻿@inherits MementoMori.BlazorShared.Models.AccountComponent
-@page "/Character"
-@using MementoMori;
-@using MementoMori.Ortega.Share.Data
-@using MementoMori.Ortega.Share
-@using MementoMori.Ortega.Share.Data.DtoInfo
-@using MementoMori.Ortega.Share.Enums
+﻿@using MementoMori.BlazorShared.Components
+@using MementoMori.Common.Localization
+@using MementoMori.Funcs
 @using MementoMori.Ortega.Common.Utils
 @using MementoMori.Ortega.Custom
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Data
 @using MementoMori.Ortega.Share.Data.Battle
 @using MementoMori.Ortega.Share.Data.Character
+@using MementoMori.Ortega.Share.Data.DtoInfo
+@using MementoMori.Ortega.Share.Enums
 @using MementoMori.Ortega.Share.Utils
-@using MementoMori.Common.Localization
-@using MementoMori.BlazorShared.Components
+@inherits MementoMori.BlazorShared.Models.AccountComponent
+@page "/Character"
 
 <PageTitle>@Masters.TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")</PageTitle>
 @if (!string.IsNullOrEmpty(alertMessage))
@@ -76,6 +76,7 @@
                                     </MudTabPanel>
                                     continue;
                                 }
+
                                 var equipmentMb = Masters.EquipmentTable.GetById(equipmentDtoInfo.EquipmentId);
                                 var changedSetEquipmentCount = ViewModel.UserSyncData.GetChangedSetEquipmentCount(_selectedCharactor.Guid, equipmentMb.EquipmentSetId, slotType);
 
@@ -95,7 +96,7 @@
             @foreach (var character in (_userSyncData?.UserCharacterDtoInfos ?? new List<UserCharacterDtoInfo>()).OrderByDescending(d => d.RarityFlags))
             {
                 <MudPaper Elevation="0" Width="72px" Height="72px" @onclick="() => SelectCharacter(character)" Style="cursor: pointer">
-                    <CharacterIcon Size="72" UserCharacterInfo="@Funcs.UserSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(character)" />
+                    <CharacterIcon Size="72" UserCharacterInfo="@Funcs.UserSyncData.GetUserCharacterInfoByUserCharacterDtoInfo(character)"/>
                 </MudPaper>
             }
         </MudPaper>

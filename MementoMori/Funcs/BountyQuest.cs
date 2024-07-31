@@ -3,7 +3,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest;
 using MementoMori.Ortega.Share.Data.BountyQuest;
 using MementoMori.Utils;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {

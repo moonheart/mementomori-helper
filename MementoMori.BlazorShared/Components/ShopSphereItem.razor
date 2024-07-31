@@ -1,14 +1,12 @@
-﻿@inject IDialogService DialogService
-@inject AccountManager AccountManager
-
-@using MementoMori.Ortega.Share.Master.Data
-@using MementoMori.Ortega.Share
+﻿@using MementoMori.Funcs
 @using MementoMori.Ortega.Common.Utils
 @using MementoMori.Ortega.Custom
+@using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Data.ApiInterface.TradeShop
 @using MementoMori.Ortega.Share.Data.TradeShop
-@using System.ComponentModel.DataAnnotations
-@using System.Text
+@using MementoMori.Ortega.Share.Master.Data
+@inject IDialogService DialogService
+@inject AccountManager AccountManager
 <MudCard Elevation="2">
     <MudCardHeader>
         <CardHeaderContent>
@@ -41,6 +39,7 @@
     private string _itemName;
 
     private MementoMoriFuncs ViewModel;
+
     private int MaxBuyCount
     {
         get
@@ -53,16 +52,19 @@
             {
                 return 0;
             }
+
             if (tradeShopSphereMb.ConsumeItem2 != null)
             {
                 count = tradeShopSphereMb.ConsumeItem2.ItemCount;
                 availableCount = ViewModel.UserSyncData.GetUserItemCount(tradeShopSphereMb.ConsumeItem2.ItemType, tradeShopSphereMb.ConsumeItem2.ItemId, true);
                 canBuyCount = Math.Min(canBuyCount, availableCount / count);
             }
+
             if (_buyCount > canBuyCount)
             {
                 _buyCount = (int) canBuyCount;
             }
+
             return (int) canBuyCount;
         }
     }
@@ -71,7 +73,7 @@
     {
         get
         {
-        var tradeShopSphereMb = Masters.TradeShopSphereTable.GetBySphereLevel(_buyLv);
+            var tradeShopSphereMb = Masters.TradeShopSphereTable.GetBySphereLevel(_buyLv);
             var count = tradeShopSphereMb.ConsumeItem1.ItemCount;
             var availableCount = ViewModel.UserSyncData.GetUserItemCount(tradeShopSphereMb.ConsumeItem1.ItemType, tradeShopSphereMb.ConsumeItem1.ItemId, true);
             if (availableCount < count) return false;
@@ -81,6 +83,7 @@
                 availableCount = ViewModel.UserSyncData.GetUserItemCount(tradeShopSphereMb.ConsumeItem2.ItemType, tradeShopSphereMb.ConsumeItem2.ItemId, true);
                 if (availableCount < count) return false;
             }
+
             return true;
         }
     }
@@ -99,6 +102,7 @@
                 count = tradeShopSphereMb.ConsumeItem2.ItemCount * _buyCount;
                 text = $"{text} {name} × {count}";
             }
+
             return text;
         }
     }

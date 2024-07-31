@@ -6,7 +6,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.DungeonBattle;
 using MementoMori.Ortega.Share.Data.Equipment;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {

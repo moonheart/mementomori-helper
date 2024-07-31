@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Linq;
+using MementoMori.Funcs;
 using Microsoft.AspNetCore.Components;
 using ReactiveUI;
 
@@ -6,12 +7,12 @@ namespace MementoMori.BlazorShared.Models;
 
 public class AccountComponent : ComponentBase
 {
-    [Inject]
-    public AccountManager AccountManager { get; set; }
-
     protected AccountInfo AccountInfo = null!;
     protected MementoMoriFuncs Funcs = null!;
     protected MementoNetworkManager NetworkManager = null!;
+
+    [Inject]
+    public AccountManager AccountManager { get; set; }
 
     protected virtual Task AccountChanged()
     {

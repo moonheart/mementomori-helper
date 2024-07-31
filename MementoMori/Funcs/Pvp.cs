@@ -6,7 +6,7 @@ using MementoMori.Ortega.Share.Data.ApiInterface.Character;
 using MementoMori.Ortega.Share.Data.Battle;
 using MementoMori.Ortega.Share.Data.Character;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {

@@ -1,19 +1,20 @@
-﻿@using MementoMori.Ortega.Share.Data.ApiInterface.TradeShop
-@using MementoMori.Ortega.Share.Data.TradeShop
-@using MementoMori.Ortega.Share
-@using MementoMori.Ortega.Share.Data.Item
-@using MementoMori.Ortega.Share.Enums
-@using MementoMori.WebUI.Extensions
-@using MementoMori.BlazorShared.Components
-@using MementoMori.Ortega.Common.Utils
-@using MementoMori.Common.Localization
-@using MementoMori.Option
-@using MementoMori.Ortega.Custom
-@using MementoMori.Ortega.Share.Master.Data
-@inject IDialogService DialogService
+﻿@inject IDialogService DialogService
 @inject IWritableOptions<GameConfig> WritableGameConfig
 @inject ISnackbar Snackbar
 
+@using MementoMori.BlazorShared.Components
+@using MementoMori.Common.Localization
+@using MementoMori.Funcs
+@using MementoMori.Option
+@using MementoMori.Ortega.Common.Utils
+@using MementoMori.Ortega.Custom
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Data.ApiInterface.TradeShop
+@using MementoMori.Ortega.Share.Data.Item
+@using MementoMori.Ortega.Share.Data.TradeShop
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.Ortega.Share.Master.Data
+@using MementoMori.WebUI.Extensions
 @inherits MementoMori.BlazorShared.Models.AccountComponent
 @page "/Shop"
 
@@ -92,7 +93,7 @@
                                             }
                                             @if (item.LimitTradeCount > 0)
                                             {
-                                                <MudText Inline="true">@Masters.TextResourceTable.Get("[ExchangeCommonLimitLabelFormat]", @item.TradeCount, @item.LimitTradeCount)</MudText>
+                                                <MudText Inline="true">@Masters.TextResourceTable.Get("[ExchangeCommonLimitLabelFormat]", item.TradeCount, item.LimitTradeCount)</MudText>
                                             }
                                         </MudCardContent>
                                         <MudCardActions>
@@ -124,7 +125,7 @@
     </MudTabs>
 }
 
-<MudDialog @bind-IsVisible="_autoBuyDialogVisible" Options="new DialogOptions() {CloseButton = true}">
+<MudDialog @bind-IsVisible="_autoBuyDialogVisible" Options="new DialogOptions {CloseButton = true}">
     <DialogContent>
         @{
             var tab = _tradeShopTabInfoList[_selectedTabIndex];
@@ -208,7 +209,7 @@
         dialogParameters.Add(d => d.UseItemFunc, async count =>
         {
             var response = await Funcs.GetResponse<BuyItemRequest, BuyItemResponse>(
-                new BuyItemRequest {TradeShopTabId = tab.TradeShopTabId, TradeShopItemInfos = new List<TradeShopItemInfo>() {new() {TradeShopItemId = tradeShopItem.TradeShopItemId, TradeCount = (int) count}}});
+                new BuyItemRequest {TradeShopTabId = tab.TradeShopTabId, TradeShopItemInfos = new List<TradeShopItemInfo> {new() {TradeShopItemId = tradeShopItem.TradeShopItemId, TradeCount = (int) count}}});
             return response.TradeShopItems.Select(d => d.GiveItem).Cast<IUserItem>().ToList();
         });
 
@@ -247,7 +248,7 @@
 
     private void ShowAutoBuyDialog(TradeShopTabMB tab, TradeShopItem item)
     {
-        _consumableItems = tab.ConsumeItemInfos.Select(d => new UserItem() {ItemType = d.ItemType, ItemId = d.ItemId}).ToList();
+        _consumableItems = tab.ConsumeItemInfos.Select(d => new UserItem {ItemType = d.ItemType, ItemId = d.ItemId}).ToList();
         _autoBuyDialogVisible = true;
         _selectedAutoBuyItem = item.GiveItem;
         _selectedConsumeItem = _consumableItems.First(d => d.IsEqual(item.ConsumeItem1.ItemType, item.ConsumeItem1.ItemId));
@@ -287,7 +288,7 @@
         }
         else
         {
-            tmp.Add(new GameConfig.ShopAutoBuyItem()
+            tmp.Add(new GameConfig.ShopAutoBuyItem
             {
                 BuyItem = _selectedAutoBuyItem,
                 MinDiscountPercent = _selectedAutoBuyDiscount,

@@ -1,6 +1,6 @@
 ﻿using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {

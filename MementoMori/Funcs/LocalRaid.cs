@@ -4,7 +4,7 @@ using MementoMori.Ortega.Network.MagicOnion.Client;
 using MementoMori.Ortega.Share.Data.ApiInterface.LocalRaid;
 using MementoMori.Ortega.Share.Data.Item;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {

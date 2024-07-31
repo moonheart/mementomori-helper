@@ -2,18 +2,15 @@
 
 @inherits MementoMori.BlazorShared.Models.AccountComponent
 @page "/Items"
-@using MementoMori.Ortega.Share.Data
-@using MementoMori.Ortega.Share.Data.DtoInfo
+@using MementoMori.BlazorShared.Components
+@using MementoMori.Common.Localization
+@using MementoMori.Funcs
+@using MementoMori.Ortega.Common.Utils
 @using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Data.ApiInterface.Item
 @using MementoMori.Ortega.Share.Data.Item
 @using MementoMori.Ortega.Share.Enums
 @using MementoMori.WebUI.Extensions
-@using MementoMori.Ortega.Common.Utils
-@using DynamicData.Binding
-@using MementoMori.Ortega.Share.Data.ApiInterface.Item
-@using MementoMori.Common.Localization
-@using MementoMori.BlazorShared.Components
-@using ReactiveUI
 @using SortDirection = MudBlazor.SortDirection
 
 <PageTitle>@Masters.TextResourceTable.Get("[CommonFooterItemBoxButtonLabel]")</PageTitle>
@@ -24,217 +21,216 @@
 }
 @if (Funcs?.LoginOk == true)
 {
-    
-<MudTabs MinimumTabWidth="20px">
-    <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabEquipment]")">
-        @{
-            var equips1 = ViewModel.UserSyncData.UserEquipmentDtoInfos.Where(d => d.CharacterGuid == "").Select(x => x.ToEquipmentInfo());
-            var equips = ViewModel.UserSyncData.UserItemDtoInfo
-                ?.Where(d => d.ItemType == ItemType.Equipment && d.ItemCount > 0)
-                .Select(d => d.ToEquipmentInfo())
-                .Union(equips1);
-        }
-        <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true" Striped="true"
-                  Items="@equips">
-            <HeaderContent>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.SlotType)">@ResourceStrings.Slot</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.RarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.EquipmentLv)">@Masters.TextResourceTable.Get("[CommonEquipmentLevelLabel]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.PerformancePoint)">@Masters.TextResourceTable.Get("[EquipmentUniquePowerLabel]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.BattleParameterChangeInfo.BattleParameterType)">@Masters.TextResourceTable.Get("[CharacterEquipmentBasicEffect]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.BattleParameterChangeInfo.Value)">@Masters.TextResourceTable.Get("[CommonBaseParameterLabel]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.AdditionalParameterTotal)">@Masters.TextResourceTable.Get("[CommonGrantParameterLabel]")</MudTableSortLabel>
-                </MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd>@context.Name</MudTd>
-                <MudTd>@(Masters.TextResourceTable.Get(context.EquipmentMb.SlotType))</MudTd>
-                <MudTd>@(Masters.TextResourceTable.Get(context.EquipmentMb.RarityFlags))</MudTd>
-                <MudTd>@context.EquipmentMb.EquipmentLv</MudTd>
-                <MudTd>@context.Count</MudTd>
-                <MudTd>@context.EquipmentMb.PerformancePoint</MudTd>
-                <MudTd>@(Masters.TextResourceTable.Get(context.EquipmentMb.BattleParameterChangeInfo.BattleParameterType))</MudTd>
-                <MudTd>@(ParameterUtil.GetBaseParameterValueText(context.EquipmentMb.BattleParameterChangeInfo.ChangeParameterType, context.EquipmentMb.BattleParameterChangeInfo.Value))</MudTd>
-                <MudTd>@context.EquipmentMb.AdditionalParameterTotal</MudTd>
-            </RowTemplate>
-        </MudTable>
-    </MudTabPanel>
-    <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabConsumption]")">
-        @{ var types = new HashSet<ItemType>()
-           {
-               ItemType.QuestQuickTicket,
-               ItemType.TreasureChestKey,
-               ItemType.TreasureChest,
-               ItemType.CharacterFragment
-           }; }
-        <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true" 
-                  Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()).OrderBy(d=>d.Item.ItemType).ThenByDescending(d=>d.ItemRarityFlags))">
-            <HeaderContent>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    @ResourceStrings.Operation
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">@ResourceStrings.ItemLimitCount</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
-                </MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd>@context.Name</MudTd>
-                <MudTd>
-                    @if (context.Item.ItemType == ItemType.QuestQuickTicket)
-                    {
-                        <MudButton OnClick="() => UseAutoBattleRewardItem(context.Name, context.Item)" Size="Size.Small" Variant="Variant.Outlined">@Masters.TextResourceTable.Get("[ItemBoxButtonUse]")</MudButton>
-                    }
-                </MudTd>
-                <MudTd>@(context.ItemRarityFlags)</MudTd>
-                <MudTd>@(context.MaxItemCount)</MudTd>
-                <MudTd>@context.Count</MudTd>
-            </RowTemplate>
-        </MudTable>
-    </MudTabPanel>
-    <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabMaterial]")">
-        @{ var types = new HashSet<ItemType>()
-           {
-               ItemType.CharacterTrainingMaterial,
-               ItemType.EquipmentReinforcementItem,
-               ItemType.MatchlessSacredTreasureExpItem,
-               ItemType.GachaTicket,
-               ItemType.BossChallengeTicket,
-               ItemType.TowerBattleTicket,
-               ItemType.DungeonRecoveryItem,
-               ItemType.FriendPoint,
-               ItemType.EquipmentRarityCrystal,
-               ItemType.ExchangePlaceItem,
-               ItemType.EventExchangePlaceItem,
-               ItemType.EquipmentSetMaterial
-           }; }
-        <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true" 
-                  Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
-            <HeaderContent>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">@ResourceStrings.ItemLimitCount</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
-                </MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd>@context.Name</MudTd>
-                <MudTd>@(context.ItemRarityFlags)</MudTd>
-                <MudTd>@(context.MaxItemCount)</MudTd>
-                <MudTd>@context.Count</MudTd>
-            </RowTemplate>
-        </MudTable>
-    </MudTabPanel>
-    <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabSphere]")">
-        @{ var types = new HashSet<ItemType>()
-           {
-               ItemType.Sphere
-           }; }
-        <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true" 
-                  Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToSphereInfo()))">
-            <HeaderContent>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.RarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.Lv)">@Masters.TextResourceTable.Get("[EquipmentSphereSynthesisSphereLv]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BaseParameterChangeInfo?.BaseParameterType)">@Masters.TextResourceTable.Get("[CharacterEquipmentBasicEffect]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BaseParameterChangeInfo?.Value)">@Masters.TextResourceTable.Get("[CommonBaseParameterLabel]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BattleParameterChangeInfo?.BattleParameterType)">@Masters.TextResourceTable.Get("[CharacterDetailTabBattleParameter]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BattleParameterChangeInfo?.Value)">@Masters.TextResourceTable.Get("[CommonBaseParameterLabel]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>@Masters.TextResourceTable.Get("[ItemDescriptionLabel]")</MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd>@context.Name</MudTd>
-                <MudTd>@(context.SphereMB.RarityFlags)</MudTd>
-                <MudTd>@(context.SphereMB.Lv)</MudTd>
-                <MudTd>@(context.SphereMB.BaseParameterChangeInfo == null ? "" : Masters.TextResourceTable.Get(context.SphereMB.BaseParameterChangeInfo.BaseParameterType))</MudTd>
-                <MudTd>@(context.SphereMB.BaseParameterChangeInfo == null ? "" : ParameterUtil.GetBaseParameterValueText(context.SphereMB.BaseParameterChangeInfo.ChangeParameterType, context.SphereMB.BaseParameterChangeInfo.Value))</MudTd>
-                <MudTd>@(context.SphereMB.BattleParameterChangeInfo == null ? "" : Masters.TextResourceTable.Get(context.SphereMB.BattleParameterChangeInfo.BattleParameterType))</MudTd>
-                <MudTd>@(context.SphereMB.BattleParameterChangeInfo == null ? "" : ParameterUtil.GetBaseParameterValueText(context.SphereMB.BattleParameterChangeInfo.ChangeParameterType, context.SphereMB.BattleParameterChangeInfo.Value))</MudTd>
-                <MudTd>@context.Count</MudTd>
-            </RowTemplate>
-        </MudTable>
-    </MudTabPanel>
-    <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabSetPiece]")">
-        @{ var types = new HashSet<ItemType>()
-           {
-               ItemType.EquipmentFragment
-           }; }
-        <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true" 
-                  Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
-            <HeaderContent>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">@ResourceStrings.ItemLimitCount</MudTableSortLabel>
-                </MudTh>
-                <MudTh>
-                    <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
-                </MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd>@context.Name</MudTd>
-                <MudTd>@(context.ItemRarityFlags)</MudTd>
-                <MudTd>@(context.MaxItemCount)</MudTd>
-                <MudTd>@context.Count</MudTd>
-            </RowTemplate>
-        </MudTable>
-    </MudTabPanel>
-</MudTabs>
+    <MudTabs MinimumTabWidth="20px">
+        <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabEquipment]")">
+            @{
+                var equips1 = ViewModel.UserSyncData.UserEquipmentDtoInfos.Where(d => d.CharacterGuid == "").Select(x => x.ToEquipmentInfo());
+                var equips = ViewModel.UserSyncData.UserItemDtoInfo
+                    ?.Where(d => d.ItemType == ItemType.Equipment && d.ItemCount > 0)
+                    .Select(d => d.ToEquipmentInfo())
+                    .Union(equips1);
+            }
+            <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true" Striped="true"
+                      Items="@equips">
+                <HeaderContent>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.SlotType)">@ResourceStrings.Slot</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.RarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.EquipmentLv)">@Masters.TextResourceTable.Get("[CommonEquipmentLevelLabel]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.PerformancePoint)">@Masters.TextResourceTable.Get("[EquipmentUniquePowerLabel]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.BattleParameterChangeInfo.BattleParameterType)">@Masters.TextResourceTable.Get("[CharacterEquipmentBasicEffect]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.BattleParameterChangeInfo.Value)">@Masters.TextResourceTable.Get("[CommonBaseParameterLabel]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.EquipmentInfo, object>(x => x.EquipmentMb.AdditionalParameterTotal)">@Masters.TextResourceTable.Get("[CommonGrantParameterLabel]")</MudTableSortLabel>
+                    </MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Name</MudTd>
+                    <MudTd>@(Masters.TextResourceTable.Get(context.EquipmentMb.SlotType))</MudTd>
+                    <MudTd>@(Masters.TextResourceTable.Get(context.EquipmentMb.RarityFlags))</MudTd>
+                    <MudTd>@context.EquipmentMb.EquipmentLv</MudTd>
+                    <MudTd>@context.Count</MudTd>
+                    <MudTd>@context.EquipmentMb.PerformancePoint</MudTd>
+                    <MudTd>@(Masters.TextResourceTable.Get(context.EquipmentMb.BattleParameterChangeInfo.BattleParameterType))</MudTd>
+                    <MudTd>@(ParameterUtil.GetBaseParameterValueText(context.EquipmentMb.BattleParameterChangeInfo.ChangeParameterType, context.EquipmentMb.BattleParameterChangeInfo.Value))</MudTd>
+                    <MudTd>@context.EquipmentMb.AdditionalParameterTotal</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudTabPanel>
+        <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabConsumption]")">
+            @{ var types = new HashSet<ItemType>
+               {
+                   ItemType.QuestQuickTicket,
+                   ItemType.TreasureChestKey,
+                   ItemType.TreasureChest,
+                   ItemType.CharacterFragment
+               }; }
+            <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true"
+                      Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()).OrderBy(d => d.Item.ItemType).ThenByDescending(d => d.ItemRarityFlags))">
+                <HeaderContent>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        @ResourceStrings.Operation
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">@ResourceStrings.ItemLimitCount</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
+                    </MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Name</MudTd>
+                    <MudTd>
+                        @if (context.Item.ItemType == ItemType.QuestQuickTicket)
+                        {
+                            <MudButton OnClick="() => UseAutoBattleRewardItem(context.Name, context.Item)" Size="Size.Small" Variant="Variant.Outlined">@Masters.TextResourceTable.Get("[ItemBoxButtonUse]")</MudButton>
+                        }
+                    </MudTd>
+                    <MudTd>@(context.ItemRarityFlags)</MudTd>
+                    <MudTd>@(context.MaxItemCount)</MudTd>
+                    <MudTd>@context.Count</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudTabPanel>
+        <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabMaterial]")">
+            @{ var types = new HashSet<ItemType>
+               {
+                   ItemType.CharacterTrainingMaterial,
+                   ItemType.EquipmentReinforcementItem,
+                   ItemType.MatchlessSacredTreasureExpItem,
+                   ItemType.GachaTicket,
+                   ItemType.BossChallengeTicket,
+                   ItemType.TowerBattleTicket,
+                   ItemType.DungeonRecoveryItem,
+                   ItemType.FriendPoint,
+                   ItemType.EquipmentRarityCrystal,
+                   ItemType.ExchangePlaceItem,
+                   ItemType.EventExchangePlaceItem,
+                   ItemType.EquipmentSetMaterial
+               }; }
+            <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true"
+                      Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
+                <HeaderContent>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">@ResourceStrings.ItemLimitCount</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
+                    </MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Name</MudTd>
+                    <MudTd>@(context.ItemRarityFlags)</MudTd>
+                    <MudTd>@(context.MaxItemCount)</MudTd>
+                    <MudTd>@context.Count</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudTabPanel>
+        <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabSphere]")">
+            @{ var types = new HashSet<ItemType>
+               {
+                   ItemType.Sphere
+               }; }
+            <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true"
+                      Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToSphereInfo()))">
+                <HeaderContent>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.RarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.Lv)">@Masters.TextResourceTable.Get("[EquipmentSphereSynthesisSphereLv]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BaseParameterChangeInfo?.BaseParameterType)">@Masters.TextResourceTable.Get("[CharacterEquipmentBasicEffect]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BaseParameterChangeInfo?.Value)">@Masters.TextResourceTable.Get("[CommonBaseParameterLabel]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BattleParameterChangeInfo?.BattleParameterType)">@Masters.TextResourceTable.Get("[CharacterDetailTabBattleParameter]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.SphereMB.BattleParameterChangeInfo?.Value)">@Masters.TextResourceTable.Get("[CommonBaseParameterLabel]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.SphereInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>@Masters.TextResourceTable.Get("[ItemDescriptionLabel]")</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Name</MudTd>
+                    <MudTd>@(context.SphereMB.RarityFlags)</MudTd>
+                    <MudTd>@(context.SphereMB.Lv)</MudTd>
+                    <MudTd>@(context.SphereMB.BaseParameterChangeInfo == null ? "" : Masters.TextResourceTable.Get(context.SphereMB.BaseParameterChangeInfo.BaseParameterType))</MudTd>
+                    <MudTd>@(context.SphereMB.BaseParameterChangeInfo == null ? "" : ParameterUtil.GetBaseParameterValueText(context.SphereMB.BaseParameterChangeInfo.ChangeParameterType, context.SphereMB.BaseParameterChangeInfo.Value))</MudTd>
+                    <MudTd>@(context.SphereMB.BattleParameterChangeInfo == null ? "" : Masters.TextResourceTable.Get(context.SphereMB.BattleParameterChangeInfo.BattleParameterType))</MudTd>
+                    <MudTd>@(context.SphereMB.BattleParameterChangeInfo == null ? "" : ParameterUtil.GetBaseParameterValueText(context.SphereMB.BattleParameterChangeInfo.ChangeParameterType, context.SphereMB.BattleParameterChangeInfo.Value))</MudTd>
+                    <MudTd>@context.Count</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudTabPanel>
+        <MudTabPanel Text="@Masters.TextResourceTable.Get("[ItemBoxTabSetPiece]")">
+            @{ var types = new HashSet<ItemType>
+               {
+                   ItemType.EquipmentFragment
+               }; }
+            <MudTable Dense="true" HorizontalScrollbar="true" Virtualize="true"
+                      Items="@(ViewModel.UserSyncData.UserItemDtoInfo.Where(d => types.Contains(d.ItemType) && d.ItemCount > 0).Select(d => d.ToUserItemInfo()))">
+                <HeaderContent>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Name)">@ResourceStrings.Name</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.ItemRarityFlags)">@Masters.TextResourceTable.Get("[CharacterSortTypeRarity]")</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.MaxItemCount)">@ResourceStrings.ItemLimitCount</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<UserItemExtensions.UserItemInfo, object>(x => x.Count)">@Masters.TextResourceTable.Get("[CommonOwnCurrencyLabel]")</MudTableSortLabel>
+                    </MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Name</MudTd>
+                    <MudTd>@(context.ItemRarityFlags)</MudTd>
+                    <MudTd>@(context.MaxItemCount)</MudTd>
+                    <MudTd>@context.Count</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudTabPanel>
+    </MudTabs>
 }
 
 @code {
@@ -266,19 +262,20 @@
         {
             return;
         }
+
         var dialogParameters = new DialogParameters<UseItemDialog>();
-        dialogParameters.Add(d=>d.Count, userItem.ItemCount);
-        dialogParameters.Add(d=>d.Name, name);
+        dialogParameters.Add(d => d.Count, userItem.ItemCount);
+        dialogParameters.Add(d => d.Name, name);
         dialogParameters.Add(d => d.ButtonText, Masters.TextResourceTable.Get("[ItemBoxButtonUse]"));
-        dialogParameters.Add(d=>d.UseItemFunc, (async count =>
+        dialogParameters.Add(d => d.UseItemFunc, async count =>
         {
             var useAutoBattleRewardItemResponse = await ViewModel.GetResponse<UseAutoBattleRewardItemRequest, UseAutoBattleRewardItemResponse>(
-                new UseAutoBattleRewardItemRequest() {ItemType = (QuestQuickTicketType) userItem.ItemId, UseCount = (int)count});
+                new UseAutoBattleRewardItemRequest {ItemType = (QuestQuickTicketType) userItem.ItemId, UseCount = (int) count});
             return useAutoBattleRewardItemResponse.RewardItemList.Cast<IUserItem>().ToList();
-        }));
+        });
 
         DialogService.Show<UseItemDialog>(Masters.TextResourceTable.Get("[ItemBoxItemUseTitle]"), dialogParameters);
     }
 
-    
+
 }

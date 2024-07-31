@@ -1,71 +1,72 @@
-﻿@using MementoMori.Ortega.Share.Data.ApiInterface.Gacha
-@using MementoMori.Ortega.Share.Data.Gacha
-@using MementoMori.Ortega.Share
-@using System.Text
-@using MementoMori.Extensions
-@using MementoMori.WebUI.Extensions
-@using MementoMori.Common.Localization
-@using MementoMori.Ortega.Custom
-@using MementoMori.BlazorShared.Components
-@inject IDialogService DialogService
+﻿@inject IDialogService DialogService
 
+@using System.Text
+@using MementoMori.BlazorShared.Components
+@using MementoMori.Common.Localization
+@using MementoMori.Extensions
+@using MementoMori.Funcs
+@using MementoMori.Ortega.Custom
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Data.ApiInterface.Gacha
+@using MementoMori.Ortega.Share.Data.Gacha
+@using MementoMori.WebUI.Extensions
 @inherits MementoMori.BlazorShared.Models.AccountComponent
 @page "/Gacha"
 <PageTitle>@Masters.TextResourceTable.Get("[CommonFooterGachaButtonLabel]")</PageTitle>
 
-    @if (!string.IsNullOrEmpty(alertMessage))
-    {
+@if (!string.IsNullOrEmpty(alertMessage))
+{
     <MudAlert Severity="Severity.Warning">@alertMessage</MudAlert>
-    }
+}
 
 @if (ViewModel?.UserSyncData?.UserItemDtoInfo != null)
 {
-<MudGrid>
-    @foreach (var gachaCaseInfo in gachaCaseInfos.OrderByDescending(d => d.DisplayOrder))
-    {
-        var gachaCaseMb = Masters.GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
-        var gachaCaseUiMb = Masters.GachaCaseUiTable.GetById(gachaCaseInfo.GachaCaseUiId);
+    <MudGrid>
+        @foreach (var gachaCaseInfo in gachaCaseInfos.OrderByDescending(d => d.DisplayOrder))
+        {
+            var gachaCaseMb = Masters.GachaCaseTable.GetById(gachaCaseInfo.GachaCaseId);
+            var gachaCaseUiMb = Masters.GachaCaseUiTable.GetById(gachaCaseInfo.GachaCaseUiId);
 
-        <MudItem xs="12" sm="6" md="4" lg="3" xl="2" xxl="2">
-            <MudCard>
-                <MudCardHeader>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.body1">@(Masters.TextResourceTable.Get(gachaCaseUiMb?.NameKey))</MudText>
-                        <MudText Typo="Typo.body2">@(Masters.TextResourceTable.Get(gachaCaseUiMb?.ExplanationKey))</MudText>
-                    </CardHeaderContent>
-                    <CardHeaderActions>
+            <MudItem xs="12" sm="6" md="4" lg="3" xl="2" xxl="2">
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.body1">@(Masters.TextResourceTable.Get(gachaCaseUiMb?.NameKey))</MudText>
+                            <MudText Typo="Typo.body2">@(Masters.TextResourceTable.Get(gachaCaseUiMb?.ExplanationKey))</MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
                             <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="() => ShowDetail(gachaCaseInfo)">@Masters.TextResourceTable.Get("[CommonDetailLabel]")</MudButton>
-                    </CardHeaderActions>
-                </MudCardHeader>
-                <MudCardContent>
+                        </CardHeaderActions>
+                    </MudCardHeader>
+                    <MudCardContent>
                         <MudField Label="@Masters.TextResourceTable.Get("[CommonPossessionLabel]")" Variant="Variant.Outlined">
-                        @foreach (var userItem in gachaCaseInfo.GachaButtonInfoList.Select(d => d.ConsumeUserItem).DistinctBy(d=>new {d.ItemType, d.ItemId}))
+                            @foreach (var userItem in gachaCaseInfo.GachaButtonInfoList.Select(d => d.ConsumeUserItem).DistinctBy(d => new {d.ItemType, d.ItemId}))
+                            {
+                                var label = $"{userItem.GetItemName()} × {ViewModel.UserSyncData.GetUserItemCount(userItem.ItemType, userItem.ItemId, true)}";
+                                <MudChip>@label</MudChip>
+                            }
+                        </MudField>
+
+                    </MudCardContent>
+                    <MudCardActions>
+                        @foreach (var button in gachaCaseInfo.GachaButtonInfoList)
                         {
-                            var label = $"{userItem.GetItemName()} × {ViewModel.UserSyncData.GetUserItemCount(userItem.ItemType, userItem.ItemId, true)}";
-                            <MudChip>@label</MudChip>
+                            var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(button.ConsumeUserItem.ItemType, button.ConsumeUserItem.ItemId);
+                            var count = ViewModel.UserSyncData.GetUserItemCount(button.ConsumeUserItem.ItemType, button.ConsumeUserItem.ItemId, true);
+                            var disabled = count < button.ConsumeUserItem.ItemCount;
+
+                            <MudButton Disabled="disabled" Variant="Variant.Filled" Class="mr-2" Color="Color.Secondary" OnClick="() => DoGacha(button.GachaButtonId)">@(Masters.TextResourceTable.Get(itemMb.NameKey)) × @button.ConsumeUserItem.ItemCount</MudButton>
                         }
-                    </MudField>
 
-                </MudCardContent>
-                <MudCardActions>
-                    @foreach (var button in gachaCaseInfo.GachaButtonInfoList)
-                    {
-                        var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(button.ConsumeUserItem.ItemType, button.ConsumeUserItem.ItemId);
-                        var count = ViewModel.UserSyncData.GetUserItemCount(button.ConsumeUserItem.ItemType, button.ConsumeUserItem.ItemId, true);
-                        var disabled = count < button.ConsumeUserItem.ItemCount;
-
-                        <MudButton Disabled="disabled" Variant="Variant.Filled" Class="mr-2" Color="Color.Secondary" OnClick="() => DoGacha(button.GachaButtonId)">@(Masters.TextResourceTable.Get(itemMb.NameKey)) × @button.ConsumeUserItem.ItemCount</MudButton>
-                    }
-
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
-    }
-</MudGrid>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
 }
 
 @code {
-    private List<GachaCaseInfo> gachaCaseInfos = new List<GachaCaseInfo>();
+    private List<GachaCaseInfo> gachaCaseInfos = new();
     private MementoMoriFuncs ViewModel;
     string alertMessage = "";
 
@@ -103,7 +104,7 @@
             return;
         }
 
-        var drawResponse = await ViewModel.GetResponse<DrawRequest, DrawResponse>(new DrawRequest() {GachaButtonId = buttonGachaButtonId});
+        var drawResponse = await ViewModel.GetResponse<DrawRequest, DrawResponse>(new DrawRequest {GachaButtonId = buttonGachaButtonId});
         var msg = new StringBuilder();
         gachaCaseInfos = drawResponse.GachaCaseInfoList;
         drawResponse.GachaRewardItemList.PrintUserItems(s => msg.AppendLine(s).AppendLine("<br />"));
@@ -111,16 +112,16 @@
         drawResponse.BonusRewardItemList.PrintUserItems(s => msg.AppendLine(s).AppendLine("<br />"));
         drawResponse.CharacterReleaseItemList.PrintUserItems(s => msg.AppendLine(s).AppendLine("<br />"));
 
-        await DialogService.ShowMessageBox(ResourceStrings.GachaResult, (MarkupString)msg.ToString());
+        await DialogService.ShowMessageBox(ResourceStrings.GachaResult, (MarkupString) msg.ToString());
     }
 
     private async Task ShowDetail(GachaCaseInfo gachaCaseInfo)
     {
-        var lotteryItemListResponse = await ViewModel.GetResponse<GetLotteryItemListRequest, GetLotteryItemListResponse>(new() {GachaButtonId = gachaCaseInfo.GachaButtonInfoList.First().GachaButtonId});
+        var lotteryItemListResponse = await ViewModel.GetResponse<GetLotteryItemListRequest, GetLotteryItemListResponse>(new GetLotteryItemListRequest {GachaButtonId = gachaCaseInfo.GachaButtonInfoList.First().GachaButtonId});
         var parameters = new DialogParameters<GachaDetail>();
         parameters.Add(d => d.GachaCaseInfo, gachaCaseInfo);
         parameters.Add(d => d.LotteryItemList, lotteryItemListResponse);
-        await DialogService.ShowAsync<GachaDetail>(Masters.TextResourceTable.Get("[CommonDetailLabel]"), parameters, new DialogOptions() { CloseButton = true, CloseOnEscapeKey = true });
+        await DialogService.ShowAsync<GachaDetail>(Masters.TextResourceTable.Get("[CommonDetailLabel]"), parameters, new DialogOptions {CloseButton = true, CloseOnEscapeKey = true});
     }
 
 }

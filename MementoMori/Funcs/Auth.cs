@@ -3,7 +3,7 @@ using MementoMori.Ortega.Share.Data.Auth;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
-namespace MementoMori;
+namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {
