@@ -176,7 +176,16 @@ public partial class MementoMoriFuncs : ReactiveObject, IDisposable
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        var task = func(AddLog, _cancellationTokenSource.Token);
+        var task = Task.CompletedTask;
+        try
+        {
+            task = func(AddLog, _cancellationTokenSource.Token);
+        }
+        catch (Exception e)
+        {
+            AddLog(e.ToString());
+        }
+
         _tasks.Add(task);
         _ = task.ContinueWith(t =>
         {
