@@ -305,7 +305,7 @@ services:
 
 进入 选项 - 幻影神殿 可以设置报酬权重，计算方法如下：
 
-$$Sort=weight\times\frac{N_{start\_current}^{lv\_current}}{N_{start\_max}^{lv\_max}}$$
+$$Sort=weight\times\frac{N_{start\_{current}}^{lv\_{current}}}{N_{start\_{max}}^{lv\_{max}}}$$
 
 假如设置是这样的：
 

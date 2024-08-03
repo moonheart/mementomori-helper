@@ -307,7 +307,7 @@ When there is no event: Select missions based on the configured reward weights i
 
 By going to Options - Phantom Temple, you can set the reward weight. The calculation method is as follows:
 
-$$Sort=weight\times\frac{N_{start\_current}^{lv\_current}}{N_{start\_max}^{lv\_max}}$$
+$$Sort=weight\times\frac{N_{start\_{current}}^{lv\_{current}}}{N_{start\_{max}}^{lv\_{max}}}$$
 
 Suppose the settings are as follows:
 
