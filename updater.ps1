@@ -1,58 +1,139 @@
+# open powershell with admin and run Set-ExecutionPolicy RemoteSigned
+
 $ErrorActionPreference = "Stop"
 
-# è®¾ç½®GitHubä»“åº“ä¿¡æ¯
+# ÉèÖÃGitHub²Ö¿âĞÅÏ¢
 $repository = "moonheart/mementomori-helper"
 $releaseApiUrl = "https://api.github.com/repos/$repository/releases/latest"
 $downloadUrl = "https://github.com/$repository/releases/download"
 
-# æŒ‡å®šç¨‹åºæ–‡ä»¶åå’Œä¸‹è½½ç›®å½•
+# »ñÈ¡ÓïÑÔ»·¾³
+$language = (Get-Culture).Name
+
+# ANSIÑÕÉ«¶¨Òå
+$Red = "Red"
+$Green = "Green"
+$Yellow = "Yellow"
+
+# ÏûÏ¢·­Òëº¯Êı
+function Translate-Message($messageKey, $params = @{}) {
+    $messages = @{
+        "AlreadyLatest" = @{
+            "zh-CN" = "³ÌĞòÒÑ¾­ÊÇ×îĞÂ°æ±¾ ($($params.currentVersionStr)). ÎŞĞè¸üĞÂ¡£"
+            "zh-TW" = "³ÌÊ½ÒÑ½›ÊÇ×îĞÂ°æ±¾ ($($params.currentVersionStr)). ŸoĞè¸üĞÂ¡£"
+            "ja-JP" = "¥×¥í¥°¥é¥à¤Ï¤¹¤Ç¤Ë×îĞÂ¥Ğ©`¥¸¥ç¥ó¤Ç¤¹ ($($params.currentVersionStr))¡£¸üĞÂ¤Ï²»Òª¤Ç¤¹¡£"
+            "default" = "The program is already the latest version ($($params.currentVersionStr)). No update is necessary."
+        }
+        "StartUpdate" = @{
+            "zh-CN" = "¿ªÊ¼¸üĞÂ..."
+            "zh-TW" = "é_Ê¼¸üĞÂ..."
+            "ja-JP" = "¸üĞÂ¤òé_Ê¼¤·¤Ş¤¹..."
+            "default" = "Starting update..."
+        }
+        "UpdateSuccess" = @{
+            "zh-CN" = "³ÌĞòÒÑ³É¹¦¸üĞÂµ½°æ±¾ $($params.latestVersionStr)."
+            "zh-TW" = "³ÌÊ½ÒÑ³É¹¦¸üĞÂµ½°æ±¾ $($params.latestVersionStr)."
+            "ja-JP" = "¥×¥í¥°¥é¥à¤Ï¥Ğ©`¥¸¥ç¥ó $($params.latestVersionStr) ¤ËÕı³£¤Ë¸üĞÂ¤µ¤ì¤Ş¤·¤¿¡£"
+            "default" = "The program has been successfully updated to version $($params.latestVersionStr)."
+        }
+        "NoLocalVersion" = @{
+            "zh-CN" = "Î´¼ì²âµ½±¾µØ³ÌĞò°æ±¾£¬¿ÉÄÜĞèÒª¸üĞÂ¡£"
+            "zh-TW" = "Î´™zœyµ½±¾µØ³ÌÊ½°æ±¾£¬¿ÉÄÜĞèÒª¸üĞÂ¡£"
+            "ja-JP" = "¥í©`¥«¥ë¥×¥í¥°¥é¥à¥Ğ©`¥¸¥ç¥ó¤¬—Ê³ö¤µ¤ì¤Ş¤»¤ó¤Ç¤·¤¿¡£¸üĞÂ¤¬±ØÒª¤«¤â¤·¤ì¤Ş¤»¤ó¡£"
+            "default" = "No local program version detected, update may be required."
+        }
+        "LatestVersion" = @{
+            "zh-CN" = "×îĞÂ°æ±¾: $($params.latestVersionStr)"
+            "zh-TW" = "×îĞÂ°æ±¾: $($params.latestVersionStr)"
+            "ja-JP" = "×îĞÂ¥Ğ©`¥¸¥ç¥ó: $($params.latestVersionStr)"
+            "default" = "Latest Version: $($params.latestVersionStr)"
+        }
+        "CurrentVersion" = @{
+            "zh-CN" = "µ±Ç°°æ±¾: v$($params.cleanedCurrentVersionStr)"
+            "zh-TW" = "®”Ç°°æ±¾: v$($params.cleanedCurrentVersionStr)"
+            "ja-JP" = "¬FÔÚ¤Î¥Ğ©`¥¸¥ç¥ó: v$($params.cleanedCurrentVersionStr)"
+            "default" = "Current Version: v$($params.cleanedCurrentVersionStr)"
+        }
+    }
+
+    if ($messages[$messageKey].ContainsKey($language)) 
+    {
+        return $messages[$messageKey][$language]
+    } 
+    else 
+    {
+        return $messages[$messageKey]["default"]
+    }
+}
+
+# Ö¸¶¨³ÌĞòÎÄ¼şÃûºÍÏÂÔØÄ¿Â¼
 $programFileName = "MementoMori.WebUI.exe"
 $downloadDirectory = $PSScriptRoot
 
-# åˆ é™¤ä¸Šæ¬¡çš„latest.zipå’Œè§£å‹çš„ä¸´æ—¶ç›®å½•ï¼ˆå¦‚æœå­˜åœ¨ï¼‰
+# É¾³ıÉÏ´ÎµÄlatest.zipºÍ½âÑ¹µÄÁÙÊ±Ä¿Â¼£¨Èç¹û´æÔÚ£©
 $lastDownloadedZip = Join-Path -Path $downloadDirectory -ChildPath "latest.zip"
 $lastTempDir = Join-Path -Path $downloadDirectory -ChildPath "temp"
 
-if (Test-Path -Path $lastDownloadedZip) {
+if (Test-Path -Path $lastDownloadedZip) 
+{
     Remove-Item -Path $lastDownloadedZip -Force
 }
 
-if (Test-Path -Path $lastTempDir) {
+if (Test-Path -Path $lastTempDir) 
+{
     Remove-Item -Path $lastTempDir -Force -Recurse
 }
 
-# è·å–æœ€æ–°çš„å‘å¸ƒä¿¡æ¯
+# »ñÈ¡×îĞÂµÄ·¢²¼ĞÅÏ¢
 $latestRelease = Invoke-RestMethod -Uri $releaseApiUrl
-
-# æå–æœ€æ–°ç‰ˆæœ¬å·
 $latestVersionStr = $latestRelease.tag_name
+Write-Host (Translate-Message "LatestVersion" @{ latestVersionStr = $latestVersionStr }) -ForegroundColor $Yellow
 
-$latestVersion = [System.Version]::Parse($latestVersionStr.TrimStart("v"))
+# »ñÈ¡±¾µØ³ÌĞòµÄ°æ±¾ĞÅÏ¢
+if (Test-Path -Path (Join-Path -Path $downloadDirectory -ChildPath $programFileName)) 
+{
+    $currentVersionInfo = (Get-ItemProperty -Path (Join-Path -Path $downloadDirectory -ChildPath $programFileName)).VersionInfo
+    $currentVersionStr = $currentVersionInfo.ProductVersion
 
-# æ£€æŸ¥å½“å‰ç‰ˆæœ¬æ˜¯å¦ä¸æœ€æ–°ç‰ˆæœ¬ç›¸åŒ
-$currentVersion = (Get-ItemProperty -Path (Join-Path -Path $downloadDirectory -ChildPath $programFileName)).VersionInfo.FileVersionRaw
+    $cleanedCurrentVersionStr = $currentVersionStr.Split('+')[0]
 
-if ($currentVersion -ge $latestVersion) {
-    Write-Host "ç¨‹åºå·²ç»æ˜¯æœ€æ–°ç‰ˆæœ¬ ($latestVersion). æ— éœ€æ›´æ–°."
+    Write-Host (Translate-Message "CurrentVersion" @{ cleanedCurrentVersionStr = $cleanedCurrentVersionStr }) -ForegroundColor $Yellow
+
+    if ([Version]$cleanedCurrentVersionStr -ge [Version]$latestVersionStr.TrimStart("v")) 
+    {
+        Write-Host (Translate-Message "AlreadyLatest" @{ currentVersionStr = "v$cleanedCurrentVersionStr" }) -ForegroundColor $Green
+        exit 0
+    }
 }
-else {
-    # ä¸‹è½½æœ€æ–°ç‰ˆæœ¬çš„å‹ç¼©åŒ…
-    $downloadLink = "$downloadUrl/$latestVersionStr/publish-win-x64.zip"
-    $downloadPath = Join-Path -Path $downloadDirectory -ChildPath "latest.zip"
-    Invoke-WebRequest -Uri $downloadLink -OutFile $downloadPath
-
-    # è§£å‹ç¼©æ–‡ä»¶åˆ°ä¸´æ—¶æ–‡ä»¶å¤¹
-    $tempDir = Join-Path -Path $downloadDirectory -ChildPath "temp"
-    Expand-Archive -Path $downloadPath -DestinationPath $tempDir -Force
-
-    # åœæ­¢å½“å‰è¿è¡Œçš„ç¨‹åº
-    Stop-Process -Name "MementoMori.WebUI" -ErrorAction SilentlyContinue
-
-    # å¤åˆ¶è§£å‹åçš„æ–‡ä»¶åˆ°ç¨‹åºæ–‡ä»¶å¤¹
-    Copy-Item -Path (Join-Path -Path $tempDir -ChildPath "publish-win-x64\*") -Destination $downloadDirectory -Recurse -Force
-
-    # å¯åŠ¨æ–°ç¨‹åº
-    Start-Process -FilePath (Join-Path -Path $downloadDirectory -ChildPath $programFileName)
-
-    Write-Host "ç¨‹åºå·²æˆåŠŸæ›´æ–°åˆ°ç‰ˆæœ¬ $latestVersion."
+else 
+{
+    Write-Host (Translate-Message "NoLocalVersion") -ForegroundColor $Red
 }
+
+Write-Host (Translate-Message "StartUpdate") -ForegroundColor $Green
+
+# ÏÂÔØ×îĞÂ°æ±¾µÄÑ¹Ëõ°ü
+$zipName = "publish-win-x64.zip"
+$downloadLink = "$downloadUrl/$latestVersionStr/$zipName"
+
+$downloadPath = Join-Path -Path $downloadDirectory -ChildPath "latest.zip"
+Invoke-WebRequest -Uri $downloadLink -OutFile $downloadPath
+
+# ½âÑ¹ËõÎÄ¼şµ½ÁÙÊ±ÎÄ¼ş¼Ğ
+$tempDir = Join-Path -Path $downloadDirectory -ChildPath "temp"
+Expand-Archive -Path $downloadPath -DestinationPath $tempDir -Force
+
+# Í£Ö¹µ±Ç°ÔËĞĞµÄ³ÌĞò
+Stop-Process -Name "MementoMori.WebUI" -ErrorAction SilentlyContinue
+
+# ¸´ÖÆ½âÑ¹ºóµÄÎÄ¼şµ½³ÌĞòÎÄ¼ş¼Ğ
+Copy-Item -Path (Join-Path -Path $tempDir -ChildPath "publish-win-x64\*") -Destination $downloadDirectory -Recurse -Force
+
+# É¾È¥ÁÙÊ±ÎÄ¼ş¼ĞÓëÏÂÔØµÄ°ü
+Remove-Item -Path $tempDir -Recurse -Force
+Remove-Item -Path $downloadPath -Force
+
+# Æô¶¯ĞÂ³ÌĞò
+Start-Process -FilePath (Join-Path -Path $downloadDirectory -ChildPath $programFileName)
+
+Write-Host (Translate-Message "UpdateSuccess" @{ latestVersionStr = $latestVersionStr }) -ForegroundColor $Green
