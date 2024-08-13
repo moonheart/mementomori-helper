@@ -554,4 +554,22 @@
   <data name="No setting means using any item for purchase" xml:space="preserve">
       <value>No setting means using any item for purchase</value>
   </data>
+  <data name="The expected diamond value of the current task is now below 20, do not refresh, dispatch directly." xml:space="preserve">
+      <value>The expected diamond value of the current task is now below 20, do not refresh, dispatch directly.</value>
+  </data>
+  <data name="Refresh limit reached, dispatch directly" xml:space="preserve">
+      <value>Refresh limit reached, dispatch directly</value>
+  </data>
+  <data name="Auto refresh diamonds" xml:space="preserve">
+      <value>Auto-refresh diamonds</value>
+  </data>
+  <data name="Max refresh count" xml:space="preserve">
+      <value>Max refresh count</value>
+  </data>
+  <data name="Enter 0 to disable auto-refresh." xml:space="preserve">
+      <value>Enter 0 to disable auto-refresh. Each refresh costs 20 diamonds and only refreshes if the expected value is greater than 20. For a single task: level 8 has an expected value of 13, level 7 is 11.6, level 6 is 9.8, level 5 is 7.9, and level 4 is 5.7. Auto-refresh is disabled for levels below 4. Expected values automatically account for double reward events.</value>
+  </data>
+  <data name="Current expected value: {0}. Today, {1}/{2} auto-refreshes completed. Refreshing now." xml:space="preserve">
+      <value>Current expected value: {0}. Today, {1}/{2} auto-refreshes completed. Refreshing now.</value>
+  </data>
 </root>

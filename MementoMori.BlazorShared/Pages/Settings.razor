@@ -27,25 +27,7 @@
         <GachaSettings/>
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText>@Masters.TextResourceTable.Get("[CommonHeaderBountyQuestLabel]") (Global)</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudField Label="@ResourceStrings.BountyQuestTargetItems" Variant="Variant.Outlined">
-                    <MudSelect T="UserItem" Label="" MultiSelection="true" Dense="true" Comparer="@(new UserItemComparer())"
-                               @bind-SelectedValues="BountyQuestAutoTargetItems" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
-                        @foreach (var item in _bountyQuestRewardItems)
-                        {
-                            <MudSelectItem T="UserItem" Value="@item">@ItemUtil.GetItemName(item)</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudField>
-
-            </MudCardContent>
-        </MudCard>
+        <BountyQuest />
     </MudItem>
     <MudItem sm="12" md="6" lg="4" xl="3">
         <DungeonBattleSettings />
@@ -90,39 +72,9 @@
 
 @code {
 
-    private IEnumerable<UserItem> _selected;
-    List<UserItem> _bountyQuestRewardItems = new();
-
     protected override async Task AccountChanged()
     {
         await InvokeAsync(StateHasChanged);
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-
-        _bountyQuestRewardItems.AddRange(new[]
-        {
-            new UserItem() {ItemType = ItemType.Gold, ItemId = 1},
-            new UserItem() {ItemType = ItemType.CurrencyFree, ItemId = 1},
-            new UserItem() {ItemType = ItemType.CharacterTrainingMaterial, ItemId = 2},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 4},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 5},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 6},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 7},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 8},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 9},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 10},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 27},
-            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 28}
-        });
-    }
-
-    IEnumerable<UserItem> BountyQuestAutoTargetItems
-    {
-        get => WritableGameConfig.Value.BountyQuestAuto.TargetItems;
-        set => WritableGameConfig.Update(x => x.BountyQuestAuto.TargetItems = value.ToList());
     }
 
     #region Other
@@ -135,21 +87,5 @@
 
     #endregion
 
-    private class UserItemComparer : IEqualityComparer<UserItem>
-    {
-        public bool Equals(UserItem x, UserItem y)
-        {
-            if (ReferenceEquals(x, y)) return true;
-            if (ReferenceEquals(x, null)) return false;
-            if (ReferenceEquals(y, null)) return false;
-            if (x.GetType() != y.GetType()) return false;
-            return x.ItemId == y.ItemId && x.ItemType == y.ItemType;
-        }
-
-        public int GetHashCode(UserItem obj)
-        {
-            return HashCode.Combine(obj.ItemId, (int) obj.ItemType);
-        }
-    }
 
 }

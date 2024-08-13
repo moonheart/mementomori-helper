@@ -146,8 +146,6 @@ public class GameConfig
     public class BountyQuestAutoModel
     {
         public List<UserItem> TargetItems { get; set; } = new();
-        public int AllowedNonTargetItemCount { get; set; } = 100;
-        public int AutoRefreshCount { get; set; }
     }
 
     public class WeightedItem : IUserItem

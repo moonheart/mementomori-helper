@@ -448,4 +448,22 @@
     <data name="No setting means using any item for purchase" xml:space="preserve">
         <value>설정하지 않으면 임의의 아이템으로 구매</value>
     </data>
+    <data name="The expected diamond value of the current task is now below 20, do not refresh, dispatch directly." xml:space="preserve">
+        <value>현재 작업의 다이아몬드 예상 값이 20 미만이므로, 새로고침 없이 바로 파견합니다.</value>
+    </data>
+    <data name="Refresh limit reached, dispatch directly" xml:space="preserve">
+        <value>새로고침 횟수가 한도에 도달하여, 바로 파견합니다.</value>
+    </data>
+    <data name="Auto refresh diamonds" xml:space="preserve">
+        <value>다이아몬드를 자동으로 새로고침.</value>
+    </data>
+    <data name="Max refresh count" xml:space="preserve">
+        <value>최대 새로고침 횟수.</value>
+    </data>
+    <data name="Enter 0 to disable auto-refresh." xml:space="preserve">
+        <value>자동 새로고침을 비활성화하려면 0을 입력하세요. 각 새로고침은 20 다이아몬드를 소모하며, 기대값이 20을 초과할 때만 새로고침이 실행됩니다. 단일 작업의 경우 8레벨 기대값은 13, 7레벨은 11.6, 6레벨은 9.8, 5레벨은 7.9, 4레벨은 5.7입니다. 4레벨 미만은 자동 새로고침이 비활성화됩니다. 기대값은 자동으로 두 배 보상 이벤트를 계산합니다.</value>
+    </data>
+    <data name="Current expected value: {0}. Today, {1}/{2} auto-refreshes completed. Refreshing now." xml:space="preserve">
+        <value>현재 기대값: {0}. 오늘 {1}/{2}회 자동 새로고침 완료. 지금 새로고침합니다.</value>
+    </data>
 </root>

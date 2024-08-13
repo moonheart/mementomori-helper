@@ -151,6 +151,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Auto-refresh diamonds 的本地化字符串。
+        /// </summary>
+        public static string Auto_refresh_diamonds {
+            get {
+                return ResourceManager.GetString("Auto refresh diamonds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Auto remove whitelist 的本地化字符串。
         /// </summary>
         public static string Auto_remove_whitelist {
@@ -520,6 +529,16 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似  的本地化字符串。
+        /// </summary>
+        public static string Current_expected_value___0___Today___1___2__auto_refreshes_completed__Refreshing_now_ {
+            get {
+                return ResourceManager.GetString("Current expected value: {0}. Today, {1}/{2} auto-refreshes completed. Refreshing " +
+                        "now.", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Daily Job 的本地化字符串。
         /// </summary>
         public static string DailyJob {
@@ -633,6 +652,15 @@ namespace MementoMori.Common.Localization {
         public static string Enter {
             get {
                 return ResourceManager.GetString("Enter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Enter 0 to disable auto-refresh; each refresh costs 20 diamonds and only refreshes if the expected value is greater than 20. For a single task, level 8 has an expected value of 13, level 7 is 11.6, level 6 is 9.8, level 5 is 7.9, and level 4 is 5.7. Levels below 4 cannot auto-refresh. 的本地化字符串。
+        /// </summary>
+        public static string Enter_0_to_disable_auto_refresh_ {
+            get {
+                return ResourceManager.GetString("Enter 0 to disable auto-refresh.", resourceCulture);
             }
         }
         
@@ -858,6 +886,15 @@ namespace MementoMori.Common.Localization {
         public static string Max_Battle_Power {
             get {
                 return ResourceManager.GetString("Max Battle Power", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Max refresh count 的本地化字符串。
+        /// </summary>
+        public static string Max_refresh_count {
+            get {
+                return ResourceManager.GetString("Max refresh count", resourceCulture);
             }
         }
         
@@ -1141,6 +1178,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Refresh limit reached, dispatch directly 的本地化字符串。
+        /// </summary>
+        public static string Refresh_limit_reached__dispatch_directly {
+            get {
+                return ResourceManager.GetString("Refresh limit reached, dispatch directly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Reinforce Equipment Once 的本地化字符串。
         /// </summary>
         public static string ReinforceEquipmentOnce {
@@ -1390,6 +1436,16 @@ namespace MementoMori.Common.Localization {
             get {
                 return ResourceManager.GetString("The current version ({0}) is not the latest version ({1}). Click to download the " +
                         "latest version.", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 The expected diamond value of the current task is now below 20, do not refresh, dispatch directly. 的本地化字符串。
+        /// </summary>
+        public static string The_expected_diamond_value_of_the_current_task_is_now_below_20__do_not_refresh__dispatch_directly_ {
+            get {
+                return ResourceManager.GetString("The expected diamond value of the current task is now below 20, do not refresh, d" +
+                        "ispatch directly.", resourceCulture);
             }
         }
         

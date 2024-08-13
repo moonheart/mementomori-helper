@@ -555,4 +555,22 @@
       <value>不设置表示使用任意物品进行购买
 </value>
   </data>
+  <data name="The expected diamond value of the current task is now below 20, do not refresh, dispatch directly." xml:space="preserve">
+      <value>当前任务的钻石数量期望值已低于20, 不再刷新,直接派遣</value>
+  </data>
+  <data name="Refresh limit reached, dispatch directly" xml:space="preserve">
+      <value>刷新次数已达上限，直接派遣</value>
+  </data>
+  <data name="Auto refresh diamonds" xml:space="preserve">
+      <value>自动刷新钻石</value>
+  </data>
+  <data name="Max refresh count" xml:space="preserve">
+      <value>最大刷新次数</value>
+  </data>
+  <data name="Enter 0 to disable auto-refresh." xml:space="preserve">
+      <value>输入0表示不进行自动刷新；每次刷新消耗20钻石，期望值大于20才刷新；对于单个任务，8级的期望值为13，7级11.6，6级9.8，5级7.9，4级5.7，低于4级不能自动刷新；期望值自动计算双倍报酬活动。</value>
+  </data>
+  <data name="Current expected value: {0}. Today, {1}/{2} auto-refreshes completed. Refreshing now." xml:space="preserve">
+      <value>当前期望值：{0}，今日已自动刷新 {1}/{2} 次，现在刷新。</value>
+  </data>
 </root>

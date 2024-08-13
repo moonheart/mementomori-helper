@@ -8,48 +8,70 @@ namespace MementoMori.Utils;
 
 public static class BountyQuestAutoFormationUtil
 {
-    public static List<BountyQuestStartInfo> CalcAutoFormation(GetListResponse getlistResponse, UserSyncData userSyncData, GameConfig.BountyQuestAutoModel bountyQuestConfig, bool force = false)
+    public static List<BountyQuestStartInfo> CalcAutoFormation(
+        GetListResponse getListResponse,
+        UserSyncData userSyncData,
+        GameConfig.BountyQuestAutoModel bountyQuestConfig,
+        bool force = false,
+        bool diamondQuestOnly = false)
     {
         var bountyQuestStartInfos = new List<BountyQuestStartInfo>();
-        // 正在执行中的任务
-        var ongoingQuest = getlistResponse.UserBountyQuestDtoInfos.Where(d => d.BountyQuestEndTime > 0).Select(d => d.BountyQuestId).ToList();
-        foreach (var bountyQuestInfos in getlistResponse.BountyQuestInfos.Where(d => !ongoingQuest.Contains(d.BountyQuestId)).GroupBy(d => d.BountyQuestType))
+        // ongoing quests
+        var ongoingQuest = getListResponse.UserBountyQuestDtoInfos.Where(d => d.BountyQuestEndTime > 0).Select(d => d.BountyQuestId).ToList();
+        foreach (var bountyQuestInfos in getListResponse.BountyQuestInfos
+                     .Where(d => !ongoingQuest.Contains(d.BountyQuestId)) // exclude ongoing quests
+                     .Where(d => !diamondQuestOnly || (d.BountyQuestType == BountyQuestType.Solo && d.RewardItems.Exists(x => x.IsCurrency()))) // diamond quests only
+                     .GroupBy(d => d.BountyQuestType))
         {
-            // 已经使用的卡片
-            var usedCharacterGuids = getlistResponse.UserBountyQuestDtoInfos.Where(d => d.BountyQuestType == bountyQuestInfos.Key).SelectMany(d =>
+            // already used character guids
+            var usedCharacterGuids = getListResponse.UserBountyQuestDtoInfos.Where(d => d.BountyQuestType == bountyQuestInfos.Key).SelectMany(d =>
                 d.StartMembers.Select(x => x.UserCharacterGuid));
-            // 用于当前任务类型的角色列表
-            var userCharacterDtoInfos = userSyncData.UserCharacterDtoInfos.Where(d => !usedCharacterGuids.Contains(d.Guid)).OrderBy(d => d.RarityFlags).ToList();
+
+            // characters to be used
+            var userCharacterDtoInfos = userSyncData.UserCharacterDtoInfos
+                .Where(d => !usedCharacterGuids.Contains(d.Guid)) // exclude used characters
+                .OrderBy(d => d.RarityFlags) // sort by rarity
+                .ToList();
+            // if guerrilla, sort by rarity and element type
             if (bountyQuestInfos.Key == BountyQuestType.Guerrilla)
                 userCharacterDtoInfos = SortGuerrilla(userCharacterDtoInfos);
+
+            // stored characters to be used, for checking if the character is already used
             var selectedCharacterGuids = new List<string>();
             foreach (var bountyQuestInfo in bountyQuestInfos)
             {
-                if (bountyQuestInfos.Key == BountyQuestType.Solo && !force)
+                // for solo quests, check if the reward item is included in the target items
+                if (bountyQuestInfos.Key == BountyQuestType.Solo && // solo quest 
+                    !force && // not force dispatch
+                    bountyQuestConfig.TargetItems.Count > 0) // target items are specified
                 {
-                    var found = bountyQuestConfig.TargetItems.Any(includeItem =>
-                        bountyQuestInfo.RewardItems.Exists(d => d.ItemType == includeItem.ItemType && d.ItemId == includeItem.ItemId));
+                    // if the target items are not included in the reward items, skip
+                    var found = bountyQuestConfig.TargetItems
+                        .Any(includeItem => bountyQuestInfo.RewardItems.Exists(d => d.IsEqual(includeItem.ItemType, includeItem.ItemId)));
 
-                    if (bountyQuestConfig.TargetItems.Count > 0 && !found) continue;
+                    if (!found) continue;
                 }
 
+                // each character can only be used once in each bounty quest
                 var selectedCharacterId = new List<long>();
                 var bountyQuestData = new BountyQuestData(bountyQuestInfo);
-                var rarityRequireCount = bountyQuestData.RarityRequireCount;
-                var elementTypes = bountyQuestData.ElementTypes.ToList();
+                var requiredRarityCount = bountyQuestData.RarityRequireCount;
+                var requiredElementTypes = bountyQuestData.ElementTypes.ToList();
+
                 var questMemberInfos = new List<BountyQuestMemberInfo>();
                 var bountyQuestStartInfo = new BountyQuestStartInfo {BountyQuestId = bountyQuestInfo.BountyQuestId, BountyQuestMemberInfos = questMemberInfos};
-                // 检查是否联合任务
+                // if team quest, get support members
                 if (bountyQuestData.QuestInfo.BountyQuestType == BountyQuestType.Team)
                 {
-                    var userBountyQuestMemberDtoInfos = GetReadySupportMemberDtoInfos(getlistResponse);
-                    // 这里可能获取不到符合条件的支援角色
+                    var userBountyQuestMemberDtoInfos = GetReadySupportMemberDtoInfos(getListResponse);
                     var supportMember = GetSupportMember(userBountyQuestMemberDtoInfos, bountyQuestData);
+                    // if no support member found, skip  
                     if (supportMember != null)
                     {
                         var characterMb = CharacterTable.GetById(supportMember.CharacterId);
-                        if (rarityRequireCount > 0) rarityRequireCount--;
-                        elementTypes.Remove(characterMb.ElementType);
+                        if (requiredRarityCount > 0) requiredRarityCount--;
+                        // remove the element type from the list
+                        requiredElementTypes.Remove(characterMb.ElementType);
                         selectedCharacterId.Add(supportMember.CharacterId);
                         questMemberInfos.Add(new BountyQuestMemberInfo
                         {
@@ -61,28 +83,28 @@ public static class BountyQuestAutoFormationUtil
                         continue;
                 }
 
-                // 匹配元素类型
+                // match the required element types and rarity
                 do
                 {
                     UserCharacterDtoInfo target = null;
-                    if (rarityRequireCount > 0)
-                        target = GetCharacterByRarity(userCharacterDtoInfos, selectedCharacterGuids, selectedCharacterId, bountyQuestData.Rarity, elementTypes);
+                    if (requiredRarityCount > 0)
+                        target = GetCharacterByRarity(userCharacterDtoInfos, selectedCharacterGuids, selectedCharacterId, bountyQuestData.Rarity, requiredElementTypes);
                     else
-                        target = GetCharacterByRarity(userCharacterDtoInfos, selectedCharacterGuids, selectedCharacterId, CharacterRarityFlags.None, elementTypes);
+                        target = GetCharacterByRarity(userCharacterDtoInfos, selectedCharacterGuids, selectedCharacterId, CharacterRarityFlags.None, requiredElementTypes);
 
                     if (target == null) break;
                     // 从待匹配元素中移除该元素
-                    elementTypes.Remove(CharacterTable.GetById(target.CharacterId).ElementType);
+                    requiredElementTypes.Remove(CharacterTable.GetById(target.CharacterId).ElementType);
                     // 从候选卡片里面移除该角色
-                    if (rarityRequireCount > 0) rarityRequireCount--;
+                    if (requiredRarityCount > 0) requiredRarityCount--;
                     selectedCharacterId.Add(target.CharacterId);
                     questMemberInfos.Add(new BountyQuestMemberInfo
                     {
                         CharacterId = target.CharacterId, CharacterRarityFlags = target.RarityFlags, UserCharacterGuid = target.Guid, PlayerId = target.PlayerId
                     });
-                } while (elementTypes.Count > 0);
+                } while (requiredElementTypes.Count > 0);
 
-                while (rarityRequireCount > 0)
+                while (requiredRarityCount > 0)
                 {
                     var target = GetCharacterByRarity(userCharacterDtoInfos, selectedCharacterGuids, selectedCharacterId, bountyQuestData.Rarity);
                     if (target != null)
@@ -92,13 +114,13 @@ public static class BountyQuestAutoFormationUtil
                         {
                             CharacterId = target.CharacterId, CharacterRarityFlags = target.RarityFlags, UserCharacterGuid = target.Guid, PlayerId = target.PlayerId
                         });
-                        rarityRequireCount--;
+                        requiredRarityCount--;
                     }
                     else
                         break;
                 }
 
-                if (elementTypes.Count > 0 || rarityRequireCount > 0) continue;
+                if (requiredElementTypes.Count > 0 || requiredRarityCount > 0) continue;
 
                 bountyQuestStartInfos.Add(bountyQuestStartInfo);
                 // 排除 GUID
@@ -108,15 +130,6 @@ public static class BountyQuestAutoFormationUtil
 
         return bountyQuestStartInfos;
     }
-
-    // public static List<UserCharacterDtoInfo> GetReadyCharacters(List<UserBountyQuestDtoInfo> questDtoInfos, BountyQuestType bountyQuestType)
-    // {
-    //     var userCharacterDtoInfos = Services.Get<MementoMoriFuncs>().UserSyncData.UserCharacterDtoInfos;
-    //     foreach (var questDtoInfo in questDtoInfos)
-    //     {
-    //         
-    //     }
-    // }
 
     public static UserCharacterDtoInfo GetCharacterByRarity(
         List<UserCharacterDtoInfo> userCharacterDtoInfos,

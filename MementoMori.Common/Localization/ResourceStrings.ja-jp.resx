@@ -448,4 +448,22 @@
     <data name="No setting means using any item for purchase" xml:space="preserve">
         <value>設定なしは任意のアイテムで購入</value>
     </data>
+    <data name="The expected diamond value of the current task is now below 20, do not refresh, dispatch directly." xml:space="preserve">
+        <value>現在のタスクのダイヤの期待値が20未満になったため、リフレッシュせずに直接派遣します。</value>
+    </data>
+    <data name="Refresh limit reached, dispatch directly" xml:space="preserve">
+        <value>リフレッシュ回数が上限に達したため、直接派遣します。</value>
+    </data>
+    <data name="Auto refresh diamonds" xml:space="preserve">
+        <value>ダイヤを自動でリフレッシュ。</value>
+    </data>
+    <data name="Max refresh count" xml:space="preserve">
+        <value>最大リフレッシュ回数。</value>
+    </data>
+    <data name="Enter 0 to disable auto-refresh." xml:space="preserve">
+        <value>0を入力すると自動リフレッシュを無効にします。リフレッシュごとに20ダイヤを消費し、期待値が20を超える場合にのみリフレッシュします。単一タスクの場合、8級の期待値は13、7級は11.6、6級は9.8、5級は7.9、4級は5.7です。4級未満では自動リフレッシュが無効になります。期待値は自動的に2倍報酬イベントを考慮します。</value>
+    </data>
+    <data name="Current expected value: {0}. Today, {1}/{2} auto-refreshes completed. Refreshing now." xml:space="preserve">
+        <value>現在の期待値：{0}。本日自動リフレッシュ {1}/{2} 回完了。リフレッシュ中。</value>
+    </data>
 </root>

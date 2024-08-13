@@ -1,0 +1,100 @@
+﻿@using MementoMori.Common.Localization
+@using MementoMori.Option
+@using MementoMori.Ortega.Common.Utils
+@using MementoMori.Ortega.Share
+@using MementoMori.Ortega.Share.Data.Item
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.Ortega.Share.Extensions
+@inject IWritableOptions<GameConfig> WritableGameConfig
+@inherits MementoMori.BlazorShared.Models.AccountComponent
+@inject IWritableOptions<PlayersOption> PlayersOptions
+@inject ISnackbar Snackbar
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>@Masters.TextResourceTable.Get("[CommonHeaderBountyQuestLabel]") (Global)</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton Variant="Variant.Outlined" Size="Size.Small" Icon="@Icons.Material.Filled.Save" OnClick="() => SavePlayerSetting()"></MudIconButton>
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudField Label="@ResourceStrings.BountyQuestTargetItems" Variant="Variant.Outlined">
+            <MudSelect T="UserItem" Label="" MultiSelection="true" Dense="true" Comparer="@(new UserItemComparer())"
+                       @bind-SelectedValues="BountyQuestAutoTargetItems" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
+                @foreach (var item in _bountyQuestRewardItems)
+                {
+                    <MudSelectItem T="UserItem" Value="@item">@ItemUtil.GetItemName(item)</MudSelectItem>
+                }
+            </MudSelect>
+        </MudField>
+        <MudField Label="@($"{ResourceStrings.Auto_refresh_diamonds} ({Funcs?.UserSyncData?.UserStatusDtoInfo?.Name})")" Variant="Variant.Outlined">
+            <MudNumericField T="int" Label="@ResourceStrings.Max_refresh_count" HelperText="@ResourceStrings.Enter_0_to_disable_auto_refresh_" @bind-Value="_autoRefreshMaxCount"></MudNumericField>
+        </MudField>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    List<UserItem> _bountyQuestRewardItems = new();
+
+    private int _autoRefreshMaxCount;
+
+    protected override Task AccountChanged()
+    {
+        _bountyQuestRewardItems.AddRange(new[]
+        {
+            new UserItem() {ItemType = ItemType.Gold, ItemId = 1},
+            new UserItem() {ItemType = ItemType.CurrencyFree, ItemId = 1},
+            new UserItem() {ItemType = ItemType.CharacterTrainingMaterial, ItemId = 2},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 4},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 5},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 6},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 7},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 8},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 9},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 10},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 27},
+            new UserItem() {ItemType = ItemType.TreasureChest, ItemId = 28}
+        });
+        _autoRefreshMaxCount = PlayersOptions.Value.TryGetValue(NetworkManager.PlayerId, out var v1) ? v1.BountyQuest.MaxRefreshCount : 0;
+        return Task.CompletedTask;
+    }
+
+    IEnumerable<UserItem> BountyQuestAutoTargetItems
+    {
+        get => WritableGameConfig.Value.BountyQuestAuto.TargetItems;
+        set => WritableGameConfig.Update(x => x.BountyQuestAuto.TargetItems = value.ToList());
+    }
+
+    private void SavePlayerSetting()
+    {
+        PlayersOptions.Update(opt =>
+        {
+            var playerOpt = opt.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
+            playerOpt.BountyQuest.MaxRefreshCount = _autoRefreshMaxCount;
+        });
+
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add(ResourceStrings.Save_successful, Severity.Success);
+    }
+
+    private class UserItemComparer : IEqualityComparer<UserItem>
+    {
+        public bool Equals(UserItem x, UserItem y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            if (x.GetType() != y.GetType()) return false;
+            return x.ItemId == y.ItemId && x.ItemType == y.ItemType;
+        }
+
+        public int GetHashCode(UserItem obj)
+        {
+            return HashCode.Combine(obj.ItemId, (int) obj.ItemType);
+        }
+    }
+
+}
