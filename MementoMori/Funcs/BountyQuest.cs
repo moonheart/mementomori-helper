@@ -106,6 +106,11 @@ public partial class MementoMoriFuncs
                     PlayerOption.BountyQuest.TodayRefreshCount[date], PlayerOption.BountyQuest.MaxRefreshCount));
 
                 await GetResponse<RemakeRequest, RemakeResponse>(new RemakeRequest());
+                _playersOption.Update(opt =>
+                {
+                    var playerOpt = opt.GetOrAdd(NetworkManager.PlayerId, id => new PlayerOption {PlayerId = id});
+                    playerOpt.BountyQuest.TodayRefreshCount[date]++;
+                });
                 response1 = await GetBountyRequestInfo();
                 if (response1 == null) return;
                 notDispatchedQuests = response1.BountyQuestInfos
