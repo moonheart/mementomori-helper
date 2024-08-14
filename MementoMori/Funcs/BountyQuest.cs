@@ -46,6 +46,8 @@ public partial class MementoMoriFuncs
                 await Dispatch(bountyQuestStartInfos, log);
             }
 
+            response1 = await GetBountyRequestInfo();
+
             // if no diamond, do not refresh
             if (!GameConfig.BountyQuestAuto.TargetItems.Exists(d => d.IsCurrency())) return;
 
@@ -53,7 +55,7 @@ public partial class MementoMoriFuncs
             if (PlayerOption.BountyQuest.MaxRefreshCount == 0) return;
 
             // if rank is not in the list, do not refresh (rank is too low)
-            if (!DiamondExpectedCount.ContainsKey(response1.UserBoardRank)) return;
+            if (!DiamondExpectedCount.ContainsKey(response1!.UserBoardRank)) return;
 
             var date = TimeManager.ServerNow.ToString("yyyy-MM-dd");
             // if new date, clear old values and initialize new date
@@ -125,6 +127,8 @@ public partial class MementoMoriFuncs
                     await Dispatch(bountyQuestStartInfos, log);
                 }
             }
+
+            await GetBountyRequestInfo();
         });
 
         async Task Dispatch(List<BountyQuestStartInfo> bountyQuestStartInfos, Action<string> log)
