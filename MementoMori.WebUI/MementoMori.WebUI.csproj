@@ -8,74 +8,74 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <SupportedPlatform Include="browser" />
+        <SupportedPlatform Include="browser"/>
     </ItemGroup>
 
 	<ItemGroup>
-      <ProjectReference Include="..\MementoMori.BlazorShared\MementoMori.BlazorShared.csproj" />
-      <ProjectReference Include="..\MementoMori.Common\MementoMori.Common.csproj" />
-      <ProjectReference Include="..\MementoMori\MementoMori.csproj" />
+        <ProjectReference Include="..\MementoMori.BlazorShared\MementoMori.BlazorShared.csproj"/>
+        <ProjectReference Include="..\MementoMori.Common\MementoMori.Common.csproj"/>
+        <ProjectReference Include="..\MementoMori\MementoMori.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.5" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.5" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.5" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.5" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="8.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.8"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2"/>
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.8"/>
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.8"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="8.0.0"/>
         <PackageReference Include="MudBlazor" Version="6.19.1" />
-        <PackageReference Include="Quartz" Version="3.9.0" />
-        <PackageReference Include="Quartz.AspNetCore" Version="3.9.0" />
-      <PackageReference Include="ReactiveUI.Blazor" Version="20.1.1" />
-      <PackageReference Include="Sentry.AspNetCore" Version="4.6.2" />
+        <PackageReference Include="Quartz" Version="3.13.0" />
+        <PackageReference Include="Quartz.AspNetCore" Version="3.13.0" />
+        <PackageReference Include="ReactiveUI.Blazor" Version="20.1.1"/>
+        <PackageReference Include="Sentry.AspNetCore" Version="4.9.0" />
       <PackageReference Include="Injectio" Version="3.1.0" PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Remove="BattleLogs\**" />
-      <Content Remove="Extensions\**" />
-      <Content Remove="Master\**" />
-      <Content Remove="Models\**" />
-      <Content Remove="Pages\**" />
-      <Content Remove="Shared\**" />
-      <Content Remove="UI\**" />
-      <Content Remove="ViewModels\**" />
+        <Content Remove="BattleLogs\**"/>
+        <Content Remove="Extensions\**"/>
+        <Content Remove="Master\**"/>
+        <Content Remove="Models\**"/>
+        <Content Remove="Pages\**"/>
+        <Content Remove="Shared\**"/>
+        <Content Remove="UI\**"/>
+        <Content Remove="ViewModels\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="BattleLogs\**" />
-      <Compile Remove="Extensions\**" />
-      <Compile Remove="Master\**" />
-      <Compile Remove="Models\**" />
-      <Compile Remove="Pages\**" />
-      <Compile Remove="Shared\**" />
-      <Compile Remove="UI\**" />
-      <Compile Remove="ViewModels\**" />
+        <Compile Remove="BattleLogs\**"/>
+        <Compile Remove="Extensions\**"/>
+        <Compile Remove="Master\**"/>
+        <Compile Remove="Models\**"/>
+        <Compile Remove="Pages\**"/>
+        <Compile Remove="Shared\**"/>
+        <Compile Remove="UI\**"/>
+        <Compile Remove="ViewModels\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Remove="BattleLogs\**" />
-      <EmbeddedResource Remove="Extensions\**" />
-      <EmbeddedResource Remove="Master\**" />
-      <EmbeddedResource Remove="Models\**" />
-      <EmbeddedResource Remove="Pages\**" />
-      <EmbeddedResource Remove="Shared\**" />
-      <EmbeddedResource Remove="UI\**" />
-      <EmbeddedResource Remove="ViewModels\**" />
+        <EmbeddedResource Remove="BattleLogs\**"/>
+        <EmbeddedResource Remove="Extensions\**"/>
+        <EmbeddedResource Remove="Master\**"/>
+        <EmbeddedResource Remove="Models\**"/>
+        <EmbeddedResource Remove="Pages\**"/>
+        <EmbeddedResource Remove="Shared\**"/>
+        <EmbeddedResource Remove="UI\**"/>
+        <EmbeddedResource Remove="ViewModels\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="BattleLogs\**" />
-      <None Remove="Extensions\**" />
-      <None Remove="Master\**" />
-      <None Remove="Models\**" />
-      <None Remove="Pages\**" />
-      <None Remove="Shared\**" />
-      <None Remove="UI\**" />
-      <None Remove="ViewModels\**" />
+        <None Remove="BattleLogs\**"/>
+        <None Remove="Extensions\**"/>
+        <None Remove="Master\**"/>
+        <None Remove="Models\**"/>
+        <None Remove="Pages\**"/>
+        <None Remove="Shared\**"/>
+        <None Remove="UI\**"/>
+        <None Remove="ViewModels\**"/>
     </ItemGroup>
 
 </Project>
