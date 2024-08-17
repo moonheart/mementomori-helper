@@ -1,9 +1,6 @@
-﻿@using MementoMori.Extensions
-@using MementoMori.Ortega.Common.Utils
+﻿@using MementoMori.Ortega.Common.Utils
 @using MementoMori.Ortega.Custom
 @using MementoMori.Ortega.Share
-@using MementoMori.Ortega.Share.Data.Battle
-@using MementoMori.Ortega.Share.Data.Character
 @using MementoMori.Ortega.Share.Data.DtoInfo
 @using MementoMori.Ortega.Share.Enums
 @using MementoMori.Ortega.Share.Utils
@@ -42,8 +39,8 @@
     <MudCard>
         <MudGrid>
             <MudItem xs="6">
-                <MudList>
-                    <MudListItem>
+                <MudList T="UserCharacterDtoInfo">
+                    <MudListItem T="UserCharacterDtoInfo">
                         @foreach (var characterDto in UserCharacterDtoInfos)
                         {
                             var characterIcon = AtlasManager.GetCharacterIcon(characterDto.CharacterId);
@@ -55,22 +52,22 @@
                                         <MudImage Src="@characterIcon" ObjectFit="ObjectFit.Contain"></MudImage>
                                         <MudPaper>
                                             <MudStack Spacing="0" Row="true" Class="flex-wrap">
-                                                    @foreach (var type in EnumUtil.GetValueList<BaseParameterType>())
-                                                    {
-                                                        var name = Tr(type);
-                                                        var value = baseParameter.GetValue(type);
-                                                        <MudField Label="@name" Style="min-width: 60px" InnerPadding="false">
-                                                            @(value.ToString("N0"))
-                                                        </MudField>
-                                                    }
-                                                    @foreach (var type in EnumUtil.GetValueList<BattleParameterType>())
-                                                    {
-                                                        var name = Tr(type);
-                                                        var value = battleParameter.GetParameter(type);
-                                                        <MudField Label="@name" Style="min-width: 60px" InnerPadding="false">
-                                                            @(value.ToString("N0"))
-                                                        </MudField>
-                                                    }
+                                                @foreach (var type in EnumUtil.GetValueList<BaseParameterType>())
+                                                {
+                                                    var name = Tr(type);
+                                                    var value = baseParameter.GetValue(type);
+                                                    <MudField Label="@name" Style="min-width: 60px" InnerPadding="false">
+                                                        @(value.ToString("N0"))
+                                                    </MudField>
+                                                }
+                                                @foreach (var type in EnumUtil.GetValueList<BattleParameterType>())
+                                                {
+                                                    var name = Tr(type);
+                                                    var value = battleParameter.GetParameter(type);
+                                                    <MudField Label="@name" Style="min-width: 60px" InnerPadding="false">
+                                                        @(value.ToString("N0"))
+                                                    </MudField>
+                                                }
                                             </MudStack>
                                         </MudPaper>
                                     </MudStack>
@@ -80,7 +77,7 @@
                                             {
                                                 var equipmentMb = Masters.EquipmentTable.GetById(equipment.EquipmentId);
                                                 var changedSetEquipmentCount = Funcs.UserSyncData.GetChangedSetEquipmentCount(equipment.CharacterGuid, equipmentMb.EquipmentSetId, slotType);
-                                                <EquipmentInfo EquipmentDtoInfo="equipment" ChangedSetEquipmentCount="changedSetEquipmentCount" MiniMode="true" />
+                                                <EquipmentInfo EquipmentDtoInfo="equipment" ChangedSetEquipmentCount="changedSetEquipmentCount" MiniMode="true"/>
                                             }
                                         </MudStack>
                                     </MudPaper>
@@ -88,7 +85,7 @@
                             </MudCard>
                         }
 
-                        
+
                     </MudListItem>
                 </MudList>
             </MudItem>

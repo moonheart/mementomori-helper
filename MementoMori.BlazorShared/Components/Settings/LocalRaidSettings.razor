@@ -20,7 +20,7 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudSwitch T="bool" Label="@(selfCreateRoom ? Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonCreateRoom]") : Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"))" @bind-Checked="selfCreateRoom" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@(selfCreateRoom ? Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonCreateRoom]") : Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"))" @bind-Value="selfCreateRoom" Color="Color.Primary"></MudSwitch>
         @if (selfCreateRoom)
         {
             <MudTextField T="int" Label="@ResourceStrings.Seconds_of_pre_battle_wait_time" @bind-Value="waitSeconds"></MudTextField>

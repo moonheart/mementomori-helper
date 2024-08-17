@@ -27,7 +27,7 @@
                 var amountDesc = item.ConsumeItem?.ItemCount == 0 ? ResourceStrings.Any_amount : item.ConsumeItem?.ItemCount.ToString();
                 var consume = item.ConsumeItem == null ? ResourceStrings.AnyItems : $"{ItemUtil.GetItemName(item.ConsumeItem.ItemType, item.ConsumeItem.ItemId)}×{amountDesc}";
                 var text = string.Format(ResourceStrings.BuyWith, consume, buy);
-                <MudChip OnClose="() => RemoveShopAutoBuyItem(item)">@text @($"{item.MinDiscountPercent}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}")</MudChip>
+                <MudChip T="string" OnClose="() => RemoveShopAutoBuyItem(item)">@text @($"{item.MinDiscountPercent}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}")</MudChip>
             }
         </MudField>
     </MudCardContent>

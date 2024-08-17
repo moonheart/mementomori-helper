@@ -18,7 +18,7 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent Class="pa-0">
-        <MudList>
+        <MudList T="AccountInfo" ReadOnly="true">
             @foreach (var accountInfo in _accounts)
             {
                 var funcs = AccountManager.Get(accountInfo.UserId).Funcs;
@@ -31,16 +31,16 @@
                         @if (funcs.LoginOk)
                         {
                             var text = accountInfo.AutoLogin ? ResourceStrings.AutoLogin : ResourceStrings.LoggedIn;
-                            <MudChip Color="Color.Success" Size="Size.Small">@text</MudChip>
+                            <MudChip T="string" Color="Color.Success" Size="Size.Small">@text</MudChip>
                         }
                         else
                         {
                             var text = accountInfo.AutoLogin ? ResourceStrings.AutoLogin : ResourceStrings.NotLoggedIn;
-                            <MudChip Color="Color.Warning" Size="Size.Small">@text</MudChip>
+                            <MudChip T="string" Color="Color.Warning" Size="Size.Small">@text</MudChip>
                         }
-                        <MudIconButton Title="@ResourceStrings.Login" Icon="@Icons.Material.Filled.Login" Disabled="_accountDoingAction" OnClick="() => LoginAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
-                        <MudIconButton Title="@ResourceStrings.Exit" Icon="@Icons.Material.Filled.Logout" Disabled="_accountDoingAction" OnClick="() => LogoutAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
-                        <MudIconButton Title="@ResourceStrings.Settings" Icon="@Icons.Material.Filled.Settings" Disabled="_accountDoingAction" OnClick="() => ShowAccountSetting(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
+                        <MudIconButton title="@ResourceStrings.Login" Icon="@Icons.Material.Filled.Login" Disabled="_accountDoingAction" OnClick="() => LoginAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
+                        <MudIconButton title="@ResourceStrings.Exit" Icon="@Icons.Material.Filled.Logout" Disabled="_accountDoingAction" OnClick="() => LogoutAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
+                        <MudIconButton title="@ResourceStrings.Settings" Icon="@Icons.Material.Filled.Settings" Disabled="_accountDoingAction" OnClick="() => ShowAccountSetting(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
                         <MudIconButton Icon="@Icons.Material.Filled.Delete" Disabled="_accountDoingAction" OnClick="() => DeleteAccount(accountInfo.UserId)" Size="Size.Small"></MudIconButton>
                     </MudStack>
                 </MudListItem>
@@ -48,24 +48,24 @@
         </MudList>
     </MudCardContent>
 </MudCard>
-<MudDialog @bind-IsVisible="_addAccountDialog" Options="@(new DialogOptions() {CloseButton = true})">
+<MudDialog @bind-Visible="_addAccountDialog" Options="@(new DialogOptions {CloseButton = true})">
     <DialogContent>
         <MudTextField Label="@ResourceStrings.Name" @bind-Value="_addAccountName"></MudTextField>
         <MudNumericField Label="@ResourceStrings.Account" @bind-Value="_addAccountUserId"></MudNumericField>
         <MudTextField Label="@ResourceStrings.Password" InputType="InputType.Password" @bind-Value="_addAccountPassword"></MudTextField>
-        <MudSwitch Label="@ResourceStrings.AutoLogin" @bind-Checked="_addAccountAutoLogin" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@ResourceStrings.AutoLogin" @bind-Value="_addAccountAutoLogin" Color="Color.Primary"></MudSwitch>
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_accountDoingAction" OnClick="AddAccountConfirmClick">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
     </DialogActions>
 </MudDialog>
 
-<MudDialog @bind-IsVisible="_settingAccountDialog" Options="@(new DialogOptions() {CloseButton = true})">
+<MudDialog @bind-Visible="_settingAccountDialog" Options="@(new DialogOptions {CloseButton = true})">
     <DialogContent>
         <MudTextField Label="@ResourceStrings.Name" @bind-Value="_settingAccountName"></MudTextField>
         <MudNumericField Disabled="true" Label="@ResourceStrings.Account" @bind-Value="_settingAccountUserId"></MudNumericField>
         <MudTextField Label="ClientKey" InputType="InputType.Password" @bind-Value="_settingAccountClientKey"></MudTextField>
-        <MudSwitch Label="@ResourceStrings.AutoLogin" @bind-Checked="_settingAccountAutoLogin" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@ResourceStrings.AutoLogin" @bind-Value="_settingAccountAutoLogin" Color="Color.Primary"></MudSwitch>
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveAccountSetting">@Masters.TextResourceTable.Get("[CommonDecisionLabel]")</MudButton>
@@ -110,15 +110,18 @@
         {
             return;
         }
+
         if (_addAccountUserId <= 0 || string.IsNullOrEmpty(_addAccountPassword))
         {
             return;
         }
+
         var account = AccountManager.Get(_addAccountUserId);
         if (account.Funcs.LoginOk)
         {
             return;
         }
+
         try
         {
             _accountDoingAction = true;
@@ -127,6 +130,7 @@
             {
                 throw new Exception("ClientKey is null");
             }
+
             AccountManager.AddAccountInfo(_addAccountUserId, clientKey, _addAccountName, _addAccountAutoLogin);
             _accountDoingAction = false;
             _addAccountDialog = false;
@@ -175,10 +179,11 @@
 
     private async Task DeleteAccount(long userId)
     {
-        if (await DialogService.ShowMessageBox(ResourceStrings.Confirm_removal_of_this_account_, "", options: new DialogOptions() {CloseButton = true}) != true)
+        if (await DialogService.ShowMessageBox(ResourceStrings.Confirm_removal_of_this_account_, "", options: new DialogOptions {CloseButton = true}) != true)
         {
             return;
         }
+
         AccountManager.RemoveAccount(userId);
         await timeZoneAwareJobRegister.DeregisterJobs(userId);
         AccountManager.CurrentUserId = 0;

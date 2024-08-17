@@ -132,28 +132,28 @@
             </MudPaper>
             <MudPaper Elevation="0">
                 <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(Funcs.Mypage?.ExistNewFriendPointTransfer ?? false)">
-                    <MudChip>@Tr("[ItemName9]")</MudChip>
+                    <MudChip T="string">@Tr("[ItemName9]")</MudChip>
                 </MudBadge>
                 <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(Funcs.Mypage?.ExistNewPrivateChat ?? false)">
-                    <MudChip>@Tr("[CommonHeaderChatLabel]")</MudChip>
+                        <MudChip T="string">@Tr("[CommonHeaderChatLabel]")</MudChip>
                 </MudBadge>
                 <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(Funcs.Mypage?.ExistNotReceivedBountyQuestReward ?? false)">
-                    <MudChip>@Tr("[CommonHeaderBountyQuestLabel]")</MudChip>
+                        <MudChip T="string">@Tr("[CommonHeaderBountyQuestLabel]")</MudChip>
                 </MudBadge>
                 <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(Funcs.Mypage?.ExistNotReceivedMissionReward ?? false)">
-                    <MudChip>@Tr("[MyPageMenuButtonMissionLabel]")</MudChip>
+                        <MudChip T="string">@Tr("[MyPageMenuButtonMissionLabel]")</MudChip>
                 </MudBadge>
                 <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@Funcs.IsNotClearDungeonBattleMap">
-                    <MudChip>@Tr("[CommonHeaderDungeonBattleLabel]")</MudChip>
+                        <MudChip T="string">@Tr("[CommonHeaderDungeonBattleLabel]")</MudChip>
                 </MudBadge>
                 <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@(Funcs.UserSyncData?.PresentCount > 0)">
-                    <MudChip>@Tr("[MyPageMenuButtonPresentBoxLabel]")</MudChip>
+                        <MudChip T="string">@Tr("[MyPageMenuButtonPresentBoxLabel]")</MudChip>
                 </MudBadge>
                 @foreach (var info in Funcs.Mypage?.MypageInfo?.MypageIconInfos ?? new List<MypageIconInfo>())
                 {
                     var name = Tr(info.IconNameKey);
                     <MudBadge Overlap="true" Bordered="true" Color="Color.Info" Visible="@info.IsDisplayBadge">
-                        <MudChip>@((MarkupString) name)</MudChip>
+                            <MudChip T="string">@((MarkupString)name)</MudChip>
                     </MudBadge>
                 }
             </MudPaper>
@@ -163,7 +163,7 @@
                 <MudSpacer/>
                 @if (GameConfig.Value.BountyQuestAuto.TargetItems.Count > 0)
                 {
-                    <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@Funcs.BountyRequestForceAll" Label="@ResourceStrings.ForceDispatch"></MudSwitch>
+                    <MudSwitch T="bool" Color="Color.Info" @bind-Value="@Funcs.BountyRequestForceAll" Label="@ResourceStrings.ForceDispatch"></MudSwitch>
                 }
                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.BountyQuestRewardAuto">@Tr("[BountyQuestAllReceive]")</MudButton>
                 <MudButton Size="Size.Small" Variant="Variant.Filled" Disabled="@Funcs.IsQuickActionExecuting" @onclick="@Funcs.BountyQuestStartAuto">@Tr("[BountyQuestAutoPlacement]")</MudButton>
@@ -198,7 +198,7 @@
                             status = ResourceStrings.Received;
                         }
                     }
-                    <MudChip>@rarityName @itemNames @status</MudChip>
+                        <MudChip T="string">@rarityName @itemNames @status</MudChip>
                 }
             </MudPaper>
         </MudPaper>
@@ -424,7 +424,7 @@
     <MudItem sm="12" md="6" lg="4" xl="3">
         <MudCard>
             <MudCardHeader>
-                <MudSwitch T="bool" Color="Color.Info" @bind-Checked="@Funcs.ShowDebugInfo" Label="Debug Info"></MudSwitch>
+                <MudSwitch T="bool" Color="Color.Info" @bind-Value="@Funcs.ShowDebugInfo" Label="Debug Info"></MudSwitch>
             </MudCardHeader>
             <MudCardContent Style="max-height: 400px; overflow: scroll">
                 @if (Funcs.ShowDebugInfo)

@@ -1,5 +1,4 @@
 ﻿@inject IDialogService DialogService
-
 @using System.Text
 @using MementoMori.BlazorShared.Components
 @using MementoMori.Common.Localization
@@ -43,7 +42,7 @@
                             @foreach (var userItem in gachaCaseInfo.GachaButtonInfoList.Select(d => d.ConsumeUserItem).DistinctBy(d => new {d.ItemType, d.ItemId}))
                             {
                                 var label = $"{userItem.GetItemName()} × {ViewModel.UserSyncData.GetUserItemCount(userItem.ItemType, userItem.ItemId, true)}";
-                                <MudChip>@label</MudChip>
+                                <MudChip T="string">@label</MudChip>
                             }
                         </MudField>
 

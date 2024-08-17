@@ -37,7 +37,7 @@
                 <MudSelectItem T="GachaRelicType" Value="GachaRelicType.DivineWingsOfDesire">@Tr("[ItemName47]")</MudSelectItem>
                 <MudSelectItem T="GachaRelicType" Value="GachaRelicType.FruitOfTheGarden">@Tr("[ItemName48]")</MudSelectItem>
             </MudSelect>
-            <MudSwitch Color="Color.Primary" Label="@ResourceStrings.Auto_draw_10_times__up_to_3_draws_" @bind-Checked="_isAutoGacha"></MudSwitch>
+            <MudSwitch Color="Color.Primary" Label="@ResourceStrings.Auto_draw_10_times__up_to_3_draws_" @bind-Value="_isAutoGacha"></MudSwitch>
         </MudField>
     </MudCardContent>
 </MudCard>

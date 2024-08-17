@@ -11,7 +11,7 @@
         <SupportedPlatform Include="browser"/>
     </ItemGroup>
 
-	<ItemGroup>
+    <ItemGroup>
         <ProjectReference Include="..\MementoMori.BlazorShared\MementoMori.BlazorShared.csproj"/>
         <ProjectReference Include="..\MementoMori.Common\MementoMori.Common.csproj"/>
         <ProjectReference Include="..\MementoMori\MementoMori.csproj"/>
@@ -26,12 +26,12 @@
         <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.8"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="8.0.0"/>
-        <PackageReference Include="MudBlazor" Version="6.19.1" />
+        <PackageReference Include="MudBlazor" Version="7.6.0"/>
         <PackageReference Include="Quartz" Version="3.13.0" />
         <PackageReference Include="Quartz.AspNetCore" Version="3.13.0" />
         <PackageReference Include="ReactiveUI.Blazor" Version="20.1.1"/>
         <PackageReference Include="Sentry.AspNetCore" Version="4.9.0" />
-      <PackageReference Include="Injectio" Version="3.1.0" PrivateAssets="all"/>
+        <PackageReference Include="Injectio" Version="3.1.0" PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup>

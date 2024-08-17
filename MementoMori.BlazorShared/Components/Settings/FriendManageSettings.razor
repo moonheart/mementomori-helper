@@ -20,7 +20,7 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudSwitch T="bool" Label="@ResourceStrings.Remove_friends_inactive_for_7_days" @bind-Checked="_autoRemoveFriend" ValueChanged="autoDeleteChanged" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@ResourceStrings.Remove_friends_inactive_for_7_days" Value="_autoRemoveFriend" ValueChanged="autoDeleteChanged" Color="Color.Primary"></MudSwitch>
         <MudSelect Label="@ResourceStrings.Auto_remove_whitelist" MultiSelection="true" T="FriendInfo" @bind-SelectedValues="_friendWhiteList" MultiSelectionTextFunc="list => string.Format(ResourceStrings.SelectedXItems, list.Count)">
             @foreach (var friend in _friendList)
             {
@@ -29,8 +29,8 @@
                 </MudSelectItem>
             }
         </MudSelect>
-        <MudSwitch T="bool" Label="@ResourceStrings.Auto_accept_friend_requests" @bind-Checked="_autoAcceptNewFriend" Color="Color.Primary"></MudSwitch>
-        <MudSwitch T="bool" Label="@ResourceStrings.Auto_send_friend_requests" @bind-Checked="_autoApplyFriend" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@ResourceStrings.Auto_accept_friend_requests" @bind-Value="_autoAcceptNewFriend" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@ResourceStrings.Auto_send_friend_requests" @bind-Value="_autoApplyFriend" Color="Color.Primary"></MudSwitch>
     </MudCardContent>
 </MudCard>
 
@@ -81,6 +81,7 @@
 
     private async Task autoDeleteChanged(bool obj)
     {
+        _autoRemoveFriend = obj;
         try
         {
             if (obj)

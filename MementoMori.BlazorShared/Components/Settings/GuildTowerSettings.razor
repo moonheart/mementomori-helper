@@ -20,11 +20,11 @@
         </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
-        <MudSwitch T="bool" Label="@Tr("[GuildTowerEntryTitle]")" @bind-Checked="_autoEntry" Color="Color.Primary"></MudSwitch>
-        <MudSwitch T="bool" Label="@Tr("[GuildTowerChallengeButton]")" @bind-Checked="_autoChallenge" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@Tr("[GuildTowerEntryTitle]")" @bind-Value="_autoEntry" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@Tr("[GuildTowerChallengeButton]")" @bind-Value="_autoChallenge" Color="Color.Primary"></MudSwitch>
         <MudNumericField T="int" @bind-Value="_autoChallengeRetryCount" Label="@ResourceStrings.Auto_challenge_retry_count"></MudNumericField>
-        <MudSwitch T="bool" Label="@Tr("[GuildTowerJobReinforceLabel]")" @bind-Checked="_autoReinforcement" Color="Color.Primary"></MudSwitch>
-        <MudSwitch T="bool" Label="@Tr("[GuildTowerStageRewardLabel]")" @bind-Checked="_autoReceiveReward" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@Tr("[GuildTowerJobReinforceLabel]")" @bind-Value="_autoReinforcement" Color="Color.Primary"></MudSwitch>
+        <MudSwitch T="bool" Label="@Tr("[GuildTowerStageRewardLabel]")" @bind-Value="_autoReceiveReward" Color="Color.Primary"></MudSwitch>
     </MudCardContent>
 </MudCard>
 

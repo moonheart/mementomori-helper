@@ -1,10 +1,10 @@
-﻿@using MementoMori.Option
+﻿@inject ISnackbar Snackbar
+@inject IWritableOptions<PlayersOption> PlayersOptions
+@using MementoMori.Common.Localization
+@using MementoMori.Option
 @using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Enums
 @using MementoMori.Ortega.Share.Extensions
-@using MementoMori.Common.Localization
-@inject ISnackbar Snackbar
-@inject IWritableOptions<PlayersOption> PlayersOptions
 @inherits MementoMori.BlazorShared.Models.AccountComponent
 <MudCard>
     <MudCardHeader>
@@ -22,7 +22,7 @@
             <MudSelectItem Value="TargetSelectStrategy.HighestBattlePower">@ResourceStrings.Max_Battle_Power</MudSelectItem>
         </MudSelect>
         <MudTextField Label="@ResourceStrings.Exclude_player_IDs__comma_separated_" @bind-Value="ExcludePlayerIds"></MudTextField>
-        <MudList>
+        <MudList T="CharacterFilter" ReadOnly="true">
             <MudListSubheader>
                 <MudText Inline="true">@ResourceStrings.Character_Filter</MudText>
                 <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="() => OpenCreateFilter()">@ResourceStrings.Add</MudButton>
@@ -35,8 +35,8 @@
                 {
                     CharacterFilterStrategy.Character => string.Format(ResourceStrings.Exclude__0_, characterName),
                     CharacterFilterStrategy.PropertyMoreThanSelf => string.Format(ResourceStrings.Exclude__battleParameterName__higher_than__characterName_, battleParameterName, characterName)
-                    };
-                <MudListItem Dense="true">
+                };
+                <MudListItem Dense="true" T="CharacterFilter">
                     <MudStack Row="true" Class="align-content-center align-center">
                         <MudText Inline="true">@desc</MudText>
                         <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Settings" OnClick="() => OpenSetting(filter)"></MudIconButton>
@@ -48,7 +48,7 @@
     </MudCardContent>
 </MudCard>
 
-<MudDialog @bind-IsVisible="settingDialogOpen" Options="@(new DialogOptions() {CloseButton = true})">
+<MudDialog @bind-Visible="settingDialogOpen" Options="@(new DialogOptions {CloseButton = true})">
     <TitleContent>
         添加角色筛选
     </TitleContent>
@@ -58,7 +58,7 @@
                 <MudSelectItem Value="CharacterFilterStrategy.Character">@ResourceStrings.Exclude_character</MudSelectItem>
                 <MudSelectItem Value="CharacterFilterStrategy.PropertyMoreThanSelf">@ResourceStrings.Exclude_enemy_character_with_higher_stats_in_the_same_attribute_as_ours</MudSelectItem>
             </MudSelect>
-                <MudSelect Label="@Masters.TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")" @bind-Value="settingFilter.CharacterId" FullWidth="true">
+            <MudSelect Label="@Masters.TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")" @bind-Value="settingFilter.CharacterId" FullWidth="true">
                 @foreach (var character in Masters.CharacterTable.GetArray())
                 {
                     <MudSelectItem Value="@character.Id">@character.GetCombinedName()</MudSelectItem>
@@ -118,7 +118,7 @@
 
     protected override Task AccountChanged()
     {
-        playerOption = PlayersOptions.Value.TryGetValue(NetworkManager.PlayerId, out var opt) ? opt : new PlayerOption() {PlayerId = NetworkManager.PlayerId};
+        playerOption = PlayersOptions.Value.TryGetValue(NetworkManager.PlayerId, out var opt) ? opt : new PlayerOption {PlayerId = NetworkManager.PlayerId};
         pvpOption = pvpOptionSelector(playerOption);
         return Task.CompletedTask;
     }
@@ -152,6 +152,7 @@
         {
             pvpOption.CharacterFilters.Add(settingFilter);
         }
+
         settingDialogOpen = false;
     }
 
@@ -159,7 +160,7 @@
     {
         PlayersOptions.Update(opt =>
         {
-            var playerOpt = opt.GetOrAdd(NetworkManager.PlayerId, (id) => new PlayerOption() {PlayerId = id});
+            var playerOpt = opt.GetOrAdd(NetworkManager.PlayerId, id => new PlayerOption {PlayerId = id});
             if (LeagueType == 0)
             {
                 playerOpt.BattleLeague = pvpOption;

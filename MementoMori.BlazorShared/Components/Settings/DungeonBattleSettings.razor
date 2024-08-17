@@ -13,21 +13,21 @@
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <MudSwitch Label="@ResourceStrings.PreferTreasureChest" @bind-Checked="DungeonBattlePreferTreasureChest" Color="Color.Primary"/>
-        <MudSwitch Label="@ResourceStrings.Auto_unequip_gear_during_events" @bind-Checked="AutoRemoveEquipment" Color="Color.Primary" />
+        <MudSwitch Label="@ResourceStrings.PreferTreasureChest" @bind-Value="DungeonBattlePreferTreasureChest" Color="Color.Primary"/>
+        <MudSwitch Label="@ResourceStrings.Auto_unequip_gear_during_events" @bind-Value="AutoRemoveEquipment" Color="Color.Primary"/>
         <MudNumericField Label="@ResourceStrings.MaxUseRecoveryItem" @bind-Value="DungeonBattleMaxUseFruitOfHealing" Min="0" Max="99"/>
         <MudField Label="@ResourceStrings.DungeonBattleTargetItems" Variant="Variant.Outlined">
             @foreach (var item in DungeonBattleShopTargetItems)
             {
                 var text = $"{ItemUtil.GetItemName(item.ItemType, item.ItemId)} {item.MinDiscountPercent}{Masters.TextResourceTable.Get("[ShopDiscountLabel]")}";
-                <MudChip OnClose="() => DungeonBattleRemoveItem(item)">@text</MudChip>
+                <MudChip T="string" OnClose="() => DungeonBattleRemoveItem(item)">@text</MudChip>
             }
         </MudField>
         <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="ShowDungeonBattleSelectItemDialog">@ResourceStrings.Add</MudButton>
     </MudCardContent>
 </MudCard>
 
-<MudDialog @bind-IsVisible="_dungeonBattleSelectItemDialog" Options="@(new DialogOptions() {CloseButton = true})">
+<MudDialog @bind-Visible="_dungeonBattleSelectItemDialog" Options="@(new DialogOptions {CloseButton = true})">
     <DialogContent>
         <MudSelect T="UserItem" @bind-Value="_dungeonBattleSelectedItem">
             @foreach (var item in _dungeonBattleShopItems)
@@ -57,7 +57,7 @@
 
         _dungeonBattleShopItems.AddRange(new[]
         {
-            new UserItem() {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}
+            new UserItem {ItemType = ItemType.EquipmentRarityCrystal, ItemId = 1}
         });
     }
 
@@ -91,7 +91,7 @@
         }
         else
         {
-            tmp.Add(new GameConfig.ShopDiscountItem()
+            tmp.Add(new GameConfig.ShopDiscountItem
             {
                 ItemId = _dungeonBattleSelectedItem.ItemId,
                 ItemType = _dungeonBattleSelectedItem.ItemType,

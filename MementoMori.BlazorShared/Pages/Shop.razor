@@ -1,7 +1,6 @@
 ﻿@inject IDialogService DialogService
 @inject IWritableOptions<GameConfig> WritableGameConfig
 @inject ISnackbar Snackbar
-
 @using MementoMori.BlazorShared.Components
 @using MementoMori.Common.Localization
 @using MementoMori.Funcs
@@ -38,7 +37,7 @@
                             var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(item.ItemType, item.ItemId);
                             var count = Funcs.UserSyncData.GetUserItemCount(item.ItemType, item.ItemId, true);
                             var text = $"{Masters.TextResourceTable.Get(itemMb.NameKey)} × {count}";
-                            <MudChip Text="@text"></MudChip>
+                            <MudChip T="string" Text="@text"></MudChip>
                         }
 
                         @if (tab.ExpirationTimeStamp > 0)
@@ -49,7 +48,7 @@
                                 : Masters.TextResourceTable.Get("[CommonRemainTimeFull]", span.Days, span.Hours, span.Minutes, span.Seconds);
                             var refreshTime = $"{Masters.TextResourceTable.Get("[ExchangeRemainingTimeLabel]")}: {time}";
 
-                            <MudChip Text="@refreshTime"></MudChip>
+                            <MudChip T="string" Text="@refreshTime"></MudChip>
                         }
                     </MudPaper>
                     @if (tradeShopTabMb.TradeShopType != TradeShopType.Sphere)
@@ -125,7 +124,7 @@
     </MudTabs>
 }
 
-<MudDialog @bind-IsVisible="_autoBuyDialogVisible" Options="new DialogOptions {CloseButton = true}">
+<MudDialog @bind-Visible="_autoBuyDialogVisible" Options="new DialogOptions {CloseButton = true}">
     <DialogContent>
         @{
             var tab = _tradeShopTabInfoList[_selectedTabIndex];

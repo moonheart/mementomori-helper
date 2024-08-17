@@ -40,7 +40,7 @@
                             <MudText>@battlePower</MudText>
                         </MudField>
                         <MudField Label="@(Masters.TextResourceTable.Get("[CommonPotentialParameterLabel]"))" Variant="Variant.Outlined">
-                            <MudStack Elevation="0" Class="d-flex gap-1 flex-wrap" Row="true">
+                            <MudStack Class="d-flex gap-1 flex-wrap" Row="true">
                                 @foreach (var type in EnumUtil.GetValueList<BaseParameterType>())
                                 {
                                     var name = Masters.TextResourceTable.Get(type);
@@ -52,7 +52,7 @@
                             </MudStack>
                         </MudField>
                         <MudField Label="@(Masters.TextResourceTable.Get("[CommonStatusLabel]"))" Variant="Variant.Outlined">
-                            <MudStack Elevation="0" Class="d-flex gap-1 flex-wrap" Row="true">
+                            <MudStack Class="d-flex gap-1 flex-wrap" Row="true">
                                 @foreach (var type in EnumUtil.GetValueList<BattleParameterType>())
                                 {
                                     var name = Masters.TextResourceTable.Get(type);

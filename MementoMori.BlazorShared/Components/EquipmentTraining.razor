@@ -1,5 +1,6 @@
 ﻿@using MementoMori.BlazorShared.Models
 @using MementoMori.Ortega.Custom
+@using MementoMori.Ortega.Share.Data.DtoInfo
 @using MementoMori.Ortega.Share.Enums
 @using ReactiveUI
 @using static Ortega.Share.Masters
@@ -7,7 +8,7 @@
 @inherits AccountComponent
 
 <MudPaper Elevation="0" Class="pa-2">
-    <MudSelect Dense="true" Variant="Variant.Outlined" Label="@Tr("[CommonFooterCharacterButtonLabel]")" T="CharacterInfo" @bind-SelectedValue="_selectedCharacterGuid" ValueChanged="SelectedCharacterChanged">
+    <MudSelect Dense="true" Variant="Variant.Outlined" Label="@Tr("[CommonFooterCharacterButtonLabel]")" T="CharacterInfo" Value="_selectedCharacterGuid" ValueChanged="SelectedCharacterChanged">
         @foreach (var info in _characterGuids)
         {
             <MudSelectItem T="CharacterInfo" Value="info">
@@ -53,14 +54,13 @@
 
 @code {
     private List<CharacterEquipment> _characterEquipments = new();
-    private string? _selectedCharacterGuid;
+    private CharacterInfo? _selectedCharacterGuid;
     private List<CharacterInfo> _characterGuids = new();
 
     protected override Task AccountChanged()
     {
         Funcs.WhenAnyValue(d => d.UserSyncData).Subscribe(data =>
         {
-            _selectedCharacterGuid = data?.UserCharacterDtoInfos?.FirstOrDefault()?.Guid;
             var chas = data?.UserEquipmentDtoInfos?.GroupBy(d => d.CharacterGuid).ToDictionary(d => d.Key);
             _characterGuids = data?.UserCharacterDtoInfos?.Where(d => chas?.ContainsKey(d.Guid) ?? false).Select(d =>
             {
@@ -69,13 +69,15 @@
                 var characterName = CharacterTable.GetCharacterName(d.CharacterId);
                 return new CharacterInfo(characterName, level, d.Guid, CharacterTable.GetById(d.CharacterId).JobFlags);
             }).OrderByDescending(d => d.Lv).ToList() ?? [];
+            _selectedCharacterGuid = _characterGuids.FirstOrDefault();
         });
         return Task.CompletedTask;
     }
 
-    private void SelectedCharacterChanged(CharacterInfo obj)
+    private void SelectedCharacterChanged(CharacterInfo? obj)
     {
         var data = Funcs.UserSyncData;
+        _selectedCharacterGuid = obj;
         _characterEquipments = data?.UserEquipmentDtoInfos?.Where(d => !string.IsNullOrEmpty(d.CharacterGuid)).Select(d =>
             {
                 if (d == null) throw new ArgumentNullException(nameof(d));
