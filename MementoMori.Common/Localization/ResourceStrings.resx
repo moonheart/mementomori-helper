@@ -262,16 +262,16 @@
       <value>Battle Result</value>
   </data>
   <data name="AutoBossExecMessage" xml:space="preserve">
-      <value>Challage {0} boss one time：{1},  total：{2}, Success：{3}, Err: {4}</value>
+      <value>Challenge {0} boss one time：{1},  total：{2}, Success：{3}, Err: {4}</value>
   </data>
   <data name="AutoBossErrorMessage" xml:space="preserve">
       <value>Error count reached {0} times, abort</value>
   </data>
   <data name="AutoTowerInfiniteExecMsg" xml:space="preserve">
-      <value>Challage {0} {1} layer one time：{2},  total：{3}, Success：{4}, Err: {5}</value>
+      <value>Challenge {0} {1} layer one time：{2},  total：{3}, Success：{4}, Err: {5}</value>
   </data>
   <data name="AutoTowerElementExecMsg" xml:space="preserve">
-      <value>Challage {0} {1} layer one time：{2},  {6}/10,total：{3}, Success：{4}, Err: {5}</value>
+      <value>Challenge {0} {1} layer one time：{2},  {6}/10,total：{3}, Success：{4}, Err: {5}</value>
   </data>
   <data name="NoAvailable" xml:space="preserve">
       <value>No Available {0}</value>
