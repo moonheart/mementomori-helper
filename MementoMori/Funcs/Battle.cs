@@ -132,6 +132,8 @@ public partial class MementoMoriFuncs
             var winCount = 0;
             var errCount = 0;
 
+            await GetResponse<MapInfoRequest, MapInfoResponse>(new MapInfoRequest() {IsUpdateOtherPlayerInfo = true});
+
             try
             {
                 await GetResponse<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
@@ -145,6 +147,7 @@ public partial class MementoMoriFuncs
                 try
                 {
                     var targetQuestId = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId + 1;
+                    await GetResponse<MapInfoRequest, MapInfoResponse>(new MapInfoRequest() {IsUpdateOtherPlayerInfo = true});
                     var bossResponse = await GetResponse<BossRequest, BossResponse>(new BossRequest {QuestId = targetQuestId});
                     var win = bossResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                     totalCount++;
