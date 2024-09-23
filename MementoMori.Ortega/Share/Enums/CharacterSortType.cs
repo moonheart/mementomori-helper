@@ -24,6 +24,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("お気に入りキャラ")]
 		Favorite,
 		[Description("ソートしない")]
-		None
+		None,
+		[Description("人気投票")]
+		PopularityVote
 	}
 }

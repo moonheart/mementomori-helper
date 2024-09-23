@@ -6,6 +6,8 @@
 		Gacha,
 		NewCharacter,
 		GuildRaid,
-		RankingAchievement
+		RankingAchievement,
+		PopularityVote,
+		PopularityVoteResult
 	}
 }

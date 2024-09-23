@@ -355,6 +355,12 @@
 		StarsGuidanceTradeNotSelectConsumeItem = 2600001,
 		StarsGuidanceTradeNotEnoughConsumeItem,
 		StarsGuidanceTradeOverTodayExchangeCount,
-		StarsGuidanceTradeAlreadyReachedMaxExchangeCount
+		StarsGuidanceTradeAlreadyReachedMaxExchangeCount,
+		PopularityVoteNotAvailableVoteReadyTerm = 2700001,
+		PopularityVoteNotAvailableVoteAggregationTerm,
+		PopularityVoteNotAvailableVoteNotEnoughItem,
+		PopularityVoteNotSelectPercentage,
+		PopularityVoteNotExistMyListCharacter,
+		AppsFlyerOnConversionDataSuccess = 2800001
 	}
 }

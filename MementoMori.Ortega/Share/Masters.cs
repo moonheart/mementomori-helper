@@ -209,6 +209,8 @@ public static class Masters
     public static PatternSettingTable PatternSettingTable { get; } = new();
 
     public static PlayerRankTable PlayerRankTable { get; } = new();
+    
+    public static PopularityVoteTable PopularityVoteTable { get; } = new();
 
     public static PvpRankingRewardTable PvpRankingRewardTable { get; } = new();
 
@@ -381,7 +383,8 @@ public static class Masters
             PatternSettingTable,
             SpecialIconItemTable,
             MusicTable,
-            DownloadRawDataTable
+            DownloadRawDataTable,
+            PopularityVoteTable
         };
     }
 
