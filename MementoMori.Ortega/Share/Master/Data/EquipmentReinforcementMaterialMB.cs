@@ -27,7 +27,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 
         [SerializationConstructor]
         public EquipmentReinforcementMaterialMB(long id, bool? isIgnore, string memo, long reinforcementLevel, IReadOnlyList<UserItem> weaponRequiredItemList, IReadOnlyList<UserItem> othersRequiredItemList)
-            : base(0L, null, null)
+            : base(id, isIgnore, memo)
         {
             this.ReinforcementLevel = reinforcementLevel;
             this.WeaponRequiredItemList = weaponRequiredItemList;

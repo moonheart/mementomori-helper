@@ -97,7 +97,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 
 		[SerializationConstructor]
 		public EquipmentMB(long id, bool? isIgnore, string memo, long additionalParameterTotal, long afterLevelEvolutionEquipmentId, long afterRarityEvolutionEquipmentId, BattleParameterChangeInfo battleParameterChangeInfo, EquipmentCategory category, long compositeId, long equipmentEvolutionId, long equipmentExclusiveSkillDescriptionId, long equipmentLv, long equipmentSetId, JobFlags equippedJobFlags, long exclusiveEffectId, long goldRequiredToOpeningFirstSphereSlot, long goldRequiredToTraining, long iconId, string nameKey, long performancePoint, long equipmentForgeId, int qualityLv, EquipmentRarityFlags rarityFlags, EquipmentSlotType slotType)
-			: base(0L, null, null)
+			: base(id, isIgnore, memo)
 		{
             this.AdditionalParameterTotal = additionalParameterTotal;
             this.AfterLevelEvolutionEquipmentId = afterLevelEvolutionEquipmentId;

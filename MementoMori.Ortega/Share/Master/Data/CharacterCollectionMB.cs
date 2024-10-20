@@ -23,7 +23,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 
         [SerializationConstructor]
         public CharacterCollectionMB(long id, bool? isIgnore, string memo, string nameKey, IReadOnlyList<long> requiredCharacterIds, long requiredPartyLv, string startTimeFixJST, string endTimeFixJST)
-            : base(0L, null, null)
+            : base(id, isIgnore, memo)
         {
             this.NameKey = nameKey;
             this.RequiredCharacterIds = requiredCharacterIds;

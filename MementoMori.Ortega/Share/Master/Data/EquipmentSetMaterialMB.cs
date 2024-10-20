@@ -43,7 +43,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 
         [SerializationConstructor]
         public EquipmentSetMaterialMB(long id, bool? isIgnore, string memo, string descriptionKey, long iconId, ItemRarityFlags itemRarityFlags, long lv, string nameKey, string displayNameKey, IReadOnlyList<long> questIdList, long treasureChestId)
-            : base(0L, null, null)
+            : base(id, isIgnore, memo)
         {
             this.DescriptionKey = descriptionKey;
             this.IconId = iconId;

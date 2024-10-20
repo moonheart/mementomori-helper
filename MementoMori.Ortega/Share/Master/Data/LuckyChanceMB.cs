@@ -54,7 +54,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 
 		[SerializationConstructor]
 		public LuckyChanceMB(long id, bool? isIgnore, string memo, StartEndTimeZoneType startEndTimeZoneType, string startTime, string endTime, string inputFormEndTime, MypageIconDisplayLocationType mypageIconDisplayLocationType, string titleTextKey, IReadOnlyList<long> luckyChanceButtonIdList, int limitUserDrawCount, UserItem consumeItem, string canDeletePersonalInfoTime)
-			: base(0L, null, null)
+			: base(id, isIgnore, memo)
 		{
 		}
 

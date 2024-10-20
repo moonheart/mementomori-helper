@@ -68,8 +68,22 @@ namespace MementoMori.Ortega.Share.Master.Data
 
 		[SerializationConstructor]
 		public CollabMissionMB(long id, bool? isIgnore, string memo, StartEndTimeZoneType startEndTimeZoneType, string startTime, string endTime, int imageId, float imageX, float imageY, float imageSize, string descriptionTextKey, string titleTextKey, IReadOnlyList<long> targetMissionIdList, string url1, string url2, long characterId, MypageIconDisplayLocationType mypageIconDisplayLocationType)
-			: base(0L, null, null)
+			: base(id, isIgnore, memo)
 		{
+            this.StartEndTimeZoneType = startEndTimeZoneType;
+            this.StartTime = startTime;
+            this.EndTime = endTime;
+            this.ImageId = imageId;
+            this.ImageX = imageX;
+            this.ImageY = imageY;
+            this.ImageSize = imageSize;
+            this.DescriptionTextKey = descriptionTextKey;
+            this.TitleTextKey = titleTextKey;
+            this.TargetMissionIdList = targetMissionIdList;
+            this.Url1 = url1;
+            this.Url2 = url2;
+            this.CharacterId = characterId;
+            this.MypageIconDisplayLocationType = mypageIconDisplayLocationType;
 		}
 
 		public CollabMissionMB()

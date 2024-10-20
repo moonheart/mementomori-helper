@@ -63,7 +63,7 @@ namespace MementoMori.Ortega.Share.Master.Data
         public NewCharacterMissionMB(long id, bool? isIgnore, string memo, string startTimeFixJST, string endTimeFixJST, string forceStartTime, int characterImageId, float characterImageX,
             float characterImageY, float characterImageSize, string titleTextKey, IReadOnlyList<long> targetMissionIdList, string youTubeUrl, string twitterUrl,
             MypageIconDisplayLocationType mypageIconDisplayLocationType)
-            : base(0L, null, null)
+            : base(id, isIgnore, memo)
         {
             this.StartTimeFixJST = startTimeFixJST;
             this.EndTimeFixJST = endTimeFixJST;
