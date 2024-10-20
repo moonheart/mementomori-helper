@@ -12,6 +12,8 @@ public enum MissionTransitionDestinationType
     [Description("アカウント連携")] LinkAccount = 401,
     [Description("Twitter ")] Twitter,
     [Description("YouTube")] YouTube,
+    [Description("Url1")] Url1,
+    [Description("Url2")] Url2,
     [Description("ショップ（武具合成\uff3f聖装タブ）")] ExchangeLegendForge = 501,
     [Description("ショップ（武具合成\uff3f通常タブ）")] ExchangeEquipmentForge,
     [Description("ショップ（店舗タブ）")] Exchange,
@@ -43,5 +45,6 @@ public enum MissionTransitionDestinationType
     [Description("楽曲再生")] MusicPlayer = 2201,
     [Description("ギルドツリーメイン画面")] GuildTower = 2301,
     [Description("ギルドツリーLV強化ダイアログ")] GuildTowerReinforceJob,
+    [Description("週間トピックス")] WeeklyTopics = 2401,
     [Description("人気投票メイン画面")] PopularityVote = 2501
 }

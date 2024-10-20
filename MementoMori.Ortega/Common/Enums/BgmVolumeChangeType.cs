@@ -1,10 +1,10 @@
-﻿namespace MementoMori.Ortega.Common.Enums
+﻿namespace MementoMori.Ortega.Common.Enums;
+
+public enum BgmVolumeChangeType
 {
-	public enum BgmVolumeChangeType
-	{
-		CharacterPlayable,
-		NewCharacter,
-		CharacterEvolution,
-		Monologue
-	}
+    CharacterPlayable,
+    NewCharacter,
+    CharacterEvolution,
+    Monologue,
+    EventPortal
 }

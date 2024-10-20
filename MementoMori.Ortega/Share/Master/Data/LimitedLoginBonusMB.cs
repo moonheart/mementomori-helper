@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master.Attributes;
 using MementoMori.Ortega.Share.Utils;
 using MessagePack;
@@ -53,10 +54,14 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("タイトル")]
         public string TitleTextKey { get; }
 
+        [PropertyOrder(14)]
+        [Description("アイコン表示箇所")]
+        public MypageIconDisplayLocationType MypageIconDisplayLocationType { get; }
+
         [SerializationConstructor]
         public LimitedLoginBonusMB(long id, bool? isIgnore, string memo, string startTime, string endTime, int delayDays, long rewardListId, int characterImageId, int rewardBackgroundImageId,
             int specialRewardBackgroundImageId, string titleTextKey, string appealTextKey, string specialRewardAppealTextKey, string specialRewardLabelTextColor,
-            string specialRewardLabelTextOutlineColor, string specialRewardCountTextColor)
+            string specialRewardLabelTextOutlineColor, string specialRewardCountTextColor, MypageIconDisplayLocationType mypageIconDisplayLocationType)
             : base(id, isIgnore, memo)
         {
             StartTime = startTime;
@@ -72,6 +77,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             SpecialRewardLabelTextColor = specialRewardLabelTextColor;
             SpecialRewardLabelTextOutlineColor = specialRewardLabelTextOutlineColor;
             SpecialRewardCountTextColor = specialRewardCountTextColor;
+            MypageIconDisplayLocationType = mypageIconDisplayLocationType;
         }
 
         public LimitedLoginBonusMB() : base(0L, false, "")

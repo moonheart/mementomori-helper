@@ -76,6 +76,14 @@ public enum OpenCommandType
     [Description("ゴールド交換")] GoldExchange = 260,
     [Description("星導交換所")] StarsGuidanceTradeShop = 280,
     [Description("神装強化(一括選択機能)")] BulkEquipmentAscend = 300,
+    [Description("週間トピックス")] WeeklyTopics = 320,
+    [Description("ラッキーチャンス")] LuckyChance = 340,
     [Description("人気投票")] PopularityVote = 360,
-    [Description("武具固定")] LockEquipment = 1000
+    [Description("武具一括進化")] BulkEquipmentEvolution = 380,
+    [Description("進化解放")] RankRelease = 400,
+    [Description("一括進化の優先設定")] RankUpPrioritySetting = 420,
+    [Description("スフィア装着(一括装着カスタム)")] BulkSphereSet = 440,
+    [Description("イベントポータル")] EventPortal = 460,
+    [Description("武具固定")] LockEquipment = 1000,
+    [Description("武具固定(ギルドバトル用)")] LockEquipmentGuildBattle
 }

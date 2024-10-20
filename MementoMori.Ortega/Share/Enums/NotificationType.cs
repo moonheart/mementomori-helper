@@ -53,5 +53,6 @@ public enum NotificationType
     FinalInterimResult,
 
     [Description("本選結果が出た時（現在時間が結果発表開始日時を過ぎると表示）")]
-    FinalResult
+    FinalResult,
+    [Description("進化解放可能")] RankRelease
 }

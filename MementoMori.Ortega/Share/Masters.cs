@@ -90,6 +90,8 @@ public static class Masters
 
     public static ChapterTable ChapterTable { get; } = new();
 
+    public static CollabMissionTable CollabMissionTable { get; }
+
     public static DownloadRawDataTable DownloadRawDataTable { get; } = new();
 
     public static DungeonBattleGridTable DungeonBattleGridTable { get; } = new();
@@ -176,6 +178,8 @@ public static class Masters
 
     public static LimitedEventTable LimitedEventTable { get; } = new();
 
+    public static LuckyChanceTable LuckyChanceTable { get; }
+    
     public static NewCharacterMissionTable NewCharacterMissionTable { get; } = new();
 
     public static LocalGvgCastleTable LocalGvgCastleTable { get; } = new();
@@ -301,6 +305,7 @@ public static class Masters
             CharacterCollectionLevelTable,
             CharacterCollectionRewardTable,
             ChapterTable,
+            CollabMissionTable,
             DungeonBattleGridTable,
             DungeonBattleGuestTable,
             DungeonBattleRelicTable,
@@ -342,6 +347,7 @@ public static class Masters
             LimitedLoginBonusRewardListTable,
             LimitedMissionTable,
             LimitedEventTable,
+            LuckyChanceTable,
             NewCharacterMissionTable,
             LocalGvgCastleTable,
             LocalRaidBonusScheduleTable,

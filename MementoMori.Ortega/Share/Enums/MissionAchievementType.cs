@@ -20,12 +20,15 @@ public enum MissionAchievementType
     [Description("期間限定ミッション中に貢献メダルを獲得した時")]
     MissionTotalActivityAtEvent = 1010300,
     [Description("パネルミッション中に貢献メダルを獲得した時")] MissionTotalActivityAtPanelMission = 1010400,
+    [Description("コラボミッション中に貢献メダルを獲得した時")] MissionTotalActivityAtCollabMission = 1010500,
     [Description("マイページで自己紹介文を変更した時")] PlayerInfoEditComment = 2010100,
     [Description("フレンドになった最大の人数")] FriendMaxFriendCount = 3010100,
     [Description("フレンドポイントを送信した時")] FriendSendFriendPointCount = 3010200,
     [Description("アカウント連携を行った時")] SocialAuthAccount = 4010100,
     [Description("公式Twitterフォロー")] SocialFollowOfficialTwitter = 4020100,
     [Description("公式Youtubeフォロー")] SocialFollowOfficialYoutube = 4020200,
+    [Description("Url1遷移")] Url1Transition = 4020300,
+    [Description("Url2遷移")] Url2Transition = 4020400,
     [Description("ショップ（聖装鋼タブ）購入回数")] ExchangeLegendForgeMergeCount = 5010100,
     [Description("ショップ（精錬鋼タブ）購入回数")] ExchangeEquipmentForgeMergeCount = 5020200,
     [Description("ショップ（全てのタブ）購入回数")] ExchangeAllBuyCount = 5030100,
@@ -249,6 +252,7 @@ public enum MissionAchievementType
     [Description("アップデート回数")] OsStoreUpdateCount = 18010100,
     [Description("パネル図鑑遷移")] PictureBookTransitionPanel = 21010100,
     [Description("楽曲再生画面遷移回数")] MusicPlayerTransitionCount = 22010100,
+    [Description("指定楽曲開放")] BuyMusic = 22010200,
 
     [Description("ギルドツリーで1つのタイプのキャラを〇体以上使って戦闘に勝利")]
     GuildTowerWinUnitSameJobTypeBase = 23010100,
@@ -276,5 +280,6 @@ public enum MissionAchievementType
 
     [Description("全てのタイプのギルドツリー強化Lvの内で最低到達のレベル")]
     GuildTowerMinJobLevel = 23020200,
+    [Description("週間トピックス遷移")] WeeklyTopicsTransitionCount = 24010100,
     [Description("人気投票チケットの消費数")] ConsumePopularityVoteTicket = 25010100
 }

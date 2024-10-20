@@ -28,8 +28,12 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("シート情報")]
         public IReadOnlyList<PanelMissionSheetInfo> PanelMissionSheetInfoList { get; }
 
+        [PropertyOrder(12)]
+        [Description("アイコン表示箇所")]
+        public MypageIconDisplayLocationType MypageIconDisplayLocationType { get; }
+
         [SerializationConstructor]
-        public PanelMissionMB(long id, bool? isIgnore, string memo, string campaignTitleKey, IReadOnlyList<PanelMissionSheetInfo> panelMissionSheetInfoList, StartEndTimeZoneType startEndTimeZoneType, string startTime, string endTime, string forceStartTime, int delayDays)
+        public PanelMissionMB(long id, bool? isIgnore, string memo, string campaignTitleKey, IReadOnlyList<PanelMissionSheetInfo> panelMissionSheetInfoList, StartEndTimeZoneType startEndTimeZoneType, string startTime, string endTime, string forceStartTime, int delayDays, MypageIconDisplayLocationType mypageIconDisplayLocationType)
             : base(id, isIgnore, memo)
         {
             CampaignTitleKey = campaignTitleKey;
@@ -39,6 +43,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             EndTime = endTime;
             ForceStartTime = forceStartTime;
             DelayDays = delayDays;
+            MypageIconDisplayLocationType = mypageIconDisplayLocationType;
         }
 
         public PanelMissionMB() : base(0L, null, null)

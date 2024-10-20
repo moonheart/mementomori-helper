@@ -42,9 +42,12 @@ public enum ItemType
     [Description("特別プレイヤーアイコン")] SpecialIcon,
     [Description("アイコンの断片")] IconFragment,
     [Description("タイプ強化アイテム")] GuildTowerJobReinforcementMaterial,
+    [Description("リアル景品(グッズ)")] RealPrizeGoods,
+    [Description("リアル景品(デジタル)")] RealPrizeDigital,
 
     [Description("人気投票(ItemId => PopularityVoteMBのId)")]
-    PopularityVote = 39,
+    PopularityVote,
+    [Description("ラッキーチャンスガチャチケット")] LuckyChanceGachaTicket,
     [Description("イベント交換所アイテム")] EventExchangePlaceItem = 50,
     [Description("Stripeクーポン")] StripeCoupon = 1001
 }

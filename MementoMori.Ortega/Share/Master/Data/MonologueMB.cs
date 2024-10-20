@@ -32,9 +32,13 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("表示開始日時")]
         public string StartTimeFixJST { get; }
 
+        [PropertyOrder(6)]
+        [Description("朗読再生BGM設定")]
+        public MonologueBgmType MonologueBgmType { get; }
+
         [SerializationConstructor]
         public MonologueMB(long id, bool? isIgnore, string memo, long characterId, IReadOnlyList<MonologueSettingData> monologueSettingDatasJP,
-            IReadOnlyList<MonologueSettingData> monologueSettingDatasUS, string StartTimeFixJst, long characterDetailVoiceId)
+            IReadOnlyList<MonologueSettingData> monologueSettingDatasUS, string StartTimeFixJst, long characterDetailVoiceId, MonologueBgmType monologueBgmType)
             : base(id, isIgnore, memo)
         {
             this.CharacterId = characterId;
@@ -42,6 +46,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             this.MonologueSettingDatasUS = monologueSettingDatasUS;
             this.StartTimeFixJST = StartTimeFixJst;
             this.CharacterDetailVoiceId = characterDetailVoiceId;
+            this.MonologueBgmType = monologueBgmType;
         }
 
         public MonologueMB()

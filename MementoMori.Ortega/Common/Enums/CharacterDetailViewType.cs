@@ -1,12 +1,12 @@
-﻿namespace MementoMori.Ortega.Common.Enums
+﻿namespace MementoMori.Ortega.Common.Enums;
+
+public enum CharacterDetailViewType
 {
-	public enum CharacterDetailViewType
-	{
-		MyCharacter,
-		OtherPlayer,
-		PictureBook,
-		Gacha,
-		GachaResult,
-		DungeonBattleGuest
-	}
+    MyCharacter,
+    OtherPlayer,
+    PictureBook,
+    Gacha,
+    GachaResult,
+    DungeonBattleGuest,
+    WeeklyTopicsCharacterUsage
 }

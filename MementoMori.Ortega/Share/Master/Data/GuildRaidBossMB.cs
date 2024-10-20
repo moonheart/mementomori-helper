@@ -117,9 +117,13 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("ワールド報酬キャラ画像サイズ")]
 		public float WorldDamageBarRewardCharacterImageSize { get; }
 
+        [PropertyOrder(27)]
+        [Description("マイページ表示タイプ")]
+        public bool IsActiveMypageIcon { get; }
+
 
         [SerializationConstructor]
-        public GuildRaidBossMB(long id, bool? isIgnore, string memo, BaseParameter baseParameter, BattleParameter battleParameter, UnitIconType unitIconType, long unitIconId, long normalSkillId, GuildRaidBossType guildRaidBossType, long releasableGuildFame, IReadOnlyList<long> activeSkillIds, IReadOnlyList<long> passiveSkillIds, long enemyRank, JobFlags jobFlags, ElementType elementType, long battlePower, CharacterRarityFlags characterRarityFlags, string nameKey, IReadOnlyList<GuildRaidDamageBar> normalDamageBar, IReadOnlyList<GuildRaidDamageBar> guildDamageBar, string startTime, string endTime, string bannerText, float guildRaidButtonU, float guildRaidButtonV, float worldDamageBarRewardCharacterImageX, float worldDamageBarRewardCharacterImageY, float worldDamageBarRewardCharacterImageSize)
+        public GuildRaidBossMB(long id, bool? isIgnore, string memo, BaseParameter baseParameter, BattleParameter battleParameter, UnitIconType unitIconType, long unitIconId, long normalSkillId, GuildRaidBossType guildRaidBossType, long releasableGuildFame, IReadOnlyList<long> activeSkillIds, IReadOnlyList<long> passiveSkillIds, long enemyRank, JobFlags jobFlags, ElementType elementType, long battlePower, CharacterRarityFlags characterRarityFlags, string nameKey, IReadOnlyList<GuildRaidDamageBar> normalDamageBar, IReadOnlyList<GuildRaidDamageBar> guildDamageBar, string startTime, string endTime, string bannerText, float guildRaidButtonU, float guildRaidButtonV, float worldDamageBarRewardCharacterImageX, float worldDamageBarRewardCharacterImageY, float worldDamageBarRewardCharacterImageSize, bool isActiveMypageIcon)
             : base(id, isIgnore, memo)
         {
             this.BaseParameter = baseParameter;
@@ -147,6 +151,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             this.WorldDamageBarRewardCharacterImageX = worldDamageBarRewardCharacterImageX;
             this.WorldDamageBarRewardCharacterImageY = worldDamageBarRewardCharacterImageY;
             this.WorldDamageBarRewardCharacterImageSize = worldDamageBarRewardCharacterImageSize;
+            this.IsActiveMypageIcon = isActiveMypageIcon;
         }
 
         public GuildRaidBossMB() : base(0L, false, "")

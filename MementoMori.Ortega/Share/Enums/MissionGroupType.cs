@@ -15,6 +15,7 @@ public enum MissionGroupType
     [Description("パネル")] Panel = 9,
     [Description("ギルドミッション")] Guild,
     [Description("ギルドツリー")] GuildTower,
-    [Description("人気投票")] PopularityVote = 13,
+    [Description("コラボ")] Collab,
+    [Description("人気投票")] PopularityVote,
     [Description("デイリー追加報酬")] DailyBonus = 1000
 }

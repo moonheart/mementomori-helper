@@ -73,5 +73,6 @@ public enum MissionType
     PanelSheet3,
     Guild = 10,
     GuildTower,
-    PopularityVote = 13
+    Collab,
+    PopularityVote
 }

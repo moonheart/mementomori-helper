@@ -12,6 +12,8 @@ namespace MementoMori.Ortega.Share.Data.Battle
 
         public long DefenseBattlePower { get; set; }
 
+        public long BattlePower { get; set; }
+
         public PlayerInfo PlayerInfo { get; set; }
 
         public List<UserCharacterInfo> UserCharacterInfoList { get; set; }

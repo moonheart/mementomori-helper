@@ -463,6 +463,8 @@ namespace MementoMori.Ortega.Share
 		CharacterCannotUseLevelReset,
 		[Description("ユーザーのチュートリアルデータが存在しません。")]
 		CharacterUserTutorialDtoNotFound,
+		[Description("進化解放回数データが存在しません。")]
+		CharacterRankReleaseCountDtoNotFound,
 		[Description("エピソードIDが不正です。")]
 		CharacterInvalidEpisodeId = 162000,
 		[Description("強化に必要なランクに達していません。")]
@@ -507,8 +509,8 @@ namespace MementoMori.Ortega.Share
 		CharacterCannotOpenCharacterCollection,
 		[Description("LR+5以上のレアリティのキャラクターを獲得したことがありません。")]
 		CharacterNotEverExistOverRarityLRPlus5,
-		[Description("レアリティがSR、SR+以外のキャラクターが含まれています。")]
-		CharacterNotRaritySROrSRPlus,
+		[Description("心片回帰でサポートされていないレアリティのキャラクターが含まれています。")]
+		CharacterShardReversionNotSupportedRarity,
 		[Description("LR+5以上のレアリティのキャラクターを所持していません。")]
 		CharacterNotExistOverRarityLRPlus5,
 		[Description("メモリー機能が開放されていません")]
@@ -519,6 +521,18 @@ namespace MementoMori.Ortega.Share
 		CharacterRankUpNotOpen,
 		[Description("解放されてないアルカナです。")]
 		CharacterCollectionNotOpen,
+		[Description("進化解放機能が解放されていません。")]
+		CharacterRankReleaseNotOpen,
+		[Description("すでに進化解放済みのキャラクターです。")]
+		CharacterRankReleaseAlreadyReleased,
+		[Description("進化解放可能回数が不足しています。")]
+		CharacterRankReleaseLimit,
+		[Description("進化優先設定が解放されていません。")]
+		CharacterRankUpPrioritySettingNotOpen,
+		[Description("進化優先設定が不正です。")]
+		CharacterRankUpPrioritySettingInvalid,
+		[Description("最も優先度の高いキャラクターが含まれています。")]
+		CharacterShardReversionHighestPrioritySelected,
 		[Description("バトル結果が見つかりません。")]
 		LocalRaidBattleResultNotFound = 172000,
 		[Description("幻影の神殿がまだ解放されてありません。")]
@@ -757,6 +771,24 @@ namespace MementoMori.Ortega.Share
 		EquipmentInvalidLeadLockEquipmentDialogType,
 		[Description("選択されたキャラクター数が登録可能数を超過しています。")]
 		EquipmentOverMaxRegisterLockCharacterCount = 232048,
+		[Description("装備固定の変更不可時間です。")]
+		EquipmentLockEquipmentForceFixTime,
+		[Description("武具一括進化機能の解放条件を満たしていません。")]
+		BulkEquipmentNotEnoughMaxQuestIdEvolution,
+		[Description("装備固定(ギルドバトル用)機能が解放されていません。")]
+		EquipmentLockEquipmentGuildBattleNotOpen,
+		[Description("スフィア装着(一括装着カスタム)が解放されていません。")]
+		EquipmentNotOpenBulkSphereSetContent,
+		[Description("スフィア種類ごとの最大選択数を超過しています。")]
+		EquipmentOverMaxSelectionPerSphereType,
+		[Description("攻撃タイプ・防御タイプ\u3000それぞれの最大選択数を超過しています。")]
+		EquipmentOverMaxSelectionPerSphereSlotType,
+		[Description("スフィアカスタムの最大登録数を超過しています。")]
+		EquipmentOverMaxCustomCount,
+		[Description("キャラごとのスフィアカスタムの最大登録数を超過しています。")]
+		EquipmentOverMaxCustomCountPerCharacter,
+		[Description("スフィアカスタムのデータが存在しません。")]
+		EquipmentBulkSphereSetDtoNotFound,
 		[Description("ユーザのフレンドデータが存在しません。")]
 		FriendUserFriendDtoNotFound = 241000,
 		[Description("ユーザのステータスデータが存在しません。")]
@@ -1363,6 +1395,88 @@ namespace MementoMori.Ortega.Share
 		PopularityVoteUnavailablePreliminaryResult,
 		[Description("本選結果を確認できる期限ではありません。")]
 		PopularityVoteUnavailableFinalResult,
+		[Description("シリアルコードに間違いがあるか不正な文字が含まれています。")]
+		SerialCodeInvalidCode = 450001,
+		[Description("シリアルコードの有効期限が終了しました。")]
+		SerialCodeInvalidDate,
+		[Description("連続して無効なコードが入力されました。5分後に再度お試しください。")]
+		SerialCodeContinuousInput,
+		[Description("このシリアルコードは既に使用されました。")]
+		SerialCodeAlreadyUsedSameCodeGroup,
+		[Description("利用条件を満たしていないシリアルコードが入力されました。入力条件をご確認ください。")]
+		SerialCodeAlreadyUsedOtherCodeGroup,
+		[Description("バトルリーグの集計データが存在しません。")]
+		WeeklyTopicsNotFoundWeeklyTopicsBattleLeagueDto = 460001,
+		[Description("ボスバトルの集計データが存在しません。")]
+		WeeklyTopicsNotFoundWeeklyTopicsBossBattleDto,
+		[Description("存在しない属性です。")]
+		WeeklyTopicsNotDefinedElementType = 461001,
+		[Description("存在しないバトル種別です。")]
+		WeeklyTopicsNotDefinedBattleType,
+		[Description("存在しないバトルトークンです。")]
+		WeeklyTopicsBattleTokenIsNullOrEmpty,
+		[Description("バトルの詳細ログが存在しません。")]
+		WeeklyTopicsNotFoundHighlightBattleResult,
+		[Description("週間トピックスが解放されていません。")]
+		WeeklyTopicsNotOpen,
+		[Description("ユーザーのユーザーの個人情報データが存在しません。")]
+		LuckyChanceNotFoundUserPersonalInfoDto = 470001,
+		[Description("ユーザーの抽選回数が上限に達しています。")]
+		LuckyChanceUserDrawCountLimit = 471001,
+		[Description("抽選の最中にDBのデータ更新に失敗しました。")]
+		LuckyChanceFailedToUpdateDbData,
+		[Description("有効なメールアドレスを入力してください。")]
+		LuckyChanceInvalidEmailFormat,
+		[Description("メールアドレスの認証に失敗しました。登録時に使用したメールアドレスのみ有効です。")]
+		LuckyChanceDifferentFromRegisteredMailAddress,
+		[Description("認証コード生成のインターバル中です。")]
+		LuckyChanceAuthCodeInterval,
+		[Description("認証メールの送信に失敗しました。")]
+		LuckyChanceFailedToSendMail,
+		[Description("認証コードが存在しません。")]
+		LuckyChanceNotFoundAuthCode,
+		[Description("認証コードが間違っています。")]
+		LuckyChanceInvalidAuthCode,
+		[Description("氏名を入力してください。")]
+		LuckyChanceInvalidPersonalInfoName,
+		[Description("フリガナを全角カタカナで入力してください。")]
+		LuckyChanceInvalidPersonalInfoFurigana,
+		[Description("郵便番号を入力してください。")]
+		LuckyChancePersonalInfoPostalCodeIsEmpty,
+		[Description("郵便番号を7桁で入力してください。")]
+		LuckyChanceInvalidPersonalInfoPostalCode,
+		[Description("電話番号を入力してください。")]
+		LuckyChancePersonalInfoPhoneNumberIsEmpty,
+		[Description("0から始まる10~11桁の電話番号を入力してください。")]
+		LuckyChanceInvalidPersonalInfoPhoneNumber,
+		[Description("メールアドレスを入力してください。")]
+		LuckyChancePersonalInfoMailAddressIsEmpty,
+		[Description("有効なメールアドレスを入力してください。")]
+		LuckyChanceInvalidPersonalInfoMailAddress,
+		[Description("交換可能なリアル景品を所持していません。")]
+		LuckyChanceNotFoundValidRealItem,
+		[Description("アイテムの当選数が不足しています。")]
+		LuckyChanceShortageLotteryItemCount,
+		[Description("交換先のアイテム情報が存在しません。")]
+		LuckyChanceNotFoundExchangeGameItem,
+		[Description("ラッキーチャンスの抽選機能が解放されていません。")]
+		LuckyChanceNotOpenDrawLuckyChance,
+		[Description("氏名を全角で入力してください。")]
+		LuckyChanceContainsHalfWidthCharacterName,
+		[Description("都道府県を入力してください。")]
+		LuckyChancePrefectureIsEmpty,
+		[Description("都道府県を全角で入力してください。")]
+		LuckyChanceContainsHalfWidthCharacterPrefecture,
+		[Description("市区町村を入力してください。")]
+		LuckyChanceMunicipalityIsEmpty,
+		[Description("市区町村を全角で入力してください。")]
+		LuckyChanceContainsHalfWidthCharacterMunicipality,
+		[Description("番地以降を入力してください。")]
+		LuckyChanceBlockNumberIsEmpty,
+		[Description("番地以降を全角で入力してください。")]
+		LuckyChanceContainsHalfWidthCharacterBlockNumber,
+		[Description("建物名を全角で入力してください。")]
+		LuckyChanceContainsHalfWidthCharacterBuildingName,
 		[Description("存在しないTreasureChestです。")]
 		ItemOpenTreasureChestIdNotFound = 602004,
 		[Description("存在しないTreasureChestです。")]

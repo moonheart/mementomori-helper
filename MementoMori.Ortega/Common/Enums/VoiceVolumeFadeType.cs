@@ -1,8 +1,8 @@
-﻿namespace MementoMori.Ortega.Common.Enums
+﻿namespace MementoMori.Ortega.Common.Enums;
+
+public enum VoiceVolumeFadeType
 {
-	public enum VoiceVolumeFadeType
-	{
-		Default,
-		Monologue
-	}
+    Default,
+    Monologue,
+    EventPortal
 }

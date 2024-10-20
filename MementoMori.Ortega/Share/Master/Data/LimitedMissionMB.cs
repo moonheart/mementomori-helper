@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master.Attributes;
 using MementoMori.Ortega.Share.Utils;
 using MessagePack;
@@ -53,8 +54,12 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("対象ミッションID")]
         public IReadOnlyList<long> TargetMissionIdList { get; }
 
+        [PropertyOrder(12)]
+        [Description("アイコン表示箇所")]
+        public MypageIconDisplayLocationType MypageIconDisplayLocationType { get; }
+
         [SerializationConstructor]
-        public LimitedMissionMB(long id, bool? isIgnore, string memo, string startTime, string endTime, string forceStartTime, int delayDays, int characterImageId, float characterImageX, float characterImageY, float characterImageSize, string titleTextKey, string appealTextKey, IReadOnlyList<long> targetMissionIdList)
+        public LimitedMissionMB(long id, bool? isIgnore, string memo, string startTime, string endTime, string forceStartTime, int delayDays, int characterImageId, float characterImageX, float characterImageY, float characterImageSize, string titleTextKey, string appealTextKey, IReadOnlyList<long> targetMissionIdList, MypageIconDisplayLocationType mypageIconDisplayLocationType)
             : base(id, isIgnore, memo)
         {
             StartTime = startTime;
@@ -68,6 +73,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             TitleTextKey = titleTextKey;
             AppealTextKey = appealTextKey;
             TargetMissionIdList = targetMissionIdList;
+            MypageIconDisplayLocationType = mypageIconDisplayLocationType;
         }
 
         public LimitedMissionMB() : base(0L, false, "")

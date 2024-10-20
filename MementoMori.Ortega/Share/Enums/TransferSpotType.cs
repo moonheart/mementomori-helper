@@ -27,6 +27,7 @@ public enum TransferSpotType
     [Description("イベントミッション")] EventMission,
     [Description("友達招待")] FriendCampaign,
     [Description("パネルミッション")] PanelMission,
+    [Description("コラボミッション")] CollabMission,
     [Description("ゲリラパック")] GuerrillaPack = 140,
     [Description("格納アイコン")] StoreIcon = 150,
     [Description("キャラ")] Character = 160,
@@ -39,6 +40,10 @@ public enum TransferSpotType
     [Description("個別通知ダイアログ")] IndividualNotification = 210,
     [Description("星導交換所")] StarsGuidanceTradeShop = 220,
     [Description("初回インストール時のワールド指定")] TitleWorld = 230,
+    [Description("ラッキーチャンス")] LuckyChance = 240,
+    [Description("ラッキーチャンス当選者入力フォーム")] LuckyChanceInputForm = 250,
+    [Description("週間トピックス")] WeeklyTopics = 260,
     [Description("人気投票")] PopularityVote = 270,
+    [Description("イベントポータル")] EventPortal = 280,
     [Description("フレンド")] Friend = 4
 }
