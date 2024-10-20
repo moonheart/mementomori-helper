@@ -70,6 +70,7 @@ public partial class MementoMoriFuncs
 
     public async Task<string> GetClientKey(string password)
     {
+        var authToken = await GetAuthToken();
         var createUserResponse = await GetResponse<CreateUserRequest, CreateUserResponse>(new CreateUserRequest
         {
             AdverisementId = Guid.NewGuid().ToString("D"),
@@ -80,7 +81,7 @@ public partial class MementoMoriFuncs
             DisplayLanguage = NetworkManager.LanguageType,
             OSVersion = AuthOption.OSVersion,
             SteamTicket = "",
-            AuthToken = await GetAuthToken()
+            AuthToken = authToken
         });
         var clientKey = createUserResponse.ClientKey;
         // var accessTokenResponse = await GetResponse<CreateAccessTokenRequest, CreateAccessTokenResponse>(new CreateAccessTokenRequest()
@@ -89,7 +90,7 @@ public partial class MementoMoriFuncs
         // });
         var getComebackUserDataResponse = await GetResponse<GetComebackUserDataRequest, GetComebackUserDataResponse>(new GetComebackUserDataRequest
         {
-            FromUserId = createUserResponse.UserId, Password = password, SnsType = SnsType.OrtegaId, UserId = UserId
+            FromUserId = createUserResponse.UserId, Password = password, SnsType = SnsType.OrtegaId, UserId = UserId, AuthToken = authToken
         });
         var comebackUserResponse = await GetResponse<ComebackUserRequest, ComebackUserResponse>(new ComebackUserRequest
         {

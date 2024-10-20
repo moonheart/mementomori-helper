@@ -90,7 +90,7 @@ public static class Masters
 
     public static ChapterTable ChapterTable { get; } = new();
 
-    public static CollabMissionTable CollabMissionTable { get; }
+    public static CollabMissionTable CollabMissionTable { get; } = new();
 
     public static DownloadRawDataTable DownloadRawDataTable { get; } = new();
 
@@ -178,8 +178,8 @@ public static class Masters
 
     public static LimitedEventTable LimitedEventTable { get; } = new();
 
-    public static LuckyChanceTable LuckyChanceTable { get; }
-    
+    public static LuckyChanceTable LuckyChanceTable { get; } = new();
+
     public static NewCharacterMissionTable NewCharacterMissionTable { get; } = new();
 
     public static LocalGvgCastleTable LocalGvgCastleTable { get; } = new();
@@ -213,7 +213,7 @@ public static class Masters
     public static PatternSettingTable PatternSettingTable { get; } = new();
 
     public static PlayerRankTable PlayerRankTable { get; } = new();
-    
+
     public static PopularityVoteTable PopularityVoteTable { get; } = new();
 
     public static PvpRankingRewardTable PvpRankingRewardTable { get; } = new();
