@@ -9,9 +9,11 @@
 @using MementoMori.Ortega.Custom
 @using MementoMori.Ortega.Share
 @using MementoMori.Ortega.Share.Data.ApiInterface.TradeShop
+@using MementoMori.Ortega.Share.Data.ApiInterface.WeeklyTopics
 @using MementoMori.Ortega.Share.Data.Item
 @using MementoMori.Ortega.Share.Data.TradeShop
 @using MementoMori.Ortega.Share.Enums
+@using MementoMori.Ortega.Share.Extensions
 @using MementoMori.Ortega.Share.Master.Data
 @using MementoMori.WebUI.Extensions
 @inherits MementoMori.BlazorShared.Models.AccountComponent
@@ -30,9 +32,14 @@
             @foreach (var tab in _tradeShopTabInfoList)
             {
                 var tradeShopTabMb = Masters.TradeShopTabTable.GetById(tab.TradeShopTabId);
-                <MudTabPanel Text="@(Masters.TextResourceTable.Get(tradeShopTabMb.TabNameKey))">
+                var tabName = Masters.TextResourceTable.Get(tradeShopTabMb.TabNameKey);
+                if (tabName.IsNullOrEmpty())
+                {
+                    tabName = tradeShopTabMb.Memo;
+                }
+                <MudTabPanel Text="@(tabName)">
                     <MudPaper Elevation="0" Class="mb-4">
-                        @foreach (var item in tradeShopTabMb.ConsumeItemInfos)
+                        @foreach (var item in tradeShopTabMb.ConsumeItemInfos ?? [])
                         {
                             var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(item.ItemType, item.ItemId);
                             var count = Funcs.UserSyncData.GetUserItemCount(item.ItemType, item.ItemId, true);
@@ -57,21 +64,31 @@
                             @foreach (var item in tab.TradeShopItems?.OrderBy(d => d.SortOrder).ToArray() ?? Array.Empty<TradeShopItem>())
                             {
                                 var (itemName, subName) = GetItemName(item.GiveItem);
+                                string consumeText = "";
+                                long buyMaxCount = 0;
 
-                                var consumeItemName1 = item.ConsumeItem1.GetItemName();
-                                var consumeText = $"{consumeItemName1} × {item.ConsumeItem1.ItemCount}";
-                                if (item.ConsumeItem2 != null)
+                                if (item.ConsumeItem1 == null)
                                 {
-                                    var consumeItemName2 = item.ConsumeItem2.GetItemName();
-                                    consumeText += $" {consumeItemName2} × {item.ConsumeItem2.ItemCount}";
+                                    consumeText = "FREE";
+                                    buyMaxCount = item.LimitTradeCount - item.TradeCount;
                                 }
-
-                                var itemCount = Funcs.UserSyncData.GetUserItemCount(item.ConsumeItem1.ItemType, item.ConsumeItem1.ItemId, true);
-                                var buyMaxCount = itemCount / item.ConsumeItem1.ItemCount;
-                                if (item.ConsumeItem2 != null)
+                                else
                                 {
-                                    itemCount = Funcs.UserSyncData.GetUserItemCount(item.ConsumeItem2.ItemType, item.ConsumeItem2.ItemId, true);
-                                    buyMaxCount = Math.Min(buyMaxCount, itemCount / item.ConsumeItem2.ItemCount);
+                                    var consumeItemName1 = item.ConsumeItem1.GetItemName();
+                                    consumeText = $"{consumeItemName1} × {item.ConsumeItem1.ItemCount}";
+                                    if (item.ConsumeItem2 != null)
+                                    {
+                                        var consumeItemName2 = item.ConsumeItem2.GetItemName();
+                                        consumeText += $" {consumeItemName2} × {item.ConsumeItem2.ItemCount}";
+                                    }
+
+                                    var itemCount = Funcs.UserSyncData.GetUserItemCount(item.ConsumeItem1.ItemType, item.ConsumeItem1.ItemId, true);
+                                    buyMaxCount = itemCount / item.ConsumeItem1.ItemCount;
+                                    if (item.ConsumeItem2 != null)
+                                    {
+                                        itemCount = Funcs.UserSyncData.GetUserItemCount(item.ConsumeItem2.ItemType, item.ConsumeItem2.ItemId, true);
+                                        buyMaxCount = Math.Min(buyMaxCount, itemCount / item.ConsumeItem2.ItemCount);
+                                    }
                                 }
 
                                 var buyBtnDisabled = (item.LimitTradeCount > 0 && item.IsSoldOut()) || buyMaxCount == 0;
@@ -186,6 +203,16 @@
     {
         var listResponse = await Funcs!.GetResponse<GetListRequest, GetListResponse>(new GetListRequest());
         _tradeShopTabInfoList = listResponse.TradeShopTabInfoList.OrderBy(d => Masters.TradeShopTabTable.GetById(d.TradeShopTabId).SortOrder).ToList();
+        var weeklyTopicInfo = await Funcs!.GetResponse<GetWeeklyTopicsInfoRequest, GetWeeklyTopicsInfoResponse>(new GetWeeklyTopicsInfoRequest());
+        foreach (var tradeShopItems in weeklyTopicInfo.ShopData.TradeShopItemList.GroupBy(d => d.TradeShopItemId / 10000))
+        {
+            _tradeShopTabInfoList.Add(new TradeShopTabInfo
+            {
+                TradeShopTabId = tradeShopItems.Key,
+                ExpirationTimeStamp = weeklyTopicInfo.ShopData.ExpirationTimeStamp,
+                TradeShopItems = tradeShopItems.ToList()
+            });
+        }
     }
 
     private void BuyItem(TradeShopTabInfo tab, TradeShopItem tradeShopItem)

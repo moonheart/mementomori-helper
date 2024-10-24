@@ -3,6 +3,7 @@ using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.Share.Data.ApiInterface.Shop;
 using MementoMori.Ortega.Share.Data.ApiInterface.TradeShop;
 using MementoMori.Ortega.Share.Data.ApiInterface.Vip;
+using MementoMori.Ortega.Share.Data.ApiInterface.WeeklyTopics;
 using MementoMori.Ortega.Share.Data.Item;
 using MementoMori.Ortega.Share.Data.TradeShop;
 using ShopGetListRequest = MementoMori.Ortega.Share.Data.ApiInterface.Shop.GetListRequest;
@@ -47,7 +48,20 @@ public partial class MementoMoriFuncs
             var listResponse = await GetResponse<TradeShopGetListRequest, TradeShopGetListResponse>(new TradeShopGetListRequest());
 
             log(ResourceStrings.ShopAutoBuyItems);
-            foreach (var tabInfo in listResponse.TradeShopTabInfoList)
+            var tabInfoList = listResponse.TradeShopTabInfoList;
+
+            var weeklyTopicInfo = await GetResponse<GetWeeklyTopicsInfoRequest, GetWeeklyTopicsInfoResponse>(new GetWeeklyTopicsInfoRequest());
+            foreach (var tradeShopItems in weeklyTopicInfo.ShopData.TradeShopItemList.GroupBy(d => d.TradeShopItemId / 10000))
+            {
+                tabInfoList.Add(new TradeShopTabInfo
+                {
+                    ExpirationTimeStamp = weeklyTopicInfo.ShopData.ExpirationTimeStamp,
+                    TradeShopItems = tradeShopItems.ToList(),
+                    TradeShopTabId = tradeShopItems.Key
+                });
+            }
+
+            foreach (var tabInfo in tabInfoList)
             {
                 if (tabInfo.TradeShopItems == null) continue;
 
@@ -55,43 +69,46 @@ public partial class MementoMoriFuncs
                 {
                     if (shopItem.IsSoldOut()) continue;
 
-                    var shopAutoBuyItem = autoBuyItems.Find(d =>
+                    if (!shopItem.IsFree())
                     {
-                        // skip if not match tab
-                        if (d.ShopTabId != tabInfo.TradeShopTabId) return false;
+                        var shopAutoBuyItem = autoBuyItems.Find(autoBuyItem =>
+                        {
+                            // skip if not match tab
+                            if (autoBuyItem.ShopTabId != tabInfo.TradeShopTabId) return false;
 
-                        // skip if not match item
-                        if (d.BuyItem == null && d.ConsumeItem == null) return false;
+                            // skip if not match item
+                            if (autoBuyItem.BuyItem == null && autoBuyItem.ConsumeItem == null) return false;
 
-                        // if buy item is not specified and consume item is matched, buy it
-                        if (d.BuyItem == null && (d.ConsumeItem.IsConsumeEqual(shopItem.ConsumeItem1) || d.ConsumeItem.IsConsumeEqual(shopItem.ConsumeItem2)))
-                            return true;
+                            // if buy item is not specified and consume item is matched, buy it
+                            if (autoBuyItem.BuyItem == null && (autoBuyItem.ConsumeItem.IsConsumeEqual(shopItem.ConsumeItem1) || autoBuyItem.ConsumeItem.IsConsumeEqual(shopItem.ConsumeItem2)))
+                                return true;
 
-                        // if buy item is matched and consume item is not specified, buy it
-                        if (d.ConsumeItem == null && shopItem.GiveItem.IsEqual(d.BuyItem))
-                            return true;
+                            // if buy item is matched and consume item is not specified, buy it
+                            if (autoBuyItem.ConsumeItem == null && shopItem.GiveItem.IsEqual(autoBuyItem.BuyItem))
+                                return true;
 
-                        // if both buy item and consume item are matched, buy it
-                        if (d.BuyItem != null
-                            && d.ConsumeItem != null
-                            && d.BuyItem.IsEqual(shopItem.GiveItem)
-                            && (d.ConsumeItem.IsConsumeEqual(shopItem.ConsumeItem1) || d.ConsumeItem.IsConsumeEqual(shopItem.ConsumeItem2)))
-                            return true;
+                            // if both buy item and consume item are matched, buy it
+                            if (autoBuyItem.BuyItem != null
+                                && autoBuyItem.ConsumeItem != null
+                                && autoBuyItem.BuyItem.IsEqual(shopItem.GiveItem)
+                                && (autoBuyItem.ConsumeItem.IsConsumeEqual(shopItem.ConsumeItem1) || autoBuyItem.ConsumeItem.IsConsumeEqual(shopItem.ConsumeItem2)))
+                                return true;
 
-                        // otherwise, skip
-                        return false;
-                    });
+                            // otherwise, skip
+                            return false;
+                        });
 
-                    if (shopAutoBuyItem == null) continue;
+                        if (shopAutoBuyItem == null) continue;
 
-                    // check if user has enough items to consume
-                    if (shopItem.ConsumeItem1.ItemCount > UserSyncData.GetUserItemCount(shopItem.ConsumeItem1.ItemType, shopItem.ConsumeItem1.ItemId, true))
-                        continue;
-                    if (shopItem.ConsumeItem2 != null && shopItem.ConsumeItem2.ItemCount > UserSyncData.GetUserItemCount(shopItem.ConsumeItem2.ItemType, shopItem.ConsumeItem2.ItemId, true))
-                        continue;
+                        // check if user has enough items to consume
+                        if (shopItem.ConsumeItem1.ItemCount > UserSyncData.GetUserItemCount(shopItem.ConsumeItem1.ItemType, shopItem.ConsumeItem1.ItemId, true))
+                            continue;
+                        if (shopItem.ConsumeItem2 != null && shopItem.ConsumeItem2.ItemCount > UserSyncData.GetUserItemCount(shopItem.ConsumeItem2.ItemType, shopItem.ConsumeItem2.ItemId, true))
+                            continue;
 
-                    // check if discount is enough
-                    if (shopItem.SalePercent < shopAutoBuyItem.MinDiscountPercent) continue;
+                        // check if discount is enough
+                        if (shopItem.SalePercent < shopAutoBuyItem.MinDiscountPercent) continue;
+                    }
 
                     try
                     {
