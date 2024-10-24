@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO.Compression;
-using System.Linq;
 using System.Net;
-using System.Text;
+using System.Net.Http.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using MementoMori;
 using MementoMori.AssetDownloader.Alist;
 using Microsoft.Extensions.Options;
@@ -16,21 +12,22 @@ namespace ConsoleApp1;
 
 internal class AssetDownloader : BackgroundService
 {
-    private readonly MementoNetworkManager _networkManager;
-    private readonly DownloaderOption _downloaderOption;
-    private readonly ILogger<AssetDownloader> _logger;
-
     private const string processedAssetsPath = "./Assets/";
     private const string assetsToBeExtractPath = "./Assets-tmp/";
     private const string exportedAssetsPath = "./Assets-export/";
     private const string apkDownloadPath = "./apks/";
     private const string apkExtractPath = "./apks-extract/";
+    private readonly DownloaderOption _downloaderOption;
 
-    private readonly HttpClient _httpClient = new(new HttpClientHandler()
-    {
-        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-    })
-    { DefaultRequestHeaders = { { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" } } };
+    private readonly HttpClient _httpClient = new(new HttpClientHandler
+        {
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+        })
+        {DefaultRequestHeaders = {{"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"}}};
+
+    private readonly ILogger<AssetDownloader> _logger;
+
+    private readonly MementoNetworkManager _networkManager;
 
     public AssetDownloader(MementoNetworkManager networkManager, IOptions<DownloaderOption> downloaderOption, ILogger<AssetDownloader> logger)
     {
@@ -48,6 +45,7 @@ internal class AssetDownloader : BackgroundService
             Directory.SetCurrentDirectory(_downloaderOption.WorkingDir);
             try
             {
+                await DownloadRawDataFromCdn(stoppingToken);
                 await DownloadAssetsFromBoi(stoppingToken);
                 await DownloadAssetsInApk(stoppingToken);
             }
@@ -64,12 +62,46 @@ internal class AssetDownloader : BackgroundService
         }
     }
 
+    private async Task DownloadRawDataFromCdn(CancellationToken stoppingToken)
+    {
+        // https://cdn-mememori.akamaized.net/asset/MementoMori/Raw/MusicPlayer/CHR_000048_SONG_JP.mp3
+        var catalogUrl = "https://github.com/moonheart/mementomori-masterbook/raw/refs/heads/master/Master/DownloadRawDataMB.json";
+        var rawDatas = await _httpClient.GetFromJsonAsync<List<RawData>>(catalogUrl);
+        if (rawDatas == null)
+        {
+            _logger.LogError("Failed to get raw data from cdn");
+            return;
+        }
+
+        var aListApi = new AListApi(_downloaderOption.AListUrl);
+        await aListApi.AuthLogin(_downloaderOption.AlistUsername, _downloaderOption.AlistPassword);
+        var subDir = "Other/RawData";
+        foreach (var rawData in rawDatas)
+        {
+            if (stoppingToken.IsCancellationRequested)
+                return;
+            var targetFile = Path.Combine(_downloaderOption.AListTargetPath, subDir, rawData.FilePath);
+            var fsGetResponse = await aListApi.FsGet(targetFile);
+            if (fsGetResponse != null && fsGetResponse.Size == rawData.FileSize)
+            {
+                _logger.LogInformation($"Skip {rawData.FilePath}");
+                continue;
+            }
+
+            _logger.LogInformation($"Downloading {rawData.FilePath}");
+            var fileBytes = await _httpClient.GetByteArrayAsync($"https://cdn-mememori.akamaized.net/asset/MementoMori/Raw/{rawData.FilePath}");
+            _logger.LogInformation($"Uploading to {targetFile}");
+            await aListApi.FsPut(targetFile, fileBytes, "application/octet-stream");
+        }
+    }
+
+
     private async Task ConvertAndUpload(CancellationToken stoppingToken)
     {
         if (Directory.Exists(exportedAssetsPath))
             Directory.Delete(exportedAssetsPath, true);
 
-        var processStartInfo = new ProcessStartInfo()
+        var processStartInfo = new ProcessStartInfo
         {
             FileName = _downloaderOption.AssetStutioCliPath,
             Arguments = $"{assetsToBeExtractPath} -t {_downloaderOption.ExportAssetType} -o {exportedAssetsPath}",
@@ -138,6 +170,7 @@ internal class AssetDownloader : BackgroundService
         _logger.LogInformation("Start to download assets");
         var isDownloaded = false;
         while (true)
+        {
             try
             {
                 if (!_downloaderOption.SkipDownloadFromBoi)
@@ -158,6 +191,7 @@ internal class AssetDownloader : BackgroundService
                 _logger.LogError(e, "Failed to download assets, abort");
                 break;
             }
+        }
 
         if (isDownloaded)
         {
@@ -318,3 +352,13 @@ internal class AssetDownloader : BackgroundService
         }
     }
 }
+
+public record RawData(
+    int Id,
+    bool IsIgnore,
+    string Memo,
+    string FilePath,
+    int FileSize,
+    int RawDataDownloadType,
+    string Etag
+);
