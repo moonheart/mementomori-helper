@@ -4,7 +4,7 @@
 @using MementoMori.Ortega.Share.Data.Auth
 <MudDialog>
     <DialogContent>
-        <MudList T="PlayerDataInfo" ReadOnly="false" SelectedValue="playerDataInfo.PlayerDataInfo">
+        <MudList T="PlayerDataInfo" ReadOnly="false" @bind-SelectedValue="playerDataInfo.PlayerDataInfo">
             <MudListSubheader>
                 @if (playerDataInfo.PlayerDataInfo != null)
                 {
