@@ -134,6 +134,7 @@ public partial class MementoNetworkManager : IDisposable
     {
         log ??= Console.WriteLine;
         log(ResourceStrings.Downloading_master_directory___);
+        await GetLatestAvailableVersion();
         var dataUriResponse = await GetResponse<GetDataUriRequest, GetDataUriResponse>(new GetDataUriRequest {CountryCode = "CN", UserId = 0});
 
         var url = string.Format(dataUriResponse.MasterUriFormat, MoriHttpClientHandler.OrtegaMasterVersion, "master-catalog");
