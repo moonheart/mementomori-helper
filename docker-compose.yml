@@ -1,9 +1,0 @@
-﻿version: '3'
-services:
-  mementomori-botserver:
-    image: moonheartmoon/mementomori-botserver
-    container_name: mementomori-botserver
-    restart: unless-stopped
-    volumes:
-      - ${PWD}/appsettings.json:/app/appsettings.json
-      - ${PWD}/MementoMoriBot.db:/app/MementoMoriBot.db

@@ -144,28 +144,7 @@ To run the program, you need to configure your account information. After that, 
 
 ### Method 2: Run with Docker
 
-```yaml
-version: '3'
-services:
-  mementomori:
-    image: moonheartmoon/mementomori-webui
-    container_name: mementomori
-    restart: unless-stopped
-    privileged: false
-    ports:
-      - "5290:8080"
-    environment:
-      - TZ=Asia/Shanghai
-    volumes:
-      - ./Master/:/app/Master/
-      - ${PWD}/appsettings.user.json:/app/appsettings.user.json:rw
-```
-
-- Start or update: `docker compose up -d --pull always`
-- Stop: `docker compose down`
-- View logs: `docker compose logs -f`
-
-Once you access the web interface, click the login button and you can start using the tool.
+See [docker-compose](expamples/docker-compose)
 
 ## Automatic Tasks
 
