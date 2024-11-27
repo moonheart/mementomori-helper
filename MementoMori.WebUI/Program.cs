@@ -1,5 +1,6 @@
 using System.Globalization;
 using MementoMori;
+using MementoMori.Apis;
 using MementoMori.Common;
 using MementoMori.Jobs;
 using MementoMori.Option;
@@ -12,10 +13,12 @@ using MementoMori.WebUI;
 using Sentry;
 using MementoMori.WebUI.UI;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Index = MementoMori.BlazorShared.Pages.Index;
 using Ortega.Common.Manager;
 using MudBlazor;
+using Refit;
 
 internal class Program
 {
@@ -70,6 +73,13 @@ internal class Program
                 };
             };
         });
+
+        builder.Services.AddSingleton(sp =>
+        {
+            var serverUrl = sp.GetRequiredService<IWritableOptions<GameConfig>>().Value.ServerUrl;
+            return RestService.For<IMemeMoriServerApi>(serverUrl);
+        });
+
 
         builder.Services.AddQuartz();
         builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);

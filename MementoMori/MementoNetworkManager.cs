@@ -11,6 +11,7 @@ using MementoMori.AddressableTools;
 using MementoMori.AddressableTools.Catalog;
 using MementoMori.Exceptions;
 using MementoMori.MagicOnion;
+using MementoMori.NetworkInterceptors;
 using MementoMori.Option;
 using MementoMori.Ortega.Network.MagicOnion.Client;
 using MementoMori.Ortega.Share.Data;
@@ -39,7 +40,7 @@ public partial class MementoNetworkManager : IDisposable
     private static readonly AsyncSemaphore asyncSemaphore = new(1);
     private readonly IWritableOptions<AuthOption> _authOption;
     private readonly IWritableOptions<GameConfig> _gameConfig;
-
+    private readonly BattleLogInterceptor _battleLogInterceptor;
     private readonly ILogger<MementoNetworkManager> _logger;
 
 
@@ -68,6 +69,8 @@ public partial class MementoNetworkManager : IDisposable
 
     public MeMoriHttpClientHandler MoriHttpClientHandler { get; private set; }
 
+    private readonly NetworkInterceptorPipeline _pipeline = new();
+
     public bool DisableAutoUpdateMasterData { get; set; }
 
     public void Dispose()
@@ -83,6 +86,8 @@ public partial class MementoNetworkManager : IDisposable
     [AutoPostConstruct]
     public void AutoPostConstruct()
     {
+        _pipeline.Use(_battleLogInterceptor);
+
         _apiAuth = new Uri(string.IsNullOrEmpty(_authOption.Value.AuthUrl) ? "https://prd1-auth.mememori-boi.com/api/" : _authOption.Value.AuthUrl);
 
         MoriHttpClientHandler = new MeMoriHttpClientHandler {AppVersion = _authOption.Value.AppVersion};
@@ -320,7 +325,7 @@ public partial class MementoNetworkManager : IDisposable
         return ortegaMagicOnionClient;
     }
 
-    public async Task<TResp> GetResponse<TReq, TResp>(TReq req, Action<string> log = null, Action<UserSyncData> userData = null, Uri apiAuth = null, Uri apiHost = null)
+    public async Task<TResp> GetResponse<TReq, TResp>(TReq req, Action<string>? log = null, Action<UserSyncData>? userData = null, Uri? apiAuth = null, Uri? apiHost = null)
         where TReq : ApiRequestBase
         where TResp : ApiResponseBase
     {

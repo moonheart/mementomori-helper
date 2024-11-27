@@ -68,6 +68,7 @@ public class GameConfig
     public DungeonBattleRelicSortInfo[] DungeonBattleRelicSort { get; set; }
     public int AutoRequestDelay { get; set; }
     public bool RecordBattleLog { get; set; } = true;
+    public bool ReportBattleLog { get; set; } = true;
     public string BattleLogDir { get; set; } = "BattleLogs/";
     public BountyQuestAutoModel BountyQuestAuto { get; set; } = new();
     public DungeonBattleConfig DungeonBattle { get; set; } = new();
@@ -75,6 +76,8 @@ public class GameConfig
 
     [Obsolete("Use config in PlayerOption")]
     public LocalRaidConfig LocalRaid { get; set; } = new();
+
+    public string ServerUrl { get; set; }
 
     public LoginConfig Login { get; set; } = new();
     public ItemsConfig Items { get; set; } = new();

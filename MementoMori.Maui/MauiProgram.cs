@@ -1,20 +1,12 @@
-﻿using MementoMori.Common;
-using MementoMori.Jobs;
-using MementoMori.Option;
-using MementoMori.WebUI.UI;
-
-using Microsoft.AspNetCore.Components.WebView.Maui;
+﻿using MementoMori.Option;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-
 using MudBlazor.Services;
-
 using Quartz;
-
-using System.Globalization;
 using Microsoft.Extensions.FileProviders;
-using System.Reflection;
 using MudBlazor;
+using MementoMori.Apis;
+using Refit;
 
 namespace MementoMori.Maui
 {
@@ -32,10 +24,7 @@ namespace MementoMori.Maui
                     o.AutoSessionTracking = true;
                     o.IsGlobalModeEnabled = true;
                 })
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                });
+                .ConfigureFonts(fonts => { fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular"); });
 
             Directory.SetCurrentDirectory(FileSystem.Current.AppDataDirectory);
             var embeddedFileProvider = new EmbeddedFileProvider(typeof(App).Assembly);
@@ -56,11 +45,17 @@ namespace MementoMori.Maui
             builder.Services.ConfigureWritable<GameConfig>(builder.Configuration.GetSection("GameConfig"), "appsettings.user.json");
             builder.Services.ConfigureWritable<PlayersOption>(builder.Configuration.GetSection("PlayersOption"), "appsettings.user.json");
 
+            builder.Services.AddSingleton(sp =>
+            {
+                var serverUrl = sp.GetRequiredService<IWritableOptions<GameConfig>>().Value.ServerUrl;
+                return RestService.For<IMemeMoriServerApi>(serverUrl);
+            });
+
             builder.Services.AddQuartz();
             builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             var app = builder.Build();
@@ -68,7 +63,5 @@ namespace MementoMori.Maui
 
             return app;
         }
-
-
     }
 }

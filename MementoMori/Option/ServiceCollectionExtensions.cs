@@ -11,14 +11,14 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfigurationSection section,
         string file = "appsettings.json",
-        IFileProvider fileProvider = null) where T : class, new()
+        IFileProvider? fileProvider = null) where T : class, new()
     {
         services.Configure<T>(section);
         services.AddSingleton<IWritableOptions<T>>(provider =>
         {
-            var configuration = (IConfigurationRoot) provider.GetService<IConfiguration>();
-            fileProvider ??= provider.GetService<IFileProvider>();
-            var options = provider.GetService<IOptionsMonitor<T>>();
+            var configuration = (IConfigurationRoot) provider.GetRequiredService<IConfiguration>();
+            fileProvider ??= provider.GetRequiredService<IFileProvider>();
+            var options = provider.GetRequiredService<IOptionsMonitor<T>>();
             return new WritableOptions<T>(fileProvider, options, configuration, section.Key, file);
         });
     }
