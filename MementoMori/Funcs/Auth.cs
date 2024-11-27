@@ -103,7 +103,7 @@ public partial class MementoMoriFuncs
     {
         try
         {
-            var json = await _httpClientFactory.CreateClient().GetStringAsync("https://list.moonheart.dev/d/public/mmtm/AddressableLocalAssets/ScriptableObjects/AuthToken/AuthTokenData.json");
+            var json = await _httpClientFactory.CreateClient().GetStringAsync("https://list.moonheart.dev/d/public/mmtm/AddressableLocalAssets/ScriptableObjects/AuthToken/AuthTokenData.json?v=" + DateTimeOffset.Now.ToUnixTimeSeconds());
             return JObject.Parse(json)["_authToken"]?.Value<int>() ?? 0;
         }
         catch (Exception e)

@@ -142,29 +142,7 @@
 
 ### 方式2 用 Docker 运行
 
-```yaml
-version: '3'
-services:
-  mementomori:
-    image: moonheartmoon/mementomori-webui
-    container_name: mementomori
-    restart: unless-stopped
-    privileged: false
-    ports:
-      - "5290:8080"
-    environment:
-      - TZ=Asia/Shanghai
-    volumes:
-      - ./Master/:/app/Master/
-      - ${PWD}/appsettings.user.json:/app/appsettings.user.json:rw
-```
-
-- 启动或更新: `docker compose up -d --pull always`
-- 停止: `docker compose down`
-- 查看日志: `docker compose logs -f`
-
-
-进入网页之后, 先点击一次登录, 之后就可以随意操作了.
+见 [docker-compose](expamples/docker-compose)
 
 ## 自动任务
 
