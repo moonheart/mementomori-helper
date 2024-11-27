@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0-android</TargetFrameworks>
-        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+        <TargetFrameworks>net9.0-android</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
         <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-        <!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
+        <!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
 
         <!-- Note for MacCatalyst:
             The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
@@ -20,7 +20,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <EnableDefaultCssItems>false</EnableDefaultCssItems>
         <Nullable>enable</Nullable>
-        <MauiVersion>8.0.80</MauiVersion>
+        <MauiVersion>9.0.10</MauiVersion>
 
         <!-- Display name -->
         <ApplicationTitle>MementoMori.Maui</ApplicationTitle>
@@ -41,7 +41,7 @@
         <AndroidSigningKeyStore>mementomori-helper.keystore</AndroidSigningKeyStore>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
       <AndroidPackageFormat>apk</AndroidPackageFormat>
       <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
       <AndroidKeyStore>True</AndroidKeyStore>
@@ -54,7 +54,7 @@
       <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|AnyCPU'">
       <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
       <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
       <AndroidKeyStore>True</AndroidKeyStore>
@@ -64,32 +64,32 @@
       <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
       <ApplicationTitle>MementoMori Helper</ApplicationTitle>
       <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-maccatalyst|AnyCPU'">
       <ApplicationTitle>MementoMori Helper</ApplicationTitle>
       <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-windows10.0.19041.0|AnyCPU'">
       <ApplicationTitle>MementoMori Helper</ApplicationTitle>
       <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
       <ApplicationTitle>MementoMori Helper</ApplicationTitle>
       <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-maccatalyst|AnyCPU'">
       <ApplicationTitle>MementoMori Helper</ApplicationTitle>
       <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-windows10.0.19041.0|AnyCPU'">
       <ApplicationTitle>MementoMori Helper</ApplicationTitle>
       <ApplicationIdGuid>2D38D223-E62A-4F86-A7B7-5CF396E98D20</ApplicationIdGuid>
     </PropertyGroup>
