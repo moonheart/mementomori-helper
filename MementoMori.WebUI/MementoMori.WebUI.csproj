@@ -18,20 +18,20 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.8" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.8" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.8" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="8.0.0" />
-        <PackageReference Include="MudBlazor" Version="7.6.0" />
-        <PackageReference Include="Quartz" Version="3.13.0" />
-        <PackageReference Include="Quartz.AspNetCore" Version="3.13.0" />
-        <PackageReference Include="ReactiveUI.Blazor" Version="20.1.1" />
-        <PackageReference Include="Sentry.AspNetCore" Version="4.9.0" />
-        <PackageReference Include="Injectio" Version="3.1.0" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.AspNetCore.Components" Version="9.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="9.0.0" />
+        <PackageReference Include="MudBlazor" Version="7.15.0" />
+        <PackageReference Include="Quartz" Version="3.13.1" />
+        <PackageReference Include="Quartz.AspNetCore" Version="3.13.1" />
+        <PackageReference Include="ReactiveUI.Blazor" Version="20.1.63" />
+        <PackageReference Include="Sentry.AspNetCore" Version="4.13.0" />
+        <PackageReference Include="Injectio" Version="4.0.0" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>

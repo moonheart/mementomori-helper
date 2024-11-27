@@ -6,27 +6,27 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="MessagePack" Version="2.5.172" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+        <PackageReference Include="MessagePack" Version="2.5.192" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
         <PackageReference Include="morelinq" Version="4.3.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="Quartz" Version="3.13.0" />
-        <PackageReference Include="ReactiveUI" Version="20.1.1" />
+        <PackageReference Include="Quartz" Version="3.13.1" />
+        <PackageReference Include="ReactiveUI" Version="20.1.63" />
         <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
-        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
         <PackageReference Include="System.Reactive" Version="6.0.1" />
         <PackageReference Include="PropertyChanged.SourceGenerator" Version="1.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="AutoCtor" Version="2.4.2" />
-        <PackageReference Include="Injectio" Version="3.1.0" PrivateAssets="all" />
-        <PackageReference Include="Refit" Version="7.2.1" />
+        <PackageReference Include="AutoCtor" Version="2.4.5" />
+        <PackageReference Include="Injectio" Version="4.0.0" PrivateAssets="all" />
+        <PackageReference Include="Refit" Version="8.0.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\MementoMori.Ortega\MementoMori.Ortega.csproj" />
