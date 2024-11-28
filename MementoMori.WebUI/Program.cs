@@ -19,6 +19,8 @@ using Index = MementoMori.BlazorShared.Pages.Index;
 using Ortega.Common.Manager;
 using MudBlazor;
 using Refit;
+using MagicOnion;
+using Microsoft.Extensions.FileProviders;
 
 internal class Program
 {
@@ -42,8 +44,11 @@ internal class Program
             o.IsGlobalModeEnabled = true;
         });
 
-        builder.Configuration.AddJsonFile("appsettings.other.json", true, true);
-        builder.Configuration.AddJsonFile("appsettings.user.json", true, true);
+        IFileProvider physicalProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
+        builder.Services.AddSingleton(physicalProvider);
+
+        builder.Configuration.AddJsonFile(physicalProvider, "appsettings.other.json", true, true);
+        builder.Configuration.AddJsonFile(physicalProvider, "appsettings.user.json", true, true);
 
         builder.Services.AddMudServices();
         builder.Services.AddMudMarkdownServices();
@@ -89,7 +94,7 @@ internal class Program
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment()) app.UseExceptionHandler("/Error");
 
-        app.UseStaticFiles();
+        app.MapStaticAssets();
         app.UseAntiforgery();
         app.MapRazorComponents<App>()
             .AddAdditionalAssemblies(typeof(Index).Assembly)

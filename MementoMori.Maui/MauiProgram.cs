@@ -27,10 +27,11 @@ namespace MementoMori.Maui
                 .ConfigureFonts(fonts => { fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular"); });
 
             Directory.SetCurrentDirectory(FileSystem.Current.AppDataDirectory);
-            var embeddedFileProvider = new EmbeddedFileProvider(typeof(App).Assembly);
+            IFileProvider fileProvider = new PhysicalFileProvider(FileSystem.Current.AppDataDirectory);
+            builder.Services.AddSingleton(fileProvider);
 
-            builder.Configuration.AddJsonFile(embeddedFileProvider, "appsettings.json", false, false);
-            builder.Configuration.AddJsonFile("appsettings.user.json", true, true);
+            builder.Configuration.AddJsonFile(new EmbeddedFileProvider(typeof(App).Assembly), "appsettings.json", false, false);
+            builder.Configuration.AddJsonFile(fileProvider, "appsettings.user.json", true, true);
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddMudServices();
             builder.Services.AddMudMarkdownServices();

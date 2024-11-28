@@ -215,7 +215,7 @@ internal class AssetDownloader : BackgroundService
         if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(chatId))
             return;
         TelegramBotClient botClient = new(token);
-        await botClient.SendTextMessageAsync(chatId, message);
+        await botClient.SendMessage(chatId, message);
     }
 
 
