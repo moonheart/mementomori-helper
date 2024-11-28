@@ -29,7 +29,7 @@ jobs:
         run: sed -i "s/<Version>.*<\/Version>/<Version>$(echo ${{github.ref_name}} | sed 's@v@@g')<\/Version>/g" ./MementoMori.WebUI/MementoMori.WebUI.csproj
         if: startsWith(github.ref, 'refs/tags/')
       - name: Publish ${{matrix.rid}}
-        run: dotnet workload restore && dotnet publish ./MementoMori.WebUI/MementoMori.WebUI.csproj -f net8.0 -c Release -r ${{matrix.rid}} -o publish-${{matrix.rid}} --sc -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true
+        run: dotnet workload restore && dotnet publish ./MementoMori.WebUI/MementoMori.WebUI.csproj -f net9.0 -c Release -r ${{matrix.rid}} -o publish-${{matrix.rid}} --sc -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true
       - name: Archive Release ${{matrix.rid}}
         uses: thedoctor0/zip-release@0.7.1
         with:
@@ -115,7 +115,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9.0.x
       - name: Install MAUI workload
         run: dotnet workload install maui
       - name: Write keystore
@@ -123,7 +123,7 @@ jobs:
           $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.KEYSTORE_BASE64_ENCODED }}")
           [IO.File]::WriteAllBytes("MementoMori.Maui/mementomori-helper.keystore", $pfx_cert_byte)
       - name: Build Android
-        run: dotnet publish .\MementoMori.Maui\MementoMori.Maui.csproj -c Release -f net8.0-android -p:AndroidSigningStorePass=env:KEYSTORE_PASSWORD -p:AndroidSigningKeyPass=env:KEYSTORE_PASSWORD -p:ApplicationDisplayVersion=$((echo ${{github.ref_name}}) -replace 'v') -p:ApplicationVersion=${{github.run_number}} -o publish-android
+        run: dotnet publish .\MementoMori.Maui\MementoMori.Maui.csproj -c Release -f net9.0-android -p:AndroidSigningStorePass=env:KEYSTORE_PASSWORD -p:AndroidSigningKeyPass=env:KEYSTORE_PASSWORD -p:ApplicationDisplayVersion=$((echo ${{github.ref_name}}) -replace 'v') -p:ApplicationVersion=${{github.run_number}} -o publish-android
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       - name: Create Dev Release
