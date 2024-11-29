@@ -8,5 +8,8 @@ public enum LimitedEventType
     [Description("不明")] None,
     [Description("属性の塔全開放")] ElementTowerAllRelease,
     [Description("シリアルコード入力")] SerialCode,
-    [Description("通知強制削除")] NotificationForceCancel = 10000
+    [Description("通知強制削除")] NotificationForceCancel = 10000,
+
+    [Description("GooglePlayのレシート消費をクライアントで行う")]
+    EnableGooglePlayReceiptConsumeByClient
 }

@@ -1,13 +1,12 @@
-﻿namespace MementoMori.Ortega.Common.Enums
+﻿namespace MementoMori.Ortega.Common.Enums;
+
+public enum AppNotificationType
 {
-	public enum AppNotificationType
-	{
-		AutoBattle = 1,
-		LocalRaid,
-		BattleLeagueReward,
-		LocalRaidRewardIncrease,
-		GuildChat = 1001,
-		Chat,
-		GuildRaid
-	}
+    AutoBattle = 1,
+    LocalRaid,
+    BattleLeagueReward,
+    OneWeekLimitedPack,
+    GuildChat = 1001,
+    Chat,
+    GuildRaid
 }

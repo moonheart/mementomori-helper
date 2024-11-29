@@ -11,5 +11,6 @@ public enum PatternSettingType
     [Description("ミッションのガイド表示優先度")] MissionGuideDisplayOrder,
     [Description("ゲリラパックの報酬内容")] GuerrillaPackRewardItem,
     [Description("ダイナミックリンクによるワールド誘導")] InviteWorldByDynamicLink,
-    [Description("初課金ボーナスのダイヤ購入ボタンの遷移先")] FirstChargeBonusButton
+    [Description("初課金ボーナスのダイヤ購入ボタンの遷移先")] FirstChargeBonusButton,
+    [Description("一週間限定パックの購入期限プッシュ通知")] OneWeekLimitedPackPushNotification
 }

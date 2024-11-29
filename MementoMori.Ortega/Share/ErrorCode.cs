@@ -1653,6 +1653,8 @@ namespace MementoMori.Ortega.Share
 		MagicOnionGlobalGvgNotOpen,
 		[Description("GlobalGvgでキャラクターのキャッシュデータが存在しないためパーティ追加に失敗しました。")]
 		MagicOnionGlobalGvgAddCastlePartyNotFoundCharacterCache,
+		[Description("グランドバトルの参加条件を満たしていません。")]
+		MagicOnionNotJoinedGrandBattle,
 		[Description("認証に失敗しました。")]
 		MagicOnionAuthenticationFail = 1000000,
 		[Description("プレイヤーの情報を見つけません。")]
@@ -1780,6 +1782,34 @@ namespace MementoMori.Ortega.Share
 		[Description("Stripe ポイントが足りません。")]
 		StripeNotEnoughPoint,
 		[Description("Stripe セッションデータがありません。")]
-		StripeNotFoundSession
+		StripeNotFoundSession,
+		[Description("ユーザーのSteamIdの取得に失敗しました。")]
+		SteamFailedToGetUserSteamId = 6000101,
+		[Description("既に別のSteamアカウントと紐づいたユーザーです。")]
+		SteamAlreadyLinkedOtherSteamId,
+		[Description("端末種別がSteamではありません。")]
+		SteamDeviceTypeIsNotSteam = 6000201,
+		[Description("未定義の言語コードです。")]
+		SteamNotDefinedLanguageCode,
+		[Description("Steamのユーザー情報取得に失敗しました。")]
+		SteamFailedToGetUserInfo,
+		[Description("価格情報が定義されていません。")]
+		SteamNotDefinedProductPriceInfo,
+		[Description("Steamでの課金開始に失敗しました。")]
+		SteamFailedToInitTxn,
+		[Description("Steamでの購入ステータス取得に失敗しました。")]
+		SteamFailedToQueryTxn = 6000301,
+		[Description("Steamでの購入完了に失敗しました。")]
+		SteamFailedToFinalizeTxn,
+		[Description("Steamでの課金に失敗しました。")]
+		SteamNotCorrectSteamId,
+		[Description("Steamでの課金に失敗しました。")]
+		SteamInvalidTxnStatus,
+		[Description("Steamでのサブスク情報取得に失敗しました。")]
+		SteamFailedToGetUserAgreementInfo,
+		[Description("Steamでのサブスク情報取得に失敗しました。")]
+		SteamNotFoundUserAgreementInfo,
+		[Description("Steamでのサブスク情報取得に失敗しました。")]
+		SteamAgreementInfoIsNull
 	}
 }

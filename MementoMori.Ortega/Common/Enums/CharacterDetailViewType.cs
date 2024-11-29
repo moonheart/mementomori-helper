@@ -8,5 +8,6 @@ public enum CharacterDetailViewType
     Gacha,
     GachaResult,
     DungeonBattleGuest,
-    WeeklyTopicsCharacterUsage
+    WeeklyTopicsCharacterUsage,
+    GrowthPack
 }
