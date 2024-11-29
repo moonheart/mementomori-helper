@@ -94,7 +94,7 @@ internal class Program
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment()) app.UseExceptionHandler("/Error");
 
-        app.MapStaticAssets();
+        app.UseStaticFiles();
         app.UseAntiforgery();
         app.MapRazorComponents<App>()
             .AddAdditionalAssemblies(typeof(Index).Assembly)
