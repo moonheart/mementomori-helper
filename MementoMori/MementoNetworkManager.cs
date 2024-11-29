@@ -405,7 +405,6 @@ public partial class MementoNetworkManager : IDisposable
         {
             _authOption.Update(x => { x.AppVersion = version.ToString(); });
             MoriHttpClientHandler.AppVersion = version.ToString();
-            return;
         }
 
         var buildAddCount = 5;
