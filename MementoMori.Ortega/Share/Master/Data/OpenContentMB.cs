@@ -12,7 +12,7 @@ public class OpenContentMB : MasterBookBase
     [SerializationConstructor]
     public OpenContentMB(long id, bool? isIgnore, string memo, string assetPath, string descriptionKey, OpenContentType openContentType, long openContentValue, OpenCommandType openCommandType,
         bool isActiveGuide, int guideOrderNumber, string guideDescriptionKey, long guideStartValue, string toastKey, long tutorialId)
-        : base(0L, null, null)
+        : base(id, isIgnore, memo)
     {
         AssetPath = assetPath;
         DescriptionKey = descriptionKey;

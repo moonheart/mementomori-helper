@@ -14,8 +14,15 @@ public class TotalActivityMedalRewardMB : MasterBookBase, IHasStartEndTime
     [SerializationConstructor]
     public TotalActivityMedalRewardMB(long id, bool? isIgnore, string memo, MissionGroupType missionGroupType, long requiredActivityMedalCount, long value, IReadOnlyList<MissionReward> rewardList,
         string startTime, string endTime, int sortOrder)
-        : base(0L, null, null)
+        : base(id, isIgnore, memo)
     {
+        MissionGroupType = missionGroupType;
+        RequiredActivityMedalCount = requiredActivityMedalCount;
+        Value = value;
+        RewardList = rewardList;
+        StartTime = startTime;
+        EndTime = endTime;
+        SortOrder = sortOrder;
     }
 
     public TotalActivityMedalRewardMB() : base(0L, false, "")
@@ -34,7 +41,7 @@ public class TotalActivityMedalRewardMB : MasterBookBase, IHasStartEndTime
     [Description("必要貢献メダル")]
     public long RequiredActivityMedalCount { get; }
 
-    [Nest()]
+    [Nest]
     [PropertyOrder(4)]
     [Description("報酬リスト")]
     public IReadOnlyList<MissionReward> RewardList { get; }
