@@ -12,7 +12,7 @@ namespace MementoMori.Ortega.Share.Master.Table
 
 		public string GetMasterBookName()
 		{
-			return nameof(TM);
+			return typeof(TM).Name;
 		}
 
 		public TM[] GetArray()
