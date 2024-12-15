@@ -49,6 +49,7 @@ namespace MementoMori.Maui
             builder.Services.AddSingleton(sp =>
             {
                 var serverUrl = sp.GetRequiredService<IWritableOptions<GameConfig>>().Value.ServerUrl;
+                if (string.IsNullOrEmpty(serverUrl)) serverUrl = "https://github.com";
                 return RestService.For<IMemeMoriServerApi>(serverUrl);
             });
 
