@@ -127,7 +127,7 @@ public partial class MementoMoriFuncs
             {
                 if (response.OpenEventLocalRaidQuestIds.Count > 0)
                 {
-                    var localRaidQuestMbs = response.OpenEventLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
+                    var localRaidQuestMbs = response.LocalRaidQuestInfos;
                     var localRaidQuestMb = localRaidQuestMbs.OrderByDescending(d =>
                     {
                         if (response.ClearCountDict.TryGetValue(d.Id, out var c) && c > 0) return d.FixedBattleRewards[0].ItemCount;
@@ -138,7 +138,7 @@ public partial class MementoMoriFuncs
                 }
                 else
                 {
-                    var localRaidQuestMbs = response.OpenLocalRaidQuestIds.Select(LocalRaidQuestTable.GetById).ToList();
+                    var localRaidQuestMbs = response.LocalRaidQuestInfos;
                     if (rewardItems.Count == 0) return localRaidQuestMbs.OrderByDescending(d => d.Level).First().Id;
 
                     return localRaidQuestMbs.Select(d =>
