@@ -38,6 +38,10 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("ギルドツリーでコンボが開始されました！\nギルドツリーに挑戦してコンボ数を増やそう！")]
 		GuildTowerStartCombo,
 		[Description("ギルドツリーで{プレイヤー名}の活躍で{数値}コンボを達成しました！")]
-		GuildTowerAchieveCombo
+		GuildTowerAchieveCombo,
+		[Description("Aギルドの[布告したプレイヤー名]がBギルドの[拠点名]に布告しました！")]
+		DeclareToTargetGuild,
+		[Description("Aギルドの[布告したプレイヤー名]がBギルドの[拠点名]に反撃を宣言しました！")]
+		RecaptureToTargetGuild
 	}
 }

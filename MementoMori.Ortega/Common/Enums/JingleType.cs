@@ -27,5 +27,7 @@ public enum JingleType
     MemoryIn,
     MemoryOut,
     LuckyChanceResultBlue = 14001,
-    LuckyChanceResultRainbow
+    LuckyChanceResultRainbow,
+    MonologueIn = 15001,
+    MonologueOut
 }

@@ -23,6 +23,7 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("コンボ上限時間(分単位)")]
         public int ComboMaxTime { get; }
 
+        [DateTimeString]
         [PropertyOrder(4)]
         [Description("バナー表示終了日時")]
         public string DisplayBannerEndTime { get; set; }

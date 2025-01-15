@@ -156,6 +156,8 @@ public static class Masters
 
     public static GuildTowerReinforcementJobLevelTable GuildTowerReinforcementJobLevelTable { get; } = new();
 
+    public static ItemMaxCountSwitchingQuestTable ItemMaxCountSwitchingQuestTable { get; } = new();
+
     public static ItemTable ItemTable { get; } = new();
 
     public static MonthlyLoginBonusRewardListTable MonthlyLoginBonusRewardListTable { get; } = new();
@@ -186,11 +188,7 @@ public static class Masters
 
     public static LocalRaidBonusScheduleTable LocalRaidBonusScheduleTable { get; } = new();
 
-    public static LocalRaidEnemyTable LocalRaidEnemyTable { get; } = new();
-
     public static LocalRaidEventScheduleTable LocalRaidEventScheduleTable { get; } = new();
-
-    public static LocalRaidQuestTable LocalRaidQuestTable { get; } = new();
 
     public static LocalRaidQuestGroupTable LocalRaidQuestGroupTable { get; } = new();
 
@@ -335,6 +333,7 @@ public static class Masters
             GuildTowerEnemyTable,
             GuildTowerChallengeRewardTable,
             GuildTowerReinforcementJobLevelTable,
+            ItemMaxCountSwitchingQuestTable,
             GuildTowerFloorTable,
             ItemTable,
             MonthlyLoginBonusRewardListTable,
@@ -351,9 +350,7 @@ public static class Masters
             NewCharacterMissionTable,
             LocalGvgCastleTable,
             LocalRaidBonusScheduleTable,
-            LocalRaidEnemyTable,
             LocalRaidEventScheduleTable,
-            LocalRaidQuestTable,
             LocalRaidQuestGroupTable,
             MissionTable,
             MissionOpenContentTable,

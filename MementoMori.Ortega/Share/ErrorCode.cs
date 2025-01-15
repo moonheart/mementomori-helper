@@ -147,6 +147,9 @@ namespace MementoMori.Ortega.Share
 		UserClearPartyNotFound = 91007,
 		[Description("ユーザのチュートリアルデータが見つかりません")]
 		UserTutorialDtoNotFound,
+
+        [Description("ユーザのGvgパーティ同期データが見つかりません")]
+        UserUserSyncGvgDeckDtoNotFound,
 		[Description("所持してないキャラーです")]
 		UserNotHaveCharacter = 92000,
 		[Description("無効な誕生日です。")]
@@ -171,6 +174,11 @@ namespace MementoMori.Ortega.Share
 		UserSaveDeckOverMaxCharacterCount,
 		[Description("パーティNoの値が不正です。")]
 		UserSaveDeckInvalidDeckNo,
+        [Description("不正なデッキ種別です。")] UserSyncGvgDeckInvalidDeckType,
+        [Description("パーティ同期のインターバル中です。")] UserSyncGvgDeckInterval,
+
+        [Description("パーティが同期されていないため同期を解除できません。")]
+        UserUnsyncGvgDeckNotSyncGvgDeck,
 		[Description("ユーザーのステータスデータが存在しません。")]
 		BattleCommonUserStatusDtoNotFound = 96000,
 		[Description("例外ケースサブスキルの条件データが存在しません。")]
@@ -1033,6 +1041,7 @@ namespace MementoMori.Ortega.Share
 		ShopNotFoundCouponData,
 		[Description("使用済みのクーポンです。")]
 		ShopAlreadyUsedCoupon,
+        [Description("利用できない商品タイプです。")] ShopNotSupportShopProductType,
 		[Description("ユーザーのステータスデータが見つかりません。")]
 		ChatUserStatusDtoNotFound = 271000,
 		[Description("ユーザーのアカウントデータが見つかりません。")]
@@ -1067,6 +1076,9 @@ namespace MementoMori.Ortega.Share
 		ChatOverMaxRegisterAnnounceChatCount,
 		[Description("アナウンスチャットのインターバル中です。")]
 		ChatGuildChatAnnounceInterval,
+        [Description("所持していないふきだしです。")] ChatSettingNotHaveBalloon,
+        [Description("所持していない背景です。")] ChatSettingNotHaveBackground,
+        [Description("設定できない文字サイズです。")] ChatSettingNotAllowedFontSize,
 		[Description("未受け取りのプレゼントは削除できません。")]
 		PresentDeleteNotReceivedPresent = 282001,
 		[Description("削除済みのプレゼントは受け取れません。")]
@@ -1511,6 +1523,8 @@ namespace MementoMori.Ortega.Share
 		ItemGoldExchangeNotOpen,
 		[Description("不正なリクエストです")]
 		ItemUsingInvalidItems,
+        [Description("一括使用は解放されていません。")] ItemBulkUseItemNotOpen,
+        [Description("一括使用できないアイテムです。")] ItemBulkUseItemNotSupported,
 		[Description("LocalRaidで解散に失敗した")]
 		MagicOnionLocalRaidDisbandRoomFailed = 900102,
 		[Description("LocalRaidで他の部屋に参加しているので参加に失敗した")]

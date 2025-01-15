@@ -84,11 +84,7 @@ public enum SeType
     PanelMissionOpenGrid = 14001,
     PanelMissionBingo,
     PanelMissionFlashScreen,
-    MonologueIn = 15001,
-    MonologueOut,
     GuildTowerDifficultyUp = 16001,
     GvGKOWithEffect = 17001,
-    GvgYesterdayMvp = 18001,
-    EventPortalFadeIn = 19001,
-    EventPortalFadeOut
+    GvgYesterdayMvp = 18001
 }

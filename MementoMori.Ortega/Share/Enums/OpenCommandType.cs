@@ -84,6 +84,7 @@ public enum OpenCommandType
     [Description("一括進化の優先設定")] RankUpPrioritySetting = 420,
     [Description("スフィア装着(一括装着カスタム)")] BulkSphereSet = 440,
     [Description("イベントポータル")] EventPortal = 460,
+    [Description("アイテムボックス 消費タブ一括使用")] BulkUseItem = 480,
     [Description("武具固定")] LockEquipment = 1000,
     [Description("武具固定(ギルドバトル用)")] LockEquipmentGuildBattle
 }

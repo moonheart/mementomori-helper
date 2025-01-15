@@ -19,6 +19,7 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("猶予日数")]
         public int DelayDays { get; }
 
+        [DateTimeString]
         [PropertyOrder(6)]
         [Description("強制開始時刻(現地時間)")]
         public string ForceStartTime { get; }

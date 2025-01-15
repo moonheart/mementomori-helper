@@ -39,6 +39,10 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		StatusDrain = 100,
 		[Description("印の効果")]
 		SkillMark = 200,
+		[Description("固有バフ（エフェクトなし）")]
+		SpecialBuffNotEffect,
+		[Description("固有デバフ（エフェクトなし）")]
+		SpecialDeBuffNotEffect,
 		[Description("バフ効果削除")]
 		RemoveBuffEffect = 500,
 		[Description("デバフ効果削除")]

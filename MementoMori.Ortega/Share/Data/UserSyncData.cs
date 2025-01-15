@@ -1,5 +1,6 @@
 ﻿using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.ServerLib.Models.MySql.Dto;
+using MementoMori.Ortega.Share.Data.Chat;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Data.Item;
@@ -17,6 +18,8 @@ public class UserSyncData
     public bool? CanJoinTodayLegendLeague { get; set; }
 
     public List<long> ClearedTutorialIdList { get; set; }
+
+    public List<ConfirmedItemQuest> ConfirmedItemQuestList { get; set; }
 
     public long? CreateUserIdTimestamp { get; set; }
 
@@ -136,11 +139,15 @@ public class UserSyncData
 
     public UserStatusDtoInfo UserStatusDtoInfo { get; set; }
 
+    public UserSyncGvgDeckDtoInfo UserSyncGvgDeckDtoInfo { get; set; }
+
     public List<UserTowerBattleDtoInfo> UserTowerBattleDtoInfos { get; set; }
 
     public List<UserVipGiftDtoInfo> UserVipGiftDtoInfos { get; set; }
 
     public bool? ExistPurchasableOneWeekLimitedPack { get; set; }
+
+    public ChatSettingData ChatSettingData { get; set; }
 
     public void UserItemEditorMergeUserSyncData(UserSyncData userSyncData)
     {

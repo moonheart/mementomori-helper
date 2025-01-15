@@ -64,7 +64,7 @@ namespace MementoMori.Ortega.Share.Master.Data
         public TranslatedText MovieJpUrl { get; }
 
         [PropertyOrder(9)]
-        [Description("動画配信サイトURL(JP)")]
+        [Description("動画配信サイトURL(US)")]
         [Nest(false, 0)]
         public TranslatedText MovieUsUrl { get; }
 

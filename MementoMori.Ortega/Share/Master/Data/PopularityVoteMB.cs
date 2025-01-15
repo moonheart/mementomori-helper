@@ -19,42 +19,52 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("終了日時")]
 		public string EndTimeFixJST { get; }
 
+        [DateTimeString]
 		[PropertyOrder(3)]
 		[Description("予選開始日時")]
 		public string PreliminaryStartTimeFixJst { get; }
 
+        [DateTimeString]
 		[PropertyOrder(4)]
 		[Description("予選終了日時")]
 		public string PreliminaryEndTimeFixJst { get; }
 
+        [DateTimeString]
 		[PropertyOrder(5)]
 		[Description("本選開始日時")]
 		public string FinalStartTimeFixJst { get; }
 
+        [DateTimeString]
 		[PropertyOrder(6)]
 		[Description("本選終了日時")]
 		public string FinalEndTimeFixJst { get; }
 
+        [DateTimeString]
 		[PropertyOrder(7)]
 		[Description("結果発表開始日時")]
 		public string FinalResultStartTimeFixJst { get; }
 
+        [DateTimeString]
 		[PropertyOrder(8)]
 		[Description("予選中間発表日時")]
 		public string PreliminaryInterimStartTimeFixJst { get; }
 
+        [DateTimeString]
 		[PropertyOrder(9)]
 		[Description("本選中間発表日時")]
 		public string FinalInterimStartTimeFixJst { get; }
 
+        [DateTimeString]
 		[PropertyOrder(10)]
 		[Description("ミッション開始日時（現地時間）")]
 		public string MissionStartTime { get; }
 
+        [DateTimeString]
 		[PropertyOrder(11)]
 		[Description("ミッション終了日時（現地時間）")]
 		public string MissionEndTime { get; }
 
+        [DateTimeString]
 		[PropertyOrder(12)]
 		[Description("ミッションリセット日時（現地時間）")]
 		public string MissionResetTime { get; }

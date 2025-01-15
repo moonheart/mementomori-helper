@@ -36,6 +36,9 @@ namespace MementoMori.Ortega.Share.Data.Chat
 		[Key(6)]
 		public SystemChatType SystemChatType { get; set; }
 
+        [Key(12)]
+        public long BalloonItemId { get; set; }
+
 		[Key(7)]
 		public long LocalTimeStamp { get; set; }
 	}

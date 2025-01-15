@@ -23,6 +23,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("終了日時")]
 		public string EndTime { get; }
 
+        [DateTimeString]
 		[PropertyOrder(4)]
 		[Description("入力フォーム終了日時")]
 		public string InputFormEndTime { get; }
@@ -48,6 +49,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("消費アイテム")]
 		public UserItem ConsumeItem { get; }
 
+        [DateTimeString]
 		[PropertyOrder(10)]
 		[Description("個人情報が削除可能になる日時")]
 		public string CanDeletePersonalInfoTime { get; }

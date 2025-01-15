@@ -70,6 +70,8 @@ namespace MementoMori.Ortega.Share.Data.Player
 
         public long LegendLeaguePointToday { get; set; }
 
+        public long ChatBalloonItemId { get; set; }
+
         public List<long> GetAutoBattleCharacterIds()
         {
             throw new NotImplementedException();

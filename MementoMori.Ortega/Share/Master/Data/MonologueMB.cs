@@ -28,6 +28,7 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("朗読設定_US")]
         public IReadOnlyList<MonologueSettingData> MonologueSettingDatasUS { get; }
 
+        [DateTimeString]
         [PropertyOrder(5)]
         [Description("表示開始日時")]
         public string StartTimeFixJST { get; }
