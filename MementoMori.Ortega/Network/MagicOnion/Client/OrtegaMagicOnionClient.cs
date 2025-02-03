@@ -622,7 +622,8 @@ namespace MementoMori.Ortega.Network.MagicOnion.Client
                     ConditionsType = conditionType,
                     QuestId = questId,
                     RequiredBattlePower = requiredBattlePower,
-                    Password = password
+                    Password = password,
+                    IsAutoStart = true
                 });
             }
         }

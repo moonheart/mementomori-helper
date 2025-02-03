@@ -4,24 +4,26 @@ namespace MementoMori.Ortega.Network.MagicOnion.Interface
 {
 	public interface IMagicOnionLocalRaidReceiver
 	{
-		void OnGetRoomList(OnGetRoomListResponse response);
+        void OnGetRoomList(OnGetRoomListResponse response);
 
-		void OnDisbandRoom();
+        void OnDisbandRoom();
 
-		void OnInvite(OnInviteResponse response);
+        void OnInvite(OnInviteResponse response);
 
-		void OnLeaveRoom();
+        void OnInviteRefuse(OnInviteRefuseResponse response);
 
-		void OnLockRoom();
+        void OnLeaveRoom();
 
-		void OnJoinRoom(OnJoinRoomResponse response);
+        void OnLockRoom();
 
-		void OnRefuse();
+        void OnJoinRoom(OnJoinRoomResponse response);
 
-		void OnStartBattle();
+        void OnRefuse();
 
-		void OnUpdateRoom(OnUpdateRoomResponse response);
+        void OnStartBattle();
 
-		void OnUpdatePartyCount(OnUpdatePartyCountResponse response);
+        void OnUpdateRoom(OnUpdateRoomResponse response);
+
+        void OnUpdatePartyCount(OnUpdatePartyCountResponse response);
 	}
 }

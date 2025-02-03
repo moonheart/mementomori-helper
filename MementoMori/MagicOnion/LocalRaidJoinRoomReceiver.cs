@@ -49,6 +49,11 @@ public abstract class LocalRaidBaseReceiver : IMagicOnionLocalRaidReceiver, IMag
         _log("OnInvite");
     }
 
+    public void OnInviteRefuse(OnInviteRefuseResponse response)
+    {
+        _log("OnInviteRefuse");
+    }
+
     public virtual void OnLeaveRoom()
     {
         _log("OnLeaveRoom");
