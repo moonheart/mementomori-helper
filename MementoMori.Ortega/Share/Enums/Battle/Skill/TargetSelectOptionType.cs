@@ -12,6 +12,8 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		[Description("挑発無視")]
 		IgnoreTaunt,
 		[Description("ロックオン無視")]
-		IgnoreLockOn
+		IgnoreLockOn,
+		[Description("優先選択")]
+		PrioritizeSelect
 	}
 }

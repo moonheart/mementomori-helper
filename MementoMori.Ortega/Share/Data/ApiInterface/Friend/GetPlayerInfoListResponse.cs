@@ -5,7 +5,7 @@ using MessagePack;
 namespace MementoMori.Ortega.Share.Data.ApiInterface.Friend
 {
 	[MessagePackObject(true)]
-	public class GetPlayerInfoListResponse : ApiResponseBase
+	public class GetPlayerInfoListResponse : ApiResponseBase, IUserSyncApiResponse
 	{
 		public List<long> AlreadyReceiveFriendPointPlayerIdList { get; set; }
 
@@ -22,5 +22,7 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Friend
 		public List<PlayerInfo> PlayerInfoList { get; set; }
 
 		public int ReceivedFriendPointCount { get; set; }
+
+        public UserSyncData UserSyncData { get; set; }
 	}
 }

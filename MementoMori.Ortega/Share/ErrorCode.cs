@@ -147,9 +147,8 @@ namespace MementoMori.Ortega.Share
 		UserClearPartyNotFound = 91007,
 		[Description("ユーザのチュートリアルデータが見つかりません")]
 		UserTutorialDtoNotFound,
-
-        [Description("ユーザのGvgパーティ同期データが見つかりません")]
-        UserUserSyncGvgDeckDtoNotFound,
+		[Description("ユーザのGvgパーティ同期データが見つかりません")]
+		UserUserSyncGvgDeckDtoNotFound,
 		[Description("所持してないキャラーです")]
 		UserNotHaveCharacter = 92000,
 		[Description("無効な誕生日です。")]
@@ -174,11 +173,14 @@ namespace MementoMori.Ortega.Share
 		UserSaveDeckOverMaxCharacterCount,
 		[Description("パーティNoの値が不正です。")]
 		UserSaveDeckInvalidDeckNo,
-        [Description("不正なデッキ種別です。")] UserSyncGvgDeckInvalidDeckType,
-        [Description("パーティ同期のインターバル中です。")] UserSyncGvgDeckInterval,
-
-        [Description("パーティが同期されていないため同期を解除できません。")]
-        UserUnsyncGvgDeckNotSyncGvgDeck,
+		[Description("不正なデッキ種別です。")]
+		UserSyncGvgDeckInvalidDeckType,
+		[Description("パーティ同期のインターバル中です。")]
+		UserSyncGvgDeckInterval,
+		[Description("パーティが同期されていないため同期を解除できません。")]
+		UserUnsyncGvgDeckNotSyncGvgDeck,
+		[Description("不正なデッキ種別です。")]
+		UserSaveDeckInvalidDeckType,
 		[Description("ユーザーのステータスデータが存在しません。")]
 		BattleCommonUserStatusDtoNotFound = 96000,
 		[Description("例外ケースサブスキルの条件データが存在しません。")]
@@ -201,6 +203,8 @@ namespace MementoMori.Ortega.Share
 		BattleCommonNotFoundStatusSubSubSkillEffectValueFormula,
 		[Description("アクティブスキルの条件データが存在しません。")]
 		BattleCommonNotFoundActiveSkillConditionFormula,
+		[Description("バトル種別が無効です。")]
+		BattleCommonInvalidBattleType,
 		[Description("ユーザーの放置バトルデータがありません")]
 		BattleAutoUserBattleAutoDtoNotFound = 101000,
 		[Description("ユーザーのボスバトルデータがありません")]
@@ -687,6 +691,8 @@ namespace MementoMori.Ortega.Share
 		EquipmentUserBattleAutoDtoNotFound,
 		[Description("ユーザーの固定キャラクターデータが存在しません。")]
 		EquipmentUserLockCharacterDtoNotFound,
+		[Description("一括研磨結果データが存在しません。")]
+		EquipmentBulkTrainingResultDtoNotFound,
 		[Description("同じ種類の宝石は装備できません。")]
 		EquipmentCanNotEquipSameKindSpheres = 232000,
 		[Description("その部位には装備できません。")]
@@ -797,6 +803,10 @@ namespace MementoMori.Ortega.Share
 		EquipmentOverMaxCustomCountPerCharacter,
 		[Description("スフィアカスタムのデータが存在しません。")]
 		EquipmentBulkSphereSetDtoNotFound,
+		[Description("武具一括研磨機能の解放条件を満たしていません。")]
+		EquipmentNotEnoughMaxQuestIdBulkRefine,
+		[Description("一括研磨対象となる武具の追加効果がロックされています。")]
+		EquipmentBulkRefineLockedAdditionalParameter,
 		[Description("ユーザのフレンドデータが存在しません。")]
 		FriendUserFriendDtoNotFound = 241000,
 		[Description("ユーザのステータスデータが存在しません。")]
@@ -1041,7 +1051,8 @@ namespace MementoMori.Ortega.Share
 		ShopNotFoundCouponData,
 		[Description("使用済みのクーポンです。")]
 		ShopAlreadyUsedCoupon,
-        [Description("利用できない商品タイプです。")] ShopNotSupportShopProductType,
+		[Description("利用できない商品タイプです。")]
+		ShopNotSupportShopProductType,
 		[Description("ユーザーのステータスデータが見つかりません。")]
 		ChatUserStatusDtoNotFound = 271000,
 		[Description("ユーザーのアカウントデータが見つかりません。")]
@@ -1076,9 +1087,12 @@ namespace MementoMori.Ortega.Share
 		ChatOverMaxRegisterAnnounceChatCount,
 		[Description("アナウンスチャットのインターバル中です。")]
 		ChatGuildChatAnnounceInterval,
-        [Description("所持していないふきだしです。")] ChatSettingNotHaveBalloon,
-        [Description("所持していない背景です。")] ChatSettingNotHaveBackground,
-        [Description("設定できない文字サイズです。")] ChatSettingNotAllowedFontSize,
+		[Description("所持していないふきだしです。")]
+		ChatSettingNotHaveBalloon,
+		[Description("所持していない背景です。")]
+		ChatSettingNotHaveBackground,
+		[Description("設定できない文字サイズです。")]
+		ChatSettingNotAllowedFontSize,
 		[Description("未受け取りのプレゼントは削除できません。")]
 		PresentDeleteNotReceivedPresent = 282001,
 		[Description("削除済みのプレゼントは受け取れません。")]
@@ -1489,6 +1503,26 @@ namespace MementoMori.Ortega.Share
 		LuckyChanceContainsHalfWidthCharacterBlockNumber,
 		[Description("建物名を全角で入力してください。")]
 		LuckyChanceContainsHalfWidthCharacterBuildingName,
+		[Description("ユーザーのフレンド情報が見つかりません。")]
+		FriendBattleUserFriendDtoNotFound = 480000,
+		[Description("ユーザーのステータス情報が見つかりません。")]
+		FriendBattleUserStatusDtoNotFound,
+		[Description("ユーザーのデッキ情報が見つかりません。")]
+		FriendBattleUserDeckDtoNotFound,
+		[Description("模擬戦の機能が解放されていません。")]
+		FriendBattleNotOpen = 481000,
+		[Description("対戦相手がフレンドではありません。")]
+		FriendBattleNotFriend,
+		[Description("対戦相手が模擬戦を許可していません。")]
+		FriendBattleNotAllowedByRival,
+		[Description("自分が模擬戦を許可していません。")]
+		FriendBattleNotAllowedBySelf,
+		[Description("既にお気に入り登録をしているプレイヤーです。")]
+		FriendBattleAlreadySetFavoritePlayer,
+		[Description("1日の挑戦回数の上限に達しています。")]
+		FriendBattleLimitChallengeCount,
+		[Description("模擬戦のバトル詳細ログが見つかりません。")]
+		FriendBattleNotFoundBattleDetailLog,
 		[Description("存在しないTreasureChestです。")]
 		ItemOpenTreasureChestIdNotFound = 602004,
 		[Description("存在しないTreasureChestです。")]
@@ -1523,8 +1557,16 @@ namespace MementoMori.Ortega.Share
 		ItemGoldExchangeNotOpen,
 		[Description("不正なリクエストです")]
 		ItemUsingInvalidItems,
-        [Description("一括使用は解放されていません。")] ItemBulkUseItemNotOpen,
-        [Description("一括使用できないアイテムです。")] ItemBulkUseItemNotSupported,
+		[Description("一括使用は解放されていません。")]
+		ItemBulkUseItemNotOpen,
+		[Description("一括使用できないアイテムです。")]
+		ItemBulkUseItemNotSupported,
+		[Description("指定できない武具タイプが指定されています")]
+		ItemOpenEquipmentSetMaterialBoxNotSupportedEquipmentType,
+		[Description("指定できないレベルが指定されています")]
+		ItemOpenEquipmentSetMaterialBoxNotSupportedLevel,
+		[Description("アダマントボックスが期限外です")]
+		ItemOpenEquipmentSetMaterialBoxNotOpen,
 		[Description("LocalRaidで解散に失敗した")]
 		MagicOnionLocalRaidDisbandRoomFailed = 900102,
 		[Description("LocalRaidで他の部屋に参加しているので参加に失敗した")]

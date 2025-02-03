@@ -72,6 +72,8 @@ namespace MementoMori.Ortega.Share.Data.Player
 
         public long ChatBalloonItemId { get; set; }
 
+        public bool IsAllowedFriendBattle { get; set; }
+
         public List<long> GetAutoBattleCharacterIds()
         {
             throw new NotImplementedException();

@@ -89,6 +89,8 @@ namespace MementoMori.Ortega.Share.Enums
 		LuckyChanceGachaTicket,
 		[Description("チャットふきだし")]
 		ChatBalloon,
+		[Description("アダマントボックス")]
+		EquipmentSetMaterialBox,
 		[Description("イベント交換所アイテム")]
 		EventExchangePlaceItem = 50,
 		[Description("Stripeクーポン")]

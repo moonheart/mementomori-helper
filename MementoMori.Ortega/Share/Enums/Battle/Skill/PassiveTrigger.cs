@@ -93,6 +93,8 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		NextCheckReceiveDamageSelf,
 		[Description("被ダメージ量判定")]
 		NextCheckReceiveDamage,
+		[Description("敵死亡時（条件なし）")]
+		AlwaysEnemyDead,
 		[Description("被致命的ダメージ時回復")]
 		RecoveryFromInstantDeathDamage = 52,
 		[Description("特殊ダメージ死亡(毒、共鳴など)")]

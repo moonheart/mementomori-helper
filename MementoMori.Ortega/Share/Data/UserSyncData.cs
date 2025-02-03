@@ -62,6 +62,8 @@ public class UserSyncData
 
     public Dictionary<LockEquipmentDeckType, List<UserEquipmentDtoInfo>> LockedUserEquipmentDtoInfoListMap { get; set; }
 
+    public List<long> FriendBattleFavoritePlayerIdList { get; set; }
+
     public long? PresentCount { get; set; }
 
     public PrivacySettingsType? PrivacySettingsType { get; set; }
@@ -75,6 +77,8 @@ public class UserSyncData
     public List<long> ReceivedGuildTowerFloorRewardIdList { get; set; } = new();
 
     public Dictionary<LockEquipmentDeckType, long> ReleaseLockEquipmentCooldownTimeStampMap { get; set; }
+
+    public int? TodayChallengeFriendBattleCount { get; set; }
 
     public Dictionary<string, long> ShopCurrencyMissionProgressMap { get; set; }
 
@@ -122,6 +126,8 @@ public class UserSyncData
     public List<UserNotificationDtoInfo> UserNotificationDtoInfoInfos { get; set; }
 
     public List<UserOpenContentDtoInfo> UserOpenContentDtoInfos { get; set; }
+
+    public UserFriendBattleOptionDtoInfo UserFriendBattleOptionDtoInfo { get; set; }
 
     public UserRecruitGuildMemberSettingDtoInfo UserRecruitGuildMemberSettingDtoInfo { get; set; }
 

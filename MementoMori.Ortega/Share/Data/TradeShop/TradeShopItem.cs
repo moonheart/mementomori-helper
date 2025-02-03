@@ -44,6 +44,18 @@ public class TradeShopItem
     [Description("終了日時")]
     public long ExpirationTimeStamp { get; set; }
 
+    [Description("TradeShopDedicatedItemMBのID")]
+    public long DedicatedItemId { get; set; }
+
+    [IgnoreMember]
+    public bool IsDedicated
+    {
+        get
+        {
+            return false;
+        }
+    }
+
     public bool IsSoldOut()
     {
         return LimitTradeCount > 0 && TradeCount >= LimitTradeCount;

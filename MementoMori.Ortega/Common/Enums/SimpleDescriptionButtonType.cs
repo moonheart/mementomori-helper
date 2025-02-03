@@ -1,11 +1,13 @@
-﻿namespace MementoMori.Ortega.Common.Enums;
-
-public enum SimpleDescriptionButtonType
+﻿namespace MementoMori.Ortega.Common.Enums
 {
-    None,
-    Hide,
-    Detail,
-    WayToGet,
-    Exchange,
-    TreasureChestUse
+	public enum SimpleDescriptionButtonType
+	{
+		None,
+		Hide,
+		Detail,
+		WayToGet,
+		Exchange,
+		TreasureChestUse,
+		EquipmentSetMaterialBoxUseable
+	}
 }

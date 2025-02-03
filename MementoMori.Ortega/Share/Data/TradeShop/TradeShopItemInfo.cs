@@ -9,6 +9,9 @@ namespace MementoMori.Ortega.Share.Data.TradeShop
 		[Description("TradeShopItemMBのId")]
 		public long TradeShopItemId { get; set; }
 
+        [Description("TradeShopDedicatedItemMBのID")]
+        public long DedicatedItemId { get; set; }
+
 		[Description("交換回数")]
 		public int TradeCount { get; set; }
 	}

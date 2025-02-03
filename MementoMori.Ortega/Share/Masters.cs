@@ -118,6 +118,8 @@ public static class Masters
 
     public static EquipmentReinforcementParameterTable EquipmentReinforcementParameterTable { get; } = new();
 
+    public static EquipmentSetMaterialBoxTable EquipmentSetMaterialBoxTable { get; } = new();
+
     public static EquipmentSetMaterialTable EquipmentSetMaterialTable { get; } = new();
 
     public static EquipmentSetTable EquipmentSetTable { get; } = new();
@@ -316,6 +318,7 @@ public static class Masters
             EquipmentMatchlessSacredTreasureTable,
             EquipmentReinforcementMaterialTable,
             EquipmentReinforcementParameterTable,
+            EquipmentSetMaterialBoxTable,
             EquipmentSetMaterialTable,
             EquipmentSetTable,
             EquipmentTable,

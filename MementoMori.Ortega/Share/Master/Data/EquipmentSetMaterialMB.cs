@@ -41,8 +41,12 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("入手宝箱Id")]
         public long TreasureChestId { get; }
 
+        [PropertyOrder(9)]
+        [Description("入手アダマントボックスId")]
+        public long EquipmentSetMaterialBoxId { get; }
+
         [SerializationConstructor]
-        public EquipmentSetMaterialMB(long id, bool? isIgnore, string memo, string descriptionKey, long iconId, ItemRarityFlags itemRarityFlags, long lv, string nameKey, string displayNameKey, IReadOnlyList<long> questIdList, long treasureChestId)
+        public EquipmentSetMaterialMB(long id, bool? isIgnore, string memo, string descriptionKey, long iconId, ItemRarityFlags itemRarityFlags, long lv, string nameKey, string displayNameKey, IReadOnlyList<long> questIdList, long treasureChestId, long equipmentSetMaterialBoxId)
             : base(id, isIgnore, memo)
         {
             this.DescriptionKey = descriptionKey;
@@ -53,6 +57,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             this.DisplayNameKey = displayNameKey;
             this.QuestIdList = questIdList;
             this.TreasureChestId = treasureChestId;
+            this.EquipmentSetMaterialBoxId = equipmentSetMaterialBoxId;
         }
 
         public EquipmentSetMaterialMB()

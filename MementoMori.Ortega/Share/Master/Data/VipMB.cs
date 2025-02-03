@@ -15,7 +15,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 		public int AutoBattlePlayerExpBonus { get; }
 
 		[Nest(false, 0)]
-		[PropertyOrder(29)]
+        [PropertyOrder(30)]
 		[Description("VIPデイリー報酬リスト")]
 		public IReadOnlyList<UserItem> DailyRewardItemList { get; }
 
@@ -91,6 +91,10 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("英雄枠数増加\u200b")]
 		public int MaxCharacterBoxPlus { get; }
 
+        [PropertyOrder(27)]
+        [Description("1日の最大模擬戦回数")]
+        public int MaxFriendBattleDailyCount { get; }
+
 		[PropertyOrder(16)]
 		[Description("ギルドレイド挑戦可能回数")]
 		public long MaxGuildRaidChallengeCount { get; }
@@ -116,7 +120,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 		public int QuickBattlePlayerExpBonus { get; }
 
 		[Nest(false, 0)]
-		[PropertyOrder(27)]
+        [PropertyOrder(28)]
 		[Description("VIP到達時報酬リスト")]
 		public IReadOnlyList<UserItem> ReachRewardItemList { get; }
 
@@ -125,12 +129,12 @@ namespace MementoMori.Ortega.Share.Master.Data
 		public long RequiredExp { get; }
 
 		[Nest(true, 0)]
-		[PropertyOrder(28)]
+        [PropertyOrder(29)]
 		[Description("VIPギフトリスト")]
 		public IReadOnlyList<VipGiftInfo> VipGiftInfoList { get; }
 
         [SerializationConstructor]
-        public VipMB(long id, bool? isIgnore, string memo, int autoBattlePlayerExpBonus, IReadOnlyList<UserItem> dailyRewardItemList, int dungeonBattleCoinBonus, int dungeonBattleGoldBonus, long dungeonBattleMissedCompensationCount, bool isDestinyGachaAvailable, bool isDestinyGachaLogAvailable, bool isStarsGuidanceGachaAvailable, bool isStarsGuidanceGachaLogAvailable, bool isStarsGuidanceTradeShopAvailable, bool isLockEquipmentTrainingAvailable, bool isMultipleBountyQuestAvailable, bool isQuickBossBattleAvailable, bool isQuickStartGuildRaidAvailable, bool isMultipleQuickStartGuildRaidAvailable, bool isRefundEquipmentMergeAvailable, long loginBonusMissedCompensationCount, long lv, long maxBossBattleUseCurrencyCount, int maxCharacterBoxPlus, long maxGuildRaidChallengeCount, long maxQuickUseCurrencyCount, int maxShopItemCountPlus, int maxSoloQuestCount, int maxTeamQuestCount, int quickBattlePlayerExpBonus, IReadOnlyList<UserItem> reachRewardItemList, long requiredExp, IReadOnlyList<VipGiftInfo> vipGiftInfoList)
+        public VipMB(long id, bool? isIgnore, string memo, int autoBattlePlayerExpBonus, IReadOnlyList<UserItem> dailyRewardItemList, int dungeonBattleCoinBonus, int dungeonBattleGoldBonus, long dungeonBattleMissedCompensationCount, bool isDestinyGachaAvailable, bool isDestinyGachaLogAvailable, bool isStarsGuidanceGachaAvailable, bool isStarsGuidanceGachaLogAvailable, bool isStarsGuidanceTradeShopAvailable, bool isLockEquipmentTrainingAvailable, bool isMultipleBountyQuestAvailable, bool isQuickBossBattleAvailable, bool isQuickStartGuildRaidAvailable, bool isMultipleQuickStartGuildRaidAvailable, bool isRefundEquipmentMergeAvailable, long loginBonusMissedCompensationCount, long lv, long maxBossBattleUseCurrencyCount, int maxCharacterBoxPlus, int maxFriendBattleDailyCount, long maxGuildRaidChallengeCount, long maxQuickUseCurrencyCount, int maxShopItemCountPlus, int maxSoloQuestCount, int maxTeamQuestCount, int quickBattlePlayerExpBonus, IReadOnlyList<UserItem> reachRewardItemList, long requiredExp, IReadOnlyList<VipGiftInfo> vipGiftInfoList)
         :base( id, isIgnore, memo)
         {
             AutoBattlePlayerExpBonus = autoBattlePlayerExpBonus;
@@ -150,6 +154,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             Lv = lv;
             MaxBossBattleUseCurrencyCount = maxBossBattleUseCurrencyCount;
             MaxCharacterBoxPlus = maxCharacterBoxPlus;
+            MaxFriendBattleDailyCount = maxFriendBattleDailyCount;
             MaxGuildRaidChallengeCount = maxGuildRaidChallengeCount;
             MaxQuickUseCurrencyCount = maxQuickUseCurrencyCount;
             MaxShopItemCountPlus = maxShopItemCountPlus;
