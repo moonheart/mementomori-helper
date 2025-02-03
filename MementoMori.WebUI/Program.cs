@@ -10,7 +10,6 @@ using MementoMori.WebUI.Extensions;
 using Quartz;
 using ReactiveUI;
 using MementoMori.WebUI;
-using Sentry;
 using MementoMori.WebUI.UI;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
@@ -27,22 +26,7 @@ internal class Program
     public static void Main(string[] args)
     {
         PlatformRegistrationManager.SetRegistrationNamespaces(RegistrationNamespace.Blazor);
-        SentrySdk.ConfigureScope(scope =>
-        {
-            scope.User = new SentryUser()
-            {
-                IpAddress = "{{auto}}"
-            };
-        });
         var builder = WebApplication.CreateBuilder(args);
-
-        builder.WebHost.UseSentry(o =>
-        {
-            o.Dsn = "https://89589ae6d459add80b04ac7f9069f9ee@sentry.moonheart.dev/2";
-            o.TracesSampleRate = 1.0;
-            o.AutoSessionTracking = true;
-            o.IsGlobalModeEnabled = true;
-        });
 
         IFileProvider physicalProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
         builder.Services.AddSingleton(physicalProvider);
@@ -100,7 +84,6 @@ internal class Program
         app.MapRazorComponents<App>()
             .AddAdditionalAssemblies(typeof(Index).Assembly)
             .AddInteractiveServerRenderMode();
-        app.UseSentryTracing();
         //app.UseRouting();
 
         //app.MapBlazorHub();
