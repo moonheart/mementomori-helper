@@ -217,8 +217,13 @@
 
     private void BuyItem(TradeShopTabInfo tab, TradeShopItem tradeShopItem)
     {
-        var itemCount = Funcs!.UserSyncData.GetUserItemCount(tradeShopItem.ConsumeItem1.ItemType, tradeShopItem.ConsumeItem1.ItemId, true);
-        var buyMaxCount = itemCount / tradeShopItem.ConsumeItem1.ItemCount;
+        var itemCount = 0L;
+        var buyMaxCount = 0L;
+        if (tradeShopItem.ConsumeItem1 != null)
+        {
+            itemCount = Funcs!.UserSyncData.GetUserItemCount(tradeShopItem.ConsumeItem1.ItemType, tradeShopItem.ConsumeItem1.ItemId, true);
+            buyMaxCount = itemCount / tradeShopItem.ConsumeItem1.ItemCount;
+        }
         if (tradeShopItem.ConsumeItem2 != null)
         {
             itemCount = Funcs.UserSyncData.GetUserItemCount(tradeShopItem.ConsumeItem2.ItemType, tradeShopItem.ConsumeItem2.ItemId, true);

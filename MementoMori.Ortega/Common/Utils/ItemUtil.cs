@@ -434,6 +434,9 @@ namespace MementoMori.Ortega.Common.Utils
                 case ItemType.TreasureChest:
                     var treasureChestMb = Masters.TreasureChestTable.GetById(userItem.ItemId);
                     return Masters.TextResourceTable.Get(treasureChestMb.NameKey);
+                case ItemType.EquipmentSetMaterialBox:
+                    var equipmentSetMaterialBoxMb = Masters.EquipmentSetMaterialBoxTable.GetById(userItem.ItemId);
+                    return Masters.TextResourceTable.Get(equipmentSetMaterialBoxMb.NameKey);
                 default:
                     var itemMb = Masters.ItemTable.GetByItemTypeAndItemId(userItem.ItemType, userItem.ItemId);
                     return Masters.TextResourceTable.Get(itemMb.DisplayName);

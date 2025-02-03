@@ -101,7 +101,7 @@ public partial class MementoMoriFuncs
                         if (shopAutoBuyItem == null) continue;
 
                         // check if user has enough items to consume
-                        if (shopItem.ConsumeItem1.ItemCount > UserSyncData.GetUserItemCount(shopItem.ConsumeItem1.ItemType, shopItem.ConsumeItem1.ItemId, true))
+                        if (shopItem.ConsumeItem1 != null && shopItem.ConsumeItem1.ItemCount > UserSyncData.GetUserItemCount(shopItem.ConsumeItem1.ItemType, shopItem.ConsumeItem1.ItemId, true))
                             continue;
                         if (shopItem.ConsumeItem2 != null && shopItem.ConsumeItem2.ItemCount > UserSyncData.GetUserItemCount(shopItem.ConsumeItem2.ItemType, shopItem.ConsumeItem2.ItemId, true))
                             continue;
