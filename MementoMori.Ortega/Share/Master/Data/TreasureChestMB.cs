@@ -11,11 +11,11 @@ namespace MementoMori.Ortega.Share.Master.Data
 	[Description("宝箱、宝石袋など")]
 	public class TreasureChestMB : MasterBookBase, IHasStartEndTime
 	{
-        [PropertyOrder(13)]
+        [PropertyOrder(14)]
         [Description("一括使用")]
         public bool BulkUseEnabled { get; }
 
-        [PropertyOrder(7)]
+        [PropertyOrder(8)]
         [Description("開けるのに必要な鍵のID ※0の場合無効")]
         public long ChestKeyItemId { get; }
 
@@ -35,11 +35,11 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("レアリティ")]
         public ItemRarityFlags ItemRarityFlags { get; }
 
-        [PropertyOrder(9)]
+        [PropertyOrder(10)]
         [Description("所持数上限")]
         public long MaxItemCount { get; }
 
-        [PropertyOrder(8)]
+        [PropertyOrder(9)]
         [Description("必要個数")]
         public int MinOpenCount { get; }
 
@@ -47,25 +47,29 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("名称キー")]
         public string NameKey { get; }
 
-        [PropertyOrder(11)]
+        [PropertyOrder(12)]
         [Description("第2フレーム値")]
         public int SecondaryFrameNum { get; }
 
-        [PropertyOrder(10)]
+        [PropertyOrder(11)]
         [Description("第2フラーム種類")]
         public SecondaryFrameType SecondaryFrameType { get; }
 
-        [PropertyOrder(12)]
+        [PropertyOrder(6)]
+        [Description("並び順（昇順）")]
+        public int SortOrder { get; }
+
+        [PropertyOrder(13)]
         [Description("TreasureChestItemMBのIdリスト")]
         public IReadOnlyList<long> TreasureChestItemIdList { get; }
 
-        [PropertyOrder(6)]
+        [PropertyOrder(7)]
         [Description("宝箱の報酬判定方法タイプ")]
         public TreasureChestLotteryType TreasureChestLotteryType { get; }
 
 		[SerializationConstructor]
         public TreasureChestMB(long id, bool? isIgnore, string memo, bool bulkUseEnabled, long chestKeyItemId, string descriptionKey, string displayNameKey, long iconId,
-            ItemRarityFlags itemRarityFlags, long maxItemCount, int minOpenCount, string nameKey, int secondaryFrameNum, SecondaryFrameType secondaryFrameType,
+            ItemRarityFlags itemRarityFlags, long maxItemCount, int minOpenCount, string nameKey, int secondaryFrameNum, SecondaryFrameType secondaryFrameType, int sortOrder,
             TreasureChestLotteryType treasureChestLotteryType, IReadOnlyList<long> treasureChestItemIdList)
 			:base(id, isIgnore, memo)
 		{
@@ -80,25 +84,18 @@ namespace MementoMori.Ortega.Share.Master.Data
 			NameKey = nameKey;
 			SecondaryFrameNum = secondaryFrameNum;
 			SecondaryFrameType = secondaryFrameType;
+            SortOrder = sortOrder;
 			TreasureChestLotteryType = treasureChestLotteryType;
 			TreasureChestItemIdList = treasureChestItemIdList;
 		}
 
-		[PropertyOrder(13)]
-		[Description("終了日時")]
-		public string EndTime
-		{
-			get;
-			set;
-		}
+        [PropertyOrder(15)]
+        [Description("終了日時")]
+        public string EndTime { get; set; }
 
-		[PropertyOrder(14)]
-		[Description("開始日時")]
-		public string StartTime
-		{
-			get;
-			set;
-		}
+        [PropertyOrder(16)]
+        [Description("開始日時")]
+        public string StartTime { get; set; }
 
 		public TreasureChestMB() :base(0L, false, ""){}
 	}
