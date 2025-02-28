@@ -3,7 +3,7 @@
 namespace MementoMori.Ortega.Share.Data.DtoInfo
 {
     [MessagePackObject(true)]
-    public class UserStatusDtoInfo : IUserStatusDtoInfo
+    public class UserStatusDtoInfo
     {
         public long CreateAt { get; set; }
 
@@ -12,6 +12,8 @@ namespace MementoMori.Ortega.Share.Data.DtoInfo
         public bool IsReachBattleLeagueTop50 { get; set; }
 
         public bool IsAlreadyChangedName { get; set; }
+
+        public long BackgroundCharacterId { get; set; }
 
         public int Birthday { get; set; }
 

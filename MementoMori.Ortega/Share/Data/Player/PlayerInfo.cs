@@ -8,6 +8,8 @@ namespace MementoMori.Ortega.Share.Data.Player
     [MessagePackObject(true)]
     public class PlayerInfo
     {
+        public long BackgroundCharacterId { get; set; }
+
         public List<UserCharacterInfo> DeckUserCharacterInfoList { get; set; }
 
         public long BattlePower { get; set; }
@@ -81,6 +83,11 @@ namespace MementoMori.Ortega.Share.Data.Player
 
         public PlayerInfo()
         {
+        }
+
+        public string GetPlayerName()
+        {
+            return null;
         }
     }
 }

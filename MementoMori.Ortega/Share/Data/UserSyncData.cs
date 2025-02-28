@@ -52,6 +52,10 @@ public class UserSyncData
 
     public bool? IsValidContractPrivilege { get; set; }
 
+    public long? LatestAnnounceChatRegistrationLocalTimestamp { get; set; }
+
+    public long? LatestGuildSurveyCreationLocalTimestamp { get; set; }
+
     public Dictionary<LockEquipmentDeckType, LeadLockEquipmentDialogInfo> LeadLockEquipmentDialogInfoMap { get; set; }
 
     public LegendLeagueClassType? LegendLeagueClassType { get; set; }

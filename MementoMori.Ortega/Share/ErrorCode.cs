@@ -163,6 +163,8 @@ namespace MementoMori.Ortega.Share
 		UserAlreadyClearedChangeNameTutorial,
 		[Description("ユーザーデータが見つかりません。")]
 		UserNotFoundPlayerInfo,
+		[Description("所持したことがないキャラクターは背景に設定できません。")]
+		UserInvalidBackgroundCharacterId,
 		[Description("所持してないキャラクターです")]
 		UserSetDeckNotFoundCharacter = 93101,
 		[Description("デッキ内にキャラクターがいません。")]
@@ -677,6 +679,8 @@ namespace MementoMori.Ortega.Share
 		GachaUserGachaSelectListDtoNotFound,
 		[Description("バトルログが見つかりません。")]
 		BattleCommonBattleLogNotFound = 220000,
+		[Description("バトル詳細ログが見つかりません。")]
+		BattleCommonBattleDetailLogNotFound,
 		[Description("ユーザの装備データが存在しません。")]
 		EquipmentUserEquipmentDtoNotFound = 231000,
 		[Description("ユーザのステータスデータが存在しません。")]
@@ -1523,6 +1527,32 @@ namespace MementoMori.Ortega.Share
 		FriendBattleLimitChallengeCount,
 		[Description("模擬戦のバトル詳細ログが見つかりません。")]
 		FriendBattleNotFoundBattleDetailLog,
+		[Description("アンケート情報が見つかりません。")]
+		GuildSurveyNotFoundGuildSurveyDto = 490000,
+		[Description("プレイヤーがギルドに参加していません。")]
+		GuildSurveyNotBelongToGuild = 491000,
+		[Description("権限が足りていません。")]
+		GuildSurveyHasNoPermission,
+		[Description("無効な投票期限が設定されています。")]
+		GuildSurveyInvalidVotingEndTimestamp,
+		[Description("本文が入力されていません。")]
+		GuildSurveyContentIsEmpty,
+		[Description("選択肢が入力されていません。")]
+		GuildSurveyContainsEmptyChoice,
+		[Description("無効な選択肢が設定されています。")]
+		GuildSurveyInvalidChoices,
+		[Description("無効な選択肢種別です。")]
+		GuildSurveyInvalidGuildSurveyChoiceType,
+		[Description("アンケートに存在しない選択肢です。")]
+		GuildSurveyNotFoundGuildSurveyChoiceType,
+		[Description("本文の文字数が上限を超えています。")]
+		GuildSurveyOverContentLength,
+		[Description("選択肢の文字数が上限を超えています。")]
+		GuildSurveyOverChoiceLength,
+		[Description("アンケートの登録件数がが上限に達しています。")]
+		GuildSurveyOverSurveyCount,
+		[Description("異なるギルドのアンケートが指定されています。")]
+		GuildSurveyDifferentGuildSurvey,
 		[Description("存在しないTreasureChestです。")]
 		ItemOpenTreasureChestIdNotFound = 602004,
 		[Description("存在しないTreasureChestです。")]

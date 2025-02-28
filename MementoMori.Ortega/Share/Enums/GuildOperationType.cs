@@ -37,6 +37,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("ギルドメンバーの勧誘")]
 		RecruitGuildMember,
 		[Description("拠点メモの管理")]
-		ManagementGvgCastleMemo
+		ManagementGvgCastleMemo,
+		[Description("ギルドアンケートの管理")]
+		ManagementGuildSurvey
 	}
 }
