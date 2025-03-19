@@ -424,6 +424,12 @@
 		BulkSphereSetNotSelectCustomSet,
 		BulkSphereSetNotExistCustomSetForSphereList,
 		BulkSphereSetNotExistReleasableSphere,
-		LinkAccountGooglePlaySignInFailed = 3200001
+		LinkAccountGooglePlaySignInFailed = 3200001,
+        BookSortBulkUseItemFloorClear = 3300001,
+        BookSortBulkUseItemNotEnoughItem,
+        BookSortBulkUseItemNotExistGrid,
+        BookSortUnlockSingleGridItemNotEnough,
+        BookSortUseItemContainOutOfRangeGrid,
+        BookSortUseItemUnlockedAllSelectedGrids
 	}
 }

@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using MementoMori.Ortega.Share.Data.Music;
+using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.ApiInterface.User;
 
@@ -11,6 +12,8 @@ public class LoginPlayerRequest : ApiRequestBase, IHasSteamTicketApiRequest
     public long PlayerId { get; set; }
 
     public List<ErrorLogInfo> ErrorLogInfoList { get; set; }
+
+    public List<MusicPlayerPlayLogInfo> MusicPlayerPlayLogInfoList { get; set; }
 
     public string SteamTicket { get; set; }
 }

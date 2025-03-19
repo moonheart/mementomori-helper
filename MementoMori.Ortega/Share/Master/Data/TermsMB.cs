@@ -5,74 +5,54 @@ using MessagePack;
 
 namespace MementoMori.Ortega.Share.Master.Data
 {
-	[Description("利用規約")]
 	[MessagePackObject(true)]
+	[Description("利用規約")]
 	public class TermsMB : MasterBookBase
 	{
 		[PropertyOrder(1)]
 		[Description("TimeServerMBのID")]
-		public long TimeServerId
-		{
-			get;
-		}
+		public long TimeServerId { get; }
 
+		[Nest(false, 0)]
 		[PropertyOrder(2)]
-		[Description("DMM用か？")]
-		public bool IsDmm
-		{
-			get;
-		}
-
-		[PropertyOrder(3)]
-		[Nest(false, 0)]
 		[Description("利用規約")]
-		public TermsButtonInfo Terms
-		{
-			get;
-		}
+		public TermsButtonInfo Terms { get; }
 
 		[Nest(false, 0)]
+		[PropertyOrder(3)]
 		[Description("プライバシーポリシー")]
-		[PropertyOrder(4)]
-		public TermsButtonInfo PrivacyPolicy
-		{
-			get;
-		}
+		public TermsButtonInfo PrivacyPolicy { get; }
 
+		[Nest(false, 0)]
+		[PropertyOrder(4)]
 		[Description("サブスク規約")]
+		public TermsButtonInfo Subscription { get; }
+
 		[Nest(false, 0)]
 		[PropertyOrder(5)]
-		public TermsButtonInfo Subscription
-		{
-			get;
-		}
-
-		[Nest(false, 0)]
-		[PropertyOrder(6)]
 		[Description("その他")]
-		public IReadOnlyList<TermsButtonInfo> TermsButtonInfos
-		{
-			get;
-		}
+		public IReadOnlyList<TermsButtonInfo> TermsButtonInfos { get; }
 
-        [DateTimeString]
-        [PropertyOrder(7)]
-        [Description("開始日時")]
-        public string StartTime { get; }
+		[DateTimeString]
+		[PropertyOrder(6)]
+		[Description("開始日時")]
+		public string StartTime { get; }
 
 		[SerializationConstructor]
-		public TermsMB(long id, bool? isIgnore, string memo, long timeServerId, bool isDmm, TermsButtonInfo terms, TermsButtonInfo privacyPolicy, TermsButtonInfo subscription, IReadOnlyList<TermsButtonInfo> termsButtonInfos, string startTime)
-			:base(id, isIgnore, memo)
+		public TermsMB(long id, bool? isIgnore, string memo, long timeServerId, TermsButtonInfo terms, TermsButtonInfo privacyPolicy, TermsButtonInfo subscription, IReadOnlyList<TermsButtonInfo> termsButtonInfos, string startTime)
+			: base(id, isIgnore, memo)
 		{
-			TimeServerId = timeServerId;
-			IsDmm = isDmm;
-			Terms = terms;
-			PrivacyPolicy = privacyPolicy;
-			Subscription = subscription;
-			TermsButtonInfos = termsButtonInfos;
-            StartTime = startTime;
-        }
+            this.TimeServerId = timeServerId;
+            this.Terms = terms;
+            this.PrivacyPolicy = privacyPolicy;
+            this.Subscription = subscription;
+            this.TermsButtonInfos = termsButtonInfos;
+            this.StartTime = startTime;
+		}
 
-		public TermsMB() :base(0L, false, ""){}
+		public TermsMB()
+			: base(0L, null, null)
+		{
+		}
 	}
 }

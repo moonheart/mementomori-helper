@@ -161,6 +161,8 @@ namespace MementoMori.Ortega.Share.Enums
 		BulkUseItem = 480,
 		[Description("模擬戦")]
 		FriendBattle = 490,
+		[Description("書庫整理")]
+		BookSort = 500,
 		[Description("武具固定")]
 		LockEquipment = 1000,
 		[Description("武具固定(ギルドバトル用)")]

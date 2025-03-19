@@ -1389,6 +1389,8 @@ namespace MementoMori.Ortega.Share
 		GuildTowerAlreadyReceivedFloorReward,
 		[Description("イベント終了後にギルドに加入したため階層報酬を受け取ることができません。")]
 		GuildTowerJoinedGuildAfterEndEvent,
+		[Description("本日の挑戦時間を過ぎています。")]
+		GuildTowerOverTodayChallengeTime,
 		[Description("個別通知キャッシュ情報が存在しません")]
 		IndividualNotificationCacheDtoNotFound = 421000,
 		[Description("ユーザーの個別通知情報が存在しません")]
@@ -1435,6 +1437,8 @@ namespace MementoMori.Ortega.Share
 		SerialCodeAlreadyUsedSameCodeGroup,
 		[Description("利用条件を満たしていないシリアルコードが入力されました。入力条件をご確認ください。")]
 		SerialCodeAlreadyUsedOtherCodeGroup,
+		[Description("入力されたシリアルコードはBOI版アプリ内のコード入力でのみ使用可能です。")]
+		SerialCodeOnlyBoiAvailable,
 		[Description("バトルリーグの集計データが存在しません。")]
 		WeeklyTopicsNotFoundWeeklyTopicsBattleLeagueDto = 460001,
 		[Description("ボスバトルの集計データが存在しません。")]
@@ -1553,6 +1557,32 @@ namespace MementoMori.Ortega.Share
 		GuildSurveyOverSurveyCount,
 		[Description("異なるギルドのアンケートが指定されています。")]
 		GuildSurveyDifferentGuildSurvey,
+		[Description("魔女の書庫整理情報が見つかりません。")]
+		BookSortNotFoundUserBookSortDto = 500000,
+		[Description("魔女の書庫整理が解放されていません。")]
+		BookSortEventNotOpen = 501000,
+		[Description("魔女の書庫整理が開催されていません。")]
+		BookSortEventNotHeld,
+		[Description("すでに当たりマスを解放済みです。")]
+		BookSortEventCurrentFloorAlreadyFinished,
+		[Description("ボーナスフロア報酬が未選択です。")]
+		BookSortEventNotSelectBonusFloorReward,
+		[Description("ボーナスフロア報酬のラインナップが更新されました。")]
+		BookSortEventChangeBonusFloorRewardLineup,
+		[Description("ボーナスフロアではないフロアです。")]
+		BookSortEventNotBonusFloor,
+		[Description("まだ当たりマスを解放していません。")]
+		BookSortEventCurrentFloorNotFinish,
+		[Description("枠外が解放対象に指定されています。")]
+		BookSortEventUnlockOutsideFrame,
+		[Description("対象の範囲に、解放可能なマスがありません。")]
+		BookSortEventNotExistAvailableGridCell,
+		[Description("一マス解放アイテムが足りないため、一括解放できません。")]
+		BookSortEventNotEnoughBulkUnlockItem,
+		[Description("残りマスが3つ未満のため、一括解放できません。")]
+		BookSortEventNotEnoughLockedGridCellBulkUnlock,
+		[Description("選択できないボーナスフロア報酬です。")]
+		BookSortEventNotSelectableBonusFloorReward,
 		[Description("存在しないTreasureChestです。")]
 		ItemOpenTreasureChestIdNotFound = 602004,
 		[Description("存在しないTreasureChestです。")]
@@ -1896,6 +1926,10 @@ namespace MementoMori.Ortega.Share
 		[Description("Steamでのサブスク情報取得に失敗しました。")]
 		SteamNotFoundUserAgreementInfo,
 		[Description("Steamでのサブスク情報取得に失敗しました。")]
-		SteamAgreementInfoIsNull
+		SteamAgreementInfoIsNull,
+		[Description("既にサブスク契約済みです。")]
+		SteamAlreadyExistAgreement,
+		[Description("次回支払日が存在しません。")]
+		SteamNotFoundNextPayment
 	}
 }

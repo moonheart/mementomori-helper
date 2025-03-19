@@ -11,6 +11,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Auth
     {
         public AccountMessageInfo AccountMessageInfo { get; set; }
 
+        public List<AccountMessageInfo> AccountMessageInfos { get; set; }
+
         public bool IsReservedAccountDeletion { get; set; }
 
         public List<RemoteNotificationType> IgnoreTypes { get; set; }

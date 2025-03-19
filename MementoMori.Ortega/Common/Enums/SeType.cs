@@ -86,5 +86,9 @@ public enum SeType
     PanelMissionFlashScreen,
     GuildTowerDifficultyUp = 16001,
     GvGKOWithEffect = 17001,
-    GvgYesterdayMvp = 18001
+    GvgYesterdayMvp = 18001,
+    BookSortUnlockGridCellSingle = 20001,
+    BookSortUnlockGridCellBig,
+    BookSortPopUpTreasureBox,
+    BookSortMoveUnlockGridItem
 }

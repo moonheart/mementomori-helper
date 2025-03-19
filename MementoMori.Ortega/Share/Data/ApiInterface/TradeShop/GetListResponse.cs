@@ -8,5 +8,9 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.TradeShop
 	public class GetListResponse : ApiResponseBase
 	{
 		public List<TradeShopTabInfo> TradeShopTabInfoList { get; set; }
+
+        public long MinOpenQuestId { get; set; }
+
+        public long MinOpenPartyLevel { get; set; }
     }
 }

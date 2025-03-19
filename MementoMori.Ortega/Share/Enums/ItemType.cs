@@ -91,6 +91,10 @@ namespace MementoMori.Ortega.Share.Enums
 		ChatBalloon,
 		[Description("アダマントボックス")]
 		EquipmentSetMaterialBox,
+		[Description("書庫整理マス解放アイテム")]
+		BookSortGridCellUnlockItem,
+		[Description("書庫整理交換所アイテム")]
+		BookSortEventExchangePlaceItem,
 		[Description("イベント交換所アイテム")]
 		EventExchangePlaceItem = 50,
 		[Description("Stripeクーポン")]
