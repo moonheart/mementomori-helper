@@ -1,5 +1,6 @@
 ﻿using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.MyPage;
+using MementoMori.Ortega.Share.Data.WorldGuidance;
 using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.ApiInterface.User;
@@ -34,4 +35,6 @@ public class GetMypageResponse : ApiResponseBase, IGuildSyncApiResponse, IUserSy
     public GuildSyncData GuildSyncData { get; set; }
 
     public UserSyncData UserSyncData { get; set; }
+    
+    public WorldGuidanceInfo WorldGuidanceInfo { get; set; }
 }

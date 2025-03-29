@@ -113,6 +113,8 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		DamageBlock,
 		[Description("持続ダメージ遮断")]
 		TransientDamageBlock,
+        [Description("バフカバー")]
+        BuffCover,
 		[Description("スキル1強化")]
 		ActiveSkill1Enhance = 2100,
 		[Description("スキル2強化")]

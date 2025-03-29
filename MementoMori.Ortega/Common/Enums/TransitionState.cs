@@ -5,6 +5,7 @@ public enum TransitionState
     None,
     TitleDownloadAll,
     TitleSplash,
+    TitleMoveToGuidedWorld,
     MyPagePlayTouchAction,
     MyPagePictureBook,
     MyPageMission,

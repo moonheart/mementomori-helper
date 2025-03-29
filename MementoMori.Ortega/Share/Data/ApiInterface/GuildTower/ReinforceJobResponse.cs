@@ -14,6 +14,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.GuildTower
 
 		public GuildTowerReinforcementJobData ReinforcementJobData { get; set; }
 
-		public UserSyncData UserSyncData { get; set; }
+        public long LastReinforceLocalTimeStamp { get; set; }
+
+        public UserSyncData UserSyncData { get; set; }
 	}
 }

@@ -35,7 +35,9 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.GuildTower
 
 		public int TodayWinCount { get; set; }
 
-		public GuildSyncData GuildSyncData { get; set; }
+        public long LastReinforceLocalTimeStamp { get; set; }
+
+        public GuildSyncData GuildSyncData { get; set; }
 
 		public UserSyncData UserSyncData { get; set; }
 	}

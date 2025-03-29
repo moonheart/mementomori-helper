@@ -87,6 +87,8 @@ namespace MementoMori.Ortega.Share.Enums
 		EventPortal = 280,
 		[Description("書庫整理")]
 		BookSort = 290,
+		[Description("ワールド誘導")]
+		WorldGuidance = 300,
 		[Description("フレンド")]
 		Friend = 4
 	}

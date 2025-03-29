@@ -12,6 +12,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("ギルド加入")]
 		GuildJoining,
 		[Description("勧誘設定")]
-		RecruitSetting2
+		RecruitSetting2,
+		[Description("ワールド誘導")]
+		WorldGuidance
 	}
 }
