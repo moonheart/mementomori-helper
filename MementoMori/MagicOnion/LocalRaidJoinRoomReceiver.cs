@@ -202,19 +202,16 @@ public class LocalRaidCreateRoomReceiver : LocalRaidBaseReceiver
     [MethodImpl(MethodImplOptions.Synchronized)]
     private void StartBattle(LocalRaidPartyInfo partyInfo)
     {
-        if (_lastRoomId != partyInfo.RoomId)
+        _lastRoomId = partyInfo.RoomId;
+        Task.Delay(TimeSpan.FromSeconds(_waitSeconds)).ContinueWith(async _ =>
         {
-            _lastRoomId = partyInfo.RoomId;
-            Task.Delay(TimeSpan.FromSeconds(_waitSeconds)).ContinueWith(async _ =>
+            while (!IsBattleStarted && !CancellationToken.IsCancellationRequested)
             {
-                while (!IsBattleStarted && !CancellationToken.IsCancellationRequested)
-                {
-                    if (partyInfo.IsReady) _ortegaMagicOnionClient.SendLocalRaidStartBattle();
+                if (partyInfo.IsReady) _ortegaMagicOnionClient.SendLocalRaidStartBattle();
 
-                    await Task.Delay(TimeSpan.FromSeconds(1));
-                }
-            }, CancellationToken);
-        }
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
+        }, CancellationToken);
     }
 
     public override void OnUpdateRoom(OnUpdateRoomResponse response)
