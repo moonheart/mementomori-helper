@@ -13,6 +13,8 @@ namespace MementoMori.Ortega.Share
 		InvalidRequestHeader,
 		[Description("アプリバージョンデータに異常が検出されました。")]
 		InvalidDataAppVersionMB,
+		[Description("マスターデータ更新(クライアントで使っている同じエラーメッセージを出すときに利用)")]
+		MasterDataVersionUp = 5,
 		[Description("メンテナンス")]
 		CommonMaintenance = 100,
 		[Description("部分メンテナンス")]
@@ -1583,6 +1585,14 @@ namespace MementoMori.Ortega.Share
 		BookSortEventNotEnoughLockedGridCellBulkUnlock,
 		[Description("選択できないボーナスフロア報酬です。")]
 		BookSortEventNotSelectableBonusFloorReward,
+		[Description("開催中のコラボミッションがありません。")]
+		SweepstakesCollabMissionNotHeld = 510000,
+		[Description("懸賞対象の時間サーバーではありません。")]
+		SweepstakesNotTargetTimeServer,
+		[Description("応募対象でないアイテムです。")]
+		SweepstakesNotAvailableEntryItem,
+		[Description("同一アカウントで応募できる上限に達しています。")]
+		SweepstakesOverEntryUpperLimit,
 		[Description("存在しないTreasureChestです。")]
 		ItemOpenTreasureChestIdNotFound = 602004,
 		[Description("存在しないTreasureChestです。")]
@@ -1930,6 +1940,8 @@ namespace MementoMori.Ortega.Share
 		[Description("既にサブスク契約済みです。")]
 		SteamAlreadyExistAgreement,
 		[Description("次回支払日が存在しません。")]
-		SteamNotFoundNextPayment
+		SteamNotFoundNextPayment,
+		[Description("レート制限により課金処理が失敗しました。")]
+		SteamRateLimited
 	}
 }

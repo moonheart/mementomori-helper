@@ -3,6 +3,7 @@
 	public enum IconPlateType
 	{
 		Default,
-		Character
+		Character,
+		ChatEmoticon
 	}
 }

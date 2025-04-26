@@ -10,48 +10,53 @@ namespace MementoMori.Ortega.Share.Master.Data
 	[Description("ワールドグループ")]
 	public class WorldGroupMB : MasterBookBase, IHasStartEndTime
 	{
-		[PropertyOrder(5)]
-		[Description("終了日時")]
-		public string EndTime { get; }
+        [PropertyOrder(5)]
+        [Description("終了日時")]
+        public string EndTime { get; }
 
-		[PropertyOrder(9)]
-		[DateTimeString]
-		[Description("レジェンドリーグ終了日時")]
-		public string EndLegendLeagueDateTime { get; }
+        [DateTimeString]
+        [PropertyOrder(9)]
+        [Description("レジェンドリーグ終了日時")]
+        public string EndLegendLeagueDateTime { get; }
 
-		[PropertyOrder(1)]
-		[Description("タイムサーバー")]
-		public long TimeServerId { get; }
+        [PropertyOrder(1)]
+        [Description("タイムサーバー")]
+        public long TimeServerId { get; }
 
-		[PropertyOrder(4)]
-		[Description("開始日時")]
-		public string StartTime { get; }
+        [PropertyOrder(4)]
+        [Description("開始日時")]
+        public string StartTime { get; }
 
-		[PropertyOrder(6)]
-		[Description("グランドバトル開始日時")]
-		[Nest(false, 0)]
-		public IReadOnlyList<StartEndTime> GrandBattleDateTimeList { get; }
+        [Nest(false, 0)]
+        [PropertyOrder(6)]
+        [Description("グランドバトル開始日時")]
+        public IReadOnlyList<StartEndTime> GrandBattleDateTimeList { get; }
 
-		[DateTimeString]
-		[PropertyOrder(8)]
-		[Description("レジェンドリーグ開始日時")]
-		public string StartLegendLeagueDateTime { get; }
+        [DateTimeString]
+        [PropertyOrder(8)]
+        [Description("レジェンドリーグ開始日時")]
+        public string StartLegendLeagueDateTime { get; }
 
-		[PropertyOrder(3)]
-		[Description("WorldIdのリスト")]
-		public IReadOnlyList<long> WorldIdList { get; }
+        [PropertyOrder(3)]
+        [Description("WorldIdのリスト")]
+        public IReadOnlyList<long> WorldIdList { get; }
+
+        [PropertyOrder(10)]
+        [Description("グランドバトル開催頻度")]
+        public int MonthlyOpenCount { get; }
 
 		[SerializationConstructor]
-		public WorldGroupMB(long id, bool? isIgnore, string memo, string endTime, long timeServerId, string startTime, IReadOnlyList<long> worldIdList, IReadOnlyList<StartEndTime> grandBattleDateTimeList, string startLegendLeagueDateTime, string endLegendLeagueDateTime)
-		:base( id, isIgnore, memo)
+        public WorldGroupMB(long id, bool? isIgnore, string memo, string endTime, long timeServerId, string startTime, IReadOnlyList<long> worldIdList, IReadOnlyList<StartEndTime> grandBattleDateTimeList, string startLegendLeagueDateTime, string endLegendLeagueDateTime, int monthlyOpenCount)
+		    :base( id, isIgnore, memo)
 		{
-			EndTime = endTime;
-			TimeServerId = timeServerId;
-			StartTime = startTime;
-			WorldIdList = worldIdList;
-			GrandBattleDateTimeList = grandBattleDateTimeList;
-			StartLegendLeagueDateTime = startLegendLeagueDateTime;
-			EndLegendLeagueDateTime = endLegendLeagueDateTime;
+            this.EndTime = endTime;
+            this.TimeServerId = timeServerId;
+            this.StartTime = startTime;
+            this.WorldIdList = worldIdList;
+            this.GrandBattleDateTimeList = grandBattleDateTimeList;
+            this.StartLegendLeagueDateTime = startLegendLeagueDateTime;
+            this.EndLegendLeagueDateTime = endLegendLeagueDateTime;
+            this.MonthlyOpenCount = monthlyOpenCount;
 		}
 
 		public WorldGroupMB() :base(0L, false, ""){}

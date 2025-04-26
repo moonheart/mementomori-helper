@@ -10,34 +10,39 @@ namespace MementoMori.Ortega.Share.Master.Data
     [MessagePackObject(true)]
     public class HelpMB : MasterBookBase
     {
-        [Description("ヘルプパートリスト")]
+        [Nest(true, 1)]
         [PropertyOrder(2)]
-        [Nest(false, 0)]
+        [Description("ヘルプパートリスト")]
         public IReadOnlyList<HelpPartInfo> HelpPartInfoList { get; }
 
-        [Description("ヘルプタイトル")]
         [PropertyOrder(1)]
+        [Description("ヘルプタイトル")]
         public string HelpTitle { get; }
 
-        [PropertyOrder(4)]
+        [PropertyOrder(5)]
         [Description("表示フラグ")]
         public bool IsDisplayed { get; }
 
-        [Description("チュートリアル説明ID")]
         [PropertyOrder(3)]
+        [Description("チュートリアル説明ID")]
         public long TutorialDescriptionId { get; }
 
-        [PropertyOrder(5)]
+        [PropertyOrder(4)]
+        [Description("ダイアログタイプ")]
+        public long DialogType { get; }
+
+        [PropertyOrder(6)]
         [Description("表示デバイスタイプ")]
         public IReadOnlyList<int> DisplayDeviceTypes { get; }
 
         [SerializationConstructor]
-        public HelpMB(long id, bool? isIgnore, string memo, string helpTitle, IReadOnlyList<HelpPartInfo> helpPartInfoList, long tutorialDescriptionId, bool isDisplayed, IReadOnlyList<int> displayDeviceTypes)
+        public HelpMB(long id, bool? isIgnore, string memo, string helpTitle, IReadOnlyList<HelpPartInfo> helpPartInfoList, long tutorialDescriptionId, long dialogType, bool isDisplayed, IReadOnlyList<int> displayDeviceTypes)
             : base(id, isIgnore, memo)
         {
             HelpTitle = helpTitle;
             HelpPartInfoList = helpPartInfoList;
             TutorialDescriptionId = tutorialDescriptionId;
+            DialogType = dialogType;
             IsDisplayed = isDisplayed;
             DisplayDeviceTypes = displayDeviceTypes;
         }

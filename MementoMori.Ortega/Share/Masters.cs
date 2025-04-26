@@ -48,6 +48,8 @@ public static class Masters
 
     public static ChatEffectKeywordTable ChatEffectKeywordTable { get; } = new();
 
+    public static SkillDescriptionLinkTextTable SkillDescriptionLinkTextTable { get; } = new();
+
     public static ActiveSkillTable ActiveSkillTable { get; } = new();
 
     public static AppVersionTable AppVersionTable { get; } = new();
@@ -390,6 +392,7 @@ public static class Masters
             LegendLeagueClassTable,
             EffectGroupTable,
             ChatEffectKeywordTable,
+            SkillDescriptionLinkTextTable,
             PanelTable,
             PanelMissionTable,
             PatternSettingTable,

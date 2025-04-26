@@ -39,6 +39,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("拠点メモの管理")]
 		ManagementGvgCastleMemo,
 		[Description("ギルドアンケートの管理")]
-		ManagementGuildSurvey
+		ManagementGuildSurvey,
+		[Description("他プレイヤーの作成したチャットアナウンス・アンケートの削除")]
+		DeleteNotOwnChatAnnounceAndSurvey
 	}
 }

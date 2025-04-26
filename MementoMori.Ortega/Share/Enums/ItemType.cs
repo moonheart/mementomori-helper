@@ -95,6 +95,12 @@ namespace MementoMori.Ortega.Share.Enums
 		BookSortGridCellUnlockItem,
 		[Description("書庫整理交換所アイテム")]
 		BookSortEventExchangePlaceItem,
+		[Description("チャット限定絵文字")]
+		ChatEmoticon,
+		[Description("ミッションパスポイント")]
+		MissionPassPoint,
+		[Description("懸賞チケット")]
+		SweepstakesTicket,
 		[Description("イベント交換所アイテム")]
 		EventExchangePlaceItem = 50,
 		[Description("Stripeクーポン")]

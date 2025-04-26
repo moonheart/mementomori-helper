@@ -26,6 +26,8 @@ namespace MementoMori.Ortega.Share.Enums
 		ChargeBonus,
 		[Description("ゲリラパック")]
 		GuerrillaPack,
+		[Description("ミッションパス")]
+		MissionPass,
 		[Description("全検索")]
 		AllSearch = 99
 	}

@@ -36,10 +36,6 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("タイトルキー")]
 		public string TitleTextKey { get; }
 
-		[PropertyOrder(7)]
-		[Description("ボタンIdリスト")]
-		public IReadOnlyList<long> LuckyChanceButtonIdList { get; }
-
 		[PropertyOrder(8)]
 		[Description("同一ユーザーの抽選上限回数")]
 		public int LimitUserDrawCount { get; }
@@ -55,9 +51,18 @@ namespace MementoMori.Ortega.Share.Master.Data
 		public string CanDeletePersonalInfoTime { get; }
 
 		[SerializationConstructor]
-		public LuckyChanceMB(long id, bool? isIgnore, string memo, StartEndTimeZoneType startEndTimeZoneType, string startTime, string endTime, string inputFormEndTime, MypageIconDisplayLocationType mypageIconDisplayLocationType, string titleTextKey, IReadOnlyList<long> luckyChanceButtonIdList, int limitUserDrawCount, UserItem consumeItem, string canDeletePersonalInfoTime)
+        public LuckyChanceMB(long id, bool? isIgnore, string memo, StartEndTimeZoneType startEndTimeZoneType, string startTime, string endTime, string inputFormEndTime, MypageIconDisplayLocationType mypageIconDisplayLocationType, string titleTextKey, int limitUserDrawCount, UserItem consumeItem, string canDeletePersonalInfoTime)
 			: base(id, isIgnore, memo)
 		{
+            this.StartEndTimeZoneType = startEndTimeZoneType;
+            this.StartTime = startTime;
+            this.EndTime = endTime;
+            this.InputFormEndTime = inputFormEndTime;
+            this.MypageIconDisplayLocationType = mypageIconDisplayLocationType;
+            this.TitleTextKey = titleTextKey;
+            this.LimitUserDrawCount = limitUserDrawCount;
+            this.ConsumeItem = consumeItem;
+            this.CanDeletePersonalInfoTime = canDeletePersonalInfoTime;
 		}
 
 		public LuckyChanceMB()

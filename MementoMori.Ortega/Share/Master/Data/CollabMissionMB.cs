@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using MementoMori.Ortega.Share.Data.Sweepstakes;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master.Attributes;
 using MementoMori.Ortega.Share.Utils;
@@ -22,68 +23,110 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("終了日時")]
 		public string EndTime { get; }
 
-		[PropertyOrder(4)]
+		[PropertyOrder(6)]
 		[Description("メイン画像Id")]
 		public int ImageId { get; }
 
-		[PropertyOrder(5)]
+		[PropertyOrder(7)]
 		[Description("メイン画像座標X")]
 		public float ImageX { get; }
 
-		[PropertyOrder(6)]
+		[PropertyOrder(8)]
 		[Description("メイン画像座標Y")]
 		public float ImageY { get; }
 
-		[PropertyOrder(7)]
+		[PropertyOrder(9)]
 		[Description("メイン画像サイズ")]
 		public float ImageSize { get; }
 
-		[PropertyOrder(8)]
+		[PropertyOrder(13)]
 		[Description("説明文")]
 		public string DescriptionTextKey { get; }
 
-		[PropertyOrder(9)]
+		[PropertyOrder(14)]
+		[Description("説明文(応募有り)")]
+		public string SweepstakesDescriptionTextKey { get; }
+
+		[PropertyOrder(15)]
 		[Description("ミッションタイトル")]
 		public string TitleTextKey { get; }
 
-		[PropertyOrder(10)]
+		[PropertyOrder(16)]
+		[Description("ミッションタイトル(応募有り)")]
+		public string SweepstakesTitleTextKey { get; }
+
+		[PropertyOrder(17)]
+		[Description("規約")]
+		public string TermsTextKey { get; }
+
+		[PropertyOrder(18)]
 		[Description("対象ミッションIDリスト")]
 		public IReadOnlyList<long> TargetMissionIdList { get; }
 
-		[PropertyOrder(11)]
+		[PropertyOrder(20)]
 		[Description("Url1")]
 		public string Url1 { get; }
 
-		[PropertyOrder(12)]
+		[PropertyOrder(21)]
 		[Description("Url2")]
 		public string Url2 { get; }
 
-		[PropertyOrder(13)]
+		[PropertyOrder(22)]
 		[Description("キャラクターID(楽曲開放ミッション用)")]
 		public long CharacterId { get; }
 
-		[PropertyOrder(14)]
+		[PropertyOrder(5)]
 		[Description("アイコン表示箇所")]
 		public MypageIconDisplayLocationType MypageIconDisplayLocationType { get; }
 
-		[SerializationConstructor]
-		public CollabMissionMB(long id, bool? isIgnore, string memo, StartEndTimeZoneType startEndTimeZoneType, string startTime, string endTime, int imageId, float imageX, float imageY, float imageSize, string descriptionTextKey, string titleTextKey, IReadOnlyList<long> targetMissionIdList, string url1, string url2, long characterId, MypageIconDisplayLocationType mypageIconDisplayLocationType)
+		[PropertyOrder(4)]
+		[Description("懸賞応募対象の時間サーバーIdのリスト")]
+		public IReadOnlyList<long> SweepstakesTargetTimeServerIdList { get; }
+
+		[PropertyOrder(10)]
+		[Description("応募券アイテムID")]
+		public long SweepstakesTicketItemId { get; }
+
+		[PropertyOrder(11)]
+		[Description("応募上限")]
+		public int SweepstakesEntryUpperLimit { get; }
+
+		[Nest(false, 0)]
+		[PropertyOrder(12)]
+		[Description("応募対象アイテムリスト")]
+		public IReadOnlyList<SweepstakesItem> SweepstakesItemList { get; }
+
+		[PropertyOrder(19)]
+		[Description("お知らせタブ")]
+		public long NoticeGroupId { get; }
+
+
+        [SerializationConstructor]
+        public CollabMissionMB(long id, bool? isIgnore, string memo, StartEndTimeZoneType startEndTimeZoneType, string startTime, string endTime, int imageId, float imageX, float imageY, float imageSize, string descriptionTextKey, string sweepstakesDescriptionTextKey, string titleTextKey, string sweepstakesTitleTextKey, string termsTextKey, IReadOnlyList<long> targetMissionIdList, string url1, string url2, long characterId, MypageIconDisplayLocationType mypageIconDisplayLocationType, IReadOnlyList<long> sweepstakesTargetTimeServerIdList, long sweepstakesTicketItemId, int sweepstakesEntryUpperLimit, IReadOnlyList<SweepstakesItem> sweepstakesItemList, long noticeGroupId)
 			: base(id, isIgnore, memo)
 		{
-            this.StartEndTimeZoneType = startEndTimeZoneType;
-            this.StartTime = startTime;
-            this.EndTime = endTime;
-            this.ImageId = imageId;
-            this.ImageX = imageX;
-            this.ImageY = imageY;
-            this.ImageSize = imageSize;
-            this.DescriptionTextKey = descriptionTextKey;
-            this.TitleTextKey = titleTextKey;
-            this.TargetMissionIdList = targetMissionIdList;
-            this.Url1 = url1;
-            this.Url2 = url2;
-            this.CharacterId = characterId;
-            this.MypageIconDisplayLocationType = mypageIconDisplayLocationType;
+            StartEndTimeZoneType = startEndTimeZoneType;
+            StartTime = startTime;
+            EndTime = endTime;
+            ImageId = imageId;
+            ImageX = imageX;
+            ImageY = imageY;
+            ImageSize = imageSize;
+            DescriptionTextKey = descriptionTextKey;
+            SweepstakesDescriptionTextKey = sweepstakesDescriptionTextKey;
+            TitleTextKey = titleTextKey;
+            SweepstakesTitleTextKey = sweepstakesTitleTextKey;
+            TermsTextKey = termsTextKey;
+            TargetMissionIdList = targetMissionIdList ?? new List<long>();
+            Url1 = url1;
+            Url2 = url2;
+            CharacterId = characterId;
+            MypageIconDisplayLocationType = mypageIconDisplayLocationType;
+            SweepstakesTargetTimeServerIdList = sweepstakesTargetTimeServerIdList ?? new List<long>();
+            SweepstakesTicketItemId = sweepstakesTicketItemId;
+            SweepstakesEntryUpperLimit = sweepstakesEntryUpperLimit;
+            SweepstakesItemList = sweepstakesItemList ?? new List<SweepstakesItem>();
+            NoticeGroupId = noticeGroupId;
 		}
 
 		public CollabMissionMB()

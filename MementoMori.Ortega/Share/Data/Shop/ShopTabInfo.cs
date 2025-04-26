@@ -30,5 +30,11 @@ namespace MementoMori.Ortega.Share.Data.Shop
 
         [Description("商品一覧")]
 		public List<ShopProductInfo> ShopProductInfoList { get; set; }
+
+        [Description("Newバッジ表示対象かどうか")]
+        public bool IsNewBadgeTarget { get; set; }
+
+        [Description("Newバッジ表示フラグ")]
+        public bool IsNew { get; set; }
     }
 }

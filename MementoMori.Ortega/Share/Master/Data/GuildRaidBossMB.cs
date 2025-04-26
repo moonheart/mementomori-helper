@@ -17,6 +17,10 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("アクティブスキルIDのリスト")]
 		public IReadOnlyList<long> ActiveSkillIds { get; }
 
+		[PropertyOrder(22)]
+		[Description("バナーテキスト")]
+		public string BannerText { get; }
+
 		[Nest(true, 1)]
 		[PropertyOrder(14)]
 		[Description("ベースパラメータ")]
@@ -43,14 +47,30 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("敵のランク")]
 		public long EnemyRank { get; }
 
+		[PropertyOrder(19)]
+		[Description("敵の専用武器レアリティ")]
+		public EquipmentRarityFlags ExclusiveEquipmentRarityFlags { get; }
+
 		[Nest(false, 0)]
-		[PropertyOrder(20)]
+		[PropertyOrder(21)]
 		[Description("ギルドダメージバー")]
 		public IReadOnlyList<GuildRaidDamageBar> GuildDamageBar { get; }
 
 		[PropertyOrder(3)]
 		[Description("ボス種別")]
 		public GuildRaidBossType GuildRaidBossType { get; }
+
+		[PropertyOrder(23)]
+		[Description("ギルドレイドボタン座標U")]
+		public float GuildRaidButtonU { get; }
+
+		[PropertyOrder(24)]
+		[Description("ギルドレイドボタン座標V")]
+		public float GuildRaidButtonV { get; }
+
+		[PropertyOrder(28)]
+		[Description("マイページ表示タイプ")]
+		public bool IsActiveMypageIcon { get; }
 
 		[PropertyOrder(11)]
 		[Description("職業")]
@@ -61,7 +81,7 @@ namespace MementoMori.Ortega.Share.Master.Data
 		public string NameKey { get; }
 
 		[Nest(false, 0)]
-		[PropertyOrder(19)]
+		[PropertyOrder(20)]
 		[Description("通常ダメージバー")]
 		public IReadOnlyList<GuildRaidDamageBar> NormalDamageBar { get; }
 
@@ -93,37 +113,21 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("終了日時（現地時間")]
 		public string EndTime { get; }
 
-		[PropertyOrder(21)]
-		[Description("バナーテキスト")]
-		public string BannerText { get; }
-
-		[PropertyOrder(22)]
-		[Description("ギルドレイドボタン座標U")]
-		public float GuildRaidButtonU { get; }
-
-		[PropertyOrder(23)]
-		[Description("ギルドレイドボタン座標V")]
-		public float GuildRaidButtonV { get; }
-
-		[PropertyOrder(24)]
-		[Description("ワールド報酬キャラ画像座標X")]
-		public float WorldDamageBarRewardCharacterImageX { get; }
-
-		[PropertyOrder(25)]
-		[Description("ワールド報酬キャラ画像座標Y")]
-		public float WorldDamageBarRewardCharacterImageY { get; }
-
-		[PropertyOrder(26)]
+		[PropertyOrder(27)]
 		[Description("ワールド報酬キャラ画像サイズ")]
 		public float WorldDamageBarRewardCharacterImageSize { get; }
 
-        [PropertyOrder(27)]
-        [Description("マイページ表示タイプ")]
-        public bool IsActiveMypageIcon { get; }
+		[PropertyOrder(25)]
+		[Description("ワールド報酬キャラ画像座標X")]
+		public float WorldDamageBarRewardCharacterImageX { get; }
+
+		[PropertyOrder(26)]
+		[Description("ワールド報酬キャラ画像座標Y")]
+		public float WorldDamageBarRewardCharacterImageY { get; }
 
 
         [SerializationConstructor]
-        public GuildRaidBossMB(long id, bool? isIgnore, string memo, BaseParameter baseParameter, BattleParameter battleParameter, UnitIconType unitIconType, long unitIconId, long normalSkillId, GuildRaidBossType guildRaidBossType, long releasableGuildFame, IReadOnlyList<long> activeSkillIds, IReadOnlyList<long> passiveSkillIds, long enemyRank, JobFlags jobFlags, ElementType elementType, long battlePower, CharacterRarityFlags characterRarityFlags, string nameKey, IReadOnlyList<GuildRaidDamageBar> normalDamageBar, IReadOnlyList<GuildRaidDamageBar> guildDamageBar, string startTime, string endTime, string bannerText, float guildRaidButtonU, float guildRaidButtonV, float worldDamageBarRewardCharacterImageX, float worldDamageBarRewardCharacterImageY, float worldDamageBarRewardCharacterImageSize, bool isActiveMypageIcon)
+        public GuildRaidBossMB(long id, bool? isIgnore, string memo, BaseParameter baseParameter, BattleParameter battleParameter, UnitIconType unitIconType, long unitIconId, long normalSkillId, GuildRaidBossType guildRaidBossType, long releasableGuildFame, IReadOnlyList<long> activeSkillIds, IReadOnlyList<long> passiveSkillIds, long enemyRank, JobFlags jobFlags, EquipmentRarityFlags exclusiveEquipmentRarityFlags, ElementType elementType, long battlePower, CharacterRarityFlags characterRarityFlags, string nameKey, IReadOnlyList<GuildRaidDamageBar> normalDamageBar, IReadOnlyList<GuildRaidDamageBar> guildDamageBar, string startTime, string endTime, string bannerText, float guildRaidButtonU, float guildRaidButtonV, float worldDamageBarRewardCharacterImageX, float worldDamageBarRewardCharacterImageY, float worldDamageBarRewardCharacterImageSize, bool isActiveMypageIcon)
             : base(id, isIgnore, memo)
         {
             this.BaseParameter = baseParameter;
@@ -137,6 +141,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             this.PassiveSkillIds = passiveSkillIds;
             this.EnemyRank = enemyRank;
             this.JobFlags = jobFlags;
+            this.ExclusiveEquipmentRarityFlags = exclusiveEquipmentRarityFlags;
             this.ElementType = elementType;
             this.BattlePower = battlePower;
             this.CharacterRarityFlags = characterRarityFlags;
