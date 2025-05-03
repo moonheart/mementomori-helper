@@ -400,6 +400,15 @@
     <data name="AutoUseItemTypeSealedChest" xml:space="preserve"><value>보물상자</value></data>
     <data name="AutoUseItemTypeWitchLetterGift" xml:space="preserve"><value>마녀의 편지기프트</value></data>
     <data name="AutoUseItemTypeChestOfChance" xml:space="preserve"><value>운명의 상자</value></data>
+    <data name="BattleLogCleanRange" xml:space="preserve"><value>정리 범위</value></data>
+    <data name="BattleLogCleanConfirm" xml:space="preserve"><value>{0}개의 로그 파일을 정리하시겠습니까? (총 {1})</value></data>
+    <data name="BattleLogNoFilesToClean" xml:space="preserve"><value>정리할 로그 파일이 없습니다</value></data>
+    <data name="BattleLogCleanComplete" xml:space="preserve"><value>{0}개의 로그 파일을 정리했습니다</value></data>
+    <data name="BattleLogCleanError" xml:space="preserve"><value>파일 {0} 삭제 실패: {1}</value></data>
+    <data name="BattleLogCleanOption1Day" xml:space="preserve"><value>1일 전</value></data>
+    <data name="BattleLogCleanOption1Week" xml:space="preserve"><value>1주일 전</value></data>
+    <data name="BattleLogCleanOption1Month" xml:space="preserve"><value>1개월 전</value></data>
+    <data name="BattleLogCleanOptionAll" xml:space="preserve"><value>모두</value></data>
     <data name="The current version ({0}) is not the latest version ({1}). Click to download the latest version." xml:space="preserve">
         <value>현재 버전 ({0})은 최신 버전 ({1})이 아닙니다. 최신 버전을 다운로드하려면 클릭하세요.</value>
     </data>
@@ -465,5 +474,11 @@
     </data>
     <data name="Current expected value: {0}. Today, {1}/{2} auto-refreshes completed. Refreshing now." xml:space="preserve">
         <value>현재 기대값: {0}. 오늘 {1}/{2}회 자동 새로고침 완료. 지금 새로고침합니다.</value>
+    </data>
+    <data name="Cancel" xml:space="preserve">
+        <value>취소</value>
+    </data>
+    <data name="Confirm" xml:space="preserve">
+        <value>확인</value>
     </data>
 </root>

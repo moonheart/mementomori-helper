@@ -1,4 +1,5 @@
 ﻿using MementoMori.Ortega.Share.Data.Battle.Result;
+using MementoMori.Common.Localization;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
 
@@ -120,4 +121,78 @@ public partial class BattleLog
     };
 
     private BattleLogType _selectedBattleLogType = BattleLogType.Main;
+    private int _selectedCleanRange = 1;
+
+    private DateTimeOffset ParseTimeFromFileName(string filename)
+    {
+        var parts = filename.Split('-');
+        if (parts.Length < 5) return DateTimeOffset.MinValue;
+        if (long.TryParse(parts[3], out var timestamp))
+            return DateTimeOffset.FromUnixTimeMilliseconds(timestamp).ToLocalTime();
+        return DateTimeOffset.MinValue;
+    }
+
+    private async Task CleanBattleLogs()
+    {
+        if (!Directory.Exists(GameConfig.Value.BattleLogDir)) return;
+
+        var threshold = _selectedCleanRange switch
+        {
+            1 => DateTimeOffset.Now.AddDays(-1),
+            7 => DateTimeOffset.Now.AddDays(-7),
+            30 => DateTimeOffset.Now.AddDays(-30),
+            _ => DateTimeOffset.MinValue
+        };
+
+        var filesToDelete = _selectedCleanRange == 0
+            ? Directory.GetFiles(GameConfig.Value.BattleLogDir).ToList()
+            : Directory.GetFiles(GameConfig.Value.BattleLogDir)
+                .Where(f => ParseTimeFromFileName(Path.GetFileName(f)) < threshold)
+                .ToList();
+
+        if (!filesToDelete.Any())
+        {
+            await DialogService.ShowMessageBox(ResourceStrings.BattleLogNoFilesToClean, ResourceStrings.BattleLogNoFilesToClean);
+            return;
+        }
+
+        long totalSize = filesToDelete.Sum(f => new FileInfo(f).Length);
+
+        string FormatFileSize(long bytes)
+        {
+            string[] sizes = {"B", "KB", "MB", "GB"};
+            int order = 0;
+            while (bytes >= 1024 && order < sizes.Length - 1)
+            {
+                order++;
+                bytes /= 1024;
+            }
+
+            return $"{bytes:0.##} {sizes[order]}";
+        }
+
+        var result = await DialogService.ShowMessageBox(
+            ResourceStrings.BattleLogCleanRange,
+            string.Format(ResourceStrings.BattleLogCleanConfirm, filesToDelete.Count, FormatFileSize(totalSize)),
+            yesText: ResourceStrings.Confirm, cancelText: ResourceStrings.Cancel);
+
+        if (result != true) return;
+
+        foreach (var file in filesToDelete)
+        {
+            try
+            {
+                File.Delete(file);
+            }
+            catch (Exception ex)
+            {
+                await DialogService.ShowMessageBox(ResourceStrings.BattleLogCleanError,
+                    string.Format(ResourceStrings.BattleLogCleanError, file, ex.Message));
+            }
+        }
+
+        GetLogs();
+        await DialogService.ShowMessageBox(ResourceStrings.Finished,
+            string.Format(ResourceStrings.BattleLogCleanComplete, filesToDelete.Count));
+    }
 }

@@ -400,6 +400,15 @@
     <data name="AutoUseItemTypeSealedChest" xml:space="preserve"><value>封印の宝箱</value></data>
     <data name="AutoUseItemTypeWitchLetterGift" xml:space="preserve"><value>魔女の手紙ギフト</value></data>
     <data name="AutoUseItemTypeChestOfChance" xml:space="preserve"><value>運命の箱</value></data>
+    <data name="BattleLogCleanRange" xml:space="preserve"><value>クリーン範囲</value></data>
+    <data name="BattleLogCleanConfirm" xml:space="preserve"><value>{0}個のログファイルをクリーンしますか？(合計{1})</value></data>
+    <data name="BattleLogNoFilesToClean" xml:space="preserve"><value>クリーンするログファイルがありません</value></data>
+    <data name="BattleLogCleanComplete" xml:space="preserve"><value>{0}個のログファイルをクリーンしました</value></data>
+    <data name="BattleLogCleanError" xml:space="preserve"><value>ファイル{0}の削除に失敗しました: {1}</value></data>
+    <data name="BattleLogCleanOption1Day" xml:space="preserve"><value>1日前</value></data>
+    <data name="BattleLogCleanOption1Week" xml:space="preserve"><value>1週間前</value></data>
+    <data name="BattleLogCleanOption1Month" xml:space="preserve"><value>1ヶ月前</value></data>
+    <data name="BattleLogCleanOptionAll" xml:space="preserve"><value>すべて</value></data>
     <data name="The current version ({0}) is not the latest version ({1}). Click to download the latest version." xml:space="preserve">
         <value>現在のバージョン（{0}）は最新バージョン（{1}）ではありません。最新バージョンをダウンロードするにはクリックしてください。</value>
     </data>
@@ -465,5 +474,11 @@
     </data>
     <data name="Current expected value: {0}. Today, {1}/{2} auto-refreshes completed. Refreshing now." xml:space="preserve">
         <value>現在の期待値：{0}。本日自動リフレッシュ {1}/{2} 回完了。リフレッシュ中。</value>
+    </data>
+    <data name="Cancel" xml:space="preserve">
+        <value>キャンセル</value>
+    </data>
+    <data name="Confirm" xml:space="preserve">
+        <value>確認</value>
     </data>
 </root>

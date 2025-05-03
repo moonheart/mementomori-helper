@@ -421,6 +421,87 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Cleaned {0} log files 的本地化字符串。
+        /// </summary>
+        public static string BattleLogCleanComplete {
+            get {
+                return ResourceManager.GetString("BattleLogCleanComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Confirm to clean {0} log files (total {1})? 的本地化字符串。
+        /// </summary>
+        public static string BattleLogCleanConfirm {
+            get {
+                return ResourceManager.GetString("BattleLogCleanConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Failed to delete file {0}: {1} 的本地化字符串。
+        /// </summary>
+        public static string BattleLogCleanError {
+            get {
+                return ResourceManager.GetString("BattleLogCleanError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 1 day ago 的本地化字符串。
+        /// </summary>
+        public static string BattleLogCleanOption1Day {
+            get {
+                return ResourceManager.GetString("BattleLogCleanOption1Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 1 month ago 的本地化字符串。
+        /// </summary>
+        public static string BattleLogCleanOption1Month {
+            get {
+                return ResourceManager.GetString("BattleLogCleanOption1Month", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 1 week ago 的本地化字符串。
+        /// </summary>
+        public static string BattleLogCleanOption1Week {
+            get {
+                return ResourceManager.GetString("BattleLogCleanOption1Week", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 All 的本地化字符串。
+        /// </summary>
+        public static string BattleLogCleanOptionAll {
+            get {
+                return ResourceManager.GetString("BattleLogCleanOptionAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Clean Range 的本地化字符串。
+        /// </summary>
+        public static string BattleLogCleanRange {
+            get {
+                return ResourceManager.GetString("BattleLogCleanRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 No log files to clean 的本地化字符串。
+        /// </summary>
+        public static string BattleLogNoFilesToClean {
+            get {
+                return ResourceManager.GetString("BattleLogNoFilesToClean", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Battle Result 的本地化字符串。
         /// </summary>
         public static string BattleResult {
@@ -444,6 +525,15 @@ namespace MementoMori.Common.Localization {
         public static string BuyWith {
             get {
                 return ResourceManager.GetString("BuyWith", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Cancel 的本地化字符串。
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
             }
         }
         
@@ -502,6 +592,15 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
+        ///   查找类似  的本地化字符串。
+        /// </summary>
+        public static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Confirm removal of this account? 的本地化字符串。
         /// </summary>
         public static string Confirm_removal_of_this_account_ {
@@ -529,7 +628,7 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
-        ///   查找类似  的本地化字符串。
+        ///   查找类似 Current expected value: {0}. Today, {1}/{2} auto-refreshes completed. Refreshing now. 的本地化字符串。
         /// </summary>
         public static string Current_expected_value___0___Today___1___2__auto_refreshes_completed__Refreshing_now_ {
             get {
@@ -656,7 +755,7 @@ namespace MementoMori.Common.Localization {
         }
         
         /// <summary>
-        ///   查找类似 Enter 0 to disable auto-refresh; each refresh costs 20 diamonds and only refreshes if the expected value is greater than 20. For a single task, level 8 has an expected value of 13, level 7 is 11.6, level 6 is 9.8, level 5 is 7.9, and level 4 is 5.7. Levels below 4 cannot auto-refresh. 的本地化字符串。
+        ///   查找类似 Enter 0 to disable auto-refresh. Each refresh costs 20 diamonds and only refreshes if the expected value is greater than 20. For a single task: level 8 has an expected value of 13, level 7 is 11.6, level 6 is 9.8, level 5 is 7.9, and level 4 is 5.7. Auto-refresh is disabled for levels below 4. Expected values automatically account for double reward events. 的本地化字符串。
         /// </summary>
         public static string Enter_0_to_disable_auto_refresh_ {
             get {

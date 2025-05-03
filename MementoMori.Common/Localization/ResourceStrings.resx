@@ -498,6 +498,15 @@
   <data name="AutoUseItemTypeOthers" xml:space="preserve"><value>Others</value></data>
   <data name="AutoUseItemTypeDiamondBag" xml:space="preserve"><value>Diamond Bag</value></data>
   <data name="AutoUseItemTypeMysteryRune" xml:space="preserve"><value>Mystery Rune</value></data>
+  <data name="BattleLogCleanRange" xml:space="preserve"><value>Clean Range</value></data>
+  <data name="BattleLogCleanConfirm" xml:space="preserve"><value>Confirm to clean {0} log files (total {1})?</value></data>
+  <data name="BattleLogNoFilesToClean" xml:space="preserve"><value>No log files to clean</value></data>
+  <data name="BattleLogCleanComplete" xml:space="preserve"><value>Cleaned {0} log files</value></data>
+  <data name="BattleLogCleanError" xml:space="preserve"><value>Failed to delete file {0}: {1}</value></data>
+  <data name="BattleLogCleanOption1Day" xml:space="preserve"><value>1 day ago</value></data>
+  <data name="BattleLogCleanOption1Week" xml:space="preserve"><value>1 week ago</value></data>
+  <data name="BattleLogCleanOption1Month" xml:space="preserve"><value>1 month ago</value></data>
+  <data name="BattleLogCleanOptionAll" xml:space="preserve"><value>All</value></data>
   <data name="AutoUseItemTypeWitchLetterR" xml:space="preserve"><value>Witch's Letter(R)</value></data>
   <data name="AutoUseItemTypeWitchLetterSr" xml:space="preserve"><value>Witch's Letter(SR)</value></data>
   <data name="AutoUseItemTypeWitchShard" xml:space="preserve"><value>Witch's Shard</value></data>
@@ -506,6 +515,15 @@
   <data name="AutoUseItemTypeSealedChest" xml:space="preserve"><value>Sealed Chest</value></data>
   <data name="AutoUseItemTypeWitchLetterGift" xml:space="preserve"><value>Witch's Letter Gift</value></data>
   <data name="AutoUseItemTypeChestOfChance" xml:space="preserve"><value>Chest of Chance</value></data>
+  <data name="BattleLogCleanRange" xml:space="preserve"><value>Clean Range</value></data>
+  <data name="BattleLogCleanConfirm" xml:space="preserve"><value>Confirm to clean {0} log files (total {1})?</value></data>
+  <data name="BattleLogNoFilesToClean" xml:space="preserve"><value>No log files to clean</value></data>
+  <data name="BattleLogCleanComplete" xml:space="preserve"><value>Cleaned {0} log files</value></data>
+  <data name="BattleLogCleanError" xml:space="preserve"><value>Failed to delete file {0}: {1}</value></data>
+  <data name="BattleLogCleanOption1Day" xml:space="preserve"><value>1 day ago</value></data>
+  <data name="BattleLogCleanOption1Week" xml:space="preserve"><value>1 week ago</value></data>
+  <data name="BattleLogCleanOption1Month" xml:space="preserve"><value>1 month ago</value></data>
+  <data name="BattleLogCleanOptionAll" xml:space="preserve"><value>All</value></data>
   <data name="The current version ({0}) is not the latest version ({1}). Click to download the latest version." xml:space="preserve">
       <value>The current version ({0}) is not the latest version ({1}). Click to download the latest version.</value>
   </data>
@@ -571,5 +589,11 @@
   </data>
   <data name="Current expected value: {0}. Today, {1}/{2} auto-refreshes completed. Refreshing now." xml:space="preserve">
       <value>Current expected value: {0}. Today, {1}/{2} auto-refreshes completed. Refreshing now.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+      <value>Cancel</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+      <value>Confirm</value>
   </data>
 </root>

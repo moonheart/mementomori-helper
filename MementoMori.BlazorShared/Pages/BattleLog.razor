@@ -10,6 +10,17 @@
     @ResourceStrings.You_can_download_the_battle_log_and_parse_it_here: <MudLink Href="https://mentemori.icu/battle_log.html" Target="_blank">Battle Log Viewer</MudLink>
 </MudText>
 
+<MudStack Row="true" Class="justify-start ">
+    <MudSelect @bind-Value="_selectedCleanRange" Label="@ResourceStrings.BattleLogCleanRange" Dense="true" Style="width: 120px;">
+        <MudSelectItem Value="1">@ResourceStrings.BattleLogCleanOption1Day</MudSelectItem>
+        <MudSelectItem Value="7">@ResourceStrings.BattleLogCleanOption1Week</MudSelectItem>
+        <MudSelectItem Value="30">@ResourceStrings.BattleLogCleanOption1Month</MudSelectItem>
+        <MudSelectItem Value="0">@ResourceStrings.BattleLogCleanOptionAll</MudSelectItem>
+    </MudSelect>
+    <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Outlined"
+                   OnClick="CleanBattleLogs" Color="Color.Error"></MudIconButton>
+</MudStack>
+
 <MudStack Row="true" Class="justify-start align-center">
     <MudIconButton Icon="@Icons.Material.Filled.Pageview" Size="Size.Small" Variant="Variant.Outlined" OnClick="() => ViewBattleLog(SelectedBattleResult)"></MudIconButton>
     <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small" Variant="Variant.Outlined" OnClick="() => DownloadBattleLog(SelectedBattleResult)"></MudIconButton>

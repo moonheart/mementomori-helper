@@ -498,6 +498,15 @@
   <data name="AutoUseItemTypeOthers" xml:space="preserve"><value>其他</value></data>
   <data name="AutoUseItemTypeDiamondBag" xml:space="preserve"><value>一袋鑽石</value></data>
   <data name="AutoUseItemTypeMysteryRune" xml:space="preserve"><value>未鑑定符石</value></data>
+  <data name="BattleLogCleanRange" xml:space="preserve"><value>清理范围</value></data>
+  <data name="BattleLogCleanConfirm" xml:space="preserve"><value>确定要清理{0}个日志文件(共{1})吗？</value></data>
+  <data name="BattleLogNoFilesToClean" xml:space="preserve"><value>没有可清理的日志文件</value></data>
+  <data name="BattleLogCleanComplete" xml:space="preserve"><value>已清理{0}个日志文件</value></data>
+  <data name="BattleLogCleanError" xml:space="preserve"><value>删除文件{0}失败: {1}</value></data>
+  <data name="BattleLogCleanOption1Day" xml:space="preserve"><value>1天前</value></data>
+  <data name="BattleLogCleanOption1Week" xml:space="preserve"><value>1周前</value></data>
+  <data name="BattleLogCleanOption1Month" xml:space="preserve"><value>1月前</value></data>
+  <data name="BattleLogCleanOptionAll" xml:space="preserve"><value>全部</value></data>
   <data name="AutoUseItemTypeWitchLetterR" xml:space="preserve"><value>魔女的來信(R)</value></data>
   <data name="AutoUseItemTypeWitchLetterSr" xml:space="preserve"><value>魔女的來信(SR)</value></data>
   <data name="AutoUseItemTypeWitchShard" xml:space="preserve"><value>魔女的心片</value></data>
@@ -572,5 +581,11 @@
   </data>
   <data name="Current expected value: {0}. Today, {1}/{2} auto-refreshes completed. Refreshing now." xml:space="preserve">
       <value>当前期望值：{0}，今日已自动刷新 {1}/{2} 次，现在刷新。</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+      <value>取消</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+      <value>确认</value>
   </data>
 </root>
