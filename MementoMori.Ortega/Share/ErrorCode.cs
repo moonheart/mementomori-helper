@@ -1397,6 +1397,12 @@ namespace MementoMori.Ortega.Share
 		IndividualNotificationCacheDtoNotFound = 421000,
 		[Description("ユーザーの個別通知情報が存在しません")]
 		IndividualNotificationDtoNotFound,
+        [Description("指定された個別通知情報が存在しません")]
+        AuthIndividualNotificationDtoNotFound,
+        [Description("個別通知コード情報が存在しません")]
+        IndividualNotificationCodeDtoNotFound,
+        [Description("個別通知コードを受け取り済みです")]
+        IndividualNotificationCodeAlreadyReceived,
 		[Description("星導交換所情報が存在しません")]
 		StarsGuidanceTradeShopDtoNotFound = 431000,
 		[Description("星導交換所が開催されていません。")]

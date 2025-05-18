@@ -2,7 +2,7 @@
 
 namespace MementoMori.Ortega.Share.Enums;
 
-[Description("ダイヤ種別")]
+[Description("【有償仮想通貨】ダイヤ種別-フラットフォームごとに管理するためDeviceTypeと紐づいている")]
 public enum CurrencyType
 {
     [Description("無償ダイヤ")] Free,

@@ -437,6 +437,7 @@
 		CollabMissionEntryFormExceedingEntryLimit,
 		CollabMissionEntryFormSpecifyPrizeAndEntries,
 		CollabMissionNotExistTicket,
-		CollabMissionNotEntry
+		CollabMissionNotEntry,
+        LiveTicketAgreement = 3500001
 	}
 }
