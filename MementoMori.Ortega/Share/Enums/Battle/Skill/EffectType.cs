@@ -227,6 +227,10 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		MoveBuffToMeFromEnemy,
 		[Description("自分のデバフを敵に移す")]
 		MoveDebuffToEnemyFromMe,
+        [Description("ターゲットのバフを指定数コピー")]
+        CopyBuffTargetToSelf,
+        [Description("自分のデバフをターゲットに指定数コピー")]
+        CopyDeBuffSelfToTarget,
 		[Description("スピード減少")]
 		SpeedDown = 5001,
 		[Description("最大HP減少")]

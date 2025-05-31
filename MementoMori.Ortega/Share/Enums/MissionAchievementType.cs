@@ -308,6 +308,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("魔女の書庫整理 最大到達フロア")]
 		BookSortMaxFloor = 26010200,
 		[Description("魔女の書庫整理 アイテムの消費量")]
-		BookSortConsumeItemCount = 26010300
+		BookSortConsumeItemCount = 26010300,
+        [Description("動画再生機能の再生回数（全サーバー合算）")]
+        PlayVideoTotalCount = 27010100
 	}
 }

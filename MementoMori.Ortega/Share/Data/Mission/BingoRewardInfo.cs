@@ -17,5 +17,9 @@ namespace MementoMori.Ortega.Share.Data.Mission
 		[Nest(true, 2)]
 		[Description("報酬アイテムリスト")]
 		public List<UserItem> RewardItemList{ get; set; }
+        
+        [Nest(true, 2)]
+		[Description("報酬情報リスト")]
+		public List<PanelMissionRewardInfo> RewardInfoList{ get; set; }
 	}
 }

@@ -91,6 +91,8 @@ namespace MementoMori.Ortega.Share.Enums
 		BookSort = 290,
 		[Description("ワールド誘導")]
 		WorldGuidance = 300,
+        [Description("動画再生")]
+        PlayVideo = 330,
 		[Description("フレンド")]
 		Friend = 4
 	}

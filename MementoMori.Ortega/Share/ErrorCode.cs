@@ -1065,6 +1065,8 @@ namespace MementoMori.Ortega.Share
 		ChatUserAccountDtoNotFound,
 		[Description("ユーザーのギルドデータが見つかりません。")]
 		ChatUserGuildDtoNotFound,
+		[Description("ギルドデータが見つかりません。")]
+		ChatGuildDtoNotFound,
 		[Description("対象ユーザにブロックされています。")]
 		ChatBlockedByTargetPlayer = 272000,
 		[Description("時間の指定が無効です。")]
@@ -1099,6 +1101,18 @@ namespace MementoMori.Ortega.Share
 		ChatSettingNotHaveBackground,
 		[Description("設定できない文字サイズです。")]
 		ChatSettingNotAllowedFontSize,
+		[Description("共有できないバトルタイプです。")]
+		ChatInvalidBattleType,
+		[Description("バトルログのダウンロードに失敗しました。")]
+		ChatFailDownloadBattleLog,
+		[Description("バトルログが存在しません。")]
+		ChatNotFoundBattleLog,
+		[Description("共有できないチャットタイプです。")]
+		ChatInvalidChatType,
+		[Description("クリアパーティ情報が存在しません。")]
+		ChatNotFoundClearPartyInfo,
+		[Description("バトル情報が存在しません。")]
+		ChatNotFoundBattleLogInfo,
 		[Description("未受け取りのプレゼントは削除できません。")]
 		PresentDeleteNotReceivedPresent = 282001,
 		[Description("削除済みのプレゼントは受け取れません。")]
@@ -1397,12 +1411,12 @@ namespace MementoMori.Ortega.Share
 		IndividualNotificationCacheDtoNotFound = 421000,
 		[Description("ユーザーの個別通知情報が存在しません")]
 		IndividualNotificationDtoNotFound,
-        [Description("指定された個別通知情報が存在しません")]
-        AuthIndividualNotificationDtoNotFound,
-        [Description("個別通知コード情報が存在しません")]
-        IndividualNotificationCodeDtoNotFound,
-        [Description("個別通知コードを受け取り済みです")]
-        IndividualNotificationCodeAlreadyReceived,
+		[Description("指定された個別通知情報が存在しません")]
+		AuthIndividualNotificationDtoNotFound,
+		[Description("個別通知コード情報が存在しません")]
+		IndividualNotificationCodeDtoNotFound,
+		[Description("個別通知コードを受け取り済みです")]
+		IndividualNotificationCodeAlreadyReceived,
 		[Description("星導交換所情報が存在しません")]
 		StarsGuidanceTradeShopDtoNotFound = 431000,
 		[Description("星導交換所が開催されていません。")]
@@ -1599,6 +1613,14 @@ namespace MementoMori.Ortega.Share
 		SweepstakesNotAvailableEntryItem,
 		[Description("同一アカウントで応募できる上限に達しています。")]
 		SweepstakesOverEntryUpperLimit,
+		[Description("開催中の動画再生がありません。")]
+		PlayVideoNotHeld = 520000,
+		[Description("本日分の動画再生のコメントを投稿済みです。")]
+		PlayVideoOverDailyCommentLimit,
+		[Description("チャット禁止中はコメントの投稿ができません。")]
+		PlayVideoCommentBanChat,
+		[Description("コメント内容を入力してください。")]
+		PlayVideoCommentEmpty,
 		[Description("存在しないTreasureChestです。")]
 		ItemOpenTreasureChestIdNotFound = 602004,
 		[Description("存在しないTreasureChestです。")]

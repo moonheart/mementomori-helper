@@ -438,6 +438,10 @@
 		CollabMissionEntryFormSpecifyPrizeAndEntries,
 		CollabMissionNotExistTicket,
 		CollabMissionNotEntry,
-        LiveTicketAgreement = 3500001
+		LiveTicketAgreement = 3500001,
+		BattleReportShareNotInGuild = 3600001,
+		PlayVideoBannedComment = 3700001,
+		PlayVideoLiveMode,
+		PlayVideoAlreadySendCommentToday
 	}
 }
