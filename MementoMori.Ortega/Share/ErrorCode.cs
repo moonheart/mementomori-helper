@@ -1297,6 +1297,8 @@ namespace MementoMori.Ortega.Share
 		RankingAlreadyReceivedRankingReward,
 		[Description("ランキング到達報酬が解放されていません。")]
 		RankingNotOpenAchieveRankingReward,
+		[Description("バトルデータがありません。")]
+		RankingNotFoundRankingBattleLog,
 		[Description("パネル図鑑表示期間外です。")]
 		PanelNotStarted = 382000,
 		[Description("無条件で解放されているパネルです。")]
