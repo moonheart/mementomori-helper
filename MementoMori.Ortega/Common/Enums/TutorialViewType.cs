@@ -48,6 +48,7 @@
 		EquipmentSacredLevelSelectView,
 		GuildRecruitListView,
 		GuildRecruitWaitSettingView,
-		MyPagePlayerInformationView
+		MyPagePlayerInformationView,
+		EquipmentSynchroMissionView
 	}
 }

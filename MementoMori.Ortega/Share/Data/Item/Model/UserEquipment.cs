@@ -81,13 +81,19 @@ namespace MementoMori.Ortega.Share.Data.Item.Model
             this.MatchlessSacredTreasureLv = num13;
             long num14 = userEquipmentDtoInfo.ReinforcementLv;
             this.ReinforcementLv = num14;
+            long num15 = userEquipmentDtoInfo.BeforeSynchroEquipmentId;
+            this.BeforeSynchroEquipmentId = num15;
+            long num16 = userEquipmentDtoInfo.SetBaseSynchroGroupId;
+            this.SetBaseSynchroGroupId = num16;
+            long num17 = userEquipmentDtoInfo.PlayerId;
+            this.PlayerId = num17;
         }
 
         [SerializationConstructor]
         [JsonConstructor]
         public UserEquipment(long itemId, long itemCount, bool hasParameter, string guid, string characterGuid, long additionalParameterHealth, long additionalParameterMuscle,
             long additionalParameterEnergy, long additionalParameterIntelligence, long sphereUnlockedCount, long sphereId1, long sphereId2, long sphereId3, long sphereId4,
-            long legendSacredTreasureExp, long legendSacredTreasureLv, long matchlessSacredTreasureExp, long matchlessSacredTreasureLv, long reinforcementLv)
+            long legendSacredTreasureExp, long legendSacredTreasureLv, long matchlessSacredTreasureExp, long matchlessSacredTreasureLv, long reinforcementLv, long beforeSynchroEquipmentId, long setBaseSynchroGroupId)
         {
             this.ItemType = (ItemType) ((ulong) 4L);
             this.ItemId = itemId;
@@ -109,6 +115,8 @@ namespace MementoMori.Ortega.Share.Data.Item.Model
             this.MatchlessSacredTreasureExp = matchlessSacredTreasureExp;
             this.MatchlessSacredTreasureLv = matchlessSacredTreasureLv;
             this.ReinforcementLv = reinforcementLv;
+            this.BeforeSynchroEquipmentId = beforeSynchroEquipmentId;
+            this.SetBaseSynchroGroupId = setBaseSynchroGroupId;
         }
 
         public long EquipmentId
@@ -165,5 +173,11 @@ namespace MementoMori.Ortega.Share.Data.Item.Model
         public long MatchlessSacredTreasureLv { get; set; }
 
         public long ReinforcementLv { get; set; }
+
+        public long BeforeSynchroEquipmentId { get; set; }
+
+        public long SetBaseSynchroGroupId { get; set; }
+
+        public long PlayerId { get; set; }
     }
 }

@@ -1,10 +1,12 @@
-﻿namespace MementoMori.Ortega.Common.Enums;
-
-public enum HeaderMenuButtonType
+﻿namespace MementoMori.Ortega.Common.Enums
 {
-    Help,
-    Shop,
-    EquipmentPictureBook,
-    Ranking,
-    ChatSetting
+	public enum HeaderMenuButtonType
+	{
+		Help,
+		Shop,
+		EquipmentPictureBook,
+		Ranking,
+		ChatSetting,
+		Custom
+	}
 }

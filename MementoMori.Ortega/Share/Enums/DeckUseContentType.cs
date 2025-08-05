@@ -38,6 +38,8 @@ namespace MementoMori.Ortega.Share.Enums
 		FriendBattleOffense,
 		[Description("模擬戦（防御）")]
 		FriendBattleDefense,
+		[Description("レンタルレイド")]
+		RentalRaid,
 		[Description("ギルドバトル")]
 		GuildBattle = 1000,
 		[Description("グランドバトル")]

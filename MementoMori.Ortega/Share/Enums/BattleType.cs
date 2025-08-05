@@ -30,6 +30,10 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("ギルドツリー")]
 		GuildTower,
 		[Description("模擬戦")]
-		FriendBattle
+		FriendBattle,
+		[Description("レンタルレイド通常バトル")]
+		RentalRaidNormalBattle,
+		[Description("レンタルレイドボスバトル")]
+		RentalRaidBossBattle
 	}
 }

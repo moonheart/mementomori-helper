@@ -12,6 +12,7 @@
 		BattleLoseSphereSet,
 		BattleLoseEquipmentAscend,
 		BattleLoseRankUp,
-		BattleLoseEquipmentRefine
+		BattleLoseEquipmentRefine,
+		EquipmentSynchro
 	}
 }

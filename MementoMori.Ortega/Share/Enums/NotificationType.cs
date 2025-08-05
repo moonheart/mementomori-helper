@@ -53,6 +53,14 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("進化解放可能")]
 		RankRelease,
 		[Description("新規獲得したチャットふきだしがあるとき")]
-		ChatBalloon
+		ChatBalloon,
+		[Description("外部サイトへ遷移できるマイページアイコンをタップしていない場合")]
+		MyPageIconWithOuterWebSite,
+		[Description("外部サイトへ遷移できるイベントポータルをタップしていない場合")]
+		EventPortalWithOuterWebSite,
+		[Description("動画を一度も再生していない場合（マイページから遷移される動画）")]
+		PlayVideoFromMyPage,
+		[Description("動画を一度も再生していない場合（イベントポータルから遷移される動画）")]
+		PlayVideoFromEventPortal
 	}
 }

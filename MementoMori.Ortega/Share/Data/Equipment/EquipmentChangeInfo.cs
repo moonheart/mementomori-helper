@@ -17,8 +17,6 @@ namespace MementoMori.Ortega.Share.Data.Equipment
 
         public bool IsInherit { get; set; }
 
-        public EquipmentChangeInfo()
-        {
-        }
+        public List<EquipmentInheritanceType> EquipmentInheritanceTypeList { get; set; }
     }
 }

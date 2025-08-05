@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using MementoMori.Ortega.Share.Enums;
 using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.ApiInterface.Equipment
@@ -19,8 +20,6 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Equipment
 			set;
 		}
 
-		public InheritanceEquipmentRequest()
-		{
-		}
+        public List<EquipmentInheritanceType> EquipmentInheritanceTypeList { get; set; }
 	}
 }

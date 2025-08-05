@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using MementoMori.Ortega.Share.Data.RentalRaid;
 using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.Battle.Result;
@@ -14,4 +15,6 @@ public class BattleSimulationResult
     public string BattleToken { get; set; }
 
     public List<BattleCharacterReport> BattleCharacterReports { get; set; }
+
+    public ShareCharacterOwnerInfo ShareCharacterOwnerInfo { get; set; }
 }

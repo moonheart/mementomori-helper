@@ -60,6 +60,9 @@
 		Character3,
 		Character23 = 1023,
 		GuildRecruitList = 1100,
-		GuildRecruitWaitSetting
+		GuildRecruitWaitSetting,
+		EquipmentSynchro = 1200,
+		EquipmentSynchroMission,
+		EquipmentSynchroUnlockGroup
 	}
 }

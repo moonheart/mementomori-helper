@@ -90,6 +90,10 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("人気投票メイン画面")]
 		PopularityVote = 2501,
 		[Description("魔女の書庫整理")]
-		BookSort = 2601
+		BookSort = 2601,
+		[Description("動画再生")]
+		PlayVideo = 2701,
+		[Description("レンタルレイド")]
+		RentalRaid = 2801
 	}
 }

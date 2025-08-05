@@ -31,6 +31,8 @@ namespace MementoMori.Ortega.Share.Enums
 		PopularityVote,
 		[Description("魔女の書庫整理")]
 		BookSort,
+		[Description("レンタルレイド")]
+		RentalRaid,
 		[Description("デイリー追加報酬")]
 		DailyBonus = 1000
 	}

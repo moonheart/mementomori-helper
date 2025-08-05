@@ -103,6 +103,8 @@ namespace MementoMori.Ortega.Share.Enums
 		SweepstakesTicket,
 		[Description("イベント交換所アイテム")]
 		EventExchangePlaceItem = 50,
+		[Description("シンクロハンマー")]
+		SynchroCellUnlockItem = 52,
 		[Description("Stripeクーポン")]
 		StripeCoupon = 1001
 	}

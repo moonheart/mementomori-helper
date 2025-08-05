@@ -1,11 +1,12 @@
 ﻿using MementoMori.Ortega.Share.Data.Character;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
+using Ortega.Share.Data.Interface;
 
 namespace MementoMori.Ortega.Share.Data.DtoInfo
 {
     [MessagePackObject(true)]
-    public class UserCharacterDtoInfo
+    public class UserCharacterDtoInfo: ICharacterInfo
     {
         public string Guid { get; set; }
 
@@ -65,6 +66,11 @@ namespace MementoMori.Ortega.Share.Data.DtoInfo
         {
             bool flag = false;
             return flag;
+        }
+
+        public bool IsShare()
+        {
+            return false;
         }
     }
 }

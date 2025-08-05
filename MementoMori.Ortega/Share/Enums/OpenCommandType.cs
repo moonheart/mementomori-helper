@@ -163,9 +163,23 @@ namespace MementoMori.Ortega.Share.Enums
 		FriendBattle = 490,
 		[Description("書庫整理")]
 		BookSort = 500,
+		[Description("武具Lvを超える強化Lv継承")]
+		EquipmentOverReinforceLevelInheritance = 520,
+		[Description("選択継承")]
+		EquipmentSelectInheritance = 530,
+		[Description("武具比較")]
+		EquipmentComparison = 540,
+		[Description("レンタルレイド")]
+		RentalRaid = 560,
+		[Description("武器シンクロ")]
+		EquipmentSynchro = 570,
+		[Description("武具リセット")]
+		EquipmentReset = 580,
 		[Description("武具固定")]
 		LockEquipment = 1000,
 		[Description("武具固定(ギルドバトル用)")]
-		LockEquipmentGuildBattle
+		LockEquipmentGuildBattle,
+		[Description("武具固定(属性の塔用)")]
+		LockEquipmentElementTower
 	}
 }

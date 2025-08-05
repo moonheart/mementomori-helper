@@ -130,6 +130,8 @@ public static class Masters
 
     public static EquipmentSetTable EquipmentSetTable { get; } = new();
 
+    public static EquipmentSynchroGroupTable EquipmentSynchroGroupTable { get; } = new();
+
     public static EquipmentTable EquipmentTable { get; } = new();
 
     public static ErrorCodeTable ErrorCodeTable { get; } = new();
@@ -329,6 +331,7 @@ public static class Masters
             EquipmentSetMaterialBoxTable,
             EquipmentSetMaterialTable,
             EquipmentSetTable,
+            EquipmentSynchroGroupTable,
             EquipmentTable,
             ErrorCodeTable,
             FriendCampaignTable,

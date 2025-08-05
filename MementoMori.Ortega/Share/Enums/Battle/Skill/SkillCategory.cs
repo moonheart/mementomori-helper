@@ -35,6 +35,8 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		SelfInjuryDamage,
 		[Description("復活")]
 		Resurrection = 50,
+		[Description("回復(演出なし)")]
+		SilenceHeal,
 		[Description("ステータス吸収")]
 		StatusDrain = 100,
 		[Description("印の効果")]

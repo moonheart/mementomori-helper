@@ -1,10 +1,15 @@
-﻿namespace MementoMori.Ortega.Share.Enums;
-
-public enum LockEquipmentDeckType
+﻿namespace MementoMori.Ortega.Share.Enums
 {
-    None,
-    League,
-    GuildTowerLatestBattle,
-    GuildTowerLatestRegistration,
-    GuildBattle
+	public enum LockEquipmentDeckType
+	{
+		None,
+		League,
+		GuildTowerLatestBattle,
+		GuildTowerLatestRegistration,
+		GuildBattle,
+		ElementTowerBlue,
+		ElementTowerRed,
+		ElementTowerGreen,
+		ElementTowerYellow
+	}
 }

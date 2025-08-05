@@ -75,6 +75,7 @@ namespace MementoMori.Ortega.Share.Enums
 		GuildTower,
 		Collab,
 		PopularityVote,
-		BookSort
+		BookSort,
+		RentalRaid
 	}
 }

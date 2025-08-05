@@ -12,6 +12,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("ゲーム登録日からの経過日数")]
 		GameStart,
 		[Description("カムバック日からの経過日数")]
-		ComeBack
+		ComeBack,
+		[Description("表示条件を満たしてからの経過日数(満たしてからn日目の23:59:59まで表示) ※PlayerId作成後経過日数条件のみ")]
+		MeetCreatePlayerCondition
 	}
 }

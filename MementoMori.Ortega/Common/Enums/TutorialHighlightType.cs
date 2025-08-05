@@ -9,6 +9,10 @@
 		Character23,
 		RefineParameter,
 		RecruitWaitSetting,
-		RecruitWaitPlayStyle
+		RecruitWaitPlayStyle,
+		EquipmentSynchroGroup,
+		EquipmentSynchroBaseCells,
+		EquipmentSynchroSynchroCell,
+		EquipmentSynchroUnlockGroup
 	}
 }

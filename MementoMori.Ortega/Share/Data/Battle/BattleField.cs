@@ -19,6 +19,8 @@ namespace MementoMori.Ortega.Share.Data.Battle
 
         public int ReceiveTeamTotalKillCount { get; set; }
 
+        public List<DamageBar> DamageBarList { get; set; }
+
         // [Obsolete("TODO 2019-12-05 takeda 使わないなら削除、使うならLinq排除")]
         // public List<long> JoinPlayerIds
         // {

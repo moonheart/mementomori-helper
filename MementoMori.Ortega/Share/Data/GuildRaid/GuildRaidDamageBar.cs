@@ -1,12 +1,10 @@
-﻿using MessagePack;
+﻿using MementoMori.Ortega.Share.Data.Battle;
+using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.GuildRaid
 {
 	[MessagePackObject(true)]
-	public class GuildRaidDamageBar
+	public class GuildRaidDamageBar: DamageBar
 	{
-		public int DamageBarCount { get; set; }
-
-		public long DamageBarMaxValue { get; set; }
 	}
 }

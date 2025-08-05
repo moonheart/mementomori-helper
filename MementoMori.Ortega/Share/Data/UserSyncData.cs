@@ -111,6 +111,8 @@ public class UserSyncData
     public List<UserDeckDtoInfo> UserDeckDtoInfos { get; set; }
 
     public List<UserEquipmentDtoInfo> UserEquipmentDtoInfos { get; set; }
+    
+    public UserEquipmentStatusDtoInfo UserEquipmentStatusDtoInfo { get; set; }
 
     public List<UserItemDtoInfo> UserItemDtoInfo { get; set; }
 
@@ -170,6 +172,7 @@ public class UserSyncData
         if (userSyncData.DataLinkageMap.IsNotNullOrEmpty()) DataLinkageMap = DataLinkageMap.Merge(userSyncData.DataLinkageMap);
         if (userSyncData.DeletedCharacterGuidList.IsNotNullOrEmpty()) UserCharacterDtoInfos.RemoveAll(d => userSyncData.DeletedCharacterGuidList.Contains(d.Guid));
         if (userSyncData.DeletedEquipmentGuidList.IsNotNullOrEmpty()) UserEquipmentDtoInfos.RemoveAll(d => userSyncData.DeletedEquipmentGuidList.Contains(d.Guid));
+        if (userSyncData.UserEquipmentStatusDtoInfo != null) UserEquipmentStatusDtoInfo = userSyncData.UserEquipmentStatusDtoInfo;
         if (userSyncData.ExistVipDailyGift != null) ExistVipDailyGift = userSyncData.ExistVipDailyGift;
         if (userSyncData.GivenItemCountInfoList.IsNotNullOrEmpty())
         {

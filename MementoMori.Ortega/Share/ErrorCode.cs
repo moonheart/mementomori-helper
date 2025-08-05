@@ -679,6 +679,8 @@ namespace MementoMori.Ortega.Share
 		GachaUserTutorialDtoNotFound,
 		[Description("ユーザーのセレクトリストデータが存在しません。")]
 		GachaUserGachaSelectListDtoNotFound,
+		[Description("ユーザーのスペシャルセレクトガチャ開催期間データが存在しません。")]
+		GachaUserGachaPeriodDtoNotFound,
 		[Description("バトルログが見つかりません。")]
 		BattleCommonBattleLogNotFound = 220000,
 		[Description("バトル詳細ログが見つかりません。")]
@@ -699,6 +701,10 @@ namespace MementoMori.Ortega.Share
 		EquipmentUserLockCharacterDtoNotFound,
 		[Description("一括研磨結果データが存在しません。")]
 		EquipmentBulkTrainingResultDtoNotFound,
+		[Description("武具情報データが存在しません。")]
+		EquipmentUserEquipmentStatusDtoNotFound,
+		[Description("武具シンクログループデータが存在しません。")]
+		EquipmentUserEquipmentSynchroGroupDtoNotFound,
 		[Description("同じ種類の宝石は装備できません。")]
 		EquipmentCanNotEquipSameKindSpheres = 232000,
 		[Description("その部位には装備できません。")]
@@ -813,6 +819,54 @@ namespace MementoMori.Ortega.Share
 		EquipmentNotEnoughMaxQuestIdBulkRefine,
 		[Description("一括研磨対象となる武具の追加効果がロックされています。")]
 		EquipmentBulkRefineLockedAdditionalParameter,
+		[Description("装備固定(属性の塔用)機能が解放されていません。")]
+		EquipmentLockEquipmentElementTowerNotOpen,
+		[Description("選択継承機能が解放されていません。")]
+		EquipmentSelectInheritanceNotOpen,
+		[Description("選択継承の対象が選択されていません。")]
+		EquipmentSelectInheritanceNotSelected,
+		[Description("選択継承で継承できない項目が選択されています。")]
+		EquipmentSelectInheritanceNotAllowed,
+		[Description("武具リセットの条件が足りません。")]
+		EquipmentInvalidResetCondition,
+		[Description("武具リセット機能が解放されていません。")]
+		EquipmentNotOpenReset,
+		[Description("武具リセット制限回数を超えています。")]
+		EquipmentOverMaxResetCount,
+		[Description("未開放の武器シンクログループです。")]
+		EquipmentSynchroGroupNotUnlocked,
+		[Description("武器シンクロ機能が解放されていません。")]
+		EquipmentSynchroNotOpen,
+		[Description("シンクロ枠が設定済みです。")]
+		EquipmentSynchroAlreadySetSynchroCell,
+		[Description("シンクロ対象外の武器です。")]
+		EquipmentSynchroNotAllowedEquipment,
+		[Description("他の枠に設定済みの武具です。")]
+		EquipmentSynchroAlreadySetAnotherCell,
+		[Description("解除対象のシンクロ枠に武器が設定されていません。")]
+		EquipmentSynchroNotSetSynchroCell,
+		[Description("シンクロ枠がクールタイム中です。")]
+		EquipmentSynchroIsInCoolTime,
+		[Description("ベース枠は0か、枠数分の武具を設定してください。")]
+		EquipmentSynchroNotAllowedBaseCellCount,
+		[Description("ベース枠の武具Guidが重複しています。")]
+		EquipmentSynchroDuplicateBaseCellGuid,
+		[Description("すでに解放済みのシンクログループです。")]
+		EquipmentSynchroGroupAlreadyUnlocked,
+		[Description("解放出来ないシンクログループです。")]
+		EquipmentSynchroGroupNotAllowedUnlock,
+		[Description("ベース枠が空のため、一括進化ができません。")]
+		EquipmentSynchroBulkEvolutionBaseCellEmpty,
+		[Description("一括進化出来ないレベルが指定されています。")]
+		EquipmentSynchroBulkEvolutionNotAllowedLevel,
+		[Description("受け取れるシンクロミッション報酬がありません。")]
+		EquipmentSynchroMissionUnavailableReward,
+		[Description("武器シンクロのシンクロ枠にセットされている武具は進化できません。")]
+		EquipmentSynchroSynchroCellEquipmentEvolutionNotAllowed,
+		[Description("武器シンクロにセットされている武具は分解できません。")]
+		EquipmentSynchroEquipmentTakeApartNotAllowed,
+		[Description("武器シンクロベース枠にセットされている武具はリセットできません。")]
+		EquipmentSynchroBaseEquipmentResetNotAllowed,
 		[Description("ユーザのフレンドデータが存在しません。")]
 		FriendUserFriendDtoNotFound = 241000,
 		[Description("ユーザのステータスデータが存在しません。")]
@@ -1623,6 +1677,44 @@ namespace MementoMori.Ortega.Share
 		PlayVideoCommentBanChat,
 		[Description("コメント内容を入力してください。")]
 		PlayVideoCommentEmpty,
+		[Description("コメント機能は使えません。")]
+		PlayVideoCommentNotAvailable,
+		[Description("レンタルレイドのユーザーデータが見つかりません。")]
+		RentalRaidNotFoundUserRentalRaidDto = 530000,
+		[Description("レンタルレイドのユーザーデイリーデータが見つかりません。")]
+		RentalRaidNotFoundUserRentalRaidDailyDto,
+		[Description("レンタルレイドの協力ポイントデータが見つかりません。")]
+		RentalRaidNotFoundUserRentalRaidSharePointDto,
+		[Description("レベルリンクデータが見つかりません。")]
+		RentalRaidNotFoundUserLevelLinkDto,
+		[Description("協力キャラデータが見つかりません。")]
+		RentalRaidNotFoundUserRentalRaidShareCharacterDto,
+		[Description("キャラクターデータが見つかりません。")]
+		RentalRaidNotFoundUserCharacterDto,
+		[Description("開催中のレンタルレイドがありません。")]
+		RentalRaidNotHeld = 531000,
+		[Description("指定した協力報酬がありません。")]
+		RentalRaidInvalidShareReward,
+		[Description("指定した協力報酬はすでに受け取っています。")]
+		RentalRaidAlreadyReceivedShareReward,
+		[Description("協力ポイントが不足しています。")]
+		RentalRaidNotEnoughSharePoint,
+		[Description("レンタルレイドが未解放です。")]
+		RentalRaidNotOpen,
+		[Description("利用できないバトルです。")]
+		RentalRaidInvalidBattleType = 532010,
+		[Description("クリア済みの通常ステージバトルです。")]
+		RentalRaidAlreadyClearedNormalStage,
+		[Description("後半ステージはまだ解放されていません。")]
+		RentalRaidNotOpenSecondHalfStage,
+		[Description("挑戦できないボスステージです。")]
+		RentalRaidInvalidBossStage,
+		[Description("ボスステージがまだ解放されていません。")]
+		RentalRaidNotOpenBossStage,
+		[Description("バトル挑戦期間が終了しています。")]
+		RentalRaidNotOpenBattle,
+		[Description("バトルデータがありません。")]
+		RentalRaidNotFoundRankingBattleLog,
 		[Description("存在しないTreasureChestです。")]
 		ItemOpenTreasureChestIdNotFound = 602004,
 		[Description("存在しないTreasureChestです。")]

@@ -23,6 +23,8 @@
 		ShowBossBattleButtonArrow,
 		ReleaseMyPage,
 		PreLoadMapObject,
-		MoveWorld
+		MoveWorld,
+		ReleaseEquipmentSynchro,
+		EquipmentSynchroUnlockGroup
 	}
 }

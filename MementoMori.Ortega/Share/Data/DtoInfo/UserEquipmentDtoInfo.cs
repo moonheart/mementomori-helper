@@ -43,6 +43,8 @@ namespace MementoMori.Ortega.Share.Data.DtoInfo
             MatchlessSacredTreasureExp = userEquipmentDtoInfo.MatchlessSacredTreasureExp;
             MatchlessSacredTreasureLv = userEquipmentDtoInfo.MatchlessSacredTreasureLv;
             ReinforcementLv = userEquipmentDtoInfo.ReinforcementLv;
+            BeforeSynchroEquipmentId = userEquipmentDtoInfo.BeforeSynchroEquipmentId;
+            SetBaseSynchroGroupId = userEquipmentDtoInfo.SetBaseSynchroGroupId;
         }
 
         [Description("付与パラメータ(体力)")]
@@ -92,6 +94,12 @@ namespace MementoMori.Ortega.Share.Data.DtoInfo
 
         [Description("強化レベル")]
         public long ReinforcementLv { get; set; }
+
+        [Description("シンクロ反映前の武具ID")]
+        public long BeforeSynchroEquipmentId { get; set; }
+
+        [Description("ベース枠に設定中のシンクログループID")]
+        public long SetBaseSynchroGroupId { get; set; }
 
         public long[] GetSphereIds()
         {

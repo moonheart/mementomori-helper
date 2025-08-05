@@ -19,6 +19,10 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("幻影の神殿の敵")]
 		LocalRaidEnemy,
 		[Description("ギルドツリーの敵")]
-		GuildTowerEnemy
+		GuildTowerEnemy,
+		[Description("レンタルレイドの敵")]
+		RentalRaidEnemy,
+		[Description("協力キャラクター")]
+		ShareCharacter
 	}
 }

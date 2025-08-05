@@ -9,6 +9,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("敵キャラクター")]
 		EnemyCharacter,
 		[Description("魔女クリファ")]
-		WitchQlipha
+		WitchQlipha,
+		[Description("協力キャラクター")]
+		ShareCharacter
 	}
 }

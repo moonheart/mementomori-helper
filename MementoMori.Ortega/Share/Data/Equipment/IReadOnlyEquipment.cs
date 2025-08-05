@@ -51,5 +51,14 @@ namespace MementoMori.Ortega.Share.Data.Equipment
 
         [Description("宝石スロット解放数")]
         long SphereUnlockedCount { get; }
+
+        [Description("シンクロ反映前の武具ID")]
+        long BeforeSynchroEquipmentId { get; set; }
+
+        [Description("ベース枠に設定中のシンクログループID")]
+        long SetBaseSynchroGroupId { get; set; }
+
+        [Description("プレイヤーID")]
+        long PlayerId { get; set; }
     }
 }

@@ -10,6 +10,8 @@ public class GachaCaseInfo
 
     public ElementType ElementType { get; set; }
 
+    public long DrawStartTime { get; set; }
+
     public long EndTime { get; set; }
 
     public int GachaBonusDrawCount { get; set; }
