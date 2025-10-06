@@ -61,6 +61,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("動画を一度も再生していない場合（マイページから遷移される動画）")]
 		PlayVideoFromMyPage,
 		[Description("動画を一度も再生していない場合（イベントポータルから遷移される動画）")]
-		PlayVideoFromEventPortal
+		PlayVideoFromEventPortal,
+		[Description("人気投票 グループ投票チケットを1枚以上もっているかつ、予選本選いずれかの期間内で、その日一度も投票してない時")]
+		NotPopularityVoteGroupOnDay
 	}
 }

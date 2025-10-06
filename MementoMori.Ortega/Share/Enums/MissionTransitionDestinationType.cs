@@ -71,6 +71,8 @@ namespace MementoMori.Ortega.Share.Enums
 		GuildRaid,
 		[Description("チャット")]
 		Chat = 1701,
+		[Description("チャット（ギルドタブ）")]
+		ChatGuild,
 		[Description("各OSのストア")]
 		OsStore = 1801,
 		[Description("キャラ詳細")]

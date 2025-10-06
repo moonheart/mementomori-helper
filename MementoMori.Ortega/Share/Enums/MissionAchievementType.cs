@@ -269,6 +269,8 @@ namespace MementoMori.Ortega.Share.Enums
 		GuildGuildRaidChallengeCount = 16020100,
 		[Description("ワールドチャット発言回数")]
 		ChatSayWorldChatCount = 17010100,
+		[Description("ギルドチャット発言回数")]
+		ChatSayGuildChatCount = 17010200,
 		[Description("アップデート回数")]
 		OsStoreUpdateCount = 18010100,
 		[Description("パネル図鑑遷移")]
@@ -303,6 +305,8 @@ namespace MementoMori.Ortega.Share.Enums
 		WeeklyTopicsTransitionCount = 24010100,
 		[Description("人気投票チケットの消費数")]
 		ConsumePopularityVoteTicket = 25010100,
+		[Description("グループ投票チケットの消費数")]
+		ConsumeGroupVotingTicket = 25010200,
 		[Description("魔女の書庫整理 マス解放数")]
 		BookSortUnlockGridCell = 26010100,
 		[Description("魔女の書庫整理 最大到達フロア")]

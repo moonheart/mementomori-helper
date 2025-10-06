@@ -101,6 +101,8 @@ namespace MementoMori.Ortega.Share.Enums
 		MissionPassPoint,
 		[Description("懸賞チケット")]
 		SweepstakesTicket,
+		[Description("グループ投票チケット")]
+		GroupVotingTicket,
 		[Description("イベント交換所アイテム")]
 		EventExchangePlaceItem = 50,
 		[Description("シンクロハンマー")]

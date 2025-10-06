@@ -60,18 +60,22 @@ namespace MementoMori.Ortega.Share.Master.Data
 		public string TermsTextKey { get; }
 
 		[PropertyOrder(18)]
+		[Description("貢献メダルタイプ")]
+		public int ActivityMedalType { get; }
+
+		[PropertyOrder(19)]
 		[Description("対象ミッションIDリスト")]
 		public IReadOnlyList<long> TargetMissionIdList { get; }
 
-		[PropertyOrder(20)]
+		[PropertyOrder(21)]
 		[Description("Url1")]
 		public string Url1 { get; }
 
-		[PropertyOrder(21)]
+		[PropertyOrder(22)]
 		[Description("Url2")]
 		public string Url2 { get; }
 
-		[PropertyOrder(22)]
+		[PropertyOrder(23)]
 		[Description("キャラクターID(楽曲開放ミッション用)")]
 		public long CharacterId { get; }
 
@@ -96,13 +100,13 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("応募対象アイテムリスト")]
 		public IReadOnlyList<SweepstakesItem> SweepstakesItemList { get; }
 
-		[PropertyOrder(19)]
+		[PropertyOrder(20)]
 		[Description("お知らせタブ")]
 		public long NoticeGroupId { get; }
 
 
         [SerializationConstructor]
-        public CollabMissionMB(long id, bool? isIgnore, string memo, StartEndTimeZoneType startEndTimeZoneType, string startTime, string endTime, int imageId, float imageX, float imageY, float imageSize, string descriptionTextKey, string sweepstakesDescriptionTextKey, string titleTextKey, string sweepstakesTitleTextKey, string termsTextKey, IReadOnlyList<long> targetMissionIdList, string url1, string url2, long characterId, MypageIconDisplayLocationType mypageIconDisplayLocationType, IReadOnlyList<long> sweepstakesTargetTimeServerIdList, long sweepstakesTicketItemId, int sweepstakesEntryUpperLimit, IReadOnlyList<SweepstakesItem> sweepstakesItemList, long noticeGroupId)
+        public CollabMissionMB(long id, bool? isIgnore, string memo, StartEndTimeZoneType startEndTimeZoneType, string startTime, string endTime, int imageId, float imageX, float imageY, float imageSize, string descriptionTextKey, string sweepstakesDescriptionTextKey, string titleTextKey, int activityMedalType, string sweepstakesTitleTextKey, string termsTextKey, IReadOnlyList<long> targetMissionIdList, string url1, string url2, long characterId, MypageIconDisplayLocationType mypageIconDisplayLocationType, IReadOnlyList<long> sweepstakesTargetTimeServerIdList, long sweepstakesTicketItemId, int sweepstakesEntryUpperLimit, IReadOnlyList<SweepstakesItem> sweepstakesItemList, long noticeGroupId)
 			: base(id, isIgnore, memo)
 		{
             StartEndTimeZoneType = startEndTimeZoneType;
@@ -118,6 +122,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             SweepstakesTitleTextKey = sweepstakesTitleTextKey;
             TermsTextKey = termsTextKey;
             TargetMissionIdList = targetMissionIdList ?? new List<long>();
+            ActivityMedalType = activityMedalType;
             Url1 = url1;
             Url2 = url2;
             CharacterId = characterId;

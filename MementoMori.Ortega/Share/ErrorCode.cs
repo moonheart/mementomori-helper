@@ -1505,6 +1505,12 @@ namespace MementoMori.Ortega.Share
 		PopularityVoteUnavailablePreliminaryResult,
 		[Description("本選結果を確認できる期限ではありません。")]
 		PopularityVoteUnavailableFinalResult,
+		[Description("グループ投票形式ではありません。")]
+		PopularityVoteNotGroupVote,
+		[Description("グループ投票のリクエストが不正です。")]
+		PopularityVoteGroupVoteInvalid,
+		[Description("グループ投票対象に設定できないキャラクターです。")]
+		PopularityVoteNotFoundGroupEntryCharacter,
 		[Description("シリアルコードに間違いがあるか不正な文字が含まれています。")]
 		SerialCodeInvalidCode = 450001,
 		[Description("シリアルコードの有効期限が終了しました。")]
@@ -1973,6 +1979,8 @@ namespace MementoMori.Ortega.Share
 		NotSupportedRemoteNotificationIgnoreType,
 		[Description("不正なリクエストです。")]
 		PushNotificationNotDefinedLanguageType,
+		[Description("不正なリクエストです。")]
+		GvGPushSettingInvalidRequest,
 		[Description("DMM GAME PLAYERからゲームを起動しなおしてください。")]
 		DmmOneTimeTokenExpired = 5000100,
 		[Description("不正なリクエストです。")]

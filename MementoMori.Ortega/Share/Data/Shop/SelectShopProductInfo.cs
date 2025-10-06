@@ -14,5 +14,7 @@ namespace MementoMori.Ortega.Share.Data.Shop
         public string ProductId { get; set; }
 
         public ShopProductType ShopProductType { get; set; }
+
+        public long ExpirationTime { get; set; }
 	}
 }

@@ -59,6 +59,8 @@ namespace MementoMori.Ortega.Share.Data.Battle
 
         public DungeonBattleInfo DungeonBattleInfo { get; set; }
 
+        public int RentalRaidMaxHpRate { get; set; }
+
         public BattleFieldCharacter()
         {
         }

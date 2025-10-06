@@ -99,6 +99,8 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		EnemyAttack = 50,
 		[Description("被致命的ダメージ時回復")]
 		RecoveryFromInstantDeathDamage = 52,
+		[Description("被致命的ダメージ時（即時戦闘不能無効）")]
+		InstantDeathDamageIgnoreFixDamage,
 		[Description("特殊ダメージ死亡(毒、共鳴など)")]
 		SpecialDamageDead = 62
 	}
