@@ -51,6 +51,8 @@ namespace MementoMori.Ortega.Share
 		CommonNotFoundCurrentMaxClearQuestId,
 		[Description("プレイヤー生成日の情報がありません。")]
 		CommonNotFoundCreatePlayerTimestamp,
+		[Description("未許可のクライアントからの通信です。")]
+		CommonInvalidClient = 2000,
 		[Description("ユーザーデータがありません")]
 		AuthNotFoundUserAccountDto = 10001,
 		[Description("ユーザーのプレイヤーデータが存在しません")]
@@ -1379,6 +1381,14 @@ namespace MementoMori.Ortega.Share
 		MusicInvalidMusicId,
 		[Description("プレイリストの曲数上限を超えています。")]
 		MusicOverMaxPlaylistMusicCount,
+		[Description("プレイリストの共有コード生成に失敗しました。")]
+		MusicFailedGeneratePlaylistShareCode,
+		[Description("プレイリストに曲が一つも存在しないと共有できません。")]
+		MusicNotEnoughMusicCountInPlaylist,
+		[Description("共有されたプレイリストを見つけませんでした。")]
+		MusicNotFoundSharePlaylist,
+		[Description("プレイリストの共有期限がきれました。")]
+		MusicExpiredSharePlaylist,
 		[Description("ユーザーのアカウント情報が存在しません")]
 		TutorialAccountDtoNotFound = 401000,
 		[Description("ユーザーのステータス情報が存在しません")]
@@ -1721,6 +1731,12 @@ namespace MementoMori.Ortega.Share
 		RentalRaidNotOpenBattle,
 		[Description("バトルデータがありません。")]
 		RentalRaidNotFoundRankingBattleLog,
+		[Description("購入できない商品です。")]
+		ChatShopInvalidBuyItem = 542000,
+		[Description("購入済みです。")]
+		ChatShopAlreadyBuyItem,
+		[Description("不正なアイテム種類です。")]
+		ChatShopInvalidItemType = 542010,
 		[Description("存在しないTreasureChestです。")]
 		ItemOpenTreasureChestIdNotFound = 602004,
 		[Description("存在しないTreasureChestです。")]

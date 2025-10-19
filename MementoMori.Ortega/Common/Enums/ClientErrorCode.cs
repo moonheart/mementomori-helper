@@ -270,6 +270,7 @@
 		ChatIsInCoolTimeAnnounce,
 		ChatNotEditableAnnounce,
 		ChatCanNotDeleteOtherPlayerAnnounce,
+		ChatShopAlreadyPurchased,
 		GuildSurveyNotExist = 1201001,
 		GuildSurveyAlreadyMaxCount,
 		GuildSurveyNotInputLimitDateTime,
@@ -376,6 +377,10 @@
 		MusicPlayerNotModified,
 		MusicPlayerNotExistSelectableMusics,
 		MusicPlayerSelectedAllMusics,
+		MusicPlayerCannotSaveEmpty,
+		MusicPlayerInputShareCodeInvalid = 2400101,
+		MusicPlayerMenuMusicListIsEmpty,
+		MusicPlayerChatCannotPlayMusic,
 		GuildTowerNotSelectDifficulty = 2500001,
 		GuildTowerNotExistChallengeCount,
 		GuildTowerExistCharacterWithoutLockEquipment,
@@ -451,7 +456,7 @@
 		CollabMissionNotExistTicket,
 		CollabMissionNotEntry,
 		LiveTicketAgreement = 3500001,
-		BattleReportShareNotInGuild = 3600001,
+		ShareChatSelectNotInGuild = 3600001,
 		PlayVideoBannedComment = 3700001,
 		PlayVideoLiveMode,
 		PlayVideoAlreadySendCommentToday,
@@ -463,6 +468,8 @@
 		EquipmentSynchroNotSelectedWeapon,
 		RentalRaidAlreadyCleared = 39000001,
 		RentalRaidChallengePeriodEnded,
-		RentalRaidMaxCoopCharactersExceeded
+		RentalRaidMaxCoopCharactersExceeded,
+		DeepLinkTutorial = 40000001,
+		DeepLinkPurchaseState
 	}
 }

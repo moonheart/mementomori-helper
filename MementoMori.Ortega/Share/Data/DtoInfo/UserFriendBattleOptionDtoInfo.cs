@@ -14,5 +14,7 @@ namespace MementoMori.Ortega.Share.Data.DtoInfo
 		public bool IsUsedBattleLeagueDeckInDefenseParty { get; set; }
 
 		public bool IsAllowedBattle { get; set; }
+        
+        public string DefenseDeckComment { get; set; }
 	}
 }

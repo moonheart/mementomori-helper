@@ -16,6 +16,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("通知強制削除")]
 		NotificationForceCancel = 10000,
 		[Description("GooglePlayのレシート消費をクライアントで行う")]
-		EnableGooglePlayReceiptConsumeByClient
+		EnableGooglePlayReceiptConsumeByClient,
+		[Description("Deeplinkのエラー判定 PurchaseStateType.FetchProductWaitチェック有効")]
+		CheckDeeplinkPurchaseStateFetchProductWait
 	}
 }

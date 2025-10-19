@@ -181,6 +181,14 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		Skill1CoolTimeIncrease,
 		[Description("スキル2のクールタイムを増加")]
 		Skill2CoolTimeIncrease,
+		[Description("ランダムなバフ効果のターン数を増やす")]
+		ExtendRandomBuffTurn = 3031,
+		[Description("ランダムなデバフ効果のターン数を増やす")]
+		ExtendRandomDeBuffTurn,
+		[Description("ランダムなバフ効果のターン数を減らす")]
+		ReduceRandomBuffTurn,
+		[Description("ランダムなデバフ効果のターン数を減らす")]
+		ReduceRandomDeBuffTurn,
 		[Description("すべてのバフ効果のターンを増やす")]
 		ExtendAllBuffTurn = 3041,
 		[Description("すべてのデバフ効果のターンを増やす")]
@@ -227,10 +235,10 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		MoveBuffToMeFromEnemy,
 		[Description("自分のデバフを敵に移す")]
 		MoveDebuffToEnemyFromMe,
-        [Description("ターゲットのバフを指定数コピー")]
-        CopyBuffTargetToSelf,
-        [Description("自分のデバフをターゲットに指定数コピー")]
-        CopyDeBuffSelfToTarget,
+		[Description("ターゲットのバフを指定数コピー")]
+		CopyBuffTargetToSelf,
+		[Description("自分のデバフをターゲットに指定数コピー")]
+		CopyDeBuffSelfToTarget,
 		[Description("スピード減少")]
 		SpeedDown = 5001,
 		[Description("最大HP減少")]

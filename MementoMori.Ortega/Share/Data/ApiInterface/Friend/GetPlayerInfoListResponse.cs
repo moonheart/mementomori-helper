@@ -22,6 +22,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Friend
 		public List<PlayerInfo> PlayerInfoList { get; set; }
 
 		public int ReceivedFriendPointCount { get; set; }
+        
+        public Dictionary<long, string> FriendBattleDefenseDeckCommentMap { get; set; }
 
         public UserSyncData UserSyncData { get; set; }
 	}

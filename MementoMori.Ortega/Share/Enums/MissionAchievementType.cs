@@ -279,6 +279,8 @@ namespace MementoMori.Ortega.Share.Enums
 		MusicPlayerTransitionCount = 22010100,
 		[Description("指定楽曲開放")]
 		BuyMusic = 22010200,
+		[Description("楽曲プレイリスト共有")]
+		ShareMusicPlaylist = 22010300,
 		[Description("ギルドツリーで1つのタイプのキャラを〇体以上使って戦闘に勝利")]
 		GuildTowerWinUnitSameJobTypeBase = 23010100,
 		[Description("ギルドツリーで1つのタイプのキャラを1体以上使って戦闘に勝利")]

@@ -9,5 +9,9 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Battle
 		public long QuestId { get; set; }
 
 		public int QuickCount { get; set; }
+
+        public bool IsAvailableBossChallengeTicket { get; set; }
+
+        public long TargetEquipmentSetMaterialId { get; set; }
 	}
 }

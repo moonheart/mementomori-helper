@@ -10,6 +10,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Battle
 		public List<BattleReward> BattleRewardList { get; set; }
 		public BattleRewardResult BattleRewardResult { get; set; }
 
+        public int ConsumeBossChallengeTicketCount { get; set; }
+
 		public UserSyncData UserSyncData { get; set; }
 
 		public BossQuickResponse()

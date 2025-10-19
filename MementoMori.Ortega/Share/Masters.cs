@@ -258,6 +258,8 @@ public static class Masters
 
     public static MusicTable MusicTable { get; } = new();
 
+    public static ChatEmoticonTable ChatEmoticonTable { get; } = new();
+
     public static VipTable VipTable { get; } = new();
 
     public static WorldGroupTable WorldGroupTable { get; } = new();
@@ -401,6 +403,7 @@ public static class Masters
             PatternSettingTable,
             SpecialIconItemTable,
             MusicTable,
+            ChatEmoticonTable,
             DownloadRawDataTable,
             PopularityVoteTable
         };
