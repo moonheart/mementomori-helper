@@ -13,5 +13,7 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Equipment
         public List<EquipmentChangeInfo> EquipmentChangeInfos { get; set; }
 
         public bool IsBulk { get; set; }
+
+        public int Code { get; set; }
     }
 }

@@ -8,6 +8,8 @@
 		Twitter,
 		Facebook,
 		GameCenter,
-		GooglePlay
+		GooglePlay,
+        Dmm,
+        Steam
 	}
 }

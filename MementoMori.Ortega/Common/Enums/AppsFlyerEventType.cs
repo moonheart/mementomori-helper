@@ -15,7 +15,9 @@
 		map_achieved_2_14,
 		map_achieved_4_18,
 		map_achieved_6_22,
-		level_achieved_50,
+		level_achieved_30 = 35,
+		level_achieved_40,
+		level_achieved_50 = 13,
 		level_achieved_60 = 33,
 		level_achieved_70 = 14,
 		level_achieved_80 = 34,
@@ -36,6 +38,19 @@
 		gacha_100_3days,
 		gacha_200_3days,
 		gacha_300_3days,
-		join_guild
+		join_guild,
+		purchase_first = 10000,
+		purachase_3times,
+		purchase_5times,
+		purchase_10times,
+		purchase_11800_first = 20000,
+		purchase_11800_3times,
+		chat_guild_first = 30000,
+		chat_guild_10times,
+		purchase_achievementpack = 40000,
+		total_purchase_1000 = 50000,
+		total_purchase_3000,
+		total_purchase_5000,
+		total_purchase_10000
 	}
 }

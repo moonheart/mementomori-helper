@@ -35,7 +35,16 @@
 		AmbLocalRaid,
 		AmbTowerBattle,
 		CharacterMainSong = 9001,
-		CharacterSubSong,
-		QliphaSong
+		ScenarioCharacterSong,
+		QliphaSong,
+		Monologue,
+		NewCharacter,
+		CharacterDetail,
+		PickupGacha,
+		PlayList,
+		RankingCharacterSong,
+		EventPortalCharacterSong,
+		PopularityVoteCharacterSong,
+		TitleCharacterSong
 	}
 }

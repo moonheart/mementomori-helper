@@ -6,8 +6,6 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Battle
 	[MessagePackObject(true)]
 	public class GetPvpInfoRequest : ApiRequestBase
 	{
-		public GetPvpInfoRequest()
-		{
-		}
+        public bool IsRankingTab { get; set; }
 	}
 }

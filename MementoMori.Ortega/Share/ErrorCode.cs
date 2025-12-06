@@ -633,6 +633,8 @@ namespace MementoMori.Ortega.Share
 		GuildRaidAlreadyRewardWorldItem,
 		[Description("ギルドレイドの期限外です。")]
 		GuildRaidNotOpenGuildRaid,
+		[Description("受取可能な報酬を全て受取済みです。")]
+		GuildRaidNotExistReceivableReward,
 		[Description("ガチャ開催中です。")]
 		GachaAlreadyBeenOpened = 200110,
 		[Description("既にその聖遺物が選択されています。")]
@@ -1209,6 +1211,8 @@ namespace MementoMori.Ortega.Share
 		GlobalGvgNotFoundReceivableReward = 302003,
 		[Description("指定されたパーティが存在しません。")]
 		GlobalGvgNotFoundParty,
+		[Description("マッチング処理中です。")]
+		GlobalGvgNotMatchingYet,
 		[Description("ユーザのレベルリンクデータが見つかりません")]
 		LevelLinkUserLevelLinkDtoNotFound = 311000,
 		[Description("ユーザのキャラクターデータが見つかりません")]
@@ -1925,6 +1929,8 @@ namespace MementoMori.Ortega.Share
 		MagicOnionGlobalGvgAddCastlePartyNotFoundCharacterCache,
 		[Description("グランドバトルの参加条件を満たしていません。")]
 		MagicOnionNotJoinedGrandBattle,
+		[Description("グランドバトルのマッチング処理中です。")]
+		MagicOnionNotMatchingYetGlobalBattle,
 		[Description("認証に失敗しました。")]
 		MagicOnionAuthenticationFail = 1000000,
 		[Description("プレイヤーの情報を見つけません。")]

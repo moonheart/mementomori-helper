@@ -15,5 +15,7 @@ public class LoginPlayerRequest : ApiRequestBase, IHasSteamTicketApiRequest
 
     public List<MusicPlayerPlayLogInfo> MusicPlayerPlayLogInfoList { get; set; }
 
+    public List<MusicPlayerPlayLogInfo> CustomMusicSettingPlayLogInfoList { get; set; }
+
     public string SteamTicket { get; set; }
 }
