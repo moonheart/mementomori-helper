@@ -1,0 +1,21 @@
+{
+    "assemblies": [
+        "bin/Debug/net10.0/MementoMori.Api.dll"
+    ],
+    "fileNameConverters": [
+        "PascalCaseToCamelCase"
+    ],
+    "typeNameConverters": [],
+    "propertyNameConverters": [
+        "PascalCaseToCamelCase"
+    ],
+    "enumValueNameConverters": [],
+    "externalAssemblyPaths": [],
+    "createIndexFile": true,
+    "outputPath": "../../src/api/generated",
+    "customTypeMappings": {
+        "System.Guid": "string",
+        "System.DateTime": "Date",
+        "System.DateTimeOffset": "Date"
+    }
+}

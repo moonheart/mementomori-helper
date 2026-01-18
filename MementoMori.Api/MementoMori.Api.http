@@ -1,0 +1,6 @@
+@MementoMori.Api_HostAddress = http://localhost:5127
+
+GET {{MementoMori.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
