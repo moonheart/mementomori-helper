@@ -1,13 +1,16 @@
-﻿using MementoMori.Ortega.Share.Enums;
+﻿using MementoMori.Ortega.Share.Data.Interface;
+using MementoMori.Ortega.Share.Enums;
 using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.Auth
 {
     [MessagePackObject(true)]
-    public class PlayerDataInfo
+    public class PlayerDataInfo : IPlayerIconInfo
     {
         public long CharacterId { get; set; }
 
+		public long IconEffectId { get; set; }
+     
         public long LastLoginTime { get; set; }
 
         public LegendLeagueClassType LegendLeagueClass { get; set; }
@@ -24,6 +27,21 @@ namespace MementoMori.Ortega.Share.Data.Auth
 
         public PlayerDataInfo()
         {
+        }
+
+        long IPlayerIconInfo.GetIconId()
+        {
+            return CharacterId;
+        }
+
+        long IPlayerIconInfo.GetIconEffectId()
+        {
+            return IconEffectId;
+        }
+
+        LegendLeagueClassType IPlayerIconInfo.GetLegendLeagueClass()
+        {
+            return LegendLeagueClass;
         }
     }
 }

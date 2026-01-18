@@ -1,7 +1,6 @@
-﻿using System;
-using MementoMori.Ortega.Share.Enums;
+﻿using MementoMori.Ortega.Share.Enums;
 
-namespace Ortega.Share.Data.Interface
+namespace MementoMori.Ortega.Share.Data.Interface
 {
 	public interface ICharacterInfo
 	{

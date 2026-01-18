@@ -84,6 +84,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("ギルドバトル布告")]
 		GuildBattleDeclaration,
 		[Description("グランドバトル布告")]
-		GrandBattleDeclaration
+		GrandBattleDeclaration,
+        [Description("お手伝い派遣")]
+        BookSortAssistance = 41
 	}
 }

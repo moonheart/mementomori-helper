@@ -23,6 +23,8 @@ namespace MementoMori.Ortega.Share.Data.DtoInfo
 
         public long MainCharacterIconId { get; set; }
 
+        public long MainCharacterIconEffectId { get; set; }
+
         public long FavoriteCharacterId1 { get; set; }
 
         public long FavoriteCharacterId2 { get; set; }

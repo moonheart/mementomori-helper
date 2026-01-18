@@ -23,6 +23,8 @@ public class GachaResultItem : IUserItem
 
     public ItemType ItemType { get; set; }
 
+    public bool IsSentPresentBox { get; set; }
+
     public IUserItem GetUserItem()
     {
         if (ItemType != ItemType.Character)

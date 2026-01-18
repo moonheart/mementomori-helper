@@ -1,7 +1,7 @@
 ﻿using MementoMori.Ortega.Share.Data.Character;
+using MementoMori.Ortega.Share.Data.Interface;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
-using Ortega.Share.Data.Interface;
 
 namespace MementoMori.Ortega.Share.Data.DtoInfo
 {

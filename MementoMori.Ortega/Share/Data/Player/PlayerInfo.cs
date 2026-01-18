@@ -1,12 +1,13 @@
 ﻿using System.Runtime.CompilerServices;
 using MementoMori.Ortega.Share.Data.Character;
+using MementoMori.Ortega.Share.Data.Interface;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.Player
 {
     [MessagePackObject(true)]
-    public class PlayerInfo
+    public class PlayerInfo : IPlayerIconInfo
     {
         public long BackgroundCharacterId { get; set; }
 
@@ -43,6 +44,8 @@ namespace MementoMori.Ortega.Share.Data.Player
         public long LocalRaidBattlePower { get; set; }
 
         public long MainCharacterIconId { get; set; }
+
+        public long MainCharacterIconEffectId { get; set; }
 
         public string NpcNameKey { get; set; }
 
@@ -88,6 +91,21 @@ namespace MementoMori.Ortega.Share.Data.Player
         public string GetPlayerName()
         {
             return null;
+        }
+
+        long IPlayerIconInfo.GetIconId()
+        {
+            return MainCharacterIconId;
+        }
+
+        long IPlayerIconInfo.GetIconEffectId()
+        {
+            return MainCharacterIconEffectId;
+        }
+
+        LegendLeagueClassType IPlayerIconInfo.GetLegendLeagueClass()
+        {
+            return PrevLegendLeagueClass;
         }
     }
 }

@@ -411,6 +411,8 @@ namespace MementoMori.Ortega.Share
 		BattlePvpLegendLeagueIconRewardLimitTimeOver,
 		[Description("アイコン報酬購入済みです")]
 		BattlePvpLegendLeagueIconRewardAlreadyBuy,
+		[Description("アイコン報酬購入上限回数を超えました")]
+		BattlePvpLegendLeagueIconRewardBuyCountLimit,
 		[Description("ユーザーのボスバトルデータがありません")]
 		BattleBossUserBountyQuestDtoNotFound = 141000,
 		[Description("ユーザーデータがありません")]
@@ -1657,11 +1659,17 @@ namespace MementoMori.Ortega.Share
 		GuildSurveyDifferentGuildSurvey,
 		[Description("魔女の書庫整理情報が見つかりません。")]
 		BookSortNotFoundUserBookSortDto = 500000,
+		[Description("お手伝い派遣クエスト情報が見つかりません。")]
+		BookSortNotFoundUserBookSortAssistanceQuestDto,
+		[Description("お手伝い派遣派遣対象キャラクター情報が見つかりません。")]
+		BookSortNotFoundUserCharacterDto,
+		[Description("お手伝い派遣情報が見つかりません。")]
+		BookSortNotFoundUserBookSortAssistanceDto,
 		[Description("魔女の書庫整理が解放されていません。")]
 		BookSortEventNotOpen = 501000,
 		[Description("魔女の書庫整理が開催されていません。")]
 		BookSortEventNotHeld,
-		[Description("すでに当たりマスを解放済みです。")]
+		[Description("すでに当たりマスと鍵マスを解放済みです。")]
 		BookSortEventCurrentFloorAlreadyFinished,
 		[Description("ボーナスフロア報酬が未選択です。")]
 		BookSortEventNotSelectBonusFloorReward,
@@ -1669,7 +1677,7 @@ namespace MementoMori.Ortega.Share
 		BookSortEventChangeBonusFloorRewardLineup,
 		[Description("ボーナスフロアではないフロアです。")]
 		BookSortEventNotBonusFloor,
-		[Description("まだ当たりマスを解放していません。")]
+		[Description("まだ当たりマスと鍵マスを解放していません。")]
 		BookSortEventCurrentFloorNotFinish,
 		[Description("枠外が解放対象に指定されています。")]
 		BookSortEventUnlockOutsideFrame,
@@ -1681,6 +1689,26 @@ namespace MementoMori.Ortega.Share
 		BookSortEventNotEnoughLockedGridCellBulkUnlock,
 		[Description("選択できないボーナスフロア報酬です。")]
 		BookSortEventNotSelectableBonusFloorReward,
+		[Description("派遣期間が終了しています。")]
+		BookSortAssistanceNotHeld,
+		[Description("派遣対象の指定が不正です。")]
+		BookSortAssistanceNotAvailableDispatchQuest,
+		[Description("一括派遣が解放されていません。")]
+		BookSortAssistanceNotAvailableBulkDispatch,
+		[Description("派遣できないクエストのステータスです。")]
+		BookSortAssistanceNotAvailableDispatchStatus,
+		[Description("前日以前に発生したお手伝い派遣クエストです。")]
+		BookSortAssistanceNotSameDayQuest,
+		[Description("派遣済みのキャラクターIDです。")]
+		BookSortAssistanceAlreadyUsedCharacter,
+		[Description("報酬獲得出来ないステータスです。")]
+		BookSortAssistanceNotAvailableRewardStatus,
+		[Description("解放出来るお手伝い派遣枠がありません。")]
+		BookSortAssistanceNotAvailableAddAssistance,
+		[Description("指定の派遣対象クエストが重複しています。")]
+		BookSortAssistanceDuplicateQuestGuid,
+		[Description("指定の派遣対象キャラクターが重複しています。")]
+		BookSortAssistanceDuplicateCharacterGuid,
 		[Description("開催中のコラボミッションがありません。")]
 		SweepstakesCollabMissionNotHeld = 510000,
 		[Description("懸賞対象の時間サーバーではありません。")]
@@ -1741,6 +1769,14 @@ namespace MementoMori.Ortega.Share
 		ChatShopAlreadyBuyItem,
 		[Description("不正なアイテム種類です。")]
 		ChatShopInvalidItemType = 542010,
+		[Description("交換条件を満たしていません。")]
+		IconEffectNotEnoughTradeCondition = 552000,
+		[Description("既に解放済みのアイコンエフェクトです。")]
+		IconEffectAlreadyUnlocked,
+		[Description("アイコンエフェクトが解放されていません。")]
+		IconEffectLocked,
+		[Description("アイコンエフェクト設定に失敗しました。")]
+		IconEffectSetFailed = 552010,
 		[Description("存在しないTreasureChestです。")]
 		ItemOpenTreasureChestIdNotFound = 602004,
 		[Description("存在しないTreasureChestです。")]

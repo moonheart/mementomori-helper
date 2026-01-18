@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Master.Attributes;
 using MementoMori.Ortega.Share.Utils;
@@ -38,12 +39,27 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("ボーナスフロア個別設定")]
 		public IReadOnlyList<int> BonusFloorList { get; }
 
-		[PropertyOrder(8)]
-		[Description("アイコン表示箇所")]
-		public MypageIconDisplayLocationType MypageIconDisplayLocationType { get; }
+        [Nest(false, 0)]
+        [PropertyOrder(8)]
+        [Description("当たり抽選係数Aリスト")]
+        public IReadOnlyList<WinningLotteryCoefficient> LotteryWinCoefficientListA { get; }
+
+        [Nest(false, 0)]
+        [PropertyOrder(9)]
+        [Description("当たり抽選係数Bリスト")]
+        public IReadOnlyList<WinningLotteryCoefficient> LotteryWinCoefficientListB { get; }
+
+        [Nest(false, 0)]
+        [PropertyOrder(10)]
+        [Description("当たり抽選係数Cリスト")]
+        public IReadOnlyList<WinningLotteryCoefficient> LotteryWinCoefficientListC { get; }
+
+        [PropertyOrder(11)]
+        [Description("アイコン表示箇所")]
+        public MypageIconDisplayLocationType MypageIconDisplayLocationType { get; }
 
 		[SerializationConstructor]
-		public BookSortEventMB(long id, bool? isIgnore, string memo, StartEndTimeZoneType startEndTimeZoneType, string startTime, string endTime, IReadOnlyList<long> targetMissionIdList, long transferShopTabId, int bonusFloorRepeat, IReadOnlyList<int> bonusFloorList, MypageIconDisplayLocationType mypageIconDisplayLocationType)
+        public BookSortEventMB(long id, bool? isIgnore, string memo, StartEndTimeZoneType startEndTimeZoneType, string startTime, string endTime, IReadOnlyList<long> targetMissionIdList, long transferShopTabId, int bonusFloorRepeat, IReadOnlyList<int> bonusFloorList, IReadOnlyList<WinningLotteryCoefficient> lotteryWinCoefficientListA, IReadOnlyList<WinningLotteryCoefficient> lotteryWinCoefficientListB, IReadOnlyList<WinningLotteryCoefficient> lotteryWinCoefficientListC, MypageIconDisplayLocationType mypageIconDisplayLocationType)
 			: base(id, isIgnore, memo)
 		{
             this.StartEndTimeZoneType = startEndTimeZoneType;
@@ -53,6 +69,9 @@ namespace MementoMori.Ortega.Share.Master.Data
             this.TransferShopTabId = transferShopTabId;
             this.BonusFloorRepeat = bonusFloorRepeat;
             this.BonusFloorList = bonusFloorList;
+            this.LotteryWinCoefficientListA = lotteryWinCoefficientListA;
+            this.LotteryWinCoefficientListB = lotteryWinCoefficientListB;
+            this.LotteryWinCoefficientListC = lotteryWinCoefficientListC;
             this.MypageIconDisplayLocationType = mypageIconDisplayLocationType;
 		}
 

@@ -6,7 +6,7 @@ using MessagePack;
 namespace MementoMori.Ortega.Share.Data.ApiInterface.User;
 
 [MessagePackObject(true)]
-public class GetMypageResponse : ApiResponseBase, IGuildSyncApiResponse, IUserSyncApiResponse
+public class GetMypageResponse : ApiResponseBase, IUserSyncApiResponse
 {
     public List<long> DisplayNoticeIdList { get; set; }
 
@@ -31,8 +31,6 @@ public class GetMypageResponse : ApiResponseBase, IGuildSyncApiResponse, IUserSy
     public List<long> UnreadIndividualNotificationIdList { get; set; }
 
     public List<UserFriendDtoInfo> UserFriendDtoInfoList { get; set; }
-
-    public GuildSyncData GuildSyncData { get; set; }
 
     public UserSyncData UserSyncData { get; set; }
     

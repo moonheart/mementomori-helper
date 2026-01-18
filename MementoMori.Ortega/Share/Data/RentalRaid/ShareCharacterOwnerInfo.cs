@@ -1,11 +1,12 @@
 ﻿using System.Runtime.CompilerServices;
+using MementoMori.Ortega.Share.Data.Interface;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.RentalRaid
 {
 	[MessagePackObject(true)]
-	public class ShareCharacterOwnerInfo
+	public class ShareCharacterOwnerInfo : IPlayerIconInfo, IShareCharacterOwnerInfo
 	{
         public string CharacterGuid { get; set; }
 
@@ -15,6 +16,24 @@ namespace MementoMori.Ortega.Share.Data.RentalRaid
 
 		public long MainCharacterIconId { get; set; }
 
+        public long MainCharacterIconEffectId { get; set; }
+
 		public LegendLeagueClassType PrevLegendLeagueClass { get; set; }
-	}
+        long IPlayerIconInfo.GetIconId()
+        {
+            return MainCharacterIconId;
+        }
+
+        long IPlayerIconInfo.GetIconEffectId()
+        {
+            return MainCharacterIconEffectId;
+        }
+
+        LegendLeagueClassType IPlayerIconInfo.GetLegendLeagueClass()
+        {
+            return PrevLegendLeagueClass;
+        }
+
+        IPlayerIconInfo IShareCharacterOwnerInfo.PlayerIconInfo => this;
+    }
 }

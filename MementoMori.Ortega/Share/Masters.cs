@@ -63,6 +63,8 @@ public static class Masters
     public static BookSortBonusFloorRewardTable BookSortBonusFloorRewardTable { get; } = new();
 
     public static BookSortEventTable BookSortEventTable { get; } = new();
+    
+	public static BookSortAssistanceTable BookSortAssistanceTable { get; } = new();
 
     public static BossBattleEnemyTable BossBattleEnemyTable { get; } = new();
 
@@ -301,6 +303,7 @@ public static class Masters
             BoardRankTable,
             BookSortBonusFloorRewardTable,
             BookSortEventTable,
+            BookSortAssistanceTable,
             BossBattleEnemyTable,
             BountyQuestEventTable,
             ChangeItemTable,

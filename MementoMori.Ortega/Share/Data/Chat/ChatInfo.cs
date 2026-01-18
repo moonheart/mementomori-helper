@@ -1,14 +1,18 @@
 ﻿using System.Runtime.CompilerServices;
+using MementoMori.Ortega.Share.Data.Interface;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.Chat
 {
 	[MessagePackObject(false)]
-	public class ChatInfo
+	public class ChatInfo : IPlayerIconInfo
 	{
 		[Key(0)]
 		public long CharacterId { get; set; }
+
+        [Key(15)]
+        public long IconEffectId { get; set; }
 
 		[Key(13)]
 		public ChatBattleInfo ChatBattleInfo { get; set; }
@@ -58,5 +62,19 @@ namespace MementoMori.Ortega.Share.Data.Chat
 		// 	chatIdentityInfo.<SendLocalTimestamp>k__BackingField = num2;
 		// 	return chatIdentityInfo;
 		// }
-	}
+        long IPlayerIconInfo.GetIconId()
+        {
+            return CharacterId;
+        }
+
+        long IPlayerIconInfo.GetIconEffectId()
+        {
+            return IconEffectId;
+        }
+
+        LegendLeagueClassType IPlayerIconInfo.GetLegendLeagueClass()
+        {
+            return LegendLeagueClass;
+        }
+    }
 }

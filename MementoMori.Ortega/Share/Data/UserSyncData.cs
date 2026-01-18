@@ -1,8 +1,10 @@
 ﻿using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.ServerLib.Models.MySql.Dto;
 using MementoMori.Ortega.Share.Data.Chat;
+using MementoMori.Ortega.Share.Data.ChatShop;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Equipment;
+using MementoMori.Ortega.Share.Data.IconEffect;
 using MementoMori.Ortega.Share.Data.Item;
 using MementoMori.Ortega.Share.Data.Shop;
 using MementoMori.Ortega.Share.Enums;
@@ -160,6 +162,10 @@ public class UserSyncData
     public bool? ExistPurchasableOneWeekLimitedPack { get; set; }
 
     public ChatSettingData ChatSettingData { get; set; }
+    
+    public List<ChatShopItem> ChatEmoticonList { get; set; }
+    
+    public List<CharacterIconEffect> CharacterIconEffectList { get; set; }
 
     public void UserItemEditorMergeUserSyncData(UserSyncData userSyncData)
     {
@@ -253,5 +259,8 @@ public class UserSyncData
         if (userSyncData.ReceivedGuildTowerFloorRewardIdList.IsNotNullOrEmpty())
             ReceivedGuildTowerFloorRewardIdList = ReceivedGuildTowerFloorRewardIdList.Merge(userSyncData.ReceivedGuildTowerFloorRewardIdList);
         if (userSyncData.ExistPurchasableOneWeekLimitedPack != null) ExistPurchasableOneWeekLimitedPack = userSyncData.ExistPurchasableOneWeekLimitedPack;
+        if (userSyncData.ChatEmoticonList.IsNotNullOrEmpty()) ChatEmoticonList = userSyncData.ChatEmoticonList;
+        if (userSyncData.CharacterIconEffectList.IsNotNullOrEmpty()) CharacterIconEffectList = userSyncData.CharacterIconEffectList;
+        
     }
 }
