@@ -1,81 +1,63 @@
-using MementoMori;
-using MementoMori.Apis;
-using MementoMori.Api.Hubs;
-using MementoMori.Common;
-using MementoMori.Jobs;
-using MementoMori.Option;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi;
-using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// Add services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
-// Configure Swagger/OpenAPI
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "MementoMori API",
         Version = "v1",
-        Description = "MementoMori Game Helper API"
-    });
-    
-    // Include XML comments for better API documentation
-    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    if (File.Exists(xmlPath))
-    {
-        options.IncludeXmlComments(xmlPath);
-    }
-});
-
-// Configure CORS for frontend
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins("http://localhost:5173", "http://localhost:3000") // Vite default port
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // Required for SignalR
+        Description = "MementoMori Game Helper REST API"
     });
 });
 
 // Add SignalR
 builder.Services.AddSignalR();
 
-// Add Quartz services for scheduled jobs
-builder.Services.AddQuartz();
-builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", "http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
-// TODO: Add MementoMori services (AccountManager, NetworkManager, etc.)
-// builder.Services.AddMementoMori();
+// Add HttpClient
+builder.Services.AddHttpClient();
+
+// Register infrastructure services
+builder.Services.AddSingleton<MementoMori.Api.Infrastructure.NetworkManager>();
+
+// Register account manager (Singleton)
+builder.Services.AddSingleton<MementoMori.Api.Services.AccountManager>();
+
+// Register application services
+builder.Services.AddScoped<MementoMori.Api.Services.AccountCredentialService>();
+builder.Services.AddScoped<MementoMori.Api.Services.AuthService>();
+builder.Services.AddScoped<MementoMori.Api.Services.AccountService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+// Configure middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MementoMori API V1");
-    });
+    app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-// Enable CORS
-app.UseCors("AllowFrontend");
-
+app.UseCors();
 app.UseAuthorization();
-
 app.MapControllers();
-
-// Map SignalR hubs
-app.MapHub<GameHub>("/hubs/game");
 
 app.Run();

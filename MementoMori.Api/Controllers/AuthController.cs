@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using TypeGen.Core.TypeAnnotations;
+using MementoMori.Api.Models;
+using MementoMori.Api.Services;
+using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
 
 namespace MementoMori.Api.Controllers;
 
@@ -7,69 +10,102 @@ namespace MementoMori.Api.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    /// <summary>
-    /// Get list of configured accounts
-    /// </summary>
-    [HttpGet("accounts")]
-    public ActionResult<List<AccountInfo>> GetAccounts()
+    private readonly ILogger<AuthController> _logger;
+    private readonly AccountService _accountService;
+
+    public AuthController(ILogger<AuthController> logger, AccountService accountService)
     {
-        // TODO: Implement account management
-        return Ok(new List<AccountInfo>
-        {
-            new AccountInfo { Id = 1, Name = "Account 1", IsActive = true },
-            new AccountInfo { Id = 2, Name = "Account 2", IsActive = false }
-        });
+        _logger = logger;
+        _accountService = accountService;
     }
 
     /// <summary>
-    /// Add a new account
+    /// Get all accounts
     /// </summary>
-    [HttpPost("accounts")]
-    public ActionResult<AccountInfo> AddAccount([FromBody] AddAccountRequest request)
+    [HttpGet("accounts")]
+    public ActionResult<List<AccountDto>> GetAccounts()
     {
-        // TODO: Implement add account logic
-        var account = new AccountInfo
+        var accounts = _accountService.GetAllAccounts();
+        return Ok(accounts);
+    }
+
+    /// <summary>
+    /// Add a new account with ClientKey (Method 1)
+    /// </summary>
+    [HttpPost("accounts/with-clientkey")]
+    public ActionResult<AccountDto> AddAccountWithClientKey([FromBody] AddAccountWithClientKeyRequest request)
+    {
+        try
         {
-            Id = 100,
-            Name = request.Name,
-            IsActive = false
-        };
-        return CreatedAtAction(nameof(GetAccounts), new { id = account.Id }, account);
+            var account = _accountService.AddAccount(
+                request.UserId,
+                request.ClientKey,
+                request.Name
+            );
+            return Ok(account);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to add account with ClientKey");
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Add a new account with Password (Method 2 - get ClientKey from password)
+    /// </summary>
+    [HttpPost("accounts/with-password")]
+    public async Task<ActionResult<GetClientKeyResponse>> AddAccountWithPassword([FromBody] AddAccountWithPasswordRequest request)
+    {
+        try
+        {
+            var result = await _accountService.AddAccountWithPasswordAsync(
+                request.UserId,
+                request.Password,
+                request.Name
+            );
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to add account with password");
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     /// <summary>
     /// Delete an account
     /// </summary>
-    [HttpDelete("accounts/{id}")]
-    public ActionResult DeleteAccount(long id)
+    [HttpDelete("accounts/{userId}")]
+    public ActionResult DeleteAccount(long userId)
     {
-        // TODO: Implement delete account logic
-        return NoContent();
+        try
+        {
+            _accountService.DeleteAccount(userId);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to delete account {UserId}", userId);
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     /// <summary>
-    /// Set active account
+    /// Login to account
     /// </summary>
-    [HttpPost("accounts/{id}/activate")]
-    public ActionResult ActivateAccount(long id)
+    [HttpPost("login")]
+    public async Task<ActionResult<SimpleLoginResponse>> Login([FromBody] SimpleLoginRequest request)
     {
-        // TODO: Implement activate account logic
-        return Ok();
+        try
+        {
+            var result = await _accountService.LoginAsync(request.UserId, request.ClientKey);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Login failed for user {UserId}", request.UserId);
+            return BadRequest(new { error = ex.Message });
+        }
     }
-}
-
-[ExportTsClass]
-public class AccountInfo
-{
-    public long Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
-}
-
-[ExportTsClass]
-public class AddAccountRequest
-{
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
 }

@@ -1,35 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- OpenAPI/Swagger -->
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.0" />
-    <PackageReference Include="NSwag.AspNetCore" Version="14.2.0" />
     
     <!-- SignalR -->
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     
-    <!-- Quartz.NET for scheduled jobs -->
-    <PackageReference Include="Quartz" Version="3.15.1" />
-    <PackageReference Include="Quartz.AspNetCore" Version="3.15.1" />
-    
     <!-- TypeGen for generating TypeScript types -->
     <PackageReference Include="TypeGen" Version="7.0.0" />
+    
+    <!-- Newtonsoft.Json for JSON handling -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Reference existing projects -->
-    <ProjectReference Include="..\MementoMori\MementoMori.csproj" />
+    <!-- Only reference necessary shared projects -->
     <ProjectReference Include="..\MementoMori.Ortega\MementoMori.Ortega.csproj" />
     <ProjectReference Include="..\MementoMori.Common\MementoMori.Common.csproj" />
   </ItemGroup>
-
 </Project>
