@@ -1,7 +1,12 @@
 {
     "assemblies": [
-        "bin/Debug/net10.0/MementoMori.Api.dll"
+        "bin/Debug/net10.0/MementoMori.Api.dll",
+        "bin/Debug/net10.0/MementoMori.Ortega.dll"
     ],
+    "generationSpecs": [
+        "MementoMori.Api.TypeGen.OrtegaGenerationSpec"
+    ],
+    "generateFromAssemblies": true,
     "fileNameConverters": [
         "PascalCaseToCamelCase"
     ],

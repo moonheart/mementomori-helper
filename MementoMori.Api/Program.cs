@@ -39,6 +39,10 @@ builder.Services.AddHttpClient();
 // Register infrastructure services
 builder.Services.AddSingleton<MementoMori.Api.Infrastructure.NetworkManager>();
 
+// Register Ortega proxy services
+builder.Services.AddSingleton<MementoMori.Api.Services.OrtegaApiDiscoveryService>();
+builder.Services.AddScoped<MementoMori.Api.Infrastructure.OrtegaInvoker>();
+
 // Register account manager (Singleton)
 builder.Services.AddSingleton<MementoMori.Api.Services.AccountManager>();
 
