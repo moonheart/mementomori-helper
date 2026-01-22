@@ -46,6 +46,7 @@ builder.Services.AddSingleton<MementoMori.Api.Services.AccountManager>();
 builder.Services.AddScoped<MementoMori.Api.Services.AccountCredentialService>();
 builder.Services.AddScoped<MementoMori.Api.Services.AuthService>();
 builder.Services.AddScoped<MementoMori.Api.Services.AccountService>();
+builder.Services.AddScoped<MementoMori.Api.Services.MissionService>();
 
 var app = builder.Build();
 
@@ -57,6 +58,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
+
+// Add User ID authentication middleware
+app.UseMiddleware<MementoMori.Api.Middleware.UserIdAuthenticationMiddleware>();
+
 app.UseAuthorization();
 app.MapControllers();
 

@@ -5,6 +5,7 @@ riderModule.iml
 /_ReSharper.Caches/
 /MementoMori.WebUI/appsettings.dev.json
 /MementoMori.WebUI/Master/
+/MementoMori.Api/Master/
 /MementoMori.BotServer/Master/
 /MementoMori.BotServer/appsettings*
 /Master/
