@@ -51,7 +51,8 @@ namespace MementoMori.Api.TypeGen
                     && IsValidType(t)
                     && t.Namespace != null
                     && (t.Namespace.StartsWith("MementoMori.Ortega.Share.Data")
-                        || t.Namespace.StartsWith("MementoMori.Ortega.Share.Enums"))
+                        || t.Namespace.StartsWith("MementoMori.Ortega.Share.Enums")
+                        || t.Namespace.StartsWith("MementoMori.Ortega.Share.Master.Data"))
                     && !t.IsSubclassOf(typeof(ApiRequestBase))
                     && !t.IsSubclassOf(typeof(ApiResponseBase)));
 
