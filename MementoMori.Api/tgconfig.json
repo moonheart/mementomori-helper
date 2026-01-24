@@ -8,9 +8,12 @@
     ],
     "generateFromAssemblies": true,
     "fileNameConverters": [
-        "PascalCaseToCamelCase"
+        "PascalCaseToCamelCase",
+        "bin/Debug/net10.0/MementoMori.Api.dll:MementoMori.Api.TypeGen.OrtegaTypeNameConverter"
     ],
-    "typeNameConverters": [],
+    "typeNameConverters": [
+        "bin/Debug/net10.0/MementoMori.Api.dll:MementoMori.Api.TypeGen.OrtegaTypeNameConverter"
+    ],
     "propertyNameConverters": [
         "PascalCaseToCamelCase"
     ],

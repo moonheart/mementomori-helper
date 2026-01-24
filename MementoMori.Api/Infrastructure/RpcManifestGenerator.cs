@@ -14,8 +14,8 @@ namespace MementoMori.Api.Infrastructure
             var typesToImport = new HashSet<string>();
             foreach (var api in apis.Values)
             {
-                typesToImport.Add(api.RequestType.Name);
-                typesToImport.Add(api.ResponseType.Name);
+                typesToImport.Add(GetTsTypeName(api.RequestType));
+                typesToImport.Add(GetTsTypeName(api.ResponseType));
             }
             var sortedTypes = typesToImport.OrderBy(t => t).ToList();
 
@@ -24,6 +24,21 @@ namespace MementoMori.Api.Infrastructure
 
             // === 2. 生成 ortega-client.ts (运行时辅助对象) ===
             GenerateClient(sortedApis, Path.Combine(outputDir, "ortega-client.ts"));
+        }
+
+        private static string GetTsTypeName(Type type)
+        {
+            const string apiNsBase = "MementoMori.Ortega.Share.Data.ApiInterface";
+            if (type.Namespace != null && type.Namespace.StartsWith(apiNsBase) && type.Namespace.Length > apiNsBase.Length)
+            {
+                var subNs = type.Namespace.Substring(apiNsBase.Length).TrimStart('.');
+                if (!string.IsNullOrEmpty(subNs))
+                {
+                    var parts = subNs.Split('.');
+                    return parts[0] + type.Name; // 同步 OrtegaGenerationSpec 的重命名逻辑
+                }
+            }
+            return type.Name;
         }
 
         private static void GenerateManifest(List<OrtegaApiInfo> sortedApis, List<string> sortedTypes, string outputPath)
@@ -44,8 +59,8 @@ namespace MementoMori.Api.Infrastructure
             foreach (var api in sortedApis)
             {
                 sb.AppendLine($"    \"{api.Uri}\": {{");
-                sb.AppendLine($"        request: {api.RequestType.Name};");
-                sb.AppendLine($"        response: {api.ResponseType.Name};");
+                sb.AppendLine($"        request: {GetTsTypeName(api.RequestType)};");
+                sb.AppendLine($"        response: {GetTsTypeName(api.ResponseType)};");
                 sb.AppendLine("    };");
             }
             sb.AppendLine("}");
