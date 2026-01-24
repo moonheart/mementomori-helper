@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using MementoMori.Ortega.Share;
 using MementoMori.Ortega.Share.Master;
 using MessagePack;
 using Microsoft.Extensions.Hosting;
@@ -121,6 +122,8 @@ public class MasterDataService : BackgroundService
             }
 
             _logger.LogInformation("Master sync completed. Updated: {Updated}, Skipped: {Skipped}", updatedCount, skippedCount);
+
+            Masters.LoadAllMasters();
         }
         catch (Exception ex)
         {

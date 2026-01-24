@@ -412,25 +412,6 @@ public static class Masters
         };
     }
 
-    // public static List<ITable> LoadAllClientMasters(LanguageType languageType)
-    // {
-    //     var tables = new List<ITable>();
-    //     
-    //     TextResourceTable.SetLanguageType(languageType);
-    //
-    //     var allTables = GetAllTables();
-    //     for (var i = 0; i < allTables.Length; i++)
-    //     {
-    //      allTables[i].Load();
-    //         tables.Add(allTables[i]);
-    //     }
-    //
-    //     var clientTables = GetClientTables();
-    //     for (var i = 0; i < clientTables.Length; i++)
-    //     {
-    //      tables.Add(clientTables[i]);
-    //     }
-    // }
     public static bool LoadAllMasters()
     {
         foreach (var allTable in GetAllTables())
@@ -446,53 +427,5 @@ public static class Masters
         }
 
         return true;
-    }
-
-    private static ITable[] GetClientTables()
-    {
-        var array = new ITable[19];
-        array[0] = TextResourceTable;
-        array[1] = TextLanguageTable;
-        array[2] = CharacterProfileTable;
-        array[3] = CharacterDetailVoiceTable;
-        array[4] = CommunityTable;
-        array[5] = TipTable;
-        array[6] = EquipmentExclusiveSkillDescriptionTable;
-        array[7] = BattleSkillCharacterSettingTable;
-        array[8] = BattleSkillNameSettingTable;
-        array[9] = HelpTable;
-        array[10] = TutorialDescriptionTable;
-        array[11] = TutorialTextBoxTable;
-        array[12] = LocalPushNotificationTable;
-        array[13] = InquiryButtonTable;
-        array[14] = FaqListTable;
-        array[15] = TermsTable;
-        array[16] = LocalRaidBannerTable;
-        array[17] = DeepLinkTable;
-        array[18] = GachaDestinyAddCharacterTable;
-        return array;
-    }
-
-    public static bool LoadAllClientMast1ers(LanguageType languageType)
-    {
-        var textResourceTable = TextResourceTable;
-        var flag = CharacterProfileTable.Load();
-        var flag2 = CharacterDetailVoiceTable.Load();
-        var flag3 = CommunityTable.Load();
-        var flag4 = EffectGroupTable.Load();
-        var flag5 = TipTable.Load();
-        var flag6 = EquipmentExclusiveSkillDescriptionTable.Load();
-        var flag7 = BattleSkillCharacterSettingTable.Load();
-        var flag8 = BattleSkillNameSettingTable.Load();
-        var flag9 = HelpTable.Load();
-        var flag10 = TutorialDescriptionTable.Load();
-        var flag11 = TutorialTextBoxTable.Load();
-        var flag12 = LocalPushNotificationTable.Load();
-        var flag13 = InquiryButtonTable.Load();
-        var flag14 = FaqListTable.Load();
-        var flag15 = TermsTable.Load();
-        var flag16 = LocalRaidBannerTable.Load();
-        var flag17 = DeepLinkTable.Load();
-        return GachaDestinyAddCharacterTable.Load();
     }
 }
