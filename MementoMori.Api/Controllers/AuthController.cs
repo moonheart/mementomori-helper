@@ -77,11 +77,11 @@ public class AuthController : ControllerBase
     /// Delete an account
     /// </summary>
     [HttpDelete("accounts/{userId}")]
-    public ActionResult DeleteAccount(long userId)
+    public async Task<ActionResult> DeleteAccount(long userId)
     {
         try
         {
-            _accountService.DeleteAccount(userId);
+            await _accountService.DeleteAccountAsync(userId);
             return NoContent();
         }
         catch (Exception ex)

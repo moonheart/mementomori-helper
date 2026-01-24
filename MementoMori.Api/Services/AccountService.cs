@@ -10,18 +10,15 @@ public class AccountService
     private readonly ILogger<AccountService> _logger;
     private readonly AccountManager _accountManager;
     private readonly AccountCredentialService _credentialService;
-    private readonly AuthService _authService;
 
     public AccountService(
         ILogger<AccountService> logger,
         AccountManager accountManager,
-        AccountCredentialService credentialService,
-        AuthService authService)
+        AccountCredentialService credentialService)
     {
         _logger = logger;
         _accountManager = accountManager;
         _credentialService = credentialService;
-        _authService = authService;
     }
 
     public List<AccountDto> GetAllAccounts()
@@ -74,20 +71,26 @@ public class AccountService
         }
     }
 
-    public void DeleteAccount(long userId)
+    public async Task DeleteAccountAsync(long userId)
     {
-        _accountManager.DeleteAccount(userId);
+        await _accountManager.DeleteAccountAsync(userId);
     }
 
     public async Task<SimpleLoginResponse> LoginAsync(long userId, string clientKey)
     {
         try
         {
-            // 获取账户上下文
-            var context = _accountManager.GetOrCreate(userId);
-            
-            // 使用该账户的 NetworkManager 获取玩家世界
-            var playerDataList = await _authService.GetPlayerDataAsync(userId, clientKey);
+            // 1. 获取账户上下文（包含专属 NetworkManager）
+            var context = await _accountManager.GetOrCreateAsync(userId);
+            var nm = context.NetworkManager;
+
+            // 2. 获取玩家数据列表（这会同时在 NetworkManager 内部缓存 LoginRequest）
+            var loginRequest = new MementoMori.Ortega.Share.Data.ApiInterface.Auth.LoginRequest
+            {
+                UserId = userId,
+                ClientKey = clientKey
+            };
+            var playerDataList = await nm.GetPlayerDataInfoListAsync(loginRequest);
             
             if (playerDataList == null || playerDataList.Count == 0)
             {
@@ -100,13 +103,17 @@ public class AccountService
                 };
             }
 
-            // 选择最近登录的世界
+            // 3. 选择最近登录的世界
             var latestWorld = playerDataList.OrderByDescending(p => p.LastLoginTime).First();
             
-            // 更新账号登录状态
+            // 4. 执行真正登录流程（发送 LoginPlayerRequest，建立 Session）
+            _logger.LogInformation("Attempting full login for user {UserId} on World {WorldId}", userId, latestWorld.WorldId);
+            await nm.LoginAsync(latestWorld.WorldId);
+            
+            // 5. 更新本地账号登录状态
             _accountManager.UpdateLoginStatus(userId, true, latestWorld.WorldId);
             
-            _logger.LogInformation("Login successful. WorldId: {WorldId}", latestWorld.WorldId);
+            _logger.LogInformation("Login successful and Session established. WorldId: {WorldId}", latestWorld.WorldId);
             
             return new SimpleLoginResponse
             {

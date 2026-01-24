@@ -28,7 +28,7 @@ public class MissionService
         try
         {
             // 获取账户上下文
-            var context = _accountManager.GetOrCreate(userId);
+            var context = await _accountManager.GetOrCreateAsync(userId);
             var networkManager = context.NetworkManager;
 
             _logger.LogInformation("Getting mission info for user {UserId}", userId);
@@ -71,7 +71,7 @@ public class MissionService
         try
         {
             // 获取账户上下文
-            var context = _accountManager.GetOrCreate(userId);
+            var context = await _accountManager.GetOrCreateAsync(userId);
             var networkManager = context.NetworkManager;
 
             _logger.LogInformation("Claiming mission rewards for user {UserId}, mission IDs: {MissionIds}", 
@@ -118,7 +118,7 @@ public class MissionService
         try
         {
             // 获取账户上下文
-            var context = _accountManager.GetOrCreate(userId);
+            var context = await _accountManager.GetOrCreateAsync(userId);
             var networkManager = context.NetworkManager;
 
             _logger.LogInformation("Claiming activity reward for user {UserId}, type: {Type}, count: {Count}", 

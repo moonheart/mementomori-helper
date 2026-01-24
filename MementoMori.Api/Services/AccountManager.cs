@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using MementoMori.Api.Infrastructure;
+using MementoMori.Api.Infrastructure.Database;
 using MementoMori.Api.Models;
 
 namespace MementoMori.Api.Services;
@@ -11,74 +12,87 @@ public class AccountContext
 {
     public AccountDto AccountInfo { get; set; } = null!;
     public NetworkManager NetworkManager { get; set; } = null!;
-    // TODO: 添加其他业务服务实例
-    // public ShopService ShopService { get; set; }
-    // public MissionService MissionService { get; set; }
 }
 
 /// <summary>
 /// 账户管理器 - 单例服务
-/// 管理所有游戏账号及其独立的业务实例
+/// 管理所有游戏账号及其独立的业务实例，使用 SQLite (FreeSql) 持久化
 /// </summary>
 public class AccountManager
 {
     private readonly ILogger<AccountManager> _logger;
-    private readonly ILoggerFactory _loggerFactory;
-    private readonly IConfiguration _configuration;
-    private readonly ConcurrentDictionary<long, AccountContext> _accounts = new();
-    private readonly string _accountsFile;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IFreeSql _fsql;
+    
+    // 内存中的活跃账户上下文（包含 NetworkManager 和实时登录状态）
+    private readonly ConcurrentDictionary<long, Lazy<Task<AccountContext>>> _activeAccounts = new();
 
-    public AccountManager(ILogger<AccountManager> logger, ILoggerFactory loggerFactory, IConfiguration configuration)
+    public AccountManager(ILogger<AccountManager> logger, IServiceProvider serviceProvider, IFreeSql fsql)
     {
         _logger = logger;
-        _loggerFactory = loggerFactory;
-        _configuration = configuration;
-        _accountsFile = Path.Combine(Directory.GetCurrentDirectory(), "accounts.json");
-        
-        // 启动时加载账户信息（不创建实例）
-        LoadAccountInfos();
+        _serviceProvider = serviceProvider;
+        _fsql = fsql;
     }
 
     /// <summary>
     /// 获取或创建账户上下文
     /// </summary>
-    public AccountContext GetOrCreate(long userId)
+    public async Task<AccountContext> GetOrCreateAsync(long userId)
     {
-        return _accounts.GetOrAdd(userId, id =>
+        return await _activeAccounts.GetOrAdd(userId, id =>
         {
-            _logger.LogInformation("Creating account context for user {UserId}", id);
-            
-            // 加载账户信息
-            var accountInfo = LoadAccountInfos().FirstOrDefault(a => a.UserId == id);
-            if (accountInfo == null)
+            return new Lazy<Task<AccountContext>>(async () =>
             {
-                throw new InvalidOperationException($"Account {id} not found");
-            }
+                _logger.LogInformation("Creating account context for user {UserId}", id);
 
-            // 为该账户创建独立的 NetworkManager 实例
-            var networkManagerLogger = _loggerFactory.CreateLogger<NetworkManager>();
-            var networkManager = new NetworkManager(networkManagerLogger, _configuration);
+                // 从数据库加载账户信息
+                var entity = await _fsql.Select<AccountEntity>()
+                    .Where(a => a.UserId == id)
+                    .FirstAsync();
 
-            // 设置 UserId
-            networkManager.UserId = id;
+                if (entity == null)
+                {
+                    throw new InvalidOperationException($"Account {id} not found in database");
+                }
 
-            // 创建账户上下文
-            var context = new AccountContext
-            {
-                AccountInfo = accountInfo,
-                NetworkManager = networkManager
-            };
+                var accountInfo = MapToDto(entity);
 
-            return context;
-        });
+                // 为该账户创建独立的 NetworkManager 实例
+                var networkManager = _serviceProvider.GetRequiredService<NetworkManager>();
+                networkManager.UserId = id;
+
+                // 创建账户上下文
+                var context = new AccountContext
+                {
+                    AccountInfo = accountInfo,
+                    NetworkManager = networkManager
+                };
+                return context;
+            });
+        }).Value;
     }
 
     /// <summary>
-    /// 获取所有账户信息（不创建实例）
+    /// 获取所有账户信息
     /// </summary>
     public List<AccountDto> GetAllAccountInfos()
     {
-        return LoadAccountInfos();
+        var entities = _fsql.Select<AccountEntity>().ToList();
+        var dtos = entities.Select(MapToDto).ToList();
+
+        // 填充内存中的登录状态
+        foreach (var dto in dtos)
+        {
+            if (_activeAccounts.TryGetValue(dto.UserId, out var lazyContext) && lazyContext.IsValueCreated)
+            {
+                // 注意：这里可能需要从已创建的 context 中获取实际状态，
+                // 但为了简单，我们假设只要在 activeAccounts 中且已登录就是 true
+                // 实际上 UpdateLoginStatus 会同步更新这些 DTO
+                dto.IsLoggedIn = lazyContext.Value.Result.AccountInfo.IsLoggedIn;
+            }
+        }
+
+        return dtos;
     }
 
     /// <summary>
@@ -86,106 +100,81 @@ public class AccountManager
     /// </summary>
     public AccountDto AddAccount(long userId, string clientKey, string name)
     {
-        var accounts = LoadAccountInfos();
-        
-        if (accounts.Any(a => a.UserId == userId))
+        if (_fsql.Select<AccountEntity>().Where(a => a.UserId == userId).Any())
         {
             throw new InvalidOperationException($"Account {userId} already exists");
         }
 
-        var account = new AccountDto
+        var entity = new AccountEntity
         {
             UserId = userId,
             ClientKey = clientKey,
             Name = name
         };
 
-        accounts.Add(account);
-        SaveAccountInfos(accounts);
+        _fsql.Insert(entity).ExecuteAffrows();
 
-        return account;
+        return MapToDto(entity);
     }
 
     /// <summary>
     /// 删除账号
     /// </summary>
-    public void DeleteAccount(long userId)
+    public async Task DeleteAccountAsync(long userId)
     {
-        var accounts = LoadAccountInfos();
-        var account = accounts.FirstOrDefault(a => a.UserId == userId);
+        // 从数据库删除
+        await _fsql.Delete<AccountEntity>().Where(a => a.UserId == userId).ExecuteAffrowsAsync();
         
-        if (account != null)
+        // 从活跃缓存中移除并释放资源
+        if (_activeAccounts.TryRemove(userId, out var lazyContext))
         {
-            accounts.Remove(account);
-            SaveAccountInfos(accounts);
-            
-            // 从缓存中移除
-            if (_accounts.TryRemove(userId, out var context))
+            if (lazyContext.IsValueCreated)
             {
-                // 释放资源
+                var context = await lazyContext.Value;
                 context.NetworkManager?.Dispose();
-                _logger.LogInformation("Removed account context for user {UserId}", userId);
+            }
+            _logger.LogInformation("Removed active account context for user {UserId}", userId);
+        }
+    }
+
+    /// <summary>
+    /// 更新账号登录状态（仅内存更新持久化部分字段）
+    /// </summary>
+    public void UpdateLoginStatus(long userId, bool isLoggedIn, long? worldId = null)
+    {
+        // 1. 更新数据库中的持久化字段（LastLoginTime, CurrentWorldId）
+        if (isLoggedIn)
+        {
+            _fsql.Update<AccountEntity>()
+                .Set(a => a.LastLoginTime, DateTime.Now)
+                .Set(a => a.CurrentWorldId, worldId)
+                .Where(a => a.UserId == userId)
+                .ExecuteAffrows();
+        }
+
+        // 2. 更新内存中活跃上下文的状态
+        if (_activeAccounts.TryGetValue(userId, out var lazyContext) && lazyContext.IsValueCreated)
+        {
+            var accountInfo = lazyContext.Value.Result.AccountInfo;
+            accountInfo.IsLoggedIn = isLoggedIn;
+            if (isLoggedIn)
+            {
+                accountInfo.LastLoginTime = DateTime.Now;
+                accountInfo.CurrentWorldId = worldId;
             }
         }
     }
 
-    /// <summary>
-    /// 更新账号登录状态
-    /// </summary>
-    public void UpdateLoginStatus(long userId, bool isLoggedIn, long? worldId = null)
+    private AccountDto MapToDto(AccountEntity entity)
     {
-        var accounts = LoadAccountInfos();
-        var account = accounts.FirstOrDefault(a => a.UserId == userId);
-        
-        if (account != null)
+        return new AccountDto
         {
-            account.IsLoggedIn = isLoggedIn;
-            account.LastLoginTime = isLoggedIn ? DateTime.Now : account.LastLoginTime;
-            account.CurrentWorldId = worldId;
-            SaveAccountInfos(accounts);
-        }
-    }
-
-    /// <summary>
-    /// 加载账户信息
-    /// </summary>
-    private List<AccountDto> LoadAccountInfos()
-    {
-        if (!File.Exists(_accountsFile))
-        {
-            return new List<AccountDto>();
-        }
-
-        try
-        {
-            var json = File.ReadAllText(_accountsFile);
-            return System.Text.Json.JsonSerializer.Deserialize<List<AccountDto>>(json) 
-                   ?? new List<AccountDto>();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to load accounts");
-            return new List<AccountDto>();
-        }
-    }
-
-    /// <summary>
-    /// 保存账户信息
-    /// </summary>
-    private void SaveAccountInfos(List<AccountDto> accounts)
-    {
-        try
-        {
-            var json = System.Text.Json.JsonSerializer.Serialize(accounts, new System.Text.Json.JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
-            File.WriteAllText(_accountsFile, json);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to save accounts");
-            throw;
-        }
+            UserId = entity.UserId,
+            ClientKey = entity.ClientKey,
+            Name = entity.Name,
+            LastLoginTime = entity.LastLoginTime,
+            CurrentWorldId = entity.CurrentWorldId,
+            IsLoggedIn = false // 初始状态为未登录，由 UpdateLoginStatus 或内存状态决定
+        };
     }
 }

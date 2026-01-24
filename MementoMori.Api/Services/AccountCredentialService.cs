@@ -13,15 +13,17 @@ public class AccountCredentialService
     private readonly ILogger<AccountCredentialService> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly NetworkManager _networkManager;
+    private readonly VersionService _versionService;
 
     public AccountCredentialService(
         ILogger<AccountCredentialService> logger,
         IHttpClientFactory httpClientFactory,
-        NetworkManager networkManager)
+        NetworkManager networkManager, VersionService versionService)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
         _networkManager = networkManager;
+        _versionService = versionService;
     }
 
     /// <summary>
@@ -44,7 +46,7 @@ public class AccountCredentialService
                 new CreateUserRequest
                 {
                     AdverisementId = Guid.NewGuid().ToString("D"),
-                    AppVersion = _networkManager.AppVersion,
+                    AppVersion = _versionService.AppVersion,
                     CountryCode = "CN",
                     DeviceToken = "",
                     ModelName = "API",

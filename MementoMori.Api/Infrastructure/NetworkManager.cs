@@ -9,6 +9,7 @@ using MementoMori.Ortega.Share.Data.Auth;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
 using Grpc.Net.Client;
+using MementoMori.Api.Services;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Master;
 
@@ -38,15 +39,10 @@ public class NetworkManager : IDisposable
     // State
     public long UserId { get; set; }
     public long PlayerId { get; set; }
-    public string AppVersion { get; set; } = "2.14.0";
     public CultureInfo CultureInfo { get; private set; } = new("zh-CN");
     public LanguageType LanguageType => ParseLanguageType(CultureInfo);
 
-    // Master Data URLs
-    public static string? AssetCatalogUriFormat { get; private set; }
-    public static string? AssetCatalogFixedUriFormat { get; private set; }
-    public static string? MasterUriFormat { get; private set; }
-    public static string? NoticeBannerImageUriFormat { get; private set; }
+    private readonly VersionService _versionService;
 
     // MagicOnion
     private string? _authTokenOfMagicOnion;
@@ -54,14 +50,11 @@ public class NetworkManager : IDisposable
     // Last login request
     private LoginRequest? _lastLoginRequest;
 
-    // Auto-update task
-    private Task? _masterDataUpdateTask;
-    public bool DisableAutoUpdateMasterData { get; set; }
-
-    public NetworkManager(ILogger<NetworkManager> logger, IConfiguration configuration)
+    public NetworkManager(ILogger<NetworkManager> logger, IConfiguration configuration, VersionService versionService)
     {
         _logger = logger;
         _configuration = configuration;
+        _versionService = versionService;
         Initialize();
     }
 
@@ -70,19 +63,16 @@ public class NetworkManager : IDisposable
     /// </summary>
     private void Initialize()
     {
-        // 从配置读取 AppVersion，如果没有则使用默认值
-        AppVersion = _configuration["Auth:AppVersion"] ?? "2.14.0";
-
         // 从配置读取 Auth API URL，如果没有则使用默认值
         var authUrl = _configuration["Auth:AuthUrl"];
-        _authApiUrl = new Uri(string.IsNullOrEmpty(authUrl) 
-            ? "https://prd1-auth.mememori-boi.com/api/" 
+        _authApiUrl = new Uri(string.IsNullOrEmpty(authUrl)
+            ? "https://prd1-auth.mememori-boi.com/api/"
             : authUrl);
 
         // 创建 HTTP 处理器
-        MoriHttpClientHandler = new MeMoriHttpClientHandler 
-        { 
-            AppVersion = AppVersion 
+        MoriHttpClientHandler = new MeMoriHttpClientHandler
+        {
+            AppVersion = _versionService.AppVersion
         };
 
         // 创建 HTTP 客户端
@@ -99,11 +89,8 @@ public class NetworkManager : IDisposable
         _unityHttpClient.DefaultRequestHeaders.Add("User-Agent", "UnityPlayer/2021.3.10f1 (UnityWebRequest/1.0, libcurl/7.80.0-DEV)");
         _unityHttpClient.DefaultRequestHeaders.Add("X-Unity-Version", "2021.3.10f1");
 
-        // 启动自动更新 Master 数据任务
-        _masterDataUpdateTask = Task.Run(AutoUpdateMasterDataAsync);
-
-        _logger.LogInformation("NetworkManager initialized - AuthUrl: {AuthUrl}, AppVersion: {AppVersion}", 
-            _authApiUrl, AppVersion);
+        _logger.LogInformation("NetworkManager initialized - AuthUrl: {AuthUrl}, AppVersion: {AppVersion}",
+            _authApiUrl, _versionService.AppVersion);
     }
 
     /// <summary>
@@ -113,25 +100,15 @@ public class NetworkManager : IDisposable
     {
         try
         {
-            var request = new GetDataUriRequest
+            // 确保版本信息已刷新
+            if (string.IsNullOrEmpty(_versionService.MasterUriFormat))
             {
-                CountryCode = countryCode
-            };
-
-            var response = await SendRequest<GetDataUriRequest, GetDataUriResponse>(request, useAuthApi: true);
-
-            AssetCatalogUriFormat = response.AssetCatalogUriFormat;
-            AssetCatalogFixedUriFormat = response.AssetCatalogFixedUriFormat;
-            MasterUriFormat = response.MasterUriFormat;
-            NoticeBannerImageUriFormat = response.NoticeBannerImageUriFormat;
-
-            if (response.AppAssetVersionInfo != null)
-            {
-                AppVersion = response.AppAssetVersionInfo.Version;
-                MoriHttpClientHandler.AppVersion = AppVersion;
+                await _versionService.RefreshVersionAsync();
             }
 
-            _logger.LogInformation("NetworkManager initialized. AppVersion: {Version}", AppVersion);
+            MoriHttpClientHandler.AppVersion = _versionService.AppVersion;
+
+            _logger.LogInformation("NetworkManager initialized. AppVersion: {Version}", _versionService.AppVersion);
         }
         catch (Exception ex)
         {
@@ -207,216 +184,6 @@ public class NetworkManager : IDisposable
         _logger.LogInformation("Game API URL set to {Url}", _gameApiUrl);
     }
 
-    /// <summary>
-    /// 下载 Master 数据目录
-    /// </summary>
-    public async Task<bool> DownloadMasterCatalogAsync()
-    {
-        try
-        {
-            _logger.LogInformation("Downloading master catalog...");
-
-            await GetLatestAvailableVersionAsync();
-
-            var dataUriRequest = new GetDataUriRequest
-            {
-                CountryCode = "CN",
-                UserId = UserId
-            };
-            var dataUriResponse = await SendRequest<GetDataUriRequest, GetDataUriResponse>(dataUriRequest, useAuthApi: true);
-
-            var url = string.Format(dataUriResponse.MasterUriFormat, MoriHttpClientHandler.OrtegaMasterVersion, "master-catalog");
-            var bytes = await _unityHttpClient.GetByteArrayAsync(url);
-
-            var masterBookCatalog = MessagePackSerializer.Deserialize<MasterBookCatalog>(bytes);
-            
-            Directory.CreateDirectory("./Master");
-            
-            var hasUpdate = false;
-            HashSet<string> allowedLangMb = new() { "TextResourceJaJpMB", "TextResourceZhTwMB", "TextResourceEnUsMB", "TextResourceKoKrMB" };
-
-            foreach (var (name, info) in masterBookCatalog.MasterBookInfoMap)
-            {
-                if (name.StartsWith("TextResource") && !allowedLangMb.Contains(name))
-                    continue;
-
-                var localPath = $"./Master/{name}";
-                
-                if (File.Exists(localPath))
-                {
-                    var md5 = await CalcFileMd5Async(localPath);
-                    if (md5 == info.Hash)
-                    {
-                        _logger.LogDebug("{Name} not changed, skip", name);
-                        continue;
-                    }
-                    File.Delete(localPath);
-                }
-
-                hasUpdate = true;
-                _logger.LogInformation("Updating {Name}...", name);
-
-                var mbUrl = string.Format(dataUriResponse.MasterUriFormat, MoriHttpClientHandler.OrtegaMasterVersion, name);
-                var fileBytes = await _unityHttpClient.GetByteArrayAsync(mbUrl);
-                await File.WriteAllBytesAsync(localPath, fileBytes);
-            }
-
-            _logger.LogInformation("Master catalog download completed");
-            return hasUpdate;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to download master catalog");
-            throw;
-        }
-    }
-
-    /// <summary>
-    /// 自动更新 Master 数据
-    /// </summary>
-    private async Task AutoUpdateMasterDataAsync()
-    {
-        while (!_cts.IsCancellationRequested)
-        {
-            try
-            {
-                await Task.Delay(TimeSpan.FromHours(1), _cts.Token);
-                
-                if (!DisableAutoUpdateMasterData)
-                {
-                    _logger.LogInformation("Auto updating master data...");
-                    var hasUpdate = await DownloadMasterCatalogAsync();
-                    
-                    if (hasUpdate)
-                    {
-                        // TODO: Reload masters
-                        _logger.LogInformation("Master data updated, reload needed");
-                    }
-                }
-            }
-            catch (TaskCanceledException)
-            {
-                break;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in auto update master data");
-            }
-        }
-    }
-
-    /// <summary>
-    /// 获取最新可用版本
-    /// </summary>
-    public async Task GetLatestAvailableVersionAsync()
-    {
-        try
-        {
-            _logger.LogInformation("Getting latest available version...");
-
-            // 从官网获取最新版本
-            var httpClient = new HttpClient();
-            var html = await httpClient.GetStringAsync("https://mememori-game.com/apps/vars.js");
-            var match = Regex.Match(html, @"/apps/mementomori_(?<version>\d+\.\d+\.\d+)\.apk");
-            
-            if (match.Success && Version.TryParse(match.Groups["version"].Value, out var version))
-            {
-                AppVersion = version.ToString();
-                MoriHttpClientHandler.AppVersion = AppVersion;
-                _logger.LogInformation("Found latest version: {Version}", AppVersion);
-                return;
-            }
-
-            // 如果失败，尝试递增版本
-            var buildAddCount = 5;
-            var minorAddCount = 5;
-            var majorAddCount = 5;
-
-            var handler = new MeMoriHttpClientHandler { AppVersion = AppVersion };
-            var client = new HttpClient(handler);
-
-            while (true)
-            {
-                var path = typeof(GetDataUriRequest).GetCustomAttribute<OrtegaAuthAttribute>()!.Uri;
-                var uri = new Uri(_authApiUrl, path);
-
-                var bytes = MessagePackSerializer.Serialize(new GetDataUriRequest 
-                { 
-                    CountryCode = "CN", 
-                    UserId = UserId 
-                });
-
-                using var respMsg = await client.PostAsync(uri, new ByteArrayContent(bytes) 
-                { 
-                    Headers = { { "content-type", "application/json; charset=UTF-8" } } 
-                });
-
-                if (!respMsg.IsSuccessStatusCode)
-                    throw new InvalidOperationException(respMsg.ToString());
-
-                await using var stream = await respMsg.Content.ReadAsStreamAsync();
-                
-                if (respMsg.Headers.TryGetValues("ortegastatuscode", out var headers))
-                {
-                    var statusCode = headers.FirstOrDefault() ?? "";
-                    
-                    if (statusCode != "0")
-                    {
-                        var apiErrResponse = MessagePackSerializer.Deserialize<ApiErrorResponse>(stream);
-                        
-                        if (apiErrResponse.ErrorCode != ErrorCode.CommonRequireClientUpdate)
-                            throw new InvalidOperationException($"Error: {apiErrResponse.ErrorCode}");
-
-                        version = new Version(handler.AppVersion);
-                        
-                        if (buildAddCount > 0)
-                        {
-                            var newVersion = new Version(version.Major, version.Minor, version.Build + 1);
-                            handler.AppVersion = newVersion.ToString(3);
-                            _logger.LogInformation("Trying {Version}", handler.AppVersion);
-                            buildAddCount--;
-                            continue;
-                        }
-
-                        if (minorAddCount > 0)
-                        {
-                            var newVersion = new Version(version.Major, version.Minor + 1, 0);
-                            handler.AppVersion = newVersion.ToString(3);
-                            _logger.LogInformation("Trying {Version}", handler.AppVersion);
-                            minorAddCount--;
-                            buildAddCount = 5;
-                            continue;
-                        }
-
-                        if (majorAddCount > 0)
-                        {
-                            var newVersion = new Version(version.Major + 1, 0, 0);
-                            handler.AppVersion = newVersion.ToString(3);
-                            _logger.LogInformation("Trying {Version}", handler.AppVersion);
-                            majorAddCount--;
-                            buildAddCount = 5;
-                            minorAddCount = 5;
-                            continue;
-                        }
-
-                        throw new InvalidOperationException("Reached max try count");
-                    }
-
-                    _logger.LogInformation("Found latest version {Version}", handler.AppVersion);
-                    AppVersion = handler.AppVersion;
-                    MoriHttpClientHandler.AppVersion = AppVersion;
-                    return;
-                }
-
-                throw new InvalidOperationException("No ortegastatuscode in response");
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to get latest available version");
-            throw;
-        }
-    }
 
     /// <summary>
     /// 设置语言文化
@@ -519,8 +286,11 @@ public class NetworkManager : IDisposable
                         // 特殊处理：需要客户端更新
                         if (error.ErrorCode == ErrorCode.CommonRequireClientUpdate)
                         {
-                            _logger.LogWarning("Client update required, attempting auto-update...");
-                            await GetLatestAvailableVersionAsync();
+                            _logger.LogWarning("Client update required, attempting auto-update via VersionService...");
+                            await _versionService.RefreshVersionAsync();
+                            MoriHttpClientHandler.AppVersion = _versionService.AppVersion;
+                            
+                            // 更新请求中的字节（如果有必要，虽然 GetDataUriRequest 没传版本，但以防万一）
                             goto RETRY_AFTER_UPDATE; // 更新后重试
                         }
 

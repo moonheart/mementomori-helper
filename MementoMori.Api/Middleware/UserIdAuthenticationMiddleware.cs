@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using MementoMori.Api.Services;
 
 namespace MementoMori.Api.Middleware;
 
@@ -7,21 +8,24 @@ public class UserIdAuthenticationMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<UserIdAuthenticationMiddleware> _logger;
+    private readonly AccountManager _accountManager;
     
     // Endpoints that don't require user ID authentication
     private static readonly string[] ExcludedPaths = new[]
     {
         "/api/Auth/accounts",
         "/swagger",
+        "/api/localization",
         "/health"
     };
 
     public UserIdAuthenticationMiddleware(
         RequestDelegate next,
-        ILogger<UserIdAuthenticationMiddleware> logger)
+        ILogger<UserIdAuthenticationMiddleware> logger, AccountManager accountManager)
     {
         _next = next;
         _logger = logger;
+        _accountManager = accountManager;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -66,6 +70,8 @@ public class UserIdAuthenticationMiddleware
 
         // Store user ID in HttpContext for use in controllers
         context.Items["UserId"] = userId;
+
+        var accountContext = await _accountManager.GetOrCreateAsync(userId);
 
         await _next(context);
     }

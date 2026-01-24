@@ -31,28 +31,32 @@ namespace MementoMori.Api.Controllers
         /// 通用 Ortega API 代理端点
         /// </summary>
         /// <param name="category">API 类别（如 user, mission, shop）</param>
-        /// <param name="action">API 操作（如 getUserData, getMissionInfo）</param>
+        /// <param name="ortegaAction">API 操作（如 getUserData, getMissionInfo）</param>
         /// <returns>API 响应</returns>
-        [HttpPost("{category}/{action}")]
-        public async Task<IActionResult> ProxyRequest(string category, string action)
+        [HttpPost("{category}/{ortegaAction}")]
+        public async Task<IActionResult> ProxyRequest(
+            [FromRoute]string category, 
+            [FromRoute]string ortegaAction)
         {
             try
             {
                 // 构建 Ortega API URI
-                var apiUri = $"{category}/{action}";
+                var apiUri = $"{category}/{ortegaAction}";
                 
+                _logger.LogInformation("ProxyRequest received: Category={Category}, Action={Action}, URI={ApiUri}", category, ortegaAction, apiUri);
+
                 // 查找 API 信息
                 var apiInfo = _discoveryService.GetApiInfo(apiUri);
                 if (apiInfo == null)
                 {
-                    _logger.LogWarning("API not found: {ApiUri}", apiUri);
-                    return NotFound(new { error = $"API '{apiUri}' not found" });
+                    _logger.LogWarning("API lookup failed for URI: {ApiUri}. Available APIs count: {Count}", apiUri, _discoveryService.GetAllApis().Count);
+                    return NotFound(new {error = $"API '{apiUri}' not found"});
                 }
 
                 // 从 Header 获取 UserId（由 UserIdAuthenticationMiddleware 设置）
                 if (!HttpContext.Items.TryGetValue("UserId", out var userIdObj) || userIdObj is not long userId)
                 {
-                    return Unauthorized(new { error = "User ID not found in request" });
+                    return Unauthorized(new {error = "User ID not found in request"});
                 }
 
                 // 读取请求体
@@ -77,23 +81,23 @@ namespace MementoMori.Api.Controllers
             catch (InvalidOperationException ex)
             {
                 _logger.LogError(ex, "Invalid operation: {Message}", ex.Message);
-                return BadRequest(new { error = ex.Message });
+                return BadRequest(new {error = ex.Message});
             }
             catch (NetworkManager.ApiErrorException ex)
             {
                 _logger.LogError(ex, "Ortega API error: {ErrorCode}", ex.ErrorCode);
-                return BadRequest(new 
-                { 
+                return BadRequest(new
+                {
                     error = "Ortega API error",
                     errorCode = ex.ErrorCode.ToString(),
                     category,
-                    action 
+                    ortegaAction
                 });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected error while proxying request to {Category}/{Action}", category, action);
-                return StatusCode(500, new { error = "Internal server error", details = ex.Message });
+                _logger.LogError(ex, "Unexpected error while proxying request to {Category}/{Action}", category, ortegaAction);
+                return StatusCode(500, new {error = "Internal server error", details = ex.Message});
             }
         }
 
@@ -121,6 +125,17 @@ namespace MementoMori.Api.Controllers
                 total = apis.Count,
                 apis
             });
+        }
+
+
+        /// <summary>
+        /// 调试 API 发现逻辑
+        /// </summary>
+        [HttpGet("debug")]
+        public IActionResult ListDebugInfo()
+        {
+            var logs = _discoveryService.DebugDiscovery();
+            return Ok(logs);
         }
     }
 }

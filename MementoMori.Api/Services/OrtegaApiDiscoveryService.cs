@@ -89,6 +89,67 @@ namespace MementoMori.Api.Services
         {
             return _apiMap;
         }
+
+        public List<string> DebugDiscovery()
+        {
+            var logs = new List<string>();
+            try 
+            {
+                var ortegaAssembly = typeof(ApiRequestBase).Assembly;
+                logs.Add($"Assembly: {ortegaAssembly.FullName}");
+                
+                var allTypes = ortegaAssembly.GetTypes();
+                logs.Add($"Total types in assembly: {allTypes.Length}");
+
+                var requestTypes = allTypes
+                    .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(ApiRequestBase)))
+                    .ToList();
+                
+                logs.Add($"Found {requestTypes.Count} subclasses of ApiRequestBase");
+
+                foreach (var requestType in requestTypes)
+                {
+                    var ortegaApiAttr = requestType.GetCustomAttribute<OrtegaApiAttribute>();
+                    if (ortegaApiAttr == null)
+                    {
+                        var ortegaAuthAttr = requestType.GetCustomAttribute<OrtegaAuthAttribute>();
+                         if (ortegaAuthAttr == null)
+                         {
+                            logs.Add($"[Skip] {requestType.Name}: No OrtegaApi/OrtegaAuth attribute");
+                            continue;
+                         }
+                    }
+
+                    var uri = ortegaApiAttr?.Uri;
+                    logs.Add($"Processing {requestType.Name}, URI: {uri}");
+
+                    var responseTypeName = requestType.Name.Replace("Request", "Response");
+                    var responseType = requestType.Assembly.GetTypes()
+                        .FirstOrDefault(t => t.Name == responseTypeName && t.IsSubclassOf(typeof(ApiResponseBase)));
+
+                    if (responseType == null)
+                    {
+                        logs.Add($"[Error] {requestType.Name}: Response type '{responseTypeName}' not found or not subclass of ApiResponseBase");
+                        // Check if type exists but not subclass
+                        var existingType = requestType.Assembly.GetTypes().FirstOrDefault(t => t.Name == responseTypeName);
+                        if (existingType != null)
+                        {
+                             logs.Add($"[Info] Type '{responseTypeName}' exists but IsSubclassOf(ApiResponseBase) is {existingType.IsSubclassOf(typeof(ApiResponseBase))}");
+                             logs.Add($"[Info] BaseType of '{responseTypeName}' is {existingType.BaseType?.Name}");
+                        }
+                    }
+                    else
+                    {
+                        logs.Add($"[Success] Registered {requestType.Name} -> {responseType.Name} at {uri}");
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                logs.Add($"Exception: {ex}");
+            }
+            return logs;
+        }
     }
 
     /// <summary>

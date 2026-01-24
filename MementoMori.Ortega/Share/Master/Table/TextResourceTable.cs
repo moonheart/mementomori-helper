@@ -1,4 +1,5 @@
-﻿using MementoMori.Ortega.Common.Enums;
+﻿using System.Collections.Generic;
+using MementoMori.Ortega.Common.Enums;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master.Data;
@@ -10,6 +11,7 @@ namespace MementoMori.Ortega.Share.Master.Table;
 public class TextResourceTable : ITable
 {
     private Dictionary<string, string> _cached = new();
+    public IReadOnlyDictionary<string, string> AllResources => _cached;
     private LanguageType _languageType;
 
     public bool Load()

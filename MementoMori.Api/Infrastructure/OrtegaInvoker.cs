@@ -31,7 +31,7 @@ namespace MementoMori.Api.Infrastructure
         public async Task<object> InvokeAsync(long userId, string requestJson, Type requestType, Type responseType)
         {
             // 获取账户上下文
-            var accountContext = _accountManager.GetOrCreate(userId);
+            var accountContext = await _accountManager.GetOrCreateAsync(userId);
             if (accountContext == null)
             {
                 throw new InvalidOperationException($"Account context not found for user {userId}");
