@@ -52,9 +52,8 @@ namespace MementoMori.Api.Services
         private void RegisterApi(string uri, Type requestType, bool isRequiredLogin, bool isIgnoreMaintenance)
         {
             // 查找对应的 Response 类型
-            var responseTypeName = requestType.Name.Replace("Request", "Response");
-            var responseType = requestType.Assembly.GetTypes()
-                .FirstOrDefault(t => t.Name == responseTypeName && t.IsSubclassOf(typeof(ApiResponseBase)));
+            var responseTypeName = requestType.FullName.Replace("Request", "Response");
+            var responseType = requestType.Assembly.GetType(responseTypeName);
 
             if (responseType == null)
             {
