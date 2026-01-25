@@ -11,10 +11,11 @@ public class HourlyJob : AccountJobBase
     private readonly GameActionService _gameActionService;
 
     public HourlyJob(
-        AccountManager accountManager, 
+        AccountManager accountManager,
         ILogger<HourlyJob> logger,
-        GameActionService gameActionService) 
-        : base(accountManager, logger)
+        IServiceProvider serviceProvider,
+        GameActionService gameActionService)
+        : base(accountManager, logger, serviceProvider)
     {
         _gameActionService = gameActionService;
     }

@@ -12,10 +12,11 @@ public class AutoBuyShopItemJob : AccountJobBase
     private readonly GameActionService _gameActionService;
 
     public AutoBuyShopItemJob(
-        AccountManager accountManager, 
+        AccountManager accountManager,
         ILogger<AutoBuyShopItemJob> logger,
-        GameActionService gameActionService) 
-        : base(accountManager, logger)
+        IServiceProvider serviceProvider,
+        GameActionService gameActionService)
+        : base(accountManager, logger, serviceProvider)
     {
         _gameActionService = gameActionService;
     }

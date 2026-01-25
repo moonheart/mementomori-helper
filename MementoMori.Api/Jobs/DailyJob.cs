@@ -11,10 +11,11 @@ public class DailyJob : AccountJobBase
     private readonly GameActionService _gameActionService;
 
     public DailyJob(
-        AccountManager accountManager, 
+        AccountManager accountManager,
         ILogger<DailyJob> logger,
-        GameActionService gameActionService) 
-        : base(accountManager, logger)
+        IServiceProvider serviceProvider,
+        GameActionService gameActionService)
+        : base(accountManager, logger, serviceProvider)
     {
         _gameActionService = gameActionService;
     }

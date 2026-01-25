@@ -79,6 +79,12 @@ builder.Services.AddScoped<MementoMori.Api.Services.PlayerSettingService>();
 builder.Services.AddSingleton<MementoMori.Api.Services.JobManagerService>();
 builder.Services.AddSingleton<MementoMori.Api.Services.GameActionService>();
 
+// Register Action Handlers
+builder.Services.AddTransient<MementoMori.Api.Handlers.DailyLoginBonusHandler>();
+builder.Services.AddTransient<MementoMori.Api.Handlers.ShopAutoBuyHandler>();
+builder.Services.AddTransient<MementoMori.Api.Handlers.ArenaPvpHandler>();
+builder.Services.AddSingleton<MementoMori.Api.Handlers.ActionExecutor>();
+
 var app = builder.Build();
 
 // 检查是否执行 RPC 契约导出并退出
