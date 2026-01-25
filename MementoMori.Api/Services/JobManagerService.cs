@@ -54,6 +54,42 @@ public partial class JobManagerService
             await RegisterJobAsync<Jobs.AutoBuyShopItemJob>(scheduler, userId, config.AutoBuyShopItemJobCron, "商店自动购买", offset);
         }
 
+        // 自动更换圣装目标
+        if (config.AutoChangeGachaRelic)
+        {
+            await RegisterJobAsync<Jobs.AutoChangeGachaRelicJob>(scheduler, userId, config.AutoChangeGachaRelicJobCron, "自动更换圣装", offset);
+        }
+
+        // 自动抽取圣装
+        if (config.AutoDrawGachaRelic)
+        {
+            await RegisterJobAsync<Jobs.AutoDrawGachaRelicJob>(scheduler, userId, config.AutoDrawGachaRelicJobCron, "自动抽取圣装", offset);
+        }
+
+        // 自动开启公会副本
+        if (config.AutoOpenGuildRaid)
+        {
+            await RegisterJobAsync<Jobs.GuildRaidBossReleaseJob>(scheduler, userId, config.GuildRaidBossReleaseCron, "自动开启公会副本", offset);
+        }
+
+        // 传奇竞技场自动对战
+        if (config.AutoLegendLeague)
+        {
+            await RegisterJobAsync<Jobs.LegendLeagueJob>(scheduler, userId, config.LegendLeagueJobCron, "传奇竞技场自动对战", offset);
+        }
+
+        // 自动时空洞窟
+        if (config.AutoLocalRaid)
+        {
+            await RegisterJobAsync<Jobs.AutoLocalRaidJob>(scheduler, userId, config.AutoLocalRaidJobCron, "自动时空洞窟", offset);
+        }
+
+        // 竞技场自动对战
+        if (config.AutoPvp)
+        {
+            await RegisterJobAsync<Jobs.PvpJob>(scheduler, userId, config.PvpJobCron, "PVP 竞技场任务", offset);
+        }
+
         // if (config.AutoPvp)
         //    await RegisterJobAsync<Jobs.PvpJob>(scheduler, config.PvpJobCron, "PVP 竞技场任务", userId, offset);
         

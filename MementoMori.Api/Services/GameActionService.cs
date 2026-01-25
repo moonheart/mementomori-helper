@@ -1,5 +1,6 @@
 using MementoMori.Api.Infrastructure;
 using MementoMori.Api.Handlers;
+using MementoMori.Api.Handlers.LocalRaid;
 
 namespace MementoMori.Api.Services;
 
@@ -27,7 +28,14 @@ public partial class GameActionService
         var handlers = new List<IGameActionHandler>
         {
             _serviceProvider.GetRequiredService<DailyLoginBonusHandler>(),
-            _serviceProvider.GetRequiredService<ShopAutoBuyHandler>()
+            _serviceProvider.GetRequiredService<ShopAutoBuyHandler>(),
+            _serviceProvider.GetRequiredService<GachaRelicChangeHandler>(),
+            _serviceProvider.GetRequiredService<GachaRelicDrawHandler>(),
+            _serviceProvider.GetRequiredService<GuildRaidOpenHandler>(),
+            _serviceProvider.GetRequiredService<LegendLeagueHandler>(),
+            _serviceProvider.GetRequiredService<LocalRaidHandler>(),
+            _serviceProvider.GetRequiredService<ArenaPvpHandler>(),
+            _serviceProvider.GetRequiredService<MissionRewardHandler>()
         };
 
         await _executor.ExecuteActionsAsync(context, handlers);
@@ -43,6 +51,83 @@ public partial class GameActionService
         var context = await _accountManager.GetOrCreateAsync(userId);
         var handler = _serviceProvider.GetRequiredService<ShopAutoBuyHandler>();
         
+        await _executor.ExecuteActionsAsync(context, new[] { handler });
+    }
+
+    /// <summary>
+    /// 仅执行自动更换圣装目标
+    /// </summary>
+    public async Task AutoSetGachaRelicAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<GachaRelicChangeHandler>();
+
+        await _executor.ExecuteActionsAsync(context, new[] { handler });
+    }
+
+    /// <summary>
+    /// 仅执行自动抽取圣装
+    /// </summary>
+    public async Task AutoDrawGachaRelicAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<GachaRelicDrawHandler>();
+
+        await _executor.ExecuteActionsAsync(context, new[] { handler });
+    }
+
+    /// <summary>
+    /// 仅执行自动开启公会副本
+    /// </summary>
+    public async Task OpenGuildRaidAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<GuildRaidOpenHandler>();
+
+        await _executor.ExecuteActionsAsync(context, new[] { handler });
+    }
+
+    /// <summary>
+    /// 仅执行自动传奇竞技场对战
+    /// </summary>
+    public async Task AutoLegendLeagueAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<LegendLeagueHandler>();
+
+        await _executor.ExecuteActionsAsync(context, new[] { handler });
+    }
+
+    /// <summary>
+    /// 仅执行自动时空洞窟
+    /// </summary>
+    public async Task AutoLocalRaidAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<LocalRaidHandler>();
+
+        await _executor.ExecuteActionsAsync(context, new[] { handler });
+    }
+
+    /// <summary>
+    /// 仅执行自动竞技场对战
+    /// </summary>
+    public async Task AutoArenaPvpAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<ArenaPvpHandler>();
+
+        await _executor.ExecuteActionsAsync(context, new[] { handler });
+    }
+
+    /// <summary>
+    /// 领取所有任务奖励
+    /// </summary>
+    public async Task ClaimMissionRewardsAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<MissionRewardHandler>();
+
         await _executor.ExecuteActionsAsync(context, new[] { handler });
     }
 }
