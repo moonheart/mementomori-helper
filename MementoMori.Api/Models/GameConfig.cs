@@ -2,7 +2,7 @@ using MementoMori.Ortega.Share.Data.Item;
 using MementoMori.Ortega.Share.Enums;
 using TypeGen.Core.TypeAnnotations;
 
-namespace MementoMori;
+namespace MementoMori.Api.Models;
 
 public class GameConfig
 {
@@ -37,6 +37,7 @@ public class GameConfig
         public bool AutoDeployGuildDefense { get; set; }
         public bool AutoChangeGachaRelic { get; set; }
         public bool AutoDrawGachaRelic { get; set; }
+        public bool AutoBuyShopItem { get; set; }
 
         public string DailyJobCron { get; set; } = "0 50 4 ? * *";
         public string HourlyJobCron { get; set; } = "0 30 0,4,8,12,16,20 ? * *";

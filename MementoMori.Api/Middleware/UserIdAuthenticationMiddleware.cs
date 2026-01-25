@@ -39,11 +39,17 @@ public class UserIdAuthenticationMiddleware
             return;
         }
 
-        // Extract user ID from header
-        if (!context.Request.Headers.TryGetValue("X-User-Id", out var userIdHeader) ||
-            string.IsNullOrWhiteSpace(userIdHeader))
+        // Extract user ID from header or query string (for SignalR)
+        string? userIdHeader = context.Request.Headers["X-User-Id"];
+        
+        if (string.IsNullOrEmpty(userIdHeader) && context.Request.Query.TryGetValue("userId", out var queryUserId))
         {
-            _logger.LogWarning("Request to {Path} missing X-User-Id header", path);
+            userIdHeader = queryUserId;
+        }
+
+        if (string.IsNullOrWhiteSpace(userIdHeader))
+        {
+            _logger.LogWarning("Request to {Path} missing User ID", path);
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsJsonAsync(new

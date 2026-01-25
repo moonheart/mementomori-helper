@@ -12,6 +12,7 @@ public class MeMoriHttpClientHandler : HttpClientHandler
     public string OrtegaAccessToken { get; private set; } = string.Empty;
     public string OrtegaMasterVersion { get; private set; } = string.Empty;
     public string OrtegaAssetVersion { get; private set; } = string.Empty;
+    public TimeSpan TimeZoneOffset { get; set; } = TimeSpan.FromHours(8); // 默认北京时间
 
     public string AppVersion
     {
@@ -73,6 +74,9 @@ public class MeMoriHttpClientHandler : HttpClientHandler
                     OrtegaAssetVersion = version;
                 }
             }
+
+            // 更新时区偏移 (如果服务器返回了相关 Header，Ortega 协议中有时会携带，
+            // 如果没有，则由外部业务逻辑如 LoginAsync 设置)
 
             return response;
         }

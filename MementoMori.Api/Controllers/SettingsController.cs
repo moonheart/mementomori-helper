@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using TypeGen.Core.TypeAnnotations;
 using MementoMori.Api.Services;
 using MementoMori;
+using MementoMori.Api.Models;
 
 namespace MementoMori.Api.Controllers;
 

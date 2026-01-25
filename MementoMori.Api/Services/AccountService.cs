@@ -10,15 +10,18 @@ public class AccountService
     private readonly ILogger<AccountService> _logger;
     private readonly AccountManager _accountManager;
     private readonly AccountCredentialService _credentialService;
+    private readonly JobManagerService _jobManager;
 
     public AccountService(
         ILogger<AccountService> logger,
         AccountManager accountManager,
-        AccountCredentialService credentialService)
+        AccountCredentialService credentialService,
+        JobManagerService jobManager)
     {
         _logger = logger;
         _accountManager = accountManager;
         _credentialService = credentialService;
+        _jobManager = jobManager;
     }
 
     public List<AccountDto> GetAllAccounts()
@@ -112,6 +115,9 @@ public class AccountService
             
             // 5. 更新本地账号登录状态
             _accountManager.UpdateLoginStatus(userId, true, latestWorld.WorldId);
+
+            // 6. 注册/刷新定时任务
+            await _jobManager.RegisterJobsAsync(userId);
             
             _logger.LogInformation("Login successful and Session established. WorldId: {WorldId}", latestWorld.WorldId);
             

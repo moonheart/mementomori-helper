@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi;
 using MementoMori.Api.Infrastructure.Database;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,17 @@ builder.Services.AddSwaggerGen(options =>
 
 // Add SignalR
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<MementoMori.Api.Infrastructure.JobLogger>();
+
+// Add Quartz
+builder.Services.AddQuartz(q =>
+{
+    // 默认配置
+});
+builder.Services.AddQuartzHostedService(options =>
+{
+    options.WaitForJobsToComplete = true;
+});
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -64,6 +76,8 @@ builder.Services.AddScoped<MementoMori.Api.Services.AccountService>();
 builder.Services.AddScoped<MementoMori.Api.Services.MissionService>();
 builder.Services.AddScoped<MementoMori.Api.Services.LocalizationService>();
 builder.Services.AddScoped<MementoMori.Api.Services.PlayerSettingService>();
+builder.Services.AddSingleton<MementoMori.Api.Services.JobManagerService>();
+builder.Services.AddSingleton<MementoMori.Api.Services.GameActionService>();
 
 var app = builder.Build();
 
@@ -105,5 +119,8 @@ app.UseMiddleware<MementoMori.Api.Middleware.UserIdAuthenticationMiddleware>();
 
 app.UseAuthorization();
 app.MapControllers();
+
+// Map SignalR Hubs
+app.MapHub<MementoMori.Api.Infrastructure.JobHub>("/hubs/jobs");
 
 app.Run();

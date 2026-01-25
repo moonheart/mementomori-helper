@@ -50,6 +50,9 @@ public class NetworkManager : IDisposable
     // Last login request
     private LoginRequest? _lastLoginRequest;
 
+    // Synchronized data
+    public UserSyncData UserSyncData { get; private set; } = new();
+
     public NetworkManager(ILogger<NetworkManager> logger, IConfiguration configuration, VersionService versionService)
     {
         _logger = logger;
@@ -321,9 +324,13 @@ public class NetworkManager : IDisposable
                 var result = MessagePackSerializer.Deserialize<TResp>(stream);
 
                 // 处理 UserSyncData
-                if (result is IUserSyncApiResponse userSyncResponse && userDataCallback != null)
+                if (result is IUserSyncApiResponse userSyncResponse)
                 {
-                    userDataCallback.Invoke(userSyncResponse.UserSyncData);
+                    if (userSyncResponse.UserSyncData != null)
+                    {
+                        UserSyncData = userSyncResponse.UserSyncData;
+                    }
+                    userDataCallback?.Invoke(userSyncResponse.UserSyncData);
                 }
 
                 _logger.LogDebug("Request successful");
