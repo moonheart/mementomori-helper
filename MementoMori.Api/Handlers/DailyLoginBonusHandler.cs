@@ -7,16 +7,12 @@ namespace MementoMori.Api.Handlers;
 /// <summary>
 /// 登录奖励领取处理器
 /// </summary>
-public class DailyLoginBonusHandler : IGameActionHandler
+[RegisterTransient]
+[AutoConstructor]
+public partial class DailyLoginBonusHandler : IGameActionHandler
 {
     private readonly ILogger<DailyLoginBonusHandler> _logger;
     private readonly JobLogger _jobLogger;
-
-    public DailyLoginBonusHandler(ILogger<DailyLoginBonusHandler> logger, JobLogger jobLogger)
-    {
-        _logger = logger;
-        _jobLogger = jobLogger;
-    }
 
     public string ActionName => "领取登录奖励";
 

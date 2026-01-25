@@ -6,16 +6,12 @@ namespace MementoMori.Api.Services;
 /// <summary>
 /// 玩家设置服务 - 处理按子类型分开存储的持久化设置
 /// </summary>
-public class PlayerSettingService
+[RegisterScoped]
+[AutoConstructor]
+public partial class PlayerSettingService
 {
     private readonly IFreeSql _fsql;
     private readonly ILogger<PlayerSettingService> _logger;
-
-    public PlayerSettingService(IFreeSql fsql, ILogger<PlayerSettingService> logger)
-    {
-        _fsql = fsql;
-        _logger = logger;
-    }
 
     /// <summary>
     /// 获取指定的设置项

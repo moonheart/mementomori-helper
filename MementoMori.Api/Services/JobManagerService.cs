@@ -9,24 +9,14 @@ namespace MementoMori.Api.Services;
 /// <summary>
 /// 定时任务管理服务 - 账户级独立调度
 /// </summary>
-public class JobManagerService
+[RegisterSingleton]
+[AutoConstructor]
+public partial class JobManagerService
 {
     private readonly ILogger<JobManagerService> _logger;
     private readonly ISchedulerFactory _schedulerFactory;
     private readonly AccountManager _accountManager;
     private readonly IServiceProvider _serviceProvider;
-
-    public JobManagerService(
-        ILogger<JobManagerService> logger,
-        ISchedulerFactory schedulerFactory,
-        AccountManager accountManager,
-        IServiceProvider serviceProvider)
-    {
-        _logger = logger;
-        _schedulerFactory = schedulerFactory;
-        _accountManager = accountManager;
-        _serviceProvider = serviceProvider;
-    }
 
     /// <summary>
     /// 为指定用户注册/刷新所有定时任务

@@ -6,16 +6,12 @@ namespace MementoMori.Api.Handlers;
 /// <summary>
 /// 动作执行协调器
 /// </summary>
-public class ActionExecutor
+[RegisterSingleton]
+[AutoConstructor]
+public partial class ActionExecutor
 {
     private readonly ILogger<ActionExecutor> _logger;
     private readonly JobLogger _jobLogger;
-
-    public ActionExecutor(ILogger<ActionExecutor> logger, JobLogger jobLogger)
-    {
-        _logger = logger;
-        _jobLogger = jobLogger;
-    }
 
     /// <summary>
     /// 按顺序执行一系列动作

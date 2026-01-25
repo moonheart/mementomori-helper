@@ -6,21 +6,13 @@ namespace MementoMori.Api.Handlers;
 /// <summary>
 /// 竞技场 (Arena) 自动战斗处理器
 /// </summary>
-public class ArenaPvpHandler : IGameActionHandler
+[RegisterTransient]
+[AutoConstructor]
+public partial class ArenaPvpHandler : IGameActionHandler
 {
     private readonly ILogger<ArenaPvpHandler> _logger;
     private readonly JobLogger _jobLogger;
     private readonly IServiceProvider _serviceProvider;
-
-    public ArenaPvpHandler(
-        ILogger<ArenaPvpHandler> logger, 
-        JobLogger jobLogger,
-        IServiceProvider serviceProvider)
-    {
-        _logger = logger;
-        _jobLogger = jobLogger;
-        _serviceProvider = serviceProvider;
-    }
 
     public string ActionName => "竞技场自动战斗";
 

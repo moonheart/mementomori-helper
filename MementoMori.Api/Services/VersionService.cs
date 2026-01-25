@@ -15,7 +15,9 @@ namespace MementoMori.Api.Services;
 /// <summary>
 /// 版本服务 - 负责探测和维护游戏版本信息
 /// </summary>
-public class VersionService
+[RegisterSingleton]
+[AutoConstructor]
+public partial class VersionService
 {
     private readonly ILogger<VersionService> _logger;
     private readonly IConfiguration _configuration;
@@ -26,11 +28,9 @@ public class VersionService
     public string? MasterUriFormat { get; private set; }
     public string? AssetCatalogUriFormat { get; private set; }
 
-    public VersionService(ILogger<VersionService> logger, IConfiguration configuration)
+    [AutoConstructorInitializer]
+    private void Initialize()
     {
-        _logger = logger;
-        _configuration = configuration;
-        
         // 从配置初始化
         AppVersion = _configuration["Auth:AppVersion"] ?? "2.14.0";
     }

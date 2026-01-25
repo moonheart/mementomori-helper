@@ -10,16 +10,11 @@ namespace MementoMori.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class MasterController : ControllerBase
+[AutoConstructor]
+public partial class MasterController : ControllerBase
 {
     private readonly VersionService _versionService;
     private readonly ILogger<MasterController> _logger;
-
-    public MasterController(VersionService versionService, ILogger<MasterController> logger)
-    {
-        _versionService = versionService;
-        _logger = logger;
-    }
 
     /// <summary>
     /// 获取 Master 数据清单（包含版本和各表哈希）

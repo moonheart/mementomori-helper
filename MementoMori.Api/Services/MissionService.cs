@@ -7,18 +7,12 @@ namespace MementoMori.Api.Services;
 /// <summary>
 /// 任务服务 - 处理任务相关的业务逻辑
 /// </summary>
-public class MissionService
+[RegisterScoped]
+[AutoConstructor]
+public partial class MissionService
 {
     private readonly ILogger<MissionService> _logger;
     private readonly AccountManager _accountManager;
-
-    public MissionService(
-        ILogger<MissionService> logger,
-        AccountManager accountManager)
-    {
-        _logger = logger;
-        _accountManager = accountManager;
-    }
 
     /// <summary>
     /// 获取任务信息

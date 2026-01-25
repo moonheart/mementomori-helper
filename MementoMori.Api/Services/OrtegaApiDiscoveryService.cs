@@ -10,11 +10,14 @@ namespace MementoMori.Api.Services
     /// Ortega API 发现服务
     /// 在启动时扫描所有标记了 [OrtegaApi] 特性的 Request 类型，建立路由映射
     /// </summary>
-    public class OrtegaApiDiscoveryService
+    [RegisterSingleton]
+    [AutoConstructor]
+    public partial class OrtegaApiDiscoveryService
     {
         private readonly Dictionary<string, OrtegaApiInfo> _apiMap = new();
         
-        public OrtegaApiDiscoveryService()
+        [AutoConstructorInitializer]
+        private void Initialize()
         {
             DiscoverApis();
         }

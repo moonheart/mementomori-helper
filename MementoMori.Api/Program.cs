@@ -32,6 +32,9 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<MementoMori.Api.Infrastructure.JobLogger>();
 
+// Add Auto Injection (Injectio)
+builder.Services.AddMementoMoriApi();
+
 // Add Quartz
 builder.Services.AddQuartz(q =>
 {
@@ -57,33 +60,8 @@ builder.Services.AddCors(options =>
 // Add HttpClient
 builder.Services.AddHttpClient();
 
-// Register infrastructure services
-builder.Services.AddSingleton<MementoMori.Api.Services.VersionService>();
-builder.Services.AddSingleton<MementoMori.Api.Services.MasterDataService>();
+// Register Hosted Services (Special Case)
 builder.Services.AddHostedService(sp => sp.GetRequiredService<MementoMori.Api.Services.MasterDataService>());
-builder.Services.AddSingleton<MementoMori.Api.Infrastructure.NetworkManager>();
-
-// Register Ortega proxy services
-builder.Services.AddSingleton<MementoMori.Api.Services.OrtegaApiDiscoveryService>();
-builder.Services.AddScoped<MementoMori.Api.Infrastructure.OrtegaInvoker>();
-
-// Register account manager (Singleton)
-builder.Services.AddSingleton<MementoMori.Api.Services.AccountManager>();
-
-// Register application services
-builder.Services.AddScoped<MementoMori.Api.Services.AccountCredentialService>();
-builder.Services.AddScoped<MementoMori.Api.Services.AccountService>();
-builder.Services.AddScoped<MementoMori.Api.Services.MissionService>();
-builder.Services.AddScoped<MementoMori.Api.Services.LocalizationService>();
-builder.Services.AddScoped<MementoMori.Api.Services.PlayerSettingService>();
-builder.Services.AddSingleton<MementoMori.Api.Services.JobManagerService>();
-builder.Services.AddSingleton<MementoMori.Api.Services.GameActionService>();
-
-// Register Action Handlers
-builder.Services.AddTransient<MementoMori.Api.Handlers.DailyLoginBonusHandler>();
-builder.Services.AddTransient<MementoMori.Api.Handlers.ShopAutoBuyHandler>();
-builder.Services.AddTransient<MementoMori.Api.Handlers.ArenaPvpHandler>();
-builder.Services.AddSingleton<MementoMori.Api.Handlers.ActionExecutor>();
 
 var app = builder.Build();
 

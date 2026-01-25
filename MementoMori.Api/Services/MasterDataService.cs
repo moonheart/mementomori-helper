@@ -10,18 +10,18 @@ namespace MementoMori.Api.Services;
 /// <summary>
 /// Master 数据同步服务 - 负责定时下载和同步游戏 Master 数据文件 (二进制)
 /// </summary>
-public class MasterDataService : BackgroundService
+[RegisterSingleton]
+[AutoConstructor]
+public partial class MasterDataService : BackgroundService
 {
     private readonly ILogger<MasterDataService> _logger;
     private readonly VersionService _versionService;
     private readonly string _masterPath = "Master";
-    private readonly HttpClient _unityHttpClient;
+    private HttpClient _unityHttpClient;
 
-    public MasterDataService(ILogger<MasterDataService> logger, VersionService versionService)
+    [AutoConstructorInitializer]
+    private void Initialize()
     {
-        _logger = logger;
-        _versionService = versionService;
-        
         _unityHttpClient = new HttpClient
         {
             Timeout = TimeSpan.FromSeconds(30)

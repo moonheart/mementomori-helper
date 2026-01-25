@@ -11,14 +11,11 @@ namespace MementoMori.Api.Infrastructure
     /// Ortega API 调用器
     /// 使用 NetworkManager 动态调用 Ortega API
     /// </summary>
-    public class OrtegaInvoker
+    [RegisterScoped]
+    [AutoConstructor]
+    public partial class OrtegaInvoker
     {
         private readonly AccountManager _accountManager;
-
-        public OrtegaInvoker(AccountManager accountManager)
-        {
-            _accountManager = accountManager;
-        }
 
         /// <summary>
         /// 动态调用 Ortega API

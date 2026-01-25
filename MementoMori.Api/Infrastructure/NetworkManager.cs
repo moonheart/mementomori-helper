@@ -19,11 +19,17 @@ namespace MementoMori.Api.Infrastructure;
 /// 网络管理器 - 完整版
 /// 迁移自 MementoMori.MementoNetworkManager
 /// </summary>
-public class NetworkManager : IDisposable
+[RegisterTransient]
+[AutoConstructor]
+public partial class NetworkManager : IDisposable
 {
     private readonly ILogger<NetworkManager> _logger;
     private readonly IConfiguration _configuration;
+    private readonly VersionService _versionService;
+
+    [AutoConstructorIgnore]
     private readonly SemaphoreSlim _requestSemaphore = new(1, 1);
+    [AutoConstructorIgnore]
     private readonly CancellationTokenSource _cts = new();
 
     // HTTP Clients
@@ -42,8 +48,6 @@ public class NetworkManager : IDisposable
     public CultureInfo CultureInfo { get; private set; } = new("zh-CN");
     public LanguageType LanguageType => ParseLanguageType(CultureInfo);
 
-    private readonly VersionService _versionService;
-
     // MagicOnion
     private string? _authTokenOfMagicOnion;
     
@@ -53,18 +57,8 @@ public class NetworkManager : IDisposable
     // Synchronized data
     public UserSyncData UserSyncData { get; private set; } = new();
 
-    public NetworkManager(ILogger<NetworkManager> logger, IConfiguration configuration, VersionService versionService)
-    {
-        _logger = logger;
-        _configuration = configuration;
-        _versionService = versionService;
-        Initialize();
-    }
-
-    /// <summary>
-    /// 初始化网络管理器
-    /// </summary>
-    private void Initialize()
+    [AutoConstructorInitializer]
+    private void InitializeInternal()
     {
         // 从配置读取 Auth API URL，如果没有则使用默认值
         var authUrl = _configuration["Auth:AuthUrl"];

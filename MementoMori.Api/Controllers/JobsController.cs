@@ -9,18 +9,11 @@ namespace MementoMori.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class JobsController : ControllerBase
+[AutoConstructor]
+public partial class JobsController : ControllerBase
 {
     private readonly JobManagerService _jobManager;
     private readonly PlayerSettingService _settingService;
-
-    public JobsController(
-        JobManagerService jobManager,
-        PlayerSettingService settingService)
-    {
-        _jobManager = jobManager;
-        _settingService = settingService;
-    }
 
     /// <summary>
     /// 获取账户的所有任务状态

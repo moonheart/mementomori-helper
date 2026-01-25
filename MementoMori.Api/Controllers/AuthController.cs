@@ -8,16 +8,11 @@ namespace MementoMori.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController : ControllerBase
+[AutoConstructor]
+public partial class AuthController : ControllerBase
 {
     private readonly ILogger<AuthController> _logger;
     private readonly AccountService _accountService;
-
-    public AuthController(ILogger<AuthController> logger, AccountService accountService)
-    {
-        _logger = logger;
-        _accountService = accountService;
-    }
 
     /// <summary>
     /// Get all accounts

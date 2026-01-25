@@ -8,23 +8,14 @@ namespace MementoMori.Api.Services;
 /// <summary>
 /// 账号凭证服务 - 通过密码获取 ClientKey
 /// </summary>
-public class AccountCredentialService
+[RegisterScoped]
+[AutoConstructor]
+public partial class AccountCredentialService
 {
     private readonly ILogger<AccountCredentialService> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly NetworkManager _networkManager;
     private readonly VersionService _versionService;
-
-    public AccountCredentialService(
-        ILogger<AccountCredentialService> logger,
-        IHttpClientFactory httpClientFactory,
-        NetworkManager networkManager, VersionService versionService)
-    {
-        _logger = logger;
-        _httpClientFactory = httpClientFactory;
-        _networkManager = networkManager;
-        _versionService = versionService;
-    }
 
     /// <summary>
     /// 通过密码（引继码）获取 ClientKey

@@ -4,14 +4,11 @@ using Microsoft.Extensions.Logging;
 
 namespace MementoMori.Api.Services
 {
-    public class LocalizationService
+    [RegisterScoped]
+    [AutoConstructor]
+    public partial class LocalizationService
     {
         private readonly ILogger<LocalizationService> _logger;
-
-        public LocalizationService(ILogger<LocalizationService> logger)
-        {
-            _logger = logger;
-        }
 
         public IReadOnlyDictionary<string, string> GetResources(LanguageType lang)
         {

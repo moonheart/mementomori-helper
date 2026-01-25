@@ -7,18 +7,11 @@ namespace MementoMori.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class MissionController : ControllerBase
+[AutoConstructor]
+public partial class MissionController : ControllerBase
 {
     private readonly ILogger<MissionController> _logger;
     private readonly MissionService _missionService;
-
-    public MissionController(
-        ILogger<MissionController> logger,
-        MissionService missionService)
-    {
-        _logger = logger;
-        _missionService = missionService;
-    }
 
     /// <summary>
     /// 获取任务信息

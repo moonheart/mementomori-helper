@@ -8,16 +8,11 @@ namespace MementoMori.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SettingsController : ControllerBase
+[AutoConstructor]
+public partial class SettingsController : ControllerBase
 {
     private readonly PlayerSettingService _settingService;
     private readonly ILogger<SettingsController> _logger;
-
-    public SettingsController(PlayerSettingService settingService, ILogger<SettingsController> logger)
-    {
-        _settingService = settingService;
-        _logger = logger;
-    }
 
     /// <summary>
     /// 获取玩家所有的配置项

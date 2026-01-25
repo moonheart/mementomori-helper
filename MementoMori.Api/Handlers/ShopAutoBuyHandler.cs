@@ -13,21 +13,13 @@ namespace MementoMori.Api.Handlers;
 /// <summary>
 /// 商店自动购买处理器
 /// </summary>
-public class ShopAutoBuyHandler : IGameActionHandler
+[RegisterTransient]
+[AutoConstructor]
+public partial class ShopAutoBuyHandler : IGameActionHandler
 {
     private readonly ILogger<ShopAutoBuyHandler> _logger;
     private readonly JobLogger _jobLogger;
     private readonly IServiceProvider _serviceProvider;
-
-    public ShopAutoBuyHandler(
-        ILogger<ShopAutoBuyHandler> logger, 
-        JobLogger jobLogger,
-        IServiceProvider serviceProvider)
-    {
-        _logger = logger;
-        _jobLogger = jobLogger;
-        _serviceProvider = serviceProvider;
-    }
 
     public string ActionName => "商店自动购买";
 

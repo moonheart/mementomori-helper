@@ -5,24 +5,14 @@ namespace MementoMori.Api.Services;
 /// <summary>
 /// 账户服务 - 简化版，使用 AccountManager
 /// </summary>
-public class AccountService
+[RegisterScoped]
+[AutoConstructor]
+public partial class AccountService
 {
     private readonly ILogger<AccountService> _logger;
     private readonly AccountManager _accountManager;
     private readonly AccountCredentialService _credentialService;
     private readonly JobManagerService _jobManager;
-
-    public AccountService(
-        ILogger<AccountService> logger,
-        AccountManager accountManager,
-        AccountCredentialService credentialService,
-        JobManagerService jobManager)
-    {
-        _logger = logger;
-        _accountManager = accountManager;
-        _credentialService = credentialService;
-        _jobManager = jobManager;
-    }
 
     public List<AccountDto> GetAllAccounts()
     {

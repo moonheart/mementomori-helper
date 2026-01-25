@@ -6,27 +6,15 @@ namespace MementoMori.Api.Services;
 /// <summary>
 /// 游戏业务动作服务 - 协调各种 Handler 的执行
 /// </summary>
-public class GameActionService
+[RegisterSingleton]
+[AutoConstructor]
+public partial class GameActionService
 {
     private readonly ILogger<GameActionService> _logger;
     private readonly AccountManager _accountManager;
     private readonly JobLogger _jobLogger;
     private readonly IServiceProvider _serviceProvider;
     private readonly ActionExecutor _executor;
-
-    public GameActionService(
-        ILogger<GameActionService> logger,
-        AccountManager accountManager,
-        JobLogger jobLogger,
-        IServiceProvider serviceProvider,
-        ActionExecutor executor)
-    {
-        _logger = logger;
-        _accountManager = accountManager;
-        _jobLogger = jobLogger;
-        _serviceProvider = serviceProvider;
-        _executor = executor;
-    }
 
     /// <summary>
     /// 执行所有快速动作（每日/每小时任务的核心）

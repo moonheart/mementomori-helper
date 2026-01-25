@@ -18,7 +18,9 @@ public class AccountContext
 /// 账户管理器 - 单例服务
 /// 管理所有游戏账号及其独立的业务实例，使用 SQLite (FreeSql) 持久化
 /// </summary>
-public class AccountManager
+[RegisterSingleton]
+[AutoConstructor]
+public partial class AccountManager
 {
     private readonly ILogger<AccountManager> _logger;
     private readonly IServiceProvider _serviceProvider;
@@ -26,13 +28,6 @@ public class AccountManager
     
     // 内存中的活跃账户上下文（包含 NetworkManager 和实时登录状态）
     private readonly ConcurrentDictionary<long, Lazy<Task<AccountContext>>> _activeAccounts = new();
-
-    public AccountManager(ILogger<AccountManager> logger, IServiceProvider serviceProvider, IFreeSql fsql)
-    {
-        _logger = logger;
-        _serviceProvider = serviceProvider;
-        _fsql = fsql;
-    }
 
     /// <summary>
     /// 获取或创建账户上下文

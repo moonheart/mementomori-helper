@@ -6,18 +6,12 @@ namespace MementoMori.Api.Services;
 /// 游戏网络服务 - 简化版，暂时使用占位逻辑
 /// 后续可以逐步集成 MementoMori.Ortega
 /// </summary>
-public class GameNetworkService
+[RegisterScoped]
+[AutoConstructor]
+public partial class GameNetworkService
 {
     private readonly ILogger<GameNetworkService> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
-
-    public GameNetworkService(
-        ILogger<GameNetworkService> logger, 
-        IHttpClientFactory httpClientFactory)
-    {
-        _logger = logger;
-        _httpClientFactory = httpClientFactory;
-    }
 
     /// <summary>
     /// 获取玩家数据信息（可用世界列表）- 占位实现

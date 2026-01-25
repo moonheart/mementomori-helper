@@ -11,21 +11,12 @@ namespace MementoMori.Api.Controllers
     /// </summary>
     [ApiController]
     [Route("api/ortega")]
-    public class OrtegaProxyController : ControllerBase
+    [AutoConstructor]
+    public partial class OrtegaProxyController : ControllerBase
     {
         private readonly OrtegaApiDiscoveryService _discoveryService;
         private readonly OrtegaInvoker _invoker;
         private readonly ILogger<OrtegaProxyController> _logger;
-
-        public OrtegaProxyController(
-            OrtegaApiDiscoveryService discoveryService,
-            OrtegaInvoker invoker,
-            ILogger<OrtegaProxyController> logger)
-        {
-            _discoveryService = discoveryService;
-            _invoker = invoker;
-            _logger = logger;
-        }
 
         /// <summary>
         /// 通用 Ortega API 代理端点

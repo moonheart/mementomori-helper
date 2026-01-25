@@ -6,16 +6,11 @@ namespace MementoMori.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class LocalizationController : ControllerBase
+    [AutoConstructor]
+    public partial class LocalizationController : ControllerBase
     {
         private readonly LocalizationService _localizationService;
         private readonly ILogger<LocalizationController> _logger;
-
-        public LocalizationController(LocalizationService localizationService, ILogger<LocalizationController> logger)
-        {
-            _localizationService = localizationService;
-            _logger = logger;
-        }
 
         [HttpGet("resources")]
         public IActionResult GetResources([FromQuery] string lang = "zhCN")
