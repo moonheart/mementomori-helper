@@ -13,15 +13,18 @@ public partial class AccountService
     private readonly AccountManager _accountManager;
     private readonly AccountCredentialService _credentialService;
     private readonly JobManagerService _jobManager;
+    private readonly PlayerSettingService _settingService;
 
     public List<AccountDto> GetAllAccounts()
     {
         return _accountManager.GetAllAccountInfos();
     }
 
-    public AccountDto AddAccount(long userId, string clientKey, string name)
+    public async Task<AccountDto> AddAccountAsync(long userId, string clientKey, string name)
     {
-        return _accountManager.AddAccount(userId, clientKey, name);
+        var account = _accountManager.AddAccount(userId, clientKey, name);
+        await _settingService.InitializeDefaultSettingsAsync(userId);
+        return account;
     }
 
     /// <summary>
@@ -45,6 +48,7 @@ public partial class AccountService
 
             // 添加账号
             _accountManager.AddAccount(userId, clientKey, name);
+            await _settingService.InitializeDefaultSettingsAsync(userId);
 
             return new GetClientKeyResponse
             {

@@ -28,11 +28,11 @@ public partial class AuthController : ControllerBase
     /// Add a new account with ClientKey (Method 1)
     /// </summary>
     [HttpPost("accounts/with-clientkey")]
-    public ActionResult<AccountDto> AddAccountWithClientKey([FromBody] AddAccountWithClientKeyRequest request)
+    public async Task<ActionResult<AccountDto>> AddAccountWithClientKey([FromBody] AddAccountWithClientKeyRequest request)
     {
         try
         {
-            var account = _accountService.AddAccount(
+            var account = await _accountService.AddAccountAsync(
                 request.UserId,
                 request.ClientKey,
                 request.Name

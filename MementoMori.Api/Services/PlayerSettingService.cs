@@ -1,4 +1,7 @@
 using MementoMori.Api.Infrastructure.Database;
+using MementoMori.Api.Models;
+using MementoMori.Ortega.Share.Data.Item;
+using MementoMori.Ortega.Share.Enums;
 using Newtonsoft.Json;
 
 namespace MementoMori.Api.Services;
@@ -79,5 +82,63 @@ public partial class PlayerSettingService
             e => e.SettingKey,
             e => (object?)e.JsonValue // 返回原始 JSON，由控制器或调用者决定如何解析
         );
+    }
+
+    /// <summary>
+    /// 初始化玩家默认配置
+    /// </summary>
+    public async Task InitializeDefaultSettingsAsync(long userId)
+    {
+        _logger.LogInformation("Initializing default settings for user {UserId}", userId);
+
+        // 1. Local Raid
+        var localRaid = new GameConfig.LocalRaidConfig
+        {
+            RewardItems = new List<GameConfig.WeightedItem>
+            {
+                new() { ItemType = ItemType.ExchangePlaceItem, ItemId = 4, Weight = 4.0 },
+                new() { ItemType = ItemType.CharacterTrainingMaterial, ItemId = 2, Weight = 3.0 },
+                new() { ItemType = ItemType.EquipmentReinforcementItem, ItemId = 2, Weight = 2.5 },
+                new() { ItemType = ItemType.CharacterTrainingMaterial, ItemId = 1, Weight = 2.0 },
+                new() { ItemType = ItemType.EquipmentReinforcementItem, ItemId = 1, Weight = 1.0 }
+            },
+            SelfCreateRoom = false,
+            WaitSeconds = 3
+        };
+        await SaveSettingAsync(userId, "localraid", localRaid);
+
+        // 2. Bounty Quest Auto
+        var bountyQuestAuto = new GameConfig.BountyQuestAutoConfig
+        {
+            TargetItems = new List<UserItem>
+            {
+                new() { ItemType = ItemType.Gold, ItemId = 1 },
+                new() { ItemType = ItemType.CurrencyFree, ItemId = 1 },
+                new() { ItemType = ItemType.CharacterTrainingMaterial, ItemId = 2 },
+                new() { ItemType = ItemType.TreasureChest, ItemId = 4 },
+                new() { ItemType = ItemType.TreasureChest, ItemId = 5 },
+                new() { ItemType = ItemType.TreasureChest, ItemId = 6 },
+                new() { ItemType = ItemType.TreasureChest, ItemId = 7 },
+                new() { ItemType = ItemType.TreasureChest, ItemId = 8 },
+                new() { ItemType = ItemType.TreasureChest, ItemId = 9 },
+                new() { ItemType = ItemType.TreasureChest, ItemId = 10 },
+                new() { ItemType = ItemType.TreasureChest, ItemId = 27 },
+                new() { ItemType = ItemType.TreasureChest, ItemId = 28 }
+            }
+        };
+        await SaveSettingAsync(userId, "bountyquestauto", bountyQuestAuto);
+
+        // 3. AutoJob (部分开关默认开启)
+        var autoJob = new GameConfig.AutoJobModel
+        {
+            AutoLocalRaid = true,
+            AutoPvp = true,
+            AutoLegendLeague = true,
+            AutoDungeonBattle = true,
+            AutoUseItems = true,
+            AutoFreeGacha = true,
+            AutoBuyShopItem = true
+        };
+        await SaveSettingAsync(userId, "autojob", autoJob);
     }
 }

@@ -121,6 +121,12 @@ public class GameConfig
         public long ItemId { get; set; }
         public ItemType ItemType { get; set; }
     }
+
+    [ExportTsClass]
+    public class BountyQuestAutoConfig
+    {
+        public List<UserItem> TargetItems { get; set; } = new();
+    }
 }
 
 [ExportTsClass]
@@ -133,6 +139,7 @@ public class PlayerOption
     public FriendManageOption FriendManage { get; set; } = new();
     public GuildTowerOption GuildTower { get; set; } = new();
     public BountyQuestOption BountyQuest { get; set; } = new();
+    public GameConfig.BountyQuestAutoConfig BountyQuestAuto { get; set; } = new();
     public GameConfig.GachaConfigModel GachaConfig { get; set; } = new();
     public Dictionary<QuickActionType, bool> QuickActionSwitch { get; set; } = new();
 }
