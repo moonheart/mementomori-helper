@@ -38,6 +38,10 @@ public class GameConfig
         public bool AutoChangeGachaRelic { get; set; }
         public bool AutoDrawGachaRelic { get; set; }
         public bool AutoBuyShopItem { get; set; }
+        public bool AutoReceiveAutoBattleReward { get; set; }
+        public bool AutoBossQuickBattle { get; set; }
+        public bool AutoBossHighSpeedBattle { get; set; }
+        // Note: AutoBossChallenge 不在此配置中，它是用户手动启停的任务，不是定时 Job
 
         public string DailyJobCron { get; set; } = "0 50 4 ? * *";
         public string HourlyJobCron { get; set; } = "0 30 0,4,8,12,16,20 ? * *";

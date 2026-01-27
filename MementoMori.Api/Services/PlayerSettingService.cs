@@ -137,7 +137,11 @@ public partial class PlayerSettingService
             AutoDungeonBattle = true,
             AutoUseItems = true,
             AutoFreeGacha = true,
-            AutoBuyShopItem = true
+            AutoBuyShopItem = true,
+            AutoReceiveAutoBattleReward = true,
+            AutoBossQuickBattle = true,
+            AutoBossHighSpeedBattle = true
+            // Note: AutoBossChallenge 不在此配置中，它是用户手动启停的任务
         };
         await SaveSettingAsync(userId, "autojob", autoJob);
     }

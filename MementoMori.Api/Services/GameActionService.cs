@@ -28,6 +28,7 @@ public partial class GameActionService
         var handlers = new List<IGameActionHandler>
         {
             _serviceProvider.GetRequiredService<DailyLoginBonusHandler>(),
+            _serviceProvider.GetRequiredService<AutoBattleRewardHandler>(),
             _serviceProvider.GetRequiredService<ShopAutoBuyHandler>(),
             _serviceProvider.GetRequiredService<GachaRelicChangeHandler>(),
             _serviceProvider.GetRequiredService<GachaRelicDrawHandler>(),
@@ -36,6 +37,7 @@ public partial class GameActionService
             _serviceProvider.GetRequiredService<LocalRaidHandler>(),
             _serviceProvider.GetRequiredService<ArenaPvpHandler>(),
             _serviceProvider.GetRequiredService<MissionRewardHandler>()
+            // Note: AutoBossChallengeHandler 不在此列表中，它是用户手动启停的任务
         };
 
         await _executor.ExecuteActionsAsync(context, handlers);
@@ -51,7 +53,7 @@ public partial class GameActionService
         var context = await _accountManager.GetOrCreateAsync(userId);
         var handler = _serviceProvider.GetRequiredService<ShopAutoBuyHandler>();
         
-        await _executor.ExecuteActionsAsync(context, new[] { handler });
+        await _executor.ExecuteActionsAsync(context, [handler]);
     }
 
     /// <summary>
@@ -62,7 +64,7 @@ public partial class GameActionService
         var context = await _accountManager.GetOrCreateAsync(userId);
         var handler = _serviceProvider.GetRequiredService<GachaRelicChangeHandler>();
 
-        await _executor.ExecuteActionsAsync(context, new[] { handler });
+        await _executor.ExecuteActionsAsync(context, [handler]);
     }
 
     /// <summary>
@@ -73,7 +75,7 @@ public partial class GameActionService
         var context = await _accountManager.GetOrCreateAsync(userId);
         var handler = _serviceProvider.GetRequiredService<GachaRelicDrawHandler>();
 
-        await _executor.ExecuteActionsAsync(context, new[] { handler });
+        await _executor.ExecuteActionsAsync(context, [handler]);
     }
 
     /// <summary>
@@ -84,7 +86,7 @@ public partial class GameActionService
         var context = await _accountManager.GetOrCreateAsync(userId);
         var handler = _serviceProvider.GetRequiredService<GuildRaidOpenHandler>();
 
-        await _executor.ExecuteActionsAsync(context, new[] { handler });
+        await _executor.ExecuteActionsAsync(context, [handler]);
     }
 
     /// <summary>
@@ -95,7 +97,7 @@ public partial class GameActionService
         var context = await _accountManager.GetOrCreateAsync(userId);
         var handler = _serviceProvider.GetRequiredService<LegendLeagueHandler>();
 
-        await _executor.ExecuteActionsAsync(context, new[] { handler });
+        await _executor.ExecuteActionsAsync(context, [handler]);
     }
 
     /// <summary>
@@ -106,7 +108,7 @@ public partial class GameActionService
         var context = await _accountManager.GetOrCreateAsync(userId);
         var handler = _serviceProvider.GetRequiredService<LocalRaidHandler>();
 
-        await _executor.ExecuteActionsAsync(context, new[] { handler });
+        await _executor.ExecuteActionsAsync(context, [handler]);
     }
 
     /// <summary>
@@ -117,7 +119,7 @@ public partial class GameActionService
         var context = await _accountManager.GetOrCreateAsync(userId);
         var handler = _serviceProvider.GetRequiredService<ArenaPvpHandler>();
 
-        await _executor.ExecuteActionsAsync(context, new[] { handler });
+        await _executor.ExecuteActionsAsync(context, [handler]);
     }
 
     /// <summary>
@@ -128,6 +130,50 @@ public partial class GameActionService
         var context = await _accountManager.GetOrCreateAsync(userId);
         var handler = _serviceProvider.GetRequiredService<MissionRewardHandler>();
 
-        await _executor.ExecuteActionsAsync(context, new[] { handler });
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 领取自动战斗奖励
+    /// </summary>
+    public async Task GetAutoBattleRewardAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<AutoBattleRewardHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 执行BOSS快速战斗
+    /// </summary>
+    public async Task BossQuickBattleAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<BossQuickBattleHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 执行BOSS高速战斗
+    /// </summary>
+    public async Task BossHighSpeedBattleAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<BossHighSpeedBattleHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 执行自动BOSS挑战
+    /// </summary>
+    public async Task AutoBossChallengeAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<AutoBossChallengeHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
     }
 }
