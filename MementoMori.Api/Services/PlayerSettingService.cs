@@ -140,8 +140,9 @@ public partial class PlayerSettingService
             AutoBuyShopItem = true,
             AutoReceiveAutoBattleReward = true,
             AutoBossQuickBattle = true,
-            AutoBossHighSpeedBattle = true
-            // Note: AutoBossChallenge 不在此配置中，它是用户手动启停的任务
+            AutoBossHighSpeedBattle = true,
+            AutoBountyQuestDispatch = true,
+            AutoBountyQuestReward = true
         };
         await SaveSettingAsync(userId, "autojob", autoJob);
     }

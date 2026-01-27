@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using MementoMori.Api.Infrastructure;
 using MementoMori.Api.Infrastructure.Database;
 using MementoMori.Api.Models;
+using MementoMori.Api.Utils;
 
 namespace MementoMori.Api.Services;
 
@@ -12,6 +13,7 @@ public class AccountContext
 {
     public AccountDto AccountInfo { get; set; } = null!;
     public NetworkManager NetworkManager { get; set; } = null!;
+    public TimeManager TimeManager { get; set; } = new();
 }
 
 /// <summary>

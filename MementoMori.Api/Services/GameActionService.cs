@@ -29,6 +29,8 @@ public partial class GameActionService
         {
             _serviceProvider.GetRequiredService<DailyLoginBonusHandler>(),
             _serviceProvider.GetRequiredService<AutoBattleRewardHandler>(),
+            _serviceProvider.GetRequiredService<BountyQuestDispatchHandler>(),
+            _serviceProvider.GetRequiredService<BountyQuestRewardHandler>(),
             _serviceProvider.GetRequiredService<ShopAutoBuyHandler>(),
             _serviceProvider.GetRequiredService<GachaRelicChangeHandler>(),
             _serviceProvider.GetRequiredService<GachaRelicDrawHandler>(),
