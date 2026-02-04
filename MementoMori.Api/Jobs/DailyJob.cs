@@ -22,6 +22,6 @@ public class DailyJob : AccountJobBase
 
     protected override async Task ExecuteAsync(IJobExecutionContext context, AccountContext accountContext)
     {
-        await _gameActionService.ExecuteAllQuickActionAsync(accountContext.AccountInfo.UserId);
+        await _gameActionService.ExecuteDailyActionAsync(accountContext.AccountInfo.UserId);
     }
 }

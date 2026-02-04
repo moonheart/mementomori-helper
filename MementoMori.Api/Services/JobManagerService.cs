@@ -29,7 +29,7 @@ public partial class JobManagerService
         // 获取用户的 AutoJob 配置
         using var scope = _serviceProvider.CreateScope();
         var settingService = scope.ServiceProvider.GetRequiredService<PlayerSettingService>();
-        var config = await settingService.GetSettingAsync<GameConfig.AutoJobModel>(userId, "AutoJob");
+        var config = await settingService.GetSettingAsync<GameConfig.AutoJobModel>(userId, SettingKeys.AutoJob);
 
         if (config == null || config.DisableAll)
         {
@@ -44,7 +44,15 @@ public partial class JobManagerService
 
         _logger.LogInformation("Registering jobs for user {UserId} with offset {Offset}", userId, offset);
 
-        // 注册核心任务
+        // 先删除所有旧任务，确保配置变更时能正确移除不需要的任务
+        var jobKeys = await scheduler.GetJobKeys(Quartz.Impl.Matchers.GroupMatcher<JobKey>.GroupEquals(userId.ToString()));
+        if (jobKeys.Count > 0)
+        {
+            await scheduler.DeleteJobs(jobKeys);
+            _logger.LogInformation("Removed {Count} existing jobs for user {UserId}", jobKeys.Count, userId);
+        }
+
+        // 注册核心任务（这些任务总是需要的）
         await RegisterJobAsync<Jobs.DailyJob>(scheduler, userId, config.DailyJobCron, "每日任务", offset);
         await RegisterJobAsync<Jobs.HourlyJob>(scheduler, userId, config.HourlyJobCron, "每小时奖励/体力任务", offset);
 
@@ -89,9 +97,6 @@ public partial class JobManagerService
         {
             await RegisterJobAsync<Jobs.PvpJob>(scheduler, userId, config.PvpJobCron, "PVP 竞技场任务", offset);
         }
-
-        // if (config.AutoPvp)
-        //    await RegisterJobAsync<Jobs.PvpJob>(scheduler, config.PvpJobCron, "PVP 竞技场任务", userId, offset);
         
         _logger.LogInformation("Successfully registered jobs for user {UserId}", userId);
     }

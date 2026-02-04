@@ -30,7 +30,7 @@ public partial class GuildRaidOpenHandler : IGameActionHandler
         // 获取配置
         using var scope = _serviceProvider.CreateScope();
         var settingService = scope.ServiceProvider.GetRequiredService<PlayerSettingService>();
-        var autoJobConfig = await settingService.GetSettingAsync<GameConfig.AutoJobModel>(userId, "AutoJob");
+        var autoJobConfig = await settingService.GetSettingAsync<GameConfig.AutoJobModel>(userId, SettingKeys.AutoJob);
 
         if (autoJobConfig == null || !autoJobConfig.AutoOpenGuildRaid)
         {

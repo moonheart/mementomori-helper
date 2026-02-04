@@ -18,33 +18,98 @@ public partial class GameActionService
     private readonly ActionExecutor _executor;
 
     /// <summary>
-    /// 执行所有快速动作（每日/每小时任务的核心）
+    /// 执行所有每日自动化任务（DailyJob 使用）
     /// </summary>
-    public async Task ExecuteAllQuickActionAsync(long userId)
+    public async Task ExecuteDailyActionAsync(long userId)
     {
         var context = await _accountManager.GetOrCreateAsync(userId);
         await _jobLogger.LogAsync(userId, "开始执行全量自动化任务...");
-        
+
         var handlers = new List<IGameActionHandler>
         {
-            _serviceProvider.GetRequiredService<DailyLoginBonusHandler>(),
-            _serviceProvider.GetRequiredService<AutoBattleRewardHandler>(),
-            _serviceProvider.GetRequiredService<BountyQuestDispatchHandler>(),
-            _serviceProvider.GetRequiredService<BountyQuestRewardHandler>(),
-            _serviceProvider.GetRequiredService<ShopAutoBuyHandler>(),
-            _serviceProvider.GetRequiredService<GachaRelicChangeHandler>(),
-            _serviceProvider.GetRequiredService<GachaRelicDrawHandler>(),
-            _serviceProvider.GetRequiredService<GuildRaidOpenHandler>(),
-            _serviceProvider.GetRequiredService<LegendLeagueHandler>(),
-            _serviceProvider.GetRequiredService<LocalRaidHandler>(),
-            _serviceProvider.GetRequiredService<ArenaPvpHandler>(),
-            _serviceProvider.GetRequiredService<MissionRewardHandler>()
-            // Note: AutoBossChallengeHandler 不在此列表中，它是用户手动启停的任务
+            // ===== 按原始代码顺序排列 =====
+            // 1-4: 登录与每日奖励
+            _serviceProvider.GetRequiredService<DailyLoginBonusHandler>(),        // GetLoginBonus()
+            _serviceProvider.GetRequiredService<VipDailyGiftHandler>(),           // GetVipGift()
+            _serviceProvider.GetRequiredService<MonthlyBoostHandler>(),           // ReceiveMonthlyBoost()
+            _serviceProvider.GetRequiredService<AutoBattleRewardHandler>(),       // GetAutoBattleReward()
+            
+            // 5-6: 社交资源
+            _serviceProvider.GetRequiredService<FriendPointTransferHandler>(),    // BulkTransferFriendPoint()
+            _serviceProvider.GetRequiredService<PresentReceiveHandler>(),         // PresentReceiveItem()
+            
+            // 7: 装备强化 (条件执行)
+            _serviceProvider.GetRequiredService<EquipmentReinforcementHandler>(), // ReinforcementEquipmentOneTime()
+            
+            // 8-10: Boss战斗
+            _serviceProvider.GetRequiredService<BossQuickBattleHandler>(),        // BattleBossQuick()
+            _serviceProvider.GetRequiredService<InfiniteTowerHandler>(),          // InfiniteTowerQuick()
+            _serviceProvider.GetRequiredService<BossHighSpeedBattleHandler>(),    // BossHishSpeedBattle()
+            
+            // 11-14: 公会相关
+            _serviceProvider.GetRequiredService<GvgRewardHandler>(),              // ReceiveGvgReward()
+            _serviceProvider.GetRequiredService<GuildCheckinHandler>(),           // GuildCheckin()
+            _serviceProvider.GetRequiredService<GuildRaidBattleHandler>(),        // GuildRaid() ⚠️ 新增
+            _serviceProvider.GetRequiredService<GuildTowerHandler>(),             // AutoGuildTower()
+            
+            // 15: 好友管理
+            _serviceProvider.GetRequiredService<FriendManageHandler>(),           // AutoFriendManage()
+            
+            // 16: 成就奖励
+            _serviceProvider.GetRequiredService<AchievementRewardHandler>(),      // ReceiveAchievementReward()
+            
+            // 17-18: 赏金任务
+            _serviceProvider.GetRequiredService<BountyQuestRewardHandler>(),      // BountyQuestRewardAuto()
+            _serviceProvider.GetRequiredService<BountyQuestDispatchHandler>(),    // BountyQuestStartAuto()
+            
+            // 19: 地下城 (条件执行)
+            _serviceProvider.GetRequiredService<DungeonBattleHandler>(),          // AutoDungeonBattle()
+            
+            // 20-21: 任务奖励
+            _serviceProvider.GetRequiredService<MissionRewardHandler>(),          // CompleteMissions()
+            _serviceProvider.GetRequiredService<MissionActivityRewardHandler>(),  // RewardMissonActivity()
+            
+            // 22-25: 道具使用和角色升级
+            _serviceProvider.GetRequiredService<AutoUseItemsHandler>(),           // AutoUseItems() (第1次)
+            _serviceProvider.GetRequiredService<FreeGachaHandler>(),              // FreeGacha()
+            _serviceProvider.GetRequiredService<AutoUseItemsHandler>(),           // AutoUseItems() (第2次 - FreeGacha后获得新道具)
+            _serviceProvider.GetRequiredService<CharacterRankUpHandler>()         // AutoRankUpCharacter()
         };
 
         await _executor.ExecuteActionsAsync(context, handlers);
-        
+
         await _jobLogger.LogAsync(userId, "全量自动化任务执行完毕。");
+    }
+
+    /// <summary>
+    /// 执行每小时自动化任务（HourlyJob 使用的轻量版本）
+    /// </summary>
+    public async Task ExecuteHourlyActionAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        await _jobLogger.LogAsync(userId, "开始执行每小时自动化任务...");
+
+        var handlers = new List<IGameActionHandler>
+        {
+            // ===== 每小时任务包含的14个动作（原始 HourlyJob 的动作列表）=====
+            _serviceProvider.GetRequiredService<DailyLoginBonusHandler>(),        // GetLoginBonus()
+            _serviceProvider.GetRequiredService<BountyQuestDispatchHandler>(),    // BountyQuestStartAuto()
+            _serviceProvider.GetRequiredService<PresentReceiveHandler>(),         // PresentReceiveItem()
+            _serviceProvider.GetRequiredService<AutoBattleRewardHandler>(),       // GetAutoBattleReward()
+            _serviceProvider.GetRequiredService<GuildRaidBattleHandler>(),        // GuildRaid()
+            _serviceProvider.GetRequiredService<GuildTowerHandler>(),             // AutoGuildTower()
+            _serviceProvider.GetRequiredService<GvgRewardHandler>(),              // ReceiveGvgReward()
+            _serviceProvider.GetRequiredService<FriendPointTransferHandler>(),    // BulkTransferFriendPoint()
+            _serviceProvider.GetRequiredService<BountyQuestRewardHandler>(),      // BountyQuestRewardAuto()
+            _serviceProvider.GetRequiredService<MissionRewardHandler>(),          // CompleteMissions()
+            _serviceProvider.GetRequiredService<MissionActivityRewardHandler>(),  // RewardMissonActivity()
+            _serviceProvider.GetRequiredService<FreeGachaHandler>(),              // FreeGacha() (条件执行)
+            _serviceProvider.GetRequiredService<AutoUseItemsHandler>()            // AutoUseItems() (条件执行)
+        };
+
+        await _executor.ExecuteActionsAsync(context, handlers);
+
+        await _jobLogger.LogAsync(userId, "每小时自动化任务执行完毕。");
     }
 
     /// <summary>
@@ -54,7 +119,7 @@ public partial class GameActionService
     {
         var context = await _accountManager.GetOrCreateAsync(userId);
         var handler = _serviceProvider.GetRequiredService<ShopAutoBuyHandler>();
-        
+
         await _executor.ExecuteActionsAsync(context, [handler]);
     }
 

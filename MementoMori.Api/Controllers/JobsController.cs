@@ -31,7 +31,7 @@ public partial class JobsController : ControllerBase
     [HttpGet("{userId}/config")]
     public async Task<ActionResult<GameConfig.AutoJobModel>> GetJobConfig(long userId)
     {
-        var config = await _settingService.GetSettingAsync<GameConfig.AutoJobModel>(userId, "AutoJob");
+        var config = await _settingService.GetSettingAsync<GameConfig.AutoJobModel>(userId, SettingKeys.AutoJob);
         return Ok(config ?? new GameConfig.AutoJobModel());
     }
 
@@ -41,7 +41,7 @@ public partial class JobsController : ControllerBase
     [HttpPost("{userId}/config")]
     public async Task<ActionResult> UpdateJobConfig(long userId, [FromBody] GameConfig.AutoJobModel config)
     {
-        await _settingService.SaveSettingAsync(userId, "AutoJob", config);
+        await _settingService.SaveSettingAsync(userId, SettingKeys.AutoJob, config);
         
         // 刷新 Quartz 任务
         await _jobManager.RegisterJobsAsync(userId);

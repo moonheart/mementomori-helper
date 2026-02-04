@@ -22,8 +22,8 @@ public class HourlyJob : AccountJobBase
 
     protected override async Task ExecuteAsync(IJobExecutionContext context, AccountContext accountContext)
     {
-        // 每小时任务通常也包含大部分快速动作，或者可以定制一套更轻量的动作
-        // 在原版中，HourlyJob 包含了大部分每日动作
-        await _gameActionService.ExecuteAllQuickActionAsync(accountContext.AccountInfo.UserId);
+        // 每小时任务执行14个特定的轻量动作（原始 HourlyJob 的子集）
+        // 不包括：VIP礼物、月卡、装备强化、BOSS战斗、无限塔、公会签到、好友管理、成就、地下城、角色升阶
+        await _gameActionService.ExecuteHourlyActionAsync(accountContext.AccountInfo.UserId);
     }
 }

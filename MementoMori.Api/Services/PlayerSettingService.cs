@@ -9,7 +9,7 @@ namespace MementoMori.Api.Services;
 /// <summary>
 /// 玩家设置服务 - 处理按子类型分开存储的持久化设置
 /// </summary>
-[RegisterScoped]
+[RegisterSingleton]
 [AutoConstructor]
 public partial class PlayerSettingService
 {
@@ -80,7 +80,7 @@ public partial class PlayerSettingService
 
         return entities.ToDictionary(
             e => e.SettingKey,
-            e => (object?)e.JsonValue // 返回原始 JSON，由控制器或调用者决定如何解析
+            e => (object?) e.JsonValue // 返回原始 JSON，由控制器或调用者决定如何解析
         );
     }
 
@@ -105,7 +105,7 @@ public partial class PlayerSettingService
             SelfCreateRoom = false,
             WaitSeconds = 3
         };
-        await SaveSettingAsync(userId, "localraid", localRaid);
+        await SaveSettingAsync(userId, SettingKeys.LocalRaid, localRaid);
 
         // 2. Bounty Quest Auto
         var bountyQuestAuto = new GameConfig.BountyQuestAutoConfig
@@ -126,7 +126,7 @@ public partial class PlayerSettingService
                 new() { ItemType = ItemType.TreasureChest, ItemId = 28 }
             }
         };
-        await SaveSettingAsync(userId, "bountyquestauto", bountyQuestAuto);
+        await SaveSettingAsync(userId, SettingKeys.BountyQuestAuto, bountyQuestAuto);
 
         // 3. AutoJob (部分开关默认开启)
         var autoJob = new GameConfig.AutoJobModel
@@ -144,6 +144,58 @@ public partial class PlayerSettingService
             AutoBountyQuestDispatch = true,
             AutoBountyQuestReward = true
         };
-        await SaveSettingAsync(userId, "autojob", autoJob);
+        await SaveSettingAsync(userId, SettingKeys.AutoJob, autoJob);
     }
+
+    #region 便捷方法
+
+    /// <summary>
+    /// 获取好友管理设置
+    /// </summary>
+    public async Task<FriendManageOption> GetFriendManageSettingsAsync(long userId)
+    {
+        return await GetSettingAsync<FriendManageOption>(userId, SettingKeys.FriendManage) ?? new FriendManageOption();
+    }
+
+    /// <summary>
+    /// 获取公会塔设置
+    /// </summary>
+    public async Task<GuildTowerOption> GetGuildTowerSettingsAsync(long userId)
+    {
+        return await GetSettingAsync<GuildTowerOption>(userId, SettingKeys.GuildTower) ?? new GuildTowerOption();
+    }
+
+    /// <summary>
+    /// 获取地下城战斗设置
+    /// </summary>
+    public async Task<GameConfig.DungeonBattleConfig> GetDungeonBattleSettingsAsync(long userId)
+    {
+        return await GetSettingAsync<GameConfig.DungeonBattleConfig>(userId, SettingKeys.DungeonBattle) ?? new GameConfig.DungeonBattleConfig();
+    }
+
+    /// <summary>
+    /// 获取自动任务设置
+    /// </summary>
+    public async Task<GameConfig.AutoJobModel> GetAutoJobSettingsAsync(long userId)
+    {
+        return await GetSettingAsync<GameConfig.AutoJobModel>(userId, SettingKeys.AutoJob) ?? new GameConfig.AutoJobModel();
+    }
+
+    /// <summary>
+    /// 获取道具设置
+    /// </summary>
+    public async Task<GameConfig.ItemsConfig> GetItemSettingsAsync(long userId)
+    {
+        return await GetSettingAsync<GameConfig.ItemsConfig>(userId, SettingKeys.Items) ?? new GameConfig.ItemsConfig();
+    }
+
+    /// <summary>
+    /// 获取扭蛋设置
+    /// </summary>
+    public async Task<GameConfig.GachaConfigModel> GetGachaSettingsAsync(long userId)
+    {
+        return await GetSettingAsync<GameConfig.GachaConfigModel>(userId, SettingKeys.Gacha) ?? new GameConfig.GachaConfigModel();
+    }
+
+    #endregion
 }
