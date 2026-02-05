@@ -50,7 +50,7 @@ public partial class NetworkManager : IDisposable
 
     // MagicOnion
     private string? _authTokenOfMagicOnion;
-    
+
     // Last login request
     private LoginRequest? _lastLoginRequest;
 
@@ -137,7 +137,7 @@ public partial class NetworkManager : IDisposable
         // 重新获取玩家数据
         var response = await SendRequest<LoginRequest, LoginResponse>(_lastLoginRequest, useAuthApi: true);
         var playerDataInfo = response.PlayerDataInfoList?.FirstOrDefault(x => x.WorldId == worldId);
-        
+
         if (playerDataInfo == null)
         {
             throw new InvalidOperationException($"World {worldId} not found");
@@ -173,7 +173,7 @@ public partial class NetworkManager : IDisposable
         };
 
         var response = await SendRequest<GetServerHostRequest, GetServerHostResponse>(request, useAuthApi: true);
-        
+
         _gameApiUrl = new Uri(response.ApiHost);
         _grpcChannel?.Dispose();
         _grpcChannel = GrpcChannel.ForAddress(new Uri($"https://{response.MagicOnionHost}:{response.MagicOnionPort}"));
@@ -245,7 +245,7 @@ public partial class NetworkManager : IDisposable
             }
 
             var apiUrl = useAuthApi ? _authApiUrl : (_gameApiUrl ?? _authApiUrl);
-            
+
             // 获取 API 路径
             var path = GetApiPath<TReq>();
             var uri = new Uri(apiUrl, path);
@@ -255,16 +255,16 @@ public partial class NetworkManager : IDisposable
             // 序列化请求
             var requestBytes = MessagePackSerializer.Serialize(request);
 
-            // 重试标签（用于自动更新后重试）
-            RETRY_AFTER_UPDATE:
+        // 重试标签（用于自动更新后重试）
+        RETRY_AFTER_UPDATE:
             try
             {
                 // 发送请求
                 using var content = new ByteArrayContent(requestBytes);
                 content.Headers.Add("content-type", "application/json; charset=UTF-8");
-                
+
                 using var response = await _httpClient.PostAsync(uri, content);
-                
+
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError("HTTP Error: {StatusCode}", response.StatusCode);
@@ -279,14 +279,14 @@ public partial class NetworkManager : IDisposable
                     {
                         await using var errorStream = await response.Content.ReadAsStreamAsync();
                         var error = MessagePackSerializer.Deserialize<ApiErrorResponse>(errorStream);
-                        
+
                         // 特殊处理：需要客户端更新
                         if (error.ErrorCode == ErrorCode.CommonRequireClientUpdate)
                         {
                             _logger.LogWarning("Client update required, attempting auto-update via VersionService...");
                             await _versionService.RefreshVersionAsync();
                             MoriHttpClientHandler.AppVersion = _versionService.AppVersion;
-                            
+
                             // 更新请求中的字节（如果有必要，虽然 GetDataUriRequest 没传版本，但以防万一）
                             goto RETRY_AFTER_UPDATE; // 更新后重试
                         }
@@ -307,7 +307,7 @@ public partial class NetworkManager : IDisposable
 
                         // 详细错误日志
                         _logger.LogError("API Error at {Uri}: {ErrorCode}", uri, error.ErrorCode);
-                        
+
                         // 抛出自定义异常
                         throw new ApiErrorException(error.ErrorCode);
                     }
@@ -317,12 +317,13 @@ public partial class NetworkManager : IDisposable
                 await using var stream = await response.Content.ReadAsStreamAsync();
                 var result = MessagePackSerializer.Deserialize<TResp>(stream);
 
-                // 处理 UserSyncData
+                // 处理 UserSyncData（增量合并）
                 if (result is IUserSyncApiResponse userSyncResponse)
                 {
                     if (userSyncResponse.UserSyncData != null)
                     {
-                        UserSyncData = userSyncResponse.UserSyncData;
+                        // 使用 UserItemEditorMergeUserSyncData 进行增量合并
+                        UserSyncData.UserItemEditorMergeUserSyncData(userSyncResponse.UserSyncData);
                     }
                     userDataCallback?.Invoke(userSyncResponse.UserSyncData);
                 }
@@ -349,7 +350,7 @@ public partial class NetworkManager : IDisposable
     {
         public ErrorCode ErrorCode { get; }
 
-        public ApiErrorException(ErrorCode errorCode) 
+        public ApiErrorException(ErrorCode errorCode)
             : base($"API Error: {errorCode}")
         {
             ErrorCode = errorCode;
@@ -362,7 +363,7 @@ public partial class NetworkManager : IDisposable
     private string GetApiPath<TReq>() where TReq : ApiRequestBase
     {
         var type = typeof(TReq);
-        
+
         // 尝试从 Attribute 获取路径
         var authAttr = type.GetCustomAttribute<OrtegaAuthAttribute>();
         if (authAttr != null)

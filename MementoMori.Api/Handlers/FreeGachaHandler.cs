@@ -78,6 +78,26 @@ public partial class FreeGachaHandler : IGameActionHandler
                     if (buttonInfo == null) continue;
                     if (ignoredButtonIds.Contains(buttonInfo.GachaButtonId)) continue;
 
+                    // 检查装备扭蛋的主线进度要求（从 OpenContentMB 动态查询）
+                    if (gachaCaseInfo.GachaCategoryType == GachaCategoryType.Equipment)
+                    {
+                        var equipmentGachaOpenContent = OpenContentTable.GetByOpenCommandType(OpenCommandType.GachaEquipment);
+
+                        if (equipmentGachaOpenContent != null)
+                        {
+                            var requiredQuestId = equipmentGachaOpenContent.OpenContentValue;
+                            var currentMaxQuestId = nm.UserSyncData.UserBattleBossDtoInfo?.BossClearMaxQuestId ?? 0;
+
+                            if (currentMaxQuestId < requiredQuestId)
+                            {
+                                _logger.LogInformation(
+                                    "跳过装备扭蛋: 主线进度不足 (需要 {Required}, 当前 {Current}) for user {UserId}",
+                                    requiredQuestId, currentMaxQuestId, userId);
+                                continue;
+                            }
+                        }
+                    }
+
                     try
                     {
                         await nm.SendRequest<DrawRequest, DrawResponse>(
