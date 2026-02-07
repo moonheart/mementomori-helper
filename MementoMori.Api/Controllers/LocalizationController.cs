@@ -25,5 +25,17 @@ namespace MementoMori.Api.Controllers
             
             return Ok(resources);
         }
+
+        [HttpGet("manifest")]
+        public IActionResult GetManifest([FromQuery] string lang = "zhCN")
+        {
+            if (!Enum.TryParse<LanguageType>(lang, true, out var languageType))
+            {
+                languageType = LanguageType.zhCN;
+            }
+
+            var manifest = _localizationService.GetManifest(languageType);
+            return Ok(manifest);
+        }
     }
 }
