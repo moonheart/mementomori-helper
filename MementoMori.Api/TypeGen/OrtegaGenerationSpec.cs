@@ -82,6 +82,11 @@ namespace MementoMori.Api.TypeGen
             Console.WriteLine($"[OrtegaGenerationSpec] Added {enumTypes.Count()} Enum types");
         }
 
+        public override void OnBeforeBarrelGeneration(OnBeforeBarrelGenerationArgs args)
+        {
+            AddBarrel(".", BarrelScope.Files);
+        }
+
         /// <summary>
         /// 检查类型是否有效（排除编译器生成的类型和特殊类型）
         /// </summary>

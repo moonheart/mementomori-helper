@@ -19,11 +19,12 @@
     ],
     "enumValueNameConverters": [],
     "externalAssemblyPaths": [],
-    "createIndexFile": true,
+    "createIndexFile": false,
     "outputPath": "../../src/api/generated",
     "customTypeMappings": {
         "System.Guid": "string",
         "System.DateTime": "Date",
-        "System.DateTimeOffset": "Date"
+        "System.DateTimeOffset": "Date",
+        "System.TimeSpan": "number"
     }
 }
