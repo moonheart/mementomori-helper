@@ -16,7 +16,8 @@ public class UserIdAuthenticationMiddleware
         "/api/Auth/accounts",
         "/swagger",
         "/api/localization",
-        "/health"
+        "/health",
+        "/api/master"
     };
 
     public UserIdAuthenticationMiddleware(
