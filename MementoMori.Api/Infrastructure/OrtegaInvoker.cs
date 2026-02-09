@@ -106,7 +106,7 @@ namespace MementoMori.Api.Infrastructure
                 // 展开 TargetInvocationException，抛出真实的异常
                 throw ex.InnerException ?? ex;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not NetworkManager.ApiErrorException)
             {
                 throw new InvalidOperationException($"Failed to invoke SendRequest for {requestType.Name}", ex);
             }

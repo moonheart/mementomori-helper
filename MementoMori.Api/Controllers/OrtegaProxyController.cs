@@ -80,7 +80,7 @@ namespace MementoMori.Api.Controllers
                 return BadRequest(new
                 {
                     error = "Ortega API error",
-                    errorCode = ex.ErrorCode.ToString(),
+                    errorCode = ex.ErrorCode,
                     category,
                     ortegaAction
                 });
