@@ -16,6 +16,7 @@ namespace MementoMori.Api.Controllers
     {
         private readonly OrtegaApiDiscoveryService _discoveryService;
         private readonly OrtegaInvoker _invoker;
+        private readonly BattleLogService _battleLogService;
         private readonly ILogger<OrtegaProxyController> _logger;
 
         /// <summary>
@@ -65,6 +66,19 @@ namespace MementoMori.Api.Controllers
 
                 // 调用 Ortega API
                 var response = await _invoker.InvokeAsync(userId, requestJson, apiInfo.RequestType, apiInfo.ResponseType);
+
+                // 尝试保存战斗日志 (失败不影响主流程)
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _battleLogService.TrySaveBattleLogAsync(userId, apiUri, response);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "保存战斗日志时发生错误");
+                    }
+                });
 
                 // 返回响应
                 return Ok(response);
