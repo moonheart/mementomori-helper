@@ -32,5 +32,8 @@ namespace MementoMori.Ortega.Share.Data.BookSortAssistance
 
 		[Description("派遣キャラクターレアリティ")]
 		public CharacterRarityFlags CharacterRarityFlags { get; set; }
+
+        [Description("枠解放演出フラグ")]
+        public bool IsUnlockEffect { get; set; }
 	}
 }

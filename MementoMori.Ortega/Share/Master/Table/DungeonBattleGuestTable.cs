@@ -6,26 +6,12 @@ namespace MementoMori.Ortega.Share.Master.Table
 	{
 		public List<DungeonBattleGuestMB> GetListByCharacterIds(List<long> characterIds)
 		{
-			// List<DungeonBattleGuestMB> list = new List();
-			// int num = 0;
-			// bool flag;
-			// if (flag)
-			// {
-			// }
-			// num++;
-			// return list;
-			throw new NotImplementedException();
+			return this._datas.Where(d => characterIds.Contains(d.CharacterId)).ToList();
 		}
 
 		public DungeonBattleGuestMB GetByCharacterId(long characterId)
 		{
-			int num = 0;
-			num++;
-			throw new NullReferenceException();
-		}
-
-		public DungeonBattleGuestTable()
-		{
+			return this._datas.FirstOrDefault(d => d.CharacterId == characterId);
 		}
 	}
 }
