@@ -2027,6 +2027,8 @@ namespace MementoMori.Ortega.Share
 		MagicOnionOverCastleMemoMessageMaxLength,
 		[Description("既に他のメンバーにより、拠点メモがリセット済みです。")]
 		MagicOnionAlreadyResetCastleMemo,
+        [Description("作戦時間が終了しているため布告できません。")]
+        MagicOnionEndDeclarationTime,
 		[Description("プッシュ通知対象外の端末です。")]
 		PushNotificationNotSupportedDeviceType = 4000000,
 		[Description("プッシュ通知の登録に必要な情報が取得できません。")]
