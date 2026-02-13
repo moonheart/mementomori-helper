@@ -7,6 +7,9 @@ namespace MementoMori.Ortega.Share.MagicOnionShare.Response
 	[MessagePackObject(false)]
 	public class OnUpdateMapResponse
 	{
+        [Key(2)]
+        public List<GvgActivePlayerInfo> ActivePlayerInfoList  { get; set; }
+
 		[Key(0)]
 		public List<CastleInfo> CastleInfos { get; set; }
 
