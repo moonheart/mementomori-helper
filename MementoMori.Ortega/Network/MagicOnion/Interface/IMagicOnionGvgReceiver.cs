@@ -17,5 +17,7 @@ namespace MementoMori.Ortega.Network.MagicOnion.Interface
 		void OnUpdateDeployCharacter(OnUpdateDeployCharacterResponse response);
 
 		void OnAddOnlyReceiverParty(OnAddOnlyReceiverPartyResponse response);
+
+		void OnUpdateCastleMemo(OnUpdateCastleMemoResponse response);
 	}
 }

@@ -58,4 +58,9 @@ public class MagicOnionGvgReceiver : IMagicOnionGvgReceiver, IMagicOnionErrorRec
     public void OnAddOnlyReceiverParty(OnAddOnlyReceiverPartyResponse response)
     {
     }
+
+    public void OnUpdateCastleMemo(OnUpdateCastleMemoResponse response)
+    {
+        
+    }
 }

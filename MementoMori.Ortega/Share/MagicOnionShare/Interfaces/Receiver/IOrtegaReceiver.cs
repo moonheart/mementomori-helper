@@ -63,5 +63,21 @@ namespace MementoMori.Ortega.Share.MagicOnionShare.Interfaces.Receiver
 		void OnGlobalGvgUpdateDeployCharacter(OnUpdateDeployCharacterResponse response);
 
 		void OnGlobalGvgAddOnlyReceiverParty(OnAddOnlyReceiverPartyResponse response);
+
+		void OnLocalGvgUpdateCastleMemo(OnUpdateCastleMemoResponse response);
+
+		void OnGlobalGvgUpdateCastleMemo(OnUpdateCastleMemoResponse response);
+
+		void OnNoticeGuildTowerInfo(GuildTowerInfoResponse response);
+
+		void OnReceiveAchieveReward(OnReceiveAchieveRewardResponse response);
+
+		void OnInviteRefuse(OnInviteRefuseResponse response);
+
+		void OnReceiveBlockChatLog(OnReceiveBlockChatLogResponse response);
+
+		void OnReactChat(OnReactChatResponse response);
+
+		void OnChangeChatOption(OnChangeChatOptionResponse response);
 	}
 }
