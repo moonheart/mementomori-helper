@@ -106,5 +106,6 @@ app.MapControllers();
 
 // Map SignalR Hubs
 app.MapHub<MementoMori.Api.Infrastructure.JobHub>("/hubs/jobs");
+app.MapHub<MementoMori.Api.Infrastructure.LocalRaidHub>("/hubs/localraid");
 
 app.Run();

@@ -50,6 +50,16 @@ public partial class NetworkManager : IDisposable
 
     // MagicOnion
     private string? _authTokenOfMagicOnion;
+    
+    /// <summary>
+    /// MagicOnion 的 gRPC Channel
+    /// </summary>
+    public GrpcChannel? GrpcChannel => _grpcChannel;
+    
+    /// <summary>
+    /// MagicOnion 认证令牌
+    /// </summary>
+    public string? AuthTokenOfMagicOnion => _authTokenOfMagicOnion;
 
     // Last login request
     private LoginRequest? _lastLoginRequest;
