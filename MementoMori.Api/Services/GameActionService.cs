@@ -67,7 +67,6 @@ public partial class GameActionService
             
             // 20-21: 任务奖励
             _serviceProvider.GetRequiredService<MissionRewardHandler>(),          // CompleteMissions()
-            _serviceProvider.GetRequiredService<MissionActivityRewardHandler>(),  // RewardMissonActivity()
             
             // 22-25: 道具使用和角色升级
             _serviceProvider.GetRequiredService<AutoUseItemsHandler>(),           // AutoUseItems() (第1次)
@@ -102,9 +101,9 @@ public partial class GameActionService
             _serviceProvider.GetRequiredService<FriendPointTransferHandler>(),    // BulkTransferFriendPoint()
             _serviceProvider.GetRequiredService<BountyQuestRewardHandler>(),      // BountyQuestRewardAuto()
             _serviceProvider.GetRequiredService<MissionRewardHandler>(),          // CompleteMissions()
-            _serviceProvider.GetRequiredService<MissionActivityRewardHandler>(),  // RewardMissonActivity()
             _serviceProvider.GetRequiredService<FreeGachaHandler>(),              // FreeGacha() (条件执行)
-            _serviceProvider.GetRequiredService<AutoUseItemsHandler>()            // AutoUseItems() (条件执行)
+            _serviceProvider.GetRequiredService<AutoUseItemsHandler>(),           // AutoUseItems() (条件执行)
+            _serviceProvider.GetRequiredService<BookSortAutoHandler>()            // 书库大扫除 (条件执行)
         };
 
         await _executor.ExecuteActionsAsync(context, handlers);
