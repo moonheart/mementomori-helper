@@ -61,7 +61,7 @@ public partial class InfiniteTowerHandler : IGameActionHandler
                         TargetTowerType = TowerType.Infinite,
                         TowerBattleQuestId = tower.MaxTowerBattleId,
                         QuickCount = 3
-                    }, false);
+                    });
                 await _jobLogger.LogAsync(userId, "无限塔快速战斗完成。");
             }
             else
@@ -74,7 +74,7 @@ public partial class InfiniteTowerHandler : IGameActionHandler
                         {
                             TargetTowerType = TowerType.Infinite,
                             TowerBattleQuestId = tower.MaxTowerBattleId
-                        }, false);
+                        });
                 }
                 await _jobLogger.LogAsync(userId, "无限塔战斗完成（普通模式）。");
             }

@@ -35,13 +35,12 @@ public partial class AutoBossChallengeHandler : IGameActionHandler
         {
             // 获取地图信息
             await nm.SendRequest<MapInfoRequest, MapInfoResponse>(
-                new MapInfoRequest { IsUpdateOtherPlayerInfo = true }, 
-                false);
+                new MapInfoRequest { IsUpdateOtherPlayerInfo = true });
 
             // 尝试获取下一个任务
             try
             {
-                await nm.SendRequest<NextQuestRequest, NextQuestResponse>(new NextQuestRequest(), false);
+                await nm.SendRequest<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
             }
             catch (NetworkManager.ApiErrorException ex) when (ex.ErrorCode == ErrorCode.BattleAutoNextQuestNotFound)
             {
@@ -57,13 +56,11 @@ public partial class AutoBossChallengeHandler : IGameActionHandler
                     
                     // 获取任务信息
                     await nm.SendRequest<GetQuestInfoRequest, GetQuestInfoResponse>(
-                        new GetQuestInfoRequest { TargetQuestId = targetQuestId }, 
-                        false);
+                        new GetQuestInfoRequest { TargetQuestId = targetQuestId });
                     
                     // 执行BOSS战斗
                     var bossResponse = await nm.SendRequest<BossRequest, BossResponse>(
-                        new BossRequest { QuestId = targetQuestId }, 
-                        false);
+                        new BossRequest { QuestId = targetQuestId });
                     
                     var win = bossResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                     totalCount++;
@@ -79,13 +76,12 @@ public partial class AutoBossChallengeHandler : IGameActionHandler
                     {
                         // 胜利后更新地图信息
                         await nm.SendRequest<MapInfoRequest, MapInfoResponse>(
-                            new MapInfoRequest { IsUpdateOtherPlayerInfo = true }, 
-                            false);
+                            new MapInfoRequest { IsUpdateOtherPlayerInfo = true });
                         
                         // 尝试进入下一个任务
                         try
                         {
-                            await nm.SendRequest<NextQuestRequest, NextQuestResponse>(new NextQuestRequest(), false);
+                            await nm.SendRequest<NextQuestRequest, NextQuestResponse>(new NextQuestRequest());
                         }
                         catch (NetworkManager.ApiErrorException ex) when (ex.ErrorCode == ErrorCode.BattleAutoNextQuestNotFound)
                         {

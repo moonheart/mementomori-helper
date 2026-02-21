@@ -26,7 +26,7 @@ public partial class FriendPointTransferHandler : IGameActionHandler
         try
         {
             await nm.SendRequest<BulkTransferFriendPointRequest, BulkTransferFriendPointResponse>(
-                new BulkTransferFriendPointRequest(), false);
+                new BulkTransferFriendPointRequest());
             await _jobLogger.LogAsync(userId, "友情点批量转移完成。");
         }
         catch (Exception ex) when (ex.Message.Contains("AlreadyMaxReceived"))

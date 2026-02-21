@@ -49,7 +49,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
             {
                 // 获取当前状态
                 var infoRequest = new BookSortGetInfoRequest();
-                var infoResponse = await nm.SendRequest<BookSortGetInfoRequest, BookSortGetInfoResponse>(infoRequest, false);
+                var infoResponse = await nm.SendRequest<BookSortGetInfoRequest, BookSortGetInfoResponse>(infoRequest);
 
                 var syncData = infoResponse.BookSortSyncData;
                 if (syncData == null)
@@ -82,7 +82,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                         {
                             await _jobLogger.LogAsync(userId, $"到达奖励层 (第 {syncData.CurrentFloor} 层)，自动选择奖励索引: {bestIndex}");
                             var selectReq = new BookSortSelectBonusFloorRewardRequest { BonusFloorRewardIndex = bestIndex };
-                            await nm.SendRequest<BookSortSelectBonusFloorRewardRequest, BookSortSelectBonusFloorRewardResponse>(selectReq, false);
+                            await nm.SendRequest<BookSortSelectBonusFloorRewardRequest, BookSortSelectBonusFloorRewardResponse>(selectReq);
 
                             // 选完奖励进入下一循环重新获取数据
                             continue;
@@ -94,7 +94,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                 if (syncData.IsUnlockedWinAndKeyGridCell())
                 {
                     await _jobLogger.LogAsync(userId, $"第 {syncData.CurrentFloor} 层已找到钥匙和被锁奖励，自动进入下一层...");
-                    await nm.SendRequest<BookSortUpFloorRequest, BookSortUpFloorResponse>(new BookSortUpFloorRequest(), false);
+                    await nm.SendRequest<BookSortUpFloorRequest, BookSortUpFloorResponse>(new BookSortUpFloorRequest());
                     continue;
                 }
 
@@ -103,7 +103,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                 if (unlockedIndexes.Count >= TotalCells)
                 {
                     await _jobLogger.LogAsync(userId, $"第 {syncData.CurrentFloor} 层已全部清扫完毕，自动进入下一层...");
-                    await nm.SendRequest<BookSortUpFloorRequest, BookSortUpFloorResponse>(new BookSortUpFloorRequest(), false);
+                    await nm.SendRequest<BookSortUpFloorRequest, BookSortUpFloorResponse>(new BookSortUpFloorRequest());
                     continue;
                 }
 
@@ -181,7 +181,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                             GridCellIndex = bestGridIndex
                         };
 
-                        await nm.SendRequest<BookSortUnlockGridCellRequest, BookSortUnlockGridCellResponse>(unlockReq, false);
+                        await nm.SendRequest<BookSortUnlockGridCellRequest, BookSortUnlockGridCellResponse>(unlockReq);
                         acted = true;
                     }
                 }
@@ -194,7 +194,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                     {
                         await _jobLogger.LogAsync(userId, $"使用普通掸子批量清扫...");
                         var bulkUnlockReq = new BookSortBulkUnlockGridCellRequest();
-                        await nm.SendRequest<BookSortBulkUnlockGridCellRequest, BookSortBulkUnlockGridCellResponse>(bulkUnlockReq, false);
+                        await nm.SendRequest<BookSortBulkUnlockGridCellRequest, BookSortBulkUnlockGridCellResponse>(bulkUnlockReq);
                         acted = true;
                     }
                 }
@@ -233,7 +233,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
         try
         {
             var missionInfoResp = await nm.SendRequest<GetMissionInfoRequest, GetMissionInfoResponse>(
-                new GetMissionInfoRequest { TargetMissionGroupList = new List<MissionGroupType> { MissionGroupType.BookSort } }, false);
+                new GetMissionInfoRequest { TargetMissionGroupList = new List<MissionGroupType> { MissionGroupType.BookSort } });
 
             if (missionInfoResp.MissionInfoDict != null)
             {
@@ -257,7 +257,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                 if (allMissionIds.Count > 0)
                 {
                     var rewardResp = await nm.SendRequest<RewardMissionRequest, RewardMissionResponse>(
-                        new RewardMissionRequest { TargetMissionIdList = allMissionIds }, false);
+                        new RewardMissionRequest { TargetMissionIdList = allMissionIds });
 
                     await _jobLogger.LogAsync(userId, $"成功领取了 {allMissionIds.Count} 项书库大扫除任务奖励。");
                     return true;

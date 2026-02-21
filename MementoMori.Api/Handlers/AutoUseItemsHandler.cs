@@ -91,7 +91,7 @@ public partial class AutoUseItemsHandler : IGameActionHandler
                             {
                                 OpenCount = (int) openCount,
                                 TreasureChestId = treasureChestMb.Id
-                            }, false);
+                            });
                         openedCount++;
                         successOpen = true;
                     }

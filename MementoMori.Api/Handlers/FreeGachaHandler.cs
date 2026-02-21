@@ -61,7 +61,7 @@ public partial class FreeGachaHandler : IGameActionHandler
 
             async Task<bool> DoFreeGacha()
             {
-                var gachaListResponse = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest(), false);
+                var gachaListResponse = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest());
 
                 foreach (var gachaCaseInfo in gachaListResponse.GachaCaseInfoList)
                 {
@@ -101,7 +101,7 @@ public partial class FreeGachaHandler : IGameActionHandler
                     try
                     {
                         await nm.SendRequest<DrawRequest, DrawResponse>(
-                            new DrawRequest { GachaButtonId = buttonInfo.GachaButtonId }, false);
+                            new DrawRequest { GachaButtonId = buttonInfo.GachaButtonId });
                         return true;
                     }
                     catch (NetworkManager.ApiErrorException ex) when (ex.Message.Contains("HaveMaxCharacter"))

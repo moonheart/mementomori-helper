@@ -41,8 +41,7 @@ public partial class BossQuickBattleHandler : IGameActionHandler
                     {
                         QuestId = bossClearMaxQuestId,
                         QuickCount = 3
-                    },
-                    false);
+                    });
 
                 if (bossQuickResponse.BattleRewardResult != null)
                 {
@@ -63,8 +62,7 @@ public partial class BossQuickBattleHandler : IGameActionHandler
                             new BossRequest
                             {
                                 QuestId = bossClearMaxQuestId
-                            },
-                            false);
+                            });
 
                         if (bossResponse.BattleRewardResult == null)
                         {

@@ -25,7 +25,7 @@ public partial class GuildCheckinHandler : IGameActionHandler
 
         try
         {
-            var guildIdResponse = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest(), false);
+            var guildIdResponse = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
 
             if (guildIdResponse.GuildId == 0)
             {
@@ -34,7 +34,7 @@ public partial class GuildCheckinHandler : IGameActionHandler
             }
 
             var guildInfoResponse = await nm.SendRequest<GetGuildBaseInfoRequest, GetGuildBaseInfoResponse>(
-                new GetGuildBaseInfoRequest { BelongGuildId = guildIdResponse.GuildId }, false);
+                new GetGuildBaseInfoRequest { BelongGuildId = guildIdResponse.GuildId });
 
             await _jobLogger.LogAsync(userId, $"公会签到完成，公会ID: {guildIdResponse.GuildId}。");
         }

@@ -60,7 +60,7 @@ public partial class DailyLoginBonusHandler : IGameActionHandler
     private async Task<GetMonthlyLoginBonusInfoResponse> GetMonthlyLoginBonusInfoAsync(NetworkManager nm)
     {
         return await nm.SendRequest<GetMonthlyLoginBonusInfoRequest, GetMonthlyLoginBonusInfoResponse>(
-            new GetMonthlyLoginBonusInfoRequest(), false);
+            new GetMonthlyLoginBonusInfoRequest());
     }
 
     /// <summary>
@@ -84,7 +84,7 @@ public partial class DailyLoginBonusHandler : IGameActionHandler
             try
             {
                 var bonus = await nm.SendRequest<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(
-                    new ReceiveDailyLoginBonusRequest { ReceiveDay = timeManager.ServerNow.Day }, false);
+                    new ReceiveDailyLoginBonusRequest { ReceiveDay = timeManager.ServerNow.Day });
 
                 await _jobLogger.LogAsync(userId,
                     $"{Masters.TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")}:");
@@ -123,7 +123,7 @@ public partial class DailyLoginBonusHandler : IGameActionHandler
                 try
                 {
                     var resp = await nm.SendRequest<ReceiveLoginCountBonusRequest, ReceiveLoginCountBonusResponse>(
-                        new ReceiveLoginCountBonusRequest { ReceiveDayCount = loginCountRewardInfo.DayCount }, false);
+                        new ReceiveLoginCountBonusRequest { ReceiveDayCount = loginCountRewardInfo.DayCount });
 
                     await _jobLogger.LogAsync(userId,
                         $"{Masters.TextResourceTable.Get("[LoginBonusCountFormat]", loginCountRewardInfo.DayCount, 30)}");
@@ -148,7 +148,7 @@ public partial class DailyLoginBonusHandler : IGameActionHandler
         try
         {
             mypageResponse = await nm.SendRequest<GetMypageRequest, GetMypageResponse>(
-                new GetMypageRequest { LanguageType = nm.LanguageType }, false);
+                new GetMypageRequest { LanguageType = nm.LanguageType });
         }
         catch (Exception ex)
         {
@@ -168,7 +168,7 @@ public partial class DailyLoginBonusHandler : IGameActionHandler
         {
             limitedLoginBonusInfo =
                 await nm.SendRequest<GetLimitedLoginBonusInfoRequest, GetLimitedLoginBonusInfoResponse>(
-                    new GetLimitedLoginBonusInfoRequest { LimitedLoginBonusId = limitedLoginBonusId }, false);
+                    new GetLimitedLoginBonusInfoRequest { LimitedLoginBonusId = limitedLoginBonusId });
         }
         catch (Exception ex)
         {
@@ -204,7 +204,7 @@ public partial class DailyLoginBonusHandler : IGameActionHandler
                         {
                             LimitedLoginBonusId = limitedLoginBonusId,
                             ReceiveDate = dailyLimitedLoginBonusItem.Date
-                        }, false);
+                        });
                 await LogUserItemsAsync(userId, resp.RewardItemList);
             }
             catch (Exception ex)
@@ -225,7 +225,7 @@ public partial class DailyLoginBonusHandler : IGameActionHandler
                 var response =
                     await nm.SendRequest<ReceiveSpecialLimitedLoginBonusRequest,
                         ReceiveSpecialLimitedLoginBonusResponse>(
-                        new ReceiveSpecialLimitedLoginBonusRequest { LimitedLoginBonusId = limitedLoginBonusId }, false);
+                        new ReceiveSpecialLimitedLoginBonusRequest { LimitedLoginBonusId = limitedLoginBonusId });
                 await LogUserItemsAsync(userId, response.RewardItemList);
             }
             catch (Exception ex)

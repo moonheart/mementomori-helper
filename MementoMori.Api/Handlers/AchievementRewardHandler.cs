@@ -26,7 +26,7 @@ public partial class AchievementRewardHandler : IGameActionHandler
 
         try
         {
-            await nm.SendRequest<GetPlayerRankingRequest, GetPlayerRankingResponse>(new GetPlayerRankingRequest(), false);
+            await nm.SendRequest<GetPlayerRankingRequest, GetPlayerRankingResponse>(new GetPlayerRankingRequest());
 
             var claimedCount = 0;
             if (nm.UserSyncData.ReceivableAchieveRankingRewardIdMap != null)
@@ -41,7 +41,7 @@ public partial class AchievementRewardHandler : IGameActionHandler
                         try
                         {
                             var response = await nm.SendRequest<ReceiveAchieveRankingRewardRequest, ReceiveAchieveRankingRewardResponse>(
-                                new ReceiveAchieveRankingRewardRequest { AchieveRankingRewardMBId = mb.Id }, false);
+                                new ReceiveAchieveRankingRewardRequest { AchieveRankingRewardMBId = mb.Id });
                             claimedCount++;
                         }
                         catch (Exception ex)

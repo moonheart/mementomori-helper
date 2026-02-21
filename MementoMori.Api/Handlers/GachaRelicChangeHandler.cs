@@ -40,7 +40,7 @@ public partial class GachaRelicChangeHandler : IGameActionHandler
         _logger.LogInformation("Checking gacha relic target for user {UserId}, target: {Target}", userId, targetRelicType);
 
         // 1. 获取卡池列表 (使用 false 表示不使用 Auth API)
-        var listResp = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest(), false);
+        var listResp = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest());
         
         // 2. 检查是否可以免费更换
         if (!listResp.IsFreeChangeRelicGacha)
@@ -77,7 +77,7 @@ public partial class GachaRelicChangeHandler : IGameActionHandler
         try
         {
             await nm.SendRequest<ChangeGachaRelicRequest, ChangeGachaRelicResponse>(
-                new ChangeGachaRelicRequest { GachaRelicType = targetRelicType }, false);
+                new ChangeGachaRelicRequest { GachaRelicType = targetRelicType });
 
             await _jobLogger.LogAsync(userId, $"成功将圣天使卡池目标更换为: {targetRelicType}");
             _logger.LogInformation("Successfully changed gacha relic target to {Target} for user {UserId}", targetRelicType, userId);

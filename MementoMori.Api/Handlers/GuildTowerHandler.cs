@@ -42,7 +42,7 @@ public partial class GuildTowerHandler : IGameActionHandler
             }
 
             // 获取公会ID
-            var guildId = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest(), false);
+            var guildId = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
             if (guildId.GuildId == 0)
             {
                 await _jobLogger.LogAsync(userId, "未加入公会，跳过公会塔。");
@@ -50,7 +50,7 @@ public partial class GuildTowerHandler : IGameActionHandler
             }
 
             var guildTowerInfo = await nm.SendRequest<GetGuildTowerInfoRequest, GetGuildTowerInfoResponse>(
-                new GetGuildTowerInfoRequest(), false);
+                new GetGuildTowerInfoRequest());
 
             // 自动报名
             if (!guildTowerInfo.IsAlreadyEntryToday)
@@ -75,11 +75,11 @@ public partial class GuildTowerHandler : IGameActionHandler
                         CharacterGuidList = guids,
                         GuildTowerEntryType = GuildTowerEntryType.Entry,
                         IsContinueEntry = false
-                    }, false);
+                    });
 
                 await _jobLogger.LogAsync(userId, "公会塔已报名。");
                 guildTowerInfo = await nm.SendRequest<GetGuildTowerInfoRequest, GetGuildTowerInfoResponse>(
-                    new GetGuildTowerInfoRequest(), false);
+                    new GetGuildTowerInfoRequest());
             }
 
             // 自动挑战
@@ -133,7 +133,7 @@ public partial class GuildTowerHandler : IGameActionHandler
                                         CharacterGuidList = guids,
                                         Difficulty = nextFloor.SelectableDifficultyList[i],
                                         GuildTowerFloor = nextFloor.FloorCount
-                                    }, false);
+                                    });
 
                                 if (battleResponse.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker())
                                 {
@@ -155,7 +155,7 @@ public partial class GuildTowerHandler : IGameActionHandler
                     }
 
                     guildTowerInfo = await nm.SendRequest<GetGuildTowerInfoRequest, GetGuildTowerInfoResponse>(
-                        new GetGuildTowerInfoRequest(), false);
+                        new GetGuildTowerInfoRequest());
                 }
 
                 await _jobLogger.LogAsync(userId, $"公会塔挑战完成，胜利 {winCount} 场。");
@@ -165,7 +165,7 @@ public partial class GuildTowerHandler : IGameActionHandler
             if (guildTowerSettings.AutoReceiveReward)
             {
                 guildTowerInfo = await nm.SendRequest<GetGuildTowerInfoRequest, GetGuildTowerInfoResponse>(
-                    new GetGuildTowerInfoRequest(), false);
+                    new GetGuildTowerInfoRequest());
 
                 var notRewardedIds = Masters.GuildTowerFloorTable.GetListByEventId(guildTowerEventMb.EventNo)
                     .Where(d =>
@@ -179,7 +179,7 @@ public partial class GuildTowerHandler : IGameActionHandler
                 if (notRewardedIds.Count > 0)
                 {
                     await nm.SendRequest<ReceiveFloorRewardRequest, ReceiveFloorRewardResponse>(
-                        new ReceiveFloorRewardRequest { FloorRewardMBIdList = notRewardedIds }, false);
+                        new ReceiveFloorRewardRequest { FloorRewardMBIdList = notRewardedIds });
                     await _jobLogger.LogAsync(userId, $"公会塔层奖励已领取 {notRewardedIds.Count} 项。");
                 }
             }

@@ -36,7 +36,7 @@ public partial class BountyQuestRewardHandler : IGameActionHandler
 
         // 获取悬赏任务列表
         var getListResponse = await nm.SendRequest<GetListRequest, GetListResponse>(
-            new GetListRequest(), false);
+            new GetListRequest());
 
         // 找出已完成且未领取奖励的任务
         var serverNow = timeManager.ServerNow;
@@ -56,8 +56,7 @@ public partial class BountyQuestRewardHandler : IGameActionHandler
                     BountyQuestIds = questIds, 
                     ConsumeCurrency = 0, 
                     IsQuick = false 
-                }, 
-                false);
+                });
 
             // 记录奖励
             if (rewardResponse.RewardItems?.Count > 0)
@@ -69,7 +68,7 @@ public partial class BountyQuestRewardHandler : IGameActionHandler
             }
 
             // 刷新任务列表
-            await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest(), false);
+            await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest());
             
             await _jobLogger.LogAsync(userId, $"已领取 {questIds.Count} 个悬赏任务的奖励");
         }
@@ -79,6 +78,6 @@ public partial class BountyQuestRewardHandler : IGameActionHandler
         }
 
         // 最后获取一次任务列表更新状态
-        await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest(), false);
+        await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest());
     }
 }

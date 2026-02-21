@@ -42,7 +42,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
             }
 
             var battleInfoResponse = await nm.SendRequest<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(
-                new GetDungeonBattleInfoRequest(), false);
+                new GetDungeonBattleInfoRequest());
 
             if (battleInfoResponse.UserDungeonDtoInfo.IsDoneRewardClearLayer(3))
             {
@@ -60,7 +60,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
                 iterations++;
 
                 battleInfoResponse = await nm.SendRequest<GetDungeonBattleInfoRequest, GetDungeonBattleInfoResponse>(
-                    new GetDungeonBattleInfoRequest(), false);
+                    new GetDungeonBattleInfoRequest());
 
                 if (battleInfoResponse.UserDungeonDtoInfo.IsDoneRewardClearLayer(3))
                 {
@@ -94,7 +94,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
                                         ClearedLayer = battleInfoResponse.CurrentDungeonBattleLayer.LayerCount,
                                         CurrentTermId = battleInfoResponse.CurrentTermId,
                                         DungeonBattleDifficultyType = battleInfoResponse.CurrentDungeonBattleLayer.DungeonDifficultyType
-                                    }, false);
+                                    });
                             }
 
                             if (battleInfoResponse.CurrentDungeonBattleLayer != null &&
@@ -105,7 +105,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
                                     {
                                         CurrentTermId = battleInfoResponse.CurrentTermId,
                                         DungeonDifficultyType = DungeonBattleDifficultyType.Normal
-                                    }, false);
+                                    });
                             }
                         }
                         else
@@ -115,7 +115,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
                                 {
                                     CurrentTermId = battleInfoResponse.CurrentTermId,
                                     DungeonGridGuid = nextGrid.DungeonGridGuid
-                                }, false);
+                                });
                         }
                         break;
 
@@ -205,7 +205,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
                         CurrentTermId = battleInfo.CurrentTermId,
                         DungeonGridGuid = currentGrid.DungeonGridGuid,
                         IsHealed = true
-                    }, false);
+                    });
                 break;
 
             case DungeonBattleGridType.Shop:
@@ -214,7 +214,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
                     {
                         CurrentTermId = battleInfo.CurrentTermId,
                         DungeonGridGuid = currentGrid.DungeonGridGuid
-                    }, false);
+                    });
                 break;
 
             case DungeonBattleGridType.Revival:
@@ -224,7 +224,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
                         CurrentTermId = battleInfo.CurrentTermId,
                         DungeonGridGuid = currentGrid.DungeonGridGuid,
                         IsRevived = true
-                    }, false);
+                    });
                 break;
 
             case DungeonBattleGridType.RelicReinforce:
@@ -233,7 +233,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
                     {
                         CurrentTermId = battleInfo.CurrentTermId,
                         DungeonGridGuid = currentGrid.DungeonGridGuid
-                    }, false);
+                    });
                 break;
         }
     }
@@ -285,7 +285,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
             if (battleInfo.UserDungeonDtoInfo.UseDungeonRecoveryItemCount < dungeonSettings.MaxUseRecoveryItem)
             {
                 await nm.SendRequest<UseRecoveryItemRequest, UseRecoveryItemResponse>(
-                    new UseRecoveryItemRequest { CurrentTermId = battleInfo.CurrentTermId }, false);
+                    new UseRecoveryItemRequest { CurrentTermId = battleInfo.CurrentTermId });
                 return;
             }
             return;
@@ -297,7 +297,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
                 CurrentTermId = battleInfo.CurrentTermId,
                 DungeonGridGuid = currentGrid.DungeonGridGuid,
                 CharacterGuids = battleCharacterGuids
-            }, false);
+            });
 
         await nm.SendRequest<FinishBattleRequest, FinishBattleResponse>(
             new FinishBattleRequest
@@ -305,7 +305,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
                 DungeonGridGuid = currentGrid.DungeonGridGuid,
                 CurrentTermId = battleInfo.CurrentTermId,
                 VisitDungeonCount = 0
-            }, false);
+            });
     }
 
     private async Task SelectReward(
@@ -321,6 +321,6 @@ public partial class DungeonBattleHandler : IGameActionHandler
                 CurrentTermId = battleInfo.CurrentTermId,
                 DungeonGridGuid = currentGrid.DungeonGridGuid,
                 SelectedRelicId = relicId
-            }, false);
+            });
     }
 }

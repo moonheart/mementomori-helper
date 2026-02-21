@@ -149,7 +149,7 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
             await _jobLogger.LogAsync(userId, 
                 $"当前期望收益: {expectedDiamond:F1} 钻石，今日已刷新: {bountyQuestOption.TodayRefreshCount[date]}/{bountyQuestOption.MaxRefreshCount}，正在刷新...");
 
-            await nm.SendRequest<RemakeRequest, RemakeResponse>(new RemakeRequest(), false);
+            await nm.SendRequest<RemakeRequest, RemakeResponse>(new RemakeRequest());
             
             // 更新刷新计数
             bountyQuestOption.TodayRefreshCount[date]++;
@@ -187,7 +187,7 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
     {
         try
         {
-            var response = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest(), false);
+            var response = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest());
             return response;
         }
         catch (Exception ex)
@@ -204,8 +204,7 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
             try
             {
                 var startResponse = await nm.SendRequest<StartRequest, StartResponse>(
-                    new StartRequest { BountyQuestStartInfos = new List<BountyQuestStartInfo> { bountyQuestStartInfo } }, 
-                    false);
+                    new StartRequest { BountyQuestStartInfos = new List<BountyQuestStartInfo> { bountyQuestStartInfo } });
                 
                 await _jobLogger.LogAsync(userId, $"已派遣悬赏任务: {bountyQuestStartInfo.BountyQuestId}");
             }

@@ -50,12 +50,12 @@ public partial class NetworkManager : IDisposable
 
     // MagicOnion
     private string? _authTokenOfMagicOnion;
-    
+
     /// <summary>
     /// MagicOnion 的 gRPC Channel
     /// </summary>
     public GrpcChannel? GrpcChannel => _grpcChannel;
-    
+
     /// <summary>
     /// MagicOnion 认证令牌
     /// </summary>
@@ -130,7 +130,7 @@ public partial class NetworkManager : IDisposable
     public async Task<List<PlayerDataInfo>> GetPlayerDataInfoListAsync(LoginRequest loginRequest)
     {
         _lastLoginRequest = loginRequest;
-        var response = await SendRequest<LoginRequest, LoginResponse>(loginRequest, useAuthApi: true);
+        var response = await SendRequest<LoginRequest, LoginResponse>(loginRequest);
         return response.PlayerDataInfoList?.ToList() ?? new List<PlayerDataInfo>();
     }
 
@@ -145,7 +145,7 @@ public partial class NetworkManager : IDisposable
         }
 
         // 重新获取玩家数据
-        var response = await SendRequest<LoginRequest, LoginResponse>(_lastLoginRequest, useAuthApi: true);
+        var response = await SendRequest<LoginRequest, LoginResponse>(_lastLoginRequest);
         var playerDataInfo = response.PlayerDataInfoList?.FirstOrDefault(x => x.WorldId == worldId);
 
         if (playerDataInfo == null)
@@ -164,7 +164,7 @@ public partial class NetworkManager : IDisposable
         };
 
         var loginPlayerResponse = await SendRequest<LoginPlayerRequest, LoginPlayerResponse>(
-            loginPlayerRequest, useAuthApi: false);
+            loginPlayerRequest);
 
         PlayerId = playerDataInfo.PlayerId;
         _authTokenOfMagicOnion = loginPlayerResponse.AuthTokenOfMagicOnion;
@@ -182,7 +182,7 @@ public partial class NetworkManager : IDisposable
             WorldId = worldId
         };
 
-        var response = await SendRequest<GetServerHostRequest, GetServerHostResponse>(request, useAuthApi: true);
+        var response = await SendRequest<GetServerHostRequest, GetServerHostResponse>(request);
 
         _gameApiUrl = new Uri(response.ApiHost);
         _grpcChannel?.Dispose();
@@ -240,7 +240,7 @@ public partial class NetworkManager : IDisposable
     /// <summary>
     /// 发送 API 请求（增强版 - 包含自动重试、错误处理等）
     /// </summary>
-    public async Task<TResp> SendRequest<TReq, TResp>(TReq request, bool useAuthApi = true, Action<UserSyncData>? userDataCallback = null)
+    public async Task<TResp> SendRequest<TReq, TResp>(TReq request, Action<UserSyncData>? userDataCallback = null)
         where TReq : ApiRequestBase
         where TResp : ApiResponseBase
     {
@@ -254,10 +254,7 @@ public partial class NetworkManager : IDisposable
                 await Task.Delay(autoDelay);
             }
 
-            var apiUrl = useAuthApi ? _authApiUrl : (_gameApiUrl ?? _authApiUrl);
-
-            // 获取 API 路径
-            var path = GetApiPath<TReq>();
+            var (apiUrl, path) = GetApiInfo<TReq>();
             var uri = new Uri(apiUrl, path);
 
             _logger.LogDebug("Sending request to {Uri}", uri);
@@ -370,30 +367,20 @@ public partial class NetworkManager : IDisposable
     /// <summary>
     /// 获取 API 路径
     /// </summary>
-    private string GetApiPath<TReq>() where TReq : ApiRequestBase
+    private (Uri api, string path) GetApiInfo<TReq>() where TReq : ApiRequestBase
     {
         var type = typeof(TReq);
 
         // 尝试从 Attribute 获取路径
         var authAttr = type.GetCustomAttribute<OrtegaAuthAttribute>();
         if (authAttr != null)
-            return authAttr.Uri;
+            return (_authApiUrl, authAttr.Uri);
 
         var apiAttr = type.GetCustomAttribute<OrtegaApiAttribute>();
         if (apiAttr != null)
-            return apiAttr.Uri;
+            return (_gameApiUrl, apiAttr.Uri);
 
-        // Fallback
-        var typeName = type.Name;
-        return typeName switch
-        {
-            "GetDataRequest" => "auth/get-data",
-            "LoginRequest" => "auth/login",
-            "GetDataUriRequest" => "auth/get-data-uri",
-            "LoginPlayerRequest" => "login-player",
-            "GetServerHostRequest" => "auth/get-server-host",
-            _ => $"api/{typeName.ToLowerInvariant()}"
-        };
+        throw new InvalidOperationException($"No API attribute found for type {type.Name}");
     }
 
     public void Dispose()

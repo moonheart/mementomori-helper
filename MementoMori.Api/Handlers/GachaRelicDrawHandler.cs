@@ -40,7 +40,7 @@ public partial class GachaRelicDrawHandler : IGameActionHandler
         _logger.LogInformation("Checking gacha relic draw for user {UserId}", userId);
 
         // 1. 获取卡池列表
-        var listResp = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest(), false);
+        var listResp = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest());
         
         // 2. 找到目标卡池 (HolyAngel)
         var gachaCaseInfo = listResp.GachaCaseInfoList?.FirstOrDefault(d => d.GachaGroupType == GachaGroupType.HolyAngel);
@@ -85,7 +85,7 @@ public partial class GachaRelicDrawHandler : IGameActionHandler
             // 执行抽取
             try
             {
-                var drawResp = await nm.SendRequest<DrawRequest, DrawResponse>(new DrawRequest { GachaButtonId = buttonInfo.GachaButtonId }, false);
+                var drawResp = await nm.SendRequest<DrawRequest, DrawResponse>(new DrawRequest { GachaButtonId = buttonInfo.GachaButtonId });
                 drawCount++;
                 
                 // 更新进度信息（从响应中获取最新的卡池信息）

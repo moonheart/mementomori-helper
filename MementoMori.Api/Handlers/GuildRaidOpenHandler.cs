@@ -41,7 +41,7 @@ public partial class GuildRaidOpenHandler : IGameActionHandler
         _logger.LogInformation("Checking guild raid open for user {UserId}", userId);
 
         // 1. 获取公会 ID
-        var guildIdResp = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest(), false);
+        var guildIdResp = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
         if (guildIdResp.GuildId == 0)
         {
             _logger.LogDebug("User {UserId} is not in a guild, skipping.", userId);
@@ -50,7 +50,7 @@ public partial class GuildRaidOpenHandler : IGameActionHandler
 
         // 2. 检查权限
         var guildMemberResp = await nm.SendRequest<GetGuildMemberInfoRequest, GetGuildMemberInfoResponse>(
-            new GetGuildMemberInfoRequest { GuildId = guildIdResp.GuildId }, false);
+            new GetGuildMemberInfoRequest { GuildId = guildIdResp.GuildId });
         
         var playerInfo = guildMemberResp.PlayerInfoList?.FirstOrDefault(d => d.PlayerId == nm.PlayerId);
         if (playerInfo == null || 
@@ -63,7 +63,7 @@ public partial class GuildRaidOpenHandler : IGameActionHandler
 
         // 3. 检查副本状态
         var raidInfoResp = await nm.SendRequest<GetGuildRaidInfoRequest, GetGuildRaidInfoResponse>(
-            new GetGuildRaidInfoRequest { BelongGuildId = guildIdResp.GuildId }, false);
+            new GetGuildRaidInfoRequest { BelongGuildId = guildIdResp.GuildId });
         
         var releasableRaid = raidInfoResp.GuildRaidInfos?.FirstOrDefault(d => d.GuildRaidDtoInfo.BossType == GuildRaidBossType.Releasable);
         if (releasableRaid == null)
@@ -86,7 +86,7 @@ public partial class GuildRaidOpenHandler : IGameActionHandler
                 { 
                     BelongGuildId = guildIdResp.GuildId, 
                     GuildRaidBossType = GuildRaidBossType.Releasable 
-                }, false);
+                });
 
             await _jobLogger.LogAsync(userId, "成功开启公会副本 (消耗公会点数)。");
             _logger.LogInformation("Successfully opened guild raid for user {UserId}, GuildId: {GuildId}", userId, guildIdResp.GuildId);

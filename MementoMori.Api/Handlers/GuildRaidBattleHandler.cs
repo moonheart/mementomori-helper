@@ -30,7 +30,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
         try
         {
             // 1. 获取公会ID
-            var guildIdResp = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest(), false);
+            var guildIdResp = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
 
             if (guildIdResp.GuildId == 0)
             {
@@ -50,7 +50,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
             {
                 hasRaid = false;
                 var raidInfoResp = await nm.SendRequest<GetGuildRaidInfoRequest, GetGuildRaidInfoResponse>(
-                    new GetGuildRaidInfoRequest { BelongGuildId = guildIdResp.GuildId }, false);
+                    new GetGuildRaidInfoRequest { BelongGuildId = guildIdResp.GuildId });
 
                 foreach (var info in raidInfoResp.GuildRaidInfos)
                 {
@@ -68,7 +68,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
                                 {
                                     BelongGuildId = guildIdResp.GuildId,
                                     GuildRaidBossType = info.GuildRaidDtoInfo.BossType
-                                }, false);
+                                });
 
                             var isWin = quickResp.BattleSimulationResult.BattleEndInfo.IsWinAttacker();
                             await _jobLogger.LogAsync(userId, $"公会副本快速战斗完成，结果: {(isWin ? "胜利" : "失败")}");
@@ -83,7 +83,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
                                 {
                                     BelongGuildId = guildIdResp.GuildId,
                                     GuildRaidBossType = info.GuildRaidDtoInfo.BossType
-                                }, false);
+                                });
 
                             var isWin = startResp.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                             await _jobLogger.LogAsync(userId, $"公会副本战斗完成，结果: {(isWin ? "胜利" : "失败")}");
@@ -158,7 +158,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
             }
 
             var worldRewardInfoResp = await nm.SendRequest<GetGuildRaidWorldRewardInfoRequest, GetGuildRaidWorldRewardInfoResponse>(
-                new GetGuildRaidWorldRewardInfoRequest { GuildRaidBossId = bossMb.Id }, false);
+                new GetGuildRaidWorldRewardInfoRequest { GuildRaidBossId = bossMb.Id });
 
             var guildRaidRewardMb = MementoMori.Ortega.Share.Masters.GuildRaidRewardTable.GetByBossId(bossMb.Id);
             if (guildRaidRewardMb == null || guildRaidRewardMb.WorldDamageBarRewards == null)
@@ -180,7 +180,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
                         {
                             GoalDamage = worldDamageBar.GoalDamage,
                             GuildRaidBossId = bossMb.Id
-                        }, false);
+                        });
 
                     rewardCount++;
                     _logger.LogInformation("Claimed guild raid world reward for user {UserId}, GoalDamage: {GoalDamage}",

@@ -33,7 +33,7 @@ public partial class FriendManageHandler : IGameActionHandler
             if (friendManageSettings.AutoRemoveInactiveFriend)
             {
                 var info = await nm.SendRequest<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(
-                    new GetPlayerInfoListRequest { FriendInfoType = FriendInfoType.Friend }, false);
+                    new GetPlayerInfoListRequest { FriendInfoType = FriendInfoType.Friend });
 
                 var removedCount = 0;
                 foreach (var playerInfo in info.PlayerInfoList)
@@ -49,7 +49,7 @@ public partial class FriendManageHandler : IGameActionHandler
                     try
                     {
                         await nm.SendRequest<RemoveFriendRequest, RemoveFriendResponse>(
-                            new RemoveFriendRequest { TargetPlayerId = playerInfo.PlayerId }, false);
+                            new RemoveFriendRequest { TargetPlayerId = playerInfo.PlayerId });
                         removedCount++;
                     }
                     catch (Exception ex)
@@ -68,12 +68,12 @@ public partial class FriendManageHandler : IGameActionHandler
             if (friendManageSettings.AutoAcceptFriendRequest)
             {
                 var info = await nm.SendRequest<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(
-                    new GetPlayerInfoListRequest { FriendInfoType = FriendInfoType.ApprovalPending }, false);
+                    new GetPlayerInfoListRequest { FriendInfoType = FriendInfoType.ApprovalPending });
 
                 if (info.FriendNum < 40 && info.PlayerInfoList.Count > 0)
                 {
                     var response = await nm.SendRequest<ReplyAllFriendRequest, ReplyAllFriendResponse>(
-                        new ReplyAllFriendRequest { IsApproval = true }, false);
+                        new ReplyAllFriendRequest { IsApproval = true });
                     await _jobLogger.LogAsync(userId, $"已接受 {response.ProcessedNum} 个好友请求。");
                 }
             }
@@ -82,7 +82,7 @@ public partial class FriendManageHandler : IGameActionHandler
             if (friendManageSettings.AutoSendFriendRequest)
             {
                 var info = await nm.SendRequest<GetPlayerInfoListRequest, GetPlayerInfoListResponse>(
-                    new GetPlayerInfoListRequest { FriendInfoType = FriendInfoType.Recommend }, false);
+                    new GetPlayerInfoListRequest { FriendInfoType = FriendInfoType.Recommend });
 
                 if (info.FriendNum < 40 && info.PlayerInfoList.Count > 0)
                 {
@@ -90,7 +90,7 @@ public partial class FriendManageHandler : IGameActionHandler
                         new BulkApplyFriendsRequest
                         {
                             TargetPlayerIdList = info.PlayerInfoList.Select(d => d.PlayerId).ToList()
-                        }, false);
+                        });
                     await _jobLogger.LogAsync(userId, $"已发送 {response.AppliedPlayerIdList?.Count ?? 0} 个好友请求。");
                 }
             }

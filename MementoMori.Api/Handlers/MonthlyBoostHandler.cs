@@ -26,7 +26,7 @@ public partial class MonthlyBoostHandler : IGameActionHandler
 
         try
         {
-            var listResponse = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest(), false);
+            var listResponse = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest());
             var shopProductInfo = listResponse.ShopTabInfoList
                 .SelectMany(d => d.ShopProductInfoList)
                 .FirstOrDefault(d => d.ShopProductType == ShopProductType.MonthlyBoost);
@@ -46,7 +46,7 @@ public partial class MonthlyBoostHandler : IGameActionHandler
                             MBId = shopProductInfo.MbId,
                             ProductId = shopProductInfo.ShopProductMonthlyBoost.ProductId,
                             ShopProductType = ShopProductType.MonthlyBoost
-                        }, false);
+                        });
                     await _jobLogger.LogAsync(userId, "月卡奖励已领取。");
                 }
             }

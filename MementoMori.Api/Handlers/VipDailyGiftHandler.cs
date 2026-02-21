@@ -27,7 +27,7 @@ public partial class VipDailyGiftHandler : IGameActionHandler
         {
             try
             {
-                var bonus = await nm.SendRequest<GetDailyGiftRequest, GetDailyGiftResponse>(new GetDailyGiftRequest(), false);
+                var bonus = await nm.SendRequest<GetDailyGiftRequest, GetDailyGiftResponse>(new GetDailyGiftRequest());
                 await _jobLogger.LogAsync(userId, $"VIP{nm.UserSyncData.UserStatusDtoInfo.Vip}每日礼包已领取。");
             }
             catch (Exception ex)

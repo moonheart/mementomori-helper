@@ -61,7 +61,7 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
         var createRoom = playerOption.LocalRaid.SelfCreateRoom;
         
         // 1. 获取活动信息
-        var localRaidInfo = await nm.SendRequest<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest(), false);
+        var localRaidInfo = await nm.SendRequest<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
         var questId = GetQuestId(localRaidInfo, rewardItems);
 
         await _jobLogger.LogAsync(userId, $"开始时空洞窟任务 (QuestId: {questId}, 自建房: {createRoom})...");
@@ -87,7 +87,7 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
             while (!cts.Token.IsCancellationRequested)
             {
                 // 获取最新信息
-                localRaidInfo = await nm.SendRequest<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest(), false);
+                localRaidInfo = await nm.SendRequest<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
                 questId = GetQuestId(localRaidInfo, rewardItems);
                 receiver.QuestId = questId;
                 receiver.IsBattleStarted = false;
@@ -123,7 +123,7 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
                         await Task.Delay(3000, cts.Token); // 等待服务器同步结果
                         try
                         {
-                            var battleResult = await nm.SendRequest<GetLocalRaidBattleResultRequest, GetLocalRaidBattleResultResponse>(new GetLocalRaidBattleResultRequest(), false);
+                            var battleResult = await nm.SendRequest<GetLocalRaidBattleResultRequest, GetLocalRaidBattleResultResponse>(new GetLocalRaidBattleResultRequest());
                             bool isWin = battleResult.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                             await _jobLogger.LogAsync(userId, isWin ? "战斗胜利！" : "战斗失败。");
                         }

@@ -101,7 +101,7 @@ public partial class CharacterRankUpHandler : IGameActionHandler
                                 MaterialGuid2 = materials.Count > 1 ? materials[1].Guid : null
                             }
                         }
-                    }, false);
+                    });
                 rankUpCount++;
             }
             catch (Exception)

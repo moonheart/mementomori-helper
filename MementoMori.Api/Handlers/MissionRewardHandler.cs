@@ -34,14 +34,14 @@ public partial class MissionRewardHandler : IGameActionHandler
         var missionGroupTypes = new List<MissionGroupType> { MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main };
         
         // 检查公会任务
-        var guildIdResp = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest(), false);
+        var guildIdResp = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
         if (guildIdResp.GuildId > 0)
         {
             missionGroupTypes.Add(MissionGroupType.Guild);
         }
 
         var missionInfoResp = await nm.SendRequest<GetMissionInfoRequest, GetMissionInfoResponse>(
-            new GetMissionInfoRequest { TargetMissionGroupList = missionGroupTypes }, false);
+            new GetMissionInfoRequest { TargetMissionGroupList = missionGroupTypes });
 
         if (missionInfoResp.MissionInfoDict == null) return;
 
@@ -66,7 +66,7 @@ public partial class MissionRewardHandler : IGameActionHandler
         if (allMissionIds.Count > 0)
         {
             var rewardResp = await nm.SendRequest<RewardMissionRequest, RewardMissionResponse>(
-                new RewardMissionRequest { TargetMissionIdList = allMissionIds }, false);
+                new RewardMissionRequest { TargetMissionIdList = allMissionIds });
             
             await _jobLogger.LogAsync(userId, $"成功领取 {allMissionIds.Count} 项任务奖励。");
         }
@@ -90,7 +90,7 @@ public partial class MissionRewardHandler : IGameActionHandler
                         {
                             MissionGroupType = pair.Key,
                             RequiredCount = rewardMb.RequiredActivityMedalCount
-                        }, false);
+                        });
 
                         await _jobLogger.LogAsync(userId, $"领取 {pair.Key} 活跃度奖励 ({rewardMb.RequiredActivityMedalCount})。");
                     }

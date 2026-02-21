@@ -28,18 +28,15 @@ public partial class AutoBattleRewardHandler : IGameActionHandler
         {
             // 1. 获取地图信息
             await nm.SendRequest<MapInfoRequest, MapInfoResponse>(
-                new MapInfoRequest { IsUpdateOtherPlayerInfo = true }, 
-                false);
+                new MapInfoRequest { IsUpdateOtherPlayerInfo = true });
 
             // 2. 执行自动战斗请求
             var autoResponse = await nm.SendRequest<AutoRequest, AutoResponse>(
-                new AutoRequest(), 
-                false);
+                new AutoRequest());
 
             // 3. 领取奖励
             var bonus = await nm.SendRequest<RewardAutoBattleRequest, RewardAutoBattleResponse>(
-                new RewardAutoBattleRequest(), 
-                false);
+                new RewardAutoBattleRequest());
 
             var result = bonus.AutoBattleRewardResult;
             

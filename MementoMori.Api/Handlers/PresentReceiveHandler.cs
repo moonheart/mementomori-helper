@@ -27,14 +27,14 @@ public partial class PresentReceiveHandler : IGameActionHandler
         try
         {
             var getListResponse = await nm.SendRequest<GetListRequest, GetListResponse>(
-                new GetListRequest { LanguageType = nm.LanguageType }, false);
+                new GetListRequest { LanguageType = nm.LanguageType });
 
             if (getListResponse.userPresentDtoInfos.Any(d => !d.IsReceived))
             {
                 try
                 {
                     var resp = await nm.SendRequest<ReceiveItemRequest, ReceiveItemResponse>(
-                        new ReceiveItemRequest { LanguageType = nm.LanguageType }, false);
+                        new ReceiveItemRequest { LanguageType = nm.LanguageType });
                     var count = resp.ResultItems?.Count ?? 0;
                     await _jobLogger.LogAsync(userId, $"礼物箱已领取 {count} 件物品。");
                 }
@@ -47,7 +47,7 @@ public partial class PresentReceiveHandler : IGameActionHandler
                         try
                         {
                             await nm.SendRequest<ReceiveItemRequest, ReceiveItemResponse>(
-                                new ReceiveItemRequest { LanguageType = nm.LanguageType, PresentGuid = present.Guid }, false);
+                                new ReceiveItemRequest { LanguageType = nm.LanguageType, PresentGuid = present.Guid });
                             receivedCount++;
                         }
                         catch

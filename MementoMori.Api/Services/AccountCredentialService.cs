@@ -45,8 +45,7 @@ public partial class AccountCredentialService
                     OSVersion = "Windows 10",
                     SteamTicket = "",
                     AuthToken = authToken
-                }, 
-                useAuthApi: true);
+                });
 
             _logger.LogInformation("Created temporary user: {UserId}", createUserResponse.UserId);
 
@@ -59,8 +58,7 @@ public partial class AccountCredentialService
                     SnsType = SnsType.OrtegaId,
                     UserId = userId,
                     AuthToken = authToken
-                },
-                useAuthApi: true);
+                });
 
             _logger.LogInformation("Got comeback data, OneTimeToken obtained");
 
@@ -71,8 +69,7 @@ public partial class AccountCredentialService
                     FromUserId = createUserResponse.UserId,
                     OneTimeToken = getComebackUserDataResponse.OneTimeToken,
                     ToUserId = userId
-                },
-                useAuthApi: true);
+                });
 
             _logger.LogInformation("Comeback successful, got ClientKey for user {UserId}", userId);
 

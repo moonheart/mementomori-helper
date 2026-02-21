@@ -43,7 +43,7 @@ public partial class EquipmentReinforcementHandler : IGameActionHandler
             if (equipmentDtoInfo != null)
             {
                 var response = await nm.SendRequest<ReinforcementRequest, ReinforcementResponse>(
-                    new ReinforcementRequest { EquipmentGuid = equipmentDtoInfo.Guid, NumberOfTimes = 1 }, false);
+                    new ReinforcementRequest { EquipmentGuid = equipmentDtoInfo.Guid, NumberOfTimes = 1 });
                 await _jobLogger.LogAsync(userId, "装备强化完成。");
             }
             else

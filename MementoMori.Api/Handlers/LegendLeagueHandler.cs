@@ -51,7 +51,7 @@ public partial class LegendLeagueHandler : IGameActionHandler
             try
             {
                 // 1. 获取竞技场信息
-                var leagueInfoResp = await nm.SendRequest<GetLegendLeagueInfoRequest, GetLegendLeagueInfoResponse>(new GetLegendLeagueInfoRequest(), false);
+                var leagueInfoResp = await nm.SendRequest<GetLegendLeagueInfoRequest, GetLegendLeagueInfoResponse>(new GetLegendLeagueInfoRequest());
 
                 if (!leagueInfoResp.IsInTimeCanChallenge)
                 {
@@ -91,7 +91,7 @@ public partial class LegendLeagueHandler : IGameActionHandler
 
                 // 5. 开始战斗
                 var startResp = await nm.SendRequest<LegendLeagueStartRequest, LegendLeagueStartResponse>(
-                    new LegendLeagueStartRequest { RivalPlayerId = targetPlayerId }, false);
+                    new LegendLeagueStartRequest { RivalPlayerId = targetPlayerId });
 
                 bool isWin = startResp.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                 string rivalName = startResp.RivalPlayerInfo?.PlayerName ?? "Unknown";

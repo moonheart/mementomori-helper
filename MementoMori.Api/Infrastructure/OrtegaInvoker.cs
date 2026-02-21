@@ -88,8 +88,8 @@ namespace MementoMori.Api.Infrastructure
                 // 创建泛型方法：SendRequest<TReq, TResp>
                 var genericMethod = sendRequestMethod.MakeGenericMethod(requestType, responseType);
 
-                // 调用方法，参数: (request, useAuthApi = false, userDataCallback = null)
-                var task = (Task)genericMethod.Invoke(networkManager, new[] { request, false, null })!;
+                // 调用方法，参数: (request, userDataCallback = null)
+                var task = (Task)genericMethod.Invoke(networkManager, new[] { request, null })!;
                 await task;
 
                 // 获取 Task<T> 的结果

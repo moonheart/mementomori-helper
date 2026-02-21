@@ -48,7 +48,7 @@ public partial class ArenaPvpHandler : IGameActionHandler
             try
             {
                 // 1. 获取竞技场信息
-                var pvpInfoResp = await nm.SendRequest<GetPvpInfoRequest, GetPvpInfoResponse>(new GetPvpInfoRequest(), false);
+                var pvpInfoResp = await nm.SendRequest<GetPvpInfoRequest, GetPvpInfoResponse>(new GetPvpInfoRequest());
 
                 // 2. 检查次数
                 if (nm.UserSyncData.UserBattlePvpDtoInfo.PvpTodayCount >= OrtegaConst.BattlePvp.MaxPvpBattleFreeCount)
@@ -84,7 +84,7 @@ public partial class ArenaPvpHandler : IGameActionHandler
                 {
                     RivalPlayerId = target.playerId,
                     RivalPlayerRank = target.rank
-                }, false);
+                });
 
                 bool isWin = startResp.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                 string rivalName = startResp.RivalPlayerInfo?.PlayerName ?? "Unknown";

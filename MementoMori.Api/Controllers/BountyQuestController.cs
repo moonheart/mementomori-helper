@@ -35,7 +35,7 @@ public partial class BountyQuestController : ControllerBase
             var nm = context.NetworkManager;
 
             // 2. 获取当前悬赏列表和玩家数据
-            var getListResponse = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest(), false);
+            var getListResponse = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest());
             var userSyncData = nm.UserSyncData;
             var bountyQuestAuto = await _settingService.GetSettingAsync<GameConfig.BountyQuestAutoConfig>(userId, "bountyquestauto") 
                                  ?? new GameConfig.BountyQuestAutoConfig();
@@ -87,7 +87,7 @@ public partial class BountyQuestController : ControllerBase
                         var startResponse = await nm.SendRequest<StartRequest, StartResponse>(new StartRequest
                         {
                             BountyQuestStartInfos = new List<BountyQuestStartInfo> { formation }
-                        }, false);
+                        });
                         
                         successCount++;
                         results.Add(new { questId = formation.BountyQuestId, success = true });

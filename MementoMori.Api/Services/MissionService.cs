@@ -35,7 +35,7 @@ public partial class MissionService
 
             // 发送请求
             var response = await networkManager.SendRequest<GetMissionInfoRequest, GetMissionInfoResponse>(
-                request, useAuthApi: false);
+                request);
 
             _logger.LogInformation("Successfully retrieved mission info for user {UserId}", userId);
 
@@ -79,7 +79,7 @@ public partial class MissionService
 
             // 发送请求
             var response = await networkManager.SendRequest<RewardMissionRequest, RewardMissionResponse>(
-                request, useAuthApi: false);
+                request);
 
             _logger.LogInformation("Successfully claimed mission rewards for user {UserId}", userId);
 
@@ -127,7 +127,7 @@ public partial class MissionService
 
             // 发送请求
             var response = await networkManager.SendRequest<RewardMissionActivityRequest, RewardMissionActivityResponse>(
-                request, useAuthApi: false);
+                request);
 
             _logger.LogInformation("Successfully claimed activity reward for user {UserId}", userId);
 

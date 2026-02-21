@@ -29,8 +29,7 @@ public partial class BossHighSpeedBattleHandler : IGameActionHandler
         {
             // 先执行自动战斗请求获取当前状态
             var autoResponse = await nm.SendRequest<AutoRequest, AutoResponse>(
-                new AutoRequest(), 
-                false);
+                new AutoRequest());
 
             // 检查是否有月卡特权
             if (IsValidMonthlyBoost(nm))
@@ -74,7 +73,7 @@ public partial class BossHighSpeedBattleHandler : IGameActionHandler
             QuickCount = count 
         };
         
-        var quickResponse = await nm.SendRequest<QuickRequest, QuickResponse>(req, false);
+        var quickResponse = await nm.SendRequest<QuickRequest, QuickResponse>(req);
 
         var result = quickResponse.AutoBattleRewardResult;
         
