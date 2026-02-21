@@ -27,14 +27,14 @@ namespace MementoMori.Api.Controllers
         /// <returns>API 响应</returns>
         [HttpPost("{category}/{ortegaAction}")]
         public async Task<IActionResult> ProxyRequest(
-            [FromRoute]string category, 
-            [FromRoute]string ortegaAction)
+            [FromRoute] string category,
+            [FromRoute] string ortegaAction)
         {
             try
             {
                 // 构建 Ortega API URI
                 var apiUri = $"{category}/{ortegaAction}";
-                
+
                 _logger.LogInformation("ProxyRequest received: Category={Category}, Action={Action}, URI={ApiUri}", category, ortegaAction, apiUri);
 
                 // 查找 API 信息
@@ -42,13 +42,13 @@ namespace MementoMori.Api.Controllers
                 if (apiInfo == null)
                 {
                     _logger.LogWarning("API lookup failed for URI: {ApiUri}. Available APIs count: {Count}", apiUri, _discoveryService.GetAllApis().Count);
-                    return NotFound(new {error = $"API '{apiUri}' not found"});
+                    return NotFound(new { error = $"API '{apiUri}' not found" });
                 }
 
                 // 从 Header 获取 UserId（由 UserIdAuthenticationMiddleware 设置）
                 if (!HttpContext.Items.TryGetValue("UserId", out var userIdObj) || userIdObj is not long userId)
                 {
-                    return Unauthorized(new {error = "User ID not found in request"});
+                    return Unauthorized(new { error = "User ID not found in request" });
                 }
 
                 // 读取请求体
@@ -86,14 +86,14 @@ namespace MementoMori.Api.Controllers
             catch (InvalidOperationException ex)
             {
                 _logger.LogError(ex, "Invalid operation: {Message}", ex.Message);
-                return BadRequest(new {error = ex.Message});
+                return BadRequest(new { error = ex.Message });
             }
             catch (NetworkManager.ApiErrorException ex)
             {
                 _logger.LogError(ex, "Ortega API error: {ErrorCode}", ex.ErrorCode);
                 return BadRequest(new
                 {
-                    error = "Ortega API error",
+                    error = TextResourceTable.GetErrorCodeMessage(ex.ErrorCode),
                     errorCode = ex.ErrorCode,
                     category,
                     ortegaAction
@@ -102,7 +102,7 @@ namespace MementoMori.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected error while proxying request to {Category}/{Action}", category, ortegaAction);
-                return StatusCode(500, new {error = "Internal server error", details = ex.Message});
+                return StatusCode(500, new { error = "Internal server error", details = ex.Message });
             }
         }
 
