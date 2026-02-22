@@ -54,6 +54,9 @@ public class GameConfig
         public string AutoDeployGuildDefenseJobCron { get; set; } = "0 20 19 ? * *";
         public string AutoChangeGachaRelicJobCron { get; set; } = "0 40 4 ? * MON *";
         public string AutoDrawGachaRelicJobCron { get; set; } = "0 0 6 ? * SUN *";
+
+        public List<string> DisabledDailyActions { get; set; } = new();
+        public List<string> DisabledHourlyActions { get; set; } = new();
     }
 
     [ExportTsClass]

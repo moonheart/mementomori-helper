@@ -38,9 +38,7 @@ public partial class JobManagerService
         }
 
         // 获取时区偏移
-        var offset = accountContext.NetworkManager.MoriHttpClientHandler.TimeZoneOffset; 
-        // 注意：原版代码中 offset 是从 networkManager.TimeManager 获取的，
-        // 在新版中我们需要确保 NetworkManager 有这个能力。
+        var offset = accountContext.TimeManager.DiffFromUtc; 
 
         _logger.LogInformation("Registering jobs for user {UserId} with offset {Offset}", userId, offset);
 
