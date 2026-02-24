@@ -69,7 +69,7 @@ namespace MementoMori.Api.TypeGen
             var enumTypes = ortegaAssembly.GetTypes()
                 .Where(t => t.IsEnum
                     && t.Namespace != null
-                    && t.Namespace.StartsWith("MementoMori.Ortega.Share"));
+                    && (t.Namespace.StartsWith("MementoMori.Ortega.Share") || t.Namespace.StartsWith("MementoMori.Ortega.Common")));
 
             foreach (var type in enumTypes)
             {
