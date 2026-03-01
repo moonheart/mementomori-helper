@@ -12,6 +12,7 @@ using Grpc.Net.Client;
 using MementoMori.Api.Services;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using MementoMori.Ortega.Share.Master;
+using MementoMori.Ortega.Share.Master.Data;
 
 namespace MementoMori.Api.Infrastructure;
 
@@ -47,6 +48,11 @@ public partial class NetworkManager : IDisposable
     public long PlayerId { get; set; }
     public CultureInfo CultureInfo { get; private set; } = new("zh-CN");
     public LanguageType LanguageType => ParseLanguageType(CultureInfo);
+
+    /// <summary>
+    /// 当前登录世界对应的 TimeServer 配置
+    /// </summary>
+    public TimeServerMB? TimeServerMb { get; private set; }
 
     // MagicOnion
     private string? _authTokenOfMagicOnion;
@@ -152,6 +158,10 @@ public partial class NetworkManager : IDisposable
         {
             throw new InvalidOperationException($"World {worldId} not found");
         }
+
+        // 设置当前世界对应的 TimeServer（worldId 前缀）
+        var timeServerId = playerDataInfo.WorldId / 1000;
+        TimeServerMb = TimeServerTable.GetById(timeServerId);
 
         // 设置服务器 Host
         await SetServerHostAsync(worldId);

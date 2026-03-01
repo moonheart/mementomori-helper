@@ -106,6 +106,12 @@ public partial class AccountService
             // 4. 执行真正登录流程（发送 LoginPlayerRequest，建立 Session）
             _logger.LogInformation("Attempting full login for user {UserId} on World {WorldId}", userId, latestWorld.WorldId);
             await nm.LoginAsync(latestWorld.WorldId);
+
+            // 4.1 同步 TimeServer 到账户级 TimeManager
+            if (nm.TimeServerMb != null)
+            {
+                context.TimeManager.SetTimeServerMb(nm.TimeServerMb);
+            }
             
             // 5. 更新本地账号登录状态
             _accountManager.UpdateLoginStatus(userId, true, latestWorld.WorldId);

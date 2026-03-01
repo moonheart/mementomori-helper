@@ -34,6 +34,14 @@ public partial class BookSortAutoHandler : IGameActionHandler
 
         await _jobLogger.LogAsync(userId, "开始书库大扫除自动清扫...");
 
+        // 检查活动是否在开放时间内
+        var bookSortEventMb = Masters.BookSortEventTable.GetArray().FirstOrDefault(context.TimeManager.IsInTime);
+        if (bookSortEventMb == null)
+        {
+            await _jobLogger.LogAsync(userId, "当前不在书库大扫除活动时间内，跳过自动清扫。");
+            return;
+        }
+
         // 获取用户进度
         var userSyncData = nm.UserSyncData;
         var maxClearQuestId = userSyncData?.UserBattleBossDtoInfo?.BossClearMaxQuestId ?? 0;
