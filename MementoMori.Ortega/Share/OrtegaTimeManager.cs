@@ -6,767 +6,764 @@ namespace MementoMori.Ortega.Share
 {
 	public class OrtegaTimeManager : ILocalTime
 	{
-		// public OrtegaTimeManager()
-		// {
-		// 	this.DifferenceFromUtc = (long)0L;
-		// }
+		public OrtegaTimeManager()
+		{
+			DifferenceFromUtc = 0L;
+		}
+
+		private const long JstDifferenceTimeStampFromUtc = 9L * 60L * 60L * 1000L;
 
 		public OrtegaTimeManager(TimeServerMB timeServerMB)
 		{
-			TimeSpan timeSpan = TimeSpan.Parse(timeServerMB.DifferenceDateTimeFromUtc);
-			this.DifferenceFromUtc = (long) timeSpan.TotalMilliseconds;
+			if (timeServerMB == null)
+			{
+				throw new ArgumentNullException(nameof(timeServerMB));
+			}
+
+			DifferenceFromUtc = (long)TimeSpan.Parse(timeServerMB.DifferenceDateTimeFromUtc).TotalMilliseconds;
 		}
 
 		public long DifferenceFromUtc { get; private set; }
 
-// 		public void SetDifferenceFromUtc(TimeServerMB timeServerMB)
-// 		{
-// 			if (!string.IsNullOrEmpty(timeServerMB.DifferenceDateTimeFromUtc))
-// 			{
-// 				TimeSpan timeSpan = TimeSpan.Parse(timeServerMB.DifferenceDateTimeFromUtc);
-// 				this.DifferenceFromUtc = timeSpan;
-// 			}
-// 		}
-//
+		public void SetDifferenceFromUtc(TimeServerMB timeServerMB)
+		{
+			if (timeServerMB == null)
+			{
+				throw new ArgumentNullException(nameof(timeServerMB));
+			}
+
+			if (!string.IsNullOrEmpty(timeServerMB.DifferenceDateTimeFromUtc))
+			{
+				TimeSpan timeSpan = TimeSpan.Parse(timeServerMB.DifferenceDateTimeFromUtc);
+				DifferenceFromUtc = (long)timeSpan.TotalMilliseconds;
+			}
+		}
+
 		public long GetLocalTimestamp()
 		{
-			return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + this.DifferenceFromUtc;
+			return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + DifferenceFromUtc;
+		}
+
+		public long GetLocalTimestamp(StartEndTimeZoneType type, DateTime dateTime, bool isStartTime)
+		{
+			if (isStartTime)
+			{
+				if (type != StartEndTimeZoneType.LocalStartLocalEnd && type != StartEndTimeZoneType.LocalStartJstEnd)
+				{
+					dateTime = ConvertJstDateTImeToLocalDateTime(dateTime);
+				}
+			}
+			else
+			{
+				if (type != StartEndTimeZoneType.LocalStartLocalEnd && type != StartEndTimeZoneType.JstStartLocalEnd)
+				{
+					dateTime = ConvertJstDateTImeToLocalDateTime(dateTime);
+				}
+			}
+
+			return ConvertDateTimeToTimeStamp(dateTime);
+		}
+
+		public DateTime GetLocalDateTime()
+		{
+			return TimeUtil.UtcEpoch.AddMilliseconds(GetLocalTimestamp());
+		}
+
+		public long GetNDaysLaterChangeDayTimeStamp(long nDay, long timestamp = -1L)
+		{
+			if (timestamp == -1L)
+			{
+				timestamp = GetLocalTimestamp();
+			}
+
+			DateTime dateTime = TimeUtil.UtcEpoch.AddMilliseconds(timestamp);
+			DateTime baseDate = (dateTime - TimeUtil.ChangeDayTime).Date;
+			DateTime changeDayDateTime = baseDate.AddDays(nDay) + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(changeDayDateTime);
+		}
+
+		public long GetLocalYesterdayChangeDayTimeStamp()
+		{
+			DateTime baseDate = (GetLocalDateTime() - TimeUtil.ChangeDayTime).Date;
+			DateTime changeDayDateTime = baseDate.AddDays(-1.0) + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(changeDayDateTime);
+		}
+
+		public long GetLocalTomorrowChangeDayTimeStamp()
+		{
+			DateTime baseDate = (GetLocalDateTime() - TimeUtil.ChangeDayTime).Date;
+			DateTime changeDayDateTime = baseDate.AddDays(1.0) + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(changeDayDateTime);
+		}
+
+		public long GetLocalTodayChangeDayTimeStamp()
+		{
+			DateTime baseDate = (GetLocalDateTime() - TimeUtil.ChangeDayTime).Date;
+			DateTime changeDayDateTime = baseDate + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(changeDayDateTime);
+		}
+
+		public long GetLocalNextChangeDayTime(long localTime)
+		{
+			long changeDayMilliseconds = (long)TimeUtil.ChangeDayTime.TotalMilliseconds;
+			DateTime dateTime = TimeUtil.UtcEpoch.AddMilliseconds(localTime - changeDayMilliseconds);
+			DateTime nextChangeDayDateTime = dateTime.Date.AddDays(1.0) + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(nextChangeDayDateTime);
+		}
+
+		public long GetLocalLastMondayTimeStamp()
+		{
+			DateTime baseDate = (GetLocalDateTime() - TimeUtil.ChangeDayTime).Date;
+			int diff = 1 - (int)baseDate.DayOfWeek;
+			if (diff > 0)
+			{
+				diff -= 7;
+			}
+
+			DateTime mondayDateTime = baseDate.AddDays(diff) + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(mondayDateTime);
+		}
+
+		public long GetLocalLastMondayTimeStamp(long timestamp)
+		{
+			DateTime dateTime = TimeUtil.UtcEpoch.AddMilliseconds(timestamp);
+			DateTime baseDate = (dateTime - TimeUtil.ChangeDayTime).Date;
+			int diff = 1 - (int)baseDate.DayOfWeek;
+			if (diff > 0)
+			{
+				diff -= 7;
+			}
+
+			DateTime mondayDateTime = baseDate.AddDays(diff) + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(mondayDateTime);
+		}
+
+		public long GetLocalNextMondayTimeStamp()
+		{
+			DateTime baseDate = (GetLocalDateTime() - TimeUtil.ChangeDayTime).Date;
+			int diff = 1 - (int)baseDate.DayOfWeek;
+			if (diff <= 0)
+			{
+				diff += 7;
+			}
+
+			DateTime mondayDateTime = baseDate.AddDays(diff) + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(mondayDateTime);
+		}
+
+		public long GetLocalNextMondayTimeStamp(long timestamp)
+		{
+			DateTime dateTime = TimeUtil.UtcEpoch.AddMilliseconds(timestamp);
+			DateTime baseDate = (dateTime - TimeUtil.ChangeDayTime).Date;
+			int diff = 1 - (int)baseDate.DayOfWeek;
+			if (diff <= 0)
+			{
+				diff += 7;
+			}
+
+			DateTime mondayDateTime = baseDate.AddDays(diff) + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(mondayDateTime);
+		}
+
+		public long GetLocalNextDayOfWeekTimeStamp(DayOfWeek dayOfWeek)
+		{
+			DateTime baseDate = (GetLocalDateTime() - TimeUtil.ChangeDayTime).Date;
+			int diff = (int)dayOfWeek - (int)baseDate.DayOfWeek;
+			if (diff <= 0)
+			{
+				diff += 7;
+			}
+
+			DateTime dayOfWeekDateTime = baseDate.AddDays(diff) + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(dayOfWeekDateTime);
+		}
+
+		public long GetGrandBattleStartBattleLocalTimestamp()
+		{
+			DateTime baseDate = (GetLocalDateTime() - TimeUtil.ChangeDayTime).Date;
+			DateTime startDateTime = baseDate
+				.AddHours(OrtegaConst.GlobalGvg.StartHour)
+				.AddMinutes(OrtegaConst.GlobalGvg.StartMinute);
+			return ConvertDateTimeToTimeStamp(startDateTime);
+		}
+
+		public long GetGuildBattleStartBattleLocalTimestamp()
+		{
+			DateTime baseDate = (GetLocalDateTime() - TimeUtil.ChangeDayTime).Date;
+			DateTime startDateTime = baseDate
+				.AddHours(OrtegaConst.LocalGvg.StartHour)
+				.AddMinutes(OrtegaConst.LocalGvg.StartMinute);
+			return ConvertDateTimeToTimeStamp(startDateTime);
+		}
+
+		public long GetLocalNextMonthFirstDayTimeStamp()
+		{
+			DateTime dateTime = GetLocalDateTime() - TimeUtil.ChangeDayTime;
+			DateTime firstDayOfNextMonth = new DateTime(dateTime.Year, dateTime.Month, 1).AddMonths(1);
+			DateTime changeDayDateTime = firstDayOfNextMonth + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(changeDayDateTime);
+		}
+
+		public long GetLocalCurrentMonthFirstDayTimeStamp()
+		{
+			DateTime dateTime = GetLocalDateTime() - TimeUtil.ChangeDayTime;
+			DateTime firstDayOfCurrentMonth = new DateTime(dateTime.Year, dateTime.Month, 1);
+			DateTime changeDayDateTime = firstDayOfCurrentMonth + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(changeDayDateTime);
+		}
+
+		public long GetLocalTodayTimestamp(long hour, long minute)
+		{
+			DateTime dateTime = GetLocalDateTime().Date.AddHours(hour).AddMinutes(minute);
+			return ConvertDateTimeToTimeStamp(dateTime);
+		}
+
+		public DateTime GetChangeDayLocalDateTime()
+		{
+			DateTime baseDate = (GetLocalDateTime() - TimeUtil.ChangeDayTime).Date;
+			return baseDate.AddDays(1.0).AddHours(TimeUtil.ChangeDayTime.Hours);
+		}
+
+		public bool IsChangeDayByChangeDayTime(long timestamp)
+		{
+			long changeDayMilliseconds = (long)TimeUtil.ChangeDayTime.TotalMilliseconds;
+			long current = GetLocalTimestamp() - changeDayMilliseconds;
+			long target = timestamp - changeDayMilliseconds;
+
+			DateTime targetDate = DateTimeOffset.FromUnixTimeMilliseconds(target).Date;
+			DateTime currentDate = DateTimeOffset.FromUnixTimeMilliseconds(current).Date;
+			return targetDate < currentDate;
+		}
+
+		public DayOfWeek GetDayOfWeek()
+		{
+			return (GetLocalDateTime() - TimeUtil.ChangeDayTime).DayOfWeek;
+		}
+
+		public DateTime GetLocalTodayDateTime()
+		{
+			return GetLocalDateTime() - TimeUtil.ChangeDayTime;
+		}
+
+		public DateTime GetLocalGameDate()
+		{
+			return (GetLocalDateTime() - TimeUtil.ChangeDayTime).Date;
+		}
+
+		public DateTime GetLocalGameDate(long localTimeStamp)
+		{
+			DateTime dateTime = TimeUtil.UtcEpoch.AddMilliseconds(localTimeStamp);
+			return (dateTime - TimeUtil.ChangeDayTime).Date;
+		}
+
+		public DateTime GetStartTime(IHasStartEndTimeZone data)
+		{
+			if (data == null)
+			{
+				throw new ArgumentNullException(nameof(data));
+			}
+
+			DateTime startTime = DateTime.Parse(data.StartTime);
+			if (data.StartEndTimeZoneType != StartEndTimeZoneType.LocalStartLocalEnd &&
+				data.StartEndTimeZoneType != StartEndTimeZoneType.LocalStartJstEnd)
+			{
+				startTime = ConvertJstDateTImeToLocalDateTime(startTime);
+			}
+
+			return startTime;
+		}
+
+		public DateTime GetEndTime(IHasStartEndTimeZone data)
+		{
+			if (data == null)
+			{
+				throw new ArgumentNullException(nameof(data));
+			}
+
+			return GetEndTime(data.StartEndTimeZoneType, data.EndTime);
+		}
+
+		public DateTime GetEndTime(StartEndTimeZoneType startEndTimeZoneTyp, string endTime)
+		{
+			DateTime parsedEndTime = DateTime.Parse(endTime);
+			if (startEndTimeZoneTyp != StartEndTimeZoneType.LocalStartLocalEnd &&
+				startEndTimeZoneTyp != StartEndTimeZoneType.JstStartLocalEnd)
+			{
+				parsedEndTime = ConvertJstDateTImeToLocalDateTime(parsedEndTime);
+			}
+
+			return parsedEndTime;
+		}
+
+		public (DateTime startTime, DateTime endTime) GetStartEndLocalDateTime(IHasStartEndTimeZone data)
+		{
+			if (data == null)
+			{
+				throw new ArgumentNullException(nameof(data));
+			}
+
+			if (!DateTime.TryParse(data.StartTime, out DateTime parsedStart) ||
+				!DateTime.TryParse(data.EndTime, out DateTime parsedEnd))
+			{
+				return (DateTime.MinValue, DateTime.MinValue);
+			}
+
+			return data.StartEndTimeZoneType switch
+			{
+				StartEndTimeZoneType.LocalStartLocalEnd => (parsedStart, parsedEnd),
+				StartEndTimeZoneType.LocalStartJstEnd => (parsedStart, ConvertJstDateTImeToLocalDateTime(parsedEnd)),
+				StartEndTimeZoneType.JstStartLocalEnd => (ConvertJstDateTImeToLocalDateTime(parsedStart), parsedEnd),
+				StartEndTimeZoneType.JstStartJstEnd =>
+					(ConvertJstDateTImeToLocalDateTime(parsedStart), ConvertJstDateTImeToLocalDateTime(parsedEnd)),
+				_ => (parsedStart, parsedEnd)
+			};
+		}
+
+		public bool IsStarted(IHasStartEndTimeZone data, DateTime now)
+		{
+			if (data == null)
+			{
+				throw new ArgumentNullException(nameof(data));
+			}
+
+			DateTime startTime = DateTime.Parse(data.StartTime);
+			if (data.StartEndTimeZoneType != StartEndTimeZoneType.LocalStartLocalEnd &&
+				data.StartEndTimeZoneType != StartEndTimeZoneType.LocalStartJstEnd)
+			{
+				startTime = ConvertJstDateTImeToLocalDateTime(startTime);
+			}
+
+			return startTime <= now;
+		}
+
+		public bool IsEnded(IHasStartEndTimeZone data, DateTime now)
+		{
+			if (data == null)
+			{
+				throw new ArgumentNullException(nameof(data));
+			}
+
+			DateTime endTime = DateTime.Parse(data.EndTime);
+			if (data.StartEndTimeZoneType != StartEndTimeZoneType.LocalStartLocalEnd &&
+				data.StartEndTimeZoneType != StartEndTimeZoneType.JstStartLocalEnd)
+			{
+				endTime = ConvertJstDateTImeToLocalDateTime(endTime);
+			}
+
+			return endTime < now;
+		}
+
+		public bool IsEndByLocalTime(DateTime endTime)
+		{
+			return GetLocalDateTime() > endTime;
+		}
+
+		public bool IsInEventTime(IHasEventStartEndTime data)
+		{
+			DateTime now = GetLocalDateTime();
+			if (data == null)
+			{
+				throw new ArgumentNullException(nameof(data));
+			}
+
+			if (string.IsNullOrEmpty(data.EventStartTime) || string.IsNullOrEmpty(data.EventEndTime))
+			{
+				return false;
+			}
+
+			DateTime startTime = DateTime.Parse(data.EventStartTime);
+			if (startTime > now)
+			{
+				return false;
+			}
+
+			DateTime endTime = DateTime.Parse(data.EventEndTime);
+			return now <= endTime;
+		}
+
+		public bool IsInTime(IHasStartEndTime data)
+		{
+			DateTime now = GetLocalDateTime();
+			DateTime startTime = DateTime.Parse(data.StartTime);
+			if (startTime > now)
+			{
+				return false;
+			}
+
+			DateTime endTime = DateTime.Parse(data.EndTime);
+			return now <= endTime;
+		}
+
+		public bool IsInTime(IHasJstStartEndTime data)
+		{
+			if (data == null)
+			{
+				throw new ArgumentNullException(nameof(data));
+			}
+
+			if (string.IsNullOrEmpty(data.StartTimeFixJST) || string.IsNullOrEmpty(data.EndTimeFixJST))
+			{
+				return false;
+			}
+
+			DateTime jstNow = ConvertLocalDateTimeToJstDateTIme(GetLocalDateTime());
+			DateTime startTime = DateTime.Parse(data.StartTimeFixJST);
+			if (startTime > jstNow)
+			{
+				return false;
+			}
+
+			DateTime endTime = DateTime.Parse(data.EndTimeFixJST);
+			return jstNow <= endTime;
+		}
+
+		public bool IsInTime(IHasStartEndTimeZone data)
+		{
+			return IsInTime(data, GetLocalDateTime());
+		}
+
+		public bool IsInTime(DateTime startTime, DateTime endTime)
+		{
+			DateTime now = GetLocalDateTime();
+			if (now < startTime)
+			{
+				return false;
+			}
+
+			return now <= endTime;
+		}
+
+		public bool IsInTime(IHasStartEndTimeZone data, DateTime localDateTime)
+		{
+			DateTime jstDateTime = ConvertLocalDateTimeToJstDateTIme(localDateTime);
+			DateTime startTime;
+			DateTime endTime;
+			DateTime startNow;
+			DateTime endNow;
+
+			switch (data.StartEndTimeZoneType)
+			{
+				case StartEndTimeZoneType.LocalStartLocalEnd:
+					startTime = DateTime.Parse(data.StartTime);
+					endTime = DateTime.Parse(data.EndTime);
+					startNow = localDateTime;
+					endNow = localDateTime;
+					break;
+				case StartEndTimeZoneType.LocalStartJstEnd:
+					startTime = DateTime.Parse(data.StartTime);
+					endTime = DateTime.Parse(data.EndTime);
+					startNow = localDateTime;
+					endNow = jstDateTime;
+					break;
+				case StartEndTimeZoneType.JstStartLocalEnd:
+					startTime = DateTime.Parse(data.StartTime);
+					endTime = DateTime.Parse(data.EndTime);
+					startNow = jstDateTime;
+					endNow = localDateTime;
+					break;
+				case StartEndTimeZoneType.JstStartJstEnd:
+					startTime = DateTime.Parse(data.StartTime);
+					endTime = DateTime.Parse(data.EndTime);
+					startNow = jstDateTime;
+					endNow = jstDateTime;
+					break;
+				default:
+					startTime = DateTime.Parse(data.StartTime);
+					endTime = DateTime.Parse(data.EndTime);
+					startNow = localDateTime;
+					endNow = localDateTime;
+					break;
+			}
+
+			if (startTime > startNow)
+			{
+				return false;
+			}
+
+			return endNow <= endTime;
+		}
+
+		public bool IsInTimeByHourAndMinuteAndSecond(long startTime, long endTime, long timestamp)
+		{
+			DateTime dateTime = TimeUtil.UtcEpoch.AddMilliseconds(timestamp);
+			int now = (dateTime.Hour * 100 + dateTime.Minute) * 100 + dateTime.Second;
+			return startTime <= now && now <= endTime;
+		}
+
+		public bool IsInTimeByHourAndMinuteAndSecond(long startTime, long endTime)
+		{
+			DateTime dateTime = GetLocalDateTime();
+			int now = (dateTime.Hour * 100 + dateTime.Minute) * 100 + dateTime.Second;
+			return startTime <= now && now <= endTime;
+		}
+
+		public IHasStartEndTime GetInTimeData(IReadOnlyList<IHasStartEndTime> datas)
+		{
+			DateTime now = GetLocalDateTime();
+			foreach (IHasStartEndTime data in datas)
+			{
+				DateTime startTime = DateTime.Parse(data.StartTime);
+				if (startTime > now)
+				{
+					continue;
+				}
+
+				DateTime endTime = DateTime.Parse(data.EndTime);
+				if (now <= endTime)
+				{
+					return data;
+				}
+			}
+
+			return null;
+		}
+
+		public IHasStartEndTimeZone GetInTimeData(IReadOnlyList<IHasStartEndTimeZone> datas)
+		{
+			foreach (IHasStartEndTimeZone data in datas)
+			{
+				if (IsInTime(data))
+				{
+					return data;
+				}
+			}
+
+			return null;
+		}
+
+		public IHasJstStartEndTime GetInTimeData(IReadOnlyList<IHasJstStartEndTime> datas)
+		{
+			DateTime jstNow = ConvertLocalDateTimeToJstDateTIme(GetLocalDateTime());
+			foreach (IHasJstStartEndTime data in datas)
+			{
+				DateTime startTime = DateTime.Parse(data.StartTimeFixJST);
+				if (startTime > jstNow)
+				{
+					continue;
+				}
+
+				DateTime endTime = DateTime.Parse(data.EndTimeFixJST);
+				if (jstNow <= endTime)
+				{
+					return data;
+				}
+			}
+
+			return null;
+		}
+
+		public bool IsSameDay(long beforeTimestamp, long afterTimestamp)
+		{
+			DateTime beforeDate = TimeUtil.UtcEpoch.AddMilliseconds(beforeTimestamp) - TimeUtil.ChangeDayTime;
+			DateTime afterDate = TimeUtil.UtcEpoch.AddMilliseconds(afterTimestamp) - TimeUtil.ChangeDayTime;
+			return beforeDate.Year == afterDate.Year
+				&& beforeDate.Month == afterDate.Month
+				&& beforeDate.Day == afterDate.Day;
+		}
+
+		public long GetElapsedDays(long startTimestamp)
+		{
+			long nextChangeTime = GetLocalNextChangeDayTime(startTimestamp);
+			double oneDayMilliseconds = TimeSpan.FromDays(1.0).TotalMilliseconds;
+			long localTimestamp = GetLocalTimestamp();
+			return (int)((localTimestamp + (long)oneDayMilliseconds - nextChangeTime) / oneDayMilliseconds);
+		}
+
+        public long GetLocalLastGrandBattleMatchingTimeStamp()
+		{
+			DateTime baseDate = (GetLocalDateTime() - TimeUtil.ChangeDayTime).Date;
+			int diff = 2 - (int)baseDate.DayOfWeek;
+			if (diff > 0)
+			{
+				diff -= 7;
+			}
+
+			DateTime matchingDateTime = baseDate.AddDays(diff) + TimeUtil.ChangeDayTime;
+			return ConvertDateTimeToTimeStamp(matchingDateTime);
+		}
+
+		public long GetLocalGrandBattleEndMatchingTimeStamp(long lastMatchingTimeStamp = -1L)
+		{
+			if (lastMatchingTimeStamp == -1L)
+			{
+				lastMatchingTimeStamp = GetLocalLastGrandBattleMatchingTimeStamp();
+			}
+
+			long changeDayMilliseconds = (long)TimeUtil.ChangeDayTime.TotalMilliseconds;
+			long endMatchingHourMilliseconds = (long)TimeSpan.FromHours(OrtegaConst.GlobalGvg.EndMatchingHour).TotalMilliseconds;
+			long endMinuteMilliseconds = (long)TimeSpan.FromMinutes(OrtegaConst.GlobalGvg.EndMinute).TotalMilliseconds;
+			return lastMatchingTimeStamp + endMatchingHourMilliseconds + endMinuteMilliseconds - changeDayMilliseconds;
+		}
+
+		public long GetPrevUpdateGrandBattleMvpRankingLocalTimestamp(long localTimestamp)
+		{
+			DateTime now = TimeUtil.UtcEpoch.AddMilliseconds(localTimestamp);
+			DateTime baseDate = (TimeUtil.UtcEpoch.AddMilliseconds(localTimestamp) - TimeUtil.ChangeDayTime).Date;
+			int waitingMinutes = OrtegaConst.Gvg.WaitingUpdateMvpRankingMinutes;
+			DateTime candidate = baseDate
+				.AddHours(OrtegaConst.GlobalGvg.EndHour)
+				.AddMinutes(OrtegaConst.GlobalGvg.EndMinute + waitingMinutes);
+			if (!(candidate < now))
+			{
+				candidate = candidate.AddDays(-1);
+			}
+
+			return ConvertDateTimeToTimeStamp(candidate);
+		}
+
+		public long GetPrevUpdateGuildBattleMvpRankingLocalTimestamp(long localTimestamp)
+		{
+			DateTime now = TimeUtil.UtcEpoch.AddMilliseconds(localTimestamp);
+			DateTime baseDate = (TimeUtil.UtcEpoch.AddMilliseconds(localTimestamp) - TimeUtil.ChangeDayTime).Date;
+			int waitingMinutes = OrtegaConst.Gvg.WaitingUpdateMvpRankingMinutes;
+			DateTime candidate = baseDate
+				.AddHours(OrtegaConst.LocalGvg.EndHour)
+				.AddMinutes(OrtegaConst.LocalGvg.EndMinute + waitingMinutes);
+			if (!(candidate < now))
+			{
+				candidate = candidate.AddDays(-1);
+			}
+
+			return ConvertDateTimeToTimeStamp(candidate);
+		}
+
+		public DateTime GetJstDateTime()
+		{
+			return TimeUtil.UtcEpoch.AddMilliseconds(GetJstTimestamp());
+		}
+
+		public long GetJstTimestamp()
+		{
+			return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + JstDifferenceTimeStampFromUtc;
+		}
+
+		public long GetAddTime(DateAddTimeType type, long value, long utcTimeStamp = 0L)
+		{
+			DateTime baseDateTime = utcTimeStamp > 0
+				? TimeUtil.UtcEpoch.AddMilliseconds(utcTimeStamp)
+				: TimeUtil.UtcEpoch.AddMilliseconds(GetLocalTimestamp());
+
+			DateTime resultDateTime = type switch
+			{
+				DateAddTimeType.Milliseconds => baseDateTime.AddMilliseconds(value),
+				DateAddTimeType.Seconds => baseDateTime.AddSeconds(value),
+				DateAddTimeType.Minutes => baseDateTime.AddMinutes(value),
+				DateAddTimeType.Hours => baseDateTime.AddHours(value),
+				DateAddTimeType.Days => baseDateTime.AddDays(value),
+				DateAddTimeType.Months => baseDateTime.AddMonths((int)value),
+				DateAddTimeType.Years => baseDateTime.AddYears((int)value),
+				_ => throw new ArgumentOutOfRangeException(nameof(type), type, null),
+			};
+
+			return ConvertDateTimeToTimeStamp(resultDateTime);
+		}
+
+		public long GetLocalTodayUpdateLegendLeagueTimeStamp()
+		{
+			DateTime dateTime = GetLocalDateTime().Date
+				.AddHours((int)OrtegaConst.BattlePvp.LegendLeagueUpdateHour)
+				.AddMinutes((int)OrtegaConst.BattlePvp.LegendLeagueUpdateMinute);
+			return ConvertDateTimeToTimeStamp(dateTime);
+		}
+
+		public long GetLocalLastUpdateLegendLeagueTimeStamp()
+		{
+			long localTimestamp = GetLocalTimestamp();
+			long today = GetLocalTodayUpdateLegendLeagueTimeStamp();
+			if (localTimestamp <= today)
+			{
+				return today - (long)TimeSpan.FromDays(1).TotalMilliseconds;
+			}
+
+			return today;
+		}
+
+		public int GetLegendLeagueDayOfWeek()
+		{
+			DateTime localDateTime = GetLocalDateTime();
+			if (GetLocalTimestamp() < GetLocalTodayUpdateLegendLeagueTimeStamp())
+			{
+				int result = (int)localDateTime.DayOfWeek - 1;
+				return result < 0 ? 6 : result;
+			}
+
+			return (int)localDateTime.DayOfWeek;
+		}
+
+		public int GetYesterdayLegendLeagueDayOfWeek()
+		{
+			DateTime localDateTime = GetLocalDateTime();
+			if (GetLocalTimestamp() < GetLocalTodayUpdateLegendLeagueTimeStamp())
+			{
+				int day = (int)localDateTime.DayOfWeek - 1;
+				if (day < 0)
+				{
+					day = 6;
+				}
+
+				int result = day - 1;
+				return result < 0 ? 6 : result;
+			}
+
+			int yesterday = (int)localDateTime.DayOfWeek - 1;
+			return yesterday < 0 ? 6 : yesterday;
+		}
+
+		public long ConvertLocalTimeStampToUtcTimeStamp(long localTimeStamp)
+		{
+			return localTimeStamp - DifferenceFromUtc;
 		}
 //
-// 		public DateTime GetLocalDateTime()
-// 		{
-// 			DateTime UtcEpoch = TimeUtil.UtcEpoch;
-// 			long localTimestamp = this.GetLocalTimestamp();
-// 			DateTime dateTime;
-// 			return dateTime;
-// 		}
-//
-// 		public long GetNDaysLaterChangeDayTimeStamp(long nDay, long timestamp = -1L)
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetNDaysLaterChangeDayTimeStamp(System.Int64,System.Int64)
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_1_05, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:int64(var_2_0C, call:int64(OrtegaTimeManager::GetLocalTimestamp, ldloc:OrtegaTimeManager(this)))
-// 	stloc:DateTime(var_3_12, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_6_1B, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_7_26, call:DateTime(DateTime::op_Subtraction, ldloc:DateTime(var_5), ldloc:TimeSpan(var_6_1B)))
-// 	stloc:TimeSpan(var_14_30, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_15_3B, call:DateTime(DateTime::op_Addition, ldloc:DateTime(var_13), ldloc:TimeSpan(var_14_30)))
-// 	stloc:DateTime(var_16_42, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_17_4D, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_15_3B), ldloc:DateTime(var_16_42)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public long GetLocalYesterdayChangeDayTimeStamp()
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetLocalYesterdayChangeDayTimeStamp()
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_1_06, call:DateTime(OrtegaTimeManager::GetLocalDateTime, ldloc:OrtegaTimeManager(this)))
-// 	stloc:TimeSpan(var_2_0C, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_3_14, call:DateTime(DateTime::op_Subtraction, ldloc:DateTime(var_1_06), ldloc:TimeSpan(var_2_0C)))
-// 	stloc:TimeSpan(var_9_1A, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_10_25, call:DateTime(DateTime::op_Addition, ldloc:DateTime(var_8), ldloc:TimeSpan(var_9_1A)))
-// 	stloc:DateTime(var_11_2C, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_12_37, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_10_25), ldloc:DateTime(var_11_2C)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public long GetLocalTomorrowChangeDayTimeStamp()
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetLocalTomorrowChangeDayTimeStamp()
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_1_06, call:DateTime(OrtegaTimeManager::GetLocalDateTime, ldloc:OrtegaTimeManager(this)))
-// 	stloc:TimeSpan(var_2_0C, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_3_14, call:DateTime(DateTime::op_Subtraction, ldloc:DateTime(var_1_06), ldloc:TimeSpan(var_2_0C)))
-// 	stloc:TimeSpan(var_9_1A, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_10_25, call:DateTime(DateTime::op_Addition, ldloc:DateTime(var_8), ldloc:TimeSpan(var_9_1A)))
-// 	stloc:DateTime(var_11_2C, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_12_37, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_10_25), ldloc:DateTime(var_11_2C)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public long GetLocalTodayChangeDayTimeStamp()
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetLocalTodayChangeDayTimeStamp()
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_0_06, call:DateTime(OrtegaTimeManager::GetLocalDateTime, ldloc:OrtegaTimeManager(this)))
-// 	stloc:TimeSpan(var_1_0C, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_2_14, call:DateTime(DateTime::op_Subtraction, ldloc:DateTime(var_0_06), ldloc:TimeSpan(var_1_0C)))
-// 	stloc:int32(var_6_16, ldc.i4:int32(0))
-// 	stloc:TimeSpan(var_7_1D, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_8_28, call:DateTime(DateTime::op_Addition, ldloc:int32[exp:DateTime](var_6_16), ldloc:TimeSpan(var_7_1D)))
-// 	stloc:DateTime(var_9_2F, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_10_3A, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_8_28), ldloc:DateTime(var_9_2F)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public long GetLocalNextChangeDayTime(long localTime)
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetLocalNextChangeDayTime(System.Int64)
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:TimeSpan(var_0_05, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_3_0D, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_10_16, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_11_21, call:DateTime(DateTime::op_Addition, ldloc:DateTime(var_9), ldloc:TimeSpan(var_10_16)))
-// 	stloc:DateTime(var_12_28, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_13_33, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_11_21), ldloc:DateTime(var_12_28)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public long GetLocalLastMondayTimeStamp()
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetLocalLastMondayTimeStamp()
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_1_06, call:DateTime(OrtegaTimeManager::GetLocalDateTime, ldloc:OrtegaTimeManager(this)))
-// 	stloc:TimeSpan(var_2_0C, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_3_14, call:DateTime(DateTime::op_Subtraction, ldloc:DateTime(var_1_06), ldloc:TimeSpan(var_2_0C)))
-// 	stloc:uint32(var_10, sub:uint32(ldloc:uint32(var_10), ldloc:DayOfWeek[exp:uint32](var_9)))
-// 	stloc:TimeSpan(var_12_24, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_13_2F, call:DateTime(DateTime::op_Addition, ldloc:DateTime(var_11), ldloc:TimeSpan(var_12_24)))
-// 	stloc:DateTime(var_14_36, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_15_41, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_13_2F), ldloc:DateTime(var_14_36)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public long GetLocalLastGrandBattleMatchingTimeStamp()
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetLocalLastGrandBattleMatchingTimeStamp()
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_1_06, call:DateTime(OrtegaTimeManager::GetLocalDateTime, ldloc:OrtegaTimeManager(this)))
-// 	stloc:TimeSpan(var_2_0C, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_3_14, call:DateTime(DateTime::op_Subtraction, ldloc:DateTime(var_1_06), ldloc:TimeSpan(var_2_0C)))
-// 	stloc:uint32(var_10, sub:uint32(ldloc:uint32(var_10), ldloc:DayOfWeek[exp:uint32](var_9)))
-// 	stloc:TimeSpan(var_12_24, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_13_2F, call:DateTime(DateTime::op_Addition, ldloc:DateTime(var_11), ldloc:TimeSpan(var_12_24)))
-// 	stloc:DateTime(var_14_36, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_15_41, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_13_2F), ldloc:DateTime(var_14_36)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public long GetLocalLastMondayTimeStamp(long timestamp)
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetLocalLastMondayTimeStamp(System.Int64)
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_2_07, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_4_0D, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_5_17, call:DateTime(DateTime::op_Subtraction, ldloc:DateTime(var_3), ldloc:TimeSpan(var_4_0D)))
-// 	stloc:uint32(var_11, sub:uint32(ldloc:uint32(var_11), ldloc:DayOfWeek[exp:uint32](var_10)))
-// 	stloc:TimeSpan(var_13_25, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_14_30, call:DateTime(DateTime::op_Addition, ldloc:DateTime(var_12), ldloc:TimeSpan(var_13_25)))
-// 	stloc:DateTime(var_15_37, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_16_42, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_14_30), ldloc:DateTime(var_15_37)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public long GetLocalNextMondayTimeStamp()
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetLocalNextMondayTimeStamp()
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_1_06, call:DateTime(OrtegaTimeManager::GetLocalDateTime, ldloc:OrtegaTimeManager(this)))
-// 	stloc:TimeSpan(var_2_0C, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_3_14, call:DateTime(DateTime::op_Subtraction, ldloc:DateTime(var_1_06), ldloc:TimeSpan(var_2_0C)))
-// 	stloc:uint32(var_10, sub:uint32(ldloc:uint32(var_10), ldloc:DayOfWeek[exp:uint32](var_9)))
-// 	stloc:TimeSpan(var_12_24, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_13_2F, call:DateTime(DateTime::op_Addition, ldloc:DateTime(var_11), ldloc:TimeSpan(var_12_24)))
-// 	stloc:DateTime(var_14_36, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_15_41, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_13_2F), ldloc:DateTime(var_14_36)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public long GetLocalNextDayOfWeekTimeStamp(DayOfWeek dayOfWeek)
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetLocalNextDayOfWeekTimeStamp(System.DayOfWeek)
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_2_08, call:DateTime(OrtegaTimeManager::GetLocalDateTime, ldloc:OrtegaTimeManager(this)))
-// 	stloc:TimeSpan(var_3_0E, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_4_16, call:DateTime(DateTime::op_Subtraction, ldloc:DateTime(var_2_08), ldloc:TimeSpan(var_3_0E)))
-// 	stloc:int32(var_0_1F, sub:int32(ldloc:DayOfWeek(dayOfWeek), ldloc:DayOfWeek(var_10)))
-// 	stloc:TimeSpan(var_12_25, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_13_30, call:DateTime(DateTime::op_Addition, ldloc:DateTime(var_11), ldloc:TimeSpan(var_12_25)))
-// 	stloc:DateTime(var_14_37, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_15_42, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_13_30), ldloc:DateTime(var_14_37)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public long GetLocalNextMondayTimeStamp(long timestamp)
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetLocalNextMondayTimeStamp(System.Int64)
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_2_07, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_4_0D, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_5_17, call:DateTime(DateTime::op_Subtraction, ldloc:DateTime(var_3), ldloc:TimeSpan(var_4_0D)))
-// 	stloc:uint32(var_11, sub:uint32(ldloc:uint32(var_11), ldloc:DayOfWeek[exp:uint32](var_10)))
-// 	stloc:TimeSpan(var_13_25, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_14_30, call:DateTime(DateTime::op_Addition, ldloc:DateTime(var_12), ldloc:TimeSpan(var_13_25)))
-// 	stloc:DateTime(var_15_37, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_16_42, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_14_30), ldloc:DateTime(var_15_37)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public long GetLocalNextMonthFirstDayTimeStamp()
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetLocalNextMonthFirstDayTimeStamp()
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_1_06, call:DateTime(OrtegaTimeManager::GetLocalDateTime, ldloc:OrtegaTimeManager(this)))
-// 	stloc:TimeSpan(var_2_0C, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_3_14, call:DateTime(DateTime::op_Subtraction, ldloc:DateTime(var_1_06), ldloc:TimeSpan(var_2_0C)))
-// 	stloc:TimeSpan(var_8_1A, ldsfld:TimeSpan(TimeUtil::ChangeDayTime))
-// 	stloc:DateTime(var_9_25, call:DateTime(DateTime::op_Addition, ldloc:DateTime(var_7), ldloc:TimeSpan(var_8_1A)))
-// 	stloc:DateTime(var_10_2C, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_11_37, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_9_25), ldloc:DateTime(var_10_2C)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public DayOfWeek GetDayOfWeek()
-// 		{
-// 			DateTime localDateTime = this.GetLocalDateTime();
-// 			TimeSpan ChangeDayTime = TimeUtil.ChangeDayTime;
-// 			DateTime dateTime = localDateTime - ChangeDayTime;
-// 			DayOfWeek dayOfWeek;
-// 			return dayOfWeek;
-// 		}
-//
-// 		public DateTime GetLocalTodayDateTime()
-// 		{
-// 			DateTime localDateTime = this.GetLocalDateTime();
-// 			TimeSpan ChangeDayTime = TimeUtil.ChangeDayTime;
-// 			return localDateTime - ChangeDayTime;
-// 		}
-//
-// 		public DateTime GetLocalGameDate()
-// 		{
-// 			DateTime localDateTime = this.GetLocalDateTime();
-// 			TimeSpan ChangeDayTime = TimeUtil.ChangeDayTime;
-// 			DateTime dateTime = localDateTime - ChangeDayTime;
-// 			DateTime dateTime2;
-// 			return dateTime2;
-// 		}
-//
-// 		public DateTime GetLocalGameDate(long localTimeStamp)
-// 		{
-// 			DateTime UtcEpoch = TimeUtil.UtcEpoch;
-// 			TimeSpan ChangeDayTime = TimeUtil.ChangeDayTime;
-// 			DateTime dateTime2;
-// 			DateTime dateTime = dateTime2 - ChangeDayTime;
-// 			DateTime dateTime3;
-// 			return dateTime3;
-// 		}
-//
-// 		public DateTime ConvertUtcTimeStampToLocalDateTime(long utcTimeStamp)
-// 		{
-// 			DateTime dateTime;
-// 			return dateTime;
-// 		}
-//
-// 		public bool IsInTime(IHasStartEndTime data)
-// 		{
-// 			DateTime localDateTime = this.GetLocalDateTime();
-// 			DateTime dateTime;
-// 			bool flag = dateTime <= localDateTime;
-// 			if (!flag)
-// 			{
-// 				return flag;
-// 			}
-// 			DateTime dateTime2;
-// 			return localDateTime <= dateTime2;
-// 		}
-//
-// 		public bool IsInTime(IHasStartEndTimeZone data)
-// 		{
-// 			DateTime localDateTime = this.GetLocalDateTime();
-// 			DateTime dateTime;
-// 			if (dateTime != 0 && dateTime != (ulong)1L)
-// 			{
-// 				DateTime jstNowDateTime = TimeUtil.JstNowDateTime;
-// 			}
-// 			if (!(dateTime > localDateTime))
-// 			{
-// 				DateTime dateTime2;
-// 				if (dateTime2 != 0 && dateTime2 != (ulong)10L)
-// 				{
-// 					DateTime jstNowDateTime2 = TimeUtil.JstNowDateTime;
-// 				}
-// 				if (!(dateTime2 < localDateTime))
-// 				{
-// 					return true;
-// 				}
-// 			}
-// 			throw new NullReferenceException();
-// 		}
-//
-// 		public bool IsInEventTime(IHasEventStartEndTime data)
-// 		{
-// 			DateTime localDateTime = this.GetLocalDateTime();
-// 			bool flag;
-// 			bool flag2;
-// 			DateTime dateTime;
-// 			if (!flag && !flag2 && dateTime <= localDateTime)
-// 			{
-// 				DateTime dateTime2;
-// 				return localDateTime <= dateTime2;
-// 			}
-// 			throw new NullReferenceException();
-// 		}
-//
-// 		public IHasStartEndTime GetInTimeData(IReadOnlyList<IHasStartEndTime> datas)
-// 		{
-// 			for (;;)
-// 			{
-// 				DateTime localDateTime = this.GetLocalDateTime();
-// 				DateTime dateTime;
-// 				DateTime dateTime2;
-// 				if (localDateTime == 0 || (dateTime <= localDateTime && localDateTime <= dateTime2))
-// 				{
-// 					if ("{il2cpp array field local6->}" != (ulong)0L)
-// 					{
-// 					}
-// 					ulong num;
-// 					if (num == (ulong)0L)
-// 					{
-// 						break;
-// 					}
-// 				}
-// 			}
-// 			throw new NullReferenceException();
-// 		}
-//
-// 		public IHasJstStartEndTime GetInTimeData(IReadOnlyList<IHasJstStartEndTime> datas)
-// 		{
-// 			for (;;)
-// 			{
-// 				DateTime utcNowDateTime = TimeUtil.UtcNowDateTime;
-// 				DateTime dateTime;
-// 				DateTime dateTime2;
-// 				DateTime dateTime3;
-// 				if (dateTime == 0 || (dateTime2 <= dateTime && dateTime <= dateTime3))
-// 				{
-// 					if ("{il2cpp array field local8->}" != (ulong)0L)
-// 					{
-// 					}
-// 					ulong num;
-// 					if (num == (ulong)0L)
-// 					{
-// 						break;
-// 					}
-// 				}
-// 			}
-// 			throw new NullReferenceException();
-// 		}
-//
-// 		public bool IsInTime(DateTime startTime, DateTime endTime)
-// 		{
-// 			DateTime localDateTime = this.GetLocalDateTime();
-// 			if (localDateTime >= startTime)
-// 			{
-// 				return localDateTime <= endTime;
-// 			}
-// 		}
-//
-// 		public bool IsInTime(IHasJstStartEndTime data)
-// 		{
-// 			DateTime utcNowDateTime = TimeUtil.UtcNowDateTime;
-// 			DateTime dateTime;
-// 			DateTime dateTime2;
-// 			bool flag = dateTime <= dateTime2;
-// 			if (!flag)
-// 			{
-// 				return flag;
-// 			}
-// 			DateTime dateTime3;
-// 			return dateTime2 <= dateTime3;
-// 		}
-//
-// 		public bool IsInTimeByHourAndMinuteAndSecond(long startTime, long endTime, long timestamp)
-// 		{
-// 			DateTime UtcEpoch = TimeUtil.UtcEpoch;
-// 			int num2;
-// 			long num = (long)(num2 * (int)((uint)100));
-// 			int num3;
-// 			num += (long)num3;
-// 			long num4 = num * (long)((uint)100);
-// 			int num5 = (int)((long)num5 + num4);
-// 			if (startTime > (long)num5)
-// 			{
-// 			}
-// 			return (long)num5 <= endTime;
-// 		}
-//
-// 		public bool IsInTimeByHourAndMinuteAndSecond(long startTime, long endTime)
-// 		{
-// 			DateTime localDateTime = this.GetLocalDateTime();
-// 			int num2;
-// 			long num = (long)(num2 * (int)((uint)100));
-// 			int num3;
-// 			num += (long)num3;
-// 			long num4 = num * (long)((uint)100);
-// 			int num5 = (int)((long)num5 + num4);
-// 			if (startTime > (long)num5)
-// 			{
-// 			}
-// 			return (long)num5 <= endTime;
-// 		}
-//
-// 		public long GetAddTime(DateAddTimeType type, long value, long utcTimeStamp = 0L)
-// 		{
-// 			DateTime UtcEpoch = TimeUtil.UtcEpoch;
-// 			DateTime UtcEpoch2 = TimeUtil.UtcEpoch;
-// 			long localTimestamp = this.GetLocalTimestamp();
-// 			if (type <= DateAddTimeType.Years)
-// 			{
-// 				DateTime UtcEpoch3 = TimeUtil.UtcEpoch;
-// 				DateTime dateTime;
-// 				TimeSpan timeSpan = dateTime - UtcEpoch3;
-// 			}
-// 			throw new NullReferenceException();
-// 		}
-//
-// 		public long ConvertUtcTimeStampToLocalTimeStamp(long utcTimeStamp)
-// 		{
-// 			long num = this.DifferenceFromUtc;
-// 			return num + utcTimeStamp;
-// 		}
-//
-// 		public long ConvertLocalTimeStampToUtcTimeStamp(long localTimeStamp)
-// 		{
-// 			return localTimeStamp;
-// 		}
-//
-// 		public long ConvertJstTimeStampToLocalTimeStamp(DateTime jstDateTime)
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::ConvertJstTimeStampToLocalTimeStamp(System.DateTime)
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_1_05, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_2_0D, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_0), ldloc:DateTime(var_1_05)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public DateTime ConvertJstDateTImeToLocalDateTime(DateTime jstDateTime)
-// 		{
-// 			DateTime utcNowDateTime = TimeUtil.UtcNowDateTime;
-// 			DateTime dateTime;
-// 			TimeSpan timeSpan = jstDateTime - dateTime;
-// 			return this.GetLocalDateTime() + timeSpan;
-// 		}
-//
-// 		public long GetLocalTodayUpdateLegendLeagueTimeStamp()
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int64 Ortega.Share.OrtegaTimeManager::GetLocalTodayUpdateLegendLeagueTimeStamp()
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_0_06, call:DateTime(OrtegaTimeManager::GetLocalDateTime, ldloc:OrtegaTimeManager(this)))
-// 	stloc:DateTime(var_6_11, ldsfld:DateTime(TimeUtil::UtcEpoch))
-// 	stloc:TimeSpan(var_7_1C, call:TimeSpan(DateTime::op_Subtraction, ldloc:DateTime(var_5), ldloc:DateTime(var_6_11)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public long GetLocalLastUpdateLegendLeagueTimeStamp()
-// 		{
-// 			long localTimestamp = this.GetLocalTimestamp();
-// 			long localTodayUpdateLegendLeagueTimeStamp = this.GetLocalTodayUpdateLegendLeagueTimeStamp();
-// 			TimeSpan timeSpan;
-// 			return localTodayUpdateLegendLeagueTimeStamp - timeSpan;
-// 		}
-//
-// 		public int GetLegendLeagueDayOfWeek()
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int32 Ortega.Share.OrtegaTimeManager::GetLegendLeagueDayOfWeek()
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_0_06, call:DateTime(OrtegaTimeManager::GetLocalDateTime, ldloc:OrtegaTimeManager(this)))
-// 	stloc:int64(var_1_0D, call:int64(OrtegaTimeManager::GetLocalTimestamp, ldloc:OrtegaTimeManager(this)))
-// 	stloc:int64(var_2_14, call:int64(OrtegaTimeManager::GetLocalTodayUpdateLegendLeagueTimeStamp, ldloc:OrtegaTimeManager(this)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public int GetYesterdayLegendLeagueDayOfWeek()
-// 		{
-// 			/*
-// An exception occurred when decompiling this method
-//
-// ICSharpCode.Decompiler.DecompilerException: Error decompiling System.Int32 Ortega.Share.OrtegaTimeManager::GetYesterdayLegendLeagueDayOfWeek()
-//
-//  ---> System.Exception: Basic block has to end with unconditional control flow. 
-// {
-// 	Block_0:
-// 	stloc:DateTime(var_0_06, call:DateTime(OrtegaTimeManager::GetLocalDateTime, ldloc:OrtegaTimeManager(this)))
-// 	stloc:int64(var_1_0D, call:int64(OrtegaTimeManager::GetLocalTimestamp, ldloc:OrtegaTimeManager(this)))
-// 	stloc:int64(var_2_14, call:int64(OrtegaTimeManager::GetLocalTodayUpdateLegendLeagueTimeStamp, ldloc:OrtegaTimeManager(this)))
-// }
-//
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.FlattenBasicBlocks(ILNode node) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 1813
-//    at ICSharpCode.Decompiler.ILAst.ILAstOptimizer.Optimize(DecompilerContext context, ILBlock method, AutoPropertyProvider autoPropertyProvider, StateMachineKind& stateMachineKind, MethodDef& inlinedMethod, AsyncMethodDebugInfo& asyncInfo, ILAstOptimizationStep abortBeforeStep) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\ILAst\ILAstOptimizer.cs:line 347
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(IEnumerable`1 parameters, MethodDebugInfoBuilder& builder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 123
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    --- End of inner exception stack trace ---
-//    at ICSharpCode.Decompiler.Ast.AstMethodBodyBuilder.CreateMethodBody(MethodDef methodDef, DecompilerContext context, AutoPropertyProvider autoPropertyProvider, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, StringBuilder sb, MethodDebugInfoBuilder& stmtsBuilder) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstMethodBodyBuilder.cs:line 99
-//    at ICSharpCode.Decompiler.Ast.AstBuilder.AddMethodBody(EntityDeclaration methodNode, EntityDeclaration& updatedNode, MethodDef method, IEnumerable`1 parameters, Boolean valueParameterIsKeyword, MethodKind methodKind) in D:\a\dnSpy\dnSpy\Extensions\ILSpy.Decompiler\ICSharpCode.Decompiler\ICSharpCode.Decompiler\Ast\AstBuilder.cs:line 1627
-// */;
-// 		}
-//
-// 		public bool IsChangeDayByChangeDayTime(long timestamp)
-// 		{
-// 			long num = this.GetLocalTimestamp();
-// 			TimeSpan ChangeDayTime = TimeUtil.ChangeDayTime;
-// 			num -= ChangeDayTime;
-// 			TimeSpan ChangeDayTime2 = TimeUtil.ChangeDayTime;
-// 			DateTime dateTime;
-// 			DateTime dateTime2;
-// 			return dateTime < dateTime2;
-// 		}
-//
-// 		public DateTime GetChangeDayLocalDateTime()
-// 		{
-// 			DateTime localDateTime = this.GetLocalDateTime();
-// 			TimeSpan ChangeDayTime = TimeUtil.ChangeDayTime;
-// 			DateTime dateTime = localDateTime - ChangeDayTime;
-// 			TimeSpan ChangeDayTime2 = TimeUtil.ChangeDayTime;
-// 			DateTime dateTime2;
-// 			return dateTime2;
-// 		}
-//
+		public long ConvertJstTimeStampToLocalTimeStamp(DateTime jstDateTime)
+		{
+			DateTime utcDateTime = jstDateTime - TimeSpan.FromMilliseconds(JstDifferenceTimeStampFromUtc);
+			return ConvertDateTimeToTimeStamp(utcDateTime) + DifferenceFromUtc;
+		}
+
+		public DateTime ConvertJstDateTImeToLocalDateTime(DateTime jstDateTime)
+		{
+			DateTime jstNowDateTime = ConvertUtcTimeStampToJstDateTime(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+			TimeSpan delta = jstDateTime - jstNowDateTime;
+			return GetLocalDateTime() + delta;
+		}
+
+		public DateTime ConvertLocalDateTimeToJstDateTIme(DateTime localDateTime)
+		{
+			DateTime utcDateTime = localDateTime - TimeSpan.FromMilliseconds(DifferenceFromUtc);
+			return utcDateTime + TimeSpan.FromMilliseconds(JstDifferenceTimeStampFromUtc);
+		}
+
+		public DateTime ConvertUtcTimeStampToJstDateTime(long utcTimeStamp)
+		{
+			return TimeUtil.UtcEpoch.AddMilliseconds(utcTimeStamp + JstDifferenceTimeStampFromUtc);
+		}
+
+		public DateTime ConvertUtcTimeStampToLocalDateTime(long utcTimeStamp)
+		{
+			return TimeUtil.UtcEpoch.AddMilliseconds(utcTimeStamp + DifferenceFromUtc);
+		}
+
 		public int GetDateIntYearMonthDay()
 		{
-			long localTimestamp = this.GetLocalTimestamp();
-			DateTime dateData = TimeUtil.UtcEpoch.AddMilliseconds(localTimestamp)- TimeUtil.ChangeDayTime;
+			long localTimestamp = GetLocalTimestamp();
+			DateTime dateData = TimeUtil.UtcEpoch.AddMilliseconds(localTimestamp) - TimeUtil.ChangeDayTime;
 			return (dateData.Year * 100 + dateData.Month) * 100 + dateData.Day;
 		}
-//
-// 		public int GetDateIntYearMonthDay(long timeStamp)
-// 		{
-// 			DateTime UtcEpoch = TimeUtil.UtcEpoch;
-// 			TimeSpan ChangeDayTime = TimeUtil.ChangeDayTime;
-// 			DateTime dateTime2;
-// 			DateTime dateTime = dateTime2 - ChangeDayTime;
-// 			int num2;
-// 			long num = (long)(num2 * (int)((uint)100));
-// 			int num3;
-// 			num += (long)num3;
-// 			long num4 = num * (long)((uint)100);
-// 			int num5 = (int)((long)num5 + num4);
-// 			return num5;
-// 		}
+
+		public int GetDateIntYearMonthDay(long timeStamp)
+		{
+			DateTime dateData = TimeUtil.UtcEpoch.AddMilliseconds(timeStamp) - TimeUtil.ChangeDayTime;
+			return (dateData.Year * 100 + dateData.Month) * 100 + dateData.Day;
+		}
+
+		public long ConvertUtcTimeStampToLocalTimeStamp(long utcTimeStamp)
+		{
+			return utcTimeStamp + DifferenceFromUtc;
+		}
+
+		private static long ConvertDateTimeToTimeStamp(DateTime dateTime)
+		{
+			return (long)(dateTime - TimeUtil.UtcEpoch).TotalMilliseconds;
+		}
 	}
 }
