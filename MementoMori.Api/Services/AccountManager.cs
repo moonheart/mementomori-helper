@@ -58,6 +58,76 @@ public partial class AccountManager
                 var networkManager = _serviceProvider.GetRequiredService<NetworkManager>();
                 networkManager.UserId = id;
 
+                // 恢复持久化的 AccessToken（若存在）
+                if (!string.IsNullOrWhiteSpace(entity.OrtegaAccessToken))
+                {
+                    networkManager.MoriHttpClientHandler.SetAccessToken(entity.OrtegaAccessToken);
+                    _logger.LogInformation("Restored persisted access token for user {UserId}", id);
+                }
+
+                // 恢复持久化的设备 UUID（若存在）
+                if (!string.IsNullOrWhiteSpace(entity.OrtegaUuid))
+                {
+                    networkManager.MoriHttpClientHandler.SetOrtegaUuid(entity.OrtegaUuid, false);
+                    _logger.LogInformation("Restored persisted ortega uuid for user {UserId}", id);
+                }
+
+                // 恢复已持久化的 Game API Host（不发请求，避免 CommonNoSession）
+                if (!string.IsNullOrWhiteSpace(entity.GameApiHost))
+                {
+                    try
+                    {
+                        networkManager.SetGameApiHost(entity.GameApiHost);
+                        _logger.LogInformation("Restored persisted game host for user {UserId}: {GameApiHost}", id, entity.GameApiHost);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to restore persisted game host for user {UserId}", id);
+                    }
+                }
+
+                // 监听 token 轮换并持久化
+                networkManager.MoriHttpClientHandler.AccessTokenUpdated += token =>
+                {
+                    try
+                    {
+                        PersistAccessToken(id, token);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to persist access token for user {UserId}", id);
+                    }
+                };
+
+                // 监听设备 UUID 更新并持久化
+                networkManager.MoriHttpClientHandler.OrtegaUuidUpdated += uuid =>
+                {
+                    try
+                    {
+                        PersistOrtegaUuid(id, uuid);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to persist ortega uuid for user {UserId}", id);
+                    }
+                };
+
+                // 确保当前使用的 UUID 已落库（首次接入旧数据时补写）
+                PersistOrtegaUuid(id, networkManager.MoriHttpClientHandler.OrtegaUuid);
+
+                // 监听 GameApiHost 更新并持久化
+                networkManager.GameApiHostUpdated += gameApiHost =>
+                {
+                    try
+                    {
+                        PersistGameApiHost(id, gameApiHost);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to persist game host for user {UserId}", id);
+                    }
+                };
+
                 // 创建账户上下文
                 var context = new AccountContext
                 {
@@ -160,6 +230,45 @@ public partial class AccountManager
                 accountInfo.CurrentWorldId = worldId;
             }
         }
+    }
+
+    private void PersistAccessToken(long userId, string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return;
+        }
+
+        _fsql.Update<AccountEntity>()
+            .Set(a => a.OrtegaAccessToken, token)
+            .Where(a => a.UserId == userId)
+            .ExecuteAffrows();
+    }
+
+    private void PersistGameApiHost(long userId, string gameApiHost)
+    {
+        if (string.IsNullOrWhiteSpace(gameApiHost))
+        {
+            return;
+        }
+
+        _fsql.Update<AccountEntity>()
+            .Set(a => a.GameApiHost, gameApiHost)
+            .Where(a => a.UserId == userId)
+            .ExecuteAffrows();
+    }
+
+    private void PersistOrtegaUuid(long userId, string uuid)
+    {
+        if (string.IsNullOrWhiteSpace(uuid))
+        {
+            return;
+        }
+
+        _fsql.Update<AccountEntity>()
+            .Set(a => a.OrtegaUuid, uuid)
+            .Where(a => a.UserId == userId)
+            .ExecuteAffrows();
     }
 
     private AccountDto MapToDto(AccountEntity entity)

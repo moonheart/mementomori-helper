@@ -9,6 +9,9 @@ public class MeMoriHttpClientHandler : HttpClientHandler
     private readonly Dictionary<string, string> _managedHeaders = new();
     private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
 
+    public event Action<string>? AccessTokenUpdated;
+    public event Action<string>? OrtegaUuidUpdated;
+
     public string OrtegaAccessToken { get; private set; } = string.Empty;
     public string OrtegaMasterVersion { get; private set; } = string.Empty;
     public string OrtegaAssetVersion { get; private set; } = string.Empty;
@@ -20,13 +23,40 @@ public class MeMoriHttpClientHandler : HttpClientHandler
         set => _managedHeaders["ortegaappversion"] = value;
     }
 
+    public string OrtegaUuid => _managedHeaders.GetValueOrDefault("ortegauuid", string.Empty);
+
     public MeMoriHttpClientHandler()
     {
         _managedHeaders["ortegaaccesstoken"] = "";
         _managedHeaders["ortegadevicetype"] = "2"; // Android
-        _managedHeaders["ortegauuid"] = Guid.NewGuid().ToString("N");
+        SetOrtegaUuid(Guid.NewGuid().ToString("N"), false);
         _managedHeaders["accept-encoding"] = "gzip";
         _managedHeaders["user-agent"] = "BestHTTP/2 v2.3.0";
+    }
+
+    public void SetAccessToken(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return;
+        }
+
+        _managedHeaders["ortegaaccesstoken"] = token;
+        OrtegaAccessToken = token;
+    }
+
+    public void SetOrtegaUuid(string uuid, bool raiseUpdated = true)
+    {
+        if (string.IsNullOrWhiteSpace(uuid))
+        {
+            return;
+        }
+
+        _managedHeaders["ortegauuid"] = uuid;
+        if (raiseUpdated)
+        {
+            OrtegaUuidUpdated?.Invoke(uuid);
+        }
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(
@@ -50,8 +80,8 @@ public class MeMoriHttpClientHandler : HttpClientHandler
                 var token = accessTokenHeaders.FirstOrDefault();
                 if (!string.IsNullOrEmpty(token))
                 {
-                    _managedHeaders["ortegaaccesstoken"] = token;
-                    OrtegaAccessToken = token;
+                    SetAccessToken(token);
+                    AccessTokenUpdated?.Invoke(token);
                 }
             }
 

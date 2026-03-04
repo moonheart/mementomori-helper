@@ -43,6 +43,8 @@ public partial class NetworkManager : IDisposable
     private Uri? _gameApiUrl;
     private GrpcChannel? _grpcChannel;
 
+    public event Action<string>? GameApiHostUpdated;
+
     // State
     public long UserId { get; set; }
     public long PlayerId { get; set; }
@@ -183,6 +185,21 @@ public partial class NetworkManager : IDisposable
     }
 
     /// <summary>
+    /// 直接设置并恢复已持久化的 Game API Host（不发起网络请求）
+    /// </summary>
+    public void SetGameApiHost(string apiHost)
+    {
+        if (string.IsNullOrWhiteSpace(apiHost))
+        {
+            throw new ArgumentException("apiHost cannot be null or empty", nameof(apiHost));
+        }
+
+        _gameApiUrl = new Uri(apiHost);
+        GameApiHostUpdated?.Invoke(apiHost);
+        _logger.LogInformation("Game API URL restored/set to {Url}", _gameApiUrl);
+    }
+
+    /// <summary>
     /// 设置游戏服务器 Host
     /// </summary>
     public async Task SetServerHostAsync(long worldId)
@@ -194,11 +211,11 @@ public partial class NetworkManager : IDisposable
 
         var response = await SendRequest<GetServerHostRequest, GetServerHostResponse>(request);
 
-        _gameApiUrl = new Uri(response.ApiHost);
+        SetGameApiHost(response.ApiHost);
         _grpcChannel?.Dispose();
         _grpcChannel = GrpcChannel.ForAddress(new Uri($"https://{response.MagicOnionHost}:{response.MagicOnionPort}"));
 
-        _logger.LogInformation("Game API URL set to {Url}", _gameApiUrl);
+        _logger.LogInformation("MagicOnion channel set: {Host}:{Port}", response.MagicOnionHost, response.MagicOnionPort);
     }
 
 

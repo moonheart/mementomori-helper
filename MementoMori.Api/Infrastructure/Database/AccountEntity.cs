@@ -32,4 +32,19 @@ public class AccountEntity
     /// 最后登录的世界ID
     /// </summary>
     public long? CurrentWorldId { get; set; }
+
+    /// <summary>
+    /// Ortega AccessToken（用于重启后复用会话）
+    /// </summary>
+    public string OrtegaAccessToken { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 上次会话的 Game API Host（用于重启后直接恢复）
+    /// </summary>
+    public string GameApiHost { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Ortega 设备唯一标识（用于避免异地设备会话冲突）
+    /// </summary>
+    public string OrtegaUuid { get; set; } = string.Empty;
 }
