@@ -27,13 +27,6 @@ public partial class EquipmentReinforcementHandler : IGameActionHandler
 
         try
         {
-            var autoJobSettings = await _playerSettingService.GetAutoJobSettingsAsync(userId);
-            if (!autoJobSettings.AutoReinforcementEquipmentOneTime)
-            {
-                await _jobLogger.LogAsync(userId, "装备强化未开启，跳过。");
-                return;
-            }
-
             // 找到强化等级最低且已装备的装备
             var equipmentDtoInfo = nm.UserSyncData.UserEquipmentDtoInfos
                 .Where(d => !string.IsNullOrEmpty(d.CharacterGuid))
