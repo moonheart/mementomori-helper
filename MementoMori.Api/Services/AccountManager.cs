@@ -27,7 +27,6 @@ public partial class AccountManager
     private readonly ILogger<AccountManager> _logger;
     private readonly IServiceProvider _serviceProvider;
     private readonly IFreeSql _fsql;
-    private readonly JobManagerService _jobManagerService;
     
     // 内存中的活跃账户上下文（包含 NetworkManager 和实时登录状态）
     private readonly ConcurrentDictionary<long, Lazy<Task<AccountContext>>> _activeAccounts = new();
@@ -135,28 +134,6 @@ public partial class AccountManager
                     AccountInfo = accountInfo,
                     NetworkManager = networkManager
                 };
-
-                // 检查是否成功还原登录状态（三个条件都必须满足）
-                var hasAccessToken = !string.IsNullOrWhiteSpace(entity.OrtegaAccessToken);
-                var hasOrtegaUuid = !string.IsNullOrWhiteSpace(entity.OrtegaUuid);
-                var hasGameApiHost = !string.IsNullOrWhiteSpace(entity.GameApiHost);
-
-                if (hasAccessToken && hasOrtegaUuid && hasGameApiHost)
-                {
-                    _logger.LogInformation("Login state restored for user {UserId}, re-registering jobs", id);
-                    accountInfo.IsLoggedIn = true;
-
-                    // 重新初始化定时任务
-                    try
-                    {
-                        await _jobManagerService.RegisterJobsAsync(id);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogWarning(ex, "Failed to register jobs for user {UserId} after login state restore", id);
-                    }
-                }
-
                 return context;
             });
         }).Value;
