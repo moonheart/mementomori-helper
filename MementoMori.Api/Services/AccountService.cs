@@ -1,4 +1,5 @@
 using MementoMori.Api.Models;
+using MementoMori.Ortega.Share.Data.ApiInterface.User;
 
 namespace MementoMori.Api.Services;
 
@@ -112,7 +113,11 @@ public partial class AccountService
             {
                 context.TimeManager.SetTimeServerMb(nm.TimeServerMb);
             }
-            
+
+            // 4.2 获取用户数据（参考原始 Blazor 版本的 AuthLogin 流程）
+            _logger.LogInformation("Fetching user data for user {UserId}", userId);
+            await nm.SendRequest<GetUserDataRequest, GetUserDataResponse>(new GetUserDataRequest());
+
             // 5. 更新本地账号登录状态
             _accountManager.UpdateLoginStatus(userId, true, latestWorld.WorldId);
 
