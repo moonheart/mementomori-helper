@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MementoMori.Api.Infrastructure;
 using MementoMori.Api.Services;
+using MementoMori.Ortega.Share.Data.ApiInterface.User;
 using System.Text.Json;
 
 namespace MementoMori.Api.Controllers
@@ -18,6 +19,7 @@ namespace MementoMori.Api.Controllers
         private readonly OrtegaInvoker _invoker;
         private readonly BattleLogService _battleLogService;
         private readonly ILogger<OrtegaProxyController> _logger;
+        private readonly AccountManager _accountManager;
 
         /// <summary>
         /// 通用 Ortega API 代理端点
@@ -37,18 +39,31 @@ namespace MementoMori.Api.Controllers
 
                 _logger.LogInformation("ProxyRequest received: Category={Category}, Action={Action}, URI={ApiUri}", category, ortegaAction, apiUri);
 
+                // 从 Header 获取 UserId（由 UserIdAuthenticationMiddleware 设置）
+                if (!HttpContext.Items.TryGetValue("UserId", out var userIdObj) || userIdObj is not long userId)
+                {
+                    return Unauthorized(new { error = "User ID not found in request" });
+                }
+
+                // 拦截 user/getUserData 请求，直接返回 UserSyncData
+                if (apiUri.Equals("user/getUserData", StringComparison.OrdinalIgnoreCase))
+                {
+                    var accountContext = await _accountManager.GetOrCreateAsync(userId);
+                    var userSyncData = accountContext.NetworkManager.UserSyncData;
+                    var interceptedResponse = new GetUserDataResponse
+                    {
+                        UserSyncData = userSyncData
+                    };
+                    _logger.LogInformation("Intercepted user/getUserData request, returning cached UserSyncData");
+                    return Ok(interceptedResponse);
+                }
+
                 // 查找 API 信息
                 var apiInfo = _discoveryService.GetApiInfo(apiUri);
                 if (apiInfo == null)
                 {
                     _logger.LogWarning("API lookup failed for URI: {ApiUri}. Available APIs count: {Count}", apiUri, _discoveryService.GetAllApis().Count);
                     return NotFound(new { error = $"API '{apiUri}' not found" });
-                }
-
-                // 从 Header 获取 UserId（由 UserIdAuthenticationMiddleware 设置）
-                if (!HttpContext.Items.TryGetValue("UserId", out var userIdObj) || userIdObj is not long userId)
-                {
-                    return Unauthorized(new { error = "User ID not found in request" });
                 }
 
                 // 读取请求体
