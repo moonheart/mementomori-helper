@@ -9,7 +9,7 @@
 @inject IWritableOptions<AuthOption> AuthOption
 @inject NavigationManager NavigationManager
 
-<MudThemeProvider/>
+<MudThemeProvider @bind-IsDarkMode="_isDarkMode"/>
 <MudPopoverProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
@@ -35,6 +35,7 @@
             <MudSelectItem Value="@(new CultureInfo("ja-JP"))"></MudSelectItem>
             <MudSelectItem Value="@(new CultureInfo("ko-KR"))"></MudSelectItem>
         </MudSelect>
+        <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)" Color="Color.Inherit" Title="Toggle dark mode" @onclick="ToggleDarkMode" />
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Target="_blank" Color="Color.Inherit" Href="https://github.com/moonheart/mementomori-helper/" />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen">
@@ -52,6 +53,7 @@
 
 @code {
     bool _drawerOpen = true;
+    bool _isDarkMode = false;
     bool _languageSelectOpen = false;
 
     CultureInfo SelectedLanguage
@@ -72,5 +74,10 @@
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    void ToggleDarkMode()
+    {
+        _isDarkMode = !_isDarkMode;
     }
 }
