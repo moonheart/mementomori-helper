@@ -137,6 +137,8 @@ namespace MementoMori.Ortega.Share
 		ItemEditorNotConsumableItem,
 		[Description("付与できないアイテムです。")]
 		ItemEditorCanNotGiveItem,
+		[Description("Webクリスタルが足りません。")]
+		ItemEditorNotEnoughWebCrystal,
 		[Description("ユーザのボックスデータが存在しません。")]
 		ItemEditorUserBoxSizeDtoNotFound = 82000,
 		[Description("ユーザーのステータスデータが存在しません。")]
@@ -169,6 +171,10 @@ namespace MementoMori.Ortega.Share
 		UserNotFoundPlayerInfo,
 		[Description("所持したことがないキャラクターは背景に設定できません。")]
 		UserInvalidBackgroundCharacterId,
+		[Description("プレイヤー名の変更が禁止されています。")]
+		UserPlayerNameChangeProhibited,
+		[Description("プレイヤーコメントの変更が禁止されています。")]
+		UserPlayerCommentChangeProhibited,
 		[Description("所持してないキャラクターです")]
 		UserSetDeckNotFoundCharacter = 93101,
 		[Description("デッキ内にキャラクターがいません。")]
@@ -211,6 +217,10 @@ namespace MementoMori.Ortega.Share
 		BattleCommonNotFoundActiveSkillConditionFormula,
 		[Description("バトル種別が無効です。")]
 		BattleCommonInvalidBattleType,
+		[Description("効果系スキルの効果最大回数データが存在しません。")]
+		BattleCommonNotFoundStatusSubSubSkillEffectMaxCountFormula,
+		[Description("効果系スキルの効果回数データが存在しません。")]
+		BattleCommonNotFoundStatusSubSubSkillEffectCountFormula,
 		[Description("ユーザーの放置バトルデータがありません")]
 		BattleAutoUserBattleAutoDtoNotFound = 101000,
 		[Description("ユーザーのボスバトルデータがありません")]
@@ -1119,6 +1129,10 @@ namespace MementoMori.Ortega.Share
 		ShopAlreadyUsedCoupon,
 		[Description("利用できない商品タイプです。")]
 		ShopNotSupportShopProductType,
+		[Description("Webクリスタルでの商品購入リクエストが不正です。")]
+		ShopBuyProductWithWebCrystalInvalidRequest = 262050,
+		[Description("支払い詳細履歴の取得リクエストが不正です。")]
+		ShopGetPaymentDetailHistoryInvaildRequest,
 		[Description("ユーザーのステータスデータが見つかりません。")]
 		ChatUserStatusDtoNotFound = 271000,
 		[Description("ユーザーのアカウントデータが見つかりません。")]
@@ -1331,6 +1345,12 @@ namespace MementoMori.Ortega.Share
 		MissionNotClearedPrevSheetMission,
 		[Description("ギルドツリーイベント終了後にギルドに加入したためミッションを開けません。")]
 		MissionJoinGuildAfterEndEvent = 352030,
+		[Description("不正なリクエストです。")]
+		MissionInvalidRequest,
+		[Description("新キャラクターミッションが開放されていません。")]
+		MissionNotOpenNewCharacterMission,
+		[Description("コラボミッションが開放されていません。")]
+		MissionNotOpenCollabMission,
 		[Description("ユーザーの放置バトルデータが存在しません。")]
 		TradeShopUserBattleAutoDtoNotFound = 361000,
 		[Description("ユーザーの放置バトルデータが存在しません。")]
@@ -1611,6 +1631,24 @@ namespace MementoMori.Ortega.Share
 		LuckyChanceContainsHalfWidthCharacterBlockNumber,
 		[Description("建物名を全角で入力してください。")]
 		LuckyChanceContainsHalfWidthCharacterBuildingName,
+		[Description("キャラクターが選択されていません。")]
+		LuckyChanceNotSelectCharacter,
+		[Description("既に選択済みのキャラクターです。")]
+		LuckyChanceCharacterAlreadySelected,
+		[Description("選択キャラクター景品が存在しません。")]
+		LuckyChanceNotExistSelectCharacterPrize,
+		[Description("住所が登録されていません。")]
+		LuckyChanceNotRegisteredAddress,
+		[Description("選択除外キャラクターです。")]
+		LuckyChanceExcludeSelectionCharacter,
+		[Description("選択されたラッキーチャンスボタンが見つかりません。")]
+		NotFoundSelectedLuckyChanceButton,
+		[Description("不正なラッキーチャンスボタンです。")]
+		InvalidLuckyChanceButton,
+		[Description("ラッキーチャンスボタンの選択は不要です。")]
+		NoNeedToSelectLuckyChanceButton,
+		[Description("現在のユーザラッキーチャンスが見つかりません。")]
+		NotFoundCurrentUserLuckyChance,
 		[Description("ユーザーのフレンド情報が見つかりません。")]
 		FriendBattleUserFriendDtoNotFound = 480000,
 		[Description("ユーザーのステータス情報が見つかりません。")]
@@ -1777,6 +1815,28 @@ namespace MementoMori.Ortega.Share
 		IconEffectLocked,
 		[Description("アイコンエフェクト設定に失敗しました。")]
 		IconEffectSetFailed = 552010,
+		[Description("ユーザーのマイニングクエストデータが見つかりません。")]
+		MiningQuestNotFoundUserMiningQuestDto = 560000,
+		[Description("マイニングクエストイベントが開催されていません。")]
+		MiningQuestEventNotHeld = 561000,
+		[Description("マイニングクエストが進行中ではありません。")]
+		MiningQuestNotProgress,
+		[Description("マイニングクエストが完了していません。")]
+		MiningQuestNotFinished,
+		[Description("強化レベルが存在しません。")]
+		MiningQuestNotExistReinforcementLevel,
+		[Description("収集レベルが不足しています。")]
+		MiningQuestNotEnoughCollectionLevel,
+		[Description("日付が変更されました。")]
+		MiningQuestChangeDay,
+		[Description("特典を解放できません。")]
+		MiningQuestUnavailableUnlockBenefit,
+		[Description("日次報酬は受け取り済みです。")]
+		MiningQuestAlreadyReceivedDailyReward,
+		[Description("日次報酬を受け取っていません。")]
+		MiningQuestNotReceivedDailyReward,
+		[Description("マイニングクエストイベントが開放されていません。")]
+		MiningQuestEventNotOpen,
 		[Description("存在しないTreasureChestです。")]
 		ItemOpenTreasureChestIdNotFound = 602004,
 		[Description("存在しないTreasureChestです。")]
@@ -2132,6 +2192,32 @@ namespace MementoMori.Ortega.Share
 		[Description("次回支払日が存在しません。")]
 		SteamNotFoundNextPayment,
 		[Description("レート制限により課金処理が失敗しました。")]
-		SteamRateLimited
+		SteamRateLimited,
+		[Description("GMO注文データが見つかりません。")]
+		GmoGmoOrderDtoNotFound = 6010000,
+		[Description("ユーザーのステータスデータが見つかりません。")]
+		GmoUserStatusDtoNotFound,
+		[Description("既に使用済みの注文です。")]
+		GmoAlreadyUsedOrder = 6011000,
+		[Description("プレゼントデータの作成に失敗しました。")]
+		GmoFailToCreatePresentData,
+		[Description("不正な通知タイプです。")]
+		GmoInvalidNoticeType,
+		[Description("不正な支払いタイプです。")]
+		GmoInvalidPayType,
+		[Description("注文IDが見つかりません。")]
+		GmoNotFoundOrderId,
+		[Description("ステータスが見つかりません。")]
+		GmoNotFoundStatus,
+		[Description("不正なトークンデータです。")]
+		GmoInvalidTokenData,
+		[Description("不正なトークン秘密鍵です。")]
+		GmoInvalidTokenPrivateKey,
+		[Description("不正な通貨コードです。")]
+		GmoInvalidCurrencyCode,
+		[Description("不正なトークン価格です。")]
+		GmoInvalidTokenPrice,
+		[Description("支払いが完了していません。")]
+		GmoNotPaid
 	}
 }

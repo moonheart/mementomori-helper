@@ -52,6 +52,10 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("ラッキーチャンス")]
 		LuckyChance,
 		[Description("レンタルレイド ランキング報酬")]
-		RentalRaidRankingReward
+		RentalRaidRankingReward,
+		[Description("マイニングクエスト シーズングレード報酬")]
+		MiningQuestSeasonGradeReward,
+		[Description("Webストア購入")]
+		WebStorePurchase
 	}
 }

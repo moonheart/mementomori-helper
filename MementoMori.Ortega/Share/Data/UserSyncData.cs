@@ -90,6 +90,8 @@ public class UserSyncData
 
     public List<ShopProductGuerrillaPack> ShopProductGuerrillaPackList { get; set; }
 
+    public long? TotalPoint { get; set; }
+
     public long StripePoint { get; set; }
 
     public long? TimeServerId { get; set; }
@@ -109,6 +111,8 @@ public class UserSyncData
     public List<UserCharacterCollectionDtoInfo> UserCharacterCollectionDtoInfos { get; set; }
 
     public List<UserCharacterDtoInfo> UserCharacterDtoInfos { get; set; }
+
+    public List<UserCharacterRankReleaseDtoInfo> UserCharacterRankReleaseDtoInfos { get; set; }
 
     public List<UserDeckDtoInfo> UserDeckDtoInfos { get; set; }
 
@@ -136,6 +140,8 @@ public class UserSyncData
     public List<UserOpenContentDtoInfo> UserOpenContentDtoInfos { get; set; }
 
     public UserFriendBattleOptionDtoInfo UserFriendBattleOptionDtoInfo { get; set; }
+
+    public UserRankUpPrioritySettingDtoInfo UserRankUpPrioritySettingDtoInfo { get; set; }
 
     public UserRecruitGuildMemberSettingDtoInfo UserRecruitGuildMemberSettingDtoInfo { get; set; }
 
@@ -225,6 +231,7 @@ public class UserSyncData
         if (userSyncData.ShopCurrencyMissionProgressMap.IsNotNullOrEmpty()) ShopCurrencyMissionProgressMap = ShopCurrencyMissionProgressMap.Merge(userSyncData.ShopCurrencyMissionProgressMap);
         if (userSyncData.ShopProductGuerrillaPackList.IsNotNullOrEmpty())
             ShopProductGuerrillaPackList = ShopProductGuerrillaPackList.Merge(userSyncData.ShopProductGuerrillaPackList, (x, y) => x.ShopGuerrillaPackId == y.ShopGuerrillaPackId);
+        if (userSyncData.TotalPoint != null) TotalPoint = userSyncData.TotalPoint;
         if (userSyncData.TimeServerId != null) TimeServerId = userSyncData.TimeServerId;
         if (userSyncData.TreasureChestCeilingCountMap.IsNotNullOrEmpty()) TreasureChestCeilingCountMap = TreasureChestCeilingCountMap.Merge(userSyncData.TreasureChestCeilingCountMap);
         if (userSyncData.UserBattleBossDtoInfo != null) UserBattleBossDtoInfo = userSyncData.UserBattleBossDtoInfo;
@@ -234,6 +241,8 @@ public class UserSyncData
         if (userSyncData.UserCharacterBookDtoInfos.IsNotNullOrEmpty()) UserCharacterBookDtoInfos = userSyncData.UserCharacterBookDtoInfos;
         if (userSyncData.UserCharacterCollectionDtoInfos.IsNotNullOrEmpty()) UserCharacterCollectionDtoInfos = userSyncData.UserCharacterCollectionDtoInfos;
         if (userSyncData.UserCharacterDtoInfos.IsNotNullOrEmpty()) UserCharacterDtoInfos = UserCharacterDtoInfos.Merge(userSyncData.UserCharacterDtoInfos, (a, b) => a.Guid == b.Guid);
+        if (userSyncData.UserCharacterRankReleaseDtoInfos.IsNotNullOrEmpty())
+            UserCharacterRankReleaseDtoInfos = UserCharacterRankReleaseDtoInfos.Merge(userSyncData.UserCharacterRankReleaseDtoInfos, (a, b) => a.CharacterId == b.CharacterId);
         if (userSyncData.UserDeckDtoInfos.IsNotNullOrEmpty()) UserDeckDtoInfos = userSyncData.UserDeckDtoInfos;
         if (userSyncData.UserEquipmentDtoInfos.IsNotNullOrEmpty()) UserEquipmentDtoInfos = UserEquipmentDtoInfos.Merge(userSyncData.UserEquipmentDtoInfos, (a, b) => a.Guid == b.Guid);
         if (userSyncData.UserItemDtoInfo.IsNotNullOrEmpty()) UserItemDtoInfo = UserItemDtoInfo.Merge(userSyncData.UserItemDtoInfo, (a, b) => a.ItemType == b.ItemType && a.ItemId == b.ItemId);
@@ -246,6 +255,7 @@ public class UserSyncData
         if (userSyncData.UserGuidanceTimeMap.IsNotNullOrEmpty()) UserGuidanceTimeMap = UserGuidanceTimeMap.Merge(userSyncData.UserGuidanceTimeMap);
         if (userSyncData.UserNotificationDtoInfoInfos.IsNotNullOrEmpty()) UserNotificationDtoInfoInfos = userSyncData.UserNotificationDtoInfoInfos;
         if (userSyncData.UserOpenContentDtoInfos.IsNotNullOrEmpty()) UserOpenContentDtoInfos = userSyncData.UserOpenContentDtoInfos;
+        if (userSyncData.UserRankUpPrioritySettingDtoInfo != null) UserRankUpPrioritySettingDtoInfo = userSyncData.UserRankUpPrioritySettingDtoInfo;
         if (userSyncData.UserSettingsDtoInfoList.IsNotNullOrEmpty()) UserSettingsDtoInfoList = userSyncData.UserSettingsDtoInfoList;
         if (userSyncData.UserShopAchievementPackDtoInfos.IsNotNullOrEmpty()) UserShopAchievementPackDtoInfos = userSyncData.UserShopAchievementPackDtoInfos;
         if (userSyncData.UserShopFirstChargeBonusDtoInfo != null) UserShopFirstChargeBonusDtoInfo = userSyncData.UserShopFirstChargeBonusDtoInfo;
