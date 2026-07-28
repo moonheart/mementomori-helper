@@ -45,11 +45,10 @@
         }
         @if (UserCharacterInfo.RarityFlags > CharacterRarityFlags.LR)
         {
-            var icon = $"{AtlasManager.AssetsUrl}/AddressableLocalAssets/Atlas/icon_rarity_plus_star_1.png";
-            if (characterMb.RarityFlags >= CharacterRarityFlags.LRPlus6)
-            {
-                icon = $"{AtlasManager.AssetsUrl}/AddressableLocalAssets/Atlas/icon_rarity_plus_star_2.png";
-            }
+            // LR+6 及以上用 star_2
+            var icon = UserCharacterInfo.RarityFlags >= CharacterRarityFlags.LRPlus6
+                ? $"{AtlasManager.AssetsUrl}/AddressableLocalAssets/Atlas/icon_rarity_plus_star_2.png"
+                : $"{AtlasManager.AssetsUrl}/AddressableLocalAssets/Atlas/icon_rarity_plus_star_1.png";
 
             var count = UserCharacterInfo.RarityFlags switch
             {
