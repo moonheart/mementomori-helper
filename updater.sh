@@ -23,8 +23,8 @@ RED="\033[0;31m"
 GREEN="\033[0;32m"
 NC="\033[0m"
 
-# 检查所需工具的可用性
-required_tools=("jq" "wget" "unzip")
+# 检查所需工具的可用性（gh 可选，用于绕过 GitHub API 匿名限流）
+required_tools=("jq" "wget" "unzip" "curl")
 missing_tools=()
 
 for tool in "${required_tools[@]}"; do
@@ -98,13 +98,33 @@ case "$arch" in
         ;;
 esac
 
-# 获取最新的发布信息
-latestRelease=$(curl -s "$releaseApiUrl")
-latestVersionStr=$(echo "$latestRelease" | jq -r '.tag_name')
+# 获取最新的发布信息（优先使用已登录的 gh，避免 GitHub API 匿名限流）
+latestVersionStr=""
+latestRelease=""
+
+if command -v gh &> /dev/null; then
+    latestVersionStr=$(gh api "repos/$repository/releases/latest" --jq .tag_name 2>/dev/null || true)
+fi
+
+if [ -z "$latestVersionStr" ] || [ "$latestVersionStr" = "null" ]; then
+    latestRelease=$(curl -sS "$releaseApiUrl" 2>/dev/null || true)
+    latestVersionStr=$(echo "$latestRelease" | jq -r '.tag_name // empty' 2>/dev/null || true)
+fi
+
+# 网页跳转兜底（API 被限流时仍可拿到 tag）
+if [ -z "$latestVersionStr" ] || [ "$latestVersionStr" = "null" ]; then
+    latestVersionStr=$(curl -sSIL "https://github.com/$repository/releases/latest" 2>/dev/null \
+        | awk 'BEGIN{IGNORECASE=1} /^location:/ {print $2}' \
+        | tr -d '\r' \
+        | sed -n 's|.*/tag/||p' \
+        | tail -n 1)
+fi
+
 latestVersion=$(echo "$latestVersionStr" | sed 's/^v//')
 
 # 检查是否成功获取最新版本信息
-if [ -z "$latestRelease" ] || [ "$latestVersionStr" = "null" ]; then
+if [ -z "$latestVersionStr" ] || [ "$latestVersionStr" = "null" ]; then
+    apiMessage=$(echo "$latestRelease" | jq -r '.message // empty' 2>/dev/null || true)
     case "$lang" in
         zh_CN|zh_SG)
             echo -e "${RED}错误：无法获取最新版本,请检查网络连接是否正常.${NC}"
@@ -119,6 +139,9 @@ if [ -z "$latestRelease" ] || [ "$latestVersionStr" = "null" ]; then
             echo -e "${RED}Error: Unable to retrieve the latest version, please check your network connection.${NC}"
             ;;
     esac
+    if [ -n "$apiMessage" ]; then
+        echo -e "${RED}$apiMessage${NC}"
+    fi
     exit 1
 fi
 
@@ -159,12 +182,45 @@ else
     # 下载最新版本的压缩包
     downloadLink="$downloadUrl/$latestVersionStr/$zipName"
     downloadPath="$downloadDirectory/latest.zip"
-    wget -O "$downloadPath" "$downloadLink"
+    if ! wget -O "$downloadPath" "$downloadLink"; then
+        case "$lang" in
+            zh_CN|zh_SG)
+                echo -e "${RED}错误：下载失败 $downloadLink${NC}"
+                ;;
+            zh_TW|zh_HK)
+                echo -e "${RED}錯誤：下載失敗 $downloadLink${NC}"
+                ;;
+            ja_JP)
+                echo -e "${RED}エラー：ダウンロードに失敗しました $downloadLink${NC}"
+                ;;
+            *)
+                echo -e "${RED}Error: Failed to download $downloadLink${NC}"
+                ;;
+        esac
+        exit 1
+    fi
 
     # 解压缩文件到临时文件夹
     tempDir="$downloadDirectory/temp"
     mkdir -p "$tempDir"
-    unzip "$downloadPath" -d "$tempDir"
+    if ! unzip "$downloadPath" -d "$tempDir"; then
+        case "$lang" in
+            zh_CN|zh_SG)
+                echo -e "${RED}错误：解压失败${NC}"
+                ;;
+            zh_TW|zh_HK)
+                echo -e "${RED}錯誤：解壓失敗${NC}"
+                ;;
+            ja_JP)
+                echo -e "${RED}エラー：解凍に失敗しました${NC}"
+                ;;
+            *)
+                echo -e "${RED}Error: Failed to unzip the archive${NC}"
+                ;;
+        esac
+        rm -rf "$tempDir" "$downloadPath"
+        exit 1
+    fi
 
     # 停止当前运行的程序
     pkill -f "$programFileName" || true
