@@ -111,7 +111,13 @@ namespace MementoMori.Ortega.Share.Enums
         IconEffect,
         [Description("シンクロハンマー")]
         SynchroCellUnlockItem,
+        [Description("リアル景品(C)")]
+        RealPrizeC = 54,
+        [Description("マイニングクエストイベント報酬アイテム")]
+        MiningQuestEventRewardItem = 56,
         [Description("Stripeクーポン")]
-        StripeCoupon = 1001
+        StripeCoupon = 1001,
+        [Description("Webクリスタル")]
+        WebCrystal = 2001
 	}
 }

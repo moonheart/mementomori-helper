@@ -11,5 +11,6 @@ public enum CurrencyType
     [Description("有償ダイヤ(Windows)")] PaidWindows = 4,
     [Description("有償ダイヤ(DMM)")] PaidDMM,
     [Description("有償ダイヤ(Steam)")] PaidSteam,
-    [Description("有償ダイヤ(Apk)")] PaidApk
+    [Description("有償ダイヤ(Apk)")] PaidApk,
+    [Description("有償ダイヤ(Webクリスタル)")] PaidWebCrystal = 100
 }

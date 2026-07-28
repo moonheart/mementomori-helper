@@ -97,6 +97,10 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		AlwaysEnemyDead,
         [Description("与バフ解除時")]
         EnemyRemoveBuff,
+		[Description("自身以外の味方の与デバフ時")]
+		AllyGiveDeBuff,
+		[Description("第三者の攻撃時、味方の被攻撃時（命中時のみ）")]
+		AllyReceiveDamageHitOnly,
 		[Description("敵が攻撃した時")]
 		EnemyAttack = 50,
 		[Description("被致命的ダメージ時回復")]
