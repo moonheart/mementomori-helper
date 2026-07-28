@@ -45,31 +45,46 @@
         }
         @if (UserCharacterInfo.RarityFlags > CharacterRarityFlags.LR)
         {
-            var icon = $"{AtlasManager.AssetsUrl}/AddressableLocalAssets/Atlas/icon_rarity_plus_star_1.png";
-            if (characterMb.RarityFlags >= CharacterRarityFlags.LRPlus6)
-            {
-                icon = $"{AtlasManager.AssetsUrl}/AddressableLocalAssets/Atlas/icon_rarity_plus_star_2.png";
-            }
-
-            var count = UserCharacterInfo.RarityFlags switch
+            // LR+～LR+5：全是 star_1
+            // LR+6～LR+10：固定 5 颗，左侧 N 颗 star_2，其余 star_1（N = LR+6→1 … LR+10→5）
+            var star1 = $"{AtlasManager.AssetsUrl}/AddressableLocalAssets/Atlas/icon_rarity_plus_star_1.png";
+            var star2 = $"{AtlasManager.AssetsUrl}/AddressableLocalAssets/Atlas/icon_rarity_plus_star_2.png";
+            int star2Count = 0;
+            int star1Count = UserCharacterInfo.RarityFlags switch
             {
                 CharacterRarityFlags.LRPlus => 1,
                 CharacterRarityFlags.LRPlus2 => 2,
                 CharacterRarityFlags.LRPlus3 => 3,
                 CharacterRarityFlags.LRPlus4 => 4,
                 CharacterRarityFlags.LRPlus5 => 5,
-                CharacterRarityFlags.LRPlus6 => 1,
-                CharacterRarityFlags.LRPlus7 => 2,
-                CharacterRarityFlags.LRPlus8 => 3,
-                CharacterRarityFlags.LRPlus9 => 4,
-                CharacterRarityFlags.LRPlus10 => 5,
+                CharacterRarityFlags.LRPlus6 => 4,
+                CharacterRarityFlags.LRPlus7 => 3,
+                CharacterRarityFlags.LRPlus8 => 2,
+                CharacterRarityFlags.LRPlus9 => 1,
+                CharacterRarityFlags.LRPlus10 => 0,
                 _ => 0
             };
+            if (UserCharacterInfo.RarityFlags >= CharacterRarityFlags.LRPlus6)
+            {
+                star2Count = UserCharacterInfo.RarityFlags switch
+                {
+                    CharacterRarityFlags.LRPlus6 => 1,
+                    CharacterRarityFlags.LRPlus7 => 2,
+                    CharacterRarityFlags.LRPlus8 => 3,
+                    CharacterRarityFlags.LRPlus9 => 4,
+                    CharacterRarityFlags.LRPlus10 => 5,
+                    _ => 0
+                };
+            }
 
             <div class="icon-rarity-star-container">
-                @for (var i = 0; i < count; i++)
+                @for (var i = 0; i < star2Count; i++)
                 {
-                    <img class="icon-rarity-star" src="@icon"/>
+                    <img class="icon-rarity-star" src="@star2"/>
+                }
+                @for (var i = 0; i < star1Count; i++)
+                {
+                    <img class="icon-rarity-star" src="@star1"/>
                 }
             </div>
         }
