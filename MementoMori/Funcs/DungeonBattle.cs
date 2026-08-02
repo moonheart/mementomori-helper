@@ -368,7 +368,7 @@ public partial class MementoMoriFuncs
                             case DungeonBattleGridType.JoinCharacter:
                             {
                                 var characterIds = battleInfoResponse.UserDungeonDtoInfo
-                                    .GuestCharacterMap[currentGrid.Grid.DungeonGridGuid]
+                                    .GuestCharacterMap[nextGrid.DungeonGridGuid]
                                     .Select(d=>DungeonBattleGuestTable.GetById(d).CharacterId);
                                 var infos = battleInfoResponse.UserDungeonBattleGuestCharacterDtoInfos
                                     .Where(d => characterIds.Contains(d.CharacterId))
