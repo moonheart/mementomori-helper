@@ -155,7 +155,7 @@ public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
             switch (errorCode)
             {
                 case ErrorCode.MagicOnionLocalRaidJoinRandomRoomNotExistRoom:
-                    if (_startSw.Elapsed > TimeSpan.FromMinutes(10))
+                    if (_startSw.Elapsed > TimeSpan.FromMinutes(2))
                     {
                         IsMaxTimeExceeded = true;
                         _startSw.Stop();
