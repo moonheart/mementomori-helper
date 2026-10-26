@@ -2320,5 +2320,149 @@ namespace MementoMori.Common.Localization {
                 return ResourceManager.GetString("AutoRankUpFodderButton", resourceCulture);
             }
         }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to Banner advisor.
+        /// </summary>
+        public static string GachaAdvisor {
+            get {
+                return ResourceManager.GetString("GachaAdvisor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto pull spends tickets freely and free diamonds only on {0}-tier pickups, keeping {1} diamonds in reserve. Paid diamonds are never used..
+        /// </summary>
+        public static string GachaAdvisorHint {
+            get {
+                return ResourceManager.GetString("GachaAdvisorHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto pull.
+        /// </summary>
+        public static string GachaAutoPull {
+            get {
+                return ResourceManager.GetString("GachaAutoPull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diamond reserve.
+        /// </summary>
+        public static string GachaDiamondReserve {
+            get {
+                return ResourceManager.GetString("GachaDiamondReserve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Banner.
+        /// </summary>
+        public static string GachaColBanner {
+            get {
+                return ResourceManager.GetString("GachaColBanner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pickup.
+        /// </summary>
+        public static string GachaColPickup {
+            get {
+                return ResourceManager.GetString("GachaColPickup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verdict.
+        /// </summary>
+        public static string GachaColVerdict {
+            get {
+                return ResourceManager.GetString("GachaColVerdict", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ticket ×{0}.
+        /// </summary>
+        public static string GachaTicketButton {
+            get {
+                return ResourceManager.GetString("GachaTicketButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pull: {0} is {1}-tier.
+        /// </summary>
+        public static string GachaVerdictPull {
+            get {
+                return ResourceManager.GetString("GachaVerdictPull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip: {0} is {1} — save diamonds.
+        /// </summary>
+        public static string GachaVerdictSkip {
+            get {
+                return ResourceManager.GetString("GachaVerdictSkip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to unranked.
+        /// </summary>
+        public static string GachaUnranked {
+            get {
+                return ResourceManager.GetString("GachaUnranked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use tickets (free value).
+        /// </summary>
+        public static string GachaVerdictTickets {
+            get {
+                return ResourceManager.GetString("GachaVerdictTickets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Standard pool — not worth diamonds.
+        /// </summary>
+        public static string GachaVerdictStandard {
+            get {
+                return ResourceManager.GetString("GachaVerdictStandard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (need {0} more diamonds above reserve).
+        /// </summary>
+        public static string GachaVerdictNeedMore {
+            get {
+                return ResourceManager.GetString("GachaVerdictNeedMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to no characters.
+        /// </summary>
+        public static string GachaNoCharacters {
+            get {
+                return ResourceManager.GetString("GachaNoCharacters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto pull gacha (all tickets + free diamonds on S/SS pickups, keeps reserve).
+        /// </summary>
+        public static string AutoPullGacha {
+            get {
+                return ResourceManager.GetString("AutoPullGacha", resourceCulture);
+            }
+        }
     }
 }

@@ -34,6 +34,7 @@
         <MudSwitch Label="@ResourceStrings.UseNormalItems" @bind-Value="AutoJob__AutoUseItems" Color="Color.Primary"></MudSwitch>
         @* <MudSwitch Label="@ResourceStrings.Deploy_defense" @bind-Value="AutoJob__AutoDeployGuildDefense" Color="Color.Primary"></MudSwitch> *@
         <div class="mm-group-label">@ResourceStrings.GroupGacha</div>
+        <MudSwitch Label="@ResourceStrings.AutoPullGacha" @bind-Value="AutoJob__AutoPullGacha" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@Tr("[CommonFooterGachaButtonLabel]")" @bind-Value="AutoJob__AutoFreeGacha" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@Tr("[GachaRelicChangeTitle]")" @bind-Value="AutoJob__AutoChangeGachaRelic" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@ResourceStrings.Auto_draw_10_times__up_to_3_draws_" @bind-Value="AutoJob__AutoDrawGachaRelic" Color="Color.Primary"></MudSwitch>
@@ -41,6 +42,13 @@
 </MudCard>
 
 @code {
+
+    public bool AutoJob__AutoPullGacha
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoPullGacha;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoPullGacha = value);
+    }
+
 
     public bool AutoJob__AutoRankUpWithFodder
     {

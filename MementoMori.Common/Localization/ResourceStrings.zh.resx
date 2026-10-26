@@ -831,4 +831,52 @@
   <data name="AutoRankUpFodderButton" xml:space="preserve">
     <value>智能升星</value>
   </data>
+  <data name="GachaAdvisor" xml:space="preserve">
+    <value>卡池建议</value>
+  </data>
+  <data name="GachaAdvisorHint" xml:space="preserve">
+    <value>自动抽卡会用掉所有抽卡券；免费钻石只用于 {0} 强度的 UP 角色，并保留 {1} 钻石。不会使用付费钻石。</value>
+  </data>
+  <data name="GachaAutoPull" xml:space="preserve">
+    <value>自动抽卡</value>
+  </data>
+  <data name="GachaDiamondReserve" xml:space="preserve">
+    <value>钻石储备</value>
+  </data>
+  <data name="GachaColBanner" xml:space="preserve">
+    <value>卡池</value>
+  </data>
+  <data name="GachaColPickup" xml:space="preserve">
+    <value>UP 角色</value>
+  </data>
+  <data name="GachaColVerdict" xml:space="preserve">
+    <value>建议</value>
+  </data>
+  <data name="GachaTicketButton" xml:space="preserve">
+    <value>券 ×{0}</value>
+  </data>
+  <data name="GachaVerdictPull" xml:space="preserve">
+    <value>值得抽：{0} 是 {1} 强度</value>
+  </data>
+  <data name="GachaVerdictSkip" xml:space="preserve">
+    <value>跳过：{0} 是 {1}，省钻石</value>
+  </data>
+  <data name="GachaUnranked" xml:space="preserve">
+    <value>未评级</value>
+  </data>
+  <data name="GachaVerdictTickets" xml:space="preserve">
+    <value>用券（不花钱）</value>
+  </data>
+  <data name="GachaVerdictStandard" xml:space="preserve">
+    <value>常驻池，不值得用钻石</value>
+  </data>
+  <data name="GachaVerdictNeedMore" xml:space="preserve">
+    <value>（还差 {0} 钻石才超过储备）</value>
+  </data>
+  <data name="GachaNoCharacters" xml:space="preserve">
+    <value>没有角色</value>
+  </data>
+  <data name="AutoPullGacha" xml:space="preserve">
+    <value>自动抽卡（用掉所有券 + 免费钻石只抽 S/SS UP，保留储备）</value>
+  </data>
 </root>

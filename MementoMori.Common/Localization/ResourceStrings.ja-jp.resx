@@ -724,4 +724,52 @@
   <data name="AutoRankUpFodderButton" xml:space="preserve">
     <value>スマート昇格</value>
   </data>
+  <data name="GachaAdvisor" xml:space="preserve">
+    <value>ガチャアドバイザー</value>
+  </data>
+  <data name="GachaAdvisorHint" xml:space="preserve">
+    <value>自動ガチャはチケットを全て使い、無償ダイヤは {0} ティアのピックアップのみに使用し、{1} ダイヤを残します。有償ダイヤは使いません。</value>
+  </data>
+  <data name="GachaAutoPull" xml:space="preserve">
+    <value>自動ガチャ</value>
+  </data>
+  <data name="GachaDiamondReserve" xml:space="preserve">
+    <value>ダイヤ保留数</value>
+  </data>
+  <data name="GachaColBanner" xml:space="preserve">
+    <value>ガチャ</value>
+  </data>
+  <data name="GachaColPickup" xml:space="preserve">
+    <value>ピックアップ</value>
+  </data>
+  <data name="GachaColVerdict" xml:space="preserve">
+    <value>判定</value>
+  </data>
+  <data name="GachaTicketButton" xml:space="preserve">
+    <value>チケット ×{0}</value>
+  </data>
+  <data name="GachaVerdictPull" xml:space="preserve">
+    <value>引く：{0} は {1} ティア</value>
+  </data>
+  <data name="GachaVerdictSkip" xml:space="preserve">
+    <value>見送り：{0} は {1}、ダイヤ温存</value>
+  </data>
+  <data name="GachaUnranked" xml:space="preserve">
+    <value>未評価</value>
+  </data>
+  <data name="GachaVerdictTickets" xml:space="preserve">
+    <value>チケットを使う（無料）</value>
+  </data>
+  <data name="GachaVerdictStandard" xml:space="preserve">
+    <value>恒常ガチャ、ダイヤを使う価値なし</value>
+  </data>
+  <data name="GachaVerdictNeedMore" xml:space="preserve">
+    <value>（保留数まであと {0} ダイヤ不足）</value>
+  </data>
+  <data name="GachaNoCharacters" xml:space="preserve">
+    <value>キャラなし</value>
+  </data>
+  <data name="AutoPullGacha" xml:space="preserve">
+    <value>自動ガチャ（チケット全部＋無償ダイヤは S/SS ピックアップのみ、保留数を維持）</value>
+  </data>
 </root>

@@ -20,6 +20,7 @@
 
 @if (ViewModel?.UserSyncData?.UserItemDtoInfo != null)
 {
+    <BannerAdvisor/>
     <MudGrid>
         @foreach (var gachaCaseInfo in gachaCaseInfos.OrderByDescending(d => d.DisplayOrder))
         {

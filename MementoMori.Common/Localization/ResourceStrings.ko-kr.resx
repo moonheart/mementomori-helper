@@ -724,4 +724,52 @@
   <data name="AutoRankUpFodderButton" xml:space="preserve">
     <value>스마트 승급</value>
   </data>
+  <data name="GachaAdvisor" xml:space="preserve">
+    <value>배너 어드바이저</value>
+  </data>
+  <data name="GachaAdvisorHint" xml:space="preserve">
+    <value>자동 뽑기는 티켓을 모두 쓰고, 무료 다이아는 {0} 티어 픽업에만 쓰며 {1} 다이아를 남깁니다. 유료 다이아는 사용하지 않습니다.</value>
+  </data>
+  <data name="GachaAutoPull" xml:space="preserve">
+    <value>자동 뽑기</value>
+  </data>
+  <data name="GachaDiamondReserve" xml:space="preserve">
+    <value>다이아 보유량</value>
+  </data>
+  <data name="GachaColBanner" xml:space="preserve">
+    <value>배너</value>
+  </data>
+  <data name="GachaColPickup" xml:space="preserve">
+    <value>픽업</value>
+  </data>
+  <data name="GachaColVerdict" xml:space="preserve">
+    <value>판단</value>
+  </data>
+  <data name="GachaTicketButton" xml:space="preserve">
+    <value>티켓 ×{0}</value>
+  </data>
+  <data name="GachaVerdictPull" xml:space="preserve">
+    <value>뽑기: {0}은(는) {1} 티어</value>
+  </data>
+  <data name="GachaVerdictSkip" xml:space="preserve">
+    <value>건너뛰기: {0}은(는) {1}, 다이아 아끼기</value>
+  </data>
+  <data name="GachaUnranked" xml:space="preserve">
+    <value>미평가</value>
+  </data>
+  <data name="GachaVerdictTickets" xml:space="preserve">
+    <value>티켓 사용 (무료)</value>
+  </data>
+  <data name="GachaVerdictStandard" xml:space="preserve">
+    <value>상시 배너, 다이아를 쓸 가치 없음</value>
+  </data>
+  <data name="GachaVerdictNeedMore" xml:space="preserve">
+    <value>(보유량보다 {0} 다이아 부족)</value>
+  </data>
+  <data name="GachaNoCharacters" xml:space="preserve">
+    <value>캐릭터 없음</value>
+  </data>
+  <data name="AutoPullGacha" xml:space="preserve">
+    <value>자동 뽑기 (티켓 전부 + 무료 다이아는 S/SS 픽업만, 보유량 유지)</value>
+  </data>
 </root>
