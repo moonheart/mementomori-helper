@@ -14,6 +14,7 @@
     <MudCardContent>
         <MudSwitch Label="@ResourceStrings.DisableAllJobs" @bind-Value="AutoJob__DisableAll" Color="Color.Primary"></MudSwitch>
         <div class="mm-group-label">@ResourceStrings.GroupGrowth</div>
+        <MudSwitch Label="@ResourceStrings.AutoLevelUp" @bind-Value="AutoJob__AutoLevelUpCharacter" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@ResourceStrings.ReinforceEquipmentOnce" @bind-Value="AutoJob__AutoReinforcementEquipmentOneTime" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@Tr("[CharacterMenuTabCharacterRankUp]")" @bind-Value="AutoJob__AutoRankUpCharacter" Color="Color.Primary"></MudSwitch>
         <div class="mm-group-label">@ResourceStrings.GroupDailyBattles</div>
@@ -32,6 +33,13 @@
 </MudCard>
 
 @code {
+
+    public bool AutoJob__AutoLevelUpCharacter
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoLevelUpCharacter;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoLevelUpCharacter = value);
+    }
+
     public bool AutoJob__DisableAll
     {
         get => WritableGameConfig.Value.AutoJob.DisableAll;

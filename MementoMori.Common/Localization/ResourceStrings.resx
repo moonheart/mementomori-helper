@@ -740,4 +740,10 @@
   <data name="AddAccount" xml:space="preserve">
     <value>Add account</value>
   </data>
+  <data name="AutoLevelUp" xml:space="preserve">
+    <value>Auto level up (top 5 + fill empty Level Link slots)</value>
+  </data>
+  <data name="AutoLevelUpButton" xml:space="preserve">
+    <value>Level up + Level Link</value>
+  </data>
 </root>

@@ -2050,5 +2050,23 @@ namespace MementoMori.Common.Localization {
                 return ResourceManager.GetString("AddAccount", resourceCulture);
             }
         }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to Auto level up (top 5 + fill empty Level Link slots).
+        /// </summary>
+        public static string AutoLevelUp {
+            get {
+                return ResourceManager.GetString("AutoLevelUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level up + Level Link.
+        /// </summary>
+        public static string AutoLevelUpButton {
+            get {
+                return ResourceManager.GetString("AutoLevelUpButton", resourceCulture);
+            }
+        }
     }
 }

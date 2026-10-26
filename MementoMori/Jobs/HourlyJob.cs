@@ -32,5 +32,6 @@ public partial class HourlyJob : IJob
         await account.Funcs.ReadAllMemories();
         if (_gameConfig.Value.AutoJob.AutoFreeGacha) await account.Funcs.FreeGacha();
         if (_gameConfig.Value.AutoJob.AutoUseItems) await account.Funcs.AutoUseItems();
+        if (_gameConfig.Value.AutoJob.AutoLevelUpCharacter) await account.Funcs.AutoLevelUp();
     }
 }

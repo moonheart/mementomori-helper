@@ -741,4 +741,10 @@
   <data name="AddAccount" xml:space="preserve">
     <value>添加账号</value>
   </data>
+  <data name="AutoLevelUp" xml:space="preserve">
+    <value>自动升级（前5名 + 填满等级链接空位）</value>
+  </data>
+  <data name="AutoLevelUpButton" xml:space="preserve">
+    <value>升级 + 等级链接</value>
+  </data>
 </root>

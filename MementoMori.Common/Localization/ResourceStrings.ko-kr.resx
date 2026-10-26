@@ -634,4 +634,10 @@
   <data name="AddAccount" xml:space="preserve">
     <value>계정 추가</value>
   </data>
+  <data name="AutoLevelUp" xml:space="preserve">
+    <value>자동 레벨업 (상위 5명 + 레벨 링크 빈 칸 채우기)</value>
+  </data>
+  <data name="AutoLevelUpButton" xml:space="preserve">
+    <value>레벨업 + 레벨 링크</value>
+  </data>
 </root>
