@@ -10,64 +10,80 @@
 @inherits MementoMori.BlazorShared.Models.AccountComponent
 @page "/settings"
 
-<MudGrid>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <AccountManagement/>
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <AutoJobSwitch/>
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <AutoJobCron/>
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <AutoJobNextExecution/>
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <GachaSettings/>
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <BountyQuest />
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <DungeonBattleSettings />
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <LocalRaidSettings/>
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <ShopSettings />
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <ItemsSetting/>
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <PvpSettings LeagueType="0"></PvpSettings>
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <PvpSettings LeagueType="1"></PvpSettings>
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <FriendManageSettings/>
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <GuildTowerSettings/>
-    </MudItem>
-    <MudItem sm="12" md="6" lg="4" xl="3">
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText>@ResourceStrings.Others (Global)</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudField Label="@ResourceStrings.AutoRequestDelay" Variant="Variant.Outlined">
-                    <MudNumericField @bind-Value="AutoRequestDelay"></MudNumericField>
-                </MudField>
-            </MudCardContent>
-        </MudCard>
-    </MudItem>
-</MudGrid>
+<MudTabs Elevation="0" Rounded="true" MinimumTabWidth="0px" ApplyEffectsToContainer="true" PanelClass="pa-0" Class="mm-tabs" KeepPanelsAlive="false">
+    <MudTabPanel Text="@ResourceStrings.TabAutomation" Icon="@Icons.Material.Rounded.Bolt">
+        <MudGrid Spacing="3">
+            <MudItem xs="12" md="6" xl="4">
+                <AutoJobSwitch/>
+            </MudItem>
+            <MudItem xs="12" md="6" xl="4">
+                <AutoJobCron/>
+            </MudItem>
+            <MudItem xs="12" md="6" xl="4">
+                <AutoJobNextExecution/>
+            </MudItem>
+            <MudItem xs="12" md="6" xl="4">
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText>@ResourceStrings.Others (Global)</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudField Label="@ResourceStrings.AutoRequestDelay" Variant="Variant.Outlined">
+                            <MudNumericField @bind-Value="AutoRequestDelay"></MudNumericField>
+                        </MudField>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+    <MudTabPanel Text="@ResourceStrings.TabBattle" Icon="@Icons.Material.Rounded.SportsMartialArts">
+        <MudGrid Spacing="3">
+            <MudItem xs="12" md="6" xl="4">
+                <DungeonBattleSettings/>
+            </MudItem>
+            <MudItem xs="12" md="6" xl="4">
+                <LocalRaidSettings/>
+            </MudItem>
+            <MudItem xs="12" md="6" xl="4">
+                <PvpSettings LeagueType="0"></PvpSettings>
+            </MudItem>
+            <MudItem xs="12" md="6" xl="4">
+                <PvpSettings LeagueType="1"></PvpSettings>
+            </MudItem>
+            <MudItem xs="12" md="6" xl="4">
+                <GuildTowerSettings/>
+            </MudItem>
+            <MudItem xs="12" md="6" xl="4">
+                <BountyQuest/>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+    <MudTabPanel Text="@ResourceStrings.TabGachaShop" Icon="@Icons.Material.Rounded.AutoAwesome">
+        <MudGrid Spacing="3">
+            <MudItem xs="12" md="6" xl="4">
+                <GachaSettings/>
+            </MudItem>
+            <MudItem xs="12" md="6" xl="4">
+                <ShopSettings/>
+            </MudItem>
+            <MudItem xs="12" md="6" xl="4">
+                <ItemsSetting/>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+    <MudTabPanel Text="@ResourceStrings.Account" Icon="@Icons.Material.Rounded.ManageAccounts">
+        <MudGrid Spacing="3">
+            <MudItem xs="12" md="6" xl="4">
+                <AccountManagement/>
+            </MudItem>
+            <MudItem xs="12" md="6" xl="4">
+                <FriendManageSettings/>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+</MudTabs>
 
 
 @code {

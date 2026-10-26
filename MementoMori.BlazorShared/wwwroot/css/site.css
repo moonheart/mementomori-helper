@@ -1,0 +1,66 @@
+
+/* ===== theme polish ===== */
+:root { --mm-font: Inter, "Noto Sans SC", "Noto Sans JP", "Noto Sans KR", system-ui, sans-serif; --mm-mono: "JetBrains Mono", ui-monospace, monospace; }
+body { font-family: var(--mm-font); -webkit-font-smoothing: antialiased; font-feature-settings: "cv11", "ss01"; }
+.mm-content { padding-top: 20px; padding-bottom: 48px; }
+.mm-appbar { backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--mud-palette-lines-default); }
+.mm-account-select { max-width: 220px; margin-left: 8px; }
+.mm-drawer { border-right: 1px solid var(--mud-palette-lines-default); }
+.mm-brand { padding: 20px 20px 12px; }
+.mm-brand-title { font-family: Cinzel, serif; font-weight: 700; font-size: 1.25rem; letter-spacing: .04em;
+    background: linear-gradient(90deg, var(--mud-palette-primary), var(--mud-palette-secondary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.mm-muted { color: var(--mud-palette-text-secondary); }
+.mm-nav { padding: 4px 8px; }
+.mm-nav .mud-nav-link { border-radius: 8px; margin-bottom: 2px; }
+
+/* 卡片: 阴影代替边框, 头部更紧凑 */
+.mud-card, .mud-paper:not(.mud-appbar):not(.mud-drawer):not(.mud-popover) {
+    border: 1px solid transparent;
+    box-shadow: 0 0 0 1px var(--mud-palette-lines-default), 0 1px 2px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.08);
+}
+.mud-card { border-radius: 14px; height: 100%; }
+.mud-card-header { padding: 14px 16px 6px; }
+.mud-card-header .mud-typography { font-weight: 600; font-size: .9375rem; }
+.mud-card-content { padding: 8px 16px 16px; }
+.mud-card-actions { padding: 8px 12px 12px; gap: 6px; flex-wrap: wrap; }
+.mud-table-cell { padding: 6px 12px; }
+.mud-chip { font-variant-numeric: tabular-nums; }
+
+/* 按下 0.96 */
+.mud-button-root:not(:disabled) { transition-property: scale, background-color, box-shadow; transition-duration: 150ms; transition-timing-function: ease-out; }
+@media (prefers-reduced-motion: no-preference) {
+    .mud-button-root:not(:disabled):active { scale: 0.96; }
+}
+.mud-button-root { -webkit-tap-highlight-color: transparent; }
+.mud-dialog-content, .mud-drawer-content, .mud-popover { overscroll-behavior: contain; }
+
+/* 设置页 tabs */
+.mm-tabs .mud-tabs-panels { padding-top: 16px; }
+.mm-tabs .mud-tab { text-transform: none; }
+.mud-typography-h5 { font-weight: 700; }
+.mud-typography-h6 { font-weight: 600; }
+.mud-button-root .mud-button-label { font-weight: 600; }
+
+/* 设置开关分组 */
+.mm-group-label { font-size: .6875rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--mud-palette-text-secondary); margin: 16px 0 2px; }
+.mm-group-label:first-child { margin-top: 0; }
+
+/* 定时任务选择器 */
+.mm-cron { padding: 10px 0; border-bottom: 1px solid var(--mud-palette-table-lines); }
+.mm-cron:last-child { border-bottom: none; }
+.mm-cron-head { display: flex; align-items: center; gap: 8px; }
+.mm-cron-label { flex: 1; font-weight: 600; font-size: .875rem; min-width: 0; }
+.mm-cron-mode { flex: 0 0 140px; }
+.mm-cron-body { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 6px; }
+.mm-cron-time { display: flex; align-items: center; }
+.mm-cron-field { flex: 0 0 130px; }
+.mm-cron-custom { flex: 1 1 100%; }
+.mm-cron-custom input { font-family: var(--mm-mono); }
+.mm-cron-presets { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; }
+.mm-cron-hint { font-size: .75rem; color: var(--mud-palette-text-secondary); margin-top: 4px; }
+
+/* 手机: tab 只留文字, 窄一点才放得下 */
+@media (max-width: 600px) {
+    .mm-tabs .mud-tab { padding: 6px 8px; font-size: .8125rem; }
+    .mm-tabs .mud-tab .mud-icon-root { display: none; }
+}

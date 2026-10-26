@@ -481,4 +481,151 @@
     <data name="Confirm" xml:space="preserve">
         <value>확인</value>
     </data>
+  <data name="TabAutomation" xml:space="preserve">
+    <value>자동화</value>
+  </data>
+  <data name="TabBattle" xml:space="preserve">
+    <value>전투</value>
+  </data>
+  <data name="TabGachaShop" xml:space="preserve">
+    <value>뽑기 및 상점</value>
+  </data>
+  <data name="NoAccount" xml:space="preserve">
+    <value>계정 없음</value>
+  </data>
+  <data name="GroupGrowth" xml:space="preserve">
+    <value>육성</value>
+  </data>
+  <data name="GroupDailyBattles" xml:space="preserve">
+    <value>일일 및 전투</value>
+  </data>
+  <data name="GroupGacha" xml:space="preserve">
+    <value>뽑기</value>
+  </data>
+  <data name="CronServerTimeHint" xml:space="preserve">
+    <value>시간은 게임 서버 시간 기준입니다</value>
+  </data>
+  <data name="CronEveryHour" xml:space="preserve">
+    <value>매시간</value>
+  </data>
+  <data name="CronEveryDay" xml:space="preserve">
+    <value>매일</value>
+  </data>
+  <data name="CronEveryWeek" xml:space="preserve">
+    <value>매주</value>
+  </data>
+  <data name="CronCustom" xml:space="preserve">
+    <value>사용자 지정</value>
+  </data>
+  <data name="CronAtMinute" xml:space="preserve">
+    <value>분</value>
+  </data>
+  <data name="CronAddTime" xml:space="preserve">
+    <value>시간 추가</value>
+  </data>
+  <data name="CronDay" xml:space="preserve">
+    <value>요일</value>
+  </data>
+  <data name="CronHelp" xml:space="preserve">
+    <value>Cron 도움말</value>
+  </data>
+  <data name="CronInvalid" xml:space="preserve">
+    <value>유효한 Quartz cron이 아닙니다 (초 분 시 일 월 요일)</value>
+  </data>
+  <data name="CronInvalidShort" xml:space="preserve">
+    <value>잘못된 일정</value>
+  </data>
+  <data name="CronCustomSchedule" xml:space="preserve">
+    <value>사용자 지정 일정</value>
+  </data>
+  <data name="CronDescFormat" xml:space="preserve">
+    <value>{1} {0}</value>
+  </data>
+  <data name="CronTimeAt" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="CronTimeEveryHourAt" xml:space="preserve">
+    <value>매시 {0}분</value>
+  </data>
+  <data name="CronTimeEveryNHoursAt" xml:space="preserve">
+    <value>{0}시간마다 {1}분</value>
+  </data>
+  <data name="CronTimeEveryNMin" xml:space="preserve">
+    <value>{0}분마다</value>
+  </data>
+  <data name="CronDaysEveryDay" xml:space="preserve">
+    <value>매일</value>
+  </data>
+  <data name="CronDaysWeekdays" xml:space="preserve">
+    <value>평일</value>
+  </data>
+  <data name="CronDaysWeekends" xml:space="preserve">
+    <value>주말</value>
+  </data>
+  <data name="CronDaysEvery" xml:space="preserve">
+    <value>매주 {0}</value>
+  </data>
+  <data name="CronDaysMonthDay" xml:space="preserve">
+    <value>매월 {0}일</value>
+  </data>
+  <data name="BattleRecent" xml:space="preserve">
+    <value>최근 전투</value>
+  </data>
+  <data name="BattleCounts" xml:space="preserve">
+    <value>{0}개 표시 · {1}승 · {2}패</value>
+  </data>
+  <data name="BattleEmpty" xml:space="preserve">
+    <value>아직 전투 기록이 없습니다. 퀘스트, 탑, PvP 전투는 실행 후 여기에 표시됩니다.</value>
+  </data>
+  <data name="BattlePick" xml:space="preserve">
+    <value>왼쪽에서 전투를 선택하면 피해량과 사망 정보를 볼 수 있습니다.</value>
+  </data>
+  <data name="BattleVictory" xml:space="preserve">
+    <value>승리</value>
+  </data>
+  <data name="BattleDefeat" xml:space="preserve">
+    <value>패배</value>
+  </data>
+  <data name="BattleEndedOnTurn" xml:space="preserve">
+    <value>{0}턴에 종료</value>
+  </data>
+  <data name="BattleOutOfTurns" xml:space="preserve">
+    <value>턴 초과로 패배 처리</value>
+  </data>
+  <data name="BattleReplay" xml:space="preserve">
+    <value>다시 보기</value>
+  </data>
+  <data name="BattleDownload" xml:space="preserve">
+    <value>로그 파일 다운로드</value>
+  </data>
+  <data name="BattleYourTeam" xml:space="preserve">
+    <value>아군</value>
+  </data>
+  <data name="BattleEnemy" xml:space="preserve">
+    <value>적군</value>
+  </data>
+  <data name="BattleAliveDamage" xml:space="preserve">
+    <value>생존 {0}/{1} · 총 피해 {2}</value>
+  </data>
+  <data name="BattleUnit" xml:space="preserve">
+    <value>캐릭터</value>
+  </data>
+  <data name="BattleDamageDealt" xml:space="preserve">
+    <value>가한 피해</value>
+  </data>
+  <data name="BattleTaken" xml:space="preserve">
+    <value>받은 피해</value>
+  </data>
+  <data name="BattleHealed" xml:space="preserve">
+    <value>회복</value>
+  </data>
+  <data name="BattleHpLeft" xml:space="preserve">
+    <value>남은 HP</value>
+  </data>
+  <data name="BattleDead" xml:space="preserve">
+    <value>사망</value>
+  </data>
+  <data name="BattleMainQuest" xml:space="preserve">
+    <value>메인 퀘스트</value>
+  </data>
 </root>

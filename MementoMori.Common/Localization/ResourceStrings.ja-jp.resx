@@ -481,4 +481,151 @@
     <data name="Confirm" xml:space="preserve">
         <value>確認</value>
     </data>
+  <data name="TabAutomation" xml:space="preserve">
+    <value>自動化</value>
+  </data>
+  <data name="TabBattle" xml:space="preserve">
+    <value>バトル</value>
+  </data>
+  <data name="TabGachaShop" xml:space="preserve">
+    <value>ガチャ・ショップ</value>
+  </data>
+  <data name="NoAccount" xml:space="preserve">
+    <value>アカウントなし</value>
+  </data>
+  <data name="GroupGrowth" xml:space="preserve">
+    <value>育成</value>
+  </data>
+  <data name="GroupDailyBattles" xml:space="preserve">
+    <value>デイリー・バトル</value>
+  </data>
+  <data name="GroupGacha" xml:space="preserve">
+    <value>ガチャ</value>
+  </data>
+  <data name="CronServerTimeHint" xml:space="preserve">
+    <value>時刻はゲームサーバー時間です</value>
+  </data>
+  <data name="CronEveryHour" xml:space="preserve">
+    <value>毎時</value>
+  </data>
+  <data name="CronEveryDay" xml:space="preserve">
+    <value>毎日</value>
+  </data>
+  <data name="CronEveryWeek" xml:space="preserve">
+    <value>毎週</value>
+  </data>
+  <data name="CronCustom" xml:space="preserve">
+    <value>カスタム</value>
+  </data>
+  <data name="CronAtMinute" xml:space="preserve">
+    <value>分</value>
+  </data>
+  <data name="CronAddTime" xml:space="preserve">
+    <value>時刻を追加</value>
+  </data>
+  <data name="CronDay" xml:space="preserve">
+    <value>曜日</value>
+  </data>
+  <data name="CronHelp" xml:space="preserve">
+    <value>Cron ヘルプ</value>
+  </data>
+  <data name="CronInvalid" xml:space="preserve">
+    <value>無効な Quartz cron です（秒 分 時 日 月 曜日）</value>
+  </data>
+  <data name="CronInvalidShort" xml:space="preserve">
+    <value>無効なスケジュール</value>
+  </data>
+  <data name="CronCustomSchedule" xml:space="preserve">
+    <value>カスタムスケジュール</value>
+  </data>
+  <data name="CronDescFormat" xml:space="preserve">
+    <value>{1} {0}</value>
+  </data>
+  <data name="CronTimeAt" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="CronTimeEveryHourAt" xml:space="preserve">
+    <value>毎時 {0} 分</value>
+  </data>
+  <data name="CronTimeEveryNHoursAt" xml:space="preserve">
+    <value>{0} 時間ごとの {1} 分</value>
+  </data>
+  <data name="CronTimeEveryNMin" xml:space="preserve">
+    <value>{0} 分ごと</value>
+  </data>
+  <data name="CronDaysEveryDay" xml:space="preserve">
+    <value>毎日</value>
+  </data>
+  <data name="CronDaysWeekdays" xml:space="preserve">
+    <value>平日</value>
+  </data>
+  <data name="CronDaysWeekends" xml:space="preserve">
+    <value>週末</value>
+  </data>
+  <data name="CronDaysEvery" xml:space="preserve">
+    <value>毎週{0}</value>
+  </data>
+  <data name="CronDaysMonthDay" xml:space="preserve">
+    <value>毎月 {0} 日</value>
+  </data>
+  <data name="BattleRecent" xml:space="preserve">
+    <value>最近のバトル</value>
+  </data>
+  <data name="BattleCounts" xml:space="preserve">
+    <value>{0} 件表示 · {1} 勝 · {2} 敗</value>
+  </data>
+  <data name="BattleEmpty" xml:space="preserve">
+    <value>まだバトル記録がありません。クエスト・塔・PvP のバトルは実行後ここに表示されます。</value>
+  </data>
+  <data name="BattlePick" xml:space="preserve">
+    <value>左のバトルを選ぶと、ダメージと戦闘不能の状況を確認できます。</value>
+  </data>
+  <data name="BattleVictory" xml:space="preserve">
+    <value>勝利</value>
+  </data>
+  <data name="BattleDefeat" xml:space="preserve">
+    <value>敗北</value>
+  </data>
+  <data name="BattleEndedOnTurn" xml:space="preserve">
+    <value>{0} ターン目で終了</value>
+  </data>
+  <data name="BattleOutOfTurns" xml:space="preserve">
+    <value>ターン切れのため敗北扱い</value>
+  </data>
+  <data name="BattleReplay" xml:space="preserve">
+    <value>リプレイ</value>
+  </data>
+  <data name="BattleDownload" xml:space="preserve">
+    <value>ログファイルをダウンロード</value>
+  </data>
+  <data name="BattleYourTeam" xml:space="preserve">
+    <value>味方</value>
+  </data>
+  <data name="BattleEnemy" xml:space="preserve">
+    <value>敵</value>
+  </data>
+  <data name="BattleAliveDamage" xml:space="preserve">
+    <value>生存 {0}/{1} · 総ダメージ {2}</value>
+  </data>
+  <data name="BattleUnit" xml:space="preserve">
+    <value>キャラ</value>
+  </data>
+  <data name="BattleDamageDealt" xml:space="preserve">
+    <value>与ダメージ</value>
+  </data>
+  <data name="BattleTaken" xml:space="preserve">
+    <value>被ダメージ</value>
+  </data>
+  <data name="BattleHealed" xml:space="preserve">
+    <value>回復</value>
+  </data>
+  <data name="BattleHpLeft" xml:space="preserve">
+    <value>残り HP</value>
+  </data>
+  <data name="BattleDead" xml:space="preserve">
+    <value>戦闘不能</value>
+  </data>
+  <data name="BattleMainQuest" xml:space="preserve">
+    <value>メインクエスト</value>
+  </data>
 </root>

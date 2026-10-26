@@ -587,4 +587,151 @@
   <data name="Confirm" xml:space="preserve">
       <value>Confirm</value>
   </data>
+  <data name="TabAutomation" xml:space="preserve">
+    <value>Automation</value>
+  </data>
+  <data name="TabBattle" xml:space="preserve">
+    <value>Battle</value>
+  </data>
+  <data name="TabGachaShop" xml:space="preserve">
+    <value>Gacha &amp; Shop</value>
+  </data>
+  <data name="NoAccount" xml:space="preserve">
+    <value>No account</value>
+  </data>
+  <data name="GroupGrowth" xml:space="preserve">
+    <value>Growth</value>
+  </data>
+  <data name="GroupDailyBattles" xml:space="preserve">
+    <value>Daily &amp; battles</value>
+  </data>
+  <data name="GroupGacha" xml:space="preserve">
+    <value>Gacha</value>
+  </data>
+  <data name="CronServerTimeHint" xml:space="preserve">
+    <value>Times are in game server time</value>
+  </data>
+  <data name="CronEveryHour" xml:space="preserve">
+    <value>Every hour</value>
+  </data>
+  <data name="CronEveryDay" xml:space="preserve">
+    <value>Every day</value>
+  </data>
+  <data name="CronEveryWeek" xml:space="preserve">
+    <value>Every week</value>
+  </data>
+  <data name="CronCustom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="CronAtMinute" xml:space="preserve">
+    <value>At minute</value>
+  </data>
+  <data name="CronAddTime" xml:space="preserve">
+    <value>Add time</value>
+  </data>
+  <data name="CronDay" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="CronHelp" xml:space="preserve">
+    <value>Cron help</value>
+  </data>
+  <data name="CronInvalid" xml:space="preserve">
+    <value>Not a valid Quartz cron (sec min hour day month weekday)</value>
+  </data>
+  <data name="CronInvalidShort" xml:space="preserve">
+    <value>Invalid schedule</value>
+  </data>
+  <data name="CronCustomSchedule" xml:space="preserve">
+    <value>Custom schedule</value>
+  </data>
+  <data name="CronDescFormat" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="CronTimeAt" xml:space="preserve">
+    <value>At {0}</value>
+  </data>
+  <data name="CronTimeEveryHourAt" xml:space="preserve">
+    <value>Every hour at :{0}</value>
+  </data>
+  <data name="CronTimeEveryNHoursAt" xml:space="preserve">
+    <value>Every {0} hours at :{1}</value>
+  </data>
+  <data name="CronTimeEveryNMin" xml:space="preserve">
+    <value>Every {0} min</value>
+  </data>
+  <data name="CronDaysEveryDay" xml:space="preserve">
+    <value>every day</value>
+  </data>
+  <data name="CronDaysWeekdays" xml:space="preserve">
+    <value>on weekdays</value>
+  </data>
+  <data name="CronDaysWeekends" xml:space="preserve">
+    <value>on weekends</value>
+  </data>
+  <data name="CronDaysEvery" xml:space="preserve">
+    <value>every {0}</value>
+  </data>
+  <data name="CronDaysMonthDay" xml:space="preserve">
+    <value>on day {0} of the month</value>
+  </data>
+  <data name="BattleRecent" xml:space="preserve">
+    <value>Recent battles</value>
+  </data>
+  <data name="BattleCounts" xml:space="preserve">
+    <value>{0} shown · {1} won · {2} lost</value>
+  </data>
+  <data name="BattleEmpty" xml:space="preserve">
+    <value>No battles recorded yet. Quest, tower and PvP fights show up here after they run.</value>
+  </data>
+  <data name="BattlePick" xml:space="preserve">
+    <value>Pick a battle on the left to see who did the damage and who died.</value>
+  </data>
+  <data name="BattleVictory" xml:space="preserve">
+    <value>Victory</value>
+  </data>
+  <data name="BattleDefeat" xml:space="preserve">
+    <value>Defeat</value>
+  </data>
+  <data name="BattleEndedOnTurn" xml:space="preserve">
+    <value>ended on turn {0}</value>
+  </data>
+  <data name="BattleOutOfTurns" xml:space="preserve">
+    <value>ran out of turns, counts as a loss</value>
+  </data>
+  <data name="BattleReplay" xml:space="preserve">
+    <value>Replay</value>
+  </data>
+  <data name="BattleDownload" xml:space="preserve">
+    <value>Download the log file</value>
+  </data>
+  <data name="BattleYourTeam" xml:space="preserve">
+    <value>Your team</value>
+  </data>
+  <data name="BattleEnemy" xml:space="preserve">
+    <value>Enemy</value>
+  </data>
+  <data name="BattleAliveDamage" xml:space="preserve">
+    <value>{0}/{1} alive · {2} total damage</value>
+  </data>
+  <data name="BattleUnit" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+  <data name="BattleDamageDealt" xml:space="preserve">
+    <value>Damage dealt</value>
+  </data>
+  <data name="BattleTaken" xml:space="preserve">
+    <value>Taken</value>
+  </data>
+  <data name="BattleHealed" xml:space="preserve">
+    <value>Healed</value>
+  </data>
+  <data name="BattleHpLeft" xml:space="preserve">
+    <value>HP left</value>
+  </data>
+  <data name="BattleDead" xml:space="preserve">
+    <value>dead</value>
+  </data>
+  <data name="BattleMainQuest" xml:space="preserve">
+    <value>Main quest</value>
+  </data>
 </root>

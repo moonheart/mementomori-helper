@@ -9,43 +9,43 @@
 @inject IWritableOptions<AuthOption> AuthOption
 @inject NavigationManager NavigationManager
 
-<MudThemeProvider @bind-IsDarkMode="_isDarkMode"/>
+<MudThemeProvider Theme="_theme" @bind-IsDarkMode="_isDarkMode"/>
+<style>:root { color-scheme: @(_isDarkMode ? "dark" : "light"); }</style>
 <MudPopoverProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
 <MudLayout>
-    <MudAppBar Dense="false" Color="Color.Transparent">
-        <MudIconButton
-            Icon="@Icons.Material.Filled.Menu"
-            Color="Color.Inherit"
-            Edge="Edge.Start"
-            @onclick="e => DrawerToggle()">
-        </MudIconButton>
-        <MudSelect T="long" Label="@ResourceStrings.SwitchAccount" Variant="Variant.Text" Dense="true" @bind-Value="AccountManager.CurrentUserId">
+    <MudAppBar Elevation="0" Dense="true" Class="mm-appbar">
+        <MudIconButton Icon="@Icons.Material.Rounded.Menu" Color="Color.Inherit" Edge="Edge.Start" @onclick="DrawerToggle" aria-label="Toggle menu"/>
+        <MudSelect T="long" ToStringFunc="@(id => AuthOption.Value.Accounts.FirstOrDefault(a => a.UserId == id)?.Name ?? ResourceStrings.NoAccount)" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true" Class="mm-account-select" AdornmentIcon="@Icons.Material.Rounded.AccountCircle" Adornment="Adornment.Start"
+                   @bind-Value="AccountManager.CurrentUserId" aria-label="@ResourceStrings.SwitchAccount">
             @foreach (var account in AuthOption.Value.Accounts)
             {
                 <MudSelectItem T="long" Value="account.UserId">@account.Name</MudSelectItem>
             }
         </MudSelect>
-        <MudSpacer />
-        <MudSelect T="CultureInfo" Label="Select Language" Variant="Variant.Text" Dense="true" @bind-Value="SelectedLanguage">
-            <MudSelectItem Value="@(new CultureInfo("en-US"))"></MudSelectItem>
-            <MudSelectItem Value="@(new CultureInfo("zh-CN"))"></MudSelectItem>
-            <MudSelectItem Value="@(new CultureInfo("ja-JP"))"></MudSelectItem>
-            <MudSelectItem Value="@(new CultureInfo("ko-KR"))"></MudSelectItem>
-        </MudSelect>
-        <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)" Color="Color.Inherit" Title="Toggle dark mode" @onclick="ToggleDarkMode" />
-        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Target="_blank" Color="Color.Inherit" Href="https://github.com/moonheart/mementomori-helper/" />
+        <MudSpacer/>
+        <MudMenu Icon="@Icons.Material.Rounded.Translate" Color="Color.Inherit" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" aria-label="Language">
+            @foreach (var (code, name) in _languages)
+            {
+                <MudMenuItem OnClick="() => SelectedLanguage = new CultureInfo(code)">@name</MudMenuItem>
+            }
+        </MudMenu>
+        <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Rounded.LightMode : Icons.Material.Rounded.DarkMode)" Color="Color.Inherit" aria-label="Toggle dark mode" @onclick="ToggleDarkMode"/>
+        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Target="_blank" Color="Color.Inherit" Href="https://github.com/moonheart/mementomori-helper/" aria-label="GitHub"/>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h5" Class="mt-1">@ResourceStrings.GameAssistant</MudText>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="0" Variant="DrawerVariant.Responsive" ClipMode="DrawerClipMode.Never" Class="mm-drawer">
+        <MudDrawerHeader Class="mm-brand">
+            <MudStack Spacing="0">
+                <MudText Class="mm-brand-title">Memento Mori</MudText>
+                <MudText Typo="Typo.caption" Class="mm-muted">@ResourceStrings.GameAssistant</MudText>
+            </MudStack>
         </MudDrawerHeader>
-        <NavMenu />
+        <NavMenu/>
     </MudDrawer>
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="mm-content">
             @Body
         </MudContainer>
     </MudMainContent>
@@ -53,7 +53,42 @@
 
 @code {
     bool _drawerOpen = true;
-    bool _isDarkMode = false;
+    bool _isDarkMode = true;
+
+    readonly (string, string)[] _languages = {("en-US", "English"), ("zh-CN", "简体中文"), ("ja-JP", "日本語"), ("ko-KR", "한국어")};
+
+    // Inter 管拉丁字, Noto 兜底中日韩
+    static readonly string[] Fonts = {"Inter", "Noto Sans SC", "Noto Sans JP", "Noto Sans KR", "system-ui", "sans-serif"};
+
+    // 暗色为主: 深蓝夜色 + 玫瑰色强调 + 金色次强调
+    readonly MudTheme _theme = new()
+    {
+        PaletteLight = new PaletteLight
+        {
+            Primary = "#b8325a", Secondary = "#a67c1e", Tertiary = "#4b6fd6",
+            Background = "#f6f5f9", Surface = "#ffffff", AppbarBackground = "rgba(246,245,249,0.8)", AppbarText = "#1d1b26",
+            DrawerBackground = "#ffffff", DrawerText = "#1d1b26", DrawerIcon = "#5c5870",
+            TextPrimary = "#1d1b26", TextSecondary = "#5c5870", LinesDefault = "rgba(29,27,38,0.1)", TableLines = "rgba(29,27,38,0.08)",
+            Success = "#2e8a5c", Error = "#c63d3d", Warning = "#b7791f", Info = "#3b6fd1",
+        },
+        PaletteDark = new PaletteDark
+        {
+            Primary = "#e8668c", Secondary = "#e3b75a", Tertiary = "#7f9cf5",
+            Black = "#08090f", Background = "#0e0f17", BackgroundGray = "#151622", Surface = "#171826",
+            AppbarBackground = "rgba(14,15,23,0.75)", AppbarText = "#ecebf3",
+            DrawerBackground = "#11121c", DrawerText = "#cfcde0", DrawerIcon = "#9a97b3",
+            TextPrimary = "#ecebf3", TextSecondary = "#a19eb8", TextDisabled = "rgba(236,235,243,0.38)",
+            ActionDefault = "#a19eb8", LinesDefault = "rgba(255,255,255,0.08)", LinesInputs = "rgba(255,255,255,0.22)",
+            TableLines = "rgba(255,255,255,0.06)", Divider = "rgba(255,255,255,0.08)",
+            Success = "#4fc28a", Error = "#f06b6b", Warning = "#f0b24f", Info = "#6f9bf2",
+        },
+        Typography = new Typography
+        {
+            Default = new Default {FontFamily = Fonts},
+            Button = new Button {FontFamily = Fonts, TextTransform = "none"},
+        },
+        LayoutProperties = new LayoutProperties {DefaultBorderRadius = "10px", DrawerWidthLeft = "232px"},
+    };
     bool _languageSelectOpen = false;
 
     CultureInfo SelectedLanguage

@@ -1591,5 +1591,446 @@ namespace MementoMori.Common.Localization {
                 return ResourceManager.GetString("You can download the battle log and parse it here", resourceCulture);
             }
         }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to Automation.
+        /// </summary>
+        public static string TabAutomation {
+            get {
+                return ResourceManager.GetString("TabAutomation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Battle.
+        /// </summary>
+        public static string TabBattle {
+            get {
+                return ResourceManager.GetString("TabBattle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gacha &amp; Shop.
+        /// </summary>
+        public static string TabGachaShop {
+            get {
+                return ResourceManager.GetString("TabGachaShop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No account.
+        /// </summary>
+        public static string NoAccount {
+            get {
+                return ResourceManager.GetString("NoAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Growth.
+        /// </summary>
+        public static string GroupGrowth {
+            get {
+                return ResourceManager.GetString("GroupGrowth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily &amp; battles.
+        /// </summary>
+        public static string GroupDailyBattles {
+            get {
+                return ResourceManager.GetString("GroupDailyBattles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gacha.
+        /// </summary>
+        public static string GroupGacha {
+            get {
+                return ResourceManager.GetString("GroupGacha", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Times are in game server time.
+        /// </summary>
+        public static string CronServerTimeHint {
+            get {
+                return ResourceManager.GetString("CronServerTimeHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Every hour.
+        /// </summary>
+        public static string CronEveryHour {
+            get {
+                return ResourceManager.GetString("CronEveryHour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Every day.
+        /// </summary>
+        public static string CronEveryDay {
+            get {
+                return ResourceManager.GetString("CronEveryDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Every week.
+        /// </summary>
+        public static string CronEveryWeek {
+            get {
+                return ResourceManager.GetString("CronEveryWeek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom.
+        /// </summary>
+        public static string CronCustom {
+            get {
+                return ResourceManager.GetString("CronCustom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At minute.
+        /// </summary>
+        public static string CronAtMinute {
+            get {
+                return ResourceManager.GetString("CronAtMinute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add time.
+        /// </summary>
+        public static string CronAddTime {
+            get {
+                return ResourceManager.GetString("CronAddTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        public static string CronDay {
+            get {
+                return ResourceManager.GetString("CronDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cron help.
+        /// </summary>
+        public static string CronHelp {
+            get {
+                return ResourceManager.GetString("CronHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not a valid Quartz cron (sec min hour day month weekday).
+        /// </summary>
+        public static string CronInvalid {
+            get {
+                return ResourceManager.GetString("CronInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid schedule.
+        /// </summary>
+        public static string CronInvalidShort {
+            get {
+                return ResourceManager.GetString("CronInvalidShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom schedule.
+        /// </summary>
+        public static string CronCustomSchedule {
+            get {
+                return ResourceManager.GetString("CronCustomSchedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}, {1}.
+        /// </summary>
+        public static string CronDescFormat {
+            get {
+                return ResourceManager.GetString("CronDescFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At {0}.
+        /// </summary>
+        public static string CronTimeAt {
+            get {
+                return ResourceManager.GetString("CronTimeAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Every hour at :{0}.
+        /// </summary>
+        public static string CronTimeEveryHourAt {
+            get {
+                return ResourceManager.GetString("CronTimeEveryHourAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Every {0} hours at :{1}.
+        /// </summary>
+        public static string CronTimeEveryNHoursAt {
+            get {
+                return ResourceManager.GetString("CronTimeEveryNHoursAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Every {0} min.
+        /// </summary>
+        public static string CronTimeEveryNMin {
+            get {
+                return ResourceManager.GetString("CronTimeEveryNMin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to every day.
+        /// </summary>
+        public static string CronDaysEveryDay {
+            get {
+                return ResourceManager.GetString("CronDaysEveryDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to on weekdays.
+        /// </summary>
+        public static string CronDaysWeekdays {
+            get {
+                return ResourceManager.GetString("CronDaysWeekdays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to on weekends.
+        /// </summary>
+        public static string CronDaysWeekends {
+            get {
+                return ResourceManager.GetString("CronDaysWeekends", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to every {0}.
+        /// </summary>
+        public static string CronDaysEvery {
+            get {
+                return ResourceManager.GetString("CronDaysEvery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to on day {0} of the month.
+        /// </summary>
+        public static string CronDaysMonthDay {
+            get {
+                return ResourceManager.GetString("CronDaysMonthDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recent battles.
+        /// </summary>
+        public static string BattleRecent {
+            get {
+                return ResourceManager.GetString("BattleRecent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} shown · {1} won · {2} lost.
+        /// </summary>
+        public static string BattleCounts {
+            get {
+                return ResourceManager.GetString("BattleCounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No battles recorded yet. Quest, tower and PvP fights show up here after they run..
+        /// </summary>
+        public static string BattleEmpty {
+            get {
+                return ResourceManager.GetString("BattleEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick a battle on the left to see who did the damage and who died..
+        /// </summary>
+        public static string BattlePick {
+            get {
+                return ResourceManager.GetString("BattlePick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Victory.
+        /// </summary>
+        public static string BattleVictory {
+            get {
+                return ResourceManager.GetString("BattleVictory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Defeat.
+        /// </summary>
+        public static string BattleDefeat {
+            get {
+                return ResourceManager.GetString("BattleDefeat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ended on turn {0}.
+        /// </summary>
+        public static string BattleEndedOnTurn {
+            get {
+                return ResourceManager.GetString("BattleEndedOnTurn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ran out of turns, counts as a loss.
+        /// </summary>
+        public static string BattleOutOfTurns {
+            get {
+                return ResourceManager.GetString("BattleOutOfTurns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replay.
+        /// </summary>
+        public static string BattleReplay {
+            get {
+                return ResourceManager.GetString("BattleReplay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download the log file.
+        /// </summary>
+        public static string BattleDownload {
+            get {
+                return ResourceManager.GetString("BattleDownload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your team.
+        /// </summary>
+        public static string BattleYourTeam {
+            get {
+                return ResourceManager.GetString("BattleYourTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enemy.
+        /// </summary>
+        public static string BattleEnemy {
+            get {
+                return ResourceManager.GetString("BattleEnemy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}/{1} alive · {2} total damage.
+        /// </summary>
+        public static string BattleAliveDamage {
+            get {
+                return ResourceManager.GetString("BattleAliveDamage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unit.
+        /// </summary>
+        public static string BattleUnit {
+            get {
+                return ResourceManager.GetString("BattleUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Damage dealt.
+        /// </summary>
+        public static string BattleDamageDealt {
+            get {
+                return ResourceManager.GetString("BattleDamageDealt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Taken.
+        /// </summary>
+        public static string BattleTaken {
+            get {
+                return ResourceManager.GetString("BattleTaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Healed.
+        /// </summary>
+        public static string BattleHealed {
+            get {
+                return ResourceManager.GetString("BattleHealed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HP left.
+        /// </summary>
+        public static string BattleHpLeft {
+            get {
+                return ResourceManager.GetString("BattleHpLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dead.
+        /// </summary>
+        public static string BattleDead {
+            get {
+                return ResourceManager.GetString("BattleDead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Main quest.
+        /// </summary>
+        public static string BattleMainQuest {
+            get {
+                return ResourceManager.GetString("BattleMainQuest", resourceCulture);
+            }
+        }
     }
 }

@@ -588,4 +588,151 @@
   <data name="Confirm" xml:space="preserve">
       <value>确认</value>
   </data>
+  <data name="TabAutomation" xml:space="preserve">
+    <value>自动化</value>
+  </data>
+  <data name="TabBattle" xml:space="preserve">
+    <value>战斗</value>
+  </data>
+  <data name="TabGachaShop" xml:space="preserve">
+    <value>抽卡与商店</value>
+  </data>
+  <data name="NoAccount" xml:space="preserve">
+    <value>未添加账号</value>
+  </data>
+  <data name="GroupGrowth" xml:space="preserve">
+    <value>养成</value>
+  </data>
+  <data name="GroupDailyBattles" xml:space="preserve">
+    <value>日常与战斗</value>
+  </data>
+  <data name="GroupGacha" xml:space="preserve">
+    <value>抽卡</value>
+  </data>
+  <data name="CronServerTimeHint" xml:space="preserve">
+    <value>时间为游戏服务器时间</value>
+  </data>
+  <data name="CronEveryHour" xml:space="preserve">
+    <value>每小时</value>
+  </data>
+  <data name="CronEveryDay" xml:space="preserve">
+    <value>每天</value>
+  </data>
+  <data name="CronEveryWeek" xml:space="preserve">
+    <value>每周</value>
+  </data>
+  <data name="CronCustom" xml:space="preserve">
+    <value>自定义</value>
+  </data>
+  <data name="CronAtMinute" xml:space="preserve">
+    <value>第几分钟</value>
+  </data>
+  <data name="CronAddTime" xml:space="preserve">
+    <value>添加时间</value>
+  </data>
+  <data name="CronDay" xml:space="preserve">
+    <value>星期</value>
+  </data>
+  <data name="CronHelp" xml:space="preserve">
+    <value>Cron 帮助</value>
+  </data>
+  <data name="CronInvalid" xml:space="preserve">
+    <value>不是有效的 Quartz cron（秒 分 时 日 月 周）</value>
+  </data>
+  <data name="CronInvalidShort" xml:space="preserve">
+    <value>无效的计划</value>
+  </data>
+  <data name="CronCustomSchedule" xml:space="preserve">
+    <value>自定义计划</value>
+  </data>
+  <data name="CronDescFormat" xml:space="preserve">
+    <value>{1} {0}</value>
+  </data>
+  <data name="CronTimeAt" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="CronTimeEveryHourAt" xml:space="preserve">
+    <value>每小时第 {0} 分</value>
+  </data>
+  <data name="CronTimeEveryNHoursAt" xml:space="preserve">
+    <value>每 {0} 小时的第 {1} 分</value>
+  </data>
+  <data name="CronTimeEveryNMin" xml:space="preserve">
+    <value>每 {0} 分钟</value>
+  </data>
+  <data name="CronDaysEveryDay" xml:space="preserve">
+    <value>每天</value>
+  </data>
+  <data name="CronDaysWeekdays" xml:space="preserve">
+    <value>工作日</value>
+  </data>
+  <data name="CronDaysWeekends" xml:space="preserve">
+    <value>周末</value>
+  </data>
+  <data name="CronDaysEvery" xml:space="preserve">
+    <value>每{0}</value>
+  </data>
+  <data name="CronDaysMonthDay" xml:space="preserve">
+    <value>每月 {0} 日</value>
+  </data>
+  <data name="BattleRecent" xml:space="preserve">
+    <value>最近战斗</value>
+  </data>
+  <data name="BattleCounts" xml:space="preserve">
+    <value>显示 {0} · 胜 {1} · 负 {2}</value>
+  </data>
+  <data name="BattleEmpty" xml:space="preserve">
+    <value>还没有战斗记录。主线、爬塔和 PvP 战斗执行后会显示在这里。</value>
+  </data>
+  <data name="BattlePick" xml:space="preserve">
+    <value>在左侧选择一场战斗，查看伤害和阵亡情况。</value>
+  </data>
+  <data name="BattleVictory" xml:space="preserve">
+    <value>胜利</value>
+  </data>
+  <data name="BattleDefeat" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="BattleEndedOnTurn" xml:space="preserve">
+    <value>第 {0} 回合结束</value>
+  </data>
+  <data name="BattleOutOfTurns" xml:space="preserve">
+    <value>回合用尽，判负</value>
+  </data>
+  <data name="BattleReplay" xml:space="preserve">
+    <value>回放</value>
+  </data>
+  <data name="BattleDownload" xml:space="preserve">
+    <value>下载日志文件</value>
+  </data>
+  <data name="BattleYourTeam" xml:space="preserve">
+    <value>我方</value>
+  </data>
+  <data name="BattleEnemy" xml:space="preserve">
+    <value>敌方</value>
+  </data>
+  <data name="BattleAliveDamage" xml:space="preserve">
+    <value>存活 {0}/{1} · 总伤害 {2}</value>
+  </data>
+  <data name="BattleUnit" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="BattleDamageDealt" xml:space="preserve">
+    <value>造成伤害</value>
+  </data>
+  <data name="BattleTaken" xml:space="preserve">
+    <value>承受伤害</value>
+  </data>
+  <data name="BattleHealed" xml:space="preserve">
+    <value>治疗</value>
+  </data>
+  <data name="BattleHpLeft" xml:space="preserve">
+    <value>剩余 HP</value>
+  </data>
+  <data name="BattleDead" xml:space="preserve">
+    <value>阵亡</value>
+  </data>
+  <data name="BattleMainQuest" xml:space="preserve">
+    <value>主线</value>
+  </data>
 </root>
