@@ -133,10 +133,12 @@
 
     void SetMode(CronMode mode)
     {
+        var from = _mode;
         _mode = mode;
         _customText = Value;
         if (mode == CronMode.Custom) return;
-        if (_hours.Count == 0) _hours = new() {4};
+        // 从 每小时/自定义 切过来时没有有效的小时, 给个合理的默认 (04:xx) 而不是半夜 0 点
+        if (_hours.Count == 0 || from is CronMode.Hourly or CronMode.Custom) _hours = new() {4};
         if (mode == CronMode.Weekly) _hours = new() {_hours[0]};
         Save(Build());
     }
