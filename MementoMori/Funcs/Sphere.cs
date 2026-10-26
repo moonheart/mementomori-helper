@@ -6,7 +6,7 @@ namespace MementoMori.Funcs;
 
 public partial class MementoMoriFuncs
 {
-    // ponytail: 合成只花金币 (Lv1-5), 金币低于这个数就不合成, 优先留给升级
+    // 合成只花金币 (Lv1-5), 金币低于这个数就不合成, 优先留给升级
     private const long SphereComposeGoldReserve = 1_000_000;
 
     // 符石: 合成重复的低级符石 -> 主队装备开第一个孔 -> 空孔塞最高级的符石 (同一件装备不放同类)
