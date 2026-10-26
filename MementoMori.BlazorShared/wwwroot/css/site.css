@@ -64,3 +64,16 @@ body { font-family: var(--mm-font); -webkit-font-smoothing: antialiased; font-fe
     .mm-tabs .mud-tab { padding: 6px 8px; font-size: .8125rem; }
     .mm-tabs .mud-tab .mud-icon-root { display: none; }
 }
+
+/* 队伍与强度 */
+.mm-team { display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); gap: 12px; }
+.mm-team-member { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 6px; border-radius: 12px; background: var(--mud-palette-background-gray); text-align: center; }
+.mm-team-name { font-weight: 600; font-size: .8125rem; line-height: 1.25; max-width: 100%; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.mm-tier { display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 22px; padding: 0 6px; border-radius: 6px; font-weight: 700; font-size: .75rem; letter-spacing: .02em; }
+.mm-tier-ss { background: linear-gradient(135deg, #ff6b9a, #ffb347); color: #1a0d12; }
+.mm-tier-s { background: #e8668c; color: #1a0d12; }
+.mm-tier-a { background: #e3b75a; color: #1d1608; }
+.mm-tier-b { background: #7f9cf5; color: #0c1330; }
+.mm-tier-c { background: var(--mud-palette-lines-inputs); color: var(--mud-palette-text-primary); }
+/* 手动改过的强度高亮 */
+.mm-overridden .mud-input { color: var(--mud-palette-primary); font-weight: 600; }

@@ -2158,5 +2158,167 @@ namespace MementoMori.Common.Localization {
                 return ResourceManager.GetString("GroupProgress", resourceCulture);
             }
         }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to Team &amp; tiers.
+        /// </summary>
+        public static string NavTeam {
+            get {
+                return ResourceManager.GetString("NavTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recommended team.
+        /// </summary>
+        public static string TeamRecommended {
+            get {
+                return ResourceManager.GetString("TeamRecommended", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Best 5 you own by tier → rarity → level (keeps a healer if you have a decent one). “Use this team” saves it for quest, auto-battle, towers, PvP, Temple and Cave..
+        /// </summary>
+        public static string TeamRecommendedHint {
+            get {
+                return ResourceManager.GetString("TeamRecommendedHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use this team.
+        /// </summary>
+        public static string TeamUseThis {
+            get {
+                return ResourceManager.GetString("TeamUseThis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to in team.
+        /// </summary>
+        public static string TeamInTeam {
+            get {
+                return ResourceManager.GetString("TeamInTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your characters ({0}).
+        /// </summary>
+        public static string TeamYourCharacters {
+            get {
+                return ResourceManager.GetString("TeamYourCharacters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tiers come from a community list (Game8, Oct 2026). Change any of them here and team building and rank-up follow your call..
+        /// </summary>
+        public static string TeamTiersHint {
+            get {
+                return ResourceManager.GetString("TeamTiersHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string TeamSearch {
+            get {
+                return ResourceManager.GetString("TeamSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Character.
+        /// </summary>
+        public static string TeamColCharacter {
+            get {
+                return ResourceManager.GetString("TeamColCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tier.
+        /// </summary>
+        public static string TeamColTier {
+            get {
+                return ResourceManager.GetString("TeamColTier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rarity.
+        /// </summary>
+        public static string TeamColRarity {
+            get {
+                return ResourceManager.GetString("TeamColRarity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level.
+        /// </summary>
+        public static string TeamColLevel {
+            get {
+                return ResourceManager.GetString("TeamColLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Role.
+        /// </summary>
+        public static string TeamColRole {
+            get {
+                return ResourceManager.GetString("TeamColRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notes.
+        /// </summary>
+        public static string TeamColNotes {
+            get {
+                return ResourceManager.GetString("TeamColNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto build best team (quest, auto-battle, towers, PvP, Temple, Cave).
+        /// </summary>
+        public static string AutoBuildTeam {
+            get {
+                return ResourceManager.GetString("AutoBuildTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Smart rank up: also use low-tier same-element fodder (never team, Level Link or unranked SR+).
+        /// </summary>
+        public static string AutoRankUpFodder {
+            get {
+                return ResourceManager.GetString("AutoRankUpFodder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build best team.
+        /// </summary>
+        public static string AutoBuildTeamButton {
+            get {
+                return ResourceManager.GetString("AutoBuildTeamButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Smart rank up.
+        /// </summary>
+        public static string AutoRankUpFodderButton {
+            get {
+                return ResourceManager.GetString("AutoRankUpFodderButton", resourceCulture);
+            }
+        }
     }
 }

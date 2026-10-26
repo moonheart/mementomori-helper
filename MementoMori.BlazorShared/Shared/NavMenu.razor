@@ -1,4 +1,5 @@
 ﻿@using static MementoMori.Ortega.Share.Masters
+@using MementoMori.Common.Localization
 
 <MudNavMenu Class="mm-nav" Color="Color.Primary" Rounded="true" Margin="Margin.Dense">
     <MudNavLink Icon="@Icons.Material.Rounded.Home" Href="" Match="NavLinkMatch.All">@TextResourceTable.Get("[CommonFooterHomeButtonLabel]")</MudNavLink>
@@ -7,6 +8,7 @@
     <MudNavLink Icon="@Icons.Material.Rounded.Storefront" Href="Shop" Match="NavLinkMatch.Prefix">@TextResourceTable.Get("[CommonHeaderExchangeLabel]")</MudNavLink>
     @* <MudNavLink Icon="@Icons.Material.Filled.LocalFireDepartment" Href="/Adventure" Match="NavLinkMatch.Prefix">冒险</MudNavLink> *@
     @* <MudNavLink Icon="@Icons.Material.Filled.Flag" Href="/Trial" Match="NavLinkMatch.Prefix">试炼</MudNavLink> *@
+    <MudNavLink Icon="@Icons.Material.Rounded.Groups" Href="team" Match="NavLinkMatch.Prefix">@ResourceStrings.NavTeam</MudNavLink>
     <MudNavLink Icon="@Icons.Material.Rounded.AutoAwesome" Href="Gacha" Match="NavLinkMatch.Prefix">@TextResourceTable.Get("[CommonFooterGachaButtonLabel]")</MudNavLink>
     @* <MudNavLink Icon="@Icons.Material.Filled.Chat" Href="/Chat" Match="NavLinkMatch.Prefix">聊天</MudNavLink> *@
     @* <MudNavLink Icon="@Icons.Material.Filled.NaturePeople" Href="/Guild" Match="NavLinkMatch.Prefix">公会</MudNavLink> *@

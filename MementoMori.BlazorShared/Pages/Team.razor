@@ -1,0 +1,131 @@
+@page "/team"
+@inherits MementoMori.BlazorShared.Models.AccountComponent
+@using MementoMori.Funcs
+@using MementoMori.Ortega.Custom
+@using MementoMori.Ortega.Share.Data.DtoInfo
+@using MementoMori.BlazorShared.Components
+@using static MementoMori.Ortega.Share.Masters
+@using DynamicData.Binding
+@using MementoMori.Common.Localization
+@implements IDisposable
+
+<PageTitle>@ResourceStrings.NavTeam</PageTitle>
+
+@if (!Funcs.LoginOk || Funcs.UserSyncData?.UserCharacterDtoInfos == null)
+{
+    <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">@ResourceStrings.PleaseLogin</MudAlert>
+}
+else
+{
+    var sync = Funcs.UserSyncData;
+    var team = Funcs.GetMainTeam().Select(c => c.Guid).ToHashSet();
+    var recommended = Funcs.GetRecommendedTeam();
+    var roster = Roster();
+
+    <MudGrid Spacing="3">
+        <MudItem xs="12">
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText>@ResourceStrings.TeamRecommended</MudText>
+                        <MudText Typo="Typo.caption" Class="mm-muted">@ResourceStrings.TeamRecommendedHint</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Groups" Disabled="@Funcs.IsQuickActionExecuting" OnClick="Funcs.AutoBuildTeam">@ResourceStrings.TeamUseThis</MudButton>
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <div class="mm-team">
+                        @foreach (var c in recommended)
+                        {
+                            <div class="mm-team-member">
+                                <CharacterIcon UserCharacterInfo="sync.GetUserCharacterInfoByUserCharacterDtoInfo(c)" Size="76"/>
+                                <div class="mm-team-name">@MementoMoriFuncs.CharName(c.CharacterId)</div>
+                                <MudStack Row="true" Spacing="1" Justify="Justify.Center">
+                                    <TierBadge Tier="@Funcs.GetTier(c.CharacterId)"/>
+                                    @if (team.Contains(c.Guid))
+                                    {
+                                        <MudChip T="string" Size="Size.Small" Color="Color.Success" Variant="Variant.Text">@ResourceStrings.TeamInTeam</MudChip>
+                                    }
+                                </MudStack>
+                            </div>
+                        }
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText>@string.Format(ResourceStrings.TeamYourCharacters, roster.Count)</MudText>
+                        <MudText Typo="Typo.caption" Class="mm-muted">@ResourceStrings.TeamTiersHint</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudTextField T="string" @bind-Value="_search" Placeholder="@ResourceStrings.TeamSearch" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Search" Margin="Margin.Dense" Variant="Variant.Outlined" Immediate="true" Style="min-width:200px"/>
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudTable Items="roster" Dense="true" Hover="true" Elevation="0" Breakpoint="Breakpoint.Sm" Filter="Matches">
+                        <HeaderContent>
+                            <MudTh></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<UserCharacterDtoInfo, object>(c => MementoMoriFuncs.CharName(c.CharacterId))">@ResourceStrings.TeamColCharacter</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel InitialDirection="MudBlazor.SortDirection.Descending" SortBy="new Func<UserCharacterDtoInfo, object>(c => Funcs.TierScore(c.CharacterId))">@ResourceStrings.TeamColTier</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<UserCharacterDtoInfo, object>(c => c.RarityFlags)">@ResourceStrings.TeamColRarity</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<UserCharacterDtoInfo, object>(c => Funcs.GetEffectiveLevel(c))">@ResourceStrings.TeamColLevel</MudTableSortLabel></MudTh>
+                            <MudTh>@ResourceStrings.TeamColRole</MudTh>
+                            <MudTh>@ResourceStrings.TeamColNotes</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            @{ var entry = MementoMoriFuncs.GetBuiltinTierEntry(context.CharacterId); }
+                            <MudTd><CharacterIcon UserCharacterInfo="sync.GetUserCharacterInfoByUserCharacterDtoInfo(context)" Size="44"/></MudTd>
+                            <MudTd DataLabel="@ResourceStrings.TeamColCharacter">
+                                <b>@MementoMoriFuncs.CharName(context.CharacterId)</b>
+                                @if (team.Contains(context.Guid)) { <MudChip T="string" Size="Size.Small" Color="Color.Success" Variant="Variant.Text">@ResourceStrings.TeamInTeam</MudChip> }
+                                @if (sync.IsLevelLinkMember(context.Guid)) { <MudIcon Icon="@Icons.Material.Rounded.Link" Size="Size.Small" Color="Color.Tertiary" Title="Level Link"/> }
+                            </MudTd>
+                            <MudTd DataLabel="@ResourceStrings.TeamColTier">
+                                <MudSelect T="string" Value="@Funcs.GetTier(context.CharacterId)" ValueChanged="t => SetTier(context.CharacterId, t)" Dense="true" Margin="Margin.Dense" Variant="Variant.Text" Style="max-width:84px"
+                                           Placeholder="—" Clearable="true" Class="@(Funcs.IsTierOverridden(context.CharacterId) ? "mm-overridden" : "")">
+                                    @foreach (var t in MementoMoriFuncs.Tiers) { <MudSelectItem Value="t">@t</MudSelectItem> }
+                                </MudSelect>
+                            </MudTd>
+                            <MudTd DataLabel="@ResourceStrings.TeamColRarity">@context.RarityFlags</MudTd>
+                            <MudTd DataLabel="@ResourceStrings.TeamColLevel">@Funcs.GetEffectiveLevel(context)</MudTd>
+                            <MudTd DataLabel="@ResourceStrings.TeamColRole">@entry?.Role</MudTd>
+                            <MudTd DataLabel="@ResourceStrings.TeamColNotes"><span class="mm-muted">@entry?.Notes</span></MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    string _search = "";
+    IDisposable? _sub;
+
+    // 每个角色只显示稀有度最高的那张
+    List<UserCharacterDtoInfo> Roster() => Funcs.UserSyncData.UserCharacterDtoInfos
+        .GroupBy(c => c.CharacterId).Select(g => g.MaxBy(c => c.RarityFlags)!)
+        .OrderByDescending(c => Funcs.TierScore(c.CharacterId)).ThenByDescending(c => c.RarityFlags).ThenByDescending(c => c.Level).ToList();
+
+    bool Matches(UserCharacterDtoInfo c) => string.IsNullOrWhiteSpace(_search) || MementoMoriFuncs.CharName(c.CharacterId).Contains(_search, StringComparison.OrdinalIgnoreCase);
+
+    void SetTier(long characterId, string? tier)
+    {
+        Funcs.SetTier(characterId, tier);
+        StateHasChanged();
+    }
+
+    protected override Task AccountChanged()
+    {
+        _sub?.Dispose();
+        _sub = Funcs.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
+        return Task.CompletedTask;
+    }
+
+    public void Dispose() => _sub?.Dispose();
+}

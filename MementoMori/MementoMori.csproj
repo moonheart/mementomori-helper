@@ -32,4 +32,7 @@
         <ProjectReference Include="..\MementoMori.Ortega\MementoMori.Ortega.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="tierlist.default.json" LogicalName="MementoMori.tierlist.default.json"/>
+    </ItemGroup>
 </Project>

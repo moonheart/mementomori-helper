@@ -670,4 +670,58 @@
   <data name="GroupProgress" xml:space="preserve">
     <value>進行</value>
   </data>
+  <data name="NavTeam" xml:space="preserve">
+    <value>編成とティア</value>
+  </data>
+  <data name="TeamRecommended" xml:space="preserve">
+    <value>おすすめ編成</value>
+  </data>
+  <data name="TeamRecommendedHint" xml:space="preserve">
+    <value>所持キャラから ティア → レア度 → レベル 順に上位5人（まともなヒーラーがいれば1人入れます）。「この編成を使う」でクエスト・放置・塔・PvP・幻影神殿・時空の洞窟に保存します。</value>
+  </data>
+  <data name="TeamUseThis" xml:space="preserve">
+    <value>この編成を使う</value>
+  </data>
+  <data name="TeamInTeam" xml:space="preserve">
+    <value>編成中</value>
+  </data>
+  <data name="TeamYourCharacters" xml:space="preserve">
+    <value>所持キャラ（{0}）</value>
+  </data>
+  <data name="TeamTiersHint" xml:space="preserve">
+    <value>ティアはコミュニティのリスト（Game8、2026年10月）です。ここで変更すると編成と昇格がそれに従います。</value>
+  </data>
+  <data name="TeamSearch" xml:space="preserve">
+    <value>検索</value>
+  </data>
+  <data name="TeamColCharacter" xml:space="preserve">
+    <value>キャラ</value>
+  </data>
+  <data name="TeamColTier" xml:space="preserve">
+    <value>ティア</value>
+  </data>
+  <data name="TeamColRarity" xml:space="preserve">
+    <value>レア度</value>
+  </data>
+  <data name="TeamColLevel" xml:space="preserve">
+    <value>レベル</value>
+  </data>
+  <data name="TeamColRole" xml:space="preserve">
+    <value>役割</value>
+  </data>
+  <data name="TeamColNotes" xml:space="preserve">
+    <value>メモ</value>
+  </data>
+  <data name="AutoBuildTeam" xml:space="preserve">
+    <value>最強編成を自動設定（クエスト・放置・塔・PvP・幻影神殿・時空の洞窟）</value>
+  </data>
+  <data name="AutoRankUpFodder" xml:space="preserve">
+    <value>スマート昇格：低ティアの同属性キャラも素材に使う（編成・レベルリンク・未評価の SR 以上は使わない）</value>
+  </data>
+  <data name="AutoBuildTeamButton" xml:space="preserve">
+    <value>最強編成</value>
+  </data>
+  <data name="AutoRankUpFodderButton" xml:space="preserve">
+    <value>スマート昇格</value>
+  </data>
 </root>

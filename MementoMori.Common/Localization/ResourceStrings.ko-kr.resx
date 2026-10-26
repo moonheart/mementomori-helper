@@ -670,4 +670,58 @@
   <data name="GroupProgress" xml:space="preserve">
     <value>진행</value>
   </data>
+  <data name="NavTeam" xml:space="preserve">
+    <value>팀 및 티어</value>
+  </data>
+  <data name="TeamRecommended" xml:space="preserve">
+    <value>추천 팀</value>
+  </data>
+  <data name="TeamRecommendedHint" xml:space="preserve">
+    <value>보유 캐릭터 중 티어 → 희귀도 → 레벨 순 상위 5명 (괜찮은 힐러가 있으면 1명 포함). “이 팀 사용”을 누르면 퀘스트, 방치, 탑, PvP, 환영 신전, 시공의 동굴에 저장합니다.</value>
+  </data>
+  <data name="TeamUseThis" xml:space="preserve">
+    <value>이 팀 사용</value>
+  </data>
+  <data name="TeamInTeam" xml:space="preserve">
+    <value>팀에 있음</value>
+  </data>
+  <data name="TeamYourCharacters" xml:space="preserve">
+    <value>보유 캐릭터 ({0})</value>
+  </data>
+  <data name="TeamTiersHint" xml:space="preserve">
+    <value>티어는 커뮤니티 목록 (Game8, 2026년 10월) 기준입니다. 여기서 바꾸면 팀 편성과 승급이 그에 따릅니다.</value>
+  </data>
+  <data name="TeamSearch" xml:space="preserve">
+    <value>검색</value>
+  </data>
+  <data name="TeamColCharacter" xml:space="preserve">
+    <value>캐릭터</value>
+  </data>
+  <data name="TeamColTier" xml:space="preserve">
+    <value>티어</value>
+  </data>
+  <data name="TeamColRarity" xml:space="preserve">
+    <value>희귀도</value>
+  </data>
+  <data name="TeamColLevel" xml:space="preserve">
+    <value>레벨</value>
+  </data>
+  <data name="TeamColRole" xml:space="preserve">
+    <value>역할</value>
+  </data>
+  <data name="TeamColNotes" xml:space="preserve">
+    <value>메모</value>
+  </data>
+  <data name="AutoBuildTeam" xml:space="preserve">
+    <value>최강 팀 자동 편성 (퀘스트, 방치, 탑, PvP, 환영 신전, 시공의 동굴)</value>
+  </data>
+  <data name="AutoRankUpFodder" xml:space="preserve">
+    <value>스마트 승급: 낮은 티어의 같은 속성 캐릭터도 재료로 사용 (팀, 레벨 링크, 미평가 SR 이상은 제외)</value>
+  </data>
+  <data name="AutoBuildTeamButton" xml:space="preserve">
+    <value>최강 팀 편성</value>
+  </data>
+  <data name="AutoRankUpFodderButton" xml:space="preserve">
+    <value>스마트 승급</value>
+  </data>
 </root>

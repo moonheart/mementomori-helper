@@ -128,6 +128,8 @@ public class GameConfig
         public bool AutoUseItems { get; set; }
         public bool AutoFreeGacha { get; set; }
         public bool AutoRankUpCharacter { get; set; }
+        public bool AutoRankUpWithFodder { get; set; }
+        public bool AutoBuildTeam { get; set; }
         public bool AutoProgressTower { get; set; }
         public bool AutoProgressQuest { get; set; }
         public bool AutoSphere { get; set; }

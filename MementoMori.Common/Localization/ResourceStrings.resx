@@ -776,4 +776,58 @@
   <data name="GroupProgress" xml:space="preserve">
     <value>Progress</value>
   </data>
+  <data name="NavTeam" xml:space="preserve">
+    <value>Team &amp; tiers</value>
+  </data>
+  <data name="TeamRecommended" xml:space="preserve">
+    <value>Recommended team</value>
+  </data>
+  <data name="TeamRecommendedHint" xml:space="preserve">
+    <value>Best 5 you own by tier → rarity → level (keeps a healer if you have a decent one). “Use this team” saves it for quest, auto-battle, towers, PvP, Temple and Cave.</value>
+  </data>
+  <data name="TeamUseThis" xml:space="preserve">
+    <value>Use this team</value>
+  </data>
+  <data name="TeamInTeam" xml:space="preserve">
+    <value>in team</value>
+  </data>
+  <data name="TeamYourCharacters" xml:space="preserve">
+    <value>Your characters ({0})</value>
+  </data>
+  <data name="TeamTiersHint" xml:space="preserve">
+    <value>Tiers come from a community list (Game8, Oct 2026). Change any of them here and team building and rank-up follow your call.</value>
+  </data>
+  <data name="TeamSearch" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="TeamColCharacter" xml:space="preserve">
+    <value>Character</value>
+  </data>
+  <data name="TeamColTier" xml:space="preserve">
+    <value>Tier</value>
+  </data>
+  <data name="TeamColRarity" xml:space="preserve">
+    <value>Rarity</value>
+  </data>
+  <data name="TeamColLevel" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="TeamColRole" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="TeamColNotes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="AutoBuildTeam" xml:space="preserve">
+    <value>Auto build best team (quest, auto-battle, towers, PvP, Temple, Cave)</value>
+  </data>
+  <data name="AutoRankUpFodder" xml:space="preserve">
+    <value>Smart rank up: also use low-tier same-element fodder (never team, Level Link or unranked SR+)</value>
+  </data>
+  <data name="AutoBuildTeamButton" xml:space="preserve">
+    <value>Build best team</value>
+  </data>
+  <data name="AutoRankUpFodderButton" xml:space="preserve">
+    <value>Smart rank up</value>
+  </data>
 </root>

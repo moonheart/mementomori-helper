@@ -1,0 +1,8 @@
+@if (!string.IsNullOrEmpty(Tier))
+{
+    <span class="mm-tier mm-tier-@Tier.ToLowerInvariant()" title="Community tier">@Tier</span>
+}
+
+@code {
+    [Parameter] public string? Tier { get; set; }
+}

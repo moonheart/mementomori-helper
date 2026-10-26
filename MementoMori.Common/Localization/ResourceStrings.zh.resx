@@ -777,4 +777,58 @@
   <data name="GroupProgress" xml:space="preserve">
     <value>推图</value>
   </data>
+  <data name="NavTeam" xml:space="preserve">
+    <value>队伍与强度</value>
+  </data>
+  <data name="TeamRecommended" xml:space="preserve">
+    <value>推荐队伍</value>
+  </data>
+  <data name="TeamRecommendedHint" xml:space="preserve">
+    <value>按 强度 → 稀有度 → 等级 选出你拥有的最强 5 人（有像样的奶会保留一个）。「使用这个队伍」会保存到主线、挂机、爬塔、竞技场、幻影神殿和时空洞窟。</value>
+  </data>
+  <data name="TeamUseThis" xml:space="preserve">
+    <value>使用这个队伍</value>
+  </data>
+  <data name="TeamInTeam" xml:space="preserve">
+    <value>在队伍中</value>
+  </data>
+  <data name="TeamYourCharacters" xml:space="preserve">
+    <value>你的角色（{0}）</value>
+  </data>
+  <data name="TeamTiersHint" xml:space="preserve">
+    <value>强度来自社区榜单（Game8，2026 年 10 月）。可以在这里修改，组队和升星会按你的设置来。</value>
+  </data>
+  <data name="TeamSearch" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="TeamColCharacter" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="TeamColTier" xml:space="preserve">
+    <value>强度</value>
+  </data>
+  <data name="TeamColRarity" xml:space="preserve">
+    <value>稀有度</value>
+  </data>
+  <data name="TeamColLevel" xml:space="preserve">
+    <value>等级</value>
+  </data>
+  <data name="TeamColRole" xml:space="preserve">
+    <value>定位</value>
+  </data>
+  <data name="TeamColNotes" xml:space="preserve">
+    <value>备注</value>
+  </data>
+  <data name="AutoBuildTeam" xml:space="preserve">
+    <value>自动组最强队伍（主线、挂机、爬塔、竞技场、幻影神殿、时空洞窟）</value>
+  </data>
+  <data name="AutoRankUpFodder" xml:space="preserve">
+    <value>智能升星：也使用低强度同属性素材（不会吃队伍、等级链接和未评级的 SR 以上角色）</value>
+  </data>
+  <data name="AutoBuildTeamButton" xml:space="preserve">
+    <value>组最强队伍</value>
+  </data>
+  <data name="AutoRankUpFodderButton" xml:space="preserve">
+    <value>智能升星</value>
+  </data>
 </root>
