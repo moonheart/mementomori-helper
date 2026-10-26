@@ -98,7 +98,7 @@ public partial class MementoMoriFuncs
                 }
                 catch (Exception e)
                 {
-                    // ponytail: 稀有度上限没精确算, 报错就跳过这个角色
+                    // 稀有度等级上限没精确算, 服务器报错就跳过这个角色
                     log($"LevelUp {CharName(c.CharacterId)}: {e.Message}");
                     skip.Add(c.Guid);
                 }
