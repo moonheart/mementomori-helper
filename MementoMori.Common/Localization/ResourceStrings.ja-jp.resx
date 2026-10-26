@@ -628,4 +628,10 @@
   <data name="BattleMainQuest" xml:space="preserve">
     <value>メインクエスト</value>
   </data>
+  <data name="NoAccountHint" xml:space="preserve">
+    <value>アカウントがまだありません。ゲームアカウントを追加してください（ゲーム設定の引き継ぎID＋パスワード）。</value>
+  </data>
+  <data name="AddAccount" xml:space="preserve">
+    <value>アカウントを追加</value>
+  </data>
 </root>

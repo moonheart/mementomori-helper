@@ -46,7 +46,19 @@
         </MudAlert>
     </MudItem>
 }
-@if (!string.IsNullOrEmpty(alertMessage))
+@if (AccountManager.CurrentUserId <= 0)
+{
+    @* 还没有账号时登录按钮不会出现, 直接带用户去添加账号 *@
+    <MudItem md="12">
+        <MudAlert Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Left">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Wrap="Wrap.Wrap" Spacing="3">
+                <MudText>@ResourceStrings.NoAccountHint</MudText>
+                <MudButton Href="settings?tab=account" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" StartIcon="@Icons.Material.Rounded.PersonAdd">@ResourceStrings.AddAccount</MudButton>
+            </MudStack>
+        </MudAlert>
+    </MudItem>
+}
+else if (!string.IsNullOrEmpty(alertMessage))
 {
     <MudItem md="12">
         <MudAlert Severity="Severity.Warning">@alertMessage</MudAlert>

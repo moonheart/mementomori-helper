@@ -2032,5 +2032,23 @@ namespace MementoMori.Common.Localization {
                 return ResourceManager.GetString("BattleMainQuest", resourceCulture);
             }
         }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to No account yet. Add your game account to start (Transfer ID + password from the game's settings)..
+        /// </summary>
+        public static string NoAccountHint {
+            get {
+                return ResourceManager.GetString("NoAccountHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add account.
+        /// </summary>
+        public static string AddAccount {
+            get {
+                return ResourceManager.GetString("AddAccount", resourceCulture);
+            }
+        }
     }
 }

@@ -734,4 +734,10 @@
   <data name="BattleMainQuest" xml:space="preserve">
     <value>Main quest</value>
   </data>
+  <data name="NoAccountHint" xml:space="preserve">
+    <value>No account yet. Add your game account to start (Transfer ID + password from the game's settings).</value>
+  </data>
+  <data name="AddAccount" xml:space="preserve">
+    <value>Add account</value>
+  </data>
 </root>

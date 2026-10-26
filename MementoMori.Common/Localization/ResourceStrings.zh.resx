@@ -735,4 +735,10 @@
   <data name="BattleMainQuest" xml:space="preserve">
     <value>主线</value>
   </data>
+  <data name="NoAccountHint" xml:space="preserve">
+    <value>还没有账号。添加游戏账号后即可使用（游戏设置里的引继码 + 密码）。</value>
+  </data>
+  <data name="AddAccount" xml:space="preserve">
+    <value>添加账号</value>
+  </data>
 </root>
