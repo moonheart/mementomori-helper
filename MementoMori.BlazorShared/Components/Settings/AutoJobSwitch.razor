@@ -20,6 +20,9 @@
         <MudSwitch Label="@ResourceStrings.AutoRunes" @bind-Value="AutoJob__AutoSphere" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@ResourceStrings.ReinforceEquipmentOnce" @bind-Value="AutoJob__AutoReinforcementEquipmentOneTime" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@Tr("[CharacterMenuTabCharacterRankUp]")" @bind-Value="AutoJob__AutoRankUpCharacter" Color="Color.Primary"></MudSwitch>
+        <div class="mm-group-label">@ResourceStrings.GroupProgress</div>
+        <MudSwitch Label="@ResourceStrings.AutoClimbQuest" @bind-Value="AutoJob__AutoProgressQuest" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@ResourceStrings.AutoClimbTowers" @bind-Value="AutoJob__AutoProgressTower" Color="Color.Primary"></MudSwitch>
         <div class="mm-group-label">@ResourceStrings.GroupDailyBattles</div>
         <MudSwitch Label="@Tr("[CommonHeaderLocalPvpLabel]")" @bind-Value="AutoJob__AutoPvp" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@Tr("[CommonHeaderGlobalPvpLabel]")" @bind-Value="AutoJob__AutoLegendLeague" Color="Color.Primary"></MudSwitch>
@@ -36,6 +39,20 @@
 </MudCard>
 
 @code {
+
+    public bool AutoJob__AutoProgressQuest
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoProgressQuest;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoProgressQuest = value);
+    }
+
+
+    public bool AutoJob__AutoProgressTower
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoProgressTower;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoProgressTower = value);
+    }
+
 
     public bool AutoJob__AutoSphere
     {

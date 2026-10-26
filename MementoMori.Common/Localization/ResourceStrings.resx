@@ -761,4 +761,19 @@
   <data name="AutoRunesButton" xml:space="preserve">
     <value>Runes</value>
   </data>
+  <data name="AutoClimbQuest" xml:space="preserve">
+    <value>Auto main quest (stops after 3 losses in a row)</value>
+  </data>
+  <data name="AutoClimbTowers" xml:space="preserve">
+    <value>Auto towers open today (stops after 3 losses in a row)</value>
+  </data>
+  <data name="AutoClimbQuestButton" xml:space="preserve">
+    <value>Main quest until 3 losses</value>
+  </data>
+  <data name="AutoClimbTowersButton" xml:space="preserve">
+    <value>Towers until 3 losses</value>
+  </data>
+  <data name="GroupProgress" xml:space="preserve">
+    <value>Progress</value>
+  </data>
 </root>

@@ -655,4 +655,19 @@
   <data name="AutoRunesButton" xml:space="preserve">
     <value>ルーン</value>
   </data>
+  <data name="AutoClimbQuest" xml:space="preserve">
+    <value>メインクエスト自動進行（3連敗で停止）</value>
+  </data>
+  <data name="AutoClimbTowers" xml:space="preserve">
+    <value>本日開放の塔を自動攻略（3連敗で停止）</value>
+  </data>
+  <data name="AutoClimbQuestButton" xml:space="preserve">
+    <value>メインクエスト（3連敗まで）</value>
+  </data>
+  <data name="AutoClimbTowersButton" xml:space="preserve">
+    <value>塔（3連敗まで）</value>
+  </data>
+  <data name="GroupProgress" xml:space="preserve">
+    <value>進行</value>
+  </data>
 </root>

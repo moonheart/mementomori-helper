@@ -2113,5 +2113,50 @@ namespace MementoMori.Common.Localization {
                 return ResourceManager.GetString("AutoRunesButton", resourceCulture);
             }
         }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to Auto main quest (stops after 3 losses in a row).
+        /// </summary>
+        public static string AutoClimbQuest {
+            get {
+                return ResourceManager.GetString("AutoClimbQuest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto towers open today (stops after 3 losses in a row).
+        /// </summary>
+        public static string AutoClimbTowers {
+            get {
+                return ResourceManager.GetString("AutoClimbTowers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Main quest until 3 losses.
+        /// </summary>
+        public static string AutoClimbQuestButton {
+            get {
+                return ResourceManager.GetString("AutoClimbQuestButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Towers until 3 losses.
+        /// </summary>
+        public static string AutoClimbTowersButton {
+            get {
+                return ResourceManager.GetString("AutoClimbTowersButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Progress.
+        /// </summary>
+        public static string GroupProgress {
+            get {
+                return ResourceManager.GetString("GroupProgress", resourceCulture);
+            }
+        }
     }
 }

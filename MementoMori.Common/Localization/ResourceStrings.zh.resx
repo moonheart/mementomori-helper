@@ -762,4 +762,19 @@
   <data name="AutoRunesButton" xml:space="preserve">
     <value>符石</value>
   </data>
+  <data name="AutoClimbQuest" xml:space="preserve">
+    <value>自动推主线（连输 3 次停止）</value>
+  </data>
+  <data name="AutoClimbTowers" xml:space="preserve">
+    <value>自动爬今日开放的塔（连输 3 次停止）</value>
+  </data>
+  <data name="AutoClimbQuestButton" xml:space="preserve">
+    <value>推主线到连输 3 次</value>
+  </data>
+  <data name="AutoClimbTowersButton" xml:space="preserve">
+    <value>爬塔到连输 3 次</value>
+  </data>
+  <data name="GroupProgress" xml:space="preserve">
+    <value>推图</value>
+  </data>
 </root>

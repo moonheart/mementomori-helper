@@ -36,5 +36,7 @@ public partial class HourlyJob : IJob
         if (_gameConfig.Value.AutoJob.AutoEquipBest) await account.Funcs.AutoEquipBest();
         if (_gameConfig.Value.AutoJob.AutoReinforceTeamEquipment) await account.Funcs.AutoReinforceTeamEquipment();
         if (_gameConfig.Value.AutoJob.AutoSphere) await account.Funcs.AutoSphere();
+        if (_gameConfig.Value.AutoJob.AutoProgressQuest) await account.Funcs.AutoProgressQuest();
+        if (_gameConfig.Value.AutoJob.AutoProgressTower) await account.Funcs.AutoClimbTowers();
     }
 }
