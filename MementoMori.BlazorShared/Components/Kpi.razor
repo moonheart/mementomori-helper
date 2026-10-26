@@ -1,0 +1,22 @@
+@using MementoMori.Common.Localization
+<MudPaper Class="mm-kpi" Elevation="0">
+    <div class="mm-kpi-top">
+        <span class="mm-stat-label">@Label</span>
+        <MudIcon Icon="@Icon" Size="Size.Small" Class="mm-muted"/>
+    </div>
+    <div class="mm-stat-value">@Value</div>
+    @if (Delta != null)
+    {
+        <div class="mm-kpi-delta @(Delta > 0 ? "up" : "flat")">
+            @(Delta > 0 ? $"▲ +{Delta:N0} {DeltaUnit}".TrimEnd() : ResourceStrings.KpiNoChange) <span class="mm-muted">· 24h</span>
+        </div>
+    }
+</MudPaper>
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public string Value { get; set; } = "";
+    [Parameter] public long? Delta { get; set; }
+    [Parameter] public string DeltaUnit { get; set; } = "";
+    [Parameter] public string Icon { get; set; } = "";
+}

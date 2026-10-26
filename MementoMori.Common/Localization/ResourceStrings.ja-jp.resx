@@ -772,4 +772,169 @@
   <data name="AutoPullGacha" xml:space="preserve">
     <value>自動ガチャ（チケット全部＋無償ダイヤは S/SS ピックアップのみ、保留数を維持）</value>
   </data>
+  <data name="NavDashboard" xml:space="preserve">
+    <value>ダッシュボード</value>
+  </data>
+  <data name="NavActivity" xml:space="preserve">
+    <value>アクティビティ</value>
+  </data>
+  <data name="DashLoggingIn" xml:space="preserve">
+    <value>ログイン中…</value>
+  </data>
+  <data name="DashRetryLogin" xml:space="preserve">
+    <value>再ログイン</value>
+  </data>
+  <data name="DashWorking" xml:space="preserve">
+    <value>実行中…</value>
+  </data>
+  <data name="DashAutopilotOn" xml:space="preserve">
+    <value>オートパイロット ON</value>
+  </data>
+  <data name="DashAutopilotOff" xml:space="preserve">
+    <value>オートパイロット OFF</value>
+  </data>
+  <data name="DashAutopilot" xml:space="preserve">
+    <value>オートパイロット</value>
+  </data>
+  <data name="DashNextRun" xml:space="preserve">
+    <value>次の実行：{0}</value>
+  </data>
+  <data name="DashInMinutes" xml:space="preserve">
+    <value>{0} 分後</value>
+  </data>
+  <data name="DashPaused" xml:space="preserve">
+    <value>定期ジョブは停止中</value>
+  </data>
+  <data name="DashRunNow" xml:space="preserve">
+    <value>今すぐ実行</value>
+  </data>
+  <data name="DashMainTeam" xml:space="preserve">
+    <value>メインパーティ</value>
+  </data>
+  <data name="DashGearTitle" xml:space="preserve">
+    <value>装備数 / 平均強化値</value>
+  </data>
+  <data name="DashProgress" xml:space="preserve">
+    <value>進行状況の推移</value>
+  </data>
+  <data name="DashChartEmpty" xml:space="preserve">
+    <value>実行ごとに1点ずつグラフが埋まっていきます。</value>
+  </data>
+  <data name="DashWhatBotDid" xml:space="preserve">
+    <value>ボットがやったこと</value>
+  </data>
+  <data name="DashFullHistory" xml:space="preserve">
+    <value>全履歴</value>
+  </data>
+  <data name="DashLiveLog" xml:space="preserve">
+    <value>ライブログ</value>
+  </data>
+  <data name="KpiMainQuest" xml:space="preserve">
+    <value>メインクエスト</value>
+  </data>
+  <data name="KpiLevelLink" xml:space="preserve">
+    <value>レベルリンク</value>
+  </data>
+  <data name="KpiPlayerRank" xml:space="preserve">
+    <value>ランク</value>
+  </data>
+  <data name="KpiNoChange" xml:space="preserve">
+    <value>変化なし</value>
+  </data>
+  <data name="ActEverything" xml:space="preserve">
+    <value>ボットがやったこと全部</value>
+  </data>
+  <data name="ActSnapshots" xml:space="preserve">
+    <value>実行スナップショット</value>
+  </data>
+  <data name="ActColTime" xml:space="preserve">
+    <value>時刻</value>
+  </data>
+  <data name="ActEmpty" xml:space="preserve">
+    <value>まだ何もありません。ダッシュボードの「今すぐ実行」を押すか、次の定期実行を待ってください。</value>
+  </data>
+  <data name="ActToday" xml:space="preserve">
+    <value>今日</value>
+  </data>
+  <data name="ActYesterday" xml:space="preserve">
+    <value>昨日</value>
+  </data>
+  <data name="ActQuest" xml:space="preserve">
+    <value>メインクエスト {0} → {1}（{2} 勝 {3} 敗）</value>
+  </data>
+  <data name="ActQuestStuck" xml:space="preserve">
+    <value>クエスト {0} で停滞：{1} 連敗、次回の実行後に再挑戦</value>
+  </data>
+  <data name="ActTower" xml:space="preserve">
+    <value>{0} {1} 階 → {2} 階</value>
+  </data>
+  <data name="ActPartyLevel" xml:space="preserve">
+    <value>パーティレベル {0} → {1}</value>
+  </data>
+  <data name="ActLevelLink" xml:space="preserve">
+    <value>レベルリンク {0} → {1}</value>
+  </data>
+  <data name="ActLevelLinkJoin" xml:space="preserve">
+    <value>{0} がレベルリンクに参加（{1} 枠目）</value>
+  </data>
+  <data name="ActRuneCombined" xml:space="preserve">
+    <value>ルーン合成：{0}</value>
+  </data>
+  <data name="ActRunePlaced" xml:space="preserve">
+    <value>ルーン装着：{0}</value>
+  </data>
+  <data name="ActNewTeam" xml:space="preserve">
+    <value>新しい編成：{0}</value>
+  </data>
+  <data name="ActRankUp" xml:space="preserve">
+    <value>{0} {1} → {2}（素材 {3}）</value>
+  </data>
+  <data name="ActDuplicates" xml:space="preserve">
+    <value>重複キャラ</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>フレンド {0} を削除（最終ログイン {1} 日前）</value>
+  </data>
+  <data name="FriendAccepted" xml:space="preserve">
+    <value>フレンド申請を {0} 件承認</value>
+  </data>
+  <data name="FriendRequested" xml:space="preserve">
+    <value>{0} にフレンド申請を送信</value>
+  </data>
+  <data name="KindLevel" xml:space="preserve">
+    <value>レベル</value>
+  </data>
+  <data name="KindLevelLink" xml:space="preserve">
+    <value>レベルリンク</value>
+  </data>
+  <data name="KindEquip" xml:space="preserve">
+    <value>装備</value>
+  </data>
+  <data name="KindReinforce" xml:space="preserve">
+    <value>強化</value>
+  </data>
+  <data name="KindQuest" xml:space="preserve">
+    <value>クエスト</value>
+  </data>
+  <data name="KindTower" xml:space="preserve">
+    <value>塔</value>
+  </data>
+  <data name="KindRankUp" xml:space="preserve">
+    <value>昇格</value>
+  </data>
+  <data name="KindGacha" xml:space="preserve">
+    <value>ガチャ</value>
+  </data>
+  <data name="KindTeam" xml:space="preserve">
+    <value>編成</value>
+  </data>
+  <data name="KindFriend" xml:space="preserve">
+    <value>フレンド</value>
+  </data>
+  <data name="KindReward" xml:space="preserve">
+    <value>報酬</value>
+  </data>
+  <data name="KindInfo" xml:space="preserve">
+    <value>情報</value>
+  </data>
 </root>

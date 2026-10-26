@@ -1,0 +1,48 @@
+@page "/activity"
+@inherits MementoMori.BlazorShared.Models.AccountComponent
+@using MementoMori.BlazorShared.Components
+@using DynamicData.Binding
+@using MementoMori.Common.Localization
+@implements IDisposable
+
+<PageTitle>@ResourceStrings.NavActivity</PageTitle>
+
+<MudGrid Spacing="3">
+    <MudItem xs="12" lg="8">
+        <MudCard>
+            <MudCardHeader><CardHeaderContent><MudText>@ResourceStrings.ActEverything</MudText></CardHeaderContent></MudCardHeader>
+            <MudCardContent>
+                <ActivityFeed Events="@Funcs.History.Events" Limit="1000" ShowFilter="true"/>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12" lg="4">
+        <MudCard>
+            <MudCardHeader><CardHeaderContent><MudText>@ResourceStrings.ActSnapshots</MudText></CardHeaderContent></MudCardHeader>
+            <MudCardContent>
+                <MudSimpleTable Dense="true" Hover="true">
+                    <thead><tr><th>@ResourceStrings.ActColTime</th><th>@ResourceStrings.KpiMainQuest</th><th>@ResourceStrings.KpiLevelLink</th><th>@ResourceStrings.KpiPlayerRank</th></tr></thead>
+                    <tbody>
+                    @foreach (var s in Funcs.History.Snapshots.AsEnumerable().Reverse().Take(200))
+                    {
+                        <tr><td>@s.Time.ToLocalTime().ToString("MM/dd HH:mm")</td><td>@s.QuestName</td><td>@s.LinkLevel</td><td>@s.PlayerRank</td></tr>
+                    }
+                    </tbody>
+                </MudSimpleTable>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+    IDisposable? _sub;
+
+    protected override Task AccountChanged()
+    {
+        _sub?.Dispose();
+        _sub = Funcs.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
+        return Task.CompletedTask;
+    }
+
+    public void Dispose() => _sub?.Dispose();
+}

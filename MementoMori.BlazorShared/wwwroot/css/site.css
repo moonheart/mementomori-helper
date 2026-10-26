@@ -77,3 +77,57 @@ body { font-family: var(--mm-font); -webkit-font-smoothing: antialiased; font-fe
 .mm-tier-c { background: var(--mud-palette-lines-inputs); color: var(--mud-palette-text-primary); }
 /* 手动改过的强度高亮 */
 .mm-overridden .mud-input { color: var(--mud-palette-primary); font-weight: 600; }
+
+/* ===== 仪表盘 ===== */
+.mm-hero { border-radius: 16px; padding: 20px; position: relative; overflow: hidden;
+    background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--mud-palette-primary) 18%, transparent), transparent 60%),
+                radial-gradient(100% 120% at 100% 100%, color-mix(in srgb, var(--mud-palette-secondary) 12%, transparent), transparent 60%),
+                var(--mud-palette-surface); }
+.mm-stat { min-width: 96px; }
+.mm-stat-value { font-size: 1.5rem; letter-spacing: -.01em; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.mm-stat-label { font-size: .6875rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--mud-palette-text-secondary); }
+
+.mm-kpi { border-radius: 14px; padding: 14px 16px; height: 100%; }
+.mm-kpi-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.mm-kpi-delta { font-size: .75rem; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.mm-kpi-delta.up { color: var(--mud-palette-success); }
+.mm-kpi-delta.flat { color: var(--mud-palette-text-secondary); }
+
+.mm-pulse { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+.mm-pulse.is-off { background: var(--mud-palette-text-disabled); }
+.mm-pulse.is-armed { background: var(--mud-palette-success); box-shadow: 0 0 0 4px color-mix(in srgb, var(--mud-palette-success) 20%, transparent); }
+.mm-pulse.is-running { background: var(--mud-palette-primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--mud-palette-primary) 25%, transparent); }
+@media (prefers-reduced-motion: no-preference) {
+    .mm-pulse.is-running { animation: mm-pulse 1.4s ease-out infinite; }
+}
+@keyframes mm-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--mud-palette-primary) 55%, transparent); } 100% { box-shadow: 0 0 0 12px transparent; } }
+
+.mm-team-gear { font-size: .75rem; color: var(--mud-palette-text-secondary); display: flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums; }
+
+.mm-feed { display: flex; flex-direction: column; gap: 2px; max-height: 520px; overflow-y: auto; overscroll-behavior: contain; padding-right: 4px; }
+.mm-feed-day { font-size: .6875rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--mud-palette-text-secondary); margin: 10px 0 4px; }
+.mm-feed-item { display: flex; gap: 12px; padding: 8px; border-radius: 10px; }
+@media (hover: hover) { .mm-feed-item:hover { background: var(--mud-palette-background-gray); } }
+.mm-feed-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; flex: none; background: var(--mud-palette-background-gray); color: var(--mud-palette-text-secondary); }
+.mm-kind-level .mm-feed-icon, .mm-kind-levellink .mm-feed-icon { color: var(--mud-palette-success); }
+.mm-kind-equip .mm-feed-icon, .mm-kind-reinforce .mm-feed-icon { color: var(--mud-palette-tertiary); }
+.mm-kind-quest .mm-feed-icon, .mm-kind-tower .mm-feed-icon { color: var(--mud-palette-primary); }
+.mm-kind-gacha .mm-feed-icon, .mm-kind-rankup .mm-feed-icon { color: var(--mud-palette-secondary); }
+.mm-kind-info .mm-feed-icon { color: var(--mud-palette-warning); }
+.mm-feed-text { font-size: .8125rem; line-height: 1.45; overflow-wrap: anywhere; }
+.mm-feed-time { font-size: .6875rem; color: var(--mud-palette-text-secondary); margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+.mm-log { font-family: var(--mm-mono); font-size: .72rem; line-height: 1.5; max-height: 520px; overflow-y: auto; overscroll-behavior: contain; color: var(--mud-palette-text-secondary); white-space: pre-wrap; overflow-wrap: anywhere; }
+.mm-log > div { padding: 2px 0; border-bottom: 1px solid var(--mud-palette-table-lines); }
+/* 图表跟主题走: MudChart 默认蓝线 + 浅灰网格在暗色下很扎眼 */
+.mm-chart .mud-chart-line { stroke: var(--mud-palette-primary); }
+.mm-chart path[stroke="#e0e0e0"] { stroke: var(--mud-palette-lines-default); }
+.mm-chart text { fill: var(--mud-palette-text-secondary); }
+.mm-chart .mud-chart-legend { display: none; }
+
+/* 卡片高度被同行撑高时, 内容居中而不是顶在上面 */
+.mm-fill { display: flex; flex-direction: column; }
+.mm-fill .mud-card-content { flex: 1; display: grid; align-content: center; }
+
+.mm-kind-friend .mm-feed-icon { color: var(--mud-palette-info); }
+.mm-kind-reward .mm-feed-icon { color: var(--mud-palette-secondary); }

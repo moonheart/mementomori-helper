@@ -1,3 +1,4 @@
+using MementoMori.Common.Localization;
 using MementoMori.Exceptions;
 using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.Share.Data.ApiInterface.Battle;
@@ -60,8 +61,8 @@ public partial class MementoMoriFuncs
 
             var endQuest = UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId;
             string Q(long id) => QuestTable.GetById(id)?.Memo ?? id.ToString();
-            if (endQuest > startQuest) Track(GrowthKind.Quest, $"Main quest {Q(startQuest)} → {Q(endQuest)} ({wins} wins, {fights - wins} losses)");
-            else if (losses >= ProgressMaxLosses) Track(GrowthKind.Info, $"Stuck at quest {Q(endQuest + 1)} — lost {losses}x, will retry after next growth");
+            if (endQuest > startQuest) Track(GrowthKind.Quest, string.Format(ResourceStrings.ActQuest, Q(startQuest), Q(endQuest), wins, fights - wins));
+            else if (losses >= ProgressMaxLosses) Track(GrowthKind.Info, string.Format(ResourceStrings.ActQuestStuck, Q(endQuest + 1), losses));
         });
     }
 
@@ -100,7 +101,7 @@ public partial class MementoMoriFuncs
             }
 
             var endFloor = UserSyncData.UserTowerBattleDtoInfos?.FirstOrDefault(d => d.TowerType == type)?.MaxTowerBattleId ?? 0;
-            if (endFloor > startFloor) Track(GrowthKind.Tower, $"{TextResourceTable.Get(type)} floor {startFloor} → {endFloor}");
+            if (endFloor > startFloor) Track(GrowthKind.Tower, string.Format(ResourceStrings.ActTower, TextResourceTable.Get(type), startFloor, endFloor));
         });
     }
 }

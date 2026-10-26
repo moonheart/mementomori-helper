@@ -1,0 +1,243 @@
+@page "/dashboard"
+@inherits MementoMori.BlazorShared.Models.AccountComponent
+@using MementoMori.Funcs
+@using MementoMori.Option
+@using MementoMori.Ortega.Custom
+@using MementoMori.Ortega.Share.Enums
+@using MementoMori.BlazorShared.Components
+@using static MementoMori.Ortega.Share.Masters
+@using DynamicData.Binding
+@using Quartz
+@using Quartz.Impl.Matchers
+@using MementoMori.Jobs
+@inject IWritableOptions<GameConfig> WritableGameConfig
+@inject ISchedulerFactory SchedulerFactory
+@inject TimeZoneAwareJobRegister TimeZoneAwareJobRegister
+@using MementoMori.Common.Localization
+@using MementoMori.Ortega.Common.Utils
+@implements IDisposable
+
+<PageTitle>@ResourceStrings.NavDashboard</PageTitle>
+
+@if (AccountManager.CurrentUserId <= 0)
+{
+    <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Wrap="Wrap.Wrap" Spacing="3">
+            <MudText>@ResourceStrings.NoAccountHint</MudText>
+            <MudButton Href="settings?tab=account" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" StartIcon="@Icons.Material.Rounded.PersonAdd">@ResourceStrings.AddAccount</MudButton>
+        </MudStack>
+    </MudAlert>
+}
+else if (!Funcs.LoginOk || Funcs.UserSyncData?.UserStatusDtoInfo == null)
+{
+    <MudStack AlignItems="AlignItems.Center" Class="mt-16" Spacing="3">
+        <MudProgressCircular Indeterminate="true" Color="Color.Primary"/>
+        <MudText Class="mm-muted">@ResourceStrings.DashLoggingIn</MudText>
+        <MudButton Variant="Variant.Outlined" OnClick="@(() => Funcs.Login())">@ResourceStrings.DashRetryLogin</MudButton>
+    </MudStack>
+}
+else
+{
+    var sync = Funcs.UserSyncData;
+    var snaps = Funcs.History.Snapshots;
+    var dayAgo = snaps.LastOrDefault(s => s.Time <= DateTimeOffset.Now.AddHours(-24)) ?? snaps.FirstOrDefault();
+    var questId = sync.UserBattleBossDtoInfo?.BossClearMaxQuestId ?? 0;
+    var link = sync.UserLevelLinkDtoInfo;
+    var infinity = sync.UserTowerBattleDtoInfos?.FirstOrDefault(t => t.TowerType == TowerType.Infinite)?.MaxTowerBattleId ?? 0;
+    var running = Funcs.IsQuickActionExecuting;
+    var autopilot = !WritableGameConfig.Value.AutoJob.DisableAll;
+
+    <MudGrid Spacing="3">
+        @* ===== Autopilot ===== *@
+        <MudItem xs="12">
+            <MudPaper Class="mm-hero" Elevation="0">
+                <MudStack Row="true" Wrap="Wrap.Wrap" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="4">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                        <div class="mm-pulse @(running ? "is-running" : autopilot ? "is-armed" : "is-off")"></div>
+                        <MudStack Spacing="0">
+                            <MudText Typo="Typo.h6">
+                                @(running ? (string.IsNullOrEmpty(Funcs.CurrentTask) ? ResourceStrings.DashWorking : Funcs.CurrentTask + "…") : autopilot ? ResourceStrings.DashAutopilotOn : ResourceStrings.DashAutopilotOff)
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mm-muted">
+                                @(autopilot ? string.Format(ResourceStrings.DashNextRun, NextRunText) : ResourceStrings.DashPaused)
+                                · @sync.UserStatusDtoInfo.Name · @ResourceStrings.KpiPlayerRank @sync.UserStatusDtoInfo.Rank
+                            </MudText>
+                        </MudStack>
+                    </MudStack>
+                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center" Wrap="Wrap.Wrap">
+                        <MudSwitch T="bool" Value="autopilot" ValueChanged="SetAutopilot" Color="Color.Primary" Label="@ResourceStrings.DashAutopilot"/>
+                        @if (running)
+                        {
+                            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Rounded.StopCircle" OnClick="Funcs.CancelQuickAction">@TextResourceTable.Get("[CommonCancelLabel]")</MudButton>
+                        }
+                        else
+                        {
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Rounded.PlayArrow" OnClick="Funcs.AutoProgress">@ResourceStrings.DashRunNow</MudButton>
+                        }
+                    </MudStack>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+
+        @* ===== KPIs ===== *@
+        <MudItem xs="6" sm="4" lg="2"><Kpi Label="@ResourceStrings.KpiMainQuest" Value="@(QuestTable.GetById(questId)?.Memo ?? "-")" Delta="@(dayAgo == null ? 0 : questId - dayAgo.QuestId)" DeltaUnit="" Icon="@Icons.Material.Rounded.Flag"/></MudItem>
+        <MudItem xs="6" sm="4" lg="2"><Kpi Label="@ResourceStrings.KpiLevelLink" Value="@($"{link?.PartyLevel}")" Delta="@(dayAgo == null ? 0 : (link?.PartyLevel ?? 0) - dayAgo.LinkLevel)" DeltaUnit="" Icon="@Icons.Material.Rounded.Link"/></MudItem>
+        <MudItem xs="6" sm="4" lg="2"><Kpi Label="@TextResourceTable.Get(TowerType.Infinite)" Value="@infinity.ToString()" Delta="@(dayAgo == null ? 0 : infinity - dayAgo.Towers.GetValueOrDefault(nameof(TowerType.Infinite)))" DeltaUnit="" Icon="@Icons.Material.Rounded.Stairs"/></MudItem>
+        <MudItem xs="6" sm="4" lg="2"><Kpi Label="@ResourceStrings.KpiPlayerRank" Value="@sync.UserStatusDtoInfo.Rank.ToString()" Delta="@(dayAgo == null ? 0 : sync.UserStatusDtoInfo.Rank - dayAgo.PlayerRank)" DeltaUnit="" Icon="@Icons.Material.Rounded.MilitaryTech"/></MudItem>
+        <MudItem xs="6" sm="4" lg="2"><Kpi Label="@ItemUtil.GetItemName(ItemType.Gold, 1)" Value="@Short(sync.GetUserItemCount(ItemType.Gold))" Icon="@Icons.Material.Rounded.Toll"/></MudItem>
+        <MudItem xs="6" sm="4" lg="2"><Kpi Label="@ItemUtil.GetItemName(ItemType.CurrencyFree, 1)" Value="@Short(sync.GetUserItemCount(ItemType.CurrencyFree, isAnyCurrency: true))" Icon="@Icons.Material.Rounded.Diamond"/></MudItem>
+
+        @* ===== Team ===== *@
+        <MudItem xs="12" lg="7">
+            <MudCard Class="mm-fill">
+                <MudCardHeader>
+                    <CardHeaderContent><MudText>@ResourceStrings.DashMainTeam</MudText></CardHeaderContent>
+                    <CardHeaderActions><MudButton Size="Size.Small" Href="team" EndIcon="@Icons.Material.Rounded.ChevronRight">@ResourceStrings.NavTeam</MudButton></CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <div class="mm-team">
+                        @foreach (var c in Funcs.GetMainTeam())
+                        {
+                            var info = sync.GetUserCharacterInfoByUserCharacterDtoInfo(c);
+                            var gear = sync.UserEquipmentDtoInfos.Where(e => e.CharacterGuid == c.Guid).ToList();
+                            var tier = Funcs.GetTier(c.CharacterId);
+                            <div class="mm-team-member">
+                                <CharacterIcon UserCharacterInfo="info" Size="76"/>
+                                <div class="mm-team-name">@FuncsName(c.CharacterId)</div>
+                                <MudStack Row="true" Spacing="1" Justify="Justify.Center" Wrap="Wrap.Wrap">
+                                    <TierBadge Tier="@tier"/>
+                                    <MudChip T="string" Size="Size.Small" Variant="Variant.Text">@c.RarityFlags</MudChip>
+                                </MudStack>
+                                <div class="mm-team-gear" title="@ResourceStrings.DashGearTitle">
+                                    <MudIcon Icon="@Icons.Material.Rounded.Shield" Size="Size.Small"/> @gear.Count/6 · +@(gear.Count == 0 ? 0 : (int) gear.Average(e => e.ReinforcementLv))
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        @* ===== Chart ===== *@
+        <MudItem xs="12" lg="5">
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent><MudText>@ResourceStrings.DashProgress</MudText></CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudSelect T="string" @bind-Value="_metric" ToStringFunc="MetricName" Dense="true" Margin="Margin.Dense" Variant="Variant.Outlined" Style="min-width:150px">
+                            @foreach (var m in Metrics) { <MudSelectItem Value="m">@MetricName(m)</MudSelectItem> }
+                        </MudSelect>
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    @if (snaps.Count < 2)
+                    {
+                        <MudText Class="mm-muted pa-6" Align="Align.Center">@ResourceStrings.DashChartEmpty</MudText>
+                    }
+                    else
+                    {
+                        var points = snaps.TakeLast(48).ToList();
+                        <MudChart ChartType="ChartType.Line" Class="mm-chart" Height="220px" Width="100%"
+                                  ChartSeries="@(new List<ChartSeries> {new() {Name = MetricName(_metric), Data = points.Select(MetricValue).ToArray()}})"
+                                  XAxisLabels="@points.Select((p, i) => i % Math.Max(1, points.Count / 6) == 0 ? p.Time.ToString("MM/dd HH:mm") : "").ToArray()"
+                                  ChartOptions="@(new ChartOptions {LineStrokeWidth = 2.5, YAxisTicks = 0, InterpolationOption = InterpolationOption.Straight})"/>
+                    }
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        @* ===== Activity ===== *@
+        <MudItem xs="12" lg="7">
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent><MudText>@ResourceStrings.DashWhatBotDid</MudText></CardHeaderContent>
+                    <CardHeaderActions><MudButton Size="Size.Small" Href="activity" EndIcon="@Icons.Material.Rounded.ChevronRight">@ResourceStrings.DashFullHistory</MudButton></CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <ActivityFeed Events="@Funcs.History.Events" Limit="25"/>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        @* ===== Live log ===== *@
+        <MudItem xs="12" lg="5">
+            <MudCard>
+                <MudCardHeader><CardHeaderContent><MudText>@ResourceStrings.DashLiveLog</MudText></CardHeaderContent></MudCardHeader>
+                <MudCardContent>
+                    <div class="mm-log">
+                        @foreach (var line in Funcs.MesssageList.Take(60))
+                        {
+                            <div>@line</div>
+                        }
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    static readonly string[] Metrics = {"link", "quest", "infinity", "rank", "gold", "diamonds"};
+    string _metric = "link";
+
+    static string MetricName(string m) => m switch
+    {
+        "quest" => ResourceStrings.KpiMainQuest, "infinity" => TextResourceTable.Get(TowerType.Infinite), "rank" => ResourceStrings.KpiPlayerRank,
+        "gold" => ItemUtil.GetItemName(ItemType.Gold, 1), "diamonds" => ItemUtil.GetItemName(ItemType.CurrencyFree, 1), _ => ResourceStrings.KpiLevelLink
+    };
+    string NextRunText = "-";
+    IDisposable? _sub;
+    System.Threading.Timer? _timer;
+
+    double MetricValue(ProgressSnapshot s) => _metric switch
+    {
+        "quest" => s.QuestId,
+        "infinity" => s.Towers.GetValueOrDefault(nameof(TowerType.Infinite)),
+        "rank" => s.PlayerRank,
+        "gold" => s.Gold,
+        "diamonds" => s.Diamonds,
+        _ => s.LinkLevel
+    };
+
+    static string FuncsName(long id) => MementoMoriFuncs.CharName(id);
+
+    static string Short(long v) => v switch
+    {
+        >= 1_000_000_000 => $"{v / 1e9:0.##}B",
+        >= 1_000_000 => $"{v / 1e6:0.##}M",
+        >= 10_000 => $"{v / 1e3:0.#}K",
+        _ => v.ToString("N0")
+    };
+
+    protected override async Task AccountChanged()
+    {
+        _sub?.Dispose();
+        _sub = Funcs.WhenAnyPropertyChanged().Subscribe(_ => InvokeAsync(StateHasChanged));
+        await RefreshNextRun();
+        _timer ??= new System.Threading.Timer(async _ => { await RefreshNextRun(); await InvokeAsync(StateHasChanged); }, null, 30_000, 30_000);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async Task RefreshNextRun()
+    {
+        var scheduler = await SchedulerFactory.GetScheduler();
+        var trigger = await scheduler.GetTrigger(new TriggerKey($"{AccountManager.CurrentUserId}-{typeof(HourlyJob).FullName}-trigger"));
+        var next = trigger?.GetNextFireTimeUtc();
+        if (next == null) { NextRunText = "-"; return; }
+        var mins = (int) Math.Max(0, (next.Value - DateTimeOffset.UtcNow).TotalMinutes);
+        NextRunText = string.Format(ResourceStrings.DashInMinutes, Math.Max(1, mins));
+    }
+
+    async Task SetAutopilot(bool on)
+    {
+        WritableGameConfig.Update(x => x.AutoJob.DisableAll = !on);
+        await TimeZoneAwareJobRegister.RegisterAllJobs();
+        await RefreshNextRun();
+    }
+
+    public void Dispose()
+    {
+        _sub?.Dispose();
+        _timer?.Dispose();
+    }
+}

@@ -1,0 +1,60 @@
+@using MementoMori.Funcs
+@using MementoMori.Common.Localization
+
+@if (Events.Count == 0)
+{
+    <MudText Class="mm-muted pa-6" Align="Align.Center">@ResourceStrings.ActEmpty</MudText>
+}
+else
+{
+    @if (ShowFilter)
+    {
+        <MudChipSet T="GrowthKind?" @bind-SelectedValue="_filter" SelectionMode="SelectionMode.ToggleSelection" Class="mb-3">
+            @foreach (var k in Enum.GetValues<GrowthKind>().Where(k => Events.Any(e => e.Kind == k)))
+            {
+                <MudChip T="GrowthKind?" Value="k" Size="Size.Small" Variant="Variant.Outlined" Icon="@IconFor(k)">@KindName(k)</MudChip>
+            }
+        </MudChipSet>
+    }
+    <div class="mm-feed">
+        @foreach (var group in Events.AsEnumerable().Reverse().Where(e => _filter == null || e.Kind == _filter).Take(Limit).GroupBy(e => e.Time.Date))
+        {
+            <div class="mm-feed-day">@(group.Key == DateTime.Today ? ResourceStrings.ActToday : group.Key == DateTime.Today.AddDays(-1) ? ResourceStrings.ActYesterday : group.Key.ToString("D"))</div>
+            @foreach (var e in group)
+            {
+                <div class="mm-feed-item mm-kind-@e.Kind.ToString().ToLowerInvariant()">
+                    <div class="mm-feed-icon"><MudIcon Icon="@IconFor(e.Kind)" Size="Size.Small"/></div>
+                    <div class="mm-feed-body">
+                        <div class="mm-feed-text">@e.Text</div>
+                        <div class="mm-feed-time">@e.Time.ToLocalTime().ToString("HH:mm") · @KindName(e.Kind)</div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public List<GrowthEvent> Events { get; set; } = new();
+    [Parameter] public int Limit { get; set; } = 25;
+    [Parameter] public bool ShowFilter { get; set; }
+    GrowthKind? _filter;
+
+    static string KindName(GrowthKind k) => ResourceStrings.ResourceManager.GetString("Kind" + k, ResourceStrings.Culture) ?? k.ToString();
+
+    public static string IconFor(GrowthKind k) => k switch
+    {
+        GrowthKind.Level => Icons.Material.Rounded.TrendingUp,
+        GrowthKind.LevelLink => Icons.Material.Rounded.Link,
+        GrowthKind.Equip => Icons.Material.Rounded.Shield,
+        GrowthKind.Reinforce => Icons.Material.Rounded.Hardware,
+        GrowthKind.Quest => Icons.Material.Rounded.Flag,
+        GrowthKind.Tower => Icons.Material.Rounded.Stairs,
+        GrowthKind.RankUp => Icons.Material.Rounded.Star,
+        GrowthKind.Gacha => Icons.Material.Rounded.AutoAwesome,
+        GrowthKind.Team => Icons.Material.Rounded.Groups,
+        GrowthKind.Friend => Icons.Material.Rounded.PersonAdd,
+        GrowthKind.Reward => Icons.Material.Rounded.Redeem,
+        _ => Icons.Material.Rounded.Info
+    };
+}

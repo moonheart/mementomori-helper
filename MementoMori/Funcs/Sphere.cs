@@ -1,3 +1,4 @@
+using MementoMori.Common.Localization;
 using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.Equipment;
@@ -27,7 +28,7 @@ public partial class MementoMoriFuncs
                 try
                 {
                     var resp = await GetResponse<ComposeManySphereRequest, ComposeManySphereResponse>(new ComposeManySphereRequest {CategoryIdList = cats});
-                    if (resp.IsSucceeded) Track(GrowthKind.Equip, "[Rune] Combined: " + string.Join(", ", resp.ResultItemList.Select(i => $"{TextResourceTable.Get(SphereTable.GetById(i.ItemId).NameKey)} ×{i.ItemCount}")));
+                    if (resp.IsSucceeded) Track(GrowthKind.Equip, string.Format(ResourceStrings.ActRuneCombined, string.Join(", ", resp.ResultItemList.Select(i => $"{TextResourceTable.Get(SphereTable.GetById(i.ItemId).NameKey)} ×{i.ItemCount}"))));
                 }
                 catch (Exception e)
                 {
@@ -70,7 +71,7 @@ public partial class MementoMoriFuncs
                     slots[i] = best;
                     pool.Remove(best);
                     used.Add(SphereTable.GetById(best).CategoryId);
-                    added.Add($"{CharName(team[eq.CharacterGuid])} {mb.SlotType}: {TextResourceTable.Get(SphereTable.GetById(best).NameKey)}");
+                    added.Add($"{CharName(team[eq.CharacterGuid])} {TextResourceTable.Get(mb.SlotType)}: {TextResourceTable.Get(SphereTable.GetById(best).NameKey)}");
                 }
 
                 if (added.Count == 0) continue;
@@ -90,7 +91,7 @@ public partial class MementoMoriFuncs
                 await Task.Delay(GameConfig.AutoRequestDelay, token);
             }
 
-            if (placed.Count > 0) Track(GrowthKind.Equip, "[Rune] " + string.Join(" | ", placed));
+            if (placed.Count > 0) Track(GrowthKind.Equip, string.Format(ResourceStrings.ActRunePlaced, string.Join(" | ", placed)));
         });
     }
 }

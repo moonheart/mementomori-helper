@@ -3,6 +3,8 @@
 
 <MudNavMenu Class="mm-nav" Color="Color.Primary" Rounded="true" Margin="Margin.Dense">
     <MudNavLink Icon="@Icons.Material.Rounded.Home" Href="" Match="NavLinkMatch.All">@TextResourceTable.Get("[CommonFooterHomeButtonLabel]")</MudNavLink>
+    <MudNavLink Icon="@Icons.Material.Rounded.SpaceDashboard" Href="dashboard" Match="NavLinkMatch.Prefix">@ResourceStrings.NavDashboard</MudNavLink>
+    <MudNavLink Icon="@Icons.Material.Rounded.Timeline" Href="activity" Match="NavLinkMatch.Prefix">@ResourceStrings.NavActivity</MudNavLink>
     <MudNavLink Icon="@Icons.Material.Rounded.Person" Href="Character" Match="NavLinkMatch.Prefix">@TextResourceTable.Get("[CommonFooterCharacterButtonLabel]")</MudNavLink>
     <MudNavLink Icon="@Icons.Material.Rounded.Inventory2" Href="Items" Match="NavLinkMatch.Prefix">@TextResourceTable.Get("[CommonFooterItemBoxButtonLabel]")</MudNavLink>
     <MudNavLink Icon="@Icons.Material.Rounded.Storefront" Href="Shop" Match="NavLinkMatch.Prefix">@TextResourceTable.Get("[CommonHeaderExchangeLabel]")</MudNavLink>

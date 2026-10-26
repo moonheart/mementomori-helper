@@ -772,4 +772,169 @@
   <data name="AutoPullGacha" xml:space="preserve">
     <value>자동 뽑기 (티켓 전부 + 무료 다이아는 S/SS 픽업만, 보유량 유지)</value>
   </data>
+  <data name="NavDashboard" xml:space="preserve">
+    <value>대시보드</value>
+  </data>
+  <data name="NavActivity" xml:space="preserve">
+    <value>활동 기록</value>
+  </data>
+  <data name="DashLoggingIn" xml:space="preserve">
+    <value>로그인 중…</value>
+  </data>
+  <data name="DashRetryLogin" xml:space="preserve">
+    <value>다시 로그인</value>
+  </data>
+  <data name="DashWorking" xml:space="preserve">
+    <value>실행 중…</value>
+  </data>
+  <data name="DashAutopilotOn" xml:space="preserve">
+    <value>자동 실행 켜짐</value>
+  </data>
+  <data name="DashAutopilotOff" xml:space="preserve">
+    <value>자동 실행 꺼짐</value>
+  </data>
+  <data name="DashAutopilot" xml:space="preserve">
+    <value>자동 실행</value>
+  </data>
+  <data name="DashNextRun" xml:space="preserve">
+    <value>다음 실행: {0}</value>
+  </data>
+  <data name="DashInMinutes" xml:space="preserve">
+    <value>{0}분 후</value>
+  </data>
+  <data name="DashPaused" xml:space="preserve">
+    <value>예약 작업이 일시 중지됨</value>
+  </data>
+  <data name="DashRunNow" xml:space="preserve">
+    <value>지금 실행</value>
+  </data>
+  <data name="DashMainTeam" xml:space="preserve">
+    <value>메인 팀</value>
+  </data>
+  <data name="DashGearTitle" xml:space="preserve">
+    <value>장착 수 / 평균 강화</value>
+  </data>
+  <data name="DashProgress" xml:space="preserve">
+    <value>성장 추이</value>
+  </data>
+  <data name="DashChartEmpty" xml:space="preserve">
+    <value>실행할 때마다 한 점씩 그래프가 채워집니다.</value>
+  </data>
+  <data name="DashWhatBotDid" xml:space="preserve">
+    <value>봇이 한 일</value>
+  </data>
+  <data name="DashFullHistory" xml:space="preserve">
+    <value>전체 기록</value>
+  </data>
+  <data name="DashLiveLog" xml:space="preserve">
+    <value>실시간 로그</value>
+  </data>
+  <data name="KpiMainQuest" xml:space="preserve">
+    <value>메인 퀘스트</value>
+  </data>
+  <data name="KpiLevelLink" xml:space="preserve">
+    <value>레벨 링크</value>
+  </data>
+  <data name="KpiPlayerRank" xml:space="preserve">
+    <value>랭크</value>
+  </data>
+  <data name="KpiNoChange" xml:space="preserve">
+    <value>변화 없음</value>
+  </data>
+  <data name="ActEverything" xml:space="preserve">
+    <value>봇이 한 모든 일</value>
+  </data>
+  <data name="ActSnapshots" xml:space="preserve">
+    <value>실행 스냅샷</value>
+  </data>
+  <data name="ActColTime" xml:space="preserve">
+    <value>시간</value>
+  </data>
+  <data name="ActEmpty" xml:space="preserve">
+    <value>아직 기록이 없습니다. 대시보드에서 “지금 실행”을 누르거나 다음 예약 실행을 기다리세요.</value>
+  </data>
+  <data name="ActToday" xml:space="preserve">
+    <value>오늘</value>
+  </data>
+  <data name="ActYesterday" xml:space="preserve">
+    <value>어제</value>
+  </data>
+  <data name="ActQuest" xml:space="preserve">
+    <value>메인 퀘스트 {0} → {1} ({2}승 {3}패)</value>
+  </data>
+  <data name="ActQuestStuck" xml:space="preserve">
+    <value>퀘스트 {0}에서 막힘: {1}연패, 다음 실행 후 재도전</value>
+  </data>
+  <data name="ActTower" xml:space="preserve">
+    <value>{0} {1}층 → {2}층</value>
+  </data>
+  <data name="ActPartyLevel" xml:space="preserve">
+    <value>파티 레벨 {0} → {1}</value>
+  </data>
+  <data name="ActLevelLink" xml:space="preserve">
+    <value>레벨 링크 {0} → {1}</value>
+  </data>
+  <data name="ActLevelLinkJoin" xml:space="preserve">
+    <value>{0} 레벨 링크 참가 ({1}번 칸)</value>
+  </data>
+  <data name="ActRuneCombined" xml:space="preserve">
+    <value>룬 합성: {0}</value>
+  </data>
+  <data name="ActRunePlaced" xml:space="preserve">
+    <value>룬 장착: {0}</value>
+  </data>
+  <data name="ActNewTeam" xml:space="preserve">
+    <value>새 팀: {0}</value>
+  </data>
+  <data name="ActRankUp" xml:space="preserve">
+    <value>{0} {1} → {2} (재료 {3})</value>
+  </data>
+  <data name="ActDuplicates" xml:space="preserve">
+    <value>중복 캐릭터</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>친구 {0} 삭제 (마지막 접속 {1}일 전)</value>
+  </data>
+  <data name="FriendAccepted" xml:space="preserve">
+    <value>친구 신청 {0}건 수락</value>
+  </data>
+  <data name="FriendRequested" xml:space="preserve">
+    <value>{0}에게 친구 신청 보냄</value>
+  </data>
+  <data name="KindLevel" xml:space="preserve">
+    <value>레벨</value>
+  </data>
+  <data name="KindLevelLink" xml:space="preserve">
+    <value>레벨 링크</value>
+  </data>
+  <data name="KindEquip" xml:space="preserve">
+    <value>장비</value>
+  </data>
+  <data name="KindReinforce" xml:space="preserve">
+    <value>강화</value>
+  </data>
+  <data name="KindQuest" xml:space="preserve">
+    <value>퀘스트</value>
+  </data>
+  <data name="KindTower" xml:space="preserve">
+    <value>탑</value>
+  </data>
+  <data name="KindRankUp" xml:space="preserve">
+    <value>승급</value>
+  </data>
+  <data name="KindGacha" xml:space="preserve">
+    <value>뽑기</value>
+  </data>
+  <data name="KindTeam" xml:space="preserve">
+    <value>팀</value>
+  </data>
+  <data name="KindFriend" xml:space="preserve">
+    <value>친구</value>
+  </data>
+  <data name="KindReward" xml:space="preserve">
+    <value>보상</value>
+  </data>
+  <data name="KindInfo" xml:space="preserve">
+    <value>정보</value>
+  </data>
 </root>

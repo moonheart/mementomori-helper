@@ -78,6 +78,7 @@ public partial class MementoMoriFuncs
 
                 var rewardMissionResponse = await GetResponse<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest {TargetMissionIdList = missionIds});
                 rewardMissionResponse.RewardInfo.ItemList.PrintUserItems(log);
+                TrackRewards(TextResourceTable.Get("[MyPageMenuButtonMissionLabel]"), rewardMissionResponse.RewardInfo.ItemList);
                 rewardMissionResponse.RewardInfo.CharacterList.PrintCharacterDtos(log);
                 missionIds.Clear();
             }
@@ -105,6 +106,7 @@ public partial class MementoMoriFuncs
                 var response = await GetResponse<RewardMissionActivityRequest, RewardMissionActivityResponse>(new RewardMissionActivityRequest
                     {MissionGroupType = pair.Key, RequiredCount = maxRequiredCount});
                 response.RewardInfo.ItemList.PrintUserItems(log);
+                TrackRewards(TextResourceTable.Get("[MyPageMenuButtonMissionLabel]"), response.RewardInfo.ItemList);
                 response.RewardInfo.CharacterList.PrintCharacterDtos(log);
             }
         });

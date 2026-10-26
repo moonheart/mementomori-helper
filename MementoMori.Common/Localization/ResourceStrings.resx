@@ -878,4 +878,169 @@
   <data name="AutoPullGacha" xml:space="preserve">
     <value>Auto pull gacha (all tickets + free diamonds on S/SS pickups, keeps reserve)</value>
   </data>
+  <data name="NavDashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="NavActivity" xml:space="preserve">
+    <value>Activity</value>
+  </data>
+  <data name="DashLoggingIn" xml:space="preserve">
+    <value>Logging in…</value>
+  </data>
+  <data name="DashRetryLogin" xml:space="preserve">
+    <value>Retry login</value>
+  </data>
+  <data name="DashWorking" xml:space="preserve">
+    <value>Working…</value>
+  </data>
+  <data name="DashAutopilotOn" xml:space="preserve">
+    <value>Autopilot on</value>
+  </data>
+  <data name="DashAutopilotOff" xml:space="preserve">
+    <value>Autopilot off</value>
+  </data>
+  <data name="DashAutopilot" xml:space="preserve">
+    <value>Autopilot</value>
+  </data>
+  <data name="DashNextRun" xml:space="preserve">
+    <value>Next full run {0}</value>
+  </data>
+  <data name="DashInMinutes" xml:space="preserve">
+    <value>in {0} min</value>
+  </data>
+  <data name="DashPaused" xml:space="preserve">
+    <value>Scheduled jobs are paused</value>
+  </data>
+  <data name="DashRunNow" xml:space="preserve">
+    <value>Run now</value>
+  </data>
+  <data name="DashMainTeam" xml:space="preserve">
+    <value>Main team</value>
+  </data>
+  <data name="DashGearTitle" xml:space="preserve">
+    <value>Equipped pieces / average reinforcement</value>
+  </data>
+  <data name="DashProgress" xml:space="preserve">
+    <value>Progress over time</value>
+  </data>
+  <data name="DashChartEmpty" xml:space="preserve">
+    <value>The chart fills in as the bot runs (one point per run).</value>
+  </data>
+  <data name="DashWhatBotDid" xml:space="preserve">
+    <value>What the bot did</value>
+  </data>
+  <data name="DashFullHistory" xml:space="preserve">
+    <value>Full history</value>
+  </data>
+  <data name="DashLiveLog" xml:space="preserve">
+    <value>Live log</value>
+  </data>
+  <data name="KpiMainQuest" xml:space="preserve">
+    <value>Main quest</value>
+  </data>
+  <data name="KpiLevelLink" xml:space="preserve">
+    <value>Level Link</value>
+  </data>
+  <data name="KpiPlayerRank" xml:space="preserve">
+    <value>Rank</value>
+  </data>
+  <data name="KpiNoChange" xml:space="preserve">
+    <value>no change</value>
+  </data>
+  <data name="ActEverything" xml:space="preserve">
+    <value>Everything the bot did</value>
+  </data>
+  <data name="ActSnapshots" xml:space="preserve">
+    <value>Run snapshots</value>
+  </data>
+  <data name="ActColTime" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="ActEmpty" xml:space="preserve">
+    <value>Nothing yet. Press “Run now” on the dashboard or wait for the next scheduled run.</value>
+  </data>
+  <data name="ActToday" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="ActYesterday" xml:space="preserve">
+    <value>Yesterday</value>
+  </data>
+  <data name="ActQuest" xml:space="preserve">
+    <value>Main quest {0} → {1} ({2} wins, {3} losses)</value>
+  </data>
+  <data name="ActQuestStuck" xml:space="preserve">
+    <value>Stuck at quest {0}: lost {1} times in a row, will retry after the next run</value>
+  </data>
+  <data name="ActTower" xml:space="preserve">
+    <value>{0} floor {1} → {2}</value>
+  </data>
+  <data name="ActPartyLevel" xml:space="preserve">
+    <value>Party level {0} → {1}</value>
+  </data>
+  <data name="ActLevelLink" xml:space="preserve">
+    <value>Level Link {0} → {1}</value>
+  </data>
+  <data name="ActLevelLinkJoin" xml:space="preserve">
+    <value>{0} joined Level Link (slot {1})</value>
+  </data>
+  <data name="ActRuneCombined" xml:space="preserve">
+    <value>Runes combined: {0}</value>
+  </data>
+  <data name="ActRunePlaced" xml:space="preserve">
+    <value>Runes socketed: {0}</value>
+  </data>
+  <data name="ActNewTeam" xml:space="preserve">
+    <value>New team: {0}</value>
+  </data>
+  <data name="ActRankUp" xml:space="preserve">
+    <value>{0} {1} → {2} (used {3})</value>
+  </data>
+  <data name="ActDuplicates" xml:space="preserve">
+    <value>duplicates</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>Removed friend {0} (last login {1} days ago)</value>
+  </data>
+  <data name="FriendAccepted" xml:space="preserve">
+    <value>Accepted {0} friend requests</value>
+  </data>
+  <data name="FriendRequested" xml:space="preserve">
+    <value>Sent friend requests to {0}</value>
+  </data>
+  <data name="KindLevel" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="KindLevelLink" xml:space="preserve">
+    <value>Level Link</value>
+  </data>
+  <data name="KindEquip" xml:space="preserve">
+    <value>Equipment</value>
+  </data>
+  <data name="KindReinforce" xml:space="preserve">
+    <value>Reinforce</value>
+  </data>
+  <data name="KindQuest" xml:space="preserve">
+    <value>Quest</value>
+  </data>
+  <data name="KindTower" xml:space="preserve">
+    <value>Tower</value>
+  </data>
+  <data name="KindRankUp" xml:space="preserve">
+    <value>Rank up</value>
+  </data>
+  <data name="KindGacha" xml:space="preserve">
+    <value>Gacha</value>
+  </data>
+  <data name="KindTeam" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="KindFriend" xml:space="preserve">
+    <value>Friends</value>
+  </data>
+  <data name="KindReward" xml:space="preserve">
+    <value>Rewards</value>
+  </data>
+  <data name="KindInfo" xml:space="preserve">
+    <value>Info</value>
+  </data>
 </root>

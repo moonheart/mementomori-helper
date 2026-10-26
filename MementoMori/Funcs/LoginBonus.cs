@@ -17,6 +17,7 @@ public partial class MementoMoriFuncs
                     var bonus = await GetResponse<ReceiveDailyLoginBonusRequest, ReceiveDailyLoginBonusResponse>(new ReceiveDailyLoginBonusRequest {ReceiveDay = TimeManager.ServerNow.Day});
                     log($"{TextResourceTable.Get("[MyPageButtonLoginBonusLabel]")}:\n");
                     bonus.RewardItemList.PrintUserItems(log);
+                    TrackRewards(TextResourceTable.Get("[MyPageButtonLoginBonusLabel]"), bonus.RewardItemList);
                 }
 
                 await GetMonthlyLoginBonusInfo();
@@ -38,6 +39,7 @@ public partial class MementoMoriFuncs
                     });
                     log($"{TextResourceTable.Get("[LoginBonusCountFormat]", loginCountRewardInfo.DayCount, 30)}");
                     resp.RewardItemList.PrintUserItems(log);
+                    TrackRewards(TextResourceTable.Get("[MyPageButtonLoginBonusLabel]"), resp.RewardItemList);
                 }
             }
 
@@ -65,6 +67,7 @@ public partial class MementoMoriFuncs
                         LimitedLoginBonusId = limitedLoginBonusId, ReceiveDate = dailyLimitedLoginBonusItem.Date
                     });
                     resp.RewardItemList.PrintUserItems(log);
+                    TrackRewards(name, resp.RewardItemList.Select(d => d.Item));
                 }
 
                 if (loginBonusRewardListMb.ExistSpecialReward && limitedLoginBonusInfoResponse.TotalLoginCount >= loginBonusRewardListMb.SpecialRewardItem.Date &&
@@ -76,6 +79,7 @@ public partial class MementoMoriFuncs
                         LimitedLoginBonusId = limitedLoginBonusId
                     });
                     response.RewardItemList.PrintUserItems(log);
+                    TrackRewards(name, response.RewardItemList.Select(d => d.Item));
                 }
             }
         });

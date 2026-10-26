@@ -32,6 +32,7 @@ public partial class MementoMoriFuncs
                     log($"{TextResourceTable.Get("[CommonMonthlyBoosterLabel]")} {TextResourceTable.Get("[ShopMonthlyBoostRewardDetailReceivedMessage]")}");
                     receiveRewardResponse.RewardInfo.ItemList.PrintUserItems(log);
                     receiveRewardResponse.RewardInfo.BonusItemList.PrintUserItems(log);
+                    TrackRewards(TextResourceTable.Get("[CommonMonthlyBoosterLabel]"), receiveRewardResponse.RewardInfo.ItemList, receiveRewardResponse.RewardInfo.BonusItemList);
                     receiveRewardResponse.RewardInfo.CharacterList.PrintCharacterDtos(log);
                 }
             }
@@ -146,6 +147,7 @@ public partial class MementoMoriFuncs
                 var bonus = await GetResponse<GetDailyGiftRequest, GetDailyGiftResponse>(new GetDailyGiftRequest());
                 log($"{TextResourceTable.Get("[VipDailyRewardLabelFormat]", UserSyncData.UserStatusDtoInfo.Vip)}\n");
                 bonus.ItemList.PrintUserItems(log);
+                TrackRewards(TextResourceTable.Get("[VipDailyRewardLabelFormat]", UserSyncData.UserStatusDtoInfo.Vip), bonus.ItemList);
             }
             else
                 log($"{TextResourceTable.GetErrorCodeMessage(ErrorCode.VipGetDailyGiftAlreadyGet)}");

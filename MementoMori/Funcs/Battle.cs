@@ -35,6 +35,7 @@ public partial class MementoMoriFuncs
             log(TextResourceTable.Get("[AutoBattleRewardInfoRewardLabel]"));
             bonus.AutoBattleRewardResult.BattleRewardResult.FixedItemList.PrintUserItems(log);
             bonus.AutoBattleRewardResult.BattleRewardResult.DropItemList.PrintUserItems(log);
+            TrackRewards(TextResourceTable.Get("[AutoBattleRewardInfoRewardLabel]"), bonus.AutoBattleRewardResult.BattleRewardResult.FixedItemList, bonus.AutoBattleRewardResult.BattleRewardResult.DropItemList);
         });
     }
 

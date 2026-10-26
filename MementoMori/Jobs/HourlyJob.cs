@@ -32,14 +32,6 @@ public partial class HourlyJob : IJob
         await account.Funcs.ReadAllMemories();
         if (_gameConfig.Value.AutoJob.AutoFreeGacha) await account.Funcs.FreeGacha();
         if (_gameConfig.Value.AutoJob.AutoUseItems) await account.Funcs.AutoUseItems();
-        if (_gameConfig.Value.AutoJob.AutoPullGacha) await account.Funcs.AutoPullGacha();
-        if (_gameConfig.Value.AutoJob.AutoRankUpWithFodder) await account.Funcs.AutoRankUpSmart();
-        if (_gameConfig.Value.AutoJob.AutoBuildTeam) await account.Funcs.AutoBuildTeam();
-        if (_gameConfig.Value.AutoJob.AutoLevelUpCharacter) await account.Funcs.AutoLevelUp();
-        if (_gameConfig.Value.AutoJob.AutoEquipBest) await account.Funcs.AutoEquipBest();
-        if (_gameConfig.Value.AutoJob.AutoReinforceTeamEquipment) await account.Funcs.AutoReinforceTeamEquipment();
-        if (_gameConfig.Value.AutoJob.AutoSphere) await account.Funcs.AutoSphere();
-        if (_gameConfig.Value.AutoJob.AutoProgressQuest) await account.Funcs.AutoProgressQuest();
-        if (_gameConfig.Value.AutoJob.AutoProgressTower) await account.Funcs.AutoClimbTowers();
+        await account.Funcs.AutoProgress();
     }
 }

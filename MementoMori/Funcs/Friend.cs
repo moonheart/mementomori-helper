@@ -147,6 +147,7 @@ public partial class MementoMoriFuncs
 
                     await GetResponse<RemoveFriendRequest, RemoveFriendResponse>(new RemoveFriendRequest {TargetPlayerId = playerInfo.PlayerId});
                     log($"{ResourceStrings.Remove_friends_inactive_for_7_days}: {playerInfo.PlayerName}");
+                    Track(GrowthKind.Friend, string.Format(ResourceStrings.FriendRemoved, playerInfo.PlayerName, (int) playerInfo.LastLoginTime.TotalDays));
                 }
             }
 
@@ -157,6 +158,7 @@ public partial class MementoMoriFuncs
                 {
                     var response = await GetResponse<ReplyAllFriendRequest, ReplyAllFriendResponse>(new ReplyAllFriendRequest {IsApproval = true});
                     log($"{ResourceStrings.Auto_accept_friend_requests}: {response.ProcessedNum}");
+                    if (response.ProcessedNum > 0) Track(GrowthKind.Friend, string.Format(ResourceStrings.FriendAccepted, response.ProcessedNum));
                 }
             }
 
@@ -167,6 +169,8 @@ public partial class MementoMoriFuncs
                 {
                     var response = await GetResponse<BulkApplyFriendsRequest, BulkApplyFriendsResponse>(new BulkApplyFriendsRequest
                         {TargetPlayerIdList = info.PlayerInfoList.Select(d => d.PlayerId).ToList()});
+                    var names = response.AppliedPlayerIdList.Select(id => info.PlayerInfoList.Find(d => d.PlayerId == id)?.PlayerName).Where(n => n != null).ToList();
+                    if (names.Count > 0) Track(GrowthKind.Friend, string.Format(ResourceStrings.FriendRequested, string.Join(", ", names)));
                     foreach (var l in response.AppliedPlayerIdList)
                     {
                         var name = info.PlayerInfoList.Find(d => d.PlayerId == l).PlayerName;

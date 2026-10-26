@@ -1,3 +1,4 @@
+using MementoMori.Common.Localization;
 using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Equipment;
@@ -8,11 +9,6 @@ using CharLevelUp = MementoMori.Ortega.Share.Data.ApiInterface.Character;
 using LevelLinkApi = MementoMori.Ortega.Share.Data.ApiInterface.LevelLink;
 
 namespace MementoMori.Funcs;
-
-public enum GrowthKind
-{
-    Level, LevelLink, Equip, Reinforce, Quest, Tower, RankUp, Gacha, Team, Info
-}
 
 public partial class MementoMoriFuncs
 {
@@ -29,9 +25,6 @@ public partial class MementoMoriFuncs
         await AutoEquipBest();
         await AutoReinforceTeamEquipment();
     }
-
-    // 养成结果统一走这里, 方便以后记录历史
-    public void Track(GrowthKind kind, string text) => AddLog($"[{kind}] {text}");
 
     private bool CanAfford(IEnumerable<UserItem> items) =>
         items.All(i => i.ItemCount <= 0 || UserSyncData.GetUserItemCount(i.ItemType, i.ItemId) >= i.ItemCount);
@@ -89,7 +82,7 @@ public partial class MementoMoriFuncs
 
                 link = UserSyncData.UserLevelLinkDtoInfo;
                 var after = $"{link.PartyLevel}.{link.PartySubLevel}";
-                if (after != before) Track(GrowthKind.LevelLink, $"Party level {before} → {after}");
+                if (after != before) Track(GrowthKind.LevelLink, string.Format(ResourceStrings.ActPartyLevel, before, after));
                 return;
             }
 
@@ -127,7 +120,7 @@ public partial class MementoMoriFuncs
                 .Select(d => $"{CharName(d.CharacterId)} {start[d.Guid]}→{d.Level}").ToList();
             if (changed.Count > 0) Track(GrowthKind.Level, string.Join(", ", changed));
             var linkAfter = UserSyncData.UserLevelLinkDtoInfo?.PartyLevel ?? 0;
-            if (linkAfter > linkBefore) Track(GrowthKind.LevelLink, $"Level Link {linkBefore} → {linkAfter}");
+            if (linkAfter > linkBefore) Track(GrowthKind.LevelLink, string.Format(ResourceStrings.ActLevelLink, linkBefore, linkAfter));
             if (changed.Count == 0) log("Level up: not enough gold/potions");
         });
     }
@@ -158,7 +151,7 @@ public partial class MementoMoriFuncs
                 try
                 {
                     await GetResponse<LevelLinkApi.SetMemberRequest, LevelLinkApi.SetMemberResponse>(new LevelLinkApi.SetMemberRequest {LevelLinkCellNo = cell, UserCharacterGuid = c.Guid});
-                    Track(GrowthKind.LevelLink, $"{CharName(c.CharacterId)} joined Level Link (slot {cell})");
+                    Track(GrowthKind.LevelLink, string.Format(ResourceStrings.ActLevelLinkJoin, CharName(c.CharacterId), cell));
                 }
                 catch (Exception e)
                 {
@@ -210,7 +203,7 @@ public partial class MementoMoriFuncs
                         // null = 全部继承 (选择性继承要解锁后才能用, 否则 232061)
                         EquipmentInheritanceTypeList = null
                     });
-                    descriptions.Add(current == null ? $"{slot}: {EquipName(mb.Id)}" : $"{slot}: {EquipName(current.EquipmentId)} → {EquipName(mb.Id)}");
+                    descriptions.Add(current == null ? $"{TextResourceTable.Get(slot)}: {EquipName(mb.Id)}" : $"{TextResourceTable.Get(slot)}: {EquipName(current.EquipmentId)} → {EquipName(mb.Id)}");
                 }
 
                 if (changes.Count == 0) continue;
@@ -256,7 +249,7 @@ public partial class MementoMoriFuncs
             var perChar = UserSyncData.UserEquipmentDtoInfos
                 .Where(d => team.ContainsKey(d.CharacterGuid ?? "") && start.TryGetValue(d.Guid, out var lv) && d.ReinforcementLv > lv)
                 .GroupBy(d => d.CharacterGuid)
-                .Select(g => $"{CharName(team[g.Key])}: " + string.Join(", ", g.Select(d => $"{EquipmentTable.GetById(d.EquipmentId).SlotType} +{start[d.Guid]}→+{d.ReinforcementLv}")))
+                .Select(g => $"{CharName(team[g.Key])}: " + string.Join(", ", g.Select(d => $"{TextResourceTable.Get(EquipmentTable.GetById(d.EquipmentId).SlotType)} +{start[d.Guid]}→+{d.ReinforcementLv}")))
                 .ToList();
             if (perChar.Count > 0) Track(GrowthKind.Reinforce, string.Join(" | ", perChar));
         });

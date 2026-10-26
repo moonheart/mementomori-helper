@@ -163,6 +163,7 @@ public partial class MementoMoriFuncs
                 {
                     var rewardResponse = await GetResponse<RewardRequest, RewardResponse>(new RewardRequest {BountyQuestIds = questIds, ConsumeCurrency = 0, IsQuick = false});
                     rewardResponse.RewardItems.PrintUserItems(log);
+                    TrackRewards(TextResourceTable.Get("[CommonHeaderBountyQuestLabel]"), rewardResponse.RewardItems);
                 }
                 catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.BountyQuestUnavailableRewardsBountyQuest && questIds.Count > 1)
                 {
@@ -171,6 +172,7 @@ public partial class MementoMoriFuncs
                     {
                         var rewardResponse = await GetResponse<RewardRequest, RewardResponse>(new RewardRequest {BountyQuestIds = new List<long> {questId}, ConsumeCurrency = 0, IsQuick = false});
                         rewardResponse.RewardItems.PrintUserItems(log);
+                        TrackRewards(TextResourceTable.Get("[CommonHeaderBountyQuestLabel]"), rewardResponse.RewardItems);
                     }
                 }
 

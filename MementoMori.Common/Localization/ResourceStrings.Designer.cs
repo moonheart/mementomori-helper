@@ -2464,5 +2464,500 @@ namespace MementoMori.Common.Localization {
                 return ResourceManager.GetString("AutoPullGacha", resourceCulture);
             }
         }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to Dashboard.
+        /// </summary>
+        public static string NavDashboard {
+            get {
+                return ResourceManager.GetString("NavDashboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Activity.
+        /// </summary>
+        public static string NavActivity {
+            get {
+                return ResourceManager.GetString("NavActivity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logging in….
+        /// </summary>
+        public static string DashLoggingIn {
+            get {
+                return ResourceManager.GetString("DashLoggingIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retry login.
+        /// </summary>
+        public static string DashRetryLogin {
+            get {
+                return ResourceManager.GetString("DashRetryLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Working….
+        /// </summary>
+        public static string DashWorking {
+            get {
+                return ResourceManager.GetString("DashWorking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Autopilot on.
+        /// </summary>
+        public static string DashAutopilotOn {
+            get {
+                return ResourceManager.GetString("DashAutopilotOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Autopilot off.
+        /// </summary>
+        public static string DashAutopilotOff {
+            get {
+                return ResourceManager.GetString("DashAutopilotOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Autopilot.
+        /// </summary>
+        public static string DashAutopilot {
+            get {
+                return ResourceManager.GetString("DashAutopilot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next full run {0}.
+        /// </summary>
+        public static string DashNextRun {
+            get {
+                return ResourceManager.GetString("DashNextRun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to in {0} min.
+        /// </summary>
+        public static string DashInMinutes {
+            get {
+                return ResourceManager.GetString("DashInMinutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scheduled jobs are paused.
+        /// </summary>
+        public static string DashPaused {
+            get {
+                return ResourceManager.GetString("DashPaused", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run now.
+        /// </summary>
+        public static string DashRunNow {
+            get {
+                return ResourceManager.GetString("DashRunNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Main team.
+        /// </summary>
+        public static string DashMainTeam {
+            get {
+                return ResourceManager.GetString("DashMainTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Equipped pieces / average reinforcement.
+        /// </summary>
+        public static string DashGearTitle {
+            get {
+                return ResourceManager.GetString("DashGearTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Progress over time.
+        /// </summary>
+        public static string DashProgress {
+            get {
+                return ResourceManager.GetString("DashProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The chart fills in as the bot runs (one point per run)..
+        /// </summary>
+        public static string DashChartEmpty {
+            get {
+                return ResourceManager.GetString("DashChartEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What the bot did.
+        /// </summary>
+        public static string DashWhatBotDid {
+            get {
+                return ResourceManager.GetString("DashWhatBotDid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full history.
+        /// </summary>
+        public static string DashFullHistory {
+            get {
+                return ResourceManager.GetString("DashFullHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Live log.
+        /// </summary>
+        public static string DashLiveLog {
+            get {
+                return ResourceManager.GetString("DashLiveLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Main quest.
+        /// </summary>
+        public static string KpiMainQuest {
+            get {
+                return ResourceManager.GetString("KpiMainQuest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level Link.
+        /// </summary>
+        public static string KpiLevelLink {
+            get {
+                return ResourceManager.GetString("KpiLevelLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rank.
+        /// </summary>
+        public static string KpiPlayerRank {
+            get {
+                return ResourceManager.GetString("KpiPlayerRank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to no change.
+        /// </summary>
+        public static string KpiNoChange {
+            get {
+                return ResourceManager.GetString("KpiNoChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Everything the bot did.
+        /// </summary>
+        public static string ActEverything {
+            get {
+                return ResourceManager.GetString("ActEverything", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run snapshots.
+        /// </summary>
+        public static string ActSnapshots {
+            get {
+                return ResourceManager.GetString("ActSnapshots", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time.
+        /// </summary>
+        public static string ActColTime {
+            get {
+                return ResourceManager.GetString("ActColTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing yet. Press “Run now” on the dashboard or wait for the next scheduled run..
+        /// </summary>
+        public static string ActEmpty {
+            get {
+                return ResourceManager.GetString("ActEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Today.
+        /// </summary>
+        public static string ActToday {
+            get {
+                return ResourceManager.GetString("ActToday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yesterday.
+        /// </summary>
+        public static string ActYesterday {
+            get {
+                return ResourceManager.GetString("ActYesterday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Main quest {0} → {1} ({2} wins, {3} losses).
+        /// </summary>
+        public static string ActQuest {
+            get {
+                return ResourceManager.GetString("ActQuest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stuck at quest {0}: lost {1} times in a row, will retry after the next run.
+        /// </summary>
+        public static string ActQuestStuck {
+            get {
+                return ResourceManager.GetString("ActQuestStuck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} floor {1} → {2}.
+        /// </summary>
+        public static string ActTower {
+            get {
+                return ResourceManager.GetString("ActTower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Party level {0} → {1}.
+        /// </summary>
+        public static string ActPartyLevel {
+            get {
+                return ResourceManager.GetString("ActPartyLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level Link {0} → {1}.
+        /// </summary>
+        public static string ActLevelLink {
+            get {
+                return ResourceManager.GetString("ActLevelLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} joined Level Link (slot {1}).
+        /// </summary>
+        public static string ActLevelLinkJoin {
+            get {
+                return ResourceManager.GetString("ActLevelLinkJoin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runes combined: {0}.
+        /// </summary>
+        public static string ActRuneCombined {
+            get {
+                return ResourceManager.GetString("ActRuneCombined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runes socketed: {0}.
+        /// </summary>
+        public static string ActRunePlaced {
+            get {
+                return ResourceManager.GetString("ActRunePlaced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New team: {0}.
+        /// </summary>
+        public static string ActNewTeam {
+            get {
+                return ResourceManager.GetString("ActNewTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} {1} → {2} (used {3}).
+        /// </summary>
+        public static string ActRankUp {
+            get {
+                return ResourceManager.GetString("ActRankUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to duplicates.
+        /// </summary>
+        public static string ActDuplicates {
+            get {
+                return ResourceManager.GetString("ActDuplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removed friend {0} (last login {1} days ago).
+        /// </summary>
+        public static string FriendRemoved {
+            get {
+                return ResourceManager.GetString("FriendRemoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Accepted {0} friend requests.
+        /// </summary>
+        public static string FriendAccepted {
+            get {
+                return ResourceManager.GetString("FriendAccepted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sent friend requests to {0}.
+        /// </summary>
+        public static string FriendRequested {
+            get {
+                return ResourceManager.GetString("FriendRequested", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level.
+        /// </summary>
+        public static string KindLevel {
+            get {
+                return ResourceManager.GetString("KindLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level Link.
+        /// </summary>
+        public static string KindLevelLink {
+            get {
+                return ResourceManager.GetString("KindLevelLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Equipment.
+        /// </summary>
+        public static string KindEquip {
+            get {
+                return ResourceManager.GetString("KindEquip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reinforce.
+        /// </summary>
+        public static string KindReinforce {
+            get {
+                return ResourceManager.GetString("KindReinforce", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quest.
+        /// </summary>
+        public static string KindQuest {
+            get {
+                return ResourceManager.GetString("KindQuest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tower.
+        /// </summary>
+        public static string KindTower {
+            get {
+                return ResourceManager.GetString("KindTower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rank up.
+        /// </summary>
+        public static string KindRankUp {
+            get {
+                return ResourceManager.GetString("KindRankUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gacha.
+        /// </summary>
+        public static string KindGacha {
+            get {
+                return ResourceManager.GetString("KindGacha", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Team.
+        /// </summary>
+        public static string KindTeam {
+            get {
+                return ResourceManager.GetString("KindTeam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Friends.
+        /// </summary>
+        public static string KindFriend {
+            get {
+                return ResourceManager.GetString("KindFriend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rewards.
+        /// </summary>
+        public static string KindReward {
+            get {
+                return ResourceManager.GetString("KindReward", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        public static string KindInfo {
+            get {
+                return ResourceManager.GetString("KindInfo", resourceCulture);
+            }
+        }
     }
 }

@@ -58,6 +58,7 @@ public partial class MementoMoriFuncs
                     var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(new ReceiveItemRequest {LanguageType = NetworkManager.LanguageType});
                     log($"{TextResourceTable.Get("[MyPagePresentBoxButtonTitle]")} {TextResourceTable.Get("[MyPagePresentBoxButtonAllReceive]")}");
                     resp.ResultItems.Select(d => d.Item).PrintUserItems(log);
+                    TrackRewards(TextResourceTable.Get("[MyPagePresentBoxButtonTitle]"), resp.ResultItems.Select(d => d.Item));
                 }
                 catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.PresentReceiveOverLimitCountPresent)
                 {
@@ -70,6 +71,7 @@ public partial class MementoMoriFuncs
                             var resp = await GetResponse<ReceiveItemRequest, ReceiveItemResponse>(
                                 new ReceiveItemRequest {LanguageType = NetworkManager.LanguageType, PresentGuid = present.Guid});
                             resp.ResultItems.Select(d => d.Item).PrintUserItems(log);
+                            TrackRewards(TextResourceTable.Get("[MyPagePresentBoxButtonTitle]"), resp.ResultItems.Select(d => d.Item));
                         }
                         catch (ApiErrorException e2) when (e2.ErrorCode == ErrorCode.PresentReceiveOverLimitCountPresent)
                         {

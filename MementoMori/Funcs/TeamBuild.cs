@@ -1,3 +1,4 @@
+using MementoMori.Common.Localization;
 using MementoMori.Ortega.Custom;
 using MementoMori.Ortega.Share.Data.ApiInterface.Character;
 using MementoMori.Ortega.Share.Data.ApiInterface.User;
@@ -43,7 +44,7 @@ public partial class MementoMoriFuncs
             }
 
             if (!before.SetEquals(guids))
-                Track(GrowthKind.Team, "New team: " + string.Join(", ", team.Select(c => $"{CharName(c.CharacterId)} ({GetTier(c.CharacterId) ?? "?"})")));
+                Track(GrowthKind.Team, string.Format(ResourceStrings.ActNewTeam, string.Join(", ", team.Select(c => $"{CharName(c.CharacterId)} ({GetTier(c.CharacterId) ?? "?"})"))));
         });
     }
 
@@ -104,8 +105,8 @@ public partial class MementoMoriFuncs
                     var m2 = rule.MaterialRankSecondFlags == CharacterRarityFlags.None ? null : Pick(rule.MaterialRankSecondFlags);
                     if (rule.MaterialRankSecondFlags != CharacterRarityFlags.None && m2 == null) continue;
                     job = new CharacterRankUpMaterialInfo {TargetGuid = target.Guid, MaterialGuid1 = m1.Guid, MaterialGuid2 = m2?.Guid};
-                    var fodder = rule.UpType == RankUpType.SameName ? "duplicates" : string.Join(" + ", new[] {m1, m2}.Where(x => x != null).Select(x => CharName(x!.CharacterId)));
-                    desc = $"{CharName(target.CharacterId)} {target.RarityFlags} → {rule.RankUpResultRarityFlags} (used {fodder})";
+                    var fodder = rule.UpType == RankUpType.SameName ? ResourceStrings.ActDuplicates : string.Join(" + ", new[] {m1, m2}.Where(x => x != null).Select(x => CharName(x!.CharacterId)));
+                    desc = string.Format(ResourceStrings.ActRankUp, CharName(target.CharacterId), target.RarityFlags, rule.RankUpResultRarityFlags, fodder);
                     break;
                 }
 

@@ -879,4 +879,169 @@
   <data name="AutoPullGacha" xml:space="preserve">
     <value>自动抽卡（用掉所有券 + 免费钻石只抽 S/SS UP，保留储备）</value>
   </data>
+  <data name="NavDashboard" xml:space="preserve">
+    <value>仪表盘</value>
+  </data>
+  <data name="NavActivity" xml:space="preserve">
+    <value>活动记录</value>
+  </data>
+  <data name="DashLoggingIn" xml:space="preserve">
+    <value>正在登录…</value>
+  </data>
+  <data name="DashRetryLogin" xml:space="preserve">
+    <value>重新登录</value>
+  </data>
+  <data name="DashWorking" xml:space="preserve">
+    <value>执行中…</value>
+  </data>
+  <data name="DashAutopilotOn" xml:space="preserve">
+    <value>自动运行中</value>
+  </data>
+  <data name="DashAutopilotOff" xml:space="preserve">
+    <value>自动运行已关闭</value>
+  </data>
+  <data name="DashAutopilot" xml:space="preserve">
+    <value>自动运行</value>
+  </data>
+  <data name="DashNextRun" xml:space="preserve">
+    <value>下次完整运行：{0}</value>
+  </data>
+  <data name="DashInMinutes" xml:space="preserve">
+    <value>{0} 分钟后</value>
+  </data>
+  <data name="DashPaused" xml:space="preserve">
+    <value>定时任务已暂停</value>
+  </data>
+  <data name="DashRunNow" xml:space="preserve">
+    <value>立即运行</value>
+  </data>
+  <data name="DashMainTeam" xml:space="preserve">
+    <value>主力队伍</value>
+  </data>
+  <data name="DashGearTitle" xml:space="preserve">
+    <value>已穿装备数 / 平均强化等级</value>
+  </data>
+  <data name="DashProgress" xml:space="preserve">
+    <value>成长曲线</value>
+  </data>
+  <data name="DashChartEmpty" xml:space="preserve">
+    <value>每运行一次记一个点，运行几次后就会出现曲线。</value>
+  </data>
+  <data name="DashWhatBotDid" xml:space="preserve">
+    <value>助手做了什么</value>
+  </data>
+  <data name="DashFullHistory" xml:space="preserve">
+    <value>完整记录</value>
+  </data>
+  <data name="DashLiveLog" xml:space="preserve">
+    <value>实时日志</value>
+  </data>
+  <data name="KpiMainQuest" xml:space="preserve">
+    <value>主线</value>
+  </data>
+  <data name="KpiLevelLink" xml:space="preserve">
+    <value>等级链接</value>
+  </data>
+  <data name="KpiPlayerRank" xml:space="preserve">
+    <value>等级</value>
+  </data>
+  <data name="KpiNoChange" xml:space="preserve">
+    <value>无变化</value>
+  </data>
+  <data name="ActEverything" xml:space="preserve">
+    <value>助手做过的所有事</value>
+  </data>
+  <data name="ActSnapshots" xml:space="preserve">
+    <value>运行快照</value>
+  </data>
+  <data name="ActColTime" xml:space="preserve">
+    <value>时间</value>
+  </data>
+  <data name="ActEmpty" xml:space="preserve">
+    <value>还没有记录。在仪表盘点「立即运行」，或者等下次定时运行。</value>
+  </data>
+  <data name="ActToday" xml:space="preserve">
+    <value>今天</value>
+  </data>
+  <data name="ActYesterday" xml:space="preserve">
+    <value>昨天</value>
+  </data>
+  <data name="ActQuest" xml:space="preserve">
+    <value>主线 {0} → {1}（胜 {2}，负 {3}）</value>
+  </data>
+  <data name="ActQuestStuck" xml:space="preserve">
+    <value>卡在主线 {0}：连输 {1} 次，下次运行后再试</value>
+  </data>
+  <data name="ActTower" xml:space="preserve">
+    <value>{0} 第 {1} → {2} 层</value>
+  </data>
+  <data name="ActPartyLevel" xml:space="preserve">
+    <value>队伍等级 {0} → {1}</value>
+  </data>
+  <data name="ActLevelLink" xml:space="preserve">
+    <value>等级链接 {0} → {1}</value>
+  </data>
+  <data name="ActLevelLinkJoin" xml:space="preserve">
+    <value>{0} 加入等级链接（第 {1} 格）</value>
+  </data>
+  <data name="ActRuneCombined" xml:space="preserve">
+    <value>符石合成：{0}</value>
+  </data>
+  <data name="ActRunePlaced" xml:space="preserve">
+    <value>符石镶嵌：{0}</value>
+  </data>
+  <data name="ActNewTeam" xml:space="preserve">
+    <value>新队伍：{0}</value>
+  </data>
+  <data name="ActRankUp" xml:space="preserve">
+    <value>{0} {1} → {2}（消耗 {3}）</value>
+  </data>
+  <data name="ActDuplicates" xml:space="preserve">
+    <value>重复角色</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>删除好友 {0}（{1} 天没登录）</value>
+  </data>
+  <data name="FriendAccepted" xml:space="preserve">
+    <value>接受了 {0} 个好友申请</value>
+  </data>
+  <data name="FriendRequested" xml:space="preserve">
+    <value>向 {0} 发送了好友申请</value>
+  </data>
+  <data name="KindLevel" xml:space="preserve">
+    <value>升级</value>
+  </data>
+  <data name="KindLevelLink" xml:space="preserve">
+    <value>等级链接</value>
+  </data>
+  <data name="KindEquip" xml:space="preserve">
+    <value>装备</value>
+  </data>
+  <data name="KindReinforce" xml:space="preserve">
+    <value>强化</value>
+  </data>
+  <data name="KindQuest" xml:space="preserve">
+    <value>主线</value>
+  </data>
+  <data name="KindTower" xml:space="preserve">
+    <value>塔</value>
+  </data>
+  <data name="KindRankUp" xml:space="preserve">
+    <value>升星</value>
+  </data>
+  <data name="KindGacha" xml:space="preserve">
+    <value>抽卡</value>
+  </data>
+  <data name="KindTeam" xml:space="preserve">
+    <value>队伍</value>
+  </data>
+  <data name="KindFriend" xml:space="preserve">
+    <value>好友</value>
+  </data>
+  <data name="KindReward" xml:space="preserve">
+    <value>奖励</value>
+  </data>
+  <data name="KindInfo" xml:space="preserve">
+    <value>提示</value>
+  </data>
 </root>
