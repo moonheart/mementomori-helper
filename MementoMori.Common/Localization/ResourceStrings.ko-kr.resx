@@ -640,4 +640,13 @@
   <data name="AutoLevelUpButton" xml:space="preserve">
     <value>레벨업 + 레벨 링크</value>
   </data>
+  <data name="AutoEquipBest" xml:space="preserve">
+    <value>메인 팀에 최고 장비 자동 장착</value>
+  </data>
+  <data name="AutoReinforceTeamGear" xml:space="preserve">
+    <value>메인 팀 장비 자동 강화</value>
+  </data>
+  <data name="AutoGearButton" xml:space="preserve">
+    <value>최고 장비 + 강화</value>
+  </data>
 </root>

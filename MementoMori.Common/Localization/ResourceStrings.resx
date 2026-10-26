@@ -746,4 +746,13 @@
   <data name="AutoLevelUpButton" xml:space="preserve">
     <value>Level up + Level Link</value>
   </data>
+  <data name="AutoEquipBest" xml:space="preserve">
+    <value>Auto equip best gear on the main team</value>
+  </data>
+  <data name="AutoReinforceTeamGear" xml:space="preserve">
+    <value>Auto reinforce main team gear</value>
+  </data>
+  <data name="AutoGearButton" xml:space="preserve">
+    <value>Equip best + reinforce</value>
+  </data>
 </root>

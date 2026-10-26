@@ -1,5 +1,8 @@
+using MementoMori.Ortega.Share.Data.ApiInterface.Equipment;
 using MementoMori.Ortega.Share.Data.DtoInfo;
+using MementoMori.Ortega.Share.Data.Equipment;
 using MementoMori.Ortega.Share.Data.Item;
+using MementoMori.Ortega.Share.Master.Data;
 using MementoMori.Ortega.Custom;
 using CharLevelUp = MementoMori.Ortega.Share.Data.ApiInterface.Character;
 using LevelLinkApi = MementoMori.Ortega.Share.Data.ApiInterface.LevelLink;
@@ -18,6 +21,13 @@ public partial class MementoMoriFuncs
     {
         await AutoFillLevelLink();
         await AutoLevelUpCharacter();
+    }
+
+    // 主队换最好的装备, 再把主队装备强化到上限
+    public async Task AutoGear()
+    {
+        await AutoEquipBest();
+        await AutoReinforceTeamEquipment();
     }
 
     // 养成结果统一走这里, 方便以后记录历史
@@ -44,6 +54,12 @@ public partial class MementoMoriFuncs
     {
         var mb = CharacterTable.GetById(characterId);
         return mb == null ? characterId.ToString() : TextResourceTable.Get(mb.NameKey);
+    }
+
+    public static string EquipName(long equipmentId)
+    {
+        var mb = EquipmentTable.GetById(equipmentId);
+        return mb == null ? equipmentId.ToString() : $"{TextResourceTable.Get(mb.NameKey)} ({mb.RarityFlags} Lv{mb.EquipmentLv})";
     }
 
     public async Task AutoLevelUpCharacter()
@@ -151,6 +167,98 @@ public partial class MementoMoriFuncs
 
                 await Task.Delay(GameConfig.AutoRequestDelay, token);
             }
+        });
+    }
+
+    // 给主队每个位置换上能穿的战力最高的装备 (继承强化等级)
+    public async Task AutoEquipBest()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            foreach (var c in GetMainTeam())
+            {
+                var job = CharacterTable.GetById(c.CharacterId).JobFlags;
+                var level = GetEffectiveLevel(c);
+                var equipped = UserSyncData.GetUserEquipmentDtoInfoSlotTypeDictionaryByCharacterGuid(c.Guid);
+                var changes = new List<EquipmentChangeInfo>();
+                var descriptions = new List<string>();
+                foreach (var (slot, current) in equipped)
+                {
+                    var currentPower = current == null ? -1 : EquipmentTable.GetById(current.EquipmentId).PerformancePoint;
+                    bool Fits(EquipmentMB mb) => mb.SlotType == slot && (mb.EquippedJobFlags & job) != 0 && mb.EquipmentLv <= level && mb.PerformancePoint > currentPower;
+
+                    // 背包里的 (未强化的叠在 item 里, 强化过的是没主人的 EquipmentDtoInfo)
+                    var bestItem = UserSyncData.UserItemDtoInfo
+                        .Where(d => d.ItemType == ItemType.Equipment && d.ItemCount > 0)
+                        .Select(d => EquipmentTable.GetById(d.ItemId)).Where(mb => mb != null && Fits(mb))
+                        .MaxBy(mb => mb.PerformancePoint);
+                    var bestDto = UserSyncData.UserEquipmentDtoInfos
+                        .Where(d => string.IsNullOrEmpty(d.CharacterGuid))
+                        .Select(d => (dto: d, mb: EquipmentTable.GetById(d.EquipmentId))).Where(x => x.mb != null && Fits(x.mb))
+                        .OrderByDescending(x => x.mb.PerformancePoint).FirstOrDefault();
+                    if (bestItem == null && bestDto.dto == null) continue;
+
+                    var useDto = bestDto.dto != null && (bestItem == null || bestDto.mb.PerformancePoint >= bestItem.PerformancePoint);
+                    var mb = useDto ? bestDto.mb : bestItem;
+                    changes.Add(new EquipmentChangeInfo
+                    {
+                        EquipmentGuid = useDto ? bestDto.dto.Guid : null,
+                        EquipmentId = mb.Id,
+                        EquipmentSlotType = slot,
+                        // 新装备没强化过才继承, 免得覆盖
+                        IsInherit = current != null && (!useDto || bestDto.dto.ReinforcementLv == 0),
+                        // null = 全部继承 (选择性继承要解锁后才能用, 否则 232061)
+                        EquipmentInheritanceTypeList = null
+                    });
+                    descriptions.Add(current == null ? $"{slot}: {EquipName(mb.Id)}" : $"{slot}: {EquipName(current.EquipmentId)} → {EquipName(mb.Id)}");
+                }
+
+                if (changes.Count == 0) continue;
+                try
+                {
+                    await GetResponse<ChangeEquipmentRequest, ChangeEquipmentResponse>(new ChangeEquipmentRequest
+                    {
+                        UserCharacterGuid = c.Guid, EquipmentChangeInfos = changes
+                    });
+                    Track(GrowthKind.Equip, $"{CharName(c.CharacterId)} — {string.Join("; ", descriptions)}");
+                }
+                catch (Exception e)
+                {
+                    log($"Equip {CharName(c.CharacterId)}: {e.Message}");
+                }
+
+                await Task.Delay(GameConfig.AutoRequestDelay, token);
+            }
+        });
+    }
+
+    // 主队装备轮流 +1 直到没钱/材料 (装备等级是强化上限)
+    public async Task AutoReinforceTeamEquipment()
+    {
+        await ExecuteQuickAction(async (log, token) =>
+        {
+            var team = GetMainTeam().ToDictionary(c => c.Guid, c => c.CharacterId);
+            var start = UserSyncData.UserEquipmentDtoInfos.Where(d => team.ContainsKey(d.CharacterGuid ?? "")).ToDictionary(d => d.Guid, d => d.ReinforcementLv);
+            while (!token.IsCancellationRequested)
+            {
+                var e = UserSyncData.UserEquipmentDtoInfos
+                    .Where(d => team.ContainsKey(d.CharacterGuid ?? "") && EquipmentTable.GetById(d.EquipmentId).EquipmentLv > d.ReinforcementLv)
+                    .MinBy(d => d.ReinforcementLv);
+                if (e == null) break;
+                var mat = EquipmentReinforcementMaterialTable.GetArray().FirstOrDefault(d => d.ReinforcementLevel == e.ReinforcementLv + 1);
+                if (mat == null) break;
+                var cost = EquipmentTable.GetById(e.EquipmentId).SlotType == EquipmentSlotType.Weapon ? mat.WeaponRequiredItemList : mat.OthersRequiredItemList;
+                if (!CanAfford(cost)) break;
+                await GetResponse<ReinforcementRequest, ReinforcementResponse>(new ReinforcementRequest {EquipmentGuid = e.Guid, NumberOfTimes = 1});
+                await Task.Delay(GameConfig.AutoRequestDelay, token);
+            }
+
+            var perChar = UserSyncData.UserEquipmentDtoInfos
+                .Where(d => team.ContainsKey(d.CharacterGuid ?? "") && start.TryGetValue(d.Guid, out var lv) && d.ReinforcementLv > lv)
+                .GroupBy(d => d.CharacterGuid)
+                .Select(g => $"{CharName(team[g.Key])}: " + string.Join(", ", g.Select(d => $"{EquipmentTable.GetById(d.EquipmentId).SlotType} +{start[d.Guid]}→+{d.ReinforcementLv}")))
+                .ToList();
+            if (perChar.Count > 0) Track(GrowthKind.Reinforce, string.Join(" | ", perChar));
         });
     }
 }

@@ -128,6 +128,8 @@ public class GameConfig
         public bool AutoUseItems { get; set; }
         public bool AutoFreeGacha { get; set; }
         public bool AutoRankUpCharacter { get; set; }
+        public bool AutoReinforceTeamEquipment { get; set; }
+        public bool AutoEquipBest { get; set; }
         public bool AutoLevelUpCharacter { get; set; }
         public bool AutoOpenGuildRaid { get; set; }
         public bool AutoLocalRaid { get; set; }

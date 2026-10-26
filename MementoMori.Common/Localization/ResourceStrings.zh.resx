@@ -747,4 +747,13 @@
   <data name="AutoLevelUpButton" xml:space="preserve">
     <value>升级 + 等级链接</value>
   </data>
+  <data name="AutoEquipBest" xml:space="preserve">
+    <value>主队自动穿戴最强装备</value>
+  </data>
+  <data name="AutoReinforceTeamGear" xml:space="preserve">
+    <value>自动强化主队装备</value>
+  </data>
+  <data name="AutoGearButton" xml:space="preserve">
+    <value>穿最强装备 + 强化</value>
+  </data>
 </root>

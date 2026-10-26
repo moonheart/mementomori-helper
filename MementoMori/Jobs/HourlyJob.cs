@@ -33,5 +33,7 @@ public partial class HourlyJob : IJob
         if (_gameConfig.Value.AutoJob.AutoFreeGacha) await account.Funcs.FreeGacha();
         if (_gameConfig.Value.AutoJob.AutoUseItems) await account.Funcs.AutoUseItems();
         if (_gameConfig.Value.AutoJob.AutoLevelUpCharacter) await account.Funcs.AutoLevelUp();
+        if (_gameConfig.Value.AutoJob.AutoEquipBest) await account.Funcs.AutoEquipBest();
+        if (_gameConfig.Value.AutoJob.AutoReinforceTeamEquipment) await account.Funcs.AutoReinforceTeamEquipment();
     }
 }

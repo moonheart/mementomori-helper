@@ -2068,5 +2068,32 @@ namespace MementoMori.Common.Localization {
                 return ResourceManager.GetString("AutoLevelUpButton", resourceCulture);
             }
         }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to Auto equip best gear on the main team.
+        /// </summary>
+        public static string AutoEquipBest {
+            get {
+                return ResourceManager.GetString("AutoEquipBest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto reinforce main team gear.
+        /// </summary>
+        public static string AutoReinforceTeamGear {
+            get {
+                return ResourceManager.GetString("AutoReinforceTeamGear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Equip best + reinforce.
+        /// </summary>
+        public static string AutoGearButton {
+            get {
+                return ResourceManager.GetString("AutoGearButton", resourceCulture);
+            }
+        }
     }
 }

@@ -640,4 +640,13 @@
   <data name="AutoLevelUpButton" xml:space="preserve">
     <value>レベルアップ＋レベルリンク</value>
   </data>
+  <data name="AutoEquipBest" xml:space="preserve">
+    <value>メインパーティに最強装備を自動装着</value>
+  </data>
+  <data name="AutoReinforceTeamGear" xml:space="preserve">
+    <value>メインパーティの装備を自動強化</value>
+  </data>
+  <data name="AutoGearButton" xml:space="preserve">
+    <value>最強装備＋強化</value>
+  </data>
 </root>
