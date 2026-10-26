@@ -649,4 +649,10 @@
   <data name="AutoGearButton" xml:space="preserve">
     <value>最強装備＋強化</value>
   </data>
+  <data name="AutoRunes" xml:space="preserve">
+    <value>自動ルーン（ゴールド100万以上で Lv1-5 を合成、1つ目の枠を開放、最良を装着）</value>
+  </data>
+  <data name="AutoRunesButton" xml:space="preserve">
+    <value>ルーン</value>
+  </data>
 </root>

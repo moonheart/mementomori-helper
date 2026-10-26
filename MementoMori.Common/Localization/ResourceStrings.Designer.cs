@@ -2095,5 +2095,23 @@ namespace MementoMori.Common.Localization {
                 return ResourceManager.GetString("AutoGearButton", resourceCulture);
             }
         }
+    
+        /// <summary>
+        ///   Looks up a localized string similar to Auto runes (combine Lv1-5 when gold &gt; 1M, open first slot, socket best).
+        /// </summary>
+        public static string AutoRunes {
+            get {
+                return ResourceManager.GetString("AutoRunes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runes.
+        /// </summary>
+        public static string AutoRunesButton {
+            get {
+                return ResourceManager.GetString("AutoRunesButton", resourceCulture);
+            }
+        }
     }
 }

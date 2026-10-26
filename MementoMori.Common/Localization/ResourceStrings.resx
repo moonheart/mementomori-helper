@@ -755,4 +755,10 @@
   <data name="AutoGearButton" xml:space="preserve">
     <value>Equip best + reinforce</value>
   </data>
+  <data name="AutoRunes" xml:space="preserve">
+    <value>Auto runes (combine Lv1-5 when gold &gt; 1M, open first slot, socket best)</value>
+  </data>
+  <data name="AutoRunesButton" xml:space="preserve">
+    <value>Runes</value>
+  </data>
 </root>

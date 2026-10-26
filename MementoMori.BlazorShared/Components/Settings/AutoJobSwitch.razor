@@ -17,6 +17,7 @@
         <MudSwitch Label="@ResourceStrings.AutoLevelUp" @bind-Value="AutoJob__AutoLevelUpCharacter" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@ResourceStrings.AutoEquipBest" @bind-Value="AutoJob__AutoEquipBest" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@ResourceStrings.AutoReinforceTeamGear" @bind-Value="AutoJob__AutoReinforceTeamEquipment" Color="Color.Primary"></MudSwitch>
+        <MudSwitch Label="@ResourceStrings.AutoRunes" @bind-Value="AutoJob__AutoSphere" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@ResourceStrings.ReinforceEquipmentOnce" @bind-Value="AutoJob__AutoReinforcementEquipmentOneTime" Color="Color.Primary"></MudSwitch>
         <MudSwitch Label="@Tr("[CharacterMenuTabCharacterRankUp]")" @bind-Value="AutoJob__AutoRankUpCharacter" Color="Color.Primary"></MudSwitch>
         <div class="mm-group-label">@ResourceStrings.GroupDailyBattles</div>
@@ -35,6 +36,13 @@
 </MudCard>
 
 @code {
+
+    public bool AutoJob__AutoSphere
+    {
+        get => WritableGameConfig.Value.AutoJob.AutoSphere;
+        set => WritableGameConfig.Update(x => x.AutoJob.AutoSphere = value);
+    }
+
 
     public bool AutoJob__AutoEquipBest
     {

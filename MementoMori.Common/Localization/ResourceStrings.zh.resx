@@ -756,4 +756,10 @@
   <data name="AutoGearButton" xml:space="preserve">
     <value>穿最强装备 + 强化</value>
   </data>
+  <data name="AutoRunes" xml:space="preserve">
+    <value>自动符石（金币 &gt; 100万时合成 1-5 级、开第一个孔、镶嵌最好的）</value>
+  </data>
+  <data name="AutoRunesButton" xml:space="preserve">
+    <value>符石</value>
+  </data>
 </root>

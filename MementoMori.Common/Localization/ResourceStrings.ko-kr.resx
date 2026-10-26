@@ -649,4 +649,10 @@
   <data name="AutoGearButton" xml:space="preserve">
     <value>최고 장비 + 강화</value>
   </data>
+  <data name="AutoRunes" xml:space="preserve">
+    <value>자동 룬 (골드 100만 이상이면 Lv1-5 합성, 첫 슬롯 개방, 최고 룬 장착)</value>
+  </data>
+  <data name="AutoRunesButton" xml:space="preserve">
+    <value>룬</value>
+  </data>
 </root>
