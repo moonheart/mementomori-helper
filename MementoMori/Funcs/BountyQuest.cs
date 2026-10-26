@@ -1,4 +1,5 @@
-﻿using MementoMori.Ortega.Common.Utils;
+﻿using MementoMori.Exceptions;
+using MementoMori.Ortega.Common.Utils;
 using MementoMori.Ortega.Share.Data.ApiInterface.BountyQuest;
 using MementoMori.Ortega.Share.Data.BountyQuest;
 using MementoMori.Ortega.Share.Extensions;
@@ -158,8 +159,21 @@ public partial class MementoMoriFuncs
 
             if (questIds.Count > 0)
             {
-                var rewardResponse = await GetResponse<RewardRequest, RewardResponse>(new RewardRequest {BountyQuestIds = questIds, ConsumeCurrency = 0, IsQuick = false});
-                rewardResponse.RewardItems.PrintUserItems(log);
+                try
+                {
+                    var rewardResponse = await GetResponse<RewardRequest, RewardResponse>(new RewardRequest {BountyQuestIds = questIds, ConsumeCurrency = 0, IsQuick = false});
+                    rewardResponse.RewardItems.PrintUserItems(log);
+                }
+                catch (ApiErrorException e) when (e.ErrorCode == ErrorCode.BountyQuestUnavailableRewardsBountyQuest && questIds.Count > 1)
+                {
+                    // 一键领取 (多个任务一起领) 还没解锁, 改为逐个领取
+                    foreach (var questId in questIds)
+                    {
+                        var rewardResponse = await GetResponse<RewardRequest, RewardResponse>(new RewardRequest {BountyQuestIds = new List<long> {questId}, ConsumeCurrency = 0, IsQuick = false});
+                        rewardResponse.RewardItems.PrintUserItems(log);
+                    }
+                }
+
                 await GetResponse<GetListRequest, GetListResponse>(new GetListRequest());
             }
             else
@@ -180,12 +194,17 @@ public partial class MementoMoriFuncs
 
     public async Task RemakeBountyRequest()
     {
-        if (BountyQuestResponseInfo.UserBountyQuestDtoInfos.Any(d => d.BountyQuestEndTime == 0))
+        await ExecuteQuickAction(async (log, token) =>
         {
-            var response = await GetResponse<RemakeRequest, RemakeResponse>(new RemakeRequest());
-            await GetBountyRequestInfo();
-        }
-        else
-            AddLog(string.Format(ResourceStrings.NoAvailable, TextResourceTable.Get("[BountyQuestTypeSolo]")));
+            // BountyQuestResponseInfo 在没打开过祈愿之泉时是 null, 先刷新一次
+            var info = await GetBountyRequestInfo();
+            if (info?.UserBountyQuestDtoInfos.Any(d => d.BountyQuestEndTime == 0) == true)
+            {
+                await GetResponse<RemakeRequest, RemakeResponse>(new RemakeRequest());
+                await GetBountyRequestInfo();
+            }
+            else
+                log(string.Format(ResourceStrings.NoAvailable, TextResourceTable.Get("[BountyQuestTypeSolo]")));
+        });
     }
 }
