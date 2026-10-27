@@ -35,7 +35,7 @@ public partial class ActionExecutor
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Action {ActionName} failed for user {UserId}", handler.ActionName, userId);
-                await _jobLogger.LogAsync(userId, $"{handler.ActionName} 执行失败: {ex.Message}", "Error");
+                await _jobLogger.LogAsync(userId, Text.T("JobActionFailed", handler.ActionName, ex.Message), "Error");
             }
         }
     }

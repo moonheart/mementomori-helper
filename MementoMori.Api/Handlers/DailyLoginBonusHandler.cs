@@ -18,7 +18,7 @@ public partial class DailyLoginBonusHandler : IGameActionHandler
     private readonly ILogger<DailyLoginBonusHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "领取登录奖励";
+    public string ActionName => Text.T("ActionDailyLoginBonus");
 
     public async Task ExecuteAsync(AccountContext context)
     {
@@ -26,7 +26,7 @@ public partial class DailyLoginBonusHandler : IGameActionHandler
         var nm = context.NetworkManager;
         var timeManager = context.TimeManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查登录奖励...");
+        await _jobLogger.LogAsync(userId, Text.T("JobCheckingLoginBonus"));
 
         try
         {
@@ -45,12 +45,12 @@ public partial class DailyLoginBonusHandler : IGameActionHandler
             // 5. 领取限时登录奖励
             await ClaimLimitedLoginBonusAsync(userId, nm);
 
-            await _jobLogger.LogAsync(userId, "登录奖励检查/领取完毕。");
+            await _jobLogger.LogAsync(userId, Text.T("JobLoginBonusDone"));
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "检查登录奖励失败 for user {UserId}", userId);
-            await _jobLogger.LogAsync(userId, $"登录奖励处理出错: {ex.Message}");
+            await _jobLogger.LogAsync(userId, Text.T("JobLoginBonusError", ex.Message));
         }
     }
 

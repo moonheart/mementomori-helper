@@ -22,7 +22,7 @@ public partial class ArenaPvpHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly IServiceProvider _serviceProvider;
 
-    public string ActionName => "竞技场自动战斗";
+    public string ActionName => Text.T("ActionArenaPvp");
 
     public async Task ExecuteAsync(AccountContext context)
     {
@@ -40,7 +40,7 @@ public partial class ArenaPvpHandler : IGameActionHandler
             return;
         }
 
-        await _jobLogger.LogAsync(userId, "正在检查竞技场挑战次数...");
+        await _jobLogger.LogAsync(userId, Text.T("ArenaChecking"));
 
         int count = 10; // 限制单次任务最大对战次数
         while (count-- > 0)
@@ -54,7 +54,7 @@ public partial class ArenaPvpHandler : IGameActionHandler
                 if (nm.UserSyncData.UserBattlePvpDtoInfo.PvpTodayCount >= OrtegaConst.BattlePvp.MaxPvpBattleFreeCount)
                 {
                     _logger.LogInformation("User {UserId} has no free arena challenge counts left.", userId);
-                    await _jobLogger.LogAsync(userId, "今日竞技场免费次数已用完。");
+                    await _jobLogger.LogAsync(userId, Text.T("ArenaFreeUsedUp"));
                     return;
                 }
 
@@ -75,7 +75,7 @@ public partial class ArenaPvpHandler : IGameActionHandler
                 if (target.playerId == 0)
                 {
                     _logger.LogInformation("No suitable arena target found for user {UserId}.", userId);
-                    await _jobLogger.LogAsync(userId, "未找到符合筛选条件的竞技场对手。");
+                    await _jobLogger.LogAsync(userId, Text.T("ArenaNoRival"));
                     break;
                 }
 
@@ -89,7 +89,7 @@ public partial class ArenaPvpHandler : IGameActionHandler
                 bool isWin = startResp.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                 string rivalName = startResp.RivalPlayerInfo?.PlayerName ?? "Unknown";
                 
-                await _jobLogger.LogAsync(userId, $"对战 {rivalName} (排名 {target.rank}): {(isWin ? "胜利" : "失败")}");
+                await _jobLogger.LogAsync(userId, Text.T("ArenaBattleResult", rivalName, target.rank, (isWin ? Text.T("CommonVictory") : Text.T("CommonDefeat"))));
                 
                 // 延迟
                 await Task.Delay(Random.Shared.Next(1000, 3000));
@@ -97,7 +97,7 @@ public partial class ArenaPvpHandler : IGameActionHandler
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in ArenaPvpHandler for user {UserId}", userId);
-                await _jobLogger.LogAsync(userId, $"竞技场对战异常: {ex.Message}", "Error");
+                await _jobLogger.LogAsync(userId, Text.T("ArenaBattleError", ex.Message), "Error");
                 break;
             }
         }

@@ -21,7 +21,7 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly PlayerSettingService _settingService;
 
-    public string ActionName => "悬赏任务自动派遣";
+    public string ActionName => Text.T("ActionBountyQuestDispatch");
 
     /// <summary>
     /// 每刷新一次花费20钻石，期望获得的钻石数量（根据任务板等级）
@@ -48,11 +48,11 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
         
         if (!isAvailable)
         {
-            await _jobLogger.LogAsync(userId, "悬赏任务功能尚未解锁");
+            await _jobLogger.LogAsync(userId, Text.T("BountyNotUnlocked"));
             return;
         }
 
-        await _jobLogger.LogAsync(userId, "开始执行悬赏任务自动派遣...");
+        await _jobLogger.LogAsync(userId, Text.T("BountyDispatchStarting"));
 
         // 获取配置
         var bountyQuestAuto = await _settingService.GetSettingAsync<GameConfig.BountyQuestAutoConfig>(userId, "bountyquestauto");
@@ -67,15 +67,15 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
         if (bountyQuestAuto?.TargetItems.Count > 0)
         {
             var itemNames = string.Join(",", bountyQuestAuto.TargetItems.Select(ItemUtil.GetItemName));
-            await _jobLogger.LogAsync(userId, $"指定目标道具: {itemNames}");
-            await _jobLogger.LogAsync(userId, "正在派遣符合目标道具的任务...");
+            await _jobLogger.LogAsync(userId, Text.T("BountyTargetItems", itemNames));
+            await _jobLogger.LogAsync(userId, Text.T("BountyDispatchingTargeted"));
             
             var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, userSyncData!, bountyQuestAuto);
             await DispatchAsync(nm, bountyQuestStartInfos, userId);
         }
         else
         {
-            await _jobLogger.LogAsync(userId, "未指定目标道具，派遣所有可用任务...");
+            await _jobLogger.LogAsync(userId, Text.T("BountyDispatchingAll"));
             var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, userSyncData!, bountyQuestAuto ?? new GameConfig.BountyQuestAutoConfig(), force: true);
             await DispatchAsync(nm, bountyQuestStartInfos, userId);
         }
@@ -130,7 +130,7 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
             // 如果期望收益低于20钻石，直接派遣不刷新
             if (expectedDiamond < 20)
             {
-                await _jobLogger.LogAsync(userId, "当前任务的期望钻石收益低于20，不再刷新，直接派遣...");
+                await _jobLogger.LogAsync(userId, Text.T("BountyLowExpectedValue"));
                 var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, userSyncData!, bountyQuestAuto, force: true);
                 await DispatchAsync(nm, bountyQuestStartInfos, userId);
                 break;
@@ -139,7 +139,7 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
             // 如果刷新次数已达上限，直接派遣
             if (bountyQuestOption.MaxRefreshCount <= bountyQuestOption.TodayRefreshCount[date])
             {
-                await _jobLogger.LogAsync(userId, $"刷新次数已达上限 ({bountyQuestOption.TodayRefreshCount[date]}/{bountyQuestOption.MaxRefreshCount})，直接派遣...");
+                await _jobLogger.LogAsync(userId, Text.T("BountyRefreshLimitReached", bountyQuestOption.TodayRefreshCount[date], bountyQuestOption.MaxRefreshCount));
                 var bountyQuestStartInfos = BountyQuestAutoFormationUtil.CalcAutoFormation(response1, userSyncData!, bountyQuestAuto, force: true);
                 await DispatchAsync(nm, bountyQuestStartInfos, userId);
                 break;
@@ -147,7 +147,7 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
 
             // 执行刷新
             await _jobLogger.LogAsync(userId, 
-                $"当前期望收益: {expectedDiamond:F1} 钻石，今日已刷新: {bountyQuestOption.TodayRefreshCount[date]}/{bountyQuestOption.MaxRefreshCount}，正在刷新...");
+                Text.T("BountyRefreshing", expectedDiamond, bountyQuestOption.TodayRefreshCount[date], bountyQuestOption.MaxRefreshCount));
 
             await nm.SendRequest<RemakeRequest, RemakeResponse>(new RemakeRequest());
             
@@ -180,7 +180,7 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
 
         // 最后获取一次任务列表更新状态
         await GetBountyRequestInfo(nm);
-        await _jobLogger.LogAsync(userId, "悬赏任务自动派遣完成");
+        await _jobLogger.LogAsync(userId, Text.T("BountyDispatchDone"));
     }
 
     private async Task<GetListResponse?> GetBountyRequestInfo(NetworkManager nm)
@@ -206,7 +206,7 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
                 var startResponse = await nm.SendRequest<StartRequest, StartResponse>(
                     new StartRequest { BountyQuestStartInfos = new List<BountyQuestStartInfo> { bountyQuestStartInfo } });
                 
-                await _jobLogger.LogAsync(userId, $"已派遣悬赏任务: {bountyQuestStartInfo.BountyQuestId}");
+                await _jobLogger.LogAsync(userId, Text.T("BountyDispatched", bountyQuestStartInfo.BountyQuestId));
             }
             catch (Exception ex)
             {

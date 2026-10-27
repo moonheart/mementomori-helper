@@ -53,49 +53,49 @@ public partial class JobManagerService
         }
 
         // 注册核心任务（这些任务总是需要的）
-        await RegisterJobAsync<Jobs.DailyJob>(scheduler, userId, config.DailyJobCron, "每日任务", offset);
-        await RegisterJobAsync<Jobs.HourlyJob>(scheduler, userId, config.HourlyJobCron, "每小时奖励/体力任务", offset);
+        await RegisterJobAsync<Jobs.DailyJob>(scheduler, userId, config.DailyJobCron, Text.T("JobDescDaily"), offset);
+        await RegisterJobAsync<Jobs.HourlyJob>(scheduler, userId, config.HourlyJobCron, Text.T("JobDescHourly"), offset);
 
         // 自动购买商店物品
         if (config.AutoBuyShopItem)
         {
-            await RegisterJobAsync<Jobs.AutoBuyShopItemJob>(scheduler, userId, config.AutoBuyShopItemJobCron, "商店自动购买", offset);
+            await RegisterJobAsync<Jobs.AutoBuyShopItemJob>(scheduler, userId, config.AutoBuyShopItemJobCron, Text.T("ActionShopAutoBuy"), offset);
         }
 
         // 自动更换圣装目标
         if (config.AutoChangeGachaRelic)
         {
-            await RegisterJobAsync<Jobs.AutoChangeGachaRelicJob>(scheduler, userId, config.AutoChangeGachaRelicJobCron, "自动更换圣装", offset);
+            await RegisterJobAsync<Jobs.AutoChangeGachaRelicJob>(scheduler, userId, config.AutoChangeGachaRelicJobCron, Text.T("ActionGachaRelicChange"), offset);
         }
 
         // 自动抽取圣装
         if (config.AutoDrawGachaRelic)
         {
-            await RegisterJobAsync<Jobs.AutoDrawGachaRelicJob>(scheduler, userId, config.AutoDrawGachaRelicJobCron, "自动抽取圣装", offset);
+            await RegisterJobAsync<Jobs.AutoDrawGachaRelicJob>(scheduler, userId, config.AutoDrawGachaRelicJobCron, Text.T("ActionGachaRelicDraw"), offset);
         }
 
         // 自动开启公会副本
         if (config.AutoOpenGuildRaid)
         {
-            await RegisterJobAsync<Jobs.GuildRaidBossReleaseJob>(scheduler, userId, config.GuildRaidBossReleaseCron, "自动开启公会副本", offset);
+            await RegisterJobAsync<Jobs.GuildRaidBossReleaseJob>(scheduler, userId, config.GuildRaidBossReleaseCron, Text.T("ActionGuildRaidOpen"), offset);
         }
 
         // 传奇竞技场自动对战
         if (config.AutoLegendLeague)
         {
-            await RegisterJobAsync<Jobs.LegendLeagueJob>(scheduler, userId, config.LegendLeagueJobCron, "传奇竞技场自动对战", offset);
+            await RegisterJobAsync<Jobs.LegendLeagueJob>(scheduler, userId, config.LegendLeagueJobCron, Text.T("ActionLegendLeague"), offset);
         }
 
         // 自动时空洞窟
         if (config.AutoLocalRaid)
         {
-            await RegisterJobAsync<Jobs.AutoLocalRaidJob>(scheduler, userId, config.AutoLocalRaidJobCron, "自动时空洞窟", offset);
+            await RegisterJobAsync<Jobs.AutoLocalRaidJob>(scheduler, userId, config.AutoLocalRaidJobCron, Text.T("ActionLocalRaid"), offset);
         }
 
         // 竞技场自动对战
         if (config.AutoPvp)
         {
-            await RegisterJobAsync<Jobs.PvpJob>(scheduler, userId, config.PvpJobCron, "PVP 竞技场任务", offset);
+            await RegisterJobAsync<Jobs.PvpJob>(scheduler, userId, config.PvpJobCron, Text.T("JobDescPvp"), offset);
         }
         
         // Autopilot (自动成长/推图/抽卡, 单独的配置)
@@ -163,7 +163,7 @@ public partial class JobManagerService
         else
         {
             _logger.LogWarning("Job {JobTypeName} not registered for user {UserId}, cannot trigger", jobTypeName, userId);
-            throw new InvalidOperationException($"任务 {jobTypeName} 未注册或已被禁用");
+            throw new InvalidOperationException(Text.T("ApiJobNotRegistered", jobTypeName));
         }
     }
 

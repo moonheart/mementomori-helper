@@ -16,14 +16,14 @@ public partial class BossHighSpeedBattleHandler : IGameActionHandler
     private readonly ILogger<BossHighSpeedBattleHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "BOSS高速战斗";
+    public string ActionName => Text.T("ActionBossHighSpeedBattle");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "开始执行BOSS高速战斗...");
+        await _jobLogger.LogAsync(userId, Text.T("BossHighSpeedStarting"));
 
         try
         {
@@ -37,30 +37,30 @@ public partial class BossHighSpeedBattleHandler : IGameActionHandler
                 var availableCount = OrtegaConst.Shop.MonthlyBoostBattleQuickBonus - autoResponse.UserBattleAuto.QuickTodayUsePrivilegeCount;
                 if (availableCount > 0)
                 {
-                    await _jobLogger.LogAsync(userId, $"使用月卡特权进行高速战斗，可用次数: {availableCount}");
+                    await _jobLogger.LogAsync(userId, Text.T("BossHighSpeedUsingMonthlyBoost", availableCount));
                     await ExecuteBattleQuick(userId, nm, QuestQuickExecuteType.Privilege, (int)availableCount);
                 }
                 else
                 {
-                    await _jobLogger.LogAsync(userId, "月卡特权次数已用完");
+                    await _jobLogger.LogAsync(userId, Text.T("BossHighSpeedMonthlyBoostUsedUp"));
                 }
             }
 
             // 每天有一次免费高速战斗
             if (autoResponse.UserBattleAuto.QuickTodayUseCurrencyCount >= 1)
             {
-                await _jobLogger.LogAsync(userId, "今日免费高速战斗次数已用完");
+                await _jobLogger.LogAsync(userId, Text.T("BossHighSpeedFreeUsedUp"));
             }
             else
             {
-                await _jobLogger.LogAsync(userId, "使用免费高速战斗次数...");
+                await _jobLogger.LogAsync(userId, Text.T("BossHighSpeedUsingFree"));
                 await ExecuteBattleQuick(userId, nm, QuestQuickExecuteType.Currency, 1);
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in BossHighSpeedBattleHandler for user {UserId}", userId);
-            await _jobLogger.LogAsync(userId, $"BOSS高速战斗失败: {ex.Message}", "Error");
+            await _jobLogger.LogAsync(userId, Text.T("BossHighSpeedFailed", ex.Message), "Error");
             throw;
         }
     }
@@ -78,23 +78,18 @@ public partial class BossHighSpeedBattleHandler : IGameActionHandler
         var result = quickResponse.AutoBattleRewardResult;
         
         await _jobLogger.LogAsync(userId, 
-            $"高速战斗完成 - 人口金币: {result.GoldByPopulation}, " +
-            $"人口潜能宝石: {result.PotentialJewelByPopulation}, " +
-            $"角色经验: {result.BattleRewardResult?.CharacterExp ?? 0}, " +
-            $"金币: {result.BattleRewardResult?.ExtraGold ?? 0}, " +
-            $"玩家经验: {result.BattleRewardResult?.PlayerExp ?? 0}, " +
-            $"Rank提升: {result.BattleRewardResult?.RankUp ?? 0}");
+            Text.T("BossHighSpeedSummary", result.GoldByPopulation, result.PotentialJewelByPopulation, result.BattleRewardResult?.CharacterExp ?? 0, result.BattleRewardResult?.ExtraGold ?? 0, result.BattleRewardResult?.PlayerExp ?? 0, result.BattleRewardResult?.RankUp ?? 0));
 
         // 记录物品奖励
         if (result.BattleRewardResult?.FixedItemList?.Count > 0)
         {
             var items = string.Join(", ", result.BattleRewardResult.FixedItemList.Select(i => $"{i.ItemType}:{i.ItemId} x{i.ItemCount}"));
-            await _jobLogger.LogAsync(userId, $"固定物品: {items}");
+            await _jobLogger.LogAsync(userId, Text.T("BossFixedItems", items));
         }
         if (result.BattleRewardResult?.DropItemList?.Count > 0)
         {
             var items = string.Join(", ", result.BattleRewardResult.DropItemList.Select(i => $"{i.ItemType}:{i.ItemId} x{i.ItemCount}"));
-            await _jobLogger.LogAsync(userId, $"掉落物品: {items}");
+            await _jobLogger.LogAsync(userId, Text.T("BossDropItems", items));
         }
     }
 

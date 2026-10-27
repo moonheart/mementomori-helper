@@ -15,14 +15,14 @@ public partial class PresentReceiveHandler : IGameActionHandler
     private readonly ILogger<PresentReceiveHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "领取礼物箱";
+    public string ActionName => Text.T("ActionPresentReceive");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查礼物箱...");
+        await _jobLogger.LogAsync(userId, Text.T("PresentChecking"));
 
         try
         {
@@ -36,7 +36,7 @@ public partial class PresentReceiveHandler : IGameActionHandler
                     var resp = await nm.SendRequest<ReceiveItemRequest, ReceiveItemResponse>(
                         new ReceiveItemRequest { LanguageType = nm.LanguageType });
                     var count = resp.ResultItems?.Count ?? 0;
-                    await _jobLogger.LogAsync(userId, $"礼物箱已领取 {count} 件物品。");
+                    await _jobLogger.LogAsync(userId, Text.T("PresentClaimed", count));
                 }
                 catch (Exception ex) when (ex.Message.Contains("OverLimitCount"))
                 {
@@ -55,12 +55,12 @@ public partial class PresentReceiveHandler : IGameActionHandler
                             // 忽略单个失败
                         }
                     }
-                    await _jobLogger.LogAsync(userId, $"礼物箱逐个领取，成功 {receivedCount} 件。");
+                    await _jobLogger.LogAsync(userId, Text.T("PresentClaimedOneByOne", receivedCount));
                 }
             }
             else
             {
-                await _jobLogger.LogAsync(userId, "礼物箱已清空。");
+                await _jobLogger.LogAsync(userId, Text.T("PresentEmpty"));
             }
         }
         catch (Exception ex)

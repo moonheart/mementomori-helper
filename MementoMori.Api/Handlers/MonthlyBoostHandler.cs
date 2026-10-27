@@ -15,14 +15,14 @@ public partial class MonthlyBoostHandler : IGameActionHandler
     private readonly ILogger<MonthlyBoostHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "领取月卡奖励";
+    public string ActionName => Text.T("ActionMonthlyBoost");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查月卡奖励...");
+        await _jobLogger.LogAsync(userId, Text.T("MonthlyBoostChecking"));
 
         try
         {
@@ -36,7 +36,7 @@ public partial class MonthlyBoostHandler : IGameActionHandler
             {
                 if (shopProductInfo.ShopProductMonthlyBoost.IsAlreadyReceive)
                 {
-                    await _jobLogger.LogAsync(userId, "月卡奖励今日已领取。");
+                    await _jobLogger.LogAsync(userId, Text.T("MonthlyBoostAlreadyClaimed"));
                 }
                 else
                 {
@@ -47,12 +47,12 @@ public partial class MonthlyBoostHandler : IGameActionHandler
                             ProductId = shopProductInfo.ShopProductMonthlyBoost.ProductId,
                             ShopProductType = ShopProductType.MonthlyBoost
                         });
-                    await _jobLogger.LogAsync(userId, "月卡奖励已领取。");
+                    await _jobLogger.LogAsync(userId, Text.T("MonthlyBoostClaimed"));
                 }
             }
             else
             {
-                await _jobLogger.LogAsync(userId, "月卡未激活或已过期。");
+                await _jobLogger.LogAsync(userId, Text.T("MonthlyBoostInactive"));
             }
         }
         catch (Exception ex)

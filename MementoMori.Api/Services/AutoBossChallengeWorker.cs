@@ -44,20 +44,20 @@ public class AutoBossChallengeWorker
         var winCount = 0;
         var errCount = 0;
 
-        log("开始自动刷主线...");
+        log(Text.T("BossMainQuestStarting"));
 
         try
         {
             // 先同步用户数据
-            log("正在同步用户数据...");
+            log(Text.T("JobSyncingUserData"));
             try
             {
                 await nm.SendRequest<GetUserDataRequest, GetUserDataResponse>(new GetUserDataRequest());
-                log("用户数据同步完成");
+                log(Text.T("JobUserDataSynced"));
             }
             catch (Exception ex)
             {
-                log($"同步用户数据失败: {ex.Message}");
+                log(Text.T("JobUserDataSyncFailed", ex.Message));
                 return;
             }
 
@@ -85,7 +85,7 @@ public class AutoBossChallengeWorker
                     // 检查是否达到目标
                     if (targetQuestId.HasValue && questId > targetQuestId.Value)
                     {
-                        log($"已达到目标关卡 {targetQuestId.Value}，停止挑战");
+                        log(Text.T("BossReachedTargetQuest", targetQuestId.Value));
                         break;
                     }
 
@@ -112,7 +112,7 @@ public class AutoBossChallengeWorker
 
                         // 获取任务信息用于日志
                         var questInfo = QuestTable.GetById(questId);
-                        log($"关卡 {questInfo?.Memo ?? questId.ToString()}: 胜利 (总{totalCount}次, 胜{winCount}次, 错{errCount}次)");
+                        log(Text.T("BossQuestVictory", questInfo?.Memo ?? questId.ToString(), totalCount, winCount, errCount));
 
                         // 胜利后更新地图信息
                         await nm.SendRequest<MapInfoRequest, MapInfoResponse>(
@@ -121,7 +121,7 @@ public class AutoBossChallengeWorker
                         // 检查是否达到目标关卡
                         if (targetQuestId.HasValue && questId >= targetQuestId.Value)
                         {
-                            log($"已达到目标关卡 {targetQuestId.Value}，停止挑战");
+                            log(Text.T("BossReachedTargetQuest", targetQuestId.Value));
                             break;
                         }
 
@@ -132,7 +132,7 @@ public class AutoBossChallengeWorker
                         }
                         catch (NetworkManager.ApiErrorException ex) when (ex.ErrorCode == ErrorCode.BattleAutoNextQuestNotFound)
                         {
-                            log("已到达当前最大可挑战关卡");
+                            log(Text.T("BossReachedMaxStage"));
                             break;
                         }
                     }
@@ -146,12 +146,12 @@ public class AutoBossChallengeWorker
 
                         // 失败不停止，继续挑战同一关卡
                         var questInfo = QuestTable.GetById(questId);
-                        log($"关卡 {questInfo?.Memo ?? questId.ToString()}: 失败 (总{totalCount}次, 胜{winCount}次, 错{errCount}次)");
+                        log(Text.T("BossQuestDefeat", questInfo?.Memo ?? questId.ToString(), totalCount, winCount, errCount));
                     }
                 }
                 catch (OperationCanceledException)
                 {
-                    log("任务已取消");
+                    log(Text.T("JobTaskCancelled"));
                     break;
                 }
                 catch (Exception ex)
@@ -160,11 +160,11 @@ public class AutoBossChallengeWorker
                     progress.TotalCount = totalCount;
                     progress.WinCount = winCount;
                     progress.ErrorCount = errCount;
-                    log($"挑战出错: {ex.Message}");
+                    log(Text.T("JobChallengeError", ex.Message));
 
                     if (errCount > MaxErrorCount)
                     {
-                        log($"错误次数超过{MaxErrorCount}次，停止挑战");
+                        log(Text.T("JobTooManyErrorsStopping", MaxErrorCount));
                         break;
                     }
 
@@ -177,12 +177,12 @@ public class AutoBossChallengeWorker
                 }
             }
 
-            log($"自动刷主线结束 - 总计{totalCount}次，胜利{winCount}次");
+            log(Text.T("BossMainQuestSummary", totalCount, winCount));
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in AutoBossChallengeWorker for user {UserId}", userId);
-            log($"自动刷主线失败: {ex.Message}");
+            log(Text.T("BossMainQuestFailed", ex.Message));
             throw;
         }
     }

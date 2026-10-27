@@ -21,14 +21,14 @@ public partial class MissionRewardHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly IServiceProvider _serviceProvider;
 
-    public string ActionName => "领取任务奖励";
+    public string ActionName => Text.T("ActionMissionReward");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查任务奖励...");
+        await _jobLogger.LogAsync(userId, Text.T("MissionChecking"));
 
         // 1. 获取任务信息
         var missionGroupTypes = new List<MissionGroupType> { MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main };
@@ -68,7 +68,7 @@ public partial class MissionRewardHandler : IGameActionHandler
             var rewardResp = await nm.SendRequest<RewardMissionRequest, RewardMissionResponse>(
                 new RewardMissionRequest { TargetMissionIdList = allMissionIds });
             
-            await _jobLogger.LogAsync(userId, $"成功领取 {allMissionIds.Count} 项任务奖励。");
+            await _jobLogger.LogAsync(userId, Text.T("MissionRewardsClaimed", allMissionIds.Count));
         }
 
         // 3. 领取活跃度奖励 (Activity Rewards)
@@ -92,7 +92,7 @@ public partial class MissionRewardHandler : IGameActionHandler
                             RequiredCount = rewardMb.RequiredActivityMedalCount
                         });
 
-                        await _jobLogger.LogAsync(userId, $"领取 {pair.Key} 活跃度奖励 ({rewardMb.RequiredActivityMedalCount})。");
+                        await _jobLogger.LogAsync(userId, Text.T("MissionActivityClaimed", pair.Key, rewardMb.RequiredActivityMedalCount));
                     }
                     catch (Exception ex)
                     {
@@ -102,6 +102,6 @@ public partial class MissionRewardHandler : IGameActionHandler
             }
         }
 
-        await _jobLogger.LogAsync(userId, "任务奖励领取检查完毕。");
+        await _jobLogger.LogAsync(userId, Text.T("MissionCheckDone"));
     }
 }

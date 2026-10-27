@@ -42,7 +42,7 @@ public partial class MissionService
             return new ApiGetMissionInfoResponse
             {
                 Success = true,
-                Message = "获取任务信息成功",
+                Message = Text.T("MissionInfoFetched"),
                 MissionInfoDict = response.MissionInfoDict
             };
         }
@@ -52,7 +52,7 @@ public partial class MissionService
             return new ApiGetMissionInfoResponse
             {
                 Success = false,
-                Message = $"获取任务信息失败: {ex.Message}"
+                Message = Text.T("MissionInfoFetchFailed", ex.Message)
             };
         }
     }
@@ -86,7 +86,7 @@ public partial class MissionService
             return new ApiClaimMissionResponse
             {
                 Success = true,
-                Message = "领取任务奖励成功",
+                Message = Text.T("MissionRewardClaimSucceeded"),
                 RewardInfo = response.RewardInfo
             };
         }
@@ -96,7 +96,7 @@ public partial class MissionService
             return new ApiClaimMissionResponse
             {
                 Success = false,
-                Message = $"领取任务奖励失败: {ex.Message}"
+                Message = Text.T("MissionRewardClaimFailed", ex.Message)
             };
         }
     }
@@ -134,7 +134,7 @@ public partial class MissionService
             return new ApiClaimActivityRewardResponse
             {
                 Success = true,
-                Message = "领取功勋奖励成功",
+                Message = Text.T("MissionPanelRewardClaimSucceeded"),
                 RewardInfo = response.RewardInfo
             };
         }
@@ -144,7 +144,7 @@ public partial class MissionService
             return new ApiClaimActivityRewardResponse
             {
                 Success = false,
-                Message = $"领取功勋奖励失败: {ex.Message}"
+                Message = Text.T("MissionPanelRewardClaimFailed", ex.Message)
             };
         }
     }

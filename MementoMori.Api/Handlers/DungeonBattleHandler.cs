@@ -21,14 +21,14 @@ public partial class DungeonBattleHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly PlayerSettingService _playerSettingService;
 
-    public string ActionName => "地下城战斗";
+    public string ActionName => Text.T("ActionDungeonBattle");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查地下城战斗...");
+        await _jobLogger.LogAsync(userId, Text.T("DungeonChecking"));
 
         try
         {
@@ -37,7 +37,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
             var autoJobSettings = await _playerSettingService.GetAutoJobSettingsAsync(userId);
             if (!autoJobSettings.AutoDungeonBattle)
             {
-                await _jobLogger.LogAsync(userId, "地下城自动战斗未开启。");
+                await _jobLogger.LogAsync(userId, Text.T("DungeonAutoDisabled"));
                 return;
             }
 
@@ -46,11 +46,11 @@ public partial class DungeonBattleHandler : IGameActionHandler
 
             if (battleInfoResponse.UserDungeonDtoInfo.IsDoneRewardClearLayer(3))
             {
-                await _jobLogger.LogAsync(userId, "地下城已通关完毕。");
+                await _jobLogger.LogAsync(userId, Text.T("DungeonAlreadyCleared"));
                 return;
             }
 
-            await _jobLogger.LogAsync(userId, $"开始地下城战斗，当前层: {battleInfoResponse.CurrentDungeonBattleLayer?.LayerCount ?? 0}");
+            await _jobLogger.LogAsync(userId, Text.T("DungeonStarting", battleInfoResponse.CurrentDungeonBattleLayer?.LayerCount ?? 0));
 
             var maxIterations = 100; // 防止无限循环
             var iterations = 0;
@@ -64,7 +64,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
 
                 if (battleInfoResponse.UserDungeonDtoInfo.IsDoneRewardClearLayer(3))
                 {
-                    await _jobLogger.LogAsync(userId, "地下城已完成！");
+                    await _jobLogger.LogAsync(userId, Text.T("DungeonCompleted"));
                     return;
                 }
 
@@ -135,7 +135,7 @@ public partial class DungeonBattleHandler : IGameActionHandler
                 }
             }
 
-            await _jobLogger.LogAsync(userId, "地下城战斗处理完毕。");
+            await _jobLogger.LogAsync(userId, Text.T("DungeonDone"));
         }
         catch (Exception ex)
         {

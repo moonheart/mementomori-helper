@@ -19,7 +19,7 @@ public partial class InfiniteTowerHandler : IGameActionHandler
     private readonly ILogger<InfiniteTowerHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "无限塔快速战斗";
+    public string ActionName => Text.T("ActionInfiniteTower");
 
     private bool IsBossBattleQuickAvailable(UserSyncData syncData)
     {
@@ -36,14 +36,14 @@ public partial class InfiniteTowerHandler : IGameActionHandler
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在执行无限塔快速战斗...");
+        await _jobLogger.LogAsync(userId, Text.T("TowerInfiniteQuickStarting"));
 
         try
         {
             var tower = nm.UserSyncData.UserTowerBattleDtoInfos.FirstOrDefault(d => d.TowerType == TowerType.Infinite);
             if (tower == null)
             {
-                await _jobLogger.LogAsync(userId, "无限塔数据不可用。");
+                await _jobLogger.LogAsync(userId, Text.T("TowerInfiniteNoData"));
                 return;
             }
 
@@ -59,7 +59,7 @@ public partial class InfiniteTowerHandler : IGameActionHandler
             var remaining = 3 - tower.TodayBattleCount;
             if (remaining <= 0)
             {
-                await _jobLogger.LogAsync(userId, "无限塔今日次数已用完。");
+                await _jobLogger.LogAsync(userId, Text.T("TowerInfiniteUsedUp"));
             }
             else if (isBossBattleQuickAvailable)
             {
@@ -72,7 +72,7 @@ public partial class InfiniteTowerHandler : IGameActionHandler
                         QuickCount = remaining
                     });
                 var spent = diamonds - nm.UserSyncData.GetUserItemCount(ItemType.CurrencyFree, isAnyCurrency: true);
-                await _jobLogger.LogAsync(userId, spent > 0 ? $"无限塔快速战斗花费了 {spent} 钻石, 免费次数可能变了!" : "无限塔快速战斗完成。", spent > 0 ? "Error" : "Info");
+                await _jobLogger.LogAsync(userId, spent > 0 ? Text.T("TowerInfiniteSpentDiamonds", spent) : Text.T("TowerInfiniteQuickDone"), spent > 0 ? "Error" : "Info");
             }
             else
             {
@@ -86,12 +86,12 @@ public partial class InfiniteTowerHandler : IGameActionHandler
                             TowerBattleQuestId = tower.MaxTowerBattleId
                         });
                 }
-                await _jobLogger.LogAsync(userId, "无限塔战斗完成（普通模式）。");
+                await _jobLogger.LogAsync(userId, Text.T("TowerInfiniteNormalDone"));
             }
         }
         catch (NetworkManager.ApiErrorException ex) when (ex.Message.Contains("NotEnoughChallengeCount"))
         {
-            await _jobLogger.LogAsync(userId, "无限塔挑战次数不足。");
+            await _jobLogger.LogAsync(userId, Text.T("TowerInfiniteNotEnoughAttempts"));
         }
         catch (Exception ex)
         {

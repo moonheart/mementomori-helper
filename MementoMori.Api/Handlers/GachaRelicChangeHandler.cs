@@ -18,7 +18,7 @@ public partial class GachaRelicChangeHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly IServiceProvider _serviceProvider;
 
-    public string ActionName => "自动更换圣装";
+    public string ActionName => Text.T("ActionGachaRelicChange");
 
     public async Task ExecuteAsync(AccountContext context)
     {
@@ -69,7 +69,7 @@ public partial class GachaRelicChangeHandler : IGameActionHandler
         {
             _logger.LogInformation("User {UserId} has gacha bonus progress ({Count}/10), skipping auto-change to preserve progress.", 
                 userId, gachaCaseInfo.GachaBonusDrawCount);
-            await _jobLogger.LogAsync(userId, $"圣天使卡池已有保底进度 ({gachaCaseInfo.GachaBonusDrawCount}/10)，跳过自动更换以保留进度。");
+            await _jobLogger.LogAsync(userId, Text.T("GachaRelicHasPity", gachaCaseInfo.GachaBonusDrawCount));
             return;
         }
 
@@ -79,13 +79,13 @@ public partial class GachaRelicChangeHandler : IGameActionHandler
             await nm.SendRequest<ChangeGachaRelicRequest, ChangeGachaRelicResponse>(
                 new ChangeGachaRelicRequest { GachaRelicType = targetRelicType });
 
-            await _jobLogger.LogAsync(userId, $"成功将圣天使卡池目标更换为: {targetRelicType}");
+            await _jobLogger.LogAsync(userId, Text.T("GachaRelicChanged", targetRelicType));
             _logger.LogInformation("Successfully changed gacha relic target to {Target} for user {UserId}", targetRelicType, userId);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to change gacha relic target for user {UserId}", userId);
-            await _jobLogger.LogAsync(userId, $"更换圣装目标失败: {ex.Message}", "Error");
+            await _jobLogger.LogAsync(userId, Text.T("GachaRelicChangeFailed", ex.Message), "Error");
         }
     }
 }

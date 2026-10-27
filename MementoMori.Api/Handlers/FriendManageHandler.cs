@@ -16,14 +16,14 @@ public partial class FriendManageHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly PlayerSettingService _playerSettingService;
 
-    public string ActionName => "好友管理";
+    public string ActionName => Text.T("ActionFriendManage");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在执行好友管理...");
+        await _jobLogger.LogAsync(userId, Text.T("FriendManaging"));
 
         try
         {
@@ -60,7 +60,7 @@ public partial class FriendManageHandler : IGameActionHandler
 
                 if (removedCount > 0)
                 {
-                    await _jobLogger.LogAsync(userId, $"已移除 {removedCount} 个不活跃好友。");
+                    await _jobLogger.LogAsync(userId, Text.T("FriendRemovedInactive", removedCount));
                 }
             }
 
@@ -74,7 +74,7 @@ public partial class FriendManageHandler : IGameActionHandler
                 {
                     var response = await nm.SendRequest<ReplyAllFriendRequest, ReplyAllFriendResponse>(
                         new ReplyAllFriendRequest { IsApproval = true });
-                    await _jobLogger.LogAsync(userId, $"已接受 {response.ProcessedNum} 个好友请求。");
+                    await _jobLogger.LogAsync(userId, Text.T("FriendAcceptedRequests", response.ProcessedNum));
                 }
             }
 
@@ -91,11 +91,11 @@ public partial class FriendManageHandler : IGameActionHandler
                         {
                             TargetPlayerIdList = info.PlayerInfoList.Select(d => d.PlayerId).ToList()
                         });
-                    await _jobLogger.LogAsync(userId, $"已发送 {response.AppliedPlayerIdList?.Count ?? 0} 个好友请求。");
+                    await _jobLogger.LogAsync(userId, Text.T("FriendSentRequests", response.AppliedPlayerIdList?.Count ?? 0));
                 }
             }
 
-            await _jobLogger.LogAsync(userId, "好友管理执行完毕。");
+            await _jobLogger.LogAsync(userId, Text.T("FriendManageDone"));
         }
         catch (Exception ex)
         {

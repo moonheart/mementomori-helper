@@ -16,21 +16,21 @@ public partial class GvgRewardHandler : IGameActionHandler
     private readonly ILogger<GvgRewardHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "领取GVG奖励";
+    public string ActionName => Text.T("ActionGvgReward");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查GVG奖励...");
+        await _jobLogger.LogAsync(userId, Text.T("GvgChecking"));
 
         try
         {
             var guildIdResponse = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
             if (guildIdResponse.GuildId <= 0)
             {
-                await _jobLogger.LogAsync(userId, "未加入公会，跳过GVG奖励。");
+                await _jobLogger.LogAsync(userId, Text.T("GvgNotJoined"));
                 return;
             }
 
@@ -45,7 +45,7 @@ public partial class GvgRewardHandler : IGameActionHandler
                     {
                         CastleIdList = guildBaseInfoResponse.LocalGuildGvgInfo.CanGetCastleRewardInfoList.Select(d => d.CastleId).ToList()
                     });
-                await _jobLogger.LogAsync(userId, $"本地GVG奖励已领取。");
+                await _jobLogger.LogAsync(userId, Text.T("GvgLocalClaimed"));
             }
 
             // 领取全球GVG奖励
@@ -56,10 +56,10 @@ public partial class GvgRewardHandler : IGameActionHandler
                     {
                         CastleIdList = guildBaseInfoResponse.GlobalGuildGvgInfo.CanGetCastleRewardInfoList.Select(d => d.CastleId).ToList()
                     });
-                await _jobLogger.LogAsync(userId, $"全球GVG奖励已领取。");
+                await _jobLogger.LogAsync(userId, Text.T("GvgGlobalClaimed"));
             }
 
-            await _jobLogger.LogAsync(userId, "GVG奖励检查完毕。");
+            await _jobLogger.LogAsync(userId, Text.T("GvgDone"));
         }
         catch (Exception ex)
         {

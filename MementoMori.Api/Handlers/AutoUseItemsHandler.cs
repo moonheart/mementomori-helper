@@ -19,21 +19,21 @@ public partial class AutoUseItemsHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly PlayerSettingService _playerSettingService;
 
-    public string ActionName => "自动使用道具";
+    public string ActionName => Text.T("ActionAutoUseItems");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查自动使用道具...");
+        await _jobLogger.LogAsync(userId, Text.T("JobCheckingAutoUseItems"));
 
         try
         {
             var autoJobSettings = await _playerSettingService.GetAutoJobSettingsAsync(userId);
             if (!autoJobSettings.AutoUseItems)
             {
-                await _jobLogger.LogAsync(userId, "自动使用道具未开启，跳过。");
+                await _jobLogger.LogAsync(userId, Text.T("JobAutoUseItemsDisabled"));
                 return;
             }
 
@@ -42,7 +42,7 @@ public partial class AutoUseItemsHandler : IGameActionHandler
 
             if (autoUseItemTypes.Count == 0)
             {
-                await _jobLogger.LogAsync(userId, "未配置自动使用道具类型。");
+                await _jobLogger.LogAsync(userId, Text.T("JobAutoUseItemsNoTypes"));
                 return;
             }
 
@@ -106,11 +106,11 @@ public partial class AutoUseItemsHandler : IGameActionHandler
 
             if (openedCount > 0)
             {
-                await _jobLogger.LogAsync(userId, $"已打开 {openedCount} 种宝箱。");
+                await _jobLogger.LogAsync(userId, Text.T("JobChestsOpened", openedCount));
             }
             else
             {
-                await _jobLogger.LogAsync(userId, "暂无可使用的道具。");
+                await _jobLogger.LogAsync(userId, Text.T("JobNoUsableItems"));
             }
         }
         catch (Exception ex)

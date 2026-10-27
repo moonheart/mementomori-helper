@@ -38,7 +38,7 @@ public partial class GameActionService
     {
         var context = await _accountManager.GetOrCreateAsync(userId);
         var autoJobConfig = await _settingService.GetAutoJobSettingsAsync(userId);
-        await _jobLogger.LogAsync(userId, "开始执行全量自动化任务...");
+        await _jobLogger.LogAsync(userId, Text.T("JobFullRunStarting"));
 
         var handlers = new List<IGameActionHandler>();
         var disabledActions = autoJobConfig.DisabledDailyActions ?? new List<string>();
@@ -60,7 +60,7 @@ public partial class GameActionService
 
         await _executor.ExecuteActionsAsync(context, handlers);
 
-        await _jobLogger.LogAsync(userId, "全量自动化任务执行完毕。");
+        await _jobLogger.LogAsync(userId, Text.T("JobFullRunDone"));
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public partial class GameActionService
     {
         var context = await _accountManager.GetOrCreateAsync(userId);
         var autoJobConfig = await _settingService.GetAutoJobSettingsAsync(userId);
-        await _jobLogger.LogAsync(userId, "开始执行每小时自动化任务...");
+        await _jobLogger.LogAsync(userId, Text.T("JobHourlyRunStarting"));
 
         var handlers = new List<IGameActionHandler>();
         var disabledActions = autoJobConfig.DisabledHourlyActions ?? new List<string>();
@@ -92,7 +92,7 @@ public partial class GameActionService
 
         await _executor.ExecuteActionsAsync(context, handlers);
 
-        await _jobLogger.LogAsync(userId, "每小时自动化任务执行完毕。");
+        await _jobLogger.LogAsync(userId, Text.T("JobHourlyRunDone"));
     }
 
     /// <summary>

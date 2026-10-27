@@ -20,7 +20,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
     private readonly ILogger<BookSortAutoHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "书库大扫除自动清扫";
+    public string ActionName => Text.T("ActionBookSortAuto");
 
     // 网格常量
     private const int GridWidth = 7;
@@ -32,13 +32,13 @@ public partial class BookSortAutoHandler : IGameActionHandler
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "开始书库大扫除自动清扫...");
+        await _jobLogger.LogAsync(userId, Text.T("BookSortStarting"));
 
         // 检查活动是否在开放时间内
         var bookSortEventMb = Masters.BookSortEventTable.GetArray().FirstOrDefault(context.TimeManager.IsInTime);
         if (bookSortEventMb == null)
         {
-            await _jobLogger.LogAsync(userId, "当前不在书库大扫除活动时间内，跳过自动清扫。");
+            await _jobLogger.LogAsync(userId, Text.T("BookSortNotActive"));
             return;
         }
 
@@ -62,7 +62,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                 var syncData = infoResponse.BookSortSyncData;
                 if (syncData == null)
                 {
-                    await _jobLogger.LogAsync(userId, "获取书库大扫除数据失败。");
+                    await _jobLogger.LogAsync(userId, Text.T("BookSortFetchFailed"));
                     break;
                 }
 
@@ -88,7 +88,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
 
                         if (bestIndex != -1)
                         {
-                            await _jobLogger.LogAsync(userId, $"到达奖励层 (第 {syncData.CurrentFloor} 层)，自动选择奖励索引: {bestIndex}");
+                            await _jobLogger.LogAsync(userId, Text.T("BookSortRewardFloor", syncData.CurrentFloor, bestIndex));
                             var selectReq = new BookSortSelectBonusFloorRewardRequest { BonusFloorRewardIndex = bestIndex };
                             await nm.SendRequest<BookSortSelectBonusFloorRewardRequest, BookSortSelectBonusFloorRewardResponse>(selectReq);
 
@@ -101,7 +101,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                 // 2. 检查是否满足进入下一层的条件
                 if (syncData.IsUnlockedWinAndKeyGridCell())
                 {
-                    await _jobLogger.LogAsync(userId, $"第 {syncData.CurrentFloor} 层已找到钥匙和被锁奖励，自动进入下一层...");
+                    await _jobLogger.LogAsync(userId, Text.T("BookSortKeyAndRewardFound", syncData.CurrentFloor));
                     await nm.SendRequest<BookSortUpFloorRequest, BookSortUpFloorResponse>(new BookSortUpFloorRequest());
                     continue;
                 }
@@ -110,7 +110,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                 var unlockedIndexes = syncData.UnlockedGridCellInfoList?.Select(x => x.GridCellIndex).ToHashSet() ?? new HashSet<int>();
                 if (unlockedIndexes.Count >= TotalCells)
                 {
-                    await _jobLogger.LogAsync(userId, $"第 {syncData.CurrentFloor} 层已全部清扫完毕，自动进入下一层...");
+                    await _jobLogger.LogAsync(userId, Text.T("BookSortFloorCleared", syncData.CurrentFloor));
                     await nm.SendRequest<BookSortUpFloorRequest, BookSortUpFloorResponse>(new BookSortUpFloorRequest());
                     continue;
                 }
@@ -182,7 +182,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                     // 只有能扫到 >= 2 个格子，我们才认为使用大道具是划算的
                     if (maxYield >= 2)
                     {
-                        await _jobLogger.LogAsync(userId, $"使用大道具 (ID:{bestItemId}) 瞄准格子 {bestGridIndex}，预期扫除 {maxYield} 格");
+                        await _jobLogger.LogAsync(userId, Text.T("BookSortUseBigItem", bestItemId, bestGridIndex, maxYield));
                         var unlockReq = new BookSortUnlockGridCellRequest
                         {
                             GridCellUnlockItemId = bestItemId,
@@ -200,7 +200,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                     var normalDuster = unlockItemsList.FirstOrDefault(x => x.ItemId == 1);
                     if (normalDuster != null && normalDuster.ItemCount > 0)
                     {
-                        await _jobLogger.LogAsync(userId, $"使用普通掸子批量清扫...");
+                        await _jobLogger.LogAsync(userId, Text.T("BookSortUseDuster"));
                         var bulkUnlockReq = new BookSortBulkUnlockGridCellRequest();
                         await nm.SendRequest<BookSortBulkUnlockGridCellRequest, BookSortBulkUnlockGridCellResponse>(bulkUnlockReq);
                         acted = true;
@@ -217,7 +217,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                         continue;
                     }
 
-                    await _jobLogger.LogAsync(userId, "没有可用的清扫道具，且没有待领取的任务奖励，自动清扫结束。");
+                    await _jobLogger.LogAsync(userId, Text.T("BookSortNothingLeft"));
                     break;
                 }
 
@@ -229,7 +229,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
             }
         }
 
-        await _jobLogger.LogAsync(userId, "书库大扫除自动清扫已结束。");
+        await _jobLogger.LogAsync(userId, Text.T("BookSortFinished"));
     }
 
     /// <summary>
@@ -267,7 +267,7 @@ public partial class BookSortAutoHandler : IGameActionHandler
                     var rewardResp = await nm.SendRequest<RewardMissionRequest, RewardMissionResponse>(
                         new RewardMissionRequest { TargetMissionIdList = allMissionIds });
 
-                    await _jobLogger.LogAsync(userId, $"成功领取了 {allMissionIds.Count} 项书库大扫除任务奖励。");
+                    await _jobLogger.LogAsync(userId, Text.T("BookSortMissionRewardsClaimed", allMissionIds.Count));
                     return true;
                 }
             }

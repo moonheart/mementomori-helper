@@ -47,7 +47,7 @@ public partial class JobsController : ControllerBase
         // 刷新 Quartz 任务
         await _jobManager.RegisterJobsAsync(userId);
         
-        return Ok(new { Message = "配置已保存并刷新任务" });
+        return Ok(new { Message = Text.T("ApiJobConfigSaved") });
     }
 
     /// <summary>
@@ -69,6 +69,6 @@ public partial class JobsController : ControllerBase
         
         // 立即触发 Quartz 任务
         await _jobManager.TriggerJobAsync(userId, request.JobType);
-        return Ok(new { Message = $"任务 {request.JobType} 已手动触发" });
+        return Ok(new { Message = Text.T("ApiJobTriggered", request.JobType) });
     }
 }

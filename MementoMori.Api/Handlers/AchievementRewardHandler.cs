@@ -15,14 +15,14 @@ public partial class AchievementRewardHandler : IGameActionHandler
     private readonly ILogger<AchievementRewardHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "领取成就奖励";
+    public string ActionName => Text.T("ActionAchievementReward");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查成就奖励...");
+        await _jobLogger.LogAsync(userId, Text.T("JobCheckingAchievementRewards"));
 
         try
         {
@@ -54,11 +54,11 @@ public partial class AchievementRewardHandler : IGameActionHandler
 
             if (claimedCount > 0)
             {
-                await _jobLogger.LogAsync(userId, $"成就奖励已领取 {claimedCount} 项。");
+                await _jobLogger.LogAsync(userId, Text.T("JobAchievementRewardsClaimed", claimedCount));
             }
             else
             {
-                await _jobLogger.LogAsync(userId, "暂无可领取的成就奖励。");
+                await _jobLogger.LogAsync(userId, Text.T("JobNoAchievementRewards"));
             }
         }
         catch (Exception ex)

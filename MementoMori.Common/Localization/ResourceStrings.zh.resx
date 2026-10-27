@@ -588,4 +588,811 @@
   <data name="Confirm" xml:space="preserve">
       <value>确认</value>
   </data>
+  <data name="ActionAchievementReward" xml:space="preserve">
+      <value>领取成就奖励</value>
+  </data>
+  <data name="ActionArenaPvp" xml:space="preserve">
+      <value>竞技场自动战斗</value>
+  </data>
+  <data name="ActionAutoBattleReward" xml:space="preserve">
+      <value>领取自动战斗奖励</value>
+  </data>
+  <data name="ActionAutoBossChallenge" xml:space="preserve">
+      <value>自动BOSS挑战</value>
+  </data>
+  <data name="ActionAutoUseItems" xml:space="preserve">
+      <value>自动使用道具</value>
+  </data>
+  <data name="ActionBookSortAuto" xml:space="preserve">
+      <value>书库大扫除自动清扫</value>
+  </data>
+  <data name="ActionBossHighSpeedBattle" xml:space="preserve">
+      <value>BOSS高速战斗</value>
+  </data>
+  <data name="ActionBossQuickBattle" xml:space="preserve">
+      <value>BOSS快速战斗</value>
+  </data>
+  <data name="ActionBountyQuestDispatch" xml:space="preserve">
+      <value>悬赏任务自动派遣</value>
+  </data>
+  <data name="ActionBountyQuestReward" xml:space="preserve">
+      <value>领取悬赏任务奖励</value>
+  </data>
+  <data name="ActionCharacterRankUp" xml:space="preserve">
+      <value>角色升阶</value>
+  </data>
+  <data name="ActionDailyLoginBonus" xml:space="preserve">
+      <value>领取登录奖励</value>
+  </data>
+  <data name="ActionDungeonBattle" xml:space="preserve">
+      <value>地下城战斗</value>
+  </data>
+  <data name="ActionEquipmentReinforce" xml:space="preserve">
+      <value>装备强化</value>
+  </data>
+  <data name="ActionFreeGacha" xml:space="preserve">
+      <value>免费扭蛋</value>
+  </data>
+  <data name="ActionFriendManage" xml:space="preserve">
+      <value>好友管理</value>
+  </data>
+  <data name="ActionFriendPointTransfer" xml:space="preserve">
+      <value>批量转移友情点</value>
+  </data>
+  <data name="ActionGachaRelicChange" xml:space="preserve">
+      <value>自动更换圣装</value>
+  </data>
+  <data name="ActionGachaRelicDraw" xml:space="preserve">
+      <value>自动抽取圣装</value>
+  </data>
+  <data name="ActionGuildCheckin" xml:space="preserve">
+      <value>公会签到</value>
+  </data>
+  <data name="ActionGuildRaidBattle" xml:space="preserve">
+      <value>公会副本自动战斗</value>
+  </data>
+  <data name="ActionGuildRaidOpen" xml:space="preserve">
+      <value>自动开启公会副本</value>
+  </data>
+  <data name="ActionGuildTower" xml:space="preserve">
+      <value>公会塔自动战斗</value>
+  </data>
+  <data name="ActionGvgReward" xml:space="preserve">
+      <value>领取GVG奖励</value>
+  </data>
+  <data name="ActionInfiniteTower" xml:space="preserve">
+      <value>无限塔快速战斗</value>
+  </data>
+  <data name="ActionLegendLeague" xml:space="preserve">
+      <value>传奇竞技场自动对战</value>
+  </data>
+  <data name="ActionLocalRaid" xml:space="preserve">
+      <value>自动时空洞窟</value>
+  </data>
+  <data name="ActionMissionReward" xml:space="preserve">
+      <value>领取任务奖励</value>
+  </data>
+  <data name="ActionMonthlyBoost" xml:space="preserve">
+      <value>领取月卡奖励</value>
+  </data>
+  <data name="ActionPresentReceive" xml:space="preserve">
+      <value>领取礼物箱</value>
+  </data>
+  <data name="ActionShopAutoBuy" xml:space="preserve">
+      <value>商店自动购买</value>
+  </data>
+  <data name="ActionVipDailyGift" xml:space="preserve">
+      <value>领取VIP每日礼包</value>
+  </data>
+  <data name="ApiAutoBossTaskStarted" xml:space="preserve">
+      <value>自动刷主线任务已启动</value>
+  </data>
+  <data name="ApiAutoBossTaskStopped" xml:space="preserve">
+      <value>自动刷主线任务已停止</value>
+  </data>
+  <data name="ApiAutoTowerTaskStarted" xml:space="preserve">
+      <value>自动爬塔任务已启动 (塔类型: {0})</value>
+  </data>
+  <data name="ApiAutoTowerTaskStopped" xml:space="preserve">
+      <value>自动爬塔任务已停止</value>
+  </data>
+  <data name="ApiJobConfigSaved" xml:space="preserve">
+      <value>配置已保存并刷新任务</value>
+  </data>
+  <data name="ApiJobNotRegistered" xml:space="preserve">
+      <value>任务 {0} 未注册或已被禁用</value>
+  </data>
+  <data name="ApiJobTriggered" xml:space="preserve">
+      <value>任务 {0} 已手动触发</value>
+  </data>
+  <data name="ApiMissionIdListEmpty" xml:space="preserve">
+      <value>任务ID列表不能为空</value>
+  </data>
+  <data name="ApiNoRunningTask" xml:space="preserve">
+      <value>没有正在运行的任务</value>
+  </data>
+  <data name="ApiTaskAlreadyRunning" xml:space="preserve">
+      <value>任务已在运行中</value>
+  </data>
+  <data name="ArenaBattleError" xml:space="preserve">
+      <value>竞技场对战异常: {0}</value>
+  </data>
+  <data name="ArenaBattleResult" xml:space="preserve">
+      <value>对战 {0} (排名 {1}): {2}</value>
+  </data>
+  <data name="ArenaChecking" xml:space="preserve">
+      <value>正在检查竞技场挑战次数...</value>
+  </data>
+  <data name="ArenaFreeUsedUp" xml:space="preserve">
+      <value>今日竞技场免费次数已用完。</value>
+  </data>
+  <data name="ArenaNoRival" xml:space="preserve">
+      <value>未找到符合筛选条件的竞技场对手。</value>
+  </data>
+  <data name="BookSortFetchFailed" xml:space="preserve">
+      <value>获取书库大扫除数据失败。</value>
+  </data>
+  <data name="BookSortFinished" xml:space="preserve">
+      <value>书库大扫除自动清扫已结束。</value>
+  </data>
+  <data name="BookSortFloorCleared" xml:space="preserve">
+      <value>第 {0} 层已全部清扫完毕，自动进入下一层...</value>
+  </data>
+  <data name="BookSortKeyAndRewardFound" xml:space="preserve">
+      <value>第 {0} 层已找到钥匙和被锁奖励，自动进入下一层...</value>
+  </data>
+  <data name="BookSortMissionRewardsClaimed" xml:space="preserve">
+      <value>成功领取了 {0} 项书库大扫除任务奖励。</value>
+  </data>
+  <data name="BookSortNotActive" xml:space="preserve">
+      <value>当前不在书库大扫除活动时间内，跳过自动清扫。</value>
+  </data>
+  <data name="BookSortNothingLeft" xml:space="preserve">
+      <value>没有可用的清扫道具，且没有待领取的任务奖励，自动清扫结束。</value>
+  </data>
+  <data name="BookSortRewardFloor" xml:space="preserve">
+      <value>到达奖励层 (第 {0} 层)，自动选择奖励索引: {1}</value>
+  </data>
+  <data name="BookSortStarting" xml:space="preserve">
+      <value>开始书库大扫除自动清扫...</value>
+  </data>
+  <data name="BookSortUseBigItem" xml:space="preserve">
+      <value>使用大道具 (ID:{0}) 瞄准格子 {1}，预期扫除 {2} 格</value>
+  </data>
+  <data name="BookSortUseDuster" xml:space="preserve">
+      <value>使用普通掸子批量清扫...</value>
+  </data>
+  <data name="BossAutoError" xml:space="preserve">
+      <value>BOSS挑战出错: {0}</value>
+  </data>
+  <data name="BossAutoFailed" xml:space="preserve">
+      <value>自动BOSS挑战失败: {0}</value>
+  </data>
+  <data name="BossAutoLostStopping" xml:space="preserve">
+      <value>BOSS挑战失败，停止自动挑战</value>
+  </data>
+  <data name="BossAutoStageResult" xml:space="preserve">
+      <value>BOSS关卡 {0}: {1} (总{2}次, 胜{3}次, 错{4}次)</value>
+  </data>
+  <data name="BossAutoStarting" xml:space="preserve">
+      <value>开始自动BOSS挑战...</value>
+  </data>
+  <data name="BossAutoSummary" xml:space="preserve">
+      <value>自动BOSS挑战结束 - 总计{0}次，胜利{1}次</value>
+  </data>
+  <data name="BossAutoTooManyErrors" xml:space="preserve">
+      <value>错误次数超过{0}次，停止自动挑战</value>
+  </data>
+  <data name="BossDropItems" xml:space="preserve">
+      <value>掉落物品: {0}</value>
+  </data>
+  <data name="BossDropRewards" xml:space="preserve">
+      <value>  掉落奖励: {0}</value>
+  </data>
+  <data name="BossFixedItems" xml:space="preserve">
+      <value>固定物品: {0}</value>
+  </data>
+  <data name="BossFixedRewards" xml:space="preserve">
+      <value>  固定奖励: {0}</value>
+  </data>
+  <data name="BossHighSpeedFailed" xml:space="preserve">
+      <value>BOSS高速战斗失败: {0}</value>
+  </data>
+  <data name="BossHighSpeedFreeUsedUp" xml:space="preserve">
+      <value>今日免费高速战斗次数已用完</value>
+  </data>
+  <data name="BossHighSpeedMonthlyBoostUsedUp" xml:space="preserve">
+      <value>月卡特权次数已用完</value>
+  </data>
+  <data name="BossHighSpeedStarting" xml:space="preserve">
+      <value>开始执行BOSS高速战斗...</value>
+  </data>
+  <data name="BossHighSpeedSummary" xml:space="preserve">
+      <value>高速战斗完成 - 人口金币: {0}, 人口潜能宝石: {1}, 角色经验: {2}, 金币: {3}, 玩家经验: {4}, Rank提升: {5}</value>
+  </data>
+  <data name="BossHighSpeedUsingFree" xml:space="preserve">
+      <value>使用免费高速战斗次数...</value>
+  </data>
+  <data name="BossHighSpeedUsingMonthlyBoost" xml:space="preserve">
+      <value>使用月卡特权进行高速战斗，可用次数: {0}</value>
+  </data>
+  <data name="BossMainQuestFailed" xml:space="preserve">
+      <value>自动刷主线失败: {0}</value>
+  </data>
+  <data name="BossMainQuestStarting" xml:space="preserve">
+      <value>开始自动刷主线...</value>
+  </data>
+  <data name="BossMainQuestSummary" xml:space="preserve">
+      <value>自动刷主线结束 - 总计{0}次，胜利{1}次</value>
+  </data>
+  <data name="BossNotEnoughAttempts" xml:space="preserve">
+      <value>BOSS挑战次数不足</value>
+  </data>
+  <data name="BossQuestDefeat" xml:space="preserve">
+      <value>关卡 {0}: 失败 (总{1}次, 胜{2}次, 错{3}次)</value>
+  </data>
+  <data name="BossQuestVictory" xml:space="preserve">
+      <value>关卡 {0}: 胜利 (总{1}次, 胜{2}次, 错{3}次)</value>
+  </data>
+  <data name="BossQuickBattleDone" xml:space="preserve">
+      <value>第 {0}/3 次BOSS战斗完成</value>
+  </data>
+  <data name="BossQuickDone" xml:space="preserve">
+      <value>BOSS快速战斗完成（快速模式）</value>
+  </data>
+  <data name="BossQuickFailed" xml:space="preserve">
+      <value>BOSS快速战斗失败: {0}</value>
+  </data>
+  <data name="BossQuickNoReward" xml:space="preserve">
+      <value>第 {0}/3 次BOSS战斗没有奖励</value>
+  </data>
+  <data name="BossQuickStarting" xml:space="preserve">
+      <value>开始执行BOSS快速战斗...</value>
+  </data>
+  <data name="BossQuickUsingNormal" xml:space="preserve">
+      <value>使用普通BOSS战斗模式...</value>
+  </data>
+  <data name="BossReachedMaxStage" xml:space="preserve">
+      <value>已到达当前最大可挑战关卡</value>
+  </data>
+  <data name="BossReachedTargetQuest" xml:space="preserve">
+      <value>已达到目标关卡 {0}，停止挑战</value>
+  </data>
+  <data name="BountyDispatchDone" xml:space="preserve">
+      <value>悬赏任务自动派遣完成</value>
+  </data>
+  <data name="BountyDispatchStarting" xml:space="preserve">
+      <value>开始执行悬赏任务自动派遣...</value>
+  </data>
+  <data name="BountyDispatched" xml:space="preserve">
+      <value>已派遣悬赏任务: {0}</value>
+  </data>
+  <data name="BountyDispatchingAll" xml:space="preserve">
+      <value>未指定目标道具，派遣所有可用任务...</value>
+  </data>
+  <data name="BountyDispatchingTargeted" xml:space="preserve">
+      <value>正在派遣符合目标道具的任务...</value>
+  </data>
+  <data name="BountyLowExpectedValue" xml:space="preserve">
+      <value>当前任务的期望钻石收益低于20，不再刷新，直接派遣...</value>
+  </data>
+  <data name="BountyNoPendingQuests" xml:space="preserve">
+      <value>没有待派遣的任务</value>
+  </data>
+  <data name="BountyNoRewards" xml:space="preserve">
+      <value>没有可领取的悬赏任务奖励</value>
+  </data>
+  <data name="BountyNotUnlocked" xml:space="preserve">
+      <value>悬赏任务功能尚未解锁</value>
+  </data>
+  <data name="BountyRefreshLimitReached" xml:space="preserve">
+      <value>刷新次数已达上限 ({0}/{1})，直接派遣...</value>
+  </data>
+  <data name="BountyRefreshing" xml:space="preserve">
+      <value>当前期望收益: {0:F1} 钻石，今日已刷新: {1}/{2}，正在刷新...</value>
+  </data>
+  <data name="BountyRewardItem" xml:space="preserve">
+      <value>获得奖励: {0} x{1}</value>
+  </data>
+  <data name="BountyRewardStarting" xml:space="preserve">
+      <value>开始领取悬赏任务奖励...</value>
+  </data>
+  <data name="BountyRewardsClaimed" xml:space="preserve">
+      <value>已领取 {0} 个悬赏任务的奖励</value>
+  </data>
+  <data name="BountyTargetItems" xml:space="preserve">
+      <value>指定目标道具: {0}</value>
+  </data>
+  <data name="DungeonAlreadyCleared" xml:space="preserve">
+      <value>地下城已通关完毕。</value>
+  </data>
+  <data name="DungeonAutoDisabled" xml:space="preserve">
+      <value>地下城自动战斗未开启。</value>
+  </data>
+  <data name="DungeonChecking" xml:space="preserve">
+      <value>正在检查地下城战斗...</value>
+  </data>
+  <data name="DungeonCompleted" xml:space="preserve">
+      <value>地下城已完成！</value>
+  </data>
+  <data name="DungeonDone" xml:space="preserve">
+      <value>地下城战斗处理完毕。</value>
+  </data>
+  <data name="DungeonStarting" xml:space="preserve">
+      <value>开始地下城战斗，当前层: {0}</value>
+  </data>
+  <data name="FriendAcceptedRequests" xml:space="preserve">
+      <value>已接受 {0} 个好友请求。</value>
+  </data>
+  <data name="FriendManageDone" xml:space="preserve">
+      <value>好友管理执行完毕。</value>
+  </data>
+  <data name="FriendManaging" xml:space="preserve">
+      <value>正在执行好友管理...</value>
+  </data>
+  <data name="FriendPointLimitReached" xml:space="preserve">
+      <value>今日友情点已达上限。</value>
+  </data>
+  <data name="FriendPointTransferDone" xml:space="preserve">
+      <value>友情点批量转移完成。</value>
+  </data>
+  <data name="FriendPointTransferring" xml:space="preserve">
+      <value>正在批量转移友情点...</value>
+  </data>
+  <data name="FriendRemovedInactive" xml:space="preserve">
+      <value>已移除 {0} 个不活跃好友。</value>
+  </data>
+  <data name="FriendSentRequests" xml:space="preserve">
+      <value>已发送 {0} 个好友请求。</value>
+  </data>
+  <data name="GachaCheckingFree" xml:space="preserve">
+      <value>正在检查免费扭蛋...</value>
+  </data>
+  <data name="GachaFreeDisabled" xml:space="preserve">
+      <value>免费扭蛋未开启，跳过。</value>
+  </data>
+  <data name="GachaFreeDone" xml:space="preserve">
+      <value>免费扭蛋完成，抽取 {0} 次。</value>
+  </data>
+  <data name="GachaNoFree" xml:space="preserve">
+      <value>暂无可用的免费扭蛋。</value>
+  </data>
+  <data name="GachaRelicChangeFailed" xml:space="preserve">
+      <value>更换圣装目标失败: {0}</value>
+  </data>
+  <data name="GachaRelicChanged" xml:space="preserve">
+      <value>成功将圣天使卡池目标更换为: {0}</value>
+  </data>
+  <data name="GachaRelicDrawFailed" xml:space="preserve">
+      <value>抽取圣装失败: {0}</value>
+  </data>
+  <data name="GachaRelicDrawn" xml:space="preserve">
+      <value>成功抽取圣天使卡池一次。当前保底进度: {0}/10</value>
+  </data>
+  <data name="GachaRelicHasPity" xml:space="preserve">
+      <value>圣天使卡池已有保底进度 ({0}/10)，跳过自动更换以保留进度。</value>
+  </data>
+  <data name="GachaRelicNoDiamonds" xml:space="preserve">
+      <value>钻石不足，停止自动抽取圣装。</value>
+  </data>
+  <data name="GuildCheckinDone" xml:space="preserve">
+      <value>公会签到完成，公会ID: {0}。</value>
+  </data>
+  <data name="GuildCheckingIn" xml:space="preserve">
+      <value>正在执行公会签到...</value>
+  </data>
+  <data name="GuildNotJoinedSkipCheckin" xml:space="preserve">
+      <value>未加入公会，跳过签到。</value>
+  </data>
+  <data name="GuildRaidBattleFailed" xml:space="preserve">
+      <value>公会副本战斗失败: {0}</value>
+  </data>
+  <data name="GuildRaidBattleResult" xml:space="preserve">
+      <value>公会副本战斗完成，结果: {0}</value>
+  </data>
+  <data name="GuildRaidGlobalDamageRewards" xml:space="preserve">
+      <value>领取了 {0} 个公会副本全球伤害奖励。</value>
+  </data>
+  <data name="GuildRaidOpenFailed" xml:space="preserve">
+      <value>开启公会副本失败: {0}</value>
+  </data>
+  <data name="GuildRaidOpened" xml:space="preserve">
+      <value>成功开启公会副本 (消耗公会点数)。</value>
+  </data>
+  <data name="GuildRaidQuickResult" xml:space="preserve">
+      <value>公会副本快速战斗完成，结果: {0}</value>
+  </data>
+  <data name="GuildRaidStarting" xml:space="preserve">
+      <value>开始公会副本自动战斗，公会ID: {0}</value>
+  </data>
+  <data name="GuildRaidSummary" xml:space="preserve">
+      <value>公会副本自动战斗完成，共进行 {0} 场战斗。</value>
+  </data>
+  <data name="GuildTowerAutoEntryDisabled" xml:space="preserve">
+      <value>公会塔自动报名未开启，跳过。</value>
+  </data>
+  <data name="GuildTowerChallengeDone" xml:space="preserve">
+      <value>公会塔挑战完成，胜利 {0} 场。</value>
+  </data>
+  <data name="GuildTowerChecking" xml:space="preserve">
+      <value>正在检查公会塔...</value>
+  </data>
+  <data name="GuildTowerDone" xml:space="preserve">
+      <value>公会塔处理完毕。</value>
+  </data>
+  <data name="GuildTowerEntered" xml:space="preserve">
+      <value>公会塔已报名。</value>
+  </data>
+  <data name="GuildTowerFloorRewardsClaimed" xml:space="preserve">
+      <value>公会塔层奖励已领取 {0} 项。</value>
+  </data>
+  <data name="GuildTowerNoEvent" xml:space="preserve">
+      <value>当前无公会塔活动。</value>
+  </data>
+  <data name="GuildTowerNotJoined" xml:space="preserve">
+      <value>未加入公会，跳过公会塔。</value>
+  </data>
+  <data name="GvgChecking" xml:space="preserve">
+      <value>正在检查GVG奖励...</value>
+  </data>
+  <data name="GvgDone" xml:space="preserve">
+      <value>GVG奖励检查完毕。</value>
+  </data>
+  <data name="GvgGlobalClaimed" xml:space="preserve">
+      <value>全球GVG奖励已领取。</value>
+  </data>
+  <data name="GvgLocalClaimed" xml:space="preserve">
+      <value>本地GVG奖励已领取。</value>
+  </data>
+  <data name="GvgNotJoined" xml:space="preserve">
+      <value>未加入公会，跳过GVG奖励。</value>
+  </data>
+  <data name="JobAchievementRewardsClaimed" xml:space="preserve">
+      <value>成就奖励已领取 {0} 项。</value>
+  </data>
+  <data name="JobActionFailed" xml:space="preserve">
+      <value>{0} 执行失败: {1}</value>
+  </data>
+  <data name="JobAutoBattleRewardFailed" xml:space="preserve">
+      <value>领取自动战斗奖励失败: {0}</value>
+  </data>
+  <data name="JobAutoBattleRewardSummary" xml:space="preserve">
+      <value>自动战斗奖励领取完成 - 胜利: {0}, 失败: {1}, 总战斗时间: {2}</value>
+  </data>
+  <data name="JobAutoUseItemsDisabled" xml:space="preserve">
+      <value>自动使用道具未开启，跳过。</value>
+  </data>
+  <data name="JobAutoUseItemsNoTypes" xml:space="preserve">
+      <value>未配置自动使用道具类型。</value>
+  </data>
+  <data name="JobChallengeError" xml:space="preserve">
+      <value>挑战出错: {0}</value>
+  </data>
+  <data name="JobCheckingAchievementRewards" xml:space="preserve">
+      <value>正在检查成就奖励...</value>
+  </data>
+  <data name="JobCheckingAutoUseItems" xml:space="preserve">
+      <value>正在检查自动使用道具...</value>
+  </data>
+  <data name="JobCheckingEquipmentReinforce" xml:space="preserve">
+      <value>正在检查装备强化...</value>
+  </data>
+  <data name="JobCheckingLoginBonus" xml:space="preserve">
+      <value>正在检查登录奖励...</value>
+  </data>
+  <data name="JobCheckingRankUp" xml:space="preserve">
+      <value>正在检查角色升阶...</value>
+  </data>
+  <data name="JobChestsOpened" xml:space="preserve">
+      <value>已打开 {0} 种宝箱。</value>
+  </data>
+  <data name="JobClaimingAutoBattleRewards" xml:space="preserve">
+      <value>正在领取自动战斗奖励...</value>
+  </data>
+  <data name="JobDescDaily" xml:space="preserve">
+      <value>每日任务</value>
+  </data>
+  <data name="JobDescHourly" xml:space="preserve">
+      <value>每小时奖励/体力任务</value>
+  </data>
+  <data name="JobDescPvp" xml:space="preserve">
+      <value>PVP 竞技场任务</value>
+  </data>
+  <data name="JobEquipmentReinforceDone" xml:space="preserve">
+      <value>装备强化完成。</value>
+  </data>
+  <data name="JobExecutionError" xml:space="preserve">
+      <value>任务执行异常: {0}</value>
+  </data>
+  <data name="JobFixedDrops" xml:space="preserve">
+      <value>固定掉落: {0}</value>
+  </data>
+  <data name="JobFullRunDone" xml:space="preserve">
+      <value>全量自动化任务执行完毕。</value>
+  </data>
+  <data name="JobFullRunStarting" xml:space="preserve">
+      <value>开始执行全量自动化任务...</value>
+  </data>
+  <data name="JobGoldIncome" xml:space="preserve">
+      <value>金币收益: {0}</value>
+  </data>
+  <data name="JobHourlyRunDone" xml:space="preserve">
+      <value>每小时自动化任务执行完毕。</value>
+  </data>
+  <data name="JobHourlyRunStarting" xml:space="preserve">
+      <value>开始执行每小时自动化任务...</value>
+  </data>
+  <data name="JobLoginBonusDone" xml:space="preserve">
+      <value>登录奖励检查/领取完毕。</value>
+  </data>
+  <data name="JobLoginBonusError" xml:space="preserve">
+      <value>登录奖励处理出错: {0}</value>
+  </data>
+  <data name="JobLoginExpiredRelogin" xml:space="preserve">
+      <value>检测到登录失效，尝试自动重登录...</value>
+  </data>
+  <data name="JobNoAchievementRewards" xml:space="preserve">
+      <value>暂无可领取的成就奖励。</value>
+  </data>
+  <data name="JobNoEquipmentToReinforce" xml:space="preserve">
+      <value>暂无可强化的装备。</value>
+  </data>
+  <data name="JobNoRankUp" xml:space="preserve">
+      <value>暂无可升阶的角色。</value>
+  </data>
+  <data name="JobNoUsableItems" xml:space="preserve">
+      <value>暂无可使用的道具。</value>
+  </data>
+  <data name="JobPotentialJewelIncome" xml:space="preserve">
+      <value>潜能宝石收益: {0}</value>
+  </data>
+  <data name="JobRandomDrops" xml:space="preserve">
+      <value>随机掉落: {0}</value>
+  </data>
+  <data name="JobRankUpDisabled" xml:space="preserve">
+      <value>角色升阶未开启，跳过。</value>
+  </data>
+  <data name="JobRankUpDone" xml:space="preserve">
+      <value>角色升阶完成，共升阶 {0} 个角色。</value>
+  </data>
+  <data name="JobReloginFailed" xml:space="preserve">
+      <value>自动重登录失败: {0}</value>
+  </data>
+  <data name="JobReloginSucceeded" xml:space="preserve">
+      <value>自动重登录成功。</value>
+  </data>
+  <data name="JobSyncingUserData" xml:space="preserve">
+      <value>正在同步用户数据...</value>
+  </data>
+  <data name="JobTaskCancelled" xml:space="preserve">
+      <value>任务已取消</value>
+  </data>
+  <data name="JobTaskFailed" xml:space="preserve">
+      <value>任务失败: {0}</value>
+  </data>
+  <data name="JobTaskStopped" xml:space="preserve">
+      <value>任务已停止</value>
+  </data>
+  <data name="JobTooManyErrorsStopping" xml:space="preserve">
+      <value>错误次数超过{0}次，停止挑战</value>
+  </data>
+  <data name="JobUserDataSyncFailed" xml:space="preserve">
+      <value>同步用户数据失败: {0}</value>
+  </data>
+  <data name="JobUserDataSynced" xml:space="preserve">
+      <value>用户数据同步完成</value>
+  </data>
+  <data name="LegendBattleResult" xml:space="preserve">
+      <value>对战 {0}: {1} (获得积分: {2})</value>
+  </data>
+  <data name="LegendChecking" xml:space="preserve">
+      <value>正在检查传奇竞技场...</value>
+  </data>
+  <data name="LegendFreeUsedUp" xml:space="preserve">
+      <value>传奇竞技场今日免费次数已用完。</value>
+  </data>
+  <data name="LegendNoRival" xml:space="preserve">
+      <value>未找到符合筛选条件的对手，跳过对战。</value>
+  </data>
+  <data name="LegendNotOpen" xml:space="preserve">
+      <value>传奇竞技场当前未开放。</value>
+  </data>
+  <data name="LocalRaidCreatingRoom" xml:space="preserve">
+      <value>正在创建房间...</value>
+  </data>
+  <data name="LocalRaidDefeat" xml:space="preserve">
+      <value>战斗失败。</value>
+  </data>
+  <data name="LocalRaidError" xml:space="preserve">
+      <value>发生错误: {0}</value>
+  </data>
+  <data name="LocalRaidFindingRoom" xml:space="preserve">
+      <value>正在寻找随机房间...</value>
+  </data>
+  <data name="LocalRaidJoinedRoom" xml:space="preserve">
+      <value>已加入房间，发送准备。</value>
+  </data>
+  <data name="LocalRaidNoAttempts" xml:space="preserve">
+      <value>挑战次数已用完。</value>
+  </data>
+  <data name="LocalRaidOnionConnectFailed" xml:space="preserve">
+      <value>无法连接到 MagicOnion 服务。</value>
+  </data>
+  <data name="LocalRaidOnionNotReady" xml:space="preserve">
+      <value>MagicOnion 通道未就绪，请确保已登录。</value>
+  </data>
+  <data name="LocalRaidRoomUpdated" xml:space="preserve">
+      <value>房间信息更新。</value>
+  </data>
+  <data name="LocalRaidSomeoneJoined" xml:space="preserve">
+      <value>有人加入房间，准备开始战斗。</value>
+  </data>
+  <data name="LocalRaidStarting" xml:space="preserve">
+      <value>开始时空洞窟任务 (QuestId: {0}, 自建房: {1})...</value>
+  </data>
+  <data name="LocalRaidTimeoutOrCancelled" xml:space="preserve">
+      <value>任务超时或被取消。</value>
+  </data>
+  <data name="LocalRaidVictory" xml:space="preserve">
+      <value>战斗胜利！</value>
+  </data>
+  <data name="LocalRaidWaitTimeout" xml:space="preserve">
+      <value>等待超时。</value>
+  </data>
+  <data name="MissionActivityClaimed" xml:space="preserve">
+      <value>领取 {0} 活跃度奖励 ({1})。</value>
+  </data>
+  <data name="MissionCheckDone" xml:space="preserve">
+      <value>任务奖励领取检查完毕。</value>
+  </data>
+  <data name="MissionChecking" xml:space="preserve">
+      <value>正在检查任务奖励...</value>
+  </data>
+  <data name="MissionInfoFetchFailed" xml:space="preserve">
+      <value>获取任务信息失败: {0}</value>
+  </data>
+  <data name="MissionInfoFetched" xml:space="preserve">
+      <value>获取任务信息成功</value>
+  </data>
+  <data name="MissionPanelRewardClaimFailed" xml:space="preserve">
+      <value>领取功勋奖励失败: {0}</value>
+  </data>
+  <data name="MissionPanelRewardClaimSucceeded" xml:space="preserve">
+      <value>领取功勋奖励成功</value>
+  </data>
+  <data name="MissionRewardClaimFailed" xml:space="preserve">
+      <value>领取任务奖励失败: {0}</value>
+  </data>
+  <data name="MissionRewardClaimSucceeded" xml:space="preserve">
+      <value>领取任务奖励成功</value>
+  </data>
+  <data name="MissionRewardsClaimed" xml:space="preserve">
+      <value>成功领取 {0} 项任务奖励。</value>
+  </data>
+  <data name="MonthlyBoostAlreadyClaimed" xml:space="preserve">
+      <value>月卡奖励今日已领取。</value>
+  </data>
+  <data name="MonthlyBoostChecking" xml:space="preserve">
+      <value>正在检查月卡奖励...</value>
+  </data>
+  <data name="MonthlyBoostClaimed" xml:space="preserve">
+      <value>月卡奖励已领取。</value>
+  </data>
+  <data name="MonthlyBoostInactive" xml:space="preserve">
+      <value>月卡未激活或已过期。</value>
+  </data>
+  <data name="PresentChecking" xml:space="preserve">
+      <value>正在检查礼物箱...</value>
+  </data>
+  <data name="PresentClaimed" xml:space="preserve">
+      <value>礼物箱已领取 {0} 件物品。</value>
+  </data>
+  <data name="PresentClaimedOneByOne" xml:space="preserve">
+      <value>礼物箱逐个领取，成功 {0} 件。</value>
+  </data>
+  <data name="PresentEmpty" xml:space="preserve">
+      <value>礼物箱已清空。</value>
+  </data>
+  <data name="ShopBought" xml:space="preserve">
+      <value>成功购买: {0} x {1}</value>
+  </data>
+  <data name="ShopBuyFailed" xml:space="preserve">
+      <value>购买失败 ({0}): {1}</value>
+  </data>
+  <data name="ShopChecking" xml:space="preserve">
+      <value>正在检查商店物品...</value>
+  </data>
+  <data name="ShopDone" xml:space="preserve">
+      <value>商店自动购买检查完毕。</value>
+  </data>
+  <data name="ShopNoItemsConfigured" xml:space="preserve">
+      <value>未配置商店自动购买项。</value>
+  </data>
+  <data name="TowerAutoFailed" xml:space="preserve">
+      <value>自动爬塔失败: {0}</value>
+  </data>
+  <data name="TowerAutoStarting" xml:space="preserve">
+      <value>开始自动爬{0}...</value>
+  </data>
+  <data name="TowerAutoSummary" xml:space="preserve">
+      <value>自动爬{0}结束 - 总计{1}次，胜利{2}次</value>
+  </data>
+  <data name="TowerDailyLimitReached" xml:space="preserve">
+      <value>{0}今日已通关{1}层，达到每日上限</value>
+  </data>
+  <data name="TowerDataNotFound" xml:space="preserve">
+      <value>未找到{0}的数据</value>
+  </data>
+  <data name="TowerFloorDefeat" xml:space="preserve">
+      <value>第 {0} 层: 失败 (总{1}次, 胜{2}次, 错{3}次)</value>
+  </data>
+  <data name="TowerFloorVictory" xml:space="preserve">
+      <value>第 {0} 层: 胜利 (总{1}次, 胜{2}次, 错{3}次)</value>
+  </data>
+  <data name="TowerInfiniteNoData" xml:space="preserve">
+      <value>无限塔数据不可用。</value>
+  </data>
+  <data name="TowerInfiniteNormalDone" xml:space="preserve">
+      <value>无限塔战斗完成（普通模式）。</value>
+  </data>
+  <data name="TowerInfiniteNotEnoughAttempts" xml:space="preserve">
+      <value>无限塔挑战次数不足。</value>
+  </data>
+  <data name="TowerInfiniteQuickDone" xml:space="preserve">
+      <value>无限塔快速战斗完成。</value>
+  </data>
+  <data name="TowerInfiniteQuickStarting" xml:space="preserve">
+      <value>正在执行无限塔快速战斗...</value>
+  </data>
+  <data name="TowerInfiniteSpentDiamonds" xml:space="preserve">
+      <value>无限塔快速战斗花费了 {0} 钻石, 免费次数可能变了!</value>
+  </data>
+  <data name="TowerInfiniteUsedUp" xml:space="preserve">
+      <value>无限塔今日次数已用完。</value>
+  </data>
+  <data name="TowerNameBlue" xml:space="preserve">
+      <value>水塔</value>
+  </data>
+  <data name="TowerNameGreen" xml:space="preserve">
+      <value>风塔</value>
+  </data>
+  <data name="TowerNameInfinite" xml:space="preserve">
+      <value>无限塔</value>
+  </data>
+  <data name="TowerNameRed" xml:space="preserve">
+      <value>火塔</value>
+  </data>
+  <data name="TowerNameUnknown" xml:space="preserve">
+      <value>未知塔</value>
+  </data>
+  <data name="TowerNameYellow" xml:space="preserve">
+      <value>地塔</value>
+  </data>
+  <data name="TowerNoData" xml:space="preserve">
+      <value>塔数据不可用，请先同步用户数据</value>
+  </data>
+  <data name="TowerNotEnoughAttempts" xml:space="preserve">
+      <value>挑战次数不足</value>
+  </data>
+  <data name="TowerNotOpenToday" xml:space="preserve">
+      <value>{0}今日未开放</value>
+  </data>
+  <data name="TowerReachedTargetFloor" xml:space="preserve">
+      <value>已达到目标层数 {0}，停止挑战</value>
+  </data>
+  <data name="VipChecking" xml:space="preserve">
+      <value>正在检查VIP每日礼包...</value>
+  </data>
+  <data name="VipGiftClaimed" xml:space="preserve">
+      <value>VIP{0}每日礼包已领取。</value>
+  </data>
+  <data name="VipGiftUnavailable" xml:space="preserve">
+      <value>VIP每日礼包已领取或不可用。</value>
+  </data>
+  <data name="CommonVictory" xml:space="preserve">
+      <value>胜利</value>
+  </data>
+  <data name="CommonDefeat" xml:space="preserve">
+      <value>失败</value>
+  </data>
 </root>

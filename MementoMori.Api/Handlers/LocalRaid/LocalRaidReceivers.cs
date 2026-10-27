@@ -145,7 +145,7 @@ public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
 
     public override void OnJoinRoom(OnJoinRoomResponse response)
     {
-        _log("已加入房间，发送准备。");
+        _log(Text.T("LocalRaidJoinedRoom"));
         _ortegaMagicOnionClient.SendLocalRaidReady(true);
     }
 
@@ -197,7 +197,7 @@ public class LocalRaidCreateRoomReceiver : LocalRaidBaseReceiver
 
     public override void OnJoinRoom(OnJoinRoomResponse response)
     {
-        _log("有人加入房间，准备开始战斗。");
+        _log(Text.T("LocalRaidSomeoneJoined"));
         StartBattle(response.LocalRaidPartyInfo);
     }
 
@@ -218,7 +218,7 @@ public class LocalRaidCreateRoomReceiver : LocalRaidBaseReceiver
 
     public override void OnUpdateRoom(OnUpdateRoomResponse response)
     {
-        _log("房间信息更新。");
+        _log(Text.T("LocalRaidRoomUpdated"));
         StartBattle(response.LocalRaidPartyInfo);
     }
 

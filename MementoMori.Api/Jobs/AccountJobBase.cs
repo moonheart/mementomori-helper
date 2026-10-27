@@ -51,7 +51,7 @@ public abstract class AccountJobBase : IJob
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error executing job {JobType} for user {UserId}", GetType().Name, userId);
-            await jobLogger.LogAsync(userId, $"任务执行异常: {ex.Message}", "Error");
+            await jobLogger.LogAsync(userId, Text.T("JobExecutionError", ex.Message), "Error");
         }
     }
 
@@ -74,7 +74,7 @@ public abstract class AccountJobBase : IJob
 
         var userId = accountContext.AccountInfo.UserId;
         Logger.LogInformation("Job {JobType} for user {UserId} triggered auto-login", GetType().Name, userId);
-        await jobLogger.LogAsync(userId, "检测到登录失效，尝试自动重登录...");
+        await jobLogger.LogAsync(userId, Text.T("JobLoginExpiredRelogin"));
 
         using var scope = ServiceProvider.CreateScope();
         var accountService = scope.ServiceProvider.GetRequiredService<AccountService>();
@@ -83,10 +83,10 @@ public abstract class AccountJobBase : IJob
         
         if (!loginResp.Success)
         {
-            throw new Exception($"自动重登录失败: {loginResp.Message}");
+            throw new Exception(Text.T("JobReloginFailed", loginResp.Message));
         }
 
-        await jobLogger.LogAsync(userId, "自动重登录成功。");
+        await jobLogger.LogAsync(userId, Text.T("JobReloginSucceeded"));
     }
 
     protected abstract Task ExecuteAsync(IJobExecutionContext context, AccountContext accountContext);

@@ -18,21 +18,21 @@ public partial class FreeGachaHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly PlayerSettingService _playerSettingService;
 
-    public string ActionName => "免费扭蛋";
+    public string ActionName => Text.T("ActionFreeGacha");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查免费扭蛋...");
+        await _jobLogger.LogAsync(userId, Text.T("GachaCheckingFree"));
 
         try
         {
             var autoJobSettings = await _playerSettingService.GetAutoJobSettingsAsync(userId);
             if (!autoJobSettings.AutoFreeGacha)
             {
-                await _jobLogger.LogAsync(userId, "免费扭蛋未开启，跳过。");
+                await _jobLogger.LogAsync(userId, Text.T("GachaFreeDisabled"));
                 return;
             }
 
@@ -52,11 +52,11 @@ public partial class FreeGachaHandler : IGameActionHandler
 
             if (drawnCount > 0)
             {
-                await _jobLogger.LogAsync(userId, $"免费扭蛋完成，抽取 {drawnCount} 次。");
+                await _jobLogger.LogAsync(userId, Text.T("GachaFreeDone", drawnCount));
             }
             else
             {
-                await _jobLogger.LogAsync(userId, "暂无可用的免费扭蛋。");
+                await _jobLogger.LogAsync(userId, Text.T("GachaNoFree"));
             }
 
             async Task<bool> DoFreeGacha()

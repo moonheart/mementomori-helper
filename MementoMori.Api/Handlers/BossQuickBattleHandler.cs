@@ -16,14 +16,14 @@ public partial class BossQuickBattleHandler : IGameActionHandler
     private readonly ILogger<BossQuickBattleHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "BOSS快速战斗";
+    public string ActionName => Text.T("ActionBossQuickBattle");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "开始执行BOSS快速战斗...");
+        await _jobLogger.LogAsync(userId, Text.T("BossQuickStarting"));
 
         try
         {
@@ -45,14 +45,14 @@ public partial class BossQuickBattleHandler : IGameActionHandler
 
                 if (bossQuickResponse.BattleRewardResult != null)
                 {
-                    await _jobLogger.LogAsync(userId, "BOSS快速战斗完成（快速模式）");
+                    await _jobLogger.LogAsync(userId, Text.T("BossQuickDone"));
                     await LogBattleReward(userId, bossQuickResponse.BattleRewardResult);
                 }
             }
             else
             {
                 // 普通模式，执行3次单独战斗
-                await _jobLogger.LogAsync(userId, "使用普通BOSS战斗模式...");
+                await _jobLogger.LogAsync(userId, Text.T("BossQuickUsingNormal"));
                 
                 for (var i = 0; i < 3; i++)
                 {
@@ -66,11 +66,11 @@ public partial class BossQuickBattleHandler : IGameActionHandler
 
                         if (bossResponse.BattleRewardResult == null)
                         {
-                            await _jobLogger.LogAsync(userId, $"第 {i + 1}/3 次BOSS战斗没有奖励");
+                            await _jobLogger.LogAsync(userId, Text.T("BossQuickNoReward", i + 1));
                             continue;
                         }
 
-                        await _jobLogger.LogAsync(userId, $"第 {i + 1}/3 次BOSS战斗完成");
+                        await _jobLogger.LogAsync(userId, Text.T("BossQuickBattleDone", i + 1));
                         await LogBattleReward(userId, bossResponse.BattleRewardResult);
 
                         // 延迟一下，避免请求过快
@@ -78,7 +78,7 @@ public partial class BossQuickBattleHandler : IGameActionHandler
                     }
                     catch (Exception ex) when (ex.Message.Contains("NotEnoughBossChallengeCount"))
                     {
-                        await _jobLogger.LogAsync(userId, "BOSS挑战次数不足");
+                        await _jobLogger.LogAsync(userId, Text.T("BossNotEnoughAttempts"));
                         break;
                     }
                 }
@@ -86,12 +86,12 @@ public partial class BossQuickBattleHandler : IGameActionHandler
         }
         catch (Exception ex) when (ex.Message.Contains("BattleBossNotEnoughBossChallengeCount"))
         {
-            await _jobLogger.LogAsync(userId, "BOSS挑战次数不足");
+            await _jobLogger.LogAsync(userId, Text.T("BossNotEnoughAttempts"));
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in BossQuickBattleHandler for user {UserId}", userId);
-            await _jobLogger.LogAsync(userId, $"BOSS快速战斗失败: {ex.Message}", "Error");
+            await _jobLogger.LogAsync(userId, Text.T("BossQuickFailed", ex.Message), "Error");
             throw;
         }
     }
@@ -120,12 +120,12 @@ public partial class BossQuickBattleHandler : IGameActionHandler
         if (rewardResult.FixedItemList?.Count > 0)
         {
             var items = string.Join(", ", rewardResult.FixedItemList.Select(i => $"{i.ItemType}:{i.ItemId} x{i.ItemCount}"));
-            await _jobLogger.LogAsync(userId, $"  固定奖励: {items}");
+            await _jobLogger.LogAsync(userId, Text.T("BossFixedRewards", items));
         }
         if (rewardResult.DropItemList?.Count > 0)
         {
             var items = string.Join(", ", rewardResult.DropItemList.Select(i => $"{i.ItemType}:{i.ItemId} x{i.ItemCount}"));
-            await _jobLogger.LogAsync(userId, $"  掉落奖励: {items}");
+            await _jobLogger.LogAsync(userId, Text.T("BossDropRewards", items));
         }
     }
 }

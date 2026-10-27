@@ -20,7 +20,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
     private readonly ILogger<GuildRaidBattleHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "公会副本自动战斗";
+    public string ActionName => Text.T("ActionGuildRaidBattle");
 
     public async Task ExecuteAsync(AccountContext context)
     {
@@ -38,7 +38,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
                 return;
             }
 
-            await _jobLogger.LogAsync(userId, $"开始公会副本自动战斗，公会ID: {guildIdResp.GuildId}");
+            await _jobLogger.LogAsync(userId, Text.T("GuildRaidStarting", guildIdResp.GuildId));
 
             // 2. 检查是否有快速战斗权限
             var isQuickAvailable = IsGuildRaidQuickAvailable(nm);
@@ -71,7 +71,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
                                 });
 
                             var isWin = quickResp.BattleSimulationResult.BattleEndInfo.IsWinAttacker();
-                            await _jobLogger.LogAsync(userId, $"公会副本快速战斗完成，结果: {(isWin ? "胜利" : "失败")}");
+                            await _jobLogger.LogAsync(userId, Text.T("GuildRaidQuickResult", (isWin ? Text.T("CommonVictory") : Text.T("CommonDefeat"))));
 
                             LogRewards(quickResp.BattleRewardResult.FixedItemList, quickResp.BattleRewardResult.DropItemList);
                         }
@@ -86,7 +86,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
                                 });
 
                             var isWin = startResp.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
-                            await _jobLogger.LogAsync(userId, $"公会副本战斗完成，结果: {(isWin ? "胜利" : "失败")}");
+                            await _jobLogger.LogAsync(userId, Text.T("GuildRaidBattleResult", (isWin ? Text.T("CommonVictory") : Text.T("CommonDefeat"))));
 
                             LogRewards(startResp.BattleRewardResult.FixedItemList, startResp.BattleRewardResult.DropItemList);
                         }
@@ -104,7 +104,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
 
             if (totalBattles > 0)
             {
-                await _jobLogger.LogAsync(userId, $"公会副本自动战斗完成，共进行 {totalBattles} 场战斗。");
+                await _jobLogger.LogAsync(userId, Text.T("GuildRaidSummary", totalBattles));
             }
             else
             {
@@ -114,7 +114,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to execute guild raid battle for user {UserId}", userId);
-            await _jobLogger.LogAsync(userId, $"公会副本战斗失败: {ex.Message}", "Error");
+            await _jobLogger.LogAsync(userId, Text.T("GuildRaidBattleFailed", ex.Message), "Error");
         }
     }
 
@@ -190,7 +190,7 @@ public partial class GuildRaidBattleHandler : IGameActionHandler
 
             if (rewardCount > 0)
             {
-                await _jobLogger.LogAsync(userId, $"领取了 {rewardCount} 个公会副本全球伤害奖励。");
+                await _jobLogger.LogAsync(userId, Text.T("GuildRaidGlobalDamageRewards", rewardCount));
             }
         }
         catch (Exception ex)

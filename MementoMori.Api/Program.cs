@@ -7,6 +7,11 @@ using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// UI language for job logs / API messages: "en" (default) or "zh"
+var uiCulture = System.Globalization.CultureInfo.GetCultureInfo(builder.Configuration["Localization:Culture"] ?? "en");
+System.Globalization.CultureInfo.DefaultThreadCurrentCulture = uiCulture;
+System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = uiCulture;
+
 // Configure FreeSql
 var fsql = new FreeSql.FreeSqlBuilder()
     .UseConnectionString(FreeSql.DataType.Sqlite, "Data Source=mementomori.db")
