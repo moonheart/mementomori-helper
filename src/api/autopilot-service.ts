@@ -14,7 +14,7 @@ export interface AutopilotConfig {
     rankUpWithFodder: boolean;
 }
 
-export type GrowthKind = 'Level' | 'LevelLink' | 'Equip' | 'Reinforce' | 'Quest' | 'Tower' | 'RankUp' | 'Gacha' | 'Team' | 'Info';
+export type GrowthKind = 'Level' | 'LevelLink' | 'Equip' | 'Reinforce' | 'Quest' | 'Tower' | 'RankUp' | 'Gacha' | 'Team' | 'Friend' | 'Reward' | 'Info';
 
 export interface GrowthEvent {
     id: number;
@@ -31,6 +31,7 @@ export interface ProgressSnapshot {
     playerRank: number;
     gold: number;
     diamonds: number;
+    power: number;
     towers: Record<string, number>;
 }
 
@@ -60,6 +61,25 @@ export interface BannerAdvice {
     worth: boolean;
 }
 
+export interface OverviewStats {
+    questId: number;
+    questName: string;
+    linkLevel: number;
+    tower: number;
+    rank: number;
+    power: number;
+    gold: number;
+    diamonds: number;
+}
+
+export interface AutopilotOverview {
+    enabled: boolean;
+    nextRun: string | null;
+    now: OverviewStats;
+    dayAgo: OverviewStats | null;
+    team: { characterId: number; name: string; tier: string | null; rarity: string; level: number; gear: number; avgReinforce: number }[];
+}
+
 export const TIERS = ['SS', 'S', 'A', 'B', 'C'] as const;
 
 /**
@@ -74,6 +94,7 @@ export const autopilotApi = {
     run: async (userId: number, step?: string) => {
         await apiClient.post(`/api/autopilot/${userId}/run`, null, { params: step ? { step } : undefined });
     },
+    getOverview: async (userId: number) => (await apiClient.get<AutopilotOverview>(`/api/autopilot/${userId}/overview`)).data,
     getEvents: async (userId: number, limit = 200) =>
         (await apiClient.get<GrowthEvent[]>(`/api/autopilot/${userId}/events`, { params: { limit } })).data,
     getSnapshots: async (userId: number, days = 30) =>

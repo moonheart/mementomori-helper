@@ -24,6 +24,7 @@ import { NoticeDialog } from '@/components/notice/NoticeDialog';
 import { BookSortDialog } from '@/components/booksort/BookSortDialog';
 import { LeaderboardDialog } from '@/components/leaderboard/LeaderboardDialog';
 import { PresentBoxDialog } from '@/components/present/PresentBoxDialog';
+import { AutopilotOverview } from '@/components/autopilot/AutopilotOverview';
 
 export function DashboardPage() {
     const navigate = useNavigate();
@@ -256,6 +257,8 @@ export function DashboardPage() {
 
     return (
         <div className="space-y-6">
+            <AutopilotOverview />
+
             {/* Resources Grid */}
             <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
                 {resourcesReal.map((resource) => (

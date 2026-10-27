@@ -14,6 +14,8 @@ const kindStyle: Record<GrowthKind, string> = {
     RankUp: 'bg-amber-500/15 text-amber-600 dark:text-amber-400',
     Gacha: 'bg-pink-500/15 text-pink-600 dark:text-pink-400',
     Team: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-400',
+    Friend: 'bg-teal-500/15 text-teal-600 dark:text-teal-400',
+    Reward: 'bg-yellow-500/15 text-yellow-700 dark:text-yellow-400',
     Info: 'bg-muted text-muted-foreground',
 };
 
