@@ -13,7 +13,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { autopilotApi, type AutopilotConfig, type AutopilotStep, type GrowthEvent, type ProgressSnapshot } from '@/api/autopilot-service';
 import { GrowthFeed } from '@/components/autopilot/GrowthFeed';
 import { ProgressChart } from '@/components/autopilot/ProgressChart';
-import { SchedulePicker } from '@/components/autopilot/SchedulePicker';
+import { CronPicker } from '@/components/settings/CronPicker';
 
 // 抽卡和组队会花钻石/改队伍, 界面上标出来
 const RISKY_STEPS = new Set(['AutoPullGacha', 'AutoBuildTeam', 'SmartRankUp']);
@@ -113,7 +113,7 @@ export function AutopilotPage() {
                         </div>
                         <div className="flex items-center gap-3">
                             <span className="text-sm text-muted-foreground">{t('AP_SCHEDULE')}</span>
-                            <SchedulePicker value={config.cron} onChange={(cron) => update({ cron })} />
+                            <CronPicker value={config.cron} onChange={(cron) => update({ cron })} defaultValue="0 30 * ? * *" />
                         </div>
                     </div>
 

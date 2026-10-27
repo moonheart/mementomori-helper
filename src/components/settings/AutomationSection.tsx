@@ -2,11 +2,11 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { RefreshCw, HelpCircle } from 'lucide-react';
+import { CronPicker } from './CronPicker';
 import { AutoJobModel } from '@/api/generated/autoJobModel';
 import { useLocalizationStore } from '@/store/localization-store';
 
@@ -144,13 +144,9 @@ export function AutomationSection({ config, onChange, onResetCron }: AutomationS
                                         />
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Input
-                                            id={cronKey}
-                                            value={config[cronKey] as string}
-                                            onChange={(e) => handleCronChange(cronKey, e.target.value)}
-                                            className="font-mono h-8 text-sm flex-1"
-                                            placeholder={t('AUTO_CRON_EXPRESSION_PLACEHOLDER')}
-                                        />
+                                        <div className="flex-1">
+                                            <CronPicker value={config[cronKey] as string} onChange={(v) => handleCronChange(cronKey, v)} />
+                                        </div>
                                         <Button
                                             variant="outline"
                                             size="icon"
@@ -169,17 +165,14 @@ export function AutomationSection({ config, onChange, onResetCron }: AutomationS
 
                     <div className="space-y-4">
                         <h4 className="text-sm font-semibold text-muted-foreground">{t('AUTO_OTHER_SCHEDULES')}</h4>
-                        <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid gap-x-6 gap-y-4 lg:grid-cols-2">
                             {standaloneCrons.map(({ key, labelKey }) => (
                                 <div key={key} className="space-y-2">
                                     <Label htmlFor={key} className="text-xs">{t(labelKey)}</Label>
-                                    <div className="flex space-x-2">
-                                        <Input
-                                            id={key}
-                                            value={config[key] as string}
-                                            onChange={(e) => handleCronChange(key, e.target.value)}
-                                            className="font-mono h-8 text-sm"
-                                        />
+                                    <div className="flex items-start gap-2">
+                                        <div className="flex-1">
+                                            <CronPicker value={config[key] as string} onChange={(v) => handleCronChange(key, v)} />
+                                        </div>
                                         <Button
                                             variant="outline"
                                             size="icon"
