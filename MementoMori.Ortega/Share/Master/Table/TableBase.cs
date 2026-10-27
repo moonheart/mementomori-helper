@@ -119,6 +119,7 @@ namespace MementoMori.Ortega.Share.Master.Table
 		}
 
 		// [FieldOffset(Offset = "0x0")]
-		protected TM[] _datas;
+		// 服务器不再下发的表 (如 BountyQuestEventMB) 没有文件, 保持空表而不是 null
+		protected TM[] _datas = Array.Empty<TM>();
 	}
 }
