@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ChevronDown, Users, User, Star, Calendar, MessageSquare, Clock, Globe } from 'lucide-react';
+import { ChevronDown, Users, User, Star, Calendar, MessageSquare, Clock, Globe, Moon, Sun } from 'lucide-react';
+import { applyTheme, getTheme, type Theme } from '@/lib/theme';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -30,6 +31,13 @@ export function Header() {
     const getTable = useMasterStore((state) => state.getTable);
     const [status, setStatus] = useState<UserStatusDtoInfo | null>(null);
     const [serverTimeStr, setServerTimeStr] = useState('--:--:--');
+
+    const [theme, setTheme] = useState<Theme>(getTheme);
+    const toggleTheme = () => {
+        const next = theme === 'dark' ? 'light' : 'dark';
+        applyTheme(next, true);
+        setTheme(next);
+    };
 
     const languages: { code: string; label: string }[] = [
         { code: 'zhCN', label: '简体中文' },
@@ -149,11 +157,18 @@ export function Header() {
                         <span className="tabular-nums">{t('[MyPagePlayerInformationServerTimeLabel]')} {serverTimeStr}</span>
                     </div>
 
-                    {/* Language Switcher */}
+                    {/* Theme */}
+                    <Button variant="ghost" size="icon" onClick={toggleTheme} title={t('HEADER_TOGGLE_THEME')} aria-label={t('HEADER_TOGGLE_THEME')}>
+                        {theme === 'dark' ? <Sun className="h-5 w-5 text-muted-foreground" /> : <Moon className="h-5 w-5 text-muted-foreground" />}
+                    </Button>
+
+                    {/* Language Switcher: 显示当前语言, 不只是一个地球 */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" title={t('HEADER_SWITCH_LANGUAGE')}>
-                                <Globe className="h-5 w-5 text-muted-foreground" />
+                            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" title={t('HEADER_SWITCH_LANGUAGE')}>
+                                <Globe className="h-4 w-4" />
+                                <span className="text-sm">{languages.find(l => l.code === currentLanguage)?.label ?? currentLanguage}</span>
+                                <ChevronDown className="h-3.5 w-3.5" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">

@@ -10,7 +10,8 @@ import { cn } from '@/lib/utils';
 import { useAccountStore } from '@/store/accountStore';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from '@/hooks/useTranslation';
-import { autopilotApi, TIERS, type BannerAdvice, type TierRow } from '@/api/autopilot-service';
+import { CharacterIcon } from '@/components/character/CharacterIcon';
+import { autopilotApi, toCharacterInfo, TIERS, type BannerAdvice, type TierRow } from '@/api/autopilot-service';
 
 const tierStyle: Record<string, string> = {
     SS: 'bg-rose-500 text-white',
@@ -97,7 +98,8 @@ export function TeamTiersPage() {
     const TeamList = ({ list }: { list: TierRow[] }) => (
         <ul className="flex flex-wrap gap-2">
             {list.map((r) => (
-                <li key={r.characterId} className="flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm">
+                <li key={r.characterId} className="flex items-center gap-2 rounded-lg border py-1 pl-1 pr-3 text-sm">
+                    <CharacterIcon userCharacterInfo={toCharacterInfo(r)} size={40} />
                     <span className={cn('rounded px-1.5 text-xs font-bold', r.tier ? tierStyle[r.tier] : 'bg-muted')}>{r.tier ?? '?'}</span>
                     <span className="font-medium">{r.name}</span>
                     <span className="tabular-nums text-muted-foreground">Lv{r.level}</span>
@@ -194,7 +196,10 @@ export function TeamTiersPage() {
                                 <tr key={r.characterId} className="border-b last:border-0">
                                     <td className="py-1.5 pr-3"><TierSelect row={r} onChange={(tier) => setTier(r, tier)} /></td>
                                     <td className="py-1.5 pr-3">
-                                        <span className="font-medium">{r.name}</span>
+                                        <span className="inline-flex items-center gap-2 align-middle">
+                                            <CharacterIcon userCharacterInfo={toCharacterInfo(r)} size={36} />
+                                            <span className="font-medium">{r.name}</span>
+                                        </span>
                                         <span className="ml-2 text-xs text-muted-foreground">{r.rarity} · {r.element}</span>
                                         {r.inTeam && <Badge variant="secondary" className="ml-2">{t('TT_IN_TEAM')}</Badge>}
                                         {r.overridden && <Badge variant="outline" className="ml-2">{t('TT_EDITED')}</Badge>}

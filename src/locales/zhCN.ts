@@ -1257,4 +1257,5 @@ export default {
     "CRON_DAY_FRI": "周五",
     "CRON_DAY_SAT": "周六",
     "CRON_DAY_SUN": "周日",
+    'HEADER_TOGGLE_THEME': "浅色 / 深色模式",
 };

@@ -9,7 +9,8 @@ import { cn } from '@/lib/utils';
 import { useAccountStore } from '@/store/accountStore';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from '@/hooks/useTranslation';
-import { autopilotApi, type AutopilotOverview as Overview, type GrowthEvent, type ProgressSnapshot } from '@/api/autopilot-service';
+import { CharacterIcon } from '@/components/character/CharacterIcon';
+import { autopilotApi, toCharacterInfo, type AutopilotOverview as Overview, type GrowthEvent, type ProgressSnapshot } from '@/api/autopilot-service';
 import { GrowthFeed } from './GrowthFeed';
 
 const tierStyle: Record<string, string> = {
@@ -174,8 +175,9 @@ export function AutopilotOverview() {
                     <CardContent>
                         <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5">
                             {overview.team.map((c) => (
-                                <li key={c.characterId} className="space-y-1 rounded-lg border p-2 text-center">
-                                    <p className="truncate text-sm font-medium">{c.name}</p>
+                                <li key={c.characterId} className="flex flex-col items-center space-y-1 rounded-lg border p-2 text-center">
+                                    <CharacterIcon userCharacterInfo={toCharacterInfo(c)} size={72} />
+                                    <p className="w-full truncate text-sm font-medium">{c.name}</p>
                                     <p className="text-xs text-muted-foreground">
                                         <span className={cn('mr-1 rounded px-1 font-bold', c.tier ? tierStyle[c.tier] : 'bg-muted')}>{c.tier ?? '?'}</span>
                                         {c.rarity} · Lv{c.level}

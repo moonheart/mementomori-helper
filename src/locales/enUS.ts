@@ -1254,4 +1254,5 @@ export default {
     "CRON_DAY_FRI": "Friday",
     "CRON_DAY_SAT": "Saturday",
     "CRON_DAY_SUN": "Sunday",
+    'HEADER_TOGGLE_THEME': "Light / dark mode",
 };

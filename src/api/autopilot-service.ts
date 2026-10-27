@@ -1,4 +1,5 @@
 import apiClient from './axios-client';
+import type { UserCharacterInfo } from './generated/userCharacterInfo';
 
 export interface AutopilotStep {
     key: string;
@@ -37,6 +38,8 @@ export interface ProgressSnapshot {
 
 export interface TierRow {
     characterId: number;
+    guid: string;
+    rarityFlags: number;
     name: string;
     tier: string | null;
     overridden: boolean;
@@ -77,8 +80,12 @@ export interface AutopilotOverview {
     nextRun: string | null;
     now: OverviewStats;
     dayAgo: OverviewStats | null;
-    team: { characterId: number; name: string; tier: string | null; rarity: string; level: number; gear: number; avgReinforce: number }[];
+    team: { characterId: number; guid: string; rarityFlags: number; name: string; tier: string | null; rarity: string; level: number; gear: number; avgReinforce: number }[];
 }
+
+/** CharacterIcon 只用到 characterId / guid / level / rarityFlags */
+export const toCharacterInfo = (c: { characterId: number; guid: string; rarityFlags: number; level: number }) =>
+    ({ characterId: c.characterId, guid: c.guid, level: c.level, rarityFlags: c.rarityFlags, subLevel: 0, exp: 0, playerId: 0, isLocked: false }) as unknown as UserCharacterInfo;
 
 export const TIERS = ['SS', 'S', 'A', 'B', 'C'] as const;
 
