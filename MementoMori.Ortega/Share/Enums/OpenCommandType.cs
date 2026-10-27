@@ -177,6 +177,10 @@ namespace MementoMori.Ortega.Share.Enums
 		EquipmentReset = 580,
         [Description("セレクト音楽設定")]
         SelectMusicSetting = 600,
+		[Description("Webクリスタル")]
+		WebCrystal = 610,
+		[Description("マイニングクエスト")]
+		MiningQuest = 620,
 		[Description("武具固定")]
 		LockEquipment = 1000,
 		[Description("武具固定(ギルドバトル用)")]

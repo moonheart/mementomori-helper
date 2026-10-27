@@ -28,6 +28,8 @@ namespace MementoMori.Ortega.Share.Enums
 		GuerrillaPack,
 		[Description("ミッションパス")]
 		MissionPass,
+		[Description("Webストア")]
+		WebStore,
 		[Description("全検索")]
 		AllSearch = 99
 	}
