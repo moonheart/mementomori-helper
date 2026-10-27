@@ -14,6 +14,7 @@ using RentalRaid = MementoMori.Ortega.Share.Data.ApiInterface.RentalRaid;
 using Vote = MementoMori.Ortega.Share.Data.ApiInterface.PopularityVote;
 using Synchro = MementoMori.Ortega.Share.Data.ApiInterface.EquipmentSynchro;
 using TowerBattle = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle;
+using StarsGuidance = MementoMori.Ortega.Share.Data.ApiInterface.StarsGuidanceTradeShop;
 
 namespace MementoMori.Api.Autopilot;
 
@@ -52,6 +53,8 @@ public class RewardTracker : IHostedService
         {
             Battle.RewardAutoBattleResponse r => Rewards(T("[AutoBattleRewardInfoRewardLabel]"), r.AutoBattleRewardResult?.BattleRewardResult?.FixedItemList, r.AutoBattleRewardResult?.BattleRewardResult?.DropItemList),
             BountyQuest.RewardResponse r => Rewards(T("[CommonHeaderBountyQuestLabel]"), r.RewardItems),
+            BountyQuest.QuickResponse r => Rewards(T("[CommonHeaderBountyQuestLabel]"), r.RewardItems),
+            StarsGuidance.ExchangeItemResponse r => Rewards("Stars Guidance shop", r.GiveItem == null ? null : new[] {r.GiveItem}),
             LoginBonus.ReceiveDailyLoginBonusResponse r => Rewards(T("[MyPageButtonLoginBonusLabel]"), r.RewardItemList),
             LoginBonus.ReceiveLoginCountBonusResponse r => Rewards(T("[MyPageButtonLoginBonusLabel]"), r.RewardItemList),
             LoginBonus.ReceiveDailyLimitedLoginBonusResponse r => Rewards(T("[MyPageButtonLoginBonusLabel]"), r.RewardItemList?.Select(d => d.Item)),
