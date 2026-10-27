@@ -46,7 +46,7 @@ public class AutopilotJob : AccountJobBase
         var userId = accountContext.AccountInfo.UserId;
         var config = await _settings.GetSettingAsync<AutopilotConfig>(userId, SettingKey) ?? new();
         // 界面上单独点某一步时只跑那一步
-        var only = context.MergedJobDataMap.GetString("step");
+        context.MergedJobDataMap.TryGetString("step", out var only);
         var enabled = Steps.Where(t => only != null ? Key(t) == only : config.Steps.Contains(Key(t))).ToList();
         var handlers = enabled.ToList();
         if (enabled.Intersect(Climbs).Any()) handlers.AddRange(GrowAgain.Where(enabled.Contains));
