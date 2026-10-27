@@ -1395,4 +1395,10 @@
   <data name="CommonDefeat" xml:space="preserve">
       <value>失败</value>
   </data>
+  <data name="LocalRaidHostingOwnRoom" xml:space="preserve">
+    <value>没有可加入的房间, 改为自己开房间</value>
+  </data>
+  <data name="LocalRaidSoloStop" xml:space="preserve">
+    <value>自己开房间连输 3 次, 等下一轮再打</value>
+  </data>
 </root>

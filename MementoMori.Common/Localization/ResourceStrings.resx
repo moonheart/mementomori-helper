@@ -1394,4 +1394,10 @@
   <data name="CommonDefeat" xml:space="preserve">
       <value>Defeat</value>
   </data>
+  <data name="LocalRaidHostingOwnRoom" xml:space="preserve">
+    <value>No rooms to join, hosting our own room</value>
+  </data>
+  <data name="LocalRaidSoloStop" xml:space="preserve">
+    <value>Lost 3 times in a row hosting alone, stopping until the next run</value>
+  </data>
 </root>

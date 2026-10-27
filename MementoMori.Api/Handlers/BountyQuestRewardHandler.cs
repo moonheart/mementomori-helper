@@ -49,22 +49,19 @@ public partial class BountyQuestRewardHandler : IGameActionHandler
 
         if (questIds.Count > 0)
         {
-            // 领取奖励
-            var rewardResponse = await nm.SendRequest<RewardRequest, RewardResponse>(
-                new RewardRequest 
-                { 
-                    BountyQuestIds = questIds, 
-                    ConsumeCurrency = 0, 
-                    IsQuick = false 
-                });
-
-            // 记录奖励
-            if (rewardResponse.RewardItems?.Count > 0)
+            // 一个一个领: 一次领多个 (Claim All) 要等级解锁, 没解锁会报 142019 (master #118 的修复)
+            foreach (var questId in questIds)
             {
-                foreach (var item in rewardResponse.RewardItems)
-                {
+                var rewardResponse = await nm.SendRequest<RewardRequest, RewardResponse>(
+                    new RewardRequest
+                    {
+                        BountyQuestIds = new List<long> { questId },
+                        ConsumeCurrency = 0,
+                        IsQuick = false
+                    });
+
+                foreach (var item in rewardResponse.RewardItems ?? new())
                     await _jobLogger.LogAsync(userId, Text.T("BountyRewardItem", item.ItemType, item.ItemCount));
-                }
             }
 
             // 刷新任务列表
