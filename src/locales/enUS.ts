@@ -1235,7 +1235,6 @@ export default {
     "ACTION_CharacterStoryReward": "Character memories (story rewards)",
     "ACTION_FriendMissionReward": "Friend mission rewards",
     "ACTION_PanelBingoReward": "Panel bingo rewards",
-    "ACTION_WebStoreLoginCampaign": "Web store login campaign",
     "ACTION_PopularityVoteReward": "Popularity vote rewards",
     "ACTION_RentalRaidShareReward": "Rental raid share rewards",
     "ACTION_EquipmentSynchroMission": "Gear synchro mission rewards",

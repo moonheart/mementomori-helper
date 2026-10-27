@@ -1238,7 +1238,6 @@ export default {
     "ACTION_CharacterStoryReward": "角色回忆奖励",
     "ACTION_FriendMissionReward": "好友任务奖励",
     "ACTION_PanelBingoReward": "面板宾果奖励",
-    "ACTION_WebStoreLoginCampaign": "网页商店登录活动",
     "ACTION_PopularityVoteReward": "人气投票奖励",
     "ACTION_RentalRaidShareReward": "租借讨伐分享奖励",
     "ACTION_EquipmentSynchroMission": "装备同步任务奖励",
