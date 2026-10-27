@@ -23,6 +23,12 @@ public partial class MissionRewardHandler : IGameActionHandler
 
     public string ActionName => Text.T("ActionMissionReward");
 
+    private static readonly MissionGroupType[] ExtraGroups =
+    {
+        MissionGroupType.Limited, MissionGroupType.Collab, MissionGroupType.Comeback, MissionGroupType.Beginner, MissionGroupType.NewCharacter,
+        MissionGroupType.Panel, MissionGroupType.GuildTower, MissionGroupType.PopularityVote, MissionGroupType.BookSort, MissionGroupType.RentalRaid,
+    };
+
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
@@ -44,6 +50,19 @@ public partial class MissionRewardHandler : IGameActionHandler
             new GetMissionInfoRequest { TargetMissionGroupList = missionGroupTypes });
 
         if (missionInfoResp.MissionInfoDict == null) return;
+
+        // 活动/联动/回归/新角色等任务: 一组一组请求, 没开的活动报错就跳过, 不影响上面的主线/每日/每周
+        foreach (var extra in ExtraGroups)
+        {
+            try
+            {
+                var extraResp = await nm.SendRequest<GetMissionInfoRequest, GetMissionInfoResponse>(
+                    new GetMissionInfoRequest { TargetMissionGroupList = new List<MissionGroupType> { extra } });
+                foreach (var (groupType, info) in extraResp.MissionInfoDict ?? new())
+                    missionInfoResp.MissionInfoDict[groupType] = info;
+            }
+            catch (NetworkManager.ApiErrorException) { }
+        }
 
         // 2. 领取普通任务奖励
         var allMissionIds = new List<long>();
