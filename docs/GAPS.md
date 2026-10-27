@@ -21,7 +21,7 @@ without decompiling anything.
 
 Daily actions in the **Freebies** module (`MementoMori.Api/Freebies`), on by default because they only claim:
 character memories (story rewards), friend mission rewards, panel bingo lines (worked out from the 3x3 grid, no blind
-requests), web store login campaign, popularity vote rewards, rental raid share rewards, gear synchro mission rewards.
+requests), popularity vote rewards, rental raid share rewards, gear synchro mission rewards.
 Run one by hand with `POST /api/jobs/{userId}/action/{ActionKey}`.
 
 - Tower of Infinity sweep already existed (`InfiniteTowerHandler`, daily). It now only asks for the sweeps left today
@@ -37,6 +37,7 @@ Run one by hand with `POST /api/jobs/{userId}/action/{ActionKey}`.
 
 ## Left out on purpose (spends something you'd want to choose yourself)
 
+- `webStore/*` (login campaign): the web store is the real-money shop on its own site; the game API returns 404 for it.
 - `bountyQuest/quick`: finishes a fountain quest instantly for diamonds.
 - `legendLeague/buyLegendLeagueIconReward`: spends Legend League coins.
 - `starsGuidanceTradeShop/exchangeItem`, `equipment/training`, `cast`: spend materials.

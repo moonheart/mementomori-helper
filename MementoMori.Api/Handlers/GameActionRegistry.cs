@@ -72,7 +72,6 @@ public static class GameActionRegistry
         typeof(Freebies.CharacterStoryRewardHandler),
         typeof(Freebies.FriendMissionRewardHandler),
         typeof(Freebies.PanelBingoRewardHandler),
-        typeof(Freebies.WebStoreLoginCampaignHandler),
         typeof(Freebies.PopularityVoteRewardHandler),
         typeof(Freebies.RentalRaidShareRewardHandler),
         typeof(Freebies.EquipmentSynchroMissionHandler)

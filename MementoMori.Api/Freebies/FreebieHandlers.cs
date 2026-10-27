@@ -7,7 +7,6 @@ using MementoMori.Ortega.Share.Data.ApiInterface.EquipmentSynchro;
 using MementoMori.Ortega.Share.Data.ApiInterface.Friend;
 using MementoMori.Ortega.Share.Data.ApiInterface.Mission;
 using MementoMori.Ortega.Share.Data.ApiInterface.RentalRaid;
-using MementoMori.Ortega.Share.Data.ApiInterface.WebStoreLoginCampaign;
 using MementoMori.Ortega.Share.Data.Item;
 using Vote = MementoMori.Ortega.Share.Data.ApiInterface.PopularityVote;
 
@@ -110,26 +109,6 @@ public partial class PanelBingoRewardHandler : IGameActionHandler
                         new ReceivePanelMissionBingoRewardRequest {SheetNo = user.SheetNo, BingoType = type});
                 }
             }
-        });
-    }
-}
-
-/// <summary>网页商店登录活动奖励</summary>
-[RegisterTransient]
-[AutoConstructor]
-public partial class WebStoreLoginCampaignHandler : IGameActionHandler
-{
-    private readonly JobLogger _log;
-    public string ActionName => "Web store login campaign";
-
-    public async Task ExecuteAsync(AccountContext context)
-    {
-        var nm = context.NetworkManager;
-        await Free.TryAsync(_log, context.AccountInfo.UserId, ActionName, async () =>
-        {
-            var info = await nm.SendRequest<GetLoginCampaignInfoRequest, GetLoginCampaignInfoResponse>(new GetLoginCampaignInfoRequest());
-            if (info.IsAchieved && info.ItemList?.Count > 0)
-                await nm.SendRequest<RewardLoginCampaignItemRequest, RewardLoginCampaignItemResponse>(new RewardLoginCampaignItemRequest());
         });
     }
 }

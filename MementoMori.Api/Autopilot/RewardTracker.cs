@@ -11,7 +11,6 @@ using Shop = MementoMori.Ortega.Share.Data.ApiInterface.Shop;
 using Vip = MementoMori.Ortega.Share.Data.ApiInterface.Vip;
 using Character = MementoMori.Ortega.Share.Data.ApiInterface.Character;
 using RentalRaid = MementoMori.Ortega.Share.Data.ApiInterface.RentalRaid;
-using WebStore = MementoMori.Ortega.Share.Data.ApiInterface.WebStoreLoginCampaign;
 using Vote = MementoMori.Ortega.Share.Data.ApiInterface.PopularityVote;
 using Synchro = MementoMori.Ortega.Share.Data.ApiInterface.EquipmentSynchro;
 using TowerBattle = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle;
@@ -65,7 +64,6 @@ public class RewardTracker : IHostedService
             Character.GetCharacterStoryRewardResponse r => Rewards("Memories", r.RewardItemList),
             Friend.RewardFriendMissionResponse r => Rewards("Friend missions", r.RewardItemList),
             Mission.ReceivePanelMissionBingoRewardResponse r => Rewards("Panel bingo", r.RewardInfo?.ItemList),
-            WebStore.RewardLoginCampaignItemResponse r => Rewards("Web store login", r.RewardItemList),
             Vote.RewardVoteItemResponse r => Rewards("Popularity vote", r.RewardItemList),
             RentalRaid.ReceiveShareRewardResponse r => Rewards("Rental raid", r.ReceiveItems),
             Synchro.EquipmentSynchroRewardMissionResponse r => Rewards("Gear synchro", r.RewardItem == null ? null : new[] {r.RewardItem}),
