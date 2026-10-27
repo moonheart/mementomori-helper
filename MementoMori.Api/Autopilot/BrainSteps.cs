@@ -210,6 +210,7 @@ public partial class AutoPullGachaHandler : IGameActionHandler
 {
     private readonly BannerAdvisor _advisor;
     private readonly PlayerSettingService _settings;
+    private readonly TierListService _tiers;
     private readonly JobLogger _log;
     public string ActionName => "Pull gacha";
 
@@ -224,7 +225,13 @@ public partial class AutoPullGachaHandler : IGameActionHandler
             var diamonds = nm.UserSyncData.GetUserItemCount(ItemType.CurrencyFree);
             var ticket = advice.FirstOrDefault(a => a.TicketButtonId != null);
             var pull = advice.FirstOrDefault(a => a.Worth && a.DiamondButtonId != null && diamonds - a.DiamondCost >= config.GachaDiamondReserve);
-            var (btn, name) = ticket != null ? (ticket.TicketButtonId, ticket.Name) : pull != null ? (pull.DiamondButtonId, pull.Name) : (null, "");
+            // 余量: 钻石多于 GachaSurplusAbove 时, 多的部分抽其他卡池 (限定角色强度高的优先)
+            var surplus = config.GachaSurplusAbove > 0
+                ? advice.Where(a => a.DiamondButtonId != null && diamonds - a.DiamondCost >= config.GachaSurplusAbove)
+                    .OrderByDescending(a => a.PickupCharacterId > 0 ? _tiers.Score(a.PickupCharacterId) : 0).FirstOrDefault()
+                : null;
+            var choice = ticket != null ? (ticket.TicketButtonId, ticket.Name) : pull != null ? (pull.DiamondButtonId, pull.Name) : surplus != null ? (surplus.DiamondButtonId, surplus.Name) : (null, "");
+            var (btn, name) = choice;
             if (btn == null) break;
             try
             {

@@ -82,6 +82,11 @@ public class AutopilotConfig
     /// <summary>值得用钻石抽的 UP 角色最低强度: 4 = S, 5 = SS</summary>
     public int GachaMinPickupTier { get; set; } = 4;
 
+    /// <summary>
+    /// 免费钻石超过这个数时, 多出来的部分也抽普通/非 S 卡池 (池子里也能出 S/SS). 0 = 关闭
+    /// </summary>
+    public long GachaSurplusAbove { get; set; }
+
     /// <summary>升星时允许吃同属性的低强度角色 (不只是重复卡)</summary>
     public bool RankUpWithFodder { get; set; } = true;
 }

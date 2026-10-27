@@ -50,6 +50,29 @@ public partial class JobsController : ControllerBase
         return Ok(new { Message = Text.T("ApiJobConfigSaved") });
     }
 
+    public record PauseRequest(double? Hours);
+
+    [HttpGet("{userId}/pause")]
+    public Task<JobManagerService.PauseState> GetPause(long userId) => _jobManager.GetPauseAsync(userId);
+
+    /// <summary>暂停所有定时任务; hours 为空 = 一直暂停到手动恢复</summary>
+    [HttpPost("{userId}/pause")]
+    public async Task<ActionResult> Pause(long userId, [FromBody] PauseRequest request)
+    {
+        await _jobManager.SetPauseAsync(userId, new JobManagerService.PauseState
+        {
+            Paused = true, Until = request.Hours is > 0 ? DateTime.Now.AddHours(request.Hours.Value) : null
+        });
+        return Ok();
+    }
+
+    [HttpDelete("{userId}/pause")]
+    public async Task<ActionResult> Resume(long userId)
+    {
+        await _jobManager.SetPauseAsync(userId, new JobManagerService.PauseState());
+        return Ok();
+    }
+
     /// <summary>
     /// 立即执行一个动作 (例如 CharacterStoryReward), 等它跑完再返回
     /// </summary>

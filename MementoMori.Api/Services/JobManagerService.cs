@@ -19,11 +19,51 @@ public partial class JobManagerService
     private readonly IServiceProvider _serviceProvider;
     private readonly IConfiguration _configuration;
 
+    public const string PauseKey = "pause";
+
+    /// <summary>暂停: 不跑任何定时任务, 也就不会去重新登录 (自己在电脑上玩游戏时不会被挤下线)</summary>
+    public class PauseState
+    {
+        public bool Paused { get; set; }
+
+        /// <summary>null = 一直暂停到手动恢复</summary>
+        public DateTime? Until { get; set; }
+    }
+
+    public async Task<PauseState> GetPauseAsync(long userId)
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var state = await scope.ServiceProvider.GetRequiredService<PlayerSettingService>().GetSettingAsync<PauseState>(userId, PauseKey) ?? new();
+        return state.Paused && state.Until <= DateTime.Now ? new PauseState() : state; // 已经过期的当作没暂停
+    }
+
+    public async Task SetPauseAsync(long userId, PauseState state)
+    {
+        using (var scope = _serviceProvider.CreateScope())
+            await scope.ServiceProvider.GetRequiredService<PlayerSettingService>().SaveSettingAsync(userId, PauseKey, state);
+        await RegisterJobsAsync(userId);
+    }
+
     /// <summary>
     /// 为指定用户注册/刷新所有定时任务
     /// </summary>
     public async Task RegisterJobsAsync(long userId)
     {
+        var pause = await GetPauseAsync(userId);
+        if (pause.Paused)
+        {
+            await UnregisterJobsAsync(userId);
+            if (pause.Until is { } until)
+            {
+                // 到点自动恢复; 重启后 (自动登录 → 注册任务) 会重新排上
+                var sched = await _schedulerFactory.GetScheduler();
+                var job = JobBuilder.Create<Jobs.ResumeJob>().WithIdentity($"ResumeJob-{userId}", "resume").UsingJobData("userId", userId).Build();
+                await sched.DeleteJob(job.Key);
+                await sched.ScheduleJob(job, TriggerBuilder.Create().StartAt(until).Build());
+            }
+            return;
+        }
+
         var scheduler = await _schedulerFactory.GetScheduler();
         var accountContext = await _accountManager.GetOrCreateAsync(userId);
         

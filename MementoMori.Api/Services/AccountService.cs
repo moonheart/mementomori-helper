@@ -75,6 +75,30 @@ public partial class AccountService
         await _accountManager.DeleteAccountAsync(userId);
     }
 
+    public record WorldInfo(long WorldId, long PlayerId, string Name, long PlayerRank, long LastLoginTime, bool Current);
+
+    /// <summary>这个账号在每个世界的角色 (同一个引继码可以在多个世界各有一个角色)</summary>
+    public async Task<List<WorldInfo>> GetWorldsAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var list = await context.NetworkManager.GetPlayerDataInfoListAsync(new MementoMori.Ortega.Share.Data.ApiInterface.Auth.LoginRequest
+        {
+            UserId = userId, ClientKey = context.AccountInfo.ClientKey
+        });
+        return (list ?? new()).OrderByDescending(p => p.PlayerRank)
+            .Select(p => new WorldInfo(p.WorldId, p.PlayerId, p.Name, p.PlayerRank, p.LastLoginTime, p.WorldId == context.AccountInfo.CurrentWorldId))
+            .ToList();
+    }
+
+    /// <summary>换到另一个世界的角色并重新登录 (之后自动登录也会留在这个世界)</summary>
+    public async Task<SimpleLoginResponse> SwitchWorldAsync(long userId, long worldId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        _accountManager.UpdateLoginStatus(userId, false);
+        context.AccountInfo.CurrentWorldId = worldId; // LoginAsync 会优先选它, 登录成功后写进数据库
+        return await LoginAsync(userId, context.AccountInfo.ClientKey);
+    }
+
     public async Task<SimpleLoginResponse> LoginAsync(long userId, string clientKey)
     {
         try

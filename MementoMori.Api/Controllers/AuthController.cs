@@ -87,6 +87,18 @@ public partial class AuthController : ControllerBase
     }
 
     /// <summary>
+    /// 账号在各个世界的角色
+    /// </summary>
+    [HttpGet("accounts/{userId}/worlds")]
+    public async Task<ActionResult<List<AccountService.WorldInfo>>> GetWorlds(long userId) => await _accountService.GetWorldsAsync(userId);
+
+    /// <summary>
+    /// 切换世界并重新登录
+    /// </summary>
+    [HttpPost("accounts/{userId}/world/{worldId}")]
+    public async Task<ActionResult<SimpleLoginResponse>> SwitchWorld(long userId, long worldId) => await _accountService.SwitchWorldAsync(userId, worldId);
+
+    /// <summary>
     /// Login to account
     /// </summary>
     [HttpPost("login")]
