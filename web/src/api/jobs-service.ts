@@ -6,7 +6,21 @@ import { TriggerJobRequest } from './generated/triggerJobRequest';
 /**
  * 定时任务管理服务
  */
+export interface PauseState {
+    paused: boolean;
+    until: string | null;
+}
+
 export const jobsApi = {
+    getPause: async (userId: number) => (await apiClient.get<PauseState>(`/api/jobs/${userId}/pause`)).data,
+    /** hours 为 null = 一直暂停到手动恢复 */
+    pause: async (userId: number, hours: number | null) => {
+        await apiClient.post(`/api/jobs/${userId}/pause`, { hours });
+    },
+    resume: async (userId: number) => {
+        await apiClient.delete(`/api/jobs/${userId}/pause`);
+    },
+
     /**
      * 获取账户的所有任务状态
      * @param userId 账户 ID

@@ -21,6 +21,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { WorldSelect } from './WorldSelect';
 import { Badge } from '@/components/ui/badge';
 import {
     DropdownMenu,
@@ -180,9 +181,9 @@ export function AccountManagement() {
                                                     <Badge variant="default" className="bg-green-600">{t('[Online]')}</Badge>
                                                 )}
                                             </div>
-                                            <div className="text-sm text-muted-foreground">
+                                            <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                                                 ID: {account.userId}
-                                                {account.currentWorldId && ` • ${t('[TitleWarningListWorld]')} ${account.currentWorldId}`}
+                                                <WorldSelect userId={account.userId} currentWorldId={account.currentWorldId} onSwitched={loadAccounts} />
                                             </div>
                                             {account.lastLoginTime && (
                                                 <div className="text-xs text-muted-foreground">

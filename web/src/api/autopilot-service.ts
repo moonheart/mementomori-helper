@@ -13,6 +13,7 @@ export interface AutopilotConfig {
     gachaDiamondReserve: number;
     gachaMinPickupTier: number;
     rankUpWithFodder: boolean;
+    gachaSurplusAbove: number;
 }
 
 export type GrowthKind = 'Level' | 'LevelLink' | 'Equip' | 'Reinforce' | 'Quest' | 'Tower' | 'RankUp' | 'Gacha' | 'Team' | 'Friend' | 'Reward' | 'Info';

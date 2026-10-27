@@ -18,7 +18,21 @@ export interface LoginResult {
     message: string;
 }
 
+export interface WorldInfo {
+    worldId: number;
+    playerId: number;
+    name: string;
+    playerRank: number;
+    lastLoginTime: number;
+    current: boolean;
+}
+
 export const accountApi = {
+    /** 这个账号在各个世界的角色 */
+    getWorlds: async (userId: number) => (await apiClient.get<WorldInfo[]>(`/api/auth/accounts/${userId}/worlds`)).data,
+    /** 切换到另一个世界的角色并重新登录 */
+    switchWorld: async (userId: number, worldId: number) => (await apiClient.post(`/api/auth/accounts/${userId}/world/${worldId}`)).data,
+
     /**
      * 获取所有账号
      */

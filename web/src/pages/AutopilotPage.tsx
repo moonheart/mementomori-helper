@@ -144,7 +144,7 @@ export function AutopilotPage() {
 
                     <Separator />
 
-                    <div className="grid gap-4 sm:grid-cols-3">
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <div className="space-y-2">
                             <Label htmlFor="ap-reserve">{t('AP_DIAMOND_RESERVE')}</Label>
                             <Input
@@ -167,6 +167,18 @@ export function AutopilotPage() {
                                     <SelectItem value="3">A</SelectItem>
                                 </SelectContent>
                             </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="ap-surplus">{t('AP_SURPLUS')}</Label>
+                            <Input
+                                id="ap-surplus"
+                                type="number"
+                                min={0}
+                                step={1000}
+                                value={config.gachaSurplusAbove ?? 0}
+                                onChange={(e) => update({ gachaSurplusAbove: Math.max(0, Number(e.target.value)) })}
+                            />
+                            <p className="text-xs text-muted-foreground">{t('AP_SURPLUS_HINT')}</p>
                         </div>
                         <div className="flex items-start gap-3 pt-7">
                             <Switch id="ap-fodder" checked={config.rankUpWithFodder} onCheckedChange={(v) => update({ rankUpWithFodder: v })} />

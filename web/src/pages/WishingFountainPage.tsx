@@ -287,6 +287,7 @@ export function WishingFountainPage() {
         }
     };
 
+    const [remakeConfirm, setRemakeConfirm] = useState(false);
     const handleRemake = async () => {
         try {
             await ortegaApi.bountyQuest.remake({});
@@ -513,7 +514,7 @@ export function WishingFountainPage() {
                                 {dispatching === 'solo' ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : <Flashlight className="mr-2 h-3 w-3" />}
                                 {t('[BountyQuestAutoPlacement]')}
                             </Button>
-                            <Button variant="outline" size="sm" onClick={handleRemake}>
+                            <Button variant="outline" size="sm" onClick={() => setRemakeConfirm(true)}>
                                 <span className="mr-1">💎</span>
                                 {t('[BountyQuestUpdate]')}
                             </Button>
@@ -594,6 +595,20 @@ export function WishingFountainPage() {
                     )}
                 </TabsContent>
             </Tabs>
+
+            {/* 刷新任务可能花钻石, 先确认 */}
+            <AlertDialog open={remakeConfirm} onOpenChange={setRemakeConfirm}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{t('[BountyQuestUpdate]')}</AlertDialogTitle>
+                        <AlertDialogDescription>{t('WF_REMAKE_CONFIRM')}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>{t('[CommonCancelLabel]')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => { setRemakeConfirm(false); handleRemake(); }}>{t('[BountyQuestUpdate]')}</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
 
             <AlertDialog open={quickPending != null} onOpenChange={(open) => !open && setQuickId(null)}>
                 <AlertDialogContent>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ChevronDown, Users, User, Star, Calendar, MessageSquare, Clock, Globe, Moon, Sun } from 'lucide-react';
 import { applyTheme, getTheme, type Theme } from '@/lib/theme';
+import { PauseButton } from './PauseButton';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -156,6 +157,8 @@ export function Header() {
                         <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
                         <span className="tabular-nums">{t('[MyPagePlayerInformationServerTimeLabel]')} {serverTimeStr}</span>
                     </div>
+
+                    <PauseButton />
 
                     {/* Theme */}
                     <Button variant="ghost" size="icon" onClick={toggleTheme} title={t('HEADER_TOGGLE_THEME')} aria-label={t('HEADER_TOGGLE_THEME')}>
