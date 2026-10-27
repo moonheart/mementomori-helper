@@ -3,11 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Swords, Loader2, RefreshCw, Trophy, Zap, TrendingUp, BookOpen, Crown, Star } from 'lucide-react';
+import { Swords, Loader2, Trophy, Zap, TrendingUp, BookOpen, Crown, Star } from 'lucide-react';
 import { ortegaApi } from '@/api/ortega-client';
 import { useMasterTable } from '@/hooks/useMasterData';
 import { useTranslation } from '@/hooks/useTranslation';
 import { toast } from '@/hooks/use-toast';
+import { PvpBattleLogs } from '@/components/pvp/PvpBattleLogs';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAccountStore } from '@/store/accountStore';
@@ -259,10 +260,7 @@ export function PVPPage() {
                             </Card>
                         </TabsContent>
                         <TabsContent value="history" className="space-y-4 mt-6">
-                            <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed rounded-lg bg-muted/20">
-                                <RefreshCw className="h-10 w-10 mb-4 opacity-20" />
-                                <p>{t('PVP_NO_HISTORY')}</p>
-                            </div>
+                            <PvpBattleLogs kind="pvp" playerId={currentUserSyncData?.userStatusDtoInfo?.playerId} />
                         </TabsContent>
                         <TabsContent value="rewards" className="mt-6">
                             <Card>
@@ -375,10 +373,7 @@ export function PVPPage() {
                             </Card>
                         </TabsContent>
                         <TabsContent value="history" className="space-y-4 mt-6">
-                            <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed rounded-lg bg-muted/20">
-                                <RefreshCw className="h-10 w-10 mb-4 opacity-20" />
-                                <p>{t('PVP_NO_HISTORY')}</p>
-                            </div>
+                            <PvpBattleLogs kind="legend" playerId={currentUserSyncData?.userStatusDtoInfo?.playerId} />
                         </TabsContent>
                         <TabsContent value="rewards" className="mt-6">
                             <Card>
