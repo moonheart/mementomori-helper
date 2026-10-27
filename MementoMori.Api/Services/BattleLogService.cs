@@ -22,6 +22,8 @@ public class BattleLogService
         "battle/boss",
         "battle/pvpStart",
         "battle/legendLeagueStart",
+        "battle/getPvpBattleResultDetail",
+        "battle/getLegendLeagueResultDetail",
         "towerBattle/start",
         "dungeonBattle/execBattle",
         "guildRaid/startGuildRaid",
@@ -95,6 +97,8 @@ public class BattleLogService
                     break;
 
                 case "battle/legendleaguestart":
+                case "battle/getpvpbattleresultdetail":
+                case "battle/getlegendleagueresultdetail":
                     battleResult = GetPropertyValue<BattleResult>(response, "BattleResult");
                     break;
 
