@@ -11,4 +11,4 @@ rm -rf MementoMori.Api/wwwroot && cp -r "$WEB/dist" MementoMori.Api/wwwroot
 
 rsync -az --delete --exclude bin --exclude obj --exclude /MementoMori.Api/AssetCache --exclude /MementoMori.Api/Master --exclude '/MementoMori.Api/*.db' --exclude .git \
   global.json MementoMori.Common MementoMori.Ortega MementoMori.Api docker-compose.yml "$HOST:mementomori-v2/src/"
-ssh "$HOST" 'cd mementomori-v2/src && sudo docker build -t mementomori-api:latest -f MementoMori.Api/Dockerfile . && cd .. && sudo docker compose -f src/docker-compose.yml up -d'
+ssh "$HOST" 'cd mementomori-v2/src && sudo docker build -q -t mementomori-api:latest -f MementoMori.Api/Dockerfile . && sudo docker compose -p mementomori-v2 up -d --force-recreate'
