@@ -262,7 +262,8 @@ public class UserSyncData
             UserCharacterDtoInfos = UserCharacterDtoInfos.Merge(userSyncData.UserCharacterDtoInfos, (a, b) => a.Guid == b.Guid);
         if (userSyncData.UserCharacterRankReleaseDtoInfos.IsNotNullOrEmpty())
             UserCharacterRankReleaseDtoInfos = UserCharacterRankReleaseDtoInfos.Merge(userSyncData.UserCharacterRankReleaseDtoInfos, (a, b) => a.CharacterId == b.CharacterId);
-        if (userSyncData.UserDeckDtoInfos.IsNotNullOrEmpty()) UserDeckDtoInfos = userSyncData.UserDeckDtoInfos;
+        // 服务器只回传改动的队伍, 按类型合并而不是整体替换
+        if (userSyncData.UserDeckDtoInfos.IsNotNullOrEmpty()) UserDeckDtoInfos = (UserDeckDtoInfos ?? new()).Merge(userSyncData.UserDeckDtoInfos, (a, b) => a.DeckUseContentType == b.DeckUseContentType && a.DeckNo == b.DeckNo);
         if (userSyncData.UserEquipmentDtoInfos.IsNotNullOrEmpty())
             UserEquipmentDtoInfos = UserEquipmentDtoInfos.Merge(userSyncData.UserEquipmentDtoInfos, (a, b) => a.Guid == b.Guid);
         if (userSyncData.UserEquipmentStatusDtoInfo != null) UserEquipmentStatusDtoInfo = userSyncData.UserEquipmentStatusDtoInfo;
