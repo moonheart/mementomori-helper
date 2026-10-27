@@ -867,4 +867,5 @@ export default {
     "TT_NOTES": "Notes",
     "TT_IN_TEAM": "In team",
     "TT_EDITED": "Edited",
+    'ACCOUNT_LOGIN': 'Log in',
 };

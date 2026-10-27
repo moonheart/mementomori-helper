@@ -215,7 +215,7 @@ export function AccountManagement() {
                                             ) : (
                                                 <>
                                                     <LogIn className="mr-2 h-4 w-4" />
-                                                    {t('[GuildTowerUseCharacterEntryContinuationLabel]')}
+                                                    {t('ACCOUNT_LOGIN')}
                                                 </>
                                             )}
                                         </Button>

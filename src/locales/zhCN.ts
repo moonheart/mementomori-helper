@@ -870,4 +870,5 @@ export default {
     "TT_NOTES": "备注",
     "TT_IN_TEAM": "主队",
     "TT_EDITED": "已修改",
+    'ACCOUNT_LOGIN': '登录',
 };

@@ -160,7 +160,7 @@ export function AutopilotPage() {
                         <div className="space-y-2">
                             <Label>{t('AP_MIN_PICKUP_TIER')}</Label>
                             <Select value={String(config.gachaMinPickupTier)} onValueChange={(v) => update({ gachaMinPickupTier: Number(v) })}>
-                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="5">SS</SelectItem>
                                     <SelectItem value="4">S</SelectItem>
