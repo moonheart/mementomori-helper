@@ -40,10 +40,16 @@ public partial class GrowthTracker
             PlayerRank = data.UserStatusDtoInfo.Rank,
             Gold = data.GetUserItemCount(ItemType.Gold),
             Diamonds = data.GetUserItemCount(ItemType.CurrencyFree, isAnyCurrency: true),
+            Power = TeamPower(data),
             TowersJson = JsonConvert.SerializeObject((data.UserTowerBattleDtoInfos ?? new()).ToDictionary(t => t.TowerType.ToString(), t => t.MaxTowerBattleId))
         }).ExecuteAffrowsAsync();
         await TrimAsync<ProgressSnapshotEntity>(userId, KeepSnapshots);
     }
+
+    /// <summary>主线 (Boss) 队伍战力, 没有就取最高的队伍</summary>
+    public static long TeamPower(UserSyncData data) =>
+        data.UserDeckDtoInfos?.FirstOrDefault(d => d.DeckUseContentType == DeckUseContentType.Boss)?.DeckBattlePower
+        ?? data.UserDeckDtoInfos?.Max(d => (long?) d.DeckBattlePower) ?? 0;
 
     public Task<List<GrowthEventEntity>> GetEventsAsync(long userId, int limit) =>
         _db.Select<GrowthEventEntity>().Where(e => e.UserId == userId).OrderByDescending(e => e.Time).Take(limit).ToListAsync();

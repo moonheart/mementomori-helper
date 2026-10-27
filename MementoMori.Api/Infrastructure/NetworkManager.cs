@@ -45,6 +45,9 @@ public partial class NetworkManager : IDisposable
 
     public event Action<string>? GameApiHostUpdated;
 
+    /// <summary>每个成功的响应 (userId, request, response), 用于记录奖励/好友等成长记录</summary>
+    public static event Action<long, object, object>? ResponseReceived;
+
     // State
     public long UserId { get; set; }
     public long PlayerId { get; set; }
@@ -361,6 +364,9 @@ public partial class NetworkManager : IDisposable
                     }
                     userDataCallback?.Invoke(userSyncResponse.UserSyncData);
                 }
+
+                try { ResponseReceived?.Invoke(UserId, request, result!); }
+                catch (Exception e) { _logger.LogWarning(e, "ResponseReceived handler failed"); }
 
                 _logger.LogDebug("Request successful");
                 return result;

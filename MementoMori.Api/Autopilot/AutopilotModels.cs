@@ -6,7 +6,7 @@ namespace MementoMori.Api.Autopilot;
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum GrowthKind
 {
-    Level, LevelLink, Equip, Reinforce, Quest, Tower, RankUp, Gacha, Team, Info
+    Level, LevelLink, Equip, Reinforce, Quest, Tower, RankUp, Gacha, Team, Friend, Reward, Info
 }
 
 /// <summary>
@@ -45,6 +45,9 @@ public class ProgressSnapshotEntity
     public long PlayerRank { get; set; }
     public long Gold { get; set; }
     public long Diamonds { get; set; }
+
+    /// <summary>主线队伍战力</summary>
+    public long Power { get; set; }
 
     /// <summary>TowerType -> 最高层, JSON</summary>
     [Column(StringLength = -1)]

@@ -15,6 +15,7 @@ public partial class AccountService
     private readonly AccountCredentialService _credentialService;
     private readonly JobManagerService _jobManager;
     private readonly PlayerSettingService _settingService;
+    private readonly Autopilot.GrowthTracker _growthTracker;
 
     public List<AccountDto> GetAllAccounts()
     {
@@ -123,6 +124,7 @@ public partial class AccountService
 
             // 6. 注册/刷新定时任务
             await _jobManager.RegisterJobsAsync(userId);
+            await _growthTracker.SnapshotAsync(userId, context.NetworkManager.UserSyncData);
             
             _logger.LogInformation("Login successful and Session established. WorldId: {WorldId}", latestWorld.WorldId);
             

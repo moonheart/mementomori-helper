@@ -62,6 +62,7 @@ builder.Services.AddHttpClient();
 
 // Register Hosted Services (Special Case)
 builder.Services.AddHostedService(sp => sp.GetRequiredService<MementoMori.Api.Services.MasterDataService>());
+builder.Services.AddHostedService<MementoMori.Api.Autopilot.RewardTracker>();
 
 var app = builder.Build();
 

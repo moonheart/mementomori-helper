@@ -1,5 +1,7 @@
 using MementoMori.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using MementoMori.Api.Extensions;
+using MementoMori.Ortega.Share.Data.Item;
 using Newtonsoft.Json;
 using static MementoMori.Api.Autopilot.AutopilotExtensions;
 
@@ -57,12 +59,49 @@ public partial class AutopilotController : ControllerBase
         var list = await _tracker.GetSnapshotsAsync(userId, DateTime.Now.AddDays(-Math.Clamp(days, 1, 90)));
         return list.Select(s => new
         {
-            s.Time, s.QuestId, s.QuestName, s.LinkLevel, s.PlayerRank, s.Gold, s.Diamonds,
+            s.Time, s.QuestId, s.QuestName, s.LinkLevel, s.PlayerRank, s.Gold, s.Diamonds, s.Power,
             Towers = JsonConvert.DeserializeObject<Dictionary<string, long>>(s.TowersJson)
         });
     }
 
     /// <summary>拥有的角色 + 强度, 用于 Team & Tiers 页面</summary>
+    public record Stats(long QuestId, string QuestName, long LinkLevel, long Tower, long Rank, long Power, long Gold, long Diamonds);
+
+    public record TeamMember(long CharacterId, string Name, string? Tier, string Rarity, long Level, int Gear, int AvgReinforce);
+
+    public record Overview(bool Enabled, DateTime? NextRun, Stats Now, Stats? DayAgo, List<TeamMember> Team);
+
+    /// <summary>Home 页面: autopilot 状态 + 当前数值 + 24 小时前的数值 + 主队</summary>
+    [HttpGet("{userId}/overview")]
+    public async Task<ActionResult<Overview>> GetOverview(long userId)
+    {
+        var data = (await _accounts.GetOrCreateAsync(userId)).NetworkManager.UserSyncData;
+        if (data?.UserStatusDtoInfo == null) return NotFound("not logged in");
+        var config = await GetConfig(userId);
+        var nextRun = (await _jobs.GetJobStatusAsync(userId)).FirstOrDefault(j => j.JobType == nameof(AutopilotJob))?.NextRunTime;
+
+        var questId = data.UserBattleBossDtoInfo?.BossClearMaxQuestId ?? 0;
+        var now = new Stats(questId, QuestTable.GetById(questId)?.Memo ?? "-", data.UserLevelLinkDtoInfo?.PartyLevel ?? 0,
+            data.UserTowerBattleDtoInfos?.FirstOrDefault(t => t.TowerType == TowerType.Infinite)?.MaxTowerBattleId ?? 0,
+            data.UserStatusDtoInfo.Rank, GrowthTracker.TeamPower(data),
+            data.GetUserItemCount(ItemType.Gold), data.GetUserItemCount(ItemType.CurrencyFree, isAnyCurrency: true));
+
+        var snaps = await _tracker.GetSnapshotsAsync(userId, DateTime.Now.AddDays(-3));
+        var old = snaps.LastOrDefault(s => s.Time <= DateTime.Now.AddHours(-24)) ?? snaps.FirstOrDefault();
+        Stats? dayAgo = old == null ? null : new Stats(old.QuestId, old.QuestName, old.LinkLevel,
+            JsonConvert.DeserializeObject<Dictionary<string, long>>(old.TowersJson)?.GetValueOrDefault(nameof(TowerType.Infinite)) ?? 0,
+            old.PlayerRank, old.Power, old.Gold, old.Diamonds);
+
+        var team = data.GetMainTeam().Select(c =>
+        {
+            var gear = data.UserEquipmentDtoInfos.Where(e => e.CharacterGuid == c.Guid).ToList();
+            return new TeamMember(c.CharacterId, CharName(c.CharacterId), _tiers.GetTier(c.CharacterId), c.RarityFlags.ToString(),
+                data.GetEffectiveLevel(c), gear.Count, gear.Count == 0 ? 0 : (int) gear.Average(e => e.ReinforcementLv));
+        }).ToList();
+
+        return new Overview(config.Enabled, nextRun, now, dayAgo, team);
+    }
+
     [HttpGet("{userId}/tiers")]
     public async Task<List<TierRow>> GetTiers(long userId)
     {
