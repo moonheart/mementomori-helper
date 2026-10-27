@@ -13,12 +13,13 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { CharacterIcon } from '@/components/character/CharacterIcon';
 import { autopilotApi, toCharacterInfo, TIERS, type BannerAdvice, type TierRow } from '@/api/autopilot-service';
 
+// dark: 也要写, 否则深色模式下 Select 自带的 dark:bg-input 会盖掉颜色
 const tierStyle: Record<string, string> = {
-    SS: 'bg-rose-500 text-white',
-    S: 'bg-amber-500 text-white',
-    A: 'bg-emerald-500 text-white',
-    B: 'bg-sky-500 text-white',
-    C: 'bg-slate-400 text-white',
+    SS: 'bg-rose-500 dark:bg-rose-500 text-white',
+    S: 'bg-amber-500 dark:bg-amber-500 text-white',
+    A: 'bg-emerald-500 dark:bg-emerald-500 text-white',
+    B: 'bg-sky-500 dark:bg-sky-500 text-white',
+    C: 'bg-slate-400 dark:bg-slate-500 text-white',
 };
 const NONE = 'none';
 
