@@ -84,7 +84,7 @@ var app = builder.Build();
 if (args.Contains("--export-rpc"))
 {
     var discoveryService = app.Services.GetRequiredService<MementoMori.Api.Services.OrtegaApiDiscoveryService>();
-    var outputDir = Path.Combine(builder.Environment.ContentRootPath, "../../src/api");
+    var outputDir = Path.Combine(builder.Environment.ContentRootPath, "../web/src/api");
     MementoMori.Api.Infrastructure.RpcManifestGenerator.Generate(discoveryService, outputDir);
     return;
 }

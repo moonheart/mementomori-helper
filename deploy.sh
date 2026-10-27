@@ -3,7 +3,7 @@
 # 用法: ./deploy.sh   (需要 ~/mementomori-helper-web 和 ssh ubuntu@157.137.213.122)
 set -euo pipefail
 HOST=ubuntu@157.137.213.122
-WEB=~/mementomori-helper-web
+WEB=web  # 前端在同一个仓库里 (moonheart: helper-web 只是临时仓库, 要并进来)
 cd "$(dirname "$0")"
 
 (cd "$WEB" && ./node_modules/.bin/tsc -b && ./node_modules/.bin/vite build)

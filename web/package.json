@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate-types": "cd api/MementoMori.Api && dotnet build && dotnet typegen generate && dotnet run --no-build -- --export-rpc"
+    "generate-types": "cd ../MementoMori.Api && dotnet build && dotnet typegen generate && dotnet run --no-build -- --export-rpc"
   },
   "dependencies": {
     "@microsoft/signalr": "^8.0.17",
