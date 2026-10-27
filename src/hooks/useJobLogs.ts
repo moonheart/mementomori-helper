@@ -28,7 +28,7 @@ export function useJobLogs(userId: number | null) {
         }
 
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/hubs/jobs?userId=${userId}`)
+            .withUrl(`${import.meta.env.VITE_API_URL ?? 'http://localhost:5000'}/hubs/jobs?userId=${userId}`)
             .withAutomaticReconnect()
             .build();
 

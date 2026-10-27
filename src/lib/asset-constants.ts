@@ -1,5 +1,5 @@
 // 游戏图片走 API 的本地缓存 (/api/assets), 第一次下载后存在服务器磁盘, 浏览器缓存一年
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
 
 /** 资源服务器基础URL (AddressableConvertAssets) */
 export const BASE_URL = `${API_URL}/api/assets/convert`;

@@ -99,7 +99,7 @@ class LocalRaidSignalRService {
     private maxReconnectAttempts = 5;
 
     constructor() {
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+        const baseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
         this.hubUrl = `${baseUrl}/hubs/localraid`;
     }
 

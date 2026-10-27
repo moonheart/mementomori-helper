@@ -3,7 +3,7 @@ import { useAccountStore } from '@/store/accountStore';
 import { parseOrtegaError } from '@/lib/errorHandler';
 
 const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
+    baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:5000',
     timeout: 30000,
     headers: {
         'Content-Type': 'application/json',

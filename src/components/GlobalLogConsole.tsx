@@ -46,7 +46,7 @@ export function GlobalLogConsole() {
         }
 
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/hubs/jobs?userId=${currentAccountId}`)
+            .withUrl(`${import.meta.env.VITE_API_URL ?? 'http://localhost:5000'}/hubs/jobs?userId=${currentAccountId}`)
             .withAutomaticReconnect()
             .build();
 
