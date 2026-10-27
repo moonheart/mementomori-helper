@@ -1,6 +1,7 @@
 ﻿@using MementoMori.Common.Localization
 @using static MementoMori.Ortega.Share.Masters
 @using System.Globalization
+@using MementoMori.BlazorShared.Components
 @using DynamicData.Binding
 @using MementoMori.Option
 @using ReactiveUI
@@ -49,6 +50,7 @@
             @Body
         </MudContainer>
     </MudMainContent>
+    <MessageList/>
 </MudLayout>
 
 @code {
