@@ -98,6 +98,13 @@ public partial class JobManagerService
             await RegisterJobAsync<Jobs.PvpJob>(scheduler, userId, config.PvpJobCron, "PVP 竞技场任务", offset);
         }
         
+        // Autopilot (自动成长/推图/抽卡, 单独的配置)
+        var autopilot = await settingService.GetSettingAsync<Autopilot.AutopilotConfig>(userId, Autopilot.AutopilotJob.SettingKey);
+        if (autopilot is {Enabled: true})
+        {
+            await RegisterJobAsync<Autopilot.AutopilotJob>(scheduler, userId, autopilot.Cron, "Autopilot", offset);
+        }
+
         _logger.LogInformation("Successfully registered jobs for user {UserId}", userId);
     }
 
@@ -158,6 +165,20 @@ public partial class JobManagerService
             _logger.LogWarning("Job {JobTypeName} not registered for user {UserId}, cannot trigger", jobTypeName, userId);
             throw new InvalidOperationException($"任务 {jobTypeName} 未注册或已被禁用");
         }
+    }
+
+    /// <summary>
+    /// 不管有没有注册定时, 立即跑一次
+    /// </summary>
+    public async Task RunOnceAsync<T>(long userId, IDictionary<string, string>? data = null) where T : IJob
+    {
+        var scheduler = await _schedulerFactory.GetScheduler();
+        var builder = JobBuilder.Create<T>()
+            .WithIdentity($"{typeof(T).Name}-once-{Guid.NewGuid():N}", userId.ToString())
+            .UsingJobData("userId", userId);
+        foreach (var (k, v) in data ?? new Dictionary<string, string>()) builder.UsingJobData(k, v);
+        var job = builder.Build();
+        await scheduler.ScheduleJob(job, TriggerBuilder.Create().StartNow().Build());
     }
 
     private async Task RegisterJobAsync<T>(IScheduler scheduler, long userId, string cron, string description, TimeSpan offset) where T : IJob

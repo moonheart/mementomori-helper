@@ -33,4 +33,7 @@
     <ProjectReference Include="..\MementoMori.Ortega\MementoMori.Ortega.csproj" />
     <ProjectReference Include="..\MementoMori.Common\MementoMori.Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Autopilot/tierlist.default.json" LogicalName="MementoMori.Api.tierlist.default.json" />
+  </ItemGroup>
 </Project>
