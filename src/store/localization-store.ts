@@ -19,7 +19,7 @@ interface LocalizationState {
 }
 
 export const useLocalizationStore = create<LocalizationState>((set, get) => ({
-    currentLanguage: localStorage.getItem('app_lang') || 'zhCN',
+    currentLanguage: localStorage.getItem('app_lang') || 'enUS',
     resources: {},
     isLoading: false,
     isSyncing: false,
