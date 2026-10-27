@@ -14,6 +14,7 @@ public partial class JobsController : ControllerBase
 {
     private readonly JobManagerService _jobManager;
     private readonly PlayerSettingService _settingService;
+    private readonly GameActionService _gameActionService;
 
     /// <summary>
     /// 获取账户的所有任务状态
@@ -48,6 +49,13 @@ public partial class JobsController : ControllerBase
         
         return Ok(new { Message = "配置已保存并刷新任务" });
     }
+
+    /// <summary>
+    /// 立即执行一个动作 (例如 CharacterStoryReward), 等它跑完再返回
+    /// </summary>
+    [HttpPost("{userId}/action/{actionKey}")]
+    public async Task<ActionResult> RunAction(long userId, string actionKey) =>
+        await _gameActionService.ExecuteSingleActionAsync(userId, actionKey) ? Ok() : NotFound($"unknown action {actionKey}");
 
     /// <summary>
     /// 立即触发某个任务

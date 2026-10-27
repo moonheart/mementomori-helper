@@ -2922,7 +2922,7 @@
      "UserSyncData"
     ]
    ],
-   "status": "unused"
+   "status": "used"
   },
   "mission/rewardMission": {
    "category": "Mission",
@@ -6632,7 +6632,7 @@
      "?"
     ]
    ],
-   "status": "unused"
+   "status": "used"
   },
   "friend/getPlayerInfoList": {
    "category": "Friend",
@@ -6810,7 +6810,7 @@
      "UserSyncData"
     ]
    ],
-   "status": "unused"
+   "status": "used"
   },
   "friend/searchFriend": {
    "category": "Friend",
@@ -7018,9 +7018,9 @@
    ],
    "status": "missing"
   },
-  "equipmentSynchro/equipmentSynchroRewardMission": {
+  "equipmentSynchro/rewardMission": {
    "category": "EquipmentSynchro",
-   "uri": "equipmentSynchro/equipmentSynchroRewardMission",
+   "uri": "equipmentSynchro/rewardMission",
    "request": [
     [
      "IsBulk",
@@ -7037,7 +7037,7 @@
      "UserSyncData"
     ]
    ],
-   "status": "missing"
+   "status": "used"
   },
   "equipmentSynchro/equipmentSynchroSetBaseCell": {
    "category": "EquipmentSynchro",
@@ -8591,7 +8591,7 @@
      "UserSyncData"
     ]
    ],
-   "status": "missing"
+   "status": "used"
   },
   "character/changeLockStatus": {
    "category": "Character",
@@ -8675,7 +8675,7 @@
      "UserSyncData"
     ]
    ],
-   "status": "unused"
+   "status": "used"
   },
   "character/getDetailsInfo": {
    "category": "Character",

@@ -9,6 +9,12 @@ using Mission = MementoMori.Ortega.Share.Data.ApiInterface.Mission;
 using Present = MementoMori.Ortega.Share.Data.ApiInterface.Present;
 using Shop = MementoMori.Ortega.Share.Data.ApiInterface.Shop;
 using Vip = MementoMori.Ortega.Share.Data.ApiInterface.Vip;
+using Character = MementoMori.Ortega.Share.Data.ApiInterface.Character;
+using RentalRaid = MementoMori.Ortega.Share.Data.ApiInterface.RentalRaid;
+using WebStore = MementoMori.Ortega.Share.Data.ApiInterface.WebStoreLoginCampaign;
+using Vote = MementoMori.Ortega.Share.Data.ApiInterface.PopularityVote;
+using Synchro = MementoMori.Ortega.Share.Data.ApiInterface.EquipmentSynchro;
+using TowerBattle = MementoMori.Ortega.Share.Data.ApiInterface.TowerBattle;
 
 namespace MementoMori.Api.Autopilot;
 
@@ -56,6 +62,14 @@ public class RewardTracker : IHostedService
             Present.ReceiveItemResponse r => Rewards(T("[MyPagePresentBoxButtonTitle]"), r.ResultItems?.Select(d => d.Item)),
             Shop.ReceiveRewardResponse r => Rewards(T("[CommonMonthlyBoosterLabel]"), r.RewardInfo?.ItemList, r.RewardInfo?.BonusItemList),
             Vip.GetDailyGiftResponse r => Rewards("VIP", r.ItemList),
+            Character.GetCharacterStoryRewardResponse r => Rewards("Memories", r.RewardItemList),
+            Friend.RewardFriendMissionResponse r => Rewards("Friend missions", r.RewardItemList),
+            Mission.ReceivePanelMissionBingoRewardResponse r => Rewards("Panel bingo", r.RewardInfo?.ItemList),
+            WebStore.RewardLoginCampaignItemResponse r => Rewards("Web store login", r.RewardItemList),
+            Vote.RewardVoteItemResponse r => Rewards("Popularity vote", r.RewardItemList),
+            RentalRaid.ReceiveShareRewardResponse r => Rewards("Rental raid", r.ReceiveItems),
+            Synchro.EquipmentSynchroRewardMissionResponse r => Rewards("Gear synchro", r.RewardItem == null ? null : new[] {r.RewardItem}),
+            TowerBattle.TowerBattleQuickResponse r => Rewards(T("[TowerTypeInfinite]"), r.BattleRewardResult?.FixedItemList, r.BattleRewardResult?.DropItemList),
             Friend.BulkApplyFriendsResponse { AppliedPlayerIdList.Count: > 0 } r => (GrowthKind.Friend, $"Sent {r.AppliedPlayerIdList.Count} friend requests"),
             Friend.ReplyAllFriendResponse { ProcessedNum: > 0 } r => (GrowthKind.Friend, $"Accepted {r.ProcessedNum} friend requests"),
             Friend.RemoveFriendResponse when request is Friend.RemoveFriendRequest req => (GrowthKind.Friend, $"Removed inactive friend (player {req.TargetPlayerId})"),

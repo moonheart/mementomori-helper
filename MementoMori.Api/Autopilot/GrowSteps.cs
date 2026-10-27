@@ -70,11 +70,25 @@ public partial class AutoLevelUpHandler : IGameActionHandler
                 .Where(d => d.Level < OrtegaConst.LevelLink.MaxCharacterLevel.GetValueOrDefault(d.RarityFlags, 240))
                 .MinBy(d => d.Level);
             if (c == null) break;
-            var cost = CharacterLevelTable.GetArray().FirstOrDefault(d => d.Level == c.Level + 1);
-            if (cost == null || !data.CanAfford(cost.RequiredItemList)) break;
+            // 一次请求升到 "追上第二低的那个" 为止 (能付得起的部分), 等级链接等级靠前5名最低等级
+            var cap = OrtegaConst.LevelLink.MaxCharacterLevel.GetValueOrDefault(c.RarityFlags, 240);
+            var others = data.UserCharacterDtoInfos.Where(d => !data.IsLevelLinkMember(d.Guid)).OrderByDescending(d => d.Level).Take(5).Where(d => d.Guid != c.Guid).ToList();
+            var target = Math.Min(cap, Math.Max(c.Level + 1, others.Count > 0 ? others.Min(d => d.Level) : cap));
+            var dest = c.Level;
+            var spent = new Dictionary<(ItemType, long), long>();
+            for (var lv = c.Level + 1; lv <= target; lv++)
+            {
+                var cost = CharacterLevelTable.GetArray().FirstOrDefault(d => d.Level == lv);
+                if (cost == null) break;
+                foreach (var i in cost.RequiredItemList) spent[(i.ItemType, i.ItemId)] = spent.GetValueOrDefault((i.ItemType, i.ItemId)) + i.ItemCount;
+                if (spent.Any(kv => data.GetUserItemCount(kv.Key.Item1, kv.Key.Item2) < kv.Value)) break;
+                dest = lv;
+            }
+
+            if (dest == c.Level) break;
             try
             {
-                await nm.SendRequest<CharacterApi.LevelUpRequest, CharacterApi.LevelUpResponse>(new CharacterApi.LevelUpRequest {UserCharacterGuid = c.Guid});
+                await nm.SendRequest<CharacterApi.BulkLevelUpRequest, CharacterApi.BulkLevelUpResponse>(new CharacterApi.BulkLevelUpRequest {UserCharacterGuid = c.Guid, DestinationLevel = dest});
             }
             catch (Exception e)
             {

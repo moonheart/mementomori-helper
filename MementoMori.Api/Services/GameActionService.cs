@@ -20,6 +20,18 @@ public partial class GameActionService
     private readonly PlayerSettingService _settingService;
 
     /// <summary>
+    /// 只执行一个动作 (界面上单独点运行); 不存在的 key 返回 false
+    /// </summary>
+    public async Task<bool> ExecuteSingleActionAsync(long userId, string actionKey)
+    {
+        var metadata = GameActionRegistry.GetMetadata(actionKey);
+        if (metadata == null || _serviceProvider.GetService(metadata.HandlerType) is not IGameActionHandler handler) return false;
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        await _executor.ExecuteActionsAsync(context, new[] {handler});
+        return true;
+    }
+
+    /// <summary>
     /// 执行所有每日自动化任务（DailyJob 使用）
     /// </summary>
     public async Task ExecuteDailyActionAsync(long userId)
