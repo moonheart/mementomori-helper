@@ -1,4 +1,4 @@
-# Oracle: Caddy (mm.5maple.com, basicauth) → 127.0.0.1:5290
+# 只监听本机; 外面放一个反向代理 (Caddy/nginx, 最好加密码) 再转到 127.0.0.1:5290
 services:
   mementomori:
     image: mementomori-api:latest
@@ -10,5 +10,5 @@ services:
       - ../data:/data
     environment:
       - Game__AutoRequestDelay=500   # 2026-10-24 不加延迟刷 boss 被 403 过
-      - TZ=America/Bogota
+      - TZ=America/Bogota   # 改成你的时区
     mem_limit: 1g

@@ -31,3 +31,4 @@ publish-android
 *.log
 MementoMori.Api/AssetCache/
 MementoMori.Api/wwwroot/
+.deploy-host
