@@ -103,7 +103,10 @@ public partial class AccountService
             }
 
             // 3. 选择最近登录的世界
-            var latestWorld = playerDataList.OrderByDescending(p => p.LastLoginTime).First();
+            // 留在上次用的世界; 没有就选等级最高的角色. 以前选 "最近登录" 的世界,
+            // 玩家在别的世界开个新号 (或用游戏客户端登录过) 就会被切到那个 2 级的新号上
+            var latestWorld = playerDataList.FirstOrDefault(p => p.WorldId == context.AccountInfo.CurrentWorldId)
+                              ?? playerDataList.OrderByDescending(p => p.PlayerRank).ThenByDescending(p => p.LastLoginTime).First();
             
             // 4. 执行真正登录流程（发送 LoginPlayerRequest，建立 Session）
             _logger.LogInformation("Attempting full login for user {UserId} on World {WorldId}", userId, latestWorld.WorldId);
