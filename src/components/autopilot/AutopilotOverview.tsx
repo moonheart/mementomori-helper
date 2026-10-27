@@ -52,7 +52,8 @@ function MetricChart({ snapshots }: { snapshots: ProgressSnapshot[] }) {
     const { t } = useTranslation();
     const [metric, setMetric] = useState<Metric>('link');
     const m = METRICS.find((x) => x.key === metric)!;
-    const points = snapshots.slice(-72);
+    // 旧快照没有战力 (记成 0), 画战力时跳过
+    const points = snapshots.filter((s) => metric !== 'power' || s.power > 0).slice(-72);
     const W = 600, H = 180, P = 8;
     const values = points.map(m.value);
     const min = Math.min(...values), max = Math.max(...values);
