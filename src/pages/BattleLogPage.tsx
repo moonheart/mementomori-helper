@@ -78,7 +78,7 @@ export function BattleLogPage() {
 
                 // 验证基本结构
                 if (!battleData.battleEndInfo || !battleData.battleCharacterReports) {
-                    throw new Error('无效的战斗日志格式');
+                    throw new Error('Invalid battle log format');
                 }
 
                 setManualBattleData(battleData);

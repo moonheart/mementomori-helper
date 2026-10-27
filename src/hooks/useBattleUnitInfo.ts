@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { UnitType } from '@/api/generated/unitType';
 import { UnitIconType } from '@/api/generated/unitIconType';
 import { useMasterData } from './useMasterData';
+import { useTranslation } from './useTranslation';
 import { CharacterMB } from '@/api/generated/characterMB';
 import { AutoBattleEnemyMB } from '@/api/generated/autoBattleEnemyMB';
 import { BossBattleEnemyMB } from '@/api/generated/bossBattleEnemyMB';
@@ -20,6 +21,7 @@ export interface BattleUnitInfo {
  * 根据 UnitType 和 UnitId 获取战斗单元信息
  */
 export function useBattleUnitInfo(unitType: UnitType, unitId: number): BattleUnitInfo {
+    const { t } = useTranslation();
     // 角色类型 - 查询 CharacterTable
     const { data: characterData, loading: characterLoading } = useMasterData<CharacterMB>(
         'CharacterTable',
@@ -61,7 +63,7 @@ export function useBattleUnitInfo(unitType: UnitType, unitId: number): BattleUni
             case UnitType.Character:
             case UnitType.ShareCharacter:
                 return {
-                    name: characterData?.nameKey || `角色${unitId}`,
+                    name: characterData?.nameKey || t('BATTLE_UNIT_CHARACTER', [unitId]),
                     unitIconType: UnitIconType.Character,
                     unitIconId: characterData?.id ?? 0,
                     isLoading: characterLoading
@@ -69,7 +71,7 @@ export function useBattleUnitInfo(unitType: UnitType, unitId: number): BattleUni
 
             case UnitType.AutoBattleEnemy:
                 return {
-                    name: autoBattleEnemyData?.nameKey || `敌人${unitId}`,
+                    name: autoBattleEnemyData?.nameKey || t('BATTLE_UNIT_ENEMY', [unitId]),
                     unitIconType: autoBattleEnemyData?.unitIconType ?? UnitIconType.EnemyCharacter,
                     unitIconId: autoBattleEnemyData?.unitIconId ?? 0,
                     isLoading: autoBattleLoading
@@ -85,7 +87,7 @@ export function useBattleUnitInfo(unitType: UnitType, unitId: number): BattleUni
 
             case UnitType.TowerBattleEnemy:
                 return {
-                    name: towerBattleEnemyData?.nameKey || `塔敌${unitId}`,
+                    name: towerBattleEnemyData?.nameKey || t('BATTLE_UNIT_TOWER_ENEMY', [unitId]),
                     unitIconType: towerBattleEnemyData?.unitIconType ?? UnitIconType.EnemyCharacter,
                     unitIconId: towerBattleEnemyData?.unitIconId ?? 0,
                     isLoading: towerBattleLoading
@@ -93,7 +95,7 @@ export function useBattleUnitInfo(unitType: UnitType, unitId: number): BattleUni
 
             case UnitType.LocalRaidEnemy:
                 return {
-                    name: localRaidEnemyData?.nameKey || `神殿敌${unitId}`,
+                    name: localRaidEnemyData?.nameKey || t('BATTLE_UNIT_LOCAL_RAID_ENEMY', [unitId]),
                     unitIconType: localRaidEnemyData?.unitIconType ?? UnitIconType.EnemyCharacter,
                     unitIconId: localRaidEnemyData?.unitIconId ?? 0,
                     isLoading: localRaidLoading
@@ -101,7 +103,7 @@ export function useBattleUnitInfo(unitType: UnitType, unitId: number): BattleUni
 
             case UnitType.GuildTowerEnemy:
                 return {
-                    name: guildTowerEnemyData?.nameKey || `公会塔敌${unitId}`,
+                    name: guildTowerEnemyData?.nameKey || t('BATTLE_UNIT_GUILD_TOWER_ENEMY', [unitId]),
                     unitIconType: guildTowerEnemyData?.unitIconType ?? UnitIconType.EnemyCharacter,
                     unitIconId: guildTowerEnemyData?.unitIconId ?? 0,
                     isLoading: guildTowerLoading
@@ -109,7 +111,7 @@ export function useBattleUnitInfo(unitType: UnitType, unitId: number): BattleUni
 
             case UnitType.DungeonBattleEnemy:
                 return {
-                    name: `地下城敌人${unitId}`,
+                    name: t('BATTLE_UNIT_DUNGEON_ENEMY', [unitId]),
                     unitIconType: UnitIconType.EnemyCharacter,
                     unitIconId: unitId,
                     isLoading: false
@@ -117,7 +119,7 @@ export function useBattleUnitInfo(unitType: UnitType, unitId: number): BattleUni
 
             case UnitType.GuildRaidBoss:
                 return {
-                    name: `公会Boss${unitId}`,
+                    name: t('BATTLE_UNIT_GUILD_BOSS', [unitId]),
                     unitIconType: UnitIconType.EnemyCharacter,
                     unitIconId: unitId,
                     isLoading: false
@@ -126,7 +128,7 @@ export function useBattleUnitInfo(unitType: UnitType, unitId: number): BattleUni
             case UnitType.RentalRaidNormalEnemy:
             case UnitType.RentalRaidBossEnemy:
                 return {
-                    name: `租赁敌人${unitId}`,
+                    name: t('BATTLE_UNIT_RENTAL_ENEMY', [unitId]),
                     unitIconType: UnitIconType.EnemyCharacter,
                     unitIconId: unitId,
                     isLoading: false
@@ -134,7 +136,7 @@ export function useBattleUnitInfo(unitType: UnitType, unitId: number): BattleUni
 
             default:
                 return {
-                    name: `单位${unitId}`,
+                    name: t('BATTLE_UNIT_GENERIC', [unitId]),
                     unitIconType: UnitIconType.EnemyCharacter,
                     unitIconId: unitId,
                     isLoading: false
@@ -154,6 +156,7 @@ export function useBattleUnitInfo(unitType: UnitType, unitId: number): BattleUni
         localRaidEnemyData,
         localRaidLoading,
         guildTowerEnemyData,
-        guildTowerLoading
+        guildTowerLoading,
+        t
     ]);
 }

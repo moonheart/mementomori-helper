@@ -1255,4 +1255,15 @@ export default {
     "CRON_DAY_SAT": "Saturday",
     "CRON_DAY_SUN": "Sunday",
     'HEADER_TOGGLE_THEME': "Light / dark mode",
+    // Battle unit name fallbacks
+    'BATTLE_UNIT_CHARACTER': 'Character {0}',
+    'BATTLE_UNIT_ENEMY': 'Enemy {0}',
+    'BATTLE_UNIT_TOWER_ENEMY': 'Tower enemy {0}',
+    'BATTLE_UNIT_LOCAL_RAID_ENEMY': 'Temple enemy {0}',
+    'BATTLE_UNIT_GUILD_TOWER_ENEMY': 'Guild tower enemy {0}',
+    'BATTLE_UNIT_DUNGEON_ENEMY': 'Dungeon enemy {0}',
+    'BATTLE_UNIT_GUILD_BOSS': 'Guild boss {0}',
+    'BATTLE_UNIT_RENTAL_ENEMY': 'Rental enemy {0}',
+    'BATTLE_UNIT_GENERIC': 'Unit {0}',
+    'LOCAL_RAID_TEMPLE_FALLBACK': 'Temple {0}',
 };

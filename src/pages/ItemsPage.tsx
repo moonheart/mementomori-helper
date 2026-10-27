@@ -107,19 +107,19 @@ export function ItemsPage() {
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
                     <TabsList className="grid w-full grid-cols-5">
                         <TabsTrigger value="equipment">
-                            {t('[ItemBoxTabEquipment]') || '装备'}
+                            {t('[ItemBoxTabEquipment]')}
                         </TabsTrigger>
                         <TabsTrigger value="consumption">
-                            {t('[ItemBoxTabConsumption]') || '消耗品'}
+                            {t('[ItemBoxTabConsumption]')}
                         </TabsTrigger>
                         <TabsTrigger value="material">
-                            {t('[ItemBoxTabMaterial]') || '材料'}
+                            {t('[ItemBoxTabMaterial]')}
                         </TabsTrigger>
                         <TabsTrigger value="sphere">
-                            {t('[ItemBoxTabSphere]') || '符石'}
+                            {t('[ItemBoxTabSphere]')}
                         </TabsTrigger>
                         <TabsTrigger value="setpiece">
-                            {t('[ItemBoxTabSetPiece]') || '套装残片'}
+                            {t('[ItemBoxTabSetPiece]')}
                         </TabsTrigger>
                     </TabsList>
 

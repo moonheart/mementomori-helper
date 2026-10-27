@@ -81,7 +81,7 @@ function formatItemName(
             const compositeMb = masterTables.EquipmentCompositeTable?.find(m => m.id === itemId);
             const equipmentMb = masterTables.EquipmentTable?.find(m => m.id === compositeMb?.equipmentId);
             const name = t(equipmentMb?.nameKey) || equipmentMb?.memo || t('CHARACTER_DETAIL_EQUIPMENT_FALLBACK', [compositeMb?.equipmentId]);
-            return t('[CommonItemEquipmentFragmentFormat]', [name]) || `${name}碎片`;
+            return t('[CommonItemEquipmentFragmentFormat]', [name]);
         }
         case ItemType.Character: {
             const characterMb = masterTables.CharacterTable?.find(m => m.id === itemId);
@@ -96,7 +96,7 @@ function formatItemName(
             const n1 = t(characterMb.nameKey);
             const n2 = t(characterMb.name2Key);
             const name = n2 ? `${n1} ${n2}` : n1;
-            return t('[CommonItemCharacterFragment]', [name]) || `${name}碎片`;
+            return t('[CommonItemCharacterFragment]', [name]);
         }
         case ItemType.DungeonBattleRelic: {
             const mb = masterTables.DungeonBattleRelicTable?.find(m => m.id === itemId);

@@ -115,7 +115,7 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
                 {!showRewards ? (
                     <>
                         <DialogHeader>
-                            <DialogTitle>{t('[ItemBoxItemUseTitle]') || '使用道具'}</DialogTitle>
+                            <DialogTitle>{t('[ItemBoxItemUseTitle]')}</DialogTitle>
                             <DialogDescription>
                                 {translate('USE_ITEM_SELECT_COUNT', [itemName])}
                             </DialogDescription>
@@ -179,7 +179,7 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
                             </Button>
                             <Button onClick={handleUse} disabled={isUsing}>
                                 {isUsing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                {t('[ItemBoxButtonUse]') || '使用'}
+                                {t('[ItemBoxButtonUse]')}
                             </Button>
                         </DialogFooter>
                     </>

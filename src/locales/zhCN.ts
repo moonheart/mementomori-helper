@@ -1258,4 +1258,15 @@ export default {
     "CRON_DAY_SAT": "周六",
     "CRON_DAY_SUN": "周日",
     'HEADER_TOGGLE_THEME': "浅色 / 深色模式",
+    // Battle unit name fallbacks
+    'BATTLE_UNIT_CHARACTER': '角色{0}',
+    'BATTLE_UNIT_ENEMY': '敌人{0}',
+    'BATTLE_UNIT_TOWER_ENEMY': '塔敌{0}',
+    'BATTLE_UNIT_LOCAL_RAID_ENEMY': '神殿敌{0}',
+    'BATTLE_UNIT_GUILD_TOWER_ENEMY': '公会塔敌{0}',
+    'BATTLE_UNIT_DUNGEON_ENEMY': '地下城敌人{0}',
+    'BATTLE_UNIT_GUILD_BOSS': '公会Boss{0}',
+    'BATTLE_UNIT_RENTAL_ENEMY': '租赁敌人{0}',
+    'BATTLE_UNIT_GENERIC': '单位{0}',
+    'LOCAL_RAID_TEMPLE_FALLBACK': '殿堂 {0}',
 };

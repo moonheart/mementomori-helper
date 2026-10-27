@@ -8,6 +8,7 @@ import { EffectGroup } from '@/api/generated/effectGroup';
 import { SkillDisplayType } from '@/api/generated/skillDisplayType';
 import { SkillCategory } from '@/api/generated/skillCategory';
 import { EffectType } from '@/api/generated/effectType';
+import { useTranslation } from '@/hooks/useTranslation';
 
 /** 重播状态机状态 */
 export type ReplayState = 'idle' | 'playing' | 'paused' | 'ended';
@@ -122,6 +123,7 @@ export interface UseBattleReplayReturn {
  * 核心思想：预计算所有状态快照，播放时直接读取
  */
 export function useBattleReplay(battleData: BattleSimulationResult | null): UseBattleReplayReturn {
+    const { t } = useTranslation();
     const [replayState, setReplayState] = useState<ReplayState>('idle');
     const [currentIndex, setCurrentIndex] = useState(0);
     const playIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -296,7 +298,7 @@ export function useBattleReplay(battleData: BattleSimulationResult | null): UseB
                     guid: report.battleCharacterGuid,
                     unitId: report.unitId,
                     unitType: report.unitType,
-                    name: report.playerName || `角色${report.unitId}`,
+                    name: report.playerName || t('BATTLE_UNIT_CHARACTER', [report.unitId]),
                     level: report.characterLevel,
                     groupType: report.groupType,
                     maxHp: report.maxHp,
@@ -434,7 +436,7 @@ export function useBattleReplay(battleData: BattleSimulationResult | null): UseB
         });
         
         return result;
-    }, [battleData, events]);
+    }, [battleData, events, t]);
     
     // ===== 步骤 3: 播放控制逻辑 =====
     const totalEvents = snapshots.length;

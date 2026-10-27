@@ -143,9 +143,9 @@ export function BookSortGrid({ syncData, maxClearQuestId, onUnlockCell, onBulkUn
                         <div className="absolute inset-0 bg-background/95 z-30 p-4 sm:p-6 flex flex-col items-center justify-center rounded-2xl w-full h-full">
                             <h3 className="text-xl sm:text-2xl font-bold mb-4 text-primary drop-shadow-[0_0_8px_rgba(var(--primary),0.5)] flex items-center">
                                 <Gift className="w-6 h-6 mr-2" />
-                                {t('[BookSortBonusFloorSelectItemTitle]') || "秘藏书架奖励设置"}
+                                {t('[BookSortBonusFloorSelectItemTitle]')}
                             </h3>
-                            <p className="text-sm text-muted-foreground mb-6 text-center max-w-sm" dangerouslySetInnerHTML={{ __html: t('[BookSortBonusFloorSelectItemMessage]') || "您可以设置在秘藏书架中可获得的书架奖励。<br>请选择您想获得的奖励。" }} />
+                            <p className="text-sm text-muted-foreground mb-6 text-center max-w-sm" dangerouslySetInnerHTML={{ __html: t('[BookSortBonusFloorSelectItemMessage]') }} />
                             <div className="grid gap-3 w-full max-w-lg mb-4 overflow-y-auto pr-2 custom-scrollbar" style={{ maxHeight: '60%' }}>
                                 {currentBonusFloorReward?.selectItemsList?.map((selectItem, index) => {
                                     const isAvailable = selectItem.startMaxClearQuestId <= maxClearQuestId && selectItem.endMaxClearQuestId >= maxClearQuestId;
@@ -176,9 +176,9 @@ export function BookSortGrid({ syncData, maxClearQuestId, onUnlockCell, onBulkUn
                 <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
                     <AlertDialogContent>
                         <AlertDialogHeader>
-                            <AlertDialogTitle>{t('[BookSortFloorMoveConfirmTitle]') || "层数移动提示"}</AlertDialogTitle>
+                            <AlertDialogTitle>{t('[BookSortFloorMoveConfirmTitle]')}</AlertDialogTitle>
                             <AlertDialogDescription>
-                                {t('[BookSortFloorMoveConfirmMessage]') || "是否前往下一层书架？"}
+                                {t('[BookSortFloorMoveConfirmMessage]')}
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>

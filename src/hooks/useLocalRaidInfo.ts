@@ -8,6 +8,7 @@ import { LocalRaidQuestGroupMB } from '@/api/generated/localRaidQuestGroupMB';
 import { LocalRaidEnemyInfo } from '@/api/generated/localRaidEnemyInfo';
 import { LocalRaidBattleLogInfo } from '@/api/generated/localRaidBattleLogInfo';
 import { useTimeManager } from '@/hooks/useTimeManager';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useAccountStore } from '@/store/accountStore';
 
 /**
@@ -15,6 +16,7 @@ import { useAccountStore } from '@/store/accountStore';
  * 获取幻影神殿的任务、敌人、奖励等信息
  */
 export function useLocalRaidInfo() {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(true);
     const [questInfos, setQuestInfos] = useState<LocalRaidQuestInfo[]>([]);
     const [enemyInfos, setEnemyInfos] = useState<LocalRaidEnemyInfo[]>([]);
@@ -132,8 +134,8 @@ export function useLocalRaidInfo() {
     // 获取殿堂名称
     const getTempleName = useCallback((bannerId: number): string => {
         const banner = bannerTable?.find(b => b.id === bannerId);
-        return banner?.nameKey || `殿堂 ${bannerId}`;
-    }, [bannerTable]);
+        return banner?.nameKey || t('LOCAL_RAID_TEMPLE_FALLBACK', [bannerId]);
+    }, [bannerTable, t]);
 
     // 获取敌人信息
     const getEnemyInfo = useCallback((enemyId: number): LocalRaidEnemyInfo | undefined => {
