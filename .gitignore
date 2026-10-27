@@ -28,4 +28,4 @@ publish-win-x64
 publish-android
 *.db
 *.keystore
-*.log
+*.logMementoMori.Api/AssetCache/

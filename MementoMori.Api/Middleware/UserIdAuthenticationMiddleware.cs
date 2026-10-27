@@ -17,7 +17,8 @@ public class UserIdAuthenticationMiddleware
         "/swagger",
         "/api/localization",
         "/health",
-        "/api/master"
+        "/api/master",
+        "/api/assets" // <img> 发不了请求头; 只是公开的游戏图片
     };
 
     public UserIdAuthenticationMiddleware(
