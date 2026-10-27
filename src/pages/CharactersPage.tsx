@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, Swords, Zap, BookOpen, TrendingUp, Star, ArrowUp, Shield, Users, Loader2 } from 'lucide-react';
+import { LevelLinkPanel } from '@/components/character/LevelLinkPanel';
 import { useAccountStore } from '@/store/accountStore';
 import { ortegaApi } from '@/api/ortega-client';
 import { useMasterStore } from '@/store/masterStore';
@@ -237,6 +238,8 @@ export function CharactersPage() {
                     </CardContent>
                 </Card>
             </div>
+
+            <LevelLinkPanel />
 
             {/* Filters */}
             <Card>
