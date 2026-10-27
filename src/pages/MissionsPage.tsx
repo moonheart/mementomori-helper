@@ -23,7 +23,7 @@ import { MissionRow, UIStoreMission } from '@/components/mission/MissionRow';
 import { mapMissionsFromGroupInfo } from '@/components/mission/mission-utils';
 
 function MeritRewardCard({
-    title = "功勋奖励",
+    title = 'MISSIONS_MERIT_REWARDS',
     totalMerit,
     meritBoxes,
     groupType,
@@ -35,6 +35,7 @@ function MeritRewardCard({
     groupType: MissionGroupType;
     onClaim: (groupType: MissionGroupType, required: number) => void;
 }) {
+    const t = useLocalizationStore(state => state.t);
     if (meritBoxes.length === 0) return null;
 
     return (
@@ -42,12 +43,12 @@ function MeritRewardCard({
             <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg">
                     <Trophy className="h-5 w-5 text-orange-500" />
-                    {title}
+                    {t(title)}
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">当前功勋: <span className="font-bold text-orange-600">{totalMerit}</span></span>
+                    <span className="text-sm text-muted-foreground">{t('MISSIONS_CURRENT_MERIT')} <span className="font-bold text-orange-600">{totalMerit}</span></span>
                 </div>
 
                 <div className="grid gap-2 grid-cols-5">
@@ -82,6 +83,7 @@ function MeritRewardCard({
 }
 
 export function MissionsPage() {
+    const t = useLocalizationStore(state => state.t);
     const { currentAccountId } = useAccountStore();
     const [loading, setLoading] = useState(false);
     const [missionData, setMissionData] = useState<MissionGetMissionInfoResponse | null>(null);
@@ -271,8 +273,8 @@ export function MissionsPage() {
             <div className="flex items-center justify-center h-[60vh]">
                 <Card className="w-full max-w-md">
                     <CardHeader>
-                        <CardTitle>未登录</CardTitle>
-                        <CardDescription>请先登录账户以查看任务信息</CardDescription>
+                        <CardTitle>{t('MISSIONS_NOT_LOGGED_IN')}</CardTitle>
+                        <CardDescription>{t('MISSIONS_LOGIN_HINT')}</CardDescription>
                     </CardHeader>
                 </Card>
             </div>
@@ -284,7 +286,7 @@ export function MissionsPage() {
             <div className="flex items-center justify-center h-[60vh]">
                 <div className="text-center">
                     <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-                    <p className="text-muted-foreground">加载中...</p>
+                    <p className="text-muted-foreground">{t('MISSIONS_LOADING')}</p>
                 </div>
             </div>
         );
@@ -295,24 +297,24 @@ export function MissionsPage() {
             <div className="flex justify-end gap-2">
                 <Button onClick={handleClaimAll} variant="secondary" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    一键领取
+                    {t('MISSIONS_CLAIM_ALL')}
                 </Button>
                 <Button onClick={fetchMissionInfo} disabled={loading} variant="outline">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    刷新
+                    {t('TEMPLE_REFRESH')}
                 </Button>
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="grid w-full max-w-md grid-cols-3">
-                    <TabsTrigger value="daily">每日</TabsTrigger>
-                    <TabsTrigger value="weekly">每周</TabsTrigger>
-                    <TabsTrigger value="main">主线</TabsTrigger>
+                    <TabsTrigger value="daily">{t('MISSIONS_DAILY')}</TabsTrigger>
+                    <TabsTrigger value="weekly">{t('MISSIONS_WEEKLY')}</TabsTrigger>
+                    <TabsTrigger value="main">{t('MISSIONS_MAIN')}</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="daily" className="mt-6">
                     <MeritRewardCard
-                        title="每日功勋奖励"
+                        title='MISSIONS_DAILY_MERIT'
                         totalMerit={dailyTotalMerit}
                         meritBoxes={dailyMeritBoxes}
                         groupType={MissionGroupType.Daily}
@@ -320,7 +322,7 @@ export function MissionsPage() {
                     />
                     <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                         {dailyMissions.length === 0 ? (
-                            <div className="col-span-full text-center py-8 text-muted-foreground">暂无每日任务</div>
+                            <div className="col-span-full text-center py-8 text-muted-foreground">{t('MISSIONS_NO_DAILY')}</div>
                         ) : (
                             dailyMissions.map(m => (
                                 <MissionRow
@@ -336,7 +338,7 @@ export function MissionsPage() {
 
                 <TabsContent value="weekly" className="mt-6">
                     <MeritRewardCard
-                        title="每周功勋奖励"
+                        title='MISSIONS_WEEKLY_MERIT'
                         totalMerit={weeklyTotalMerit}
                         meritBoxes={weeklyMeritBoxes}
                         groupType={MissionGroupType.Weekly}
@@ -344,7 +346,7 @@ export function MissionsPage() {
                     />
                     <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                         {weeklyMissions.length === 0 ? (
-                            <div className="col-span-full text-center py-8 text-muted-foreground">暂无每周任务</div>
+                            <div className="col-span-full text-center py-8 text-muted-foreground">{t('MISSIONS_NO_WEEKLY')}</div>
                         ) : (
                             weeklyMissions.map(m => (
                                 <MissionRow
@@ -360,7 +362,7 @@ export function MissionsPage() {
 
                 <TabsContent value="main" className="grid gap-4 mt-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                     {mainMissions.length === 0 ? (
-                        <div className="col-span-full text-center py-8 text-muted-foreground">暂无主线任务</div>
+                        <div className="col-span-full text-center py-8 text-muted-foreground">{t('MISSIONS_NO_MAIN')}</div>
                     ) : (
                         mainMissions.map(m => (
                             <MissionRow

@@ -69,14 +69,14 @@ export function getSlotIcon(slot: EquipmentSlotType): string {
  */
 export function getSlotName(slot: EquipmentSlotType): string {
     const names: Record<number, string> = {
-        [EquipmentSlotType.Weapon]: '武器',
-        [EquipmentSlotType.Sub]: '饰品',
-        [EquipmentSlotType.Gauntlet]: '手部',
-        [EquipmentSlotType.Helmet]: '头部',
-        [EquipmentSlotType.Armor]: '身体',
-        [EquipmentSlotType.Shoes]: '腿部',
+        [EquipmentSlotType.Weapon]: '[EquipmentSlotTypeWeapon]',
+        [EquipmentSlotType.Sub]: '[EquipmentSlotTypeSub]',
+        [EquipmentSlotType.Gauntlet]: '[EquipmentSlotTypeGauntlet]',
+        [EquipmentSlotType.Helmet]: '[EquipmentSlotTypeHelmet]',
+        [EquipmentSlotType.Armor]: '[EquipmentSlotTypeArmor]',
+        [EquipmentSlotType.Shoes]: '[EquipmentSlotTypeShoes]',
     };
-    return names[slot] || '未知';
+    return names[slot] || 'AUTO_TOWER_UNKNOWN';
 }
 
 /**
@@ -136,19 +136,19 @@ function getStatWeight(type: BattleParameterType): number {
  */
 export function formatStatName(type: BattleParameterType): string {
     const names: Partial<Record<BattleParameterType, string>> = {
-        [BattleParameterType.Hp]: '生命值',
-        [BattleParameterType.AttackPower]: '攻击力',
-        [BattleParameterType.Defense]: '防御力',
-        [BattleParameterType.Speed]: '速度',
-        [BattleParameterType.Hit]: '命中',
-        [BattleParameterType.Avoidance]: '闪避',
-        [BattleParameterType.Critical]: '暴击',
-        [BattleParameterType.CriticalResist]: '暴击抗性',
-        [BattleParameterType.DefensePenetration]: '防御穿透',
-        [BattleParameterType.HpDrain]: '生命吸取',
-        [BattleParameterType.DamageReflect]: '伤害反射',
+        [BattleParameterType.Hp]: '[BattleParameterTypeHp]',
+        [BattleParameterType.AttackPower]: '[BattleParameterTypeAttackPower]',
+        [BattleParameterType.Defense]: '[BattleParameterTypeDefense]',
+        [BattleParameterType.Speed]: '[BattleParameterTypeSpeed]',
+        [BattleParameterType.Hit]: '[BattleParameterTypeHit]',
+        [BattleParameterType.Avoidance]: '[BattleParameterTypeAvoidance]',
+        [BattleParameterType.Critical]: '[BattleParameterTypeCritical]',
+        [BattleParameterType.CriticalResist]: '[BattleParameterTypeCriticalResist]',
+        [BattleParameterType.DefensePenetration]: '[BattleParameterTypeDefensePenetration]',
+        [BattleParameterType.HpDrain]: '[BattleParameterTypeHpDrain]',
+        [BattleParameterType.DamageReflect]: '[BattleParameterTypeDamageReflect]',
     };
-    return names[type] || `属性 ${type}`;
+    return names[type] || `[BattleParameterType${BattleParameterType[type]}]`;
 }
 
 /**

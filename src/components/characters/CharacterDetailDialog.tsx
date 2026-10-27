@@ -673,7 +673,7 @@ export function CharacterDetailDialog({ character, open, onOpenChange, lockEquip
                                                                             <Badge className={rarity.cls}>{rarity.name}</Badge>
                                                                         </div>
                                                                         <p className="text-xs text-muted-foreground mt-1">
-                                                                            {getSlotName(item.slot)} • Lv.{item.master?.equipmentLv ?? 0} • ID {item.equipmentId}
+                                                                            {t(getSlotName(item.slot))} • Lv.{item.master?.equipmentLv ?? 0} • ID {item.equipmentId}
                                                                         </p>
                                                                         {runeUsage.total > 0 && (
                                                                             <div className="mt-2 flex items-center gap-1">

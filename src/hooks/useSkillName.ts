@@ -22,17 +22,17 @@ export function useActiveSkillName(skillId: number | undefined) {
         setIsLoading(true);
         getRecord<ActiveSkillMB>('ActiveSkillTable', skillId)
             .then(skill => {
-                setName(skill ? t(skill.nameKey) : `技能#${skillId}`);
+                setName(skill ? t(skill.nameKey) : t('COMMON_SKILL_FALLBACK', [skillId]));
             })
             .catch(() => {
-                setName(`技能#${skillId}`);
+                setName(t('COMMON_SKILL_FALLBACK', [skillId]));
             })
             .finally(() => {
                 setIsLoading(false);
             });
     }, [skillId, getRecord, t]);
 
-    return { name: name || `技能#${skillId}`, isLoading };
+    return { name: name || t('COMMON_SKILL_FALLBACK', [skillId]), isLoading };
 }
 
 /**
@@ -53,17 +53,17 @@ export function usePassiveSkillName(skillId: number | undefined) {
         setIsLoading(true);
         getRecord<PassiveSkillMB>('PassiveSkillTable', skillId)
             .then(skill => {
-                setName(skill ? t(skill.nameKey) : `被动#${skillId}`);
+                setName(skill ? t(skill.nameKey) : t('COMMON_PASSIVE_FALLBACK', [skillId]));
             })
             .catch(() => {
-                setName(`被动#${skillId}`);
+                setName(t('COMMON_PASSIVE_FALLBACK', [skillId]));
             })
             .finally(() => {
                 setIsLoading(false);
             });
     }, [skillId, getRecord, t]);
 
-    return { name: name || `被动#${skillId}`, isLoading };
+    return { name: name || t('COMMON_PASSIVE_FALLBACK', [skillId]), isLoading };
 }
 
 /**

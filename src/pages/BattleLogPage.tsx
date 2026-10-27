@@ -22,22 +22,24 @@ import {
     Upload
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const battleTypeNames: Record<number, string> = {
-    [BattleType.Auto]: '自动战斗',
-    [BattleType.Boss]: '首领挑战',
-    [BattleType.GuildBattle]: '公会战',
-    [BattleType.BattleLeague]: '竞技场',
-    [BattleType.LegendLeague]: '传说联赛',
-    [BattleType.LocalRaid]: '幻影神殿',
-    [BattleType.TowerBattle]: '无穷之塔',
-    [BattleType.DungeonBattle]: '地下城',
-    [BattleType.GuildRaid]: '公会讨伐',
-    [BattleType.GuildTower]: '公会塔',
-    [BattleType.FriendBattle]: '友谊赛',
+    [BattleType.Auto]: '[BattleTypeAuto]',
+    [BattleType.Boss]: '[BattleTypeBoss]',
+    [BattleType.GuildBattle]: '[BattleTypeGvG]',
+    [BattleType.BattleLeague]: '[BattleTypeBattleLeague]',
+    [BattleType.LegendLeague]: '[BattleTypeLegendLeague]',
+    [BattleType.LocalRaid]: '[CommonHeaderLocalRaidLabel]',
+    [BattleType.TowerBattle]: '[TowerTypeInfinite]',
+    [BattleType.DungeonBattle]: '[CommonHeaderDungeonBattleLabel]',
+    [BattleType.GuildRaid]: '[CommonHeaderGuildRaidLabel]',
+    [BattleType.GuildTower]: '[GuildTowerTitle]',
+    [BattleType.FriendBattle]: '[BattleTypeFriendBattle]',
 };
 
 export function BattleLogPage() {
+    const { t } = useTranslation();
     const {
         logs,
         loading,
@@ -82,14 +84,14 @@ export function BattleLogPage() {
                 setManualBattleData(battleData);
                 setIsManualModalOpen(true);
                 toast({
-                    title: '导入成功',
-                    description: '战斗日志已加载'
+                    title: t('BATTLE_LOG_IMPORT_SUCCESS'),
+                    description: t('BATTLE_LOG_IMPORT_SUCCESS_DESC')
                 });
             } catch (error) {
                 console.error('Failed to parse battle log:', error);
                 toast({
-                    title: '导入失败',
-                    description: '无法解析战斗日志文件，请检查文件格式',
+                    title: t('BATTLE_LOG_IMPORT_FAILED'),
+                    description: t('BATTLE_LOG_IMPORT_FAILED_DESC'),
                     variant: 'destructive'
                 });
             }
@@ -139,13 +141,13 @@ export function BattleLogPage() {
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-2 flex-wrap">
                             <Filter className="w-4 h-4 text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground">筛选:</span>
+                            <span className="text-sm text-muted-foreground">{t('BATTLE_LOG_FILTER')}</span>
                             <Button
                                 variant={selectedType === null ? 'default' : 'outline'}
                                 size="sm"
                                 onClick={() => setSelectedType(null)}
                             >
-                                全部
+                                {t('[CommonAllLabel]')}
                             </Button>
                             {[BattleType.Boss, BattleType.BattleLeague, BattleType.LegendLeague, BattleType.TowerBattle].map(type => (
                                 <Button
@@ -154,7 +156,7 @@ export function BattleLogPage() {
                                     size="sm"
                                     onClick={() => setSelectedType(type)}
                                 >
-                                    {battleTypeNames[type] || `类型${type}`}
+                                    {battleTypeNames[type] ? t(battleTypeNames[type]) : t('BATTLE_LOG_TYPE_FALLBACK', [type])}
                                 </Button>
                             ))}
                         </div>
@@ -173,7 +175,7 @@ export function BattleLogPage() {
                                 onClick={handleUploadClick}
                             >
                                 <Upload className="w-4 h-4 mr-1" />
-                                导入日志
+                                {t('BATTLE_LOG_IMPORT')}
                             </Button>
                         </div>
                     </div>
@@ -184,9 +186,9 @@ export function BattleLogPage() {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center justify-between">
-                        <span>历史记录</span>
+                        <span>{t('BATTLE_LOG_HISTORY')}</span>
                         <span className="text-sm font-normal text-muted-foreground">
-                            共 {pagination.total} 条
+                            {t('BATTLE_LOG_TOTAL', [pagination.total])}
                         </span>
                     </CardTitle>
                 </CardHeader>
@@ -198,8 +200,8 @@ export function BattleLogPage() {
                     ) : logs.length === 0 ? (
                         <div className="text-center py-12 text-muted-foreground">
                             <Trophy className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                            <p>暂无战斗记录</p>
-                            <p className="text-sm mt-1">进行首领挑战、竞技场等战斗后会自动记录</p>
+                            <p>{t('BATTLE_LOG_EMPTY')}</p>
+                            <p className="text-sm mt-1">{t('BATTLE_LOG_EMPTY_HINT')}</p>
                         </div>
                     ) : (
                         <>
@@ -238,14 +240,14 @@ export function BattleLogPage() {
                                                         variant={log.isWin ? 'default' : 'destructive'}
                                                         className="text-xs"
                                                     >
-                                                        {log.isWin ? '胜利' : '失败'}
+                                                        {log.isWin ? t('BATTLE_LOG_WIN') : t('BATTLE_LOG_LOSS')}
                                                     </Badge>
                                                     <span className="text-sm text-muted-foreground">
-                                                        {battleTypeNames[log.battleType] || `类型${log.battleType}`}
+                                                        {battleTypeNames[log.battleType] ? t(battleTypeNames[log.battleType]) : t('BATTLE_LOG_TYPE_FALLBACK', [log.battleType])}
                                                     </span>
                                                     {log.questId && (
                                                         <span className="text-xs text-muted-foreground">
-                                                            关卡 {log.questId}
+                                                            {t('BATTLE_STAGE', [log.questId])}
                                                         </span>
                                                     )}
                                                 </div>
@@ -256,7 +258,7 @@ export function BattleLogPage() {
                                                     </span>
                                                     <span className="flex items-center gap-1">
                                                         <Target className="w-3 h-3" />
-                                                        {log.endTurn} 回合
+                                                        {t('BATTLE_LOG_TURNS', [log.endTurn])}
                                                     </span>
                                                     <span>{formatDuration(log.battleDurationMs)}</span>
                                                 </div>

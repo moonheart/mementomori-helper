@@ -172,8 +172,8 @@ export function ShopPage() {
         } catch (error) {
             console.error('Failed to load shop data:', error);
             toast({
-                title: '加载失败',
-                description: '无法获取商城数据，请稍后再试',
+                title: t('BATTLE_LOAD_FAILED'),
+                description: t('SHOP_LOAD_FAILED_DESC'),
                 variant: 'destructive',
             });
         } finally {
@@ -204,8 +204,8 @@ export function ShopPage() {
         } catch (error) {
             console.error('Failed to save shop config:', error);
             toast({
-                title: '保存失败',
-                description: '无法保存自动购买配置',
+                title: t('SHOP_SAVE_FAILED'),
+                description: t('SHOP_SAVE_FAILED_DESC'),
                 variant: 'destructive',
             });
         }
@@ -243,8 +243,8 @@ export function ShopPage() {
     const confirmAutoBuy = async () => {
         if (!selectedAutoBuyItem && !selectedConsumeItem) {
             toast({
-                title: '设置错误',
-                description: '请至少选择要购买的物品或消耗的物品',
+                title: t('SHOP_SETTING_ERROR'),
+                description: t('SHOP_SETTING_ERROR_DESC'),
                 variant: 'destructive',
             });
             return;
@@ -320,8 +320,8 @@ export function ShopPage() {
         await saveShopConfig(newConfig);
 
         toast({
-            title: '设置成功',
-            description: '自动购买规则已保存',
+            title: t('SHOP_SETTING_SAVED'),
+            description: t('SHOP_SETTING_SAVED_DESC'),
         });
         setAutoBuyDialogOpen(false);
     };
@@ -369,8 +369,8 @@ export function ShopPage() {
             });
 
             toast({
-                title: '购买成功',
-                description: `已获得 ${getItemName(item.giveItem.itemType, item.giveItem.itemId)}`,
+                title: t('SHOP_BUY_SUCCESS'),
+                description: t('SHOP_OBTAINED', [getItemName(item.giveItem.itemType, item.giveItem.itemId)]),
             });
 
             // 重新加载数据以更新余额和库存
@@ -378,8 +378,8 @@ export function ShopPage() {
         } catch (error) {
             console.error('Buy item failed:', error);
             toast({
-                title: '购买失败',
-                description: '交易未能完成，请检查余额或库存',
+                title: t('SHOP_BUY_FAILED'),
+                description: t('SHOP_BUY_FAILED_DESC'),
                 variant: 'destructive',
             });
         }
@@ -617,8 +617,8 @@ export function ShopPage() {
 
         if (!targetSphere) {
             toast({
-                title: '购买失败',
-                description: '未找到对应等级的符石',
+                title: t('SHOP_BUY_FAILED'),
+                description: t('SHOP_SPHERE_NOT_FOUND'),
                 variant: 'destructive',
             });
             return;
@@ -633,8 +633,8 @@ export function ShopPage() {
             });
 
             toast({
-                title: '购买成功',
-                description: `已获得 ${getItemName(ItemType.Sphere, targetSphere.id)} × ${state.count}`,
+                title: t('SHOP_BUY_SUCCESS'),
+                description: t('SHOP_OBTAINED_COUNT', [getItemName(ItemType.Sphere, targetSphere.id), state.count]),
             });
 
             // 重新加载数据以更新余额
@@ -642,8 +642,8 @@ export function ShopPage() {
         } catch (error) {
             console.error('Buy sphere failed:', error);
             toast({
-                title: '购买失败',
-                description: '交易未能完成，请检查余额或库存',
+                title: t('SHOP_BUY_FAILED'),
+                description: t('SHOP_BUY_FAILED_DESC'),
                 variant: 'destructive',
             });
         }
@@ -671,7 +671,7 @@ export function ShopPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="text-muted-foreground">加载商城数据中...</p>
+                <p className="text-muted-foreground">{t('SHOP_LOADING')}</p>
             </div>
         );
     }
@@ -681,7 +681,7 @@ export function ShopPage() {
             <div className="flex justify-end">
                 <Button variant="outline" size="sm" onClick={loadData} disabled={loading}>
                     <Clock className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                    刷新数据
+                    {t('SHOP_REFRESH')}
                 </Button>
             </div>
 
@@ -692,7 +692,7 @@ export function ShopPage() {
                             <TabsTrigger key={tab.tradeShopTabId} value={tab.tradeShopTabId.toString()} className="whitespace-nowrap">
                                 {(() => {
                                     const mb = tradeShopTabMasterMap[tab.tradeShopTabId];
-                                    return mb ? (t(mb.tabNameKey) || mb.memo) : `商店 #${tab.tradeShopTabId}`;
+                                    return mb ? (t(mb.tabNameKey) || mb.memo) : t('SHOP_TAB_FALLBACK', [tab.tradeShopTabId]);
                                 })()}
                             </TabsTrigger>
                         ))}
@@ -713,7 +713,7 @@ export function ShopPage() {
                                         <CardTitle>
                                             {(() => {
                                                 const mb = tradeShopTabMasterMap[tab.tradeShopTabId];
-                                                return mb ? (t(mb.tabNameKey) || mb.memo) : `商店 #${tab.tradeShopTabId}`;
+                                                return mb ? (t(mb.tabNameKey) || mb.memo) : t('SHOP_TAB_FALLBACK', [tab.tradeShopTabId]);
                                             })()}
                                         </CardTitle>
                                         <CardDescription>
@@ -823,7 +823,7 @@ export function ShopPage() {
                                                         {/* 数量选择 */}
                                                         <div className="space-y-2">
                                                             <div className="flex justify-between text-sm">
-                                                                <span className="text-muted-foreground">购买数量</span>
+                                                                <span className="text-muted-foreground">{t('SHOP_BUY_COUNT')}</span>
                                                                 <span className="font-semibold">{state.count} / {maxCount}</span>
                                                             </div>
                                                             <Slider
@@ -838,7 +838,7 @@ export function ShopPage() {
 
                                                         {/* 消耗显示 */}
                                                         <div className="text-sm text-muted-foreground">
-                                                            消耗: {getSphereConsumeText(state.lv, state.count)}
+                                                            {t('SHOP_COST', [getSphereConsumeText(state.lv, state.count)])}
                                                         </div>
                                                     </CardContent>
                                                     <CardContent className="pt-0">
@@ -917,7 +917,7 @@ export function ShopPage() {
                                                                             size="icon"
                                                                             className="h-8 w-8"
                                                                             onClick={() => showAutoBuyDialog(tab.tradeShopTabId, tab.tradeShopItems || [], item)}
-                                                                            title="设置自动购买"
+                                                                            title={t('SHOP_SET_AUTO_BUY')}
                                                                         >
                                                                             <AlarmClock className="h-4 w-4" />
                                                                         </Button>
@@ -934,7 +934,7 @@ export function ShopPage() {
                                                                                 () => handleBuyTradeItem(tab.tradeShopTabId, item)
                                                                             )}
                                                                         >
-                                                                            {isSoldOut ? '已售罄' : t('[PurchaseConfirmationYesButton]')}
+                                                                            {isSoldOut ? t('SHOP_SOLD_OUT') : t('[PurchaseConfirmationYesButton]')}
                                                                         </Button>
                                                                     </>
                                                                 );
@@ -965,7 +965,7 @@ export function ShopPage() {
                     </AlertDialogHeader>
                     <div className="space-y-3 text-sm">
                         <div className="rounded-md border bg-muted/30 px-3 py-2 text-center font-medium">
-                            {confirmDialogItemLabel || '未知物品'}
+                            {confirmDialogItemLabel || t('SHOP_UNKNOWN_ITEM')}
                         </div>
                         {confirmDialogOwnedCount !== null && (
                             <div className="flex items-center gap-2 text-xs text-emerald-600">
@@ -1006,27 +1006,27 @@ export function ShopPage() {
                         <DialogTitle>
                             {(() => {
                                 const mb = tradeShopTabMasterMap[currentAutoBuyTabId];
-                                return mb ? `${t(mb.tabNameKey) || mb.memo} 自动购买` : '自动购买';
+                                return mb ? t('SHOP_TAB_AUTO_BUY', [t(mb.tabNameKey) || mb.memo]) : t('SHOP_AUTO_BUY');
                             })()}
                         </DialogTitle>
                         <DialogDescription>
-                            自动购买商城物品
+                            {t('SHOP_AUTO_BUY_TITLE')}
                         </DialogDescription>
                     </DialogHeader>
 
                     <div className="space-y-4 py-4">
                         {/* 选择要购买的物品 */}
                         <div className="space-y-2">
-                            <Label>购买物品</Label>
+                            <Label>{t('SHOP_BUY_ITEM')}</Label>
                             <Select
                                 value={selectedAutoBuyItem || "any"}
                                 onValueChange={(value) => setSelectedAutoBuyItem(value === "any" ? "" : value)}
                             >
                                 <SelectTrigger>
-                                    <SelectValue placeholder="不设置表示购买任意物品" />
+                                    <SelectValue placeholder={t('SHOP_ANY_ITEM_HINT')} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="any">— 不设置（购买任意物品）—</SelectItem>
+                                    <SelectItem value="any">{t('SHOP_ANY_ITEM_OPTION')}</SelectItem>
                                     {currentAutoBuyTabItems.map((item) => (
                                         <SelectItem
                                             key={`${item.giveItem.itemType}-${item.giveItem.itemId}-${item.giveItem.itemCount}`}
@@ -1037,13 +1037,13 @@ export function ShopPage() {
                                     ))}
                                 </SelectContent>
                             </Select>
-                            <p className="text-xs text-muted-foreground">不设置表示购买任意物品</p>
+                            <p className="text-xs text-muted-foreground">{t('SHOP_ANY_ITEM_HINT')}</p>
                         </div>
 
                         {/* 折扣幅度 */}
                         <div className="space-y-2">
                             <div className="flex justify-between">
-                                <Label>商品打折幅度</Label>
+                                <Label>{t('SHOP_DISCOUNT')}</Label>
                                 <span className="text-sm font-medium">{autoBuyDiscount}%OFF</span>
                             </div>
                             <Slider
@@ -1057,16 +1057,16 @@ export function ShopPage() {
 
                         {/* 选择消耗物品 */}
                         <div className="space-y-2">
-                            <Label>消耗的物品</Label>
+                            <Label>{t('SHOP_CONSUME_ITEM')}</Label>
                             <Select
                                 value={selectedConsumeItem || "any"}
                                 onValueChange={(value) => setSelectedConsumeItem(value === "any" ? "" : value)}
                             >
                                 <SelectTrigger>
-                                    <SelectValue placeholder="不设置表示使用任意物品进行购买" />
+                                    <SelectValue placeholder={t('SHOP_ANY_CONSUME_HINT')} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="any">— 不设置（使用任意物品）—</SelectItem>
+                                    <SelectItem value="any">{t('SHOP_ANY_CONSUME_OPTION')}</SelectItem>
                                     {(() => {
                                         const tabMaster = tradeShopTabMasterMap[currentAutoBuyTabId];
                                         const consumeItems = tabMaster?.consumeItemInfos || [];
@@ -1081,12 +1081,12 @@ export function ShopPage() {
                                     })()}
                                 </SelectContent>
                             </Select>
-                            <p className="text-xs text-muted-foreground">不设置表示使用任意物品进行购买</p>
+                            <p className="text-xs text-muted-foreground">{t('SHOP_ANY_CONSUME_HINT')}</p>
                         </div>
 
                         {/* 消耗数量 */}
                         <div className="space-y-2">
-                            <Label>消耗数量</Label>
+                            <Label>{t('SHOP_CONSUME_COUNT')}</Label>
                             <Input
                                 type="number"
                                 min={0}
@@ -1094,16 +1094,16 @@ export function ShopPage() {
                                 onChange={(e) => setAutoBuyConsumeCount(parseInt(e.target.value) || 0)}
                                 placeholder="0"
                             />
-                            <p className="text-xs text-muted-foreground">设置为 0 表示任意数量</p>
+                            <p className="text-xs text-muted-foreground">{t('SHOP_ZERO_ANY')}</p>
                         </div>
                     </div>
 
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setAutoBuyDialogOpen(false)}>
-                            取消
+                            {t('SHOP_CANCEL')}
                         </Button>
                         <Button onClick={confirmAutoBuy} variant="outline" className="text-pink-500 border-pink-500 hover:bg-pink-50">
-                            自动购买
+                            {t('SHOP_AUTO_BUY')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

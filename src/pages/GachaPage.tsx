@@ -63,7 +63,7 @@ export function GachaPage() {
 
     const loadData = useCallback(async () => {
         if (!currentAccount) {
-            setAlertMessage('请先登录账户');
+            setAlertMessage(t('GACHA_LOGIN_FIRST'));
             return;
         }
         setLoading(true);
@@ -106,16 +106,16 @@ export function GachaPage() {
             }
         } catch (error) {
             console.error('Failed to load gacha data:', error);
-            setAlertMessage('加载抽卡数据失败，请稍后再试');
+            setAlertMessage(t('GACHA_LOAD_FAILED_ALERT'));
             toast({
-                title: '加载失败',
-                description: '无法获取抽卡数据，请稍后再试',
+                title: t('BATTLE_LOAD_FAILED'),
+                description: t('GACHA_LOAD_FAILED_DESC'),
                 variant: 'destructive',
             });
         } finally {
             setLoading(false);
         }
-    }, [currentAccount, toast, getTable]);
+    }, [currentAccount, toast, getTable, t]);
 
     useEffect(() => {
         if (currentAccount) {
@@ -187,8 +187,8 @@ export function GachaPage() {
         } catch (error) {
             console.error('Draw failed:', error);
             toast({
-                title: '抽卡失败',
-                description: '抽卡失败，请检查余额或稍后再试',
+                title: t('GACHA_DRAW_FAILED'),
+                description: t('GACHA_DRAW_FAILED_DESC'),
                 variant: 'destructive',
             });
         } finally {
@@ -226,8 +226,8 @@ export function GachaPage() {
         } catch (error) {
             console.error('Failed to load lottery detail:', error);
             toast({
-                title: '加载失败',
-                description: '无法获取抽卡详情',
+                title: t('BATTLE_LOAD_FAILED'),
+                description: t('GACHA_DETAIL_FAILED_DESC'),
                 variant: 'destructive',
             });
         } finally {
@@ -239,7 +239,7 @@ export function GachaPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="text-muted-foreground">加载抽卡数据中...</p>
+                <p className="text-muted-foreground">{t('GACHA_LOADING')}</p>
             </div>
         );
     }
@@ -249,7 +249,7 @@ export function GachaPage() {
             <div className="flex justify-end">
                 <Button variant="outline" size="sm" onClick={loadData} disabled={loading}>
                     <Clock className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                    刷新数据
+                    {t('SHOP_REFRESH')}
                 </Button>
             </div>
 
@@ -274,7 +274,7 @@ export function GachaPage() {
                                     <div className="flex items-start justify-between">
                                         <div className="flex-1">
                                             <CardTitle className="text-lg flex flex-wrap items-center gap-2">
-                                                <span>{uiMb ? t(uiMb.nameKey) : `抽卡池 #${gachaCase.gachaCaseId}`}</span>
+                                                <span>{uiMb ? t(uiMb.nameKey) : t('GACHA_CASE_FALLBACK', [gachaCase.gachaCaseId])}</span>
                                                 {gachaCase.endTime > 0 && gachaCase.endTime < 4102441200000 && (
                                                     <span className="text-xs text-muted-foreground">
                                                         {t('[ExchangeExpirationTimeLabel]')}: {formatRemainTime(gachaCase.endTime)}
@@ -393,7 +393,7 @@ export function GachaPage() {
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
                             <Sparkles className="h-5 w-5 text-yellow-500" />
-                            抽卡结果
+                            {t('GACHA_RESULT')}
                         </DialogTitle>
                     </DialogHeader>
                     {drawResult && (
@@ -401,7 +401,7 @@ export function GachaPage() {
                             {/* 主要奖励 */}
                             {drawResult.gachaRewardItemList && drawResult.gachaRewardItemList.length > 0 && (
                                 <div>
-                                    <h3 className="font-semibold mb-2">获得物品</h3>
+                                    <h3 className="font-semibold mb-2">{t('GACHA_OBTAINED')}</h3>
                                     <div className="grid grid-cols-2 gap-2">
                                         {drawResult.gachaRewardItemList.map((item, idx) => (
                                             <Card key={idx}>
@@ -422,7 +422,7 @@ export function GachaPage() {
                             {/* 额外奖励 */}
                             {drawResult.gachaRewardAddItemList && drawResult.gachaRewardAddItemList.length > 0 && (
                                 <div>
-                                    <h3 className="font-semibold mb-2">额外奖励</h3>
+                                    <h3 className="font-semibold mb-2">{t('GACHA_BONUS')}</h3>
                                     <div className="grid grid-cols-2 gap-2">
                                         {drawResult.gachaRewardAddItemList.map((item, idx) => (
                                             <Card key={idx}>
@@ -464,7 +464,7 @@ export function GachaPage() {
                             {/* 角色解锁 */}
                             {drawResult.characterReleaseItemList && drawResult.characterReleaseItemList.length > 0 && (
                                 <div>
-                                    <h3 className="font-semibold mb-2">新角色解锁</h3>
+                                    <h3 className="font-semibold mb-2">{t('GACHA_NEW_CHARACTERS')}</h3>
                                     <div className="grid grid-cols-2 gap-2">
                                         {drawResult.characterReleaseItemList.map((item, idx) => (
                                             <Card key={idx} className="border-yellow-500">
@@ -485,7 +485,7 @@ export function GachaPage() {
                     )}
                     <DialogFooter>
                         <Button onClick={() => setResultDrawOpen(false)}>
-                            关闭
+                            {t('GACHA_CLOSE')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -675,7 +675,7 @@ export function GachaPage() {
                     )}
                     <DialogFooter>
                         <Button onClick={() => setDetailOpen(false)}>
-                            关闭
+                            {t('GACHA_CLOSE')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

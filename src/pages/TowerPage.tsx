@@ -57,7 +57,7 @@ const TOWER_CONFIGS: Record<number, TowerConfig> = {
         nameKey: '[TowerTypeInfinite]',
         icon: Building2,
         color: 'gray',
-        element: '全属性'
+        elementKey: 'TOWER_ALL_ELEMENTS'
     },
     [TowerType.Blue]: {
         nameKey: '[TowerTypeBlue]',
@@ -84,7 +84,7 @@ const TOWER_CONFIGS: Record<number, TowerConfig> = {
         elementKey: '[ElementTypeYellow]'
     },
     [TowerType.None]: {
-        name: '未知',
+        nameKey: 'AUTO_TOWER_UNKNOWN',
         icon: Building2,
         color: 'gray',
         elementKey: '[CommonNoneLabel]'
@@ -158,9 +158,9 @@ export function TowerPage() {
             .slice(0, 50)
             .map(q => ({
                 floor: q.floor,
-                name: `第 ${q.floor} 层`
+                name: t('TOWER_FLOOR', [q.floor])
             }));
-    }, [allTowerQuests, selectedTowerType, maxClearedFloor]);
+    }, [allTowerQuests, selectedTowerType, maxClearedFloor, t]);
 
     const fetchUserData = async (silent = false) => {
         try {
@@ -225,11 +225,11 @@ export function TowerPage() {
         try {
             const target = parseInt(targetFloor) || 0;
             await backgroundTaskApi.startAutoTower(currentAccountId, selectedTowerType, target > 0 ? target : undefined);
-            toast({ title: '任务已启动', description: '自动爬塔任务已开始' });
+            toast({ title: t('BATTLE_TASK_STARTED'), description: t('TOWER_AUTO_STARTED') });
             fetchTaskStatus();
         } catch (error) {
             console.error('Failed to start auto tower:', error);
-            toast({ title: '启动失败', description: '无法启动自动爬塔任务', variant: 'destructive' });
+            toast({ title: t('BATTLE_START_FAILED'), description: t('TOWER_AUTO_START_FAILED'), variant: 'destructive' });
         }
     };
 
@@ -238,11 +238,11 @@ export function TowerPage() {
         if (!currentAccountId) return;
         try {
             await backgroundTaskApi.stopAutoTower(currentAccountId);
-            toast({ title: '任务已停止', description: '自动爬塔任务已停止' });
+            toast({ title: t('BATTLE_TASK_STOPPED'), description: t('TOWER_AUTO_STOPPED') });
             fetchTaskStatus();
         } catch (error) {
             console.error('Failed to stop auto tower:', error);
-            toast({ title: '停止失败', description: '无法停止自动爬塔任务', variant: 'destructive' });
+            toast({ title: t('BATTLE_STOP_FAILED'), description: t('TOWER_AUTO_STOP_FAILED'), variant: 'destructive' });
         }
     };
 
@@ -256,14 +256,14 @@ export function TowerPage() {
             const isWin = res.battleResult?.simulationResult?.battleEndInfo?.winGroupType === BattleFieldCharacterGroupType.Attacker;
 
             if (isWin) {
-                toast({ title: '挑战成功', description: `已通关第 ${questId} 层` });
+                toast({ title: t('BATTLE_CHALLENGE_WIN'), description: t('TOWER_CLEARED_FLOOR', [questId]) });
             } else {
-                toast({ title: '挑战失败', description: '战力不足，请提升后再试', variant: 'destructive' });
+                toast({ title: t('BATTLE_CHALLENGE_LOSS'), description: t('BATTLE_CHALLENGE_LOSS_DESC'), variant: 'destructive' });
             }
             fetchUserData(true);
         } catch (error) {
             console.error('Tower battle failed:', error);
-            toast({ title: '挑战异常', description: '服务器请求失败', variant: 'destructive' });
+            toast({ title: t('BATTLE_CHALLENGE_ERROR'), description: t('BATTLE_SERVER_ERROR'), variant: 'destructive' });
         }
     };
 
@@ -274,11 +274,11 @@ export function TowerPage() {
                 towerBattleQuestId: questId,
                 quickCount: 1
             });
-            toast({ title: '快速挑战成功', description: '已获得挑战奖励' });
+            toast({ title: t('TOWER_QUICK_SUCCESS'), description: t('TOWER_QUICK_SUCCESS_DESC') });
             fetchUserData(true);
         } catch (error) {
             console.error('Tower quick failed:', error);
-            toast({ title: '挑战失败', description: '挑战次数不足或请求异常', variant: 'destructive' });
+            toast({ title: t('BATTLE_CHALLENGE_LOSS'), description: t('TOWER_QUICK_FAILED_DESC'), variant: 'destructive' });
         }
     };
 
@@ -296,7 +296,7 @@ export function TowerPage() {
         if (!rewards || rewards.length === 0) return null;
         return rewards.map((item, idx) => (
             <span key={idx}>
-                {getItemName(item.itemType, item.itemId,) || `道具ID:${item.itemId}`} x{item.itemCount}
+                {getItemName(item.itemType, item.itemId,) || t('TOWER_ITEM_ID', [item.itemId])} x{item.itemCount}
                 {idx < rewards.length - 1 ? ' • ' : ''}
             </span>
         ));
@@ -306,7 +306,7 @@ export function TowerPage() {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <span className="ml-2">加载塔数据中...</span>
+                <span className="ml-2">{t('TOWER_LOADING')}</span>
             </div>
         );
     }
@@ -335,8 +335,8 @@ export function TowerPage() {
             <Tabs defaultValue="infinite" className="space-y-6">
                 <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="infinite">{t('[TowerTypeInfinite]')}</TabsTrigger>
-                    <TabsTrigger value="elemental">属性塔</TabsTrigger>
-                    <TabsTrigger value="auto">自动爬塔</TabsTrigger>
+                    <TabsTrigger value="elemental">{t('TOWER_TAB_ELEMENTAL')}</TabsTrigger>
+                    <TabsTrigger value="auto">{t('TOWER_TAB_AUTO')}</TabsTrigger>
                 </TabsList>
 
                 {/* 无穷之塔 */}
@@ -349,14 +349,14 @@ export function TowerPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <Building2 className="h-6 w-6" />
-                                    当前进度
+                                    {t('TOWER_CURRENT_PROGRESS')}
                                 </CardTitle>
-                                <CardDescription>已挑战至最高层</CardDescription>
+                                <CardDescription>{t('TOWER_HIGHEST_DESC')}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm text-muted-foreground">当前楼层</span>
+                                        <span className="text-sm text-muted-foreground">{t('TOWER_CURRENT_FLOOR')}</span>
                                         <div className="flex items-baseline gap-2">
                                             <span className="text-3xl font-bold text-primary">
                                                 {currentInfiniteFloor}
@@ -378,26 +378,26 @@ export function TowerPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <Sparkles className="h-6 w-6" />
-                                    今日状态
+                                    {t('TOWER_TODAY_STATUS')}
                                 </CardTitle>
-                                <CardDescription>今日挑战统计</CardDescription>
+                                <CardDescription>{t('TOWER_TODAY_STATS')}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm text-muted-foreground">今日新通关</span>
+                                        <span className="text-sm text-muted-foreground">{t('TOWER_TODAY_NEW')}</span>
                                         <Badge variant="secondary" className="text-base">
-                                            {infiniteProgress?.todayClearNewFloorCount || 0} 层
+                                            {t('TOWER_FLOORS', [infiniteProgress?.todayClearNewFloorCount || 0])}
                                         </Badge>
                                     </div>
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm text-muted-foreground">今日已挑战</span>
+                                        <span className="text-sm text-muted-foreground">{t('TOWER_TODAY_DONE')}</span>
                                         <Badge variant="secondary" className="text-base">
-                                            {infiniteProgress?.todayBattleCount || 0} 次
+                                            {t('GUILD_TIMES', [infiniteProgress?.todayBattleCount || 0])}
                                         </Badge>
                                     </div>
                                     <p className="text-xs text-muted-foreground">
-                                        每天凌晨4:00重置 • 通关新楼层不消耗次数
+                                        {t('TOWER_RESET_HINT')}
                                     </p>
                                 </div>
 
@@ -412,7 +412,7 @@ export function TowerPage() {
                                         }}
                                     >
                                         <ChevronUp className="mr-2 h-5 w-5" />
-                                        继续挑战 (第{currentInfiniteFloor + 1}层)
+                                        {t('TOWER_CONTINUE', [currentInfiniteFloor + 1])}
                                     </Button>
                                     <Button
                                         className="w-full"
@@ -426,7 +426,7 @@ export function TowerPage() {
                                         }}
                                     >
                                         <Zap className="mr-2 h-4 w-4" />
-                                        快速挑战 ({remainingQuickCount}次可用)
+                                        {t('TOWER_QUICK', [remainingQuickCount])}
                                     </Button>
                                 </div>
                             </CardContent>
@@ -435,8 +435,8 @@ export function TowerPage() {
 
                     <Card>
                         <CardHeader>
-                            <CardTitle>楼层进度</CardTitle>
-                            <CardDescription>查看最近楼层状态和奖励</CardDescription>
+                            <CardTitle>{t('TOWER_FLOOR_STATUS')}</CardTitle>
+                            <CardDescription>{t('TOWER_FLOOR_STATUS_DESC')}</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-2">
@@ -467,17 +467,17 @@ export function TowerPage() {
 
                                                     <div className="flex-1">
                                                         <div className="flex items-center gap-2 mb-1">
-                                                            <span className="font-semibold">第 {quest.floor} 层</span>
+                                                            <span className="font-semibold">{t('TOWER_FLOOR', [quest.floor])}</span>
                                                             {isCleared ? (
-                                                                <Badge variant="outline" className="border-green-500 text-green-500">已通关</Badge>
+                                                                <Badge variant="outline" className="border-green-500 text-green-500">{t('BATTLE_CLEARED')}</Badge>
                                                             ) : isCurrent ? (
-                                                                <Badge>挑战中</Badge>
+                                                                <Badge>{t('TOWER_IN_PROGRESS')}</Badge>
                                                             ) : (
                                                                 <Lock className="h-4 w-4 text-muted-foreground" />
                                                             )}
                                                         </div>
                                                         <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                                                            <span>推荐战力: {quest.baseClearPartyDeckPower?.toLocaleString()}</span>
+                                                            <span>{t('CAVE_RECOMMENDED_POWER', [quest.baseClearPartyDeckPower?.toLocaleString()])}</span>
                                                             <span>•</span>
                                                             <span>{renderRewards(quest.battleRewardsFirst)}</span>
                                                         </div>
@@ -487,7 +487,7 @@ export function TowerPage() {
                                                 {isCurrent && (
                                                     <Button size="sm" onClick={() => handleChallenge(TowerType.Infinite, quest.id)}>
                                                         <ChevronUp className="mr-1 h-4 w-4" />
-                                                        挑战
+                                                        {t('PVP_CHALLENGE')}
                                                     </Button>
                                                 )}
                                                 {!isCleared && !isCurrent && (
@@ -537,19 +537,19 @@ export function TowerPage() {
                                                 <div>
                                                     <CardTitle>{config.nameKey ? t(config.nameKey) : config.name}</CardTitle>
                                                     <CardDescription>
-                                                        {isAvailable ? '今日开放' : '今日未开放'}
+                                                        {isAvailable ? t('TOWER_OPEN_TODAY') : t('TOWER_CLOSED_TODAY')}
                                                     </CardDescription>
                                                 </div>
                                             </div>
                                             {isAvailable ? (
                                                 <Badge className="bg-green-500">
                                                     <Unlock className="h-3 w-3 mr-1" />
-                                                    开放中
+                                                    {t('TOWER_OPEN')}
                                                 </Badge>
                                             ) : (
                                                 <Badge variant="secondary">
                                                     <Lock className="h-3 w-3 mr-1" />
-                                                    未开放
+                                                    {t('TOWER_CLOSED')}
                                                 </Badge>
                                             )}
                                         </div>
@@ -558,9 +558,9 @@ export function TowerPage() {
                                     <CardContent className="space-y-4">
                                         <div className="space-y-2">
                                             <div className="flex items-center justify-between text-sm">
-                                                <span className="text-muted-foreground">当前进度</span>
+                                                <span className="text-muted-foreground">{t('TOWER_CURRENT_PROGRESS')}</span>
                                                 <span className="font-semibold">
-                                                    {currentFloor} / {maxFloor} 层
+                                                    {t('TOWER_FLOOR_PROGRESS', [currentFloor, maxFloor])}
                                                 </span>
                                             </div>
                                             <Progress
@@ -570,19 +570,19 @@ export function TowerPage() {
                                         </div>
 
                                         <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                                            <span className="text-sm text-muted-foreground">今日新通关</span>
+                                            <span className="text-sm text-muted-foreground">{t('TOWER_TODAY_NEW')}</span>
                                             <Badge variant={(progress?.todayClearNewFloorCount || 0) >= 10 ? "default" : "secondary"}>
-                                                {progress?.todayClearNewFloorCount || 0} / 10 层
+                                                {t('TOWER_FLOOR_PROGRESS', [progress?.todayClearNewFloorCount || 0, 10])}
                                             </Badge>
                                         </div>
 
                                         <div className="p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-lg border">
-                                            <div className="text-xs text-muted-foreground mb-1">规则</div>
+                                            <div className="text-xs text-muted-foreground mb-1">{t('TOWER_RULES')}</div>
                                             <div className="text-sm">
-                                                • 仅可使用<span className="font-semibold text-primary">{config.elementKey ? t(config.elementKey) : config.element}</span>属性角色
+                                                • {t('TOWER_RULE_ELEMENT_PREFIX')}<span className="font-semibold text-primary">{config.elementKey ? t(config.elementKey) : config.element}</span>{t('TOWER_RULE_ELEMENT_SUFFIX')}
                                             </div>
                                             <div className="text-sm">
-                                                • 每天最多通关10层
+                                                • {t('TOWER_RULE_MAX10')}
                                             </div>
                                         </div>
 
@@ -597,12 +597,12 @@ export function TowerPage() {
                                                 }}
                                             >
                                                 <ChevronUp className="mr-2 h-4 w-4" />
-                                                开始挑战 (第{currentFloor + 1}层)
+                                                {t('TOWER_START', [currentFloor + 1])}
                                             </Button>
                                         ) : (
                                             <Button className="w-full" disabled>
                                                 <Lock className="mr-2 h-4 w-4" />
-                                                今日未开放
+                                                {t('TOWER_CLOSED_TODAY')}
                                             </Button>
                                         )}
                                     </CardContent>
@@ -616,28 +616,28 @@ export function TowerPage() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Trophy className="h-5 w-5" />
-                                属性塔轮换安排 (4:00 AM 重置)
+                                {t('TOWER_ROTATION')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs md:text-sm">
                                 <div className="p-3 border rounded-lg text-center">
-                                    <div className="text-muted-foreground mb-1">周一 / 周五 / 周日</div>
+                                    <div className="text-muted-foreground mb-1">{t('TOWER_DAYS_BLUE')}</div>
                                     <Droplet className="h-6 w-6 mx-auto mb-1 text-blue-500" />
                                     <div className="font-semibold">{t('[TowerTypeBlue]')}</div>
                                 </div>
                                 <div className="p-3 border rounded-lg text-center">
-                                    <div className="text-muted-foreground mb-1">周二 / 周五 / 周日</div>
+                                    <div className="text-muted-foreground mb-1">{t('TOWER_DAYS_RED')}</div>
                                     <Flame className="h-6 w-6 mx-auto mb-1 text-red-500" />
                                     <div className="font-semibold">{t('[TowerTypeRed]')}</div>
                                 </div>
                                 <div className="p-3 border rounded-lg text-center">
-                                    <div className="text-muted-foreground mb-1">周三 / 周六 / 周日</div>
+                                    <div className="text-muted-foreground mb-1">{t('TOWER_DAYS_GREEN')}</div>
                                     <Wind className="h-6 w-6 mx-auto mb-1 text-green-500" />
                                     <div className="font-semibold">{t('[TowerTypeGreen]')}</div>
                                 </div>
                                 <div className="p-3 border rounded-lg text-center">
-                                    <div className="text-muted-foreground mb-1">周四 / 周六 / 周日</div>
+                                    <div className="text-muted-foreground mb-1">{t('TOWER_DAYS_YELLOW')}</div>
                                     <Mountain className="h-6 w-6 mx-auto mb-1 text-yellow-500" />
                                     <div className="font-semibold">{t('[TowerTypeYellow]')}</div>
                                 </div>

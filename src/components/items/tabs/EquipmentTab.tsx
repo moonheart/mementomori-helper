@@ -34,19 +34,19 @@ interface SealedEquipmentItem {
 function getSlotTypeName(slotType: EquipmentSlotType): string {
     switch (slotType) {
         case EquipmentSlotType.Weapon:
-            return '武器';
+            return '[EquipmentSlotTypeWeapon]';
         case EquipmentSlotType.Armor:
-            return '护甲';
+            return '[EquipmentSlotTypeArmor]';
         case EquipmentSlotType.Helmet:
-            return '头盔';
+            return '[EquipmentSlotTypeHelmet]';
         case EquipmentSlotType.Shoes:
-            return '鞋子';
+            return '[EquipmentSlotTypeShoes]';
         case EquipmentSlotType.Gauntlet:
-            return '护手';
+            return '[EquipmentSlotTypeGauntlet]';
         case EquipmentSlotType.Sub:
-            return '副手';
+            return '[EquipmentSlotTypeSub]';
         default:
-            return '其他';
+            return '[ItemBoxTabOther]';
     }
 }
 
@@ -124,6 +124,7 @@ function getRarityGradient(rarity: EquipmentRarityFlags): string {
 
 // 已解除封印装备卡片
 function UnsealedEquipmentCard({ item }: { item: UnsealedEquipmentItem }) {
+    const t = useLocalizationStore((state) => state.t);
     const equip = item.equipment;
     const master = item.masterData;
     const rarityName = getRarityName(item.rarity);
@@ -174,7 +175,7 @@ function UnsealedEquipmentCard({ item }: { item: UnsealedEquipmentItem }) {
                         </div>
                         {master && (
                             <p className="text-xs text-muted-foreground mb-2">
-                                {getSlotTypeName(master.slotType)} · Lv.{master.equipmentLv}
+                                {t(getSlotTypeName(master.slotType))} · Lv.{master.equipmentLv}
                             </p>
                         )}
 
@@ -189,7 +190,7 @@ function UnsealedEquipmentCard({ item }: { item: UnsealedEquipmentItem }) {
                         {/* 宝石槽信息 */}
                         {unlockedSpheres > 0 && (
                             <div className="flex items-center gap-1.5 mt-2">
-                                <span className="text-xs text-muted-foreground">宝石:</span>
+                                <span className="text-xs text-muted-foreground">{t('ITEMS_SPHERES_LABEL')}</span>
                                 <div className="flex gap-0.5">
                                     {[0, 1, 2, 3].map((index) => {
                                         const hasSphere = sphereIds[index] > 0;
@@ -222,12 +223,12 @@ function UnsealedEquipmentCard({ item }: { item: UnsealedEquipmentItem }) {
                             <div className="flex gap-3 mt-2">
                                 {equip.legendSacredTreasureLv > 0 && (
                                     <span className="text-xs text-amber-600">
-                                        传说圣遗物 Lv.{equip.legendSacredTreasureLv}
+                                        {t('ITEMS_LEGEND_SACRED_LV', [equip.legendSacredTreasureLv])}
                                     </span>
                                 )}
                                 {equip.matchlessSacredTreasureLv > 0 && (
                                     <span className="text-xs text-purple-600">
-                                        无双圣遗物 Lv.{equip.matchlessSacredTreasureLv}
+                                        {t('ITEMS_MATCHLESS_SACRED_LV', [equip.matchlessSacredTreasureLv])}
                                     </span>
                                 )}
                             </div>
@@ -241,6 +242,7 @@ function UnsealedEquipmentCard({ item }: { item: UnsealedEquipmentItem }) {
 
 // 未解除封印装备卡片
 function SealedEquipmentCard({ item }: { item: SealedEquipmentItem }) {
+    const t = useLocalizationStore((state) => state.t);
     const master = item.masterData;
     const rarityName = getRarityName(item.rarity);
 
@@ -282,7 +284,7 @@ function SealedEquipmentCard({ item }: { item: SealedEquipmentItem }) {
                     <h3 className="font-medium text-gray-700 text-sm line-clamp-1 mb-1">{item.name}</h3>
                     {master && (
                         <p className="text-xs text-muted-foreground">
-                            {getSlotTypeName(master.slotType)}
+                            {t(getSlotTypeName(master.slotType))}
                         </p>
                     )}
                     <div className="text-base font-bold text-gray-600 mt-1">
@@ -371,7 +373,7 @@ export function EquipmentTab({ items, userEquipments }: EquipmentTabProps) {
         return (
             <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <div className="text-6xl mb-4 opacity-20">⚔️</div>
-                <p>暂无装备道具</p>
+                <p>{t('ITEMS_EMPTY_EQUIPMENT')}</p>
             </div>
         );
     }
@@ -383,7 +385,7 @@ export function EquipmentTab({ items, userEquipments }: EquipmentTabProps) {
                 <div>
                     <div className="flex items-center gap-2 mb-4">
                         <Sparkles className="w-5 h-5 text-yellow-500" />
-                        <h3 className="text-lg font-semibold">已解除封印</h3>
+                        <h3 className="text-lg font-semibold">{t('ITEMS_UNSEALED')}</h3>
                         <Badge variant="secondary">{unsealedItems.length}</Badge>
                     </div>
                     <div className="flex flex-wrap gap-4">
@@ -399,8 +401,8 @@ export function EquipmentTab({ items, userEquipments }: EquipmentTabProps) {
                 <div>
                     <div className="flex items-center gap-2 mb-4">
                         <Package className="w-5 h-5 text-gray-500" />
-                        <h3 className="text-lg font-semibold">未解除封印</h3>
-                        <Badge variant="secondary">{sealedItems.reduce((sum, item) => sum + item.item.itemCount, 0)} 个</Badge>
+                        <h3 className="text-lg font-semibold">{t('ITEMS_SEALED')}</h3>
+                        <Badge variant="secondary">{t('ITEMS_COUNT_PCS', [sealedItems.reduce((sum, item) => sum + item.item.itemCount, 0)])}</Badge>
                     </div>
                     <div className="flex flex-wrap gap-4">
                         {sealedItems.map((item) => (

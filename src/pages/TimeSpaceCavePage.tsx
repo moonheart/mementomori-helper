@@ -101,7 +101,7 @@ export function TimeSpaceCavePage() {
             setGuestTable((guests as any) || []);
         } catch (err) {
             console.error('Failed to load dungeon battle info:', err);
-            setError('加载时空洞窟数据失败');
+            setError(t('CAVE_LOAD_FAILED'));
         } finally {
             setLoading(false);
         }
@@ -125,7 +125,7 @@ export function TimeSpaceCavePage() {
             if (remaining > 0) {
                 setRefreshTimeLeft(timeManager.formatTimeSpan(remaining));
             } else {
-                setRefreshTimeLeft('已刷新');
+                setRefreshTimeLeft(t('CAVE_REFRESHED'));
             }
         };
 
@@ -149,15 +149,15 @@ export function TimeSpaceCavePage() {
     const getGridStateName = (state?: DungeonBattleGridState) => {
         switch (state) {
             case DungeonBattleGridState.Done:
-                return '已完成，请选择下一石台';
+                return t('CAVE_STATE_DONE');
             case DungeonBattleGridState.Selected:
-                return '已选择，等待操作';
+                return t('CAVE_STATE_SELECTED');
             case DungeonBattleGridState.Reward:
-                return '等待选择奖励';
+                return t('CAVE_STATE_WAIT_REWARD');
             case DungeonBattleGridState.SkipShop:
-                return '跳过商店';
+                return t('CAVE_STATE_SKIP_SHOP');
             default:
-                return '未知状态';
+                return t('CAVE_STATE_UNKNOWN');
         }
     };
 
@@ -494,7 +494,7 @@ export function TimeSpaceCavePage() {
             const relicMB = relicTable.find(r => r.id === parseInt(id));
             return {
                 id: parseInt(id),
-                name: relicMB ? t(relicMB.nameKey) : '未知加护',
+                name: relicMB ? t(relicMB.nameKey) : t('CAVE_UNKNOWN_BLESSING'),
                 effect: relicMB ? t(relicMB.descriptionKey) : '',
                 tier: relicMB?.dungeonRelicRarityType || DungeonBattleRelicRarityType.None,
                 count
@@ -514,7 +514,7 @@ export function TimeSpaceCavePage() {
             return {
                 id: char.guid,
                 characterId: char.characterId,
-                name: characterMB ? t(characterMB.nameKey) : '未知角色',
+                name: characterMB ? t(characterMB.nameKey) : t('CAVE_UNKNOWN_CHARACTER'),
                 rarity: characterMB?.rarityFlags || 0,
                 battlePower: char.battlePower,
                 selected: isSelected
@@ -568,7 +568,7 @@ export function TimeSpaceCavePage() {
         return (
             <div className="container mx-auto p-6">
                 <Alert>
-                    <AlertDescription>请先登录账号</AlertDescription>
+                    <AlertDescription>{t('CAVE_LOGIN_FIRST')}</AlertDescription>
                 </Alert>
             </div>
         );
@@ -582,14 +582,14 @@ export function TimeSpaceCavePage() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Trophy className="w-5 h-5" />
-                            探索进度
+                            {t('CAVE_EXPLORE_PROGRESS')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {/* 层数进度 */}
                         <div className="space-y-2">
                             <div className="flex justify-between text-sm">
-                                <span>第 {progressData.currentLayer} / {progressData.totalLayers} 层</span>
+                                <span>{t('CAVE_LAYER_PROGRESS', [progressData.currentLayer, progressData.totalLayers])}</span>
                                 <span>{Math.round((progressData.currentLayer / progressData.totalLayers) * 100)}%</span>
                             </div>
                             <Progress
@@ -602,7 +602,7 @@ export function TimeSpaceCavePage() {
                         <div className="flex items-center justify-between p-2 bg-secondary/50 rounded">
                             <div className="flex items-center gap-2">
                                 <Clock className="w-4 h-4 text-muted-foreground" />
-                                <span className="text-sm">刷新倒计时</span>
+                                <span className="text-sm">{t('CAVE_REFRESH_COUNTDOWN')}</span>
                             </div>
                             <Badge variant="outline">{progressData.refreshIn}</Badge>
                         </div>
@@ -612,11 +612,11 @@ export function TimeSpaceCavePage() {
                             <Alert>
                                 <Trophy className="h-4 w-4" />
                                 <AlertDescription>
-                                    你有 {progressData.missedCount} 次未探索，获得{' '}
+                                    {t('CAVE_MISSED_PREFIX', [progressData.missedCount])}{' '}
                                     <span className="font-semibold text-orange-500">
                                         {progressData.bonusPercentage}%
                                     </span>{' '}
-                                    额外奖励加成
+                                    {t('CAVE_MISSED_SUFFIX')}
                                 </AlertDescription>
                             </Alert>
                         )}
@@ -625,7 +625,7 @@ export function TimeSpaceCavePage() {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <Heart className="w-4 h-4 text-red-500" />
-                                <span className="text-sm">回复果实使用次数</span>
+                                <span className="text-sm">{t('CAVE_FRUIT_USES')}</span>
                             </div>
                             <span className="text-sm">
                                 {progressData.recoveryFruitsUsed} / {progressData.maxRecoveryFruits}
@@ -639,17 +639,17 @@ export function TimeSpaceCavePage() {
             <Card>
                 <Tabs defaultValue="explore" className="p-6">
                     <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="explore">探索</TabsTrigger>
-                        <TabsTrigger value="team">队伍</TabsTrigger>
-                        <TabsTrigger value="blessings">加护</TabsTrigger>
+                        <TabsTrigger value="explore">{t('CAVE_TAB_EXPLORE')}</TabsTrigger>
+                        <TabsTrigger value="team">{t('CAVE_TAB_TEAM')}</TabsTrigger>
+                        <TabsTrigger value="blessings">{t('[DungeonBattleMapProtectionButtonLabel]')}</TabsTrigger>
                     </TabsList>
 
                     {/* 探索石台 */}
                     <TabsContent value="explore" className="space-y-4">
                         <CardHeader className="px-0">
-                            <CardTitle>可选择的石台</CardTitle>
+                            <CardTitle>{t('CAVE_AVAILABLE_ENCOUNTERS')}</CardTitle>
                             <CardDescription>
-                                选择下一个要探索的石台，每个石台拥有不同的奖励
+                                {t('CAVE_AVAILABLE_ENCOUNTERS_DESC')}
                             </CardDescription>
                         </CardHeader>
 
@@ -755,14 +755,14 @@ export function TimeSpaceCavePage() {
                                                                                 {/* 当前位置标识 */}
                                                                                 {isCurrent && (
                                                                                     <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[10px] px-2 py-0.5 rounded-full shadow-lg whitespace-nowrap font-semibold">
-                                                                                        当前位置
+                                                                                        {t('CAVE_CURRENT_POSITION')}
                                                                                     </div>
                                                                                 )}
 
                                                                                 {/* 已完成标识 */}
                                                                                 {isDone && !isCurrent && (
                                                                                     <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-muted text-muted-foreground text-[10px] px-2 py-0.5 rounded-full shadow-sm">
-                                                                                        已完成
+                                                                                        {t('CAVE_COMPLETED')}
                                                                                     </div>
                                                                                 )}
 
@@ -785,7 +785,7 @@ export function TimeSpaceCavePage() {
                             </div>
                         ) : (
                             <p className="text-center text-muted-foreground py-8">
-                                暂无可选择的石台
+                                {t('CAVE_NO_ENCOUNTERS')}
                             </p>
                         )}
                     </TabsContent>
@@ -793,9 +793,9 @@ export function TimeSpaceCavePage() {
                     {/* 队伍状态 */}
                     <TabsContent value="team" className="space-y-4">
                         <CardHeader className="px-0">
-                            <CardTitle>当前队伍</CardTitle>
+                            <CardTitle>{t('CAVE_CURRENT_TEAM')}</CardTitle>
                             <CardDescription>
-                                显示当前队伍中所有角色的状态
+                                {t('CAVE_CURRENT_TEAM_DESC')}
                             </CardDescription>
                         </CardHeader>
                         <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -853,7 +853,7 @@ export function TimeSpaceCavePage() {
                             })()}
                             {(!battleInfo.userDungeonBattleCharacterDtoInfos || battleInfo.userDungeonBattleCharacterDtoInfos.length === 0) && (
                                 <p className="col-span-full text-center text-muted-foreground py-8">
-                                    暂无队伍成员
+                                    {t('CAVE_NO_TEAM')}
                                 </p>
                             )}
                         </div>
@@ -862,9 +862,9 @@ export function TimeSpaceCavePage() {
                     {/* 加护列表 */}
                     <TabsContent value="blessings" className="space-y-4">
                         <CardHeader className="px-0">
-                            <CardTitle>已获得的加护</CardTitle>
+                            <CardTitle>{t('CAVE_OBTAINED_BLESSINGS')}</CardTitle>
                             <CardDescription>
-                                加护会在战斗中提供各种增益效果
+                                {t('CAVE_OBTAINED_BLESSINGS_DESC')}
                             </CardDescription>
                         </CardHeader>
                         <div className="grid gap-3">
@@ -893,7 +893,7 @@ export function TimeSpaceCavePage() {
                             ))}
                             {blessings.length === 0 && (
                                 <p className="text-center text-muted-foreground py-8">
-                                    还未获得任何加护
+                                    {t('[DungeonBattleRelicListEmptyMessage]')}
                                 </p>
                             )}
                         </div>
@@ -912,7 +912,7 @@ export function TimeSpaceCavePage() {
                                     {currentGridAction.typeName}
                                 </DialogTitle>
                                 <DialogDescription>
-                                    当前石台状态: {getGridStateName(battleInfo.userDungeonDtoInfo?.currentGridState)} | 推荐战力: {currentGridAction.power.toLocaleString()}
+                                    {t('CAVE_GRID_STATE', [getGridStateName(battleInfo.userDungeonDtoInfo?.currentGridState)])} | {t('CAVE_RECOMMENDED_POWER', [currentGridAction.power.toLocaleString()])}
                                 </DialogDescription>
                             </DialogHeader>
 
@@ -929,7 +929,7 @@ export function TimeSpaceCavePage() {
                                             return (
                                                 <div className="space-y-3">
                                                     <Alert>
-                                                        <AlertDescription>当前石台为战斗类型，点击开始战斗</AlertDescription>
+                                                        <AlertDescription>{t('CAVE_BATTLE_HINT')}</AlertDescription>
                                                     </Alert>
                                                     <Button
                                                         className="w-full"
@@ -937,9 +937,9 @@ export function TimeSpaceCavePage() {
                                                         onClick={() => handleCurrentGridAction('battle')}
                                                     >
                                                         {isActionSubmitting ? (
-                                                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />执行中...</>
+                                                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t('CAVE_RUNNING')}</>
                                                         ) : (
-                                                            '开始战斗'
+                                                            t('[LocalRaidRoomManagementChallengeButtonLabel]')
                                                         )}
                                                     </Button>
                                                 </div>
@@ -951,7 +951,7 @@ export function TimeSpaceCavePage() {
                                             return (
                                                 <div className="space-y-3">
                                                     <Alert>
-                                                        <AlertDescription>使用回复果实恢复角色HP</AlertDescription>
+                                                        <AlertDescription>{t('CAVE_FRUIT_HINT')}</AlertDescription>
                                                     </Alert>
                                                     <Button
                                                         className="w-full"
@@ -959,9 +959,9 @@ export function TimeSpaceCavePage() {
                                                         onClick={() => handleCurrentGridAction('recovery')}
                                                     >
                                                         {isActionSubmitting ? (
-                                                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />执行中...</>
+                                                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t('CAVE_RUNNING')}</>
                                                         ) : (
-                                                            '使用回复果实'
+                                                            t('CAVE_USE_FRUIT')
                                                         )}
                                                     </Button>
                                                 </div>
@@ -973,7 +973,7 @@ export function TimeSpaceCavePage() {
                                             return (
                                                 <div className="space-y-3">
                                                     <Alert>
-                                                        <AlertDescription>强化当前持有的加护圣遗物</AlertDescription>
+                                                        <AlertDescription>{t('CAVE_ENHANCE_HINT')}</AlertDescription>
                                                     </Alert>
                                                     <Button
                                                         className="w-full"
@@ -981,9 +981,9 @@ export function TimeSpaceCavePage() {
                                                         onClick={() => handleCurrentGridAction('reinforce')}
                                                     >
                                                         {isActionSubmitting ? (
-                                                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />执行中...</>
+                                                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t('CAVE_RUNNING')}</>
                                                         ) : (
-                                                            '强化加护'
+                                                            t('[DungeonBattleGridRelicReinforcementTitle]')
                                                         )}
                                                     </Button>
                                                 </div>
@@ -995,7 +995,7 @@ export function TimeSpaceCavePage() {
                                             return (
                                                 <div className="space-y-3">
                                                     <Alert>
-                                                        <AlertDescription>复活已战败的角色</AlertDescription>
+                                                        <AlertDescription>{t('CAVE_REVIVE_HINT')}</AlertDescription>
                                                     </Alert>
                                                     <Button
                                                         className="w-full"
@@ -1003,9 +1003,9 @@ export function TimeSpaceCavePage() {
                                                         onClick={() => handleCurrentGridAction('revive')}
                                                     >
                                                         {isActionSubmitting ? (
-                                                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />执行中...</>
+                                                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t('CAVE_RUNNING')}</>
                                                         ) : (
-                                                            '复活角色'
+                                                            t('CAVE_REVIVE')
                                                         )}
                                                     </Button>
                                                 </div>
@@ -1017,7 +1017,7 @@ export function TimeSpaceCavePage() {
                                             return (
                                                 <div className="space-y-3">
                                                     <Alert>
-                                                        <AlertDescription>商店功能开发中，需要购买物品后离开</AlertDescription>
+                                                        <AlertDescription>{t('CAVE_SHOP_HINT')}</AlertDescription>
                                                     </Alert>
                                                     <Button
                                                         className="w-full"
@@ -1025,9 +1025,9 @@ export function TimeSpaceCavePage() {
                                                         onClick={() => handleCurrentGridAction('leaveShop')}
                                                     >
                                                         {isActionSubmitting ? (
-                                                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />执行中...</>
+                                                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t('CAVE_RUNNING')}</>
                                                         ) : (
-                                                            '离开商店'
+                                                            t('CAVE_LEAVE_SHOP')
                                                         )}
                                                     </Button>
                                                 </div>
@@ -1036,7 +1036,7 @@ export function TimeSpaceCavePage() {
 
                                         return (
                                             <Alert>
-                                                <AlertDescription>此石台类型暂不支持手动操作</AlertDescription>
+                                                <AlertDescription>{t('CAVE_UNSUPPORTED')}</AlertDescription>
                                             </Alert>
                                         );
                                     }
@@ -1045,7 +1045,7 @@ export function TimeSpaceCavePage() {
                                     if (state === DungeonBattleGridState.Reward) {
                                         return (
                                             <div className="space-y-3">
-                                                <h4 className="text-sm font-semibold">选择加护奖励</h4>
+                                                <h4 className="text-sm font-semibold">{t('[DungeonBattleGridSelectRelicTitle]')}</h4>
                                                 <div className="grid gap-2">
                                                     {battleInfo.rewardRelicIds?.map((relicId) => {
                                                         const relic = relicTable.find(r => r.id === relicId);
@@ -1071,7 +1071,7 @@ export function TimeSpaceCavePage() {
                                                 </div>
                                                 {(!battleInfo.rewardRelicIds || battleInfo.rewardRelicIds.length === 0) && (
                                                     <Alert>
-                                                        <AlertDescription>暂无可选择的加护奖励</AlertDescription>
+                                                        <AlertDescription>{t('CAVE_NO_BLESSING_REWARDS')}</AlertDescription>
                                                     </Alert>
                                                 )}
                                             </div>
@@ -1100,7 +1100,7 @@ export function TimeSpaceCavePage() {
                                     {selectedPlatform.typeName}
                                 </DialogTitle>
                                 <DialogDescription>
-                                    坐标: ({selectedPlatform.x}, {selectedPlatform.y}) | 推荐战力: {selectedPlatform.power.toLocaleString()}
+                                    {t('CAVE_COORDS', [selectedPlatform.x, selectedPlatform.y])} | {t('CAVE_RECOMMENDED_POWER', [selectedPlatform.power.toLocaleString()])}
                                 </DialogDescription>
                             </DialogHeader>
 
@@ -1117,7 +1117,7 @@ export function TimeSpaceCavePage() {
                                                 {/* 敌人列表 */}
                                                 {platformDetails.enemyInfos && platformDetails.enemyInfos.length > 0 && (
                                                     <div>
-                                                        <h4 className="text-sm font-semibold mb-2">敌人信息</h4>
+                                                        <h4 className="text-sm font-semibold mb-2">{t('[DungeonBattleGridBattleHeadlineEnemy]')}</h4>
                                                         <div className="grid gap-2">
                                                             {platformDetails.enemyInfos.map((enemy, idx) => (
                                                                 <Card key={idx}>
@@ -1125,7 +1125,7 @@ export function TimeSpaceCavePage() {
                                                                         <div className="flex items-center justify-between">
                                                                             <div className="flex items-center gap-2">
                                                                                 <Badge variant="outline">Lv.{enemy.level}</Badge>
-                                                                                <span className="text-sm">战力: {enemy.battlePower.toLocaleString()}</span>
+                                                                                <span className="text-sm">{t('CAVE_POWER', [enemy.battlePower.toLocaleString()])}</span>
                                                                             </div>
                                                                         </div>
                                                                     </CardContent>
@@ -1138,11 +1138,11 @@ export function TimeSpaceCavePage() {
                                                 {/* 奖励列表 */}
                                                 {(platformDetails.normalRewardItemList?.length > 0 || platformDetails.specialRewardItemList?.length > 0) && (
                                                     <div>
-                                                        <h4 className="text-sm font-semibold mb-2">奖励</h4>
+                                                        <h4 className="text-sm font-semibold mb-2">{t('[DungeonBattleGridBattleHeadlineReward]')}</h4>
                                                         <div className="space-y-2">
                                                             {platformDetails.normalRewardItemList && platformDetails.normalRewardItemList.length > 0 && (
                                                                 <div>
-                                                                    <p className="text-xs text-muted-foreground mb-1">普通奖励</p>
+                                                                    <p className="text-xs text-muted-foreground mb-1">{t('CAVE_NORMAL_REWARDS')}</p>
                                                                     <div className="flex flex-wrap gap-2">
                                                                         {platformDetails.normalRewardItemList.map((item, idx) => (
                                                                             <Badge key={idx} variant="secondary">
@@ -1154,7 +1154,7 @@ export function TimeSpaceCavePage() {
                                                             )}
                                                             {platformDetails.specialRewardItemList && platformDetails.specialRewardItemList.length > 0 && (
                                                                 <div>
-                                                                    <p className="text-xs text-muted-foreground mb-1">特殊奖励</p>
+                                                                    <p className="text-xs text-muted-foreground mb-1">{t('CAVE_SPECIAL_REWARDS')}</p>
                                                                     <div className="flex flex-wrap gap-2">
                                                                         {platformDetails.specialRewardItemList.map((item, idx) => (
                                                                             <Badge key={idx} variant="default">
@@ -1175,7 +1175,7 @@ export function TimeSpaceCavePage() {
                                 {/* JoinCharacter 石台显示增援角色列表 */}
                                 {selectedPlatform.type === DungeonBattleGridType.JoinCharacter && battleInfo && (
                                     <div className="space-y-3">
-                                        <h4 className="text-sm font-semibold">选择增援角色</h4>
+                                        <h4 className="text-sm font-semibold">{t('CAVE_SELECT_ASSIST')}</h4>
                                         <div className="grid gap-2">
                                             {(() => {
                                                 // 从 guestCharacterMap 获取当前石台的 4 个增援角色 MB ID
@@ -1228,7 +1228,7 @@ export function TimeSpaceCavePage() {
                                                                                 {/* 角色名称和稀有度 */}
                                                                                 <div className="flex items-center gap-2">
                                                                                     <h5 className="font-semibold">
-                                                                                        {characterMB ? t(characterMB.nameKey) : '未知角色'}
+                                                                                        {characterMB ? t(characterMB.nameKey) : t('CAVE_UNKNOWN_CHARACTER')}
                                                                                     </h5>
                                                                                     <Badge
                                                                                         variant="outline"
@@ -1257,7 +1257,7 @@ export function TimeSpaceCavePage() {
                                                                             </div>
                                                                         </div>
                                                                         {isSelected && (
-                                                                            <Badge variant="default">已选择</Badge>
+                                                                            <Badge variant="default">{t('CAVE_SELECTED')}</Badge>
                                                                         )}
                                                                     </div>
                                                                 </CardContent>
@@ -1273,7 +1273,7 @@ export function TimeSpaceCavePage() {
                                 {/* 非战斗且非 JoinCharacter 石台显示说明 */}
                                 {!isBattleGrid(selectedPlatform.type) && selectedPlatform.type !== DungeonBattleGridType.JoinCharacter && (
                                     <div className="text-sm text-muted-foreground py-4 text-center">
-                                        此石台为非战斗类型，暂无详细信息
+                                        {t('CAVE_NON_BATTLE')}
                                     </div>
                                 )}
 
@@ -1290,10 +1290,10 @@ export function TimeSpaceCavePage() {
                                         {isSubmitting ? (
                                             <>
                                                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                                确认中...
+                                                {t('CAVE_CONFIRMING')}
                                             </>
                                         ) : (
-                                            '确认选择'
+                                            t('CAVE_CONFIRM_SELECTION')
                                         )}
                                     </Button>
                                 )}

@@ -122,7 +122,7 @@ export function EquipmentPage() {
             return {
                 ...eq,
                 master,
-                name: master ? t(master.nameKey) : `装备 ${eq.equipmentId}`,
+                name: master ? t(master.nameKey) : t('CHARACTER_DETAIL_EQUIPMENT_FALLBACK', [eq.equipmentId]),
                 rarity: master?.rarityFlags || EquipmentRarityFlags.None,
                 slotType: master?.slotType || EquipmentSlotType.Weapon,
                 level: master?.equipmentLv || 0,
@@ -206,7 +206,7 @@ export function EquipmentPage() {
     if (!currentAccountId) {
         return (
             <div className="flex items-center justify-center h-[60vh] text-muted-foreground">
-                请先选择一个账户以管理装备
+                {t('EQUIPMENT_SELECT_ACCOUNT')}
             </div>
         );
     }
@@ -215,7 +215,7 @@ export function EquipmentPage() {
         return (
             <div className="flex flex-col items-center justify-center h-[60vh]">
                 <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-                <p className="text-muted-foreground">正在同步账户装备数据...</p>
+                <p className="text-muted-foreground">{t('EQUIPMENT_SYNCING')}</p>
             </div>
         );
     }
@@ -256,15 +256,15 @@ export function EquipmentPage() {
             ) : (
                 <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
                     <div className="text-6xl mb-4 opacity-20">📦</div>
-                    <h3 className="text-lg font-semibold mb-2">未找到匹配的装备</h3>
+                    <h3 className="text-lg font-semibold mb-2">{t('EQUIPMENT_NO_MATCH')}</h3>
                     <p className="text-muted-foreground mb-4">
-                        尝试调整筛选条件或重置筛选
+                        {t('EQUIPMENT_NO_MATCH_HINT')}
                     </p>
                     <button
                         onClick={handleReset}
                         className="text-primary hover:underline"
                     >
-                        重置所有筛选
+                        {t('EQUIPMENT_RESET_FILTERS')}
                     </button>
                 </div>
             )}

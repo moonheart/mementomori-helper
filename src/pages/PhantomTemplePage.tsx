@@ -57,14 +57,14 @@ function getElementColor(elementType: ElementType): string {
 // 获取属性名称
 function getElementName(elementType: ElementType): string {
     const names: Record<number, string> = {
-        [ElementType.Blue]: '忧蓝',
-        [ElementType.Red]: '业红',
-        [ElementType.Green]: '苍翠',
-        [ElementType.Yellow]: '流金',
-        [ElementType.Light]: '光',
-        [ElementType.Dark]: '暗',
+        [ElementType.Blue]: '[ElementTypeBlue]',
+        [ElementType.Red]: '[ElementTypeRed]',
+        [ElementType.Green]: '[ElementTypeGreen]',
+        [ElementType.Yellow]: '[ElementTypeYellow]',
+        [ElementType.Light]: '[ElementTypeLight]',
+        [ElementType.Dark]: '[ElementTypeDark]',
     };
-    return names[elementType] || '无';
+    return names[elementType] || '[CommonNoneLabel]';
 }
 
 export function PhantomTemplePage() {
@@ -137,11 +137,11 @@ export function PhantomTemplePage() {
                 setSelectedLog(result.battleResult.simulationResult);
                 setIsModalOpen(true);
             } else {
-                toast({ title: '无法获取战斗详情', variant: 'destructive' });
+                toast({ title: t('TEMPLE_NO_BATTLE_DETAIL'), variant: 'destructive' });
             }
         } catch (e) {
             console.error('Failed to fetch battle result old:', e);
-            toast({ title: '获取战斗详情失败', variant: 'destructive' });
+            toast({ title: t('TEMPLE_BATTLE_DETAIL_FAILED'), variant: 'destructive' });
         } finally {
             // no-op
         }
@@ -197,11 +197,11 @@ export function PhantomTemplePage() {
                 <div className="flex-1 min-w-0">
                     <div className="font-medium truncate">{t(enemy.nameKey)}</div>
                     <div className="text-sm text-muted-foreground">
-                        Lv.{enemy.enemyRank} • 战力 {enemy.battlePower.toLocaleString()}
+                        Lv.{enemy.enemyRank} • {t('CAVE_POWER', [enemy.battlePower.toLocaleString()])}
                     </div>
                 </div>
                 <Badge variant="outline" className={getElementColor(enemy.elementType)}>
-                    {getElementName(enemy.elementType)}
+                    {t(getElementName(enemy.elementType))}
                 </Badge>
             </div>
         ));
@@ -218,7 +218,7 @@ export function PhantomTemplePage() {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <span className="ml-2">加载幻影神殿数据中...</span>
+                <span className="ml-2">{t('TEMPLE_LOADING')}</span>
             </div>
         );
     }
@@ -228,7 +228,7 @@ export function PhantomTemplePage() {
             <div className="flex justify-end">
                 <Button variant="outline" size="sm" onClick={() => { refresh(); refreshLogs(); }}>
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    刷新
+                    {t('TEMPLE_REFRESH')}
                 </Button>
             </div>
 
@@ -237,8 +237,8 @@ export function PhantomTemplePage() {
                 <Alert className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950 dark:to-orange-950 border-yellow-500">
                     <Zap className="h-4 w-4 text-yellow-600" />
                     <AlertDescription className="text-yellow-800 dark:text-yellow-200">
-                        <strong>奖励加成时段！</strong>
-                        当前时段挑战可获得 {bonusTimeInfo.bonusRate}% 奖励（额外 +{bonusExtraRate}%）
+                        <strong>{t('TEMPLE_BONUS_TITLE')}</strong>
+                        {t('TEMPLE_BONUS_DESC', [bonusTimeInfo.bonusRate, bonusExtraRate])}
                     </AlertDescription>
                 </Alert>
             )}
@@ -249,13 +249,13 @@ export function PhantomTemplePage() {
                     <CardHeader className="pb-2">
                         <CardTitle className="flex items-center gap-2 text-base">
                             <Swords className="h-5 w-5" />
-                            今日挑战
+                            {t('GUILD_TODAY_CHALLENGES')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">剩余次数</span>
+                                <span className="text-sm text-muted-foreground">{t('PVP_REMAINING')}</span>
                                 <Badge variant="secondary" className="text-base">
                                     {remainingCount} / 6
                                 </Badge>
@@ -272,7 +272,7 @@ export function PhantomTemplePage() {
                     <CardHeader className="pb-2">
                         <CardTitle className="flex items-center gap-2 text-base">
                             <Crown className="h-5 w-5 text-purple-500" />
-                            幻影等级
+                            {t('TEMPLE_LEVEL')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -281,7 +281,7 @@ export function PhantomTemplePage() {
                                 {localRaidLevelText}
                             </div>
                             <div className="text-xs text-muted-foreground mt-1">
-                                {hasLocalRaidLevelText ? null : '随世界开设时长提升'}
+                                {hasLocalRaidLevelText ? null : t('TEMPLE_LEVEL_HINT')}
                             </div>
                         </div>
                     </CardContent>
@@ -326,7 +326,7 @@ export function PhantomTemplePage() {
 
             <Tabs defaultValue="quests" className="space-y-6">
                 <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="quests">探索任务</TabsTrigger>
+                    <TabsTrigger value="quests">{t('TEMPLE_TAB_QUESTS')}</TabsTrigger>
                     <TabsTrigger value="logs">{t('[BattleReportTitle]')}</TabsTrigger>
                 </TabsList>
 
@@ -335,7 +335,7 @@ export function PhantomTemplePage() {
                     {questInfos.length === 0 ? (
                         <Card>
                             <CardContent className="py-8 text-center text-muted-foreground">
-                                暂无开放的探索任务
+                                {t('TEMPLE_NO_QUESTS')}
                             </CardContent>
                         </Card>
                     ) : (
@@ -367,7 +367,7 @@ export function PhantomTemplePage() {
                                                             )}
                                                             {isCleared && (
                                                                 <Badge variant="outline" className="border-green-500 text-green-500 text-xs">
-                                                                    已通关
+                                                                    {t('BATTLE_CLEARED')}
                                                                 </Badge>
                                                             )}
                                                         </div>
@@ -382,16 +382,16 @@ export function PhantomTemplePage() {
                                             {/* 敌人预览 */}
                                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                                 <Users className="h-4 w-4" />
-                                                <span>敌人: {enemies.length} 名</span>
+                                                <span>{t('TEMPLE_ENEMY_COUNT', [enemies.length])}</span>
                                                 <span>•</span>
                                                 <span>
-                                                    总战力: {enemies.reduce((sum, e) => sum + e.battlePower, 0).toLocaleString()}
+                                                    {t('TEMPLE_TOTAL_POWER', [enemies.reduce((sum, e) => sum + e.battlePower, 0).toLocaleString()])}
                                                 </span>
                                             </div>
 
                                             {/* 奖励预览 */}
                                             <div>
-                                                <div className="text-sm font-medium mb-2">确定奖励</div>
+                                                <div className="text-sm font-medium mb-2">{t('TEMPLE_FIXED_REWARDS')}</div>
                                                 <div className="flex flex-wrap gap-2">
                                                     {renderRewards(quest.fixedBattleRewards)}
                                                 </div>
@@ -401,7 +401,7 @@ export function PhantomTemplePage() {
                                             {!isCleared && quest.firstBattleRewards.length > 0 && (
                                                 <div className="p-3 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950 dark:to-orange-950 rounded-lg border border-yellow-200">
                                                     <div className="text-sm font-medium mb-2 text-yellow-800 dark:text-yellow-200">
-                                                        首次通关奖励
+                                                        {t('TEMPLE_FIRST_CLEAR')}
                                                     </div>
                                                     <div className="flex flex-wrap gap-2">
                                                         {renderRewards(quest.firstBattleRewards)}
@@ -425,7 +425,7 @@ export function PhantomTemplePage() {
                                                     disabled={remainingCount <= 0}
                                                 >
                                                     <Users className="mr-2 h-4 w-4" />
-                                                    {remainingCount <= 0 ? '今日次数已用完' : t('[CommonChallengeLabel]')}
+                                                    {remainingCount <= 0 ? t('TEMPLE_NO_TRIES') : t('[CommonChallengeLabel]')}
                                                 </Button>
                                             </div>
                                         </CardContent>
@@ -441,13 +441,13 @@ export function PhantomTemplePage() {
                     {logsLoading ? (
                         <div className="flex items-center justify-center py-8">
                             <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                            <span className="ml-2">加载战斗记录...</span>
+                            <span className="ml-2">{t('TEMPLE_LOADING_LOGS')}</span>
                         </div>
                     ) : battleLogs.length === 0 ? (
                         <Card>
                             <CardContent className="py-8 text-center text-muted-foreground">
                                 <History className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                                <div>暂无战斗记录</div>
+                                <div>{t('BATTLE_LOG_EMPTY')}</div>
                             </CardContent>
                         </Card>
                     ) : (
@@ -493,16 +493,16 @@ export function PhantomTemplePage() {
                                                                 variant={isWin ? 'default' : 'destructive'}
                                                                 className="text-xs"
                                                             >
-                                                                {isWin ? '胜利' : '失败'}
+                                                                {isWin ? t('BATTLE_LOG_WIN') : t('BATTLE_LOG_LOSS')}
                                                             </Badge>
                                                             <span className="text-sm font-medium">
-                                                                任务 {log.questId}
+                                                                {t('TEMPLE_QUEST', [log.questId])}
                                                             </span>
                                                         </div>
                                                         <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                                                             <span className="flex items-center gap-1">
                                                                 <Target className="w-3 h-3" />
-                                                                {log.battleEndInfo?.endTurn || 0} 回合
+                                                                {t('BATTLE_LOG_TURNS', [log.battleEndInfo?.endTurn || 0])}
                                                             </span>
                                                             {log.battleTime > 0 && (
                                                                 <span className="flex items-center gap-1">
@@ -511,7 +511,7 @@ export function PhantomTemplePage() {
                                                                 </span>
                                                             )}
                                                             {log.clearLevel > 0 && (
-                                                                <span>清除等级: {log.clearLevel}</span>
+                                                                <span>{t('TEMPLE_CLEAR_LEVEL', [log.clearLevel])}</span>
                                                             )}
                                                         </div>
                                                     </div>
@@ -519,7 +519,7 @@ export function PhantomTemplePage() {
                                                     {/* 层级 */}
                                                     <div className="text-xs text-muted-foreground shrink-0">
                                                         {log.isAutoStart && (
-                                                            <Badge variant="outline" className="text-xs">自动</Badge>
+                                                            <Badge variant="outline" className="text-xs">{t('TEMPLE_AUTO')}</Badge>
                                                         )}
                                                     </div>
                                                 </div>
@@ -566,7 +566,7 @@ export function PhantomTemplePage() {
                                     {/* 首次奖励 */}
                                     <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950 dark:to-orange-950 rounded-lg border border-yellow-200">
                                         <div className="text-sm font-medium mb-2 text-yellow-800 dark:text-yellow-200">
-                                            首次通关奖励
+                                            {t('TEMPLE_FIRST_CLEAR')}
                                         </div>
                                         <div className="flex flex-wrap gap-2">
                                             {renderRewards(selectedQuest.firstBattleRewards)}
@@ -575,7 +575,7 @@ export function PhantomTemplePage() {
 
                                     {/* 确定奖励 */}
                                     <div className="p-4 bg-muted rounded-lg">
-                                        <div className="text-sm font-medium mb-2">确定奖励</div>
+                                        <div className="text-sm font-medium mb-2">{t('TEMPLE_FIXED_REWARDS')}</div>
                                         <div className="flex flex-wrap gap-2">
                                             {renderRewards(selectedQuest.fixedBattleRewards)}
                                         </div>
@@ -594,7 +594,7 @@ export function PhantomTemplePage() {
                                     disabled={remainingCount <= 0}
                                 >
                                     <Users className="mr-2 h-5 w-5" />
-                                    {remainingCount <= 0 ? '今日次数已用完' : '前往组队挑战'}
+                                    {remainingCount <= 0 ? t('TEMPLE_NO_TRIES') : t('TEMPLE_GO_PARTY')}
                                 </Button>
                             </div>
                         </div>

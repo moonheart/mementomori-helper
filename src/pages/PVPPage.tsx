@@ -67,8 +67,8 @@ export function PVPPage() {
         } catch (error) {
             console.error('Failed to fetch PVP data:', error);
             toast({
-                title: '获取数据失败',
-                description: '无法连接到竞技场服务器',
+                title: t('PVP_FETCH_FAILED'),
+                description: t('PVP_CONNECT_FAILED'),
                 variant: 'destructive'
             });
         } finally {
@@ -91,13 +91,13 @@ export function PVPPage() {
 
             if (isWin) {
                 toast({
-                    title: '挑战成功!',
-                    description: `排名提升至 #${res.afterRank}`,
+                    title: t('PVP_WIN'),
+                    description: t('PVP_RANK_UP', [res.afterRank]),
                 });
             } else {
                 toast({
-                    title: '挑战失败',
-                    description: '再接再厉，提升战力后再来吧',
+                    title: t('BATTLE_CHALLENGE_LOSS'),
+                    description: t('PVP_LOSS_DESC'),
                     variant: 'destructive'
                 });
             }
@@ -105,8 +105,8 @@ export function PVPPage() {
         } catch (error) {
             console.error('PVP challenge failed:', error);
             toast({
-                title: '挑战异常',
-                description: '请求对战服务器失败',
+                title: t('BATTLE_CHALLENGE_ERROR'),
+                description: t('PVP_REQUEST_FAILED'),
                 variant: 'destructive'
             });
         }
@@ -120,13 +120,13 @@ export function PVPPage() {
 
             if (isWin) {
                 toast({
-                    title: '挑战成功!',
-                    description: `排名提升至 #${res.ranking}，积分: ${res.point}`,
+                    title: t('PVP_WIN'),
+                    description: t('PVP_RANK_UP_POINTS', [res.ranking, res.point]),
                 });
             } else {
                 toast({
-                    title: '挑战失败',
-                    description: '积分减少',
+                    title: t('BATTLE_CHALLENGE_LOSS'),
+                    description: t('PVP_POINTS_LOST'),
                     variant: 'destructive'
                 });
             }
@@ -134,8 +134,8 @@ export function PVPPage() {
         } catch (error) {
             console.error('Legend PVP challenge failed:', error);
             toast({
-                title: '挑战异常',
-                description: '请求对战服务器失败',
+                title: t('BATTLE_CHALLENGE_ERROR'),
+                description: t('PVP_REQUEST_FAILED'),
                 variant: 'destructive'
             });
         }
@@ -151,7 +151,7 @@ export function PVPPage() {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <span className="ml-2">加载竞技场中...</span>
+                <span className="ml-2">{t('PVP_LOADING')}</span>
             </div>
         );
     }
@@ -181,9 +181,9 @@ export function PVPPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <Trophy className="h-6 w-6 text-yellow-500" />
-                                    我的排名
+                                    {t('PVP_MY_RANK')}
                                 </CardTitle>
-                                <CardDescription>当前竞技场实时排名</CardDescription>
+                                <CardDescription>{t('PVP_MY_RANK_DESC')}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="text-center py-4">
@@ -191,7 +191,7 @@ export function PVPPage() {
                                         #{pvpInfo?.currentRank || '---'}
                                     </div>
                                     <div className="text-sm text-muted-foreground">
-                                        历史最高: #{userPvpDto?.maxRanking || '---'}
+                                        {t('PVP_BEST_RANK', [userPvpDto?.maxRanking || '---'])}
                                     </div>
                                 </div>
                             </CardContent>
@@ -201,14 +201,14 @@ export function PVPPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <Swords className="h-6 w-6" />
-                                    今日挑战
+                                    {t('GUILD_TODAY_CHALLENGES')}
                                 </CardTitle>
-                                <CardDescription>每天凌晨 4:00 重置</CardDescription>
+                                <CardDescription>{t('PVP_RESET_4')}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm text-muted-foreground">剩余次数</span>
+                                        <span className="text-sm text-muted-foreground">{t('PVP_REMAINING')}</span>
                                         <Badge variant="secondary" className="text-base">
                                             {freeChallengesRemaining} / 5
                                         </Badge>
@@ -218,7 +218,7 @@ export function PVPPage() {
                                 <div className="pt-2">
                                     <Button className="w-full" size="lg" onClick={() => fetchPvpData(true)}>
                                         <Zap className="mr-2 h-5 w-5" />
-                                        刷新对手
+                                        {t('PVP_REFRESH_RIVALS')}
                                     </Button>
                                 </div>
                             </CardContent>
@@ -227,15 +227,15 @@ export function PVPPage() {
 
                     <Tabs defaultValue="opponents">
                         <TabsList className="grid w-full max-w-md grid-cols-3">
-                            <TabsTrigger value="opponents">挑战</TabsTrigger>
-                            <TabsTrigger value="history">记录</TabsTrigger>
-                            <TabsTrigger value="rewards">奖励</TabsTrigger>
+                            <TabsTrigger value="opponents">{t('PVP_CHALLENGE')}</TabsTrigger>
+                            <TabsTrigger value="history">{t('PVP_HISTORY')}</TabsTrigger>
+                            <TabsTrigger value="rewards">{t('[CommonRewardLabel]')}</TabsTrigger>
                         </TabsList>
 
                         <TabsContent value="opponents" className="space-y-4 mt-6">
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>可挑战对手</CardTitle>
+                                    <CardTitle>{t('PVP_RIVALS')}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-3">
@@ -248,10 +248,10 @@ export function PVPPage() {
                                                     </div>
                                                     <div>
                                                         <div className="font-semibold">{rival.playerInfo.playerName}</div>
-                                                        <div className="text-sm text-muted-foreground">战力: {rival.battlePower.toLocaleString()} • Lv.{rival.playerInfo.playerLevel}</div>
+                                                        <div className="text-sm text-muted-foreground">{t('CAVE_POWER', [rival.battlePower.toLocaleString()])} • Lv.{rival.playerInfo.playerLevel}</div>
                                                     </div>
                                                 </div>
-                                                <Button onClick={() => handleChallenge(rival.playerInfo.playerId, rival.currentRank)} disabled={freeChallengesRemaining === 0}>挑战</Button>
+                                                <Button onClick={() => handleChallenge(rival.playerInfo.playerId, rival.currentRank)} disabled={freeChallengesRemaining === 0}>{t('PVP_CHALLENGE')}</Button>
                                             </div>
                                         ))}
                                     </div>
@@ -261,17 +261,17 @@ export function PVPPage() {
                         <TabsContent value="history" className="space-y-4 mt-6">
                             <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed rounded-lg bg-muted/20">
                                 <RefreshCw className="h-10 w-10 mb-4 opacity-20" />
-                                <p>暂无近期对战记录</p>
+                                <p>{t('PVP_NO_HISTORY')}</p>
                             </div>
                         </TabsContent>
                         <TabsContent value="rewards" className="mt-6">
                             <Card>
-                                <CardHeader><CardTitle>每日奖励</CardTitle></CardHeader>
+                                <CardHeader><CardTitle>{t('PVP_DAILY_REWARDS')}</CardTitle></CardHeader>
                                 <CardContent>
                                     <div className="space-y-3">
                                         {pvpRewards.map((tier, idx) => (
                                             <div key={idx} className="flex items-center justify-between p-3 rounded-lg border">
-                                                <span className="font-medium">排名 {tier.upperLimitRanking === tier.lowerLimitRanking ? tier.upperLimitRanking : `${tier.upperLimitRanking} - ${tier.lowerLimitRanking}`}</span>
+                                                <span className="font-medium">{t('PVP_RANK', [tier.upperLimitRanking === tier.lowerLimitRanking ? tier.upperLimitRanking : `${tier.upperLimitRanking} - ${tier.lowerLimitRanking}`])}</span>
                                                 <div className="flex gap-2">
                                                     {tier.rewardList?.map((item, i) => (
                                                         <span key={i} className="text-sm text-muted-foreground">{t(`[ItemName_${item.itemId}]`)} x{item.itemCount}{i < (tier.rewardList?.length || 0) - 1 ? ' • ' : ''}</span>
@@ -291,8 +291,8 @@ export function PVPPage() {
                     <Alert>
                         <Star className="h-4 w-4" />
                         <AlertDescription>
-                            <strong>巅峰竞技场说明：</strong>
-                            通过积分和排名晋升阶级。每日 10 次挑战机会，赛季末发放丰厚奖励。
+                            <strong>{t('PVP_LEGEND_INFO_TITLE')}</strong>
+                            {t('PVP_LEGEND_INFO')}
                         </AlertDescription>
                     </Alert>
 
@@ -301,14 +301,14 @@ export function PVPPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <Crown className="h-6 w-6 text-yellow-500" />
-                                    我的阶级
+                                    {t('PVP_MY_TIER')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="text-center py-2">
                                 <div className="text-4xl font-bold text-primary mb-2">
                                     {legendInfo?.currentPoint || 0} pt
                                 </div>
-                                <Badge variant="outline" className="text-base">排名 #{legendInfo?.currentRanking || '---'}</Badge>
+                                <Badge variant="outline" className="text-base">{t('PVP_RANK_HASH', [legendInfo?.currentRanking || '---'])}</Badge>
                             </CardContent>
                         </Card>
 
@@ -316,14 +316,14 @@ export function PVPPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <TrendingUp className="h-6 w-6 text-green-500" />
-                                    连胜
+                                    {t('PVP_STREAK')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="text-center py-2">
                                 <div className="text-4xl font-bold text-green-500 mb-2">
                                     {userLegendDto?.legendLeagueConsecutiveVictoryCount || 0}
                                 </div>
-                                <div className="text-sm text-muted-foreground">连胜中</div>
+                                <div className="text-sm text-muted-foreground">{t('PVP_STREAK_ON')}</div>
                             </CardContent>
                         </Card>
 
@@ -331,12 +331,12 @@ export function PVPPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <Swords className="h-6 w-6" />
-                                    挑战次数
+                                    {t('PVP_CHALLENGE_COUNT')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-sm text-muted-foreground">剩余挑战</span>
+                                    <span className="text-sm text-muted-foreground">{t('PVP_REMAINING_CHALLENGES')}</span>
                                     <Badge variant="secondary">{legendChallengesRemaining} / 10</Badge>
                                 </div>
                                 <Progress value={legendChallengesRemainingPercent} className="h-2" />
@@ -346,14 +346,14 @@ export function PVPPage() {
 
                     <Tabs defaultValue="opponents">
                         <TabsList className="grid w-full max-w-md grid-cols-3">
-                            <TabsTrigger value="opponents">挑战</TabsTrigger>
-                            <TabsTrigger value="history">记录</TabsTrigger>
-                            <TabsTrigger value="rewards">奖励</TabsTrigger>
+                            <TabsTrigger value="opponents">{t('PVP_CHALLENGE')}</TabsTrigger>
+                            <TabsTrigger value="history">{t('PVP_HISTORY')}</TabsTrigger>
+                            <TabsTrigger value="rewards">{t('[CommonRewardLabel]')}</TabsTrigger>
                         </TabsList>
 
                         <TabsContent value="opponents" className="space-y-4 mt-6">
                             <Card>
-                                <CardHeader><CardTitle>匹配对手</CardTitle></CardHeader>
+                                <CardHeader><CardTitle>{t('PVP_MATCHED_RIVALS')}</CardTitle></CardHeader>
                                 <CardContent>
                                     <div className="space-y-3">
                                         {legendInfo?.matchingRivalList.map((rival) => (
@@ -364,10 +364,10 @@ export function PVPPage() {
                                                     </div>
                                                     <div>
                                                         <div className="font-semibold">{rival.playerInfo.playerName}</div>
-                                                        <div className="text-sm text-muted-foreground">积分: {rival.currentPoint} • 战力: {rival.defenseBattlePower.toLocaleString()}</div>
+                                                        <div className="text-sm text-muted-foreground">{t('PVP_POINTS', [rival.currentPoint])} • {t('CAVE_POWER', [rival.defenseBattlePower.toLocaleString()])}</div>
                                                     </div>
                                                 </div>
-                                                <Button onClick={() => handleLegendChallenge(rival.playerInfo.playerId)} disabled={legendChallengesRemaining === 0}>挑战</Button>
+                                                <Button onClick={() => handleLegendChallenge(rival.playerInfo.playerId)} disabled={legendChallengesRemaining === 0}>{t('PVP_CHALLENGE')}</Button>
                                             </div>
                                         ))}
                                     </div>
@@ -377,17 +377,17 @@ export function PVPPage() {
                         <TabsContent value="history" className="space-y-4 mt-6">
                             <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed rounded-lg bg-muted/20">
                                 <RefreshCw className="h-10 w-10 mb-4 opacity-20" />
-                                <p>暂无近期对战记录</p>
+                                <p>{t('PVP_NO_HISTORY')}</p>
                             </div>
                         </TabsContent>
                         <TabsContent value="rewards" className="mt-6">
                             <Card>
-                                <CardHeader><CardTitle>赛季奖励</CardTitle></CardHeader>
+                                <CardHeader><CardTitle>{t('PVP_SEASON_REWARDS')}</CardTitle></CardHeader>
                                 <CardContent>
                                     <div className="space-y-3">
                                         {pvpRewards.map((tier, idx) => (
                                             <div key={idx} className="flex items-center justify-between p-3 rounded-lg border">
-                                                <span className="font-medium">排名 {tier.upperLimitRanking === tier.lowerLimitRanking ? tier.upperLimitRanking : `${tier.upperLimitRanking} - ${tier.lowerLimitRanking}`}</span>
+                                                <span className="font-medium">{t('PVP_RANK', [tier.upperLimitRanking === tier.lowerLimitRanking ? tier.upperLimitRanking : `${tier.upperLimitRanking} - ${tier.lowerLimitRanking}`])}</span>
                                                 <div className="flex gap-2">
                                                     {tier.rewardList?.map((item, i) => (
                                                         <span key={i} className="text-sm text-muted-foreground">{t(`[ItemName_${item.itemId}]`)} x{item.itemCount}{i < (tier.rewardList?.length || 0) - 1 ? ' • ' : ''}</span>

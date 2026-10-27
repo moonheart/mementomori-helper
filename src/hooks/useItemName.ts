@@ -79,7 +79,7 @@ export function useItemName() {
      * 获取道具名称
      */
     const getItemName = useCallback((itemType: ItemType, itemId: number) => {
-        if (isLoading) return `道具 ${itemId}...`;
+        if (isLoading) return t('COMMON_ITEM_LOADING', [itemId]);
         return getItemNameRaw(itemType, itemId, masterTables, t);
     }, [isLoading, masterTables, t]);
 

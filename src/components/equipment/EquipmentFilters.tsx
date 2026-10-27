@@ -143,7 +143,7 @@ export function EquipmentFilters({
                     {slotOptions.map(slot => (
                         <TabsTrigger key={slot} value={slot.toString()}>
                             <span className="mr-1">{getSlotIcon(slot)}</span>
-                            <span className="hidden sm:inline">{getSlotName(slot)}</span>
+                            <span className="hidden sm:inline">{t(getSlotName(slot))}</span>
                         </TabsTrigger>
                     ))}
                 </TabsList>

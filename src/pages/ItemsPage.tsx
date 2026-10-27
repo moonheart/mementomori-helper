@@ -101,7 +101,7 @@ export function ItemsPage() {
                 {refreshing && (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>正在刷新...</span>
+                        <span>{t('ITEMS_REFRESHING')}</span>
                     </div>
                 )}
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">

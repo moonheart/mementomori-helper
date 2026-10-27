@@ -46,7 +46,7 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
         if (!item || useCount <= 0 || useCount > item.itemCount) {
             toast({
                 variant: 'destructive',
-                title: t('[CommonErrorTitle]') || '错误',
+                title: t('ACCOUNT_ERROR'),
                 description: translate('USE_ITEM_INVALID_COUNT'),
             });
             return;
@@ -73,7 +73,7 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
             setShowRewards(true);
 
             toast({
-                title: t('[CommonSuccessTitle]') || '成功',
+                title: t('ACCOUNT_SUCCESS'),
                 description: translate('ITEMS_USE_SUCCESS', [String(useCount), itemName]),
             });
 
@@ -83,7 +83,7 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
             console.error('Failed to use item:', error);
             toast({
                 variant: 'destructive',
-                title: t('[CommonErrorTitle]') || '错误',
+                title: t('ACCOUNT_ERROR'),
                 description: translate('ITEMS_USE_FAILED'),
             });
         } finally {

@@ -39,7 +39,7 @@ export function useSkillInfoFromEffectGroup(effectGroupId: number): SkillInfo {
     const t = useLocalizationStore(state => state.t);
     
     const [info, setInfo] = useState<SkillInfo>({
-        name: `技能 #${effectGroupId}`,
+        name: t('COMMON_SKILL_FALLBACK', [effectGroupId]),
         descriptionKey: '',
         iconUrl: '',
         isActiveSkill: false,
@@ -62,7 +62,7 @@ export function useSkillInfoFromEffectGroup(effectGroupId: number): SkillInfo {
                     const activeSkillMB = await getRecord<ActiveSkillMB>('ActiveSkillTable', skillId);
                     if (activeSkillMB && mounted) {
                         setInfo({
-                            name: t(activeSkillMB.nameKey) || `技能 #${skillId}`,
+                            name: t(activeSkillMB.nameKey) || t('COMMON_SKILL_FALLBACK', [skillId]),
                             descriptionKey,
                             iconUrl: AssetManager.skill.getCskUrl(skillId),
                             isActiveSkill: true,
@@ -74,7 +74,7 @@ export function useSkillInfoFromEffectGroup(effectGroupId: number): SkillInfo {
                     const passiveSkillMB = await getRecord<PassiveSkillMB>('PassiveSkillTable', skillId);
                     if (passiveSkillMB && mounted) {
                         setInfo({
-                            name: t(passiveSkillMB.nameKey) || `技能 #${skillId}`,
+                            name: t(passiveSkillMB.nameKey) || t('COMMON_SKILL_FALLBACK', [skillId]),
                             descriptionKey,
                             iconUrl: AssetManager.skill.getCskUrl(skillId),
                             isActiveSkill: false,
@@ -90,7 +90,7 @@ export function useSkillInfoFromEffectGroup(effectGroupId: number): SkillInfo {
             // Fallback
             if (mounted) {
                 setInfo({
-                    name: `技能 #${skillId}`,
+                    name: t('COMMON_SKILL_FALLBACK', [skillId]),
                     descriptionKey: '',
                     iconUrl: AssetManager.skill.getCskUrl(skillId),
                     isActiveSkill: isActive,
@@ -130,7 +130,7 @@ export function useSkillInfosFromEffectGroups(effectGroupIds: number[]): Map<num
             
             for (const data of skillData) {
                 const { effectGroupId, skillId, isActive } = data;
-                let skillName = `技能 #${skillId}`;
+                let skillName = t('COMMON_SKILL_FALLBACK', [skillId]);
                 let descriptionKey = '';
                 
                 try {

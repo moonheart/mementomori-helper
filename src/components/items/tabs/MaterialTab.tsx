@@ -89,7 +89,7 @@ export function MaterialTab({ items }: MaterialTabProps) {
         return (
             <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <div className="text-6xl mb-4 opacity-20">📦</div>
-                <p>暂无材料道具</p>
+                <p>{t('ITEMS_EMPTY_MATERIAL')}</p>
             </div>
         );
     }

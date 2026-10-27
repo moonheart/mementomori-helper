@@ -67,7 +67,7 @@ export function EquipmentCard({
                             {equipment.name}
                         </CardTitle>
                         <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                            <span className="text-sm text-muted-foreground">{getSlotName(equipment.slotType)}</span>
+                            <span className="text-sm text-muted-foreground">{t(getSlotName(equipment.slotType))}</span>
                             <Badge className={`${getRarityColor(equipment.rarity)} text-white text-xs px-1.5 py-0`}>
                                 {rarityName}
                             </Badge>
@@ -119,7 +119,7 @@ export function EquipmentCard({
                                 <div className="text-xs text-muted-foreground font-medium">{t('[CharacterEquipmentBasicEffect]')}</div>
                                 <div className="flex justify-between text-xs bg-muted/50 px-2 py-1 rounded">
                                     <span className="text-muted-foreground truncate">
-                                        {formatStatName(equipment.master.battleParameterChangeInfo.battleParameterType)}
+                                        {t(formatStatName(equipment.master.battleParameterChangeInfo.battleParameterType))}
                                     </span>
                                     <span className="font-semibold ml-1">
                                         {formatStatValue(

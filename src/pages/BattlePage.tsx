@@ -80,8 +80,8 @@ export function BattlePage() {
         } catch (error) {
             console.error('Failed to load user data:', error);
             toast({
-                title: '加载失败',
-                description: '无法获取用户数据，请检查网络连接',
+                title: t('BATTLE_LOAD_FAILED'),
+                description: t('BATTLE_LOAD_FAILED_DESC'),
                 variant: 'destructive',
             });
         } finally {
@@ -141,11 +141,11 @@ export function BattlePage() {
         try {
             const target = parseInt(targetQuestId) || 0;
             await backgroundTaskApi.startAutoBoss(currentAccountId, target > 0 ? target : undefined);
-            toast({ title: '任务已启动', description: '自动刷主线任务已开始' });
+            toast({ title: t('BATTLE_TASK_STARTED'), description: t('BATTLE_AUTO_MAIN_STARTED') });
             fetchTaskStatus();
         } catch (error) {
             console.error('Failed to start auto boss:', error);
-            toast({ title: '启动失败', description: '无法启动自动刷主线任务', variant: 'destructive' });
+            toast({ title: t('BATTLE_START_FAILED'), description: t('BATTLE_AUTO_MAIN_START_FAILED'), variant: 'destructive' });
         }
     };
 
@@ -154,11 +154,11 @@ export function BattlePage() {
         if (!currentAccountId) return;
         try {
             await backgroundTaskApi.stopAutoBoss(currentAccountId);
-            toast({ title: '任务已停止', description: '自动刷主线任务已停止' });
+            toast({ title: t('BATTLE_TASK_STOPPED'), description: t('BATTLE_AUTO_MAIN_STOPPED') });
             fetchTaskStatus();
         } catch (error) {
             console.error('Failed to stop auto boss:', error);
-            toast({ title: '停止失败', description: '无法停止自动刷主线任务', variant: 'destructive' });
+            toast({ title: t('BATTLE_STOP_FAILED'), description: t('BATTLE_AUTO_MAIN_STOP_FAILED'), variant: 'destructive' });
         }
     };
 
@@ -179,7 +179,7 @@ export function BattlePage() {
 
     // 自动战斗时长计算
     const autoBattleStats = useMemo(() => {
-        if (!userData || !currentQuest) return { timeStr: '0分钟', minutes: 0, gold: 0, exp: 0, progress: 0 };
+        if (!userData || !currentQuest) return { timeStr: t('[CommonMinuteFormat]', [0]), minutes: 0, gold: 0, exp: 0, progress: 0 };
 
         const lastRewardTime = (userData.receivedAutoBattleRewardLastTime || 0) * 1000;
         const diffMs = Math.max(0, currentTime - lastRewardTime);
@@ -189,13 +189,13 @@ export function BattlePage() {
         const mins = diffMinutes % 60;
 
         return {
-            timeStr: hours > 0 ? `${hours}小时${mins}${t('[CommonMinuteLabel]')}` : `${mins}${t('[CommonMinuteLabel]')}`,
+            timeStr: hours > 0 ? t('[CommonRemainTimeHoursAndMinutes]', [hours, mins]) : t('[CommonMinuteFormat]', [mins]),
             minutes: diffMinutes,
             gold: diffMinutes * (currentQuest.goldPerMinute || 0),
             exp: diffMinutes * (currentQuest.minPlayerExp || 0),
             progress: Math.min(100, (diffMinutes / (24 * 60)) * 100) // 假设24小时满溢
         };
-    }, [userData, currentQuest, currentTime]);
+    }, [userData, currentQuest, currentTime, t]);
 
     // 领民数据汇总
     const citizenStats = useMemo(() => {
@@ -205,9 +205,9 @@ export function BattlePage() {
             const chapterQuests = questTable.filter(q => q.chapterId === chapter.id && q.id <= maxQuestId);
             const population = chapterQuests.reduce((sum, q) => sum + (q.population || 0), 0);
             return {
-                name: t(chapter.territoryNameKey) || `章节 ${chapter.id}`,
+                name: t(chapter.territoryNameKey) || t('BATTLE_CHAPTER', [chapter.id]),
                 count: population,
-                bonus: `+${Math.floor(population / 100)}% 收益` // 模拟加成逻辑
+                bonus: t('BATTLE_INCOME_BONUS', [Math.floor(population / 100)]) // 模拟加成逻辑
             };
         }).filter(s => s.count > 0);
 
@@ -243,9 +243,9 @@ export function BattlePage() {
             .slice(0, 50)
             .map(q => ({
                 id: q.id,
-                name: q.memo || `关卡 ${q.id}`
+                name: q.memo || t('BATTLE_STAGE', [q.id])
             }));
-    }, [questTable, maxQuestId]);
+    }, [questTable, maxQuestId, t]);
 
     // 关卡列表显示逻辑（当前关卡前后5关）
     const displayStages = useMemo(() => {
@@ -259,7 +259,7 @@ export function BattlePage() {
 
         return sortedQuests.slice(start, end).map(q => {
             // 优先使用 Memo 字段（格式如 "8-96"）
-            const displayName = q.memo || `关卡 ${q.id}`;
+            const displayName = q.memo || t('BATTLE_STAGE', [q.id]);
 
             return {
                 id: q.id,
@@ -269,17 +269,17 @@ export function BattlePage() {
                 power: q.baseBattlePower
             };
         });
-    }, [questTable, maxQuestId]);
+    }, [questTable, maxQuestId, t]);
 
     // 操作处理
     const handleClaimReward = async () => {
         try {
             await ortegaApi.battle.rewardAutoBattle({});
-            toast({ title: '领取成功', description: '已获得自动战斗收益' });
+            toast({ title: t('BATTLE_CLAIM_SUCCESS'), description: t('BATTLE_CLAIM_SUCCESS_DESC') });
             loadUserData(); // 刷新数据
         } catch (error) {
             console.error('Claim reward failed:', error);
-            toast({ title: '领取失败', description: '接口调用异常', variant: 'destructive' });
+            toast({ title: t('BATTLE_CLAIM_FAILED'), description: t('BATTLE_API_ERROR'), variant: 'destructive' });
         }
     };
 
@@ -291,11 +291,11 @@ export function BattlePage() {
                 questQuickExecuteType: useFree ? QuestQuickExecuteType.Currency : QuestQuickExecuteType.Currency,
                 quickCount: 1
             });
-            toast({ title: '加速成功', description: '已获得2小时额外收益' });
+            toast({ title: t('BATTLE_QUICK_SUCCESS'), description: t('BATTLE_QUICK_SUCCESS_DESC') });
             loadUserData();
         } catch (error) {
             console.error('Quick battle failed:', error);
-            toast({ title: '加速失败', description: '钻石不足或次数已满', variant: 'destructive' });
+            toast({ title: t('BATTLE_QUICK_FAILED'), description: t('BATTLE_QUICK_FAILED_DESC'), variant: 'destructive' });
         }
     };
 
@@ -306,14 +306,14 @@ export function BattlePage() {
             const isWin = res.battleResult?.simulationResult?.battleEndInfo?.winGroupType === BattleFieldCharacterGroupType.Attacker;
 
             if (isWin) {
-                toast({ title: '挑战成功', description: `已通关 ${nextQuest.id}` });
+                toast({ title: t('BATTLE_CHALLENGE_WIN'), description: t('BATTLE_CLEARED_STAGE', [nextQuest.id]) });
                 loadUserData();
             } else {
-                toast({ title: '挑战失败', description: '战力不足，请提升后再试', variant: 'destructive' });
+                toast({ title: t('BATTLE_CHALLENGE_LOSS'), description: t('BATTLE_CHALLENGE_LOSS_DESC'), variant: 'destructive' });
             }
         } catch (error) {
             console.error('Boss battle failed:', error);
-            toast({ title: '挑战异常', description: '服务器请求失败', variant: 'destructive' });
+            toast({ title: t('BATTLE_CHALLENGE_ERROR'), description: t('BATTLE_SERVER_ERROR'), variant: 'destructive' });
         }
     };
 
@@ -338,14 +338,14 @@ export function BattlePage() {
                             </div>
                             <div className="flex-1">
                                 <CardTitle>{t('[AutoBattleQuestButtonAutoBattle]')}</CardTitle>
-                                <CardDescription>持续获取资源</CardDescription>
+                                <CardDescription>{t('BATTLE_AUTO_DESC')}</CardDescription>
                             </div>
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
                             <div className="flex items-center justify-between text-sm">
-                                <span className="text-muted-foreground">已进行</span>
+                                <span className="text-muted-foreground">{t('BATTLE_ELAPSED')}</span>
                                 <span className="font-semibold">{autoBattleStats.timeStr}</span>
                             </div>
                             <Progress value={autoBattleStats.progress} className="h-2" />
@@ -384,13 +384,13 @@ export function BattlePage() {
                             </div>
                             <div className="flex-1">
                                 <CardTitle>{t('[AutoBattleButtonQuickForward]')}</CardTitle>
-                                <CardDescription>立即获得2小时收益</CardDescription>
+                                <CardDescription>{t('BATTLE_QUICK_DESC')}</CardDescription>
                             </div>
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="p-3 bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-950 dark:to-yellow-950 rounded-lg border border-orange-200 dark:border-orange-800">
-                            <div className="text-sm text-muted-foreground mb-1">预计获得</div>
+                            <div className="text-sm text-muted-foreground mb-1">{t('BATTLE_EXPECTED')}</div>
                             <div className="flex items-baseline gap-2">
                                 <span className="text-2xl font-bold text-orange-600">
                                     ~{Math.round((currentQuest?.goldPerMinute || 0) * 120 / 1000)}K
@@ -398,33 +398,33 @@ export function BattlePage() {
                                 <span className="text-sm text-muted-foreground">{t('[ItemName5]')}</span>
                             </div>
                             <div className="text-xs text-muted-foreground mt-1">
-                                +其他战利品
+                                {t('BATTLE_OTHER_LOOT')}
                             </div>
                         </div>
 
                         <div className="space-y-2">
                             <div className="flex items-center justify-between text-sm">
-                                <span className="text-muted-foreground">免费次数</span>
+                                <span className="text-muted-foreground">{t('BATTLE_FREE_USES')}</span>
                                 <Badge variant={battleAutoData && battleAutoData.quickTodayUseCurrencyCount >= 1 ? "secondary" : "default"}>
-                                    {battleAutoData ? (battleAutoData.quickTodayUseCurrencyCount >= 1 ? '已用完' : '1 / 1') : '--'}
+                                    {battleAutoData ? (battleAutoData.quickTodayUseCurrencyCount >= 1 ? t('BATTLE_USED_UP') : '1 / 1') : '--'}
                                 </Badge>
                             </div>
                             {userData?.isValidContractPrivilege && (
                                 <div className="flex items-center justify-between text-sm">
-                                    <span className="text-muted-foreground">月卡特权</span>
+                                    <span className="text-muted-foreground">{t('BATTLE_MONTHLY_PASS')}</span>
                                     <Badge variant="secondary">
                                         {battleAutoData ? `${Math.max(0, 2 - battleAutoData.quickTodayUsePrivilegeCount)} / 2` : '--'}
                                     </Badge>
                                 </div>
                             )}
                             <div className="text-xs text-muted-foreground">
-                                每天凌晨4:00重置，后续消耗钻石随次数递增
+                                {t('BATTLE_QUICK_RESET')}
                             </div>
                         </div>
 
                         <Button className="w-full" variant="default" onClick={handleQuickBattle}>
                             <Zap className="mr-2 h-4 w-4" />
-                            开始高速战斗
+                            {t('BATTLE_START_QUICK')}
                         </Button>
                     </CardContent>
                 </Card>
@@ -438,24 +438,24 @@ export function BattlePage() {
                             </div>
                             <div className="flex-1">
                                 <CardTitle>{t('[AutoBattleButtonBoss]')}</CardTitle>
-                                <CardDescription>击败首领获取奖励</CardDescription>
+                                <CardDescription>{t('BATTLE_BOSS_DESC')}</CardDescription>
                             </div>
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="p-3 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800">
                             <div className="flex items-center justify-between mb-2">
-                                <span className="text-sm font-medium">当前首领</span>
+                                <span className="text-sm font-medium">{t('BATTLE_CURRENT_BOSS')}</span>
                                 <Badge className="bg-red-500">Boss {nextQuest?.id || 'MAX'}</Badge>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Shield className="h-4 w-4 text-red-600" />
                                 <div className="flex-1">
                                     <div className="text-sm font-semibold">
-                                        {nextQuest ? `${nextQuest.chapterId}-${nextQuest.id % 100 || 100}` : '已全部通关'}
+                                        {nextQuest ? `${nextQuest.chapterId}-${nextQuest.id % 100 || 100}` : t('BATTLE_ALL_CLEARED')}
                                     </div>
                                     <div className="text-xs text-muted-foreground">
-                                        推荐战力: {nextQuest?.baseBattlePower.toLocaleString() || '--'}
+                                        {t('CAVE_RECOMMENDED_POWER', [nextQuest?.baseBattlePower.toLocaleString() || '--'])}
                                     </div>
                                 </div>
                             </div>
@@ -463,13 +463,13 @@ export function BattlePage() {
 
                         <div className="space-y-2">
                             <div className="flex items-center justify-between text-sm">
-                                <span className="text-muted-foreground">免费挑战</span>
+                                <span className="text-muted-foreground">{t('BATTLE_FREE_CHALLENGES')}</span>
                                 <Badge variant="secondary">
                                     {3 - (userData?.userBattleBossDtoInfo?.bossTodayWinCount || 0)} / 3
                                 </Badge>
                             </div>
                             <div className="text-xs text-muted-foreground">
-                                每天凌晨4:00重置
+                                {t('BATTLE_DAILY_RESET')}
                             </div>
                         </div>
 
@@ -489,8 +489,8 @@ export function BattlePage() {
             {/* 关卡列表与领民数据 */}
             <Tabs defaultValue="stages" className="space-y-4">
                 <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="stages">关卡进度</TabsTrigger>
-                    <TabsTrigger value="autoboss">自动刷主线</TabsTrigger>
+                    <TabsTrigger value="stages">{t('BATTLE_TAB_STAGES')}</TabsTrigger>
+                    <TabsTrigger value="autoboss">{t('BATTLE_TAB_AUTOBOSS')}</TabsTrigger>
                     <TabsTrigger value="stats">{t('[DialogAutoBattleStatisticsTabBattle]')}</TabsTrigger>
                     <TabsTrigger value="citizens">{t('[DialogAutoBattleStatisticsTabPopulation]')}</TabsTrigger>
                 </TabsList>
@@ -520,12 +520,12 @@ export function BattlePage() {
                                                 <div className="flex items-center gap-2">
                                                     <h3 className="font-semibold">{stage.name}</h3>
                                                     {stage.cleared && (
-                                                        <Badge variant="secondary">已通关</Badge>
+                                                        <Badge variant="secondary">{t('BATTLE_CLEARED')}</Badge>
                                                     )}
                                                 </div>
                                                 <div className="flex items-center gap-3 mt-1">
                                                     <span className="text-sm text-muted-foreground">
-                                                        推荐战力: {stage.power.toLocaleString()}
+                                                        {t('CAVE_RECOMMENDED_POWER', [stage.power.toLocaleString()])}
                                                     </span>
                                                     {stage.cleared && (
                                                         <div className="flex items-center gap-1">
@@ -555,7 +555,7 @@ export function BattlePage() {
                                                 variant={stage.cleared ? 'secondary' : 'default'}
                                                 onClick={() => !stage.cleared && handleChallengeBoss()}
                                             >
-                                                {stage.cleared ? '重新挑战' : '开始挑战'}
+                                                {stage.cleared ? t('BATTLE_RECHALLENGE') : t('GUILD_START_CHALLENGE')}
                                             </Button>
                                         </div>
                                     </div>
@@ -701,9 +701,9 @@ export function BattlePage() {
                 <TabsContent value="stats" className="space-y-4">
                     <Card>
                         <CardHeader>
-                            <CardTitle>自动战斗统计</CardTitle>
+                            <CardTitle>{t('BATTLE_AUTO_STATS')}</CardTitle>
                             <CardDescription>
-                                离线期间的自动战斗收益、高速战斗收益将取决于这些数值
+                                {t('BATTLE_AUTO_STATS_DESC')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -711,7 +711,7 @@ export function BattlePage() {
                                 <div className="p-4 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-950 dark:to-yellow-900 rounded-lg">
                                     <div className="flex items-center gap-2 mb-2">
                                         <Coins className="h-5 w-5 text-yellow-600" />
-                                        <span className="text-sm font-medium text-muted-foreground">金币/小时</span>
+                                        <span className="text-sm font-medium text-muted-foreground">{t('BATTLE_GOLD_PER_HOUR')}</span>
                                     </div>
                                     <div className="text-2xl font-bold">
                                         {((currentQuest?.goldPerMinute || 0) * 60).toLocaleString()}
@@ -721,7 +721,7 @@ export function BattlePage() {
                                 <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 rounded-lg">
                                     <div className="flex items-center gap-2 mb-2">
                                         <Star className="h-5 w-5 text-purple-600" />
-                                        <span className="text-sm font-medium text-muted-foreground">经验/小时</span>
+                                        <span className="text-sm font-medium text-muted-foreground">{t('BATTLE_EXP_PER_HOUR')}</span>
                                     </div>
                                     <div className="text-2xl font-bold">
                                         {((currentQuest?.minPlayerExp || 0) * 60).toLocaleString()}
@@ -731,7 +731,7 @@ export function BattlePage() {
                                 <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 rounded-lg">
                                     <div className="flex items-center gap-2 mb-2">
                                         <Target className="h-5 w-5 text-blue-600" />
-                                        <span className="text-sm font-medium text-muted-foreground">潜能宝珠/天</span>
+                                        <span className="text-sm font-medium text-muted-foreground">{t('BATTLE_ORBS_PER_DAY')}</span>
                                     </div>
                                     <div className="text-2xl font-bold">{currentQuest?.potentialJewelPerDay || 0}</div>
                                 </div>
@@ -739,7 +739,7 @@ export function BattlePage() {
                                 <div className="p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 rounded-lg">
                                     <div className="flex items-center gap-2 mb-2">
                                         <TrendingUp className="h-5 w-5 text-green-600" />
-                                        <span className="text-sm font-medium text-muted-foreground">效率</span>
+                                        <span className="text-sm font-medium text-muted-foreground">{t('BATTLE_EFFICIENCY')}</span>
                                     </div>
                                     <div className="text-2xl font-bold">100%</div>
                                 </div>
@@ -754,16 +754,16 @@ export function BattlePage() {
                         <CardHeader>
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <CardTitle>解救的领民</CardTitle>
+                                    <CardTitle>{t('BATTLE_CITIZENS')}</CardTitle>
                                     <CardDescription>
-                                        通关主线冒险关卡可解救领民，增加自动战斗收益
+                                        {t('BATTLE_CITIZENS_DESC')}
                                     </CardDescription>
                                 </div>
                                 <div className="text-right">
                                     <div className="text-3xl font-bold text-primary">
                                         {citizenStats.total.toLocaleString()}
                                     </div>
-                                    <div className="text-sm text-muted-foreground">总人数</div>
+                                    <div className="text-sm text-muted-foreground">{t('BATTLE_CITIZENS_TOTAL')}</div>
                                 </div>
                             </div>
                         </CardHeader>
