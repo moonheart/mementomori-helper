@@ -1,7 +1,9 @@
+using System.Text.Json.Serialization;
 using FreeSql.DataAnnotations;
 
 namespace MementoMori.Api.Autopilot;
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum GrowthKind
 {
     Level, LevelLink, Equip, Reinforce, Quest, Tower, RankUp, Gacha, Team, Info
