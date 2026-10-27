@@ -11,3 +11,4 @@ services:
     environment:
       - Game__AutoRequestDelay=500   # 2026-10-24 不加延迟刷 boss 被 403 过
       - TZ=America/Bogota
+    mem_limit: 1g
