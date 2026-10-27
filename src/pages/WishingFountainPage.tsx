@@ -5,6 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { useAccountStore } from '@/store/accountStore';
+import { getUserItemCount } from '@/lib/itemUtils';
+import { parseOrtegaError } from '@/lib/errorHandler';
+import { rpcClient } from '@/api/rpc-client';
 import {
     Sparkles,
     Users,
@@ -61,6 +66,7 @@ interface ProcessedQuest {
     remainingMs: number;
     progress: number;
     durationMs: number;
+    quickCost: number;
 }
 
 export function WishingFountainPage() {
@@ -73,6 +79,10 @@ export function WishingFountainPage() {
 
     const { data: timeServers } = useMasterTable<TimeServerMB>('TimeServerTable');
     const { getItemName } = useItemName();
+    const items = useAccountStore((s) => s.getCurrentUserSyncData())?.userItemDtoInfo;
+    const diamonds = getUserItemCount(items, ItemType.CurrencyFree, 1, true);
+    const [quickId, setQuickId] = useState<number | null>(null);
+    const [quicking, setQuicking] = useState(false);
 
     // 初始化服务器时间偏移
     useEffect(() => {
@@ -160,7 +170,8 @@ export function WishingFountainPage() {
                     status,
                     remainingMs,
                     progress,
-                    durationMs
+                    durationMs,
+                    quickCost: tpl.initialRequireCurrencyForQuick
                 } as ProcessedQuest;
             });
 
@@ -255,6 +266,24 @@ export function WishingFountainPage() {
             });
         } finally {
             setDispatching(null);
+        }
+    };
+
+    // Manual only: spends diamonds. The client's exact cost formula (CurrencyUtil.CalcCurrencyForBountyQuestQuick)
+    // isn't ported, so the dialog shows InitialRequireCurrencyForQuick as the upper bound.
+    const quickPending = quests.find(q => q.id === quickId && q.status === 'OnGoing') ?? null;
+    const handleQuick = async () => {
+        if (!quickPending) return;
+        setQuicking(true);
+        try {
+            await rpcClient.call('bountyQuest/quick', { bountyQuestId: quickPending.id });
+            toast({ title: t('WF_QUICK_DONE') });
+            setQuickId(null);
+            fetchQuests(true);
+        } catch (error) {
+            toast({ title: t('WF_QUICK_FAILED'), description: parseOrtegaError(error).message, variant: 'destructive' });
+        } finally {
+            setQuicking(false);
         }
     };
 
@@ -401,9 +430,10 @@ export function WishingFountainPage() {
                                 {t('[BountyQuestAcceptance]')}
                             </Button>
                         ) : quest.status === 'OnGoing' ? (
-                            <Button variant="outline" className="w-full">
+                            <Button variant="outline" className="w-full" onClick={() => setQuickId(quest.id)}>
                                 <span className="mr-1">💎</span>
                                 {t('[BountyQuestFastCompletion]')}
+                                <span className="ml-1 text-muted-foreground">≤{quest.quickCost.toLocaleString()}</span>
                             </Button>
                         ) : quest.status === 'Received' ? (
                             <Button className="w-full" disabled variant="ghost">
@@ -564,6 +594,28 @@ export function WishingFountainPage() {
                     )}
                 </TabsContent>
             </Tabs>
+
+            <AlertDialog open={quickPending != null} onOpenChange={(open) => !open && setQuickId(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{t('[BountyQuestFastCompletion]')}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {quickPending && t('WF_QUICK_CONFIRM', [
+                                t(quickPending.nameKey) || quickPending.nameKey,
+                                quickPending.quickCost.toLocaleString(),
+                                formatDuration(quickPending.remainingMs),
+                                diamonds.toLocaleString(),
+                            ])}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>{t('[CommonCancelLabel]')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={(e) => { e.preventDefault(); handleQuick(); }} disabled={quicking || diamonds < 1}>
+                            {quicking && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t('[BountyQuestFastCompletion]')}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
