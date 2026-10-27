@@ -23,6 +23,8 @@ import { SettingsPage } from './pages/SettingsPage';
 import { AccountsPage } from './pages/AccountsPage';
 import { AutomationPage } from './pages/AutomationPage';
 import { BattleLogPage } from './pages/BattleLogPage';
+import { AutopilotPage } from './pages/AutopilotPage';
+import { TeamTiersPage } from './pages/TeamTiersPage';
 import './index.css';
 
 function App() {
@@ -103,6 +105,8 @@ function App() {
             <Route path="/temple" element={<PhantomTemplePage />} />
             <Route path="/friends" element={<FriendsPage />} />
             <Route path="/battle-logs" element={<BattleLogPage />} />
+            <Route path="/autopilot" element={<AutopilotPage />} />
+            <Route path="/team-tiers" element={<TeamTiersPage />} />
             <Route path="/automation" element={<AutomationPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>

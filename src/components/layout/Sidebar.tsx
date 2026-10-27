@@ -1,4 +1,4 @@
-import { Home, Users, Package, Boxes, ListTodo, ShoppingCart, Swords, Shield, MapPin, Settings, Sparkles, Mountain, Ghost, Bot, ScrollText } from 'lucide-react';
+import { Home, Users, Package, Boxes, ListTodo, ShoppingCart, Swords, Shield, MapPin, Settings, Sparkles, Mountain, Ghost, Bot, ScrollText, Rocket, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link, useLocation } from 'react-router-dom';
 import { useLocalizationStore } from '@/store/localization-store';
@@ -13,6 +13,16 @@ const navItems: { titleKey: string; href: string; icon: React.ElementType }[] = 
         titleKey: 'SIDEBAR_AUTOMATION',
         href: '/automation',
         icon: Bot
+    },
+    {
+        titleKey: 'SIDEBAR_AUTOPILOT',
+        href: '/autopilot',
+        icon: Rocket
+    },
+    {
+        titleKey: 'SIDEBAR_TEAM_TIERS',
+        href: '/team-tiers',
+        icon: Crown
     },
     {
         titleKey: '[CommonFooterCharacterButtonLabel]',

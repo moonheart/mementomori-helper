@@ -98,7 +98,7 @@ export const useLocalizationStore = create<LocalizationState>((set, get) => ({
         const { resources, currentLanguage } = get();
 
         // 如果资源未加载或找不到 key，尝试本地翻译，如果还找不到返回 key
-        let text = resources?.[key] ?? localTranslations[currentLanguage]?.[key] ?? key;
+        let text = resources?.[key] ?? localTranslations[currentLanguage]?.[key] ?? localTranslations.enUS?.[key] ?? key;
 
         // 处理 C# 风格的占位符 {0}, {0:D2}, etc.
         if (params && params.length > 0) {
