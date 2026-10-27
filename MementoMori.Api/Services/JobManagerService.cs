@@ -17,6 +17,7 @@ public partial class JobManagerService
     private readonly ISchedulerFactory _schedulerFactory;
     private readonly AccountManager _accountManager;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IConfiguration _configuration;
 
     /// <summary>
     /// 为指定用户注册/刷新所有定时任务
@@ -31,7 +32,8 @@ public partial class JobManagerService
         var settingService = scope.ServiceProvider.GetRequiredService<PlayerSettingService>();
         var config = await settingService.GetSettingAsync<GameConfig.AutoJobModel>(userId, SettingKeys.AutoJob);
 
-        if (config == null || config.DisableAll)
+        // Jobs:Enabled=false: 本地开发时不跑定时任务, 免得和服务器上的同一账号抢
+        if (config == null || config.DisableAll || !_configuration.GetValue("Jobs:Enabled", true))
         {
             await UnregisterJobsAsync(userId);
             return;
