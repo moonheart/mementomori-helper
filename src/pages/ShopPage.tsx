@@ -60,6 +60,7 @@ import { ShopConfig } from '@/api/generated/shopConfig';
 import { ShopAutoBuyItem } from '@/api/generated/shopAutoBuyItem';
 import { UserItem } from '@/api/generated/userItem';
 import { useItemName } from '@/hooks/useItemName';
+import { LegendLeagueIconShop, StarsGuidanceShop } from '@/components/shop/SpendShops';
 import { getUserItemCount } from '@/lib/itemUtils';
 
 export function ShopPage() {
@@ -696,6 +697,8 @@ export function ShopPage() {
                                 })()}
                             </TabsTrigger>
                         ))}
+                        <TabsTrigger value="legendLeagueIcon" className="whitespace-nowrap">{t('LL_ICON_SHOP_TITLE')}</TabsTrigger>
+                        <TabsTrigger value="starsGuidance" className="whitespace-nowrap">{t('SG_SHOP_TITLE')}</TabsTrigger>
                     </TabsList>
                 </div>
 
@@ -950,6 +953,8 @@ export function ShopPage() {
                         </Card>
                     </TabsContent>
                 );})}
+                <TabsContent value="legendLeagueIcon"><LegendLeagueIconShop /></TabsContent>
+                <TabsContent value="starsGuidance"><StarsGuidanceShop /></TabsContent>
             </Tabs>
 
             <AlertDialog open={confirmDialogOpen} onOpenChange={(open) => {
