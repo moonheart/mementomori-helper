@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { ChevronDown, Users, User, Star, Calendar, MessageSquare, Clock, Globe, Moon, Sun } from 'lucide-react';
-import { applyTheme, getTheme, type Theme } from '@/lib/theme';
+import { ChevronDown, Users, User, Star, Calendar, MessageSquare, Clock } from 'lucide-react';
 import { PauseButton } from './PauseButton';
+import { LanguageMenu, ThemeToggle } from './AppControls';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -25,28 +25,13 @@ import { TimeServerMB } from '@/api/generated/timeServerMB';
 
 export function Header() {
     const navigate = useNavigate();
-    const { t, currentLanguage, setLanguage } = useLocalizationStore();
+    const { t, currentLanguage } = useLocalizationStore();
     const currentAccountId = useAccountStore((state) => state.currentAccountId);
     const setUserInfo = useUserStore((state) => state.setUserInfo);
     const timeManager = useTimeManager();
     const getTable = useMasterStore((state) => state.getTable);
     const [status, setStatus] = useState<UserStatusDtoInfo | null>(null);
     const [serverTimeStr, setServerTimeStr] = useState('--:--:--');
-
-    const [theme, setTheme] = useState<Theme>(getTheme);
-    const toggleTheme = () => {
-        const next = theme === 'dark' ? 'light' : 'dark';
-        applyTheme(next, true);
-        setTheme(next);
-    };
-
-    const languages: { code: string; label: string }[] = [
-        { code: 'zhCN', label: '简体中文' },
-        { code: 'zhTW', label: '繁體中文' },
-        { code: 'enUS', label: 'English' },
-        { code: 'jaJP', label: '日本語' },
-        { code: 'koKR', label: '한국어' }
-    ];
 
     // 获取用户数据，并初始化时间偏移
     useEffect(() => {
@@ -160,32 +145,8 @@ export function Header() {
 
                     <PauseButton />
 
-                    {/* Theme */}
-                    <Button variant="ghost" size="icon" onClick={toggleTheme} title={t('HEADER_TOGGLE_THEME')} aria-label={t('HEADER_TOGGLE_THEME')}>
-                        {theme === 'dark' ? <Sun className="h-5 w-5 text-muted-foreground" /> : <Moon className="h-5 w-5 text-muted-foreground" />}
-                    </Button>
-
-                    {/* Language Switcher: 显示当前语言, 不只是一个地球 */}
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" title={t('HEADER_SWITCH_LANGUAGE')}>
-                                <Globe className="h-4 w-4" />
-                                <span className="text-sm">{languages.find(l => l.code === currentLanguage)?.label ?? currentLanguage}</span>
-                                <ChevronDown className="h-3.5 w-3.5" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            {languages.map(lang => (
-                                <DropdownMenuItem
-                                    key={lang.code}
-                                    onClick={() => setLanguage(lang.code)}
-                                    className={currentLanguage === lang.code ? 'bg-accent' : ''}
-                                >
-                                    {lang.label}
-                                </DropdownMenuItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <ThemeToggle />
+                    <LanguageMenu />
 
                     {/* Account Menu */}
                     <DropdownMenu>
