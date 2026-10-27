@@ -156,13 +156,19 @@ public partial class DailyLoginBonusHandler : IGameActionHandler
             return;
         }
 
-        var iconInfo = mypageResponse.MypageInfo?.MypageIconInfos?
-            .FirstOrDefault(d => d.TransferDetailInfo?.TransferSpotType == TransferSpotType.LimitedLoginBonus);
+        // 周年庆之类经常同时开好几个限时登录奖励, 每个都领 (以前只领第一个)
+        var limitedLoginBonusIds = (mypageResponse.MypageInfo?.MypageIconInfos ?? new())
+            .Where(d => d.TransferDetailInfo?.TransferSpotType == TransferSpotType.LimitedLoginBonus)
+            .Select(d => d.TransferDetailInfo.NumberInfo1)
+            .Distinct()
+            .ToList();
 
-        if (iconInfo == null) return;
+        foreach (var limitedLoginBonusId in limitedLoginBonusIds)
+            await ClaimLimitedLoginBonusAsync(userId, nm, limitedLoginBonusId);
+    }
 
-        var limitedLoginBonusId = iconInfo.TransferDetailInfo.NumberInfo1;
-
+    private async Task ClaimLimitedLoginBonusAsync(long userId, NetworkManager nm, long limitedLoginBonusId)
+    {
         GetLimitedLoginBonusInfoResponse limitedLoginBonusInfo;
         try
         {
