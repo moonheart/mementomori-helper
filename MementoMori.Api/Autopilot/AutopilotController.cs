@@ -1,6 +1,7 @@
 using MementoMori.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using MementoMori.Api.Extensions;
+using MementoMori.Ortega.Share.Data.Character;
 using MementoMori.Ortega.Share.Data.Item;
 using Newtonsoft.Json;
 using static MementoMori.Api.Autopilot.AutopilotExtensions;
@@ -22,7 +23,7 @@ public partial class AutopilotController : ControllerBase
 
     public record StepInfo(string Key, string Name);
 
-    public record TierRow(long CharacterId, string Name, string? Tier, bool Overridden, string? Role, string? Notes, string Rarity, string Element, long Level, bool InTeam, bool Recommended);
+    public record TierRow(long CharacterId, string Guid, CharacterRarityFlags RarityFlags, string Name, string? Tier, bool Overridden, string? Role, string? Notes, string Rarity, string Element, long Level, bool InTeam, bool Recommended);
 
     public record DrawRequest(long ButtonId, string Name);
 
@@ -67,7 +68,7 @@ public partial class AutopilotController : ControllerBase
     /// <summary>拥有的角色 + 强度, 用于 Team & Tiers 页面</summary>
     public record Stats(long QuestId, string QuestName, long LinkLevel, long Tower, long Rank, long Power, long Gold, long Diamonds);
 
-    public record TeamMember(long CharacterId, string Name, string? Tier, string Rarity, long Level, int Gear, int AvgReinforce);
+    public record TeamMember(long CharacterId, string Guid, CharacterRarityFlags RarityFlags, string Name, string? Tier, string Rarity, long Level, int Gear, int AvgReinforce);
 
     public record Overview(bool Enabled, DateTime? NextRun, Stats Now, Stats? DayAgo, List<TeamMember> Team);
 
@@ -95,7 +96,7 @@ public partial class AutopilotController : ControllerBase
         var team = data.GetMainTeam().Select(c =>
         {
             var gear = data.UserEquipmentDtoInfos.Where(e => e.CharacterGuid == c.Guid).ToList();
-            return new TeamMember(c.CharacterId, CharName(c.CharacterId), _tiers.GetTier(c.CharacterId), c.RarityFlags.ToString(),
+            return new TeamMember(c.CharacterId, c.Guid, c.RarityFlags, CharName(c.CharacterId), _tiers.GetTier(c.CharacterId), c.RarityFlags.ToString(),
                 data.GetEffectiveLevel(c), gear.Count, gear.Count == 0 ? 0 : (int) gear.Average(e => e.ReinforcementLv));
         }).ToList();
 
@@ -115,7 +116,7 @@ public partial class AutopilotController : ControllerBase
             {
                 var entry = _tiers.GetBuiltinEntry(c.CharacterId);
                 var mb = CharacterTable.GetById(c.CharacterId);
-                return new TierRow(c.CharacterId, CharName(c.CharacterId), _tiers.GetTier(c.CharacterId), _tiers.IsOverridden(c.CharacterId),
+                return new TierRow(c.CharacterId, c.Guid, c.RarityFlags, CharName(c.CharacterId), _tiers.GetTier(c.CharacterId), _tiers.IsOverridden(c.CharacterId),
                     entry?.Role, entry?.Notes, c.RarityFlags.ToString(), mb?.ElementType.ToString() ?? "", data.GetEffectiveLevel(c),
                     team.Contains(c.Guid), recommended.Contains(c.Guid));
             })
