@@ -100,6 +100,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors();
 
+// 前端打包后放在 wwwroot, 同一个端口一起提供
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 // Add User ID authentication middleware
 app.UseMiddleware<MementoMori.Api.Middleware.UserIdAuthenticationMiddleware>();
 
@@ -109,5 +113,6 @@ app.MapControllers();
 // Map SignalR Hubs
 app.MapHub<MementoMori.Api.Infrastructure.JobHub>("/hubs/jobs");
 app.MapHub<MementoMori.Api.Infrastructure.LocalRaidHub>("/hubs/localraid");
+app.MapFallbackToFile("index.html"); // React 路由 (/dashboard 等)
 
 app.Run();

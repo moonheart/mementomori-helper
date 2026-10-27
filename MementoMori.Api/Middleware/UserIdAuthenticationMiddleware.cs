@@ -86,6 +86,8 @@ public class UserIdAuthenticationMiddleware
 
     private static bool ShouldSkipAuthentication(string path)
     {
+        // 前端页面 (同一个容器里的静态文件) 不需要
+        if (!path.StartsWith("/api", StringComparison.OrdinalIgnoreCase) && !path.StartsWith("/hubs", StringComparison.OrdinalIgnoreCase)) return true;
         foreach (var excludedPath in ExcludedPaths)
         {
             if (path.StartsWith(excludedPath, StringComparison.OrdinalIgnoreCase))
