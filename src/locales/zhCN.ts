@@ -1235,4 +1235,11 @@ export default {
     'ITEM_FALLBACK_LEVEL_LINK_EXP': '等级链接经验 {0}',
     'ITEM_FALLBACK_SET_MATERIAL_BOX': '套装材料箱 {0}',
     'ITEM_FALLBACK_ITEM': '道具 {0}',
+    "ACTION_CharacterStoryReward": "角色回忆奖励",
+    "ACTION_FriendMissionReward": "好友任务奖励",
+    "ACTION_PanelBingoReward": "面板宾果奖励",
+    "ACTION_WebStoreLoginCampaign": "网页商店登录活动",
+    "ACTION_PopularityVoteReward": "人气投票奖励",
+    "ACTION_RentalRaidShareReward": "租借讨伐分享奖励",
+    "ACTION_EquipmentSynchroMission": "装备同步任务奖励",
 };
