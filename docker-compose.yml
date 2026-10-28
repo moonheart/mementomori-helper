@@ -8,6 +8,10 @@ services:
       - "127.0.0.1:5290:8080"
     volumes:
       - ../data:/data
+    # 密钥 (Tamamo__ApiKey=...) 放在仓库外的 ../.env, 没有也能启动
+    env_file:
+      - path: ../.env
+        required: false
     environment:
       - Game__AutoRequestDelay=500   # 2026-10-24 不加延迟刷 boss 被 403 过
       - TZ=America/Bogota   # 改成你的时区

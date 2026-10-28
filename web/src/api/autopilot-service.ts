@@ -93,6 +93,10 @@ export interface AutopilotOverview {
 export const toCharacterInfo = (c: { characterId: number; guid: string; rarityFlags: number; level: number }) =>
     ({ characterId: c.characterId, guid: c.guid, level: c.level, rarityFlags: c.rarityFlags, subLevel: 0, exp: 0, playerId: 0, isLocked: false }) as unknown as UserCharacterInfo;
 
+export interface TamamoCharacter { characterId: number; name: string; rarityFlags: number; tier: string | null; owned: boolean }
+export interface TamamoTeam { characters: TamamoCharacter[]; clears: number; minPower: number }
+export interface TamamoStageTeams { stage: string; dataStage: string | null; stuck: number; teams: TamamoTeam[]; lowest: TamamoTeam | null; link: string }
+
 export const TIERS = ['SS', 'S', 'A', 'B', 'C'] as const;
 
 /**
@@ -112,6 +116,9 @@ export const autopilotApi = {
         (await apiClient.get<GrowthEvent[]>(`/api/autopilot/${userId}/events`, { params: { limit } })).data,
     getSnapshots: async (userId: number, days = 30) =>
         (await apiClient.get<ProgressSnapshot[]>(`/api/autopilot/${userId}/snapshots`, { params: { days } })).data,
+    // 204 = 没配 Tamamo key
+    getTamamo: async (userId: number, refresh = false) =>
+        (await apiClient.get<TamamoStageTeams | ''>(`/api/autopilot/${userId}/tamamo`, { params: refresh ? { refresh } : undefined })).data || null,
     getTiers: async (userId: number) => (await apiClient.get<TierRow[]>(`/api/autopilot/${userId}/tiers`)).data,
     setTier: async (characterId: number, tier: string | null) => {
         await apiClient.put(`/api/autopilot/tiers/${characterId}`, JSON.stringify(tier ?? ''), {

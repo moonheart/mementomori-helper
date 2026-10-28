@@ -11,7 +11,7 @@ import { useAccountStore } from '@/store/accountStore';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from '@/hooks/useTranslation';
 import { CharacterIcon } from '@/components/character/CharacterIcon';
-import { autopilotApi, toCharacterInfo, TIERS, type BannerAdvice, type TierRow } from '@/api/autopilot-service';
+import { autopilotApi, toCharacterInfo, TIERS, type BannerAdvice, type TamamoStageTeams, type TamamoTeam, type TierRow } from '@/api/autopilot-service';
 
 // dark: 也要写, 否则深色模式下 Select 自带的 dark:bg-input 会盖掉颜色
 const tierStyle: Record<string, string> = {
@@ -44,6 +44,7 @@ export function TeamTiersPage() {
     const userId = useAccountStore((s) => s.currentAccountId);
     const [rows, setRows] = useState<TierRow[] | null>(null);
     const [banners, setBanners] = useState<BannerAdvice[] | null>(null);
+    const [tamamo, setTamamo] = useState<TamamoStageTeams | null | undefined>(undefined);
     const [query, setQuery] = useState('');
     const [pending, setPending] = useState<{ banner: BannerAdvice; buttonId: number; diamonds: boolean } | null>(null);
     const [drawing, setDrawing] = useState(false);
@@ -51,6 +52,17 @@ export function TeamTiersPage() {
     const load = useCallback(async () => {
         if (!userId) return;
         setRows(await autopilotApi.getTiers(userId));
+    }, [userId]);
+
+    // 服务器按关卡缓存, 只有点刷新才强制重新请求 tamamo.dev
+    const loadTamamo = useCallback(async (refresh = false) => {
+        if (!userId) return;
+        setTamamo(undefined);
+        try {
+            setTamamo(await autopilotApi.getTamamo(userId, refresh));
+        } catch {
+            setTamamo(null);
+        }
     }, [userId]);
 
     const loadBanners = useCallback(async () => {
@@ -63,7 +75,7 @@ export function TeamTiersPage() {
         }
     }, [userId]);
 
-    useEffect(() => { load(); loadBanners(); }, [load, loadBanners]);
+    useEffect(() => { load(); loadBanners(); loadTamamo(); }, [load, loadBanners, loadTamamo]);
 
     const setTier = async (row: TierRow, tier: string | null) => {
         await autopilotApi.setTier(row.characterId, tier);
@@ -127,8 +139,56 @@ export function TeamTiersPage() {
         </ul>
     );
 
+    const TamamoRow = ({ team, label }: { team: TamamoTeam; label: string }) => (
+        <div className="space-y-1">
+            <p className="text-xs text-muted-foreground">{label} · {t('TM_POWER', [team.minPower.toLocaleString()])}</p>
+            <ul className="flex flex-wrap gap-2">
+                {team.characters.map((c, i) => (
+                    <li key={i} className={cn('flex items-center gap-2 rounded-lg border py-1 pl-1 pr-3 text-sm', !c.owned && 'opacity-50')}
+                        title={c.owned ? undefined : t('TM_NOT_OWNED')}>
+                        <CharacterIcon userCharacterInfo={toCharacterInfo({ characterId: c.characterId, guid: '', rarityFlags: c.rarityFlags, level: 0 })} size={32} />
+                        <span className={cn('rounded px-1.5 text-xs font-bold', c.tier ? tierStyle[c.tier] : 'bg-muted')}>{c.tier ?? '?'}</span>
+                        <span className="font-medium">{c.name}</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+
     return (
         <div className="space-y-6">
+            {tamamo !== null && (
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                        <div className="space-y-1">
+                            <CardTitle className="text-base">{t('TM_TITLE', [tamamo?.stage ?? '…'])}</CardTitle>
+                            <CardDescription>
+                                {t('TM_DESC')} <a href={tamamo?.link ?? 'https://tamamo.dev/ClearPartys'} target="_blank" rel="noreferrer" className="underline">tamamo.dev</a>
+                                {tamamo && tamamo.stuck > 0 && <> · {t('TM_STUCK', [tamamo.stuck.toLocaleString()])}</>}
+                            </CardDescription>
+                        </div>
+                        <Button variant="ghost" size="icon" onClick={() => loadTamamo(true)} aria-label={t('AP_REFRESH')}>
+                            <RefreshCcw className="h-4 w-4" />
+                        </Button>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {tamamo === undefined ? (
+                            <div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
+                        ) : tamamo.teams.length === 0 ? (
+                            <p className="text-sm text-muted-foreground">{t('TM_NONE')}</p>
+                        ) : (
+                            <>
+                                {tamamo.dataStage !== tamamo.stage && (
+                                    <p className="text-sm text-amber-600 dark:text-amber-400">{t('TM_CLOSEST', [tamamo.stage, tamamo.dataStage ?? ''])}</p>
+                                )}
+                                {tamamo.teams.map((team, i) => <TamamoRow key={i} team={team} label={t('TM_CLEARS', [team.clears])} />)}
+                                {tamamo.lowest && <TamamoRow team={tamamo.lowest} label={t('TM_LOWEST')} />}
+                            </>
+                        )}
+                    </CardContent>
+                </Card>
+            )}
+
             <div className="grid gap-6 lg:grid-cols-2">
                 <Card>
                     <CardHeader>

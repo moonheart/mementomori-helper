@@ -20,6 +20,7 @@ public partial class AutopilotController : ControllerBase
     private readonly BannerAdvisor _advisor;
     private readonly AccountManager _accounts;
     private readonly IServiceProvider _services;
+    private readonly TamamoService _tamamo;
 
     public record StepInfo(string Key, string Name);
 
@@ -73,6 +74,18 @@ public partial class AutopilotController : ControllerBase
     public record Overview(bool Enabled, DateTime? NextRun, Stats Now, Stats? DayAgo, List<TeamMember> Team);
 
     /// <summary>Home 页面: autopilot 状态 + 当前数值 + 24 小时前的数值 + 主队</summary>
+    /// <summary>tamamo.dev 上当前关卡的通关队伍 (没配 key 返回 204)</summary>
+    [HttpGet("{userId}/tamamo")]
+    public async Task<ActionResult<TamamoService.StageTeams>> GetTamamo(long userId, [FromQuery] bool refresh = false)
+    {
+        if (!_tamamo.Enabled) return NoContent();
+        var data = (await _accounts.GetOrCreateAsync(userId)).NetworkManager.UserSyncData;
+        if (data?.UserBattleBossDtoInfo == null) return NotFound("not logged in");
+        var questId = data.UserBattleBossDtoInfo.BossClearMaxQuestId + 1;
+        var result = await _tamamo.GetQuestTeamsAsync(questId, QuestTable.GetById(questId)?.Memo ?? questId.ToString(), data.UserCharacterDtoInfos, refresh);
+        return result == null ? NoContent() : result;
+    }
+
     [HttpGet("{userId}/overview")]
     public async Task<ActionResult<Overview>> GetOverview(long userId)
     {
