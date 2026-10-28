@@ -22,6 +22,13 @@ public partial class ActionExecutor
         
         foreach (var handler in handlers)
         {
+            // 会话丢了 (别处登录) 就别继续刷错误, 下次任务会重新登录
+            if (!context.AccountInfo.IsLoggedIn)
+            {
+                await _jobLogger.LogAsync(userId, "Session lost (logged in on another device?), stopping this run. Next run logs back in.", "Warning");
+                break;
+            }
+
             try
             {
                 _logger.LogInformation("Starting action {ActionName} for user {UserId}", handler.ActionName, userId);

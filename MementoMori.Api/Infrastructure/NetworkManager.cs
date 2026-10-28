@@ -45,6 +45,9 @@ public partial class NetworkManager : IDisposable
 
     public event Action<string>? GameApiHostUpdated;
 
+    /// <summary>会话失效 (别处登录/过期), 下次任务会重新登录</summary>
+    public event Action? SessionLost;
+
     /// <summary>每个成功的响应 (userId, request, response), 用于记录奖励/好友等成长记录</summary>
     public static event Action<long, object, object>? ResponseReceived;
 
@@ -341,6 +344,9 @@ public partial class NetworkManager : IDisposable
                         {
                             _logger.LogError("No session found");
                         }
+
+                        if (error.ErrorCode is ErrorCode.CommonNoSession or ErrorCode.CommonLoggedInAnotherDevice)
+                            SessionLost?.Invoke();
 
                         // 详细错误日志
                         _logger.LogError("API Error at {Uri}: {ErrorCode}", uri, error.ErrorCode);
