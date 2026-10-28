@@ -23,8 +23,10 @@ public partial class MissionRewardHandler : IGameActionHandler
 
     public string ActionName => Text.T("ActionMissionReward");
 
-    private static readonly MissionGroupType[] ExtraGroups =
+    // 每组单独请求: 一组没开 (MissionNotOpenMission) 会让整个请求失败, 连活动任务都领不到
+    private static readonly MissionGroupType[] Groups =
     {
+        MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main, MissionGroupType.Guild,
         MissionGroupType.Limited, MissionGroupType.Collab, MissionGroupType.Comeback, MissionGroupType.Beginner, MissionGroupType.NewCharacter,
         MissionGroupType.Panel, MissionGroupType.GuildTower, MissionGroupType.PopularityVote, MissionGroupType.BookSort, MissionGroupType.RentalRaid,
     };
@@ -37,57 +39,36 @@ public partial class MissionRewardHandler : IGameActionHandler
         await _jobLogger.LogAsync(userId, Text.T("MissionChecking"));
 
         // 1. 获取任务信息
-        var missionGroupTypes = new List<MissionGroupType> { MissionGroupType.Daily, MissionGroupType.Weekly, MissionGroupType.Main };
-        
-        // 检查公会任务
-        var guildIdResp = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
-        if (guildIdResp.GuildId > 0)
-        {
-            missionGroupTypes.Add(MissionGroupType.Guild);
-        }
-
-        var missionInfoResp = await nm.SendRequest<GetMissionInfoRequest, GetMissionInfoResponse>(
-            new GetMissionInfoRequest { TargetMissionGroupList = missionGroupTypes });
-
-        if (missionInfoResp.MissionInfoDict == null) return;
-
-        // 活动/联动/回归/新角色等任务: 一组一组请求, 没开的活动报错就跳过, 不影响上面的主线/每日/每周
-        foreach (var extra in ExtraGroups)
+        var missionInfoResp = new GetMissionInfoResponse { MissionInfoDict = new() };
+        foreach (var group in Groups)
         {
             try
             {
-                var extraResp = await nm.SendRequest<GetMissionInfoRequest, GetMissionInfoResponse>(
-                    new GetMissionInfoRequest { TargetMissionGroupList = new List<MissionGroupType> { extra } });
-                foreach (var (groupType, info) in extraResp.MissionInfoDict ?? new())
+                var resp = await nm.SendRequest<GetMissionInfoRequest, GetMissionInfoResponse>(
+                    new GetMissionInfoRequest { TargetMissionGroupList = new List<MissionGroupType> { group } });
+                foreach (var (groupType, info) in resp.MissionInfoDict ?? new())
                     missionInfoResp.MissionInfoDict[groupType] = info;
             }
             catch (NetworkManager.ApiErrorException) { }
         }
 
-        // 2. 领取普通任务奖励
-        var allMissionIds = new List<long>();
-        foreach (var group in missionInfoResp.MissionInfoDict.Values)
+        // 2. 领取普通任务奖励: 按组领, 面板任务前一张没完成会报 MissionNotClearedPrevSheetMission, 别连累其他组
+        foreach (var (groupType, group) in missionInfoResp.MissionInfoDict)
         {
             if (group.UserMissionDtoInfoDict == null) continue;
-            foreach (var missionList in group.UserMissionDtoInfoDict.Values)
+            var ids = group.UserMissionDtoInfoDict.Values.SelectMany(l => l)
+                .SelectMany(m => m.MissionStatusHistory != null && m.MissionStatusHistory.TryGetValue(MissionStatusType.NotReceived, out var v) ? v : new List<long>())
+                .ToList();
+            if (ids.Count == 0) continue;
+            try
             {
-                foreach (var mission in missionList)
-                {
-                    if (mission.MissionStatusHistory != null && 
-                        mission.MissionStatusHistory.TryGetValue(MissionStatusType.NotReceived, out var ids))
-                    {
-                        allMissionIds.AddRange(ids);
-                    }
-                }
+                await nm.SendRequest<RewardMissionRequest, RewardMissionResponse>(new RewardMissionRequest { TargetMissionIdList = ids });
+                await _jobLogger.LogAsync(userId, Text.T("MissionRewardsClaimed", ids.Count));
             }
-        }
-
-        if (allMissionIds.Count > 0)
-        {
-            var rewardResp = await nm.SendRequest<RewardMissionRequest, RewardMissionResponse>(
-                new RewardMissionRequest { TargetMissionIdList = allMissionIds });
-            
-            await _jobLogger.LogAsync(userId, Text.T("MissionRewardsClaimed", allMissionIds.Count));
+            catch (NetworkManager.ApiErrorException e)
+            {
+                _logger.LogWarning("Mission claim {Group} skipped: {Error}", groupType, e.Message);
+            }
         }
 
         // 3. 领取活跃度奖励 (Activity Rewards)
