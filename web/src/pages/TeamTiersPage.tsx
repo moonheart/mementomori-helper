@@ -158,6 +158,7 @@ export function TeamTiersPage() {
                         <div className="space-y-1">
                             <CardTitle className="text-base">{t('TT_BANNERS')}</CardTitle>
                             <CardDescription>{t('TT_BANNERS_DESC')}</CardDescription>
+                            {banners?.[0] && <p className="text-xs tabular-nums">💎 {t('TT_FREE_DIAMONDS', [banners[0].freeDiamonds.toLocaleString()])}</p>}
                         </div>
                         <Button variant="ghost" size="icon" onClick={loadBanners} aria-label={t('AP_REFRESH')}>
                             <RefreshCcw className="h-4 w-4" />
@@ -175,6 +176,9 @@ export function TeamTiersPage() {
                                         <div className="min-w-0 flex-1">
                                             <p className="truncate text-sm font-medium">{b.name}</p>
                                             <p className={cn('text-xs', b.worth ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground')}>{b.verdict}</p>
+                                            {b.ticketName && (
+                                                <p className="text-xs tabular-nums text-muted-foreground">🎟 {b.ticketName}: {b.ticketsOwned.toLocaleString()} ({t('TT_TICKETS_PER_PULL', [b.ticketCost.toLocaleString()])})</p>
+                                            )}
                                         </div>
                                         {b.ticketButtonId != null && (
                                             <Button size="sm" variant="outline" onClick={() => setPending({ banner: b, buttonId: b.ticketButtonId!, diamonds: false })}>
@@ -245,8 +249,8 @@ export function TeamTiersPage() {
                         <AlertDialogTitle>{t('TT_CONFIRM_PULL')}</AlertDialogTitle>
                         <AlertDialogDescription>
                             {pending && (pending.diamonds
-                                ? t('TT_CONFIRM_PULL_DIAMONDS', [pending.banner.name, pending.banner.diamondCost.toLocaleString()])
-                                : t('TT_CONFIRM_PULL_TICKET', [pending.banner.name]))}
+                                ? t('TT_CONFIRM_PULL_DIAMONDS', [pending.banner.name, pending.banner.diamondCost.toLocaleString(), pending.banner.freeDiamonds.toLocaleString()])
+                                : t('TT_CONFIRM_PULL_TICKET', [pending.banner.name, pending.banner.ticketName ?? '', pending.banner.ticketsOwned.toLocaleString()]))}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

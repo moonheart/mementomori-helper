@@ -2,6 +2,7 @@ using MementoMori.Api.Extensions;
 using MementoMori.Api.Handlers;
 using MementoMori.Api.Infrastructure;
 using MementoMori.Api.Services;
+using MementoMori.Ortega.Common.Utils;
 using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.ApiInterface.Character;
 using MementoMori.Ortega.Share.Data.ApiInterface.Gacha;
@@ -149,7 +150,8 @@ public partial class SmartRankUpHandler : IGameActionHandler
 }
 
 public record BannerAdvice(long GachaCaseId, string Name, long PickupCharacterId, string? PickupTier,
-    long? DiamondButtonId, long DiamondCost, long? TicketButtonId, string Verdict, bool Worth);
+    long? DiamondButtonId, long DiamondCost, long? TicketButtonId, string Verdict, bool Worth,
+    string? TicketName, long TicketsOwned, long TicketCost, long FreeDiamonds);
 
 /// <summary>
 /// 卡池评估: 有 S/SS 限定 UP 才值得砸免费钻石, 券随便用; 付费钻石永远不碰
@@ -176,6 +178,8 @@ public partial class BannerAdvisor
             var ticketBtn = c.GachaButtonInfoList?.Where(b => b.ConsumeUserItem?.ItemType == ItemType.GachaTicket
                                                               && data.GetUserItemCount(ItemType.GachaTicket, b.ConsumeUserItem.ItemId) >= b.ConsumeUserItem.ItemCount)
                 .MaxBy(b => b.LotteryCount);
+            // 显示用: 这个卡池的券有多少 (不管够不够抽一次)
+            var anyTicket = c.GachaButtonInfoList?.Where(b => b.ConsumeUserItem?.ItemType == ItemType.GachaTicket).MinBy(b => b.LotteryCount)?.ConsumeUserItem;
             var tier = pickup > 0 ? _tiers.GetTier(pickup) : null;
             var worth = pickup > 0 && _tiers.Score(pickup) >= config.GachaMinPickupTier;
             var verdict = pickup > 0
@@ -184,7 +188,9 @@ public partial class BannerAdvisor
             var cost = diamondBtn?.ConsumeUserItem.ItemCount ?? 0;
             if (diamondBtn != null && worth && diamonds - cost < config.GachaDiamondReserve)
                 verdict += $" (need {cost + config.GachaDiamondReserve - diamonds:N0} more diamonds above reserve)";
-            advice.Add(new BannerAdvice(c.GachaCaseId, name, pickup, tier, diamondBtn?.GachaButtonId, cost, ticketBtn?.GachaButtonId, verdict, worth));
+            advice.Add(new BannerAdvice(c.GachaCaseId, name, pickup, tier, diamondBtn?.GachaButtonId, cost, ticketBtn?.GachaButtonId, verdict, worth,
+                anyTicket == null ? null : ItemUtil.GetItemName(ItemType.GachaTicket, anyTicket.ItemId),
+                anyTicket == null ? 0 : data.GetUserItemCount(ItemType.GachaTicket, anyTicket.ItemId), anyTicket?.ItemCount ?? 0, diamonds));
         }
 
         return advice.OrderByDescending(a => a.Worth).ThenByDescending(a => a.TicketButtonId != null).ToList();
@@ -219,9 +225,11 @@ public partial class AutoPullGachaHandler : IGameActionHandler
         var nm = context.NetworkManager;
         var userId = context.AccountInfo.UserId;
         var config = await _settings.GetSettingAsync<AutopilotConfig>(userId, AutopilotJob.SettingKey) ?? new();
+        var closed = new HashSet<long>(); // 没开的卡池 (GachaNotOpen) 跳过, 换下一个
         for (var round = 0; round < 20; round++)
         {
-            var advice = await _advisor.EvaluateAsync(nm, config);
+            var advice = (await _advisor.EvaluateAsync(nm, config))
+                .Where(a => !closed.Contains(a.TicketButtonId ?? -1) && !closed.Contains(a.DiamondButtonId ?? -1)).ToList();
             var diamonds = nm.UserSyncData.GetUserItemCount(ItemType.CurrencyFree);
             var ticket = advice.FirstOrDefault(a => a.TicketButtonId != null);
             var pull = advice.FirstOrDefault(a => a.Worth && a.DiamondButtonId != null && diamonds - a.DiamondCost >= config.GachaDiamondReserve);
@@ -233,9 +241,18 @@ public partial class AutoPullGachaHandler : IGameActionHandler
             var choice = ticket != null ? (ticket.TicketButtonId, ticket.Name) : pull != null ? (pull.DiamondButtonId, pull.Name) : surplus != null ? (surplus.DiamondButtonId, surplus.Name) : (null, "");
             var (btn, name) = choice;
             if (btn == null) break;
+            var spent = advice.First(a => a.TicketButtonId == btn || a.DiamondButtonId == btn);
+            await _log.LogAsync(userId, btn == spent.TicketButtonId
+                ? $"Gacha {name}: using tickets ({spent.TicketName} ×{spent.TicketsOwned:N0} owned)"
+                : $"Gacha {name}: spending {spent.DiamondCost:N0} of {diamonds:N0} free diamonds");
             try
             {
                 await _advisor.DrawAsync(userId, nm, btn.Value, name);
+            }
+            catch (NetworkManager.ApiErrorException e) when (e.ErrorCode == ErrorCode.GachaNotOpen)
+            {
+                closed.Add(btn.Value);
+                continue;
             }
             catch (Exception e)
             {

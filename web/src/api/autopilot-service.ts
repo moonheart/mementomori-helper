@@ -64,6 +64,10 @@ export interface BannerAdvice {
     ticketButtonId: number | null;
     verdict: string;
     worth: boolean;
+    ticketName: string | null;
+    ticketsOwned: number;
+    ticketCost: number;
+    freeDiamonds: number;
 }
 
 export interface OverviewStats {
