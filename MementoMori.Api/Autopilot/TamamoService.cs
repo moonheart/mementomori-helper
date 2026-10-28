@@ -85,6 +85,8 @@ public partial class TamamoService
     {
         using var req = new HttpRequestMessage(HttpMethod.Get, path);
         req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {ApiKey}");
+        // 没有 User-Agent 会 400; 顺便让作者知道是谁在请求
+        req.Headers.TryAddWithoutValidation("User-Agent", "MementoMori-Helper (+https://github.com/maplehugs/mementomori-helper)");
         using var resp = await Http.SendAsync(req);
         resp.EnsureSuccessStatusCode();
         return JObject.Parse(await resp.Content.ReadAsStringAsync())["data"]!;
