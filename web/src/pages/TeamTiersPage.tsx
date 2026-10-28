@@ -85,12 +85,30 @@ export function TeamTiersPage() {
         }
     };
 
+    const [applying, setApplying] = useState(false);
+    const applyRecommended = async () => {
+        if (!userId) return;
+        setApplying(true);
+        try {
+            await autopilotApi.run(userId, 'AutoBuildTeam');
+            // 任务是后台跑的, 等一下再刷新
+            await new Promise((r) => setTimeout(r, 5000));
+            await load();
+            toast({ title: t('TT_TEAM_APPLIED') });
+        } catch (e) {
+            toast({ title: t('TT_TEAM_APPLY_FAILED'), description: String(e), variant: 'destructive' });
+        } finally {
+            setApplying(false);
+        }
+    };
+
     const filtered = useMemo(
         () => (rows ?? []).filter((r) => r.name.toLowerCase().includes(query.trim().toLowerCase())),
         [rows, query]
     );
     const team = (rows ?? []).filter((r) => r.inTeam);
     const recommended = (rows ?? []).filter((r) => r.recommended);
+    const sameTeam = recommended.length === team.length && recommended.every((r) => r.inTeam);
 
     if (!rows) {
         return <div className="flex justify-center p-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
@@ -123,7 +141,13 @@ export function TeamTiersPage() {
                             <TeamList list={team} />
                         </div>
                         <div className="space-y-2">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('TT_RECOMMENDED_TEAM')}</p>
+                            <div className="flex items-center justify-between gap-2">
+                                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('TT_RECOMMENDED_TEAM')}</p>
+                                <Button size="sm" variant="outline" onClick={applyRecommended} disabled={applying || sameTeam || recommended.length === 0}>
+                                    {applying && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    {t('TT_USE_TEAM')}
+                                </Button>
+                            </div>
                             <TeamList list={recommended} />
                         </div>
                     </CardContent>
@@ -206,7 +230,7 @@ export function TeamTiersPage() {
                                         {r.overridden && <Badge variant="outline" className="ml-2">{t('TT_EDITED')}</Badge>}
                                     </td>
                                     <td className="py-1.5 pr-3 capitalize text-muted-foreground">{r.role ?? '—'}</td>
-                                    <td className="py-1.5 pr-3 tabular-nums">{r.level}</td>
+                                    <td className="py-1.5 pr-3 tabular-nums">{r.level}{r.linked && <span className="ml-1 text-xs text-muted-foreground" title={t('TT_LINKED_HINT')}>🔗 {t('TT_LINKED')}</span>}</td>
                                     <td className="py-1.5 text-xs text-muted-foreground">{r.notes ?? ''}</td>
                                 </tr>
                             ))}

@@ -49,6 +49,7 @@ export interface TierRow {
     rarity: string;
     element: string;
     level: number;
+    linked: boolean;
     inTeam: boolean;
     recommended: boolean;
 }

@@ -23,7 +23,7 @@ public partial class AutopilotController : ControllerBase
 
     public record StepInfo(string Key, string Name);
 
-    public record TierRow(long CharacterId, string Guid, CharacterRarityFlags RarityFlags, string Name, string? Tier, bool Overridden, string? Role, string? Notes, string Rarity, string Element, long Level, bool InTeam, bool Recommended);
+    public record TierRow(long CharacterId, string Guid, CharacterRarityFlags RarityFlags, string Name, string? Tier, bool Overridden, string? Role, string? Notes, string Rarity, string Element, long Level, bool Linked, bool InTeam, bool Recommended);
 
     public record DrawRequest(long ButtonId, string Name);
 
@@ -117,7 +117,7 @@ public partial class AutopilotController : ControllerBase
                 var entry = _tiers.GetBuiltinEntry(c.CharacterId);
                 var mb = CharacterTable.GetById(c.CharacterId);
                 return new TierRow(c.CharacterId, c.Guid, c.RarityFlags, CharName(c.CharacterId), _tiers.GetTier(c.CharacterId), _tiers.IsOverridden(c.CharacterId),
-                    entry?.Role, entry?.Notes, c.RarityFlags.ToString(), mb?.ElementType.ToString() ?? "", data.GetEffectiveLevel(c),
+                    entry?.Role, entry?.Notes, c.RarityFlags.ToString(), mb?.ElementType.ToString() ?? "", data.GetEffectiveLevel(c), data.IsLevelLinkMember(c.Guid),
                     team.Contains(c.Guid), recommended.Contains(c.Guid));
             })
             .OrderByDescending(r => _tiers.Score(r.CharacterId)).ThenByDescending(r => r.Level)
