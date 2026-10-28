@@ -133,8 +133,10 @@ export function GachaPage() {
         return userBalance[key] || 0;
     };
 
+    // 2099/2100 之类的结束时间 = 常驻卡池, 不显示倒计时
+    const isPermanent = (endTime: number) => endTime <= 0 || endTime - nowMs > 3650 * 86400000;
     const formatRemainTime = (endTime: number) => {
-        if (endTime <= 0 || endTime >= 4102441200000) return '';
+        if (isPermanent(endTime)) return '';
         const remainMs = Math.max(0, endTime - nowMs);
         const totalSeconds = Math.floor(remainMs / 1000);
         const days = Math.floor(totalSeconds / 86400);
@@ -275,7 +277,7 @@ export function GachaPage() {
                                         <div className="flex-1">
                                             <CardTitle className="text-lg flex flex-wrap items-center gap-2">
                                                 <span>{uiMb ? t(uiMb.nameKey) : t('GACHA_CASE_FALLBACK', [gachaCase.gachaCaseId])}</span>
-                                                {gachaCase.endTime > 0 && gachaCase.endTime < 4102441200000 && (
+                                                {!isPermanent(gachaCase.endTime) && (
                                                     <span className="text-xs text-muted-foreground">
                                                         {t('[ExchangeExpirationTimeLabel]')}: {formatRemainTime(gachaCase.endTime)}
                                                     </span>

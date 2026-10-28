@@ -260,7 +260,7 @@ export function BattleLogPage() {
                                                         <Target className="w-3 h-3" />
                                                         {t('BATTLE_LOG_TURNS', [log.endTurn])}
                                                     </span>
-                                                    <span>{formatDuration(log.battleDurationMs)}</span>
+                                                    {log.battleDurationMs > 0 && <span>{formatDuration(log.battleDurationMs)}</span>}
                                                 </div>
                                             </div>
 
