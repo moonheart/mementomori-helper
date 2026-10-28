@@ -25,7 +25,7 @@ set ASPNETCORE_URLS=http://localhost:$PORT
 set Game__AutoRequestDelay=500
 echo First start downloads game data, can take a few minutes. Browser opens when ready.
 echo Close this window to stop.
-start "" /b powershell -NoProfile -WindowStyle Hidden -Command "do{Start-Sleep 2}until((Invoke-WebRequest -UseBasicParsing http://localhost:$PORT -TimeoutSec 2 -ErrorAction SilentlyContinue).StatusCode -eq 200); Start-Process http://localhost:$PORT"
+start "" /b powershell -NoProfile -WindowStyle Hidden -Command "do{Start-Sleep 2;try{\$ok=(Invoke-WebRequest -UseBasicParsing http://localhost:$PORT -TimeoutSec 5).StatusCode -eq 200}catch{\$ok=\$false}}until(\$ok); Start-Process http://localhost:$PORT"
 MementoMori.Api.exe
 pause
 EOF
