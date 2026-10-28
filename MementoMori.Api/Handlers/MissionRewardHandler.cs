@@ -96,7 +96,10 @@ public partial class MissionRewardHandler : IGameActionHandler
                     }
                     catch (Exception ex)
                     {
+                        // 这个请求出错时游戏服务器会把会话弄没 (UncaughtException → NoSession), 别再试别的了
                         _logger.LogWarning(ex, "Failed to reward mission activity for user {UserId}", userId);
+                        await _jobLogger.LogAsync(userId, Text.T("MissionCheckDone"));
+                        return;
                     }
                 }
             }

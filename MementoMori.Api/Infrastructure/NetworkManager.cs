@@ -48,6 +48,9 @@ public partial class NetworkManager : IDisposable
     /// <summary>会话失效 (别处登录/过期), 下次任务会重新登录</summary>
     public event Action? SessionLost;
 
+    /// <summary>最近一次会话失效的原因: CommonLoggedInAnotherDevice = 有人在别处登录, CommonNoSession = 会话自己没了</summary>
+    public ErrorCode? LastSessionError { get; private set; }
+
     /// <summary>每个成功的响应 (userId, request, response), 用于记录奖励/好友等成长记录</summary>
     public static event Action<long, object, object>? ResponseReceived;
 
@@ -346,7 +349,10 @@ public partial class NetworkManager : IDisposable
                         }
 
                         if (error.ErrorCode is ErrorCode.CommonNoSession or ErrorCode.CommonLoggedInAnotherDevice)
+                        {
+                            LastSessionError = error.ErrorCode;
                             SessionLost?.Invoke();
+                        }
 
                         // 详细错误日志
                         _logger.LogError("API Error at {Uri}: {ErrorCode}", uri, error.ErrorCode);
