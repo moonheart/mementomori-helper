@@ -1,16 +1,17 @@
+import { useState } from 'react';
 import dayjs from 'dayjs';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { ProgressSnapshot } from '@/api/autopilot-service';
 
-type Series = { key: string; label: string; color: string; value: (s: ProgressSnapshot) => number };
+type Point = { time: number; value: number; label: string };
 
-const W = 600;
-const H = 160;
-const PAD = 8;
+const W = 300;
+const H = 80;
+const PAD = 4;
 
 /**
- * 进度曲线: 主线关卡 / 等级链接 / 无穷塔, 各自归一化画在一张图上
- * ponytail: 手写 SVG, 要缩放/悬浮提示再上图表库
+ * 进度: 主线 / 等级链接 / 无穷塔 各画一张小图 (各自的刻度), 阶梯线, 悬浮看具体值
+ * ponytail: 手写 SVG, 要缩放再上图表库
  */
 export function ProgressChart({ snapshots }: { snapshots: ProgressSnapshot[] }) {
     const { t } = useTranslation();
@@ -18,41 +19,62 @@ export function ProgressChart({ snapshots }: { snapshots: ProgressSnapshot[] }) 
         return <p className="py-8 text-center text-sm text-muted-foreground">{t('AP_NO_SNAPSHOTS')}</p>;
     }
 
-    const series: Series[] = [
-        { key: 'quest', label: t('AP_SERIES_QUEST'), color: '#8b5cf6', value: (s) => s.questId },
-        { key: 'link', label: t('AP_SERIES_LINK'), color: '#10b981', value: (s) => s.linkLevel },
-        { key: 'tower', label: t('AP_SERIES_TOWER'), color: '#0ea5e9', value: (s) => s.towers?.Infinite ?? 0 },
-    ];
-    const t0 = dayjs(snapshots[0].time).valueOf();
-    const t1 = dayjs(snapshots[snapshots.length - 1].time).valueOf();
-    const x = (s: ProgressSnapshot) => PAD + ((dayjs(s.time).valueOf() - t0) / Math.max(1, t1 - t0)) * (W - PAD * 2);
-
-    const first = snapshots[0];
-    const last = snapshots[snapshots.length - 1];
+    const at = (s: ProgressSnapshot) => dayjs(s.time).valueOf();
+    const quest = snapshots.map((s) => ({ time: at(s), value: s.questId, label: s.questName }));
+    const link = snapshots.map((s) => ({ time: at(s), value: s.linkLevel, label: String(s.linkLevel) }));
+    // 早期的快照没记塔, 没有就跳过, 别从 0 画起
+    const tower = snapshots.filter((s) => s.towers?.Infinite).map((s) => ({ time: at(s), value: s.towers.Infinite, label: String(s.towers.Infinite) }));
+    const range = { from: at(snapshots[0]), to: at(snapshots[snapshots.length - 1]) };
 
     return (
-        <div className="space-y-3">
-            <svg viewBox={`0 0 ${W} ${H}`} className="h-40 w-full" preserveAspectRatio="none" role="img" aria-label={t('AP_PROGRESS')}>
-                {series.map((se) => {
-                    const values = snapshots.map(se.value);
-                    const min = Math.min(...values);
-                    const max = Math.max(...values);
-                    const y = (v: number) => H - PAD - ((v - min) / Math.max(1, max - min)) * (H - PAD * 2);
-                    const d = snapshots.map((s, i) => `${i ? 'L' : 'M'}${x(s).toFixed(1)},${y(values[i]).toFixed(1)}`).join(' ');
-                    return <path key={se.key} d={d} fill="none" stroke={se.color} strokeWidth={2} vectorEffect="non-scaling-stroke" />;
-                })}
-            </svg>
-            <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
-                {series.map((se) => (
-                    <span key={se.key} className="flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full" style={{ background: se.color }} />
-                        <span className="text-muted-foreground">{se.label}</span>
-                        <span className="font-medium tabular-nums">
-                            {se.key === 'quest' ? `${first.questName} → ${last.questName}` : `${se.value(first)} → ${se.value(last)}`}
-                        </span>
-                    </span>
-                ))}
+        <div className="grid gap-4 sm:grid-cols-3">
+            <Mini title={t('AP_SERIES_QUEST')} points={quest} range={range} />
+            <Mini title={t('AP_SERIES_LINK')} points={link} range={range} />
+            <Mini title={t('AP_SERIES_TOWER')} points={tower} range={range} />
+        </div>
+    );
+}
+
+function Mini({ title, points, range }: { title: string; points: Point[]; range: { from: number; to: number } }) {
+    const [hover, setHover] = useState<number | null>(null);
+    if (points.length === 0) return null;
+
+    const first = points[0];
+    const last = points[points.length - 1];
+    const min = Math.min(...points.map((p) => p.value));
+    const max = Math.max(...points.map((p) => p.value));
+    const x = (time: number) => PAD + ((time - range.from) / Math.max(1, range.to - range.from)) * (W - PAD * 2);
+    const y = (v: number) => H - PAD - ((v - min) / Math.max(1, max - min)) * (H - PAD * 2);
+    // 阶梯线: 进度是一下一下跳的, 不是平滑涨的
+    const d = points.map((p, i) => (i === 0 ? `M${x(p.time)},${y(p.value)}` : `H${x(p.time)} V${y(p.value)}`)).join(' ') + ` H${x(range.to)}`;
+    const shown = hover != null ? points[hover] : last;
+
+    const onMove = (e: React.MouseEvent<SVGSVGElement>) => {
+        const box = e.currentTarget.getBoundingClientRect();
+        const time = range.from + ((e.clientX - box.left) / box.width) * (range.to - range.from);
+        // 光标位置之前的最后一个点 = 那时候的值
+        let i = 0;
+        while (i + 1 < points.length && points[i + 1].time <= time) i++;
+        setHover(i);
+    };
+
+    return (
+        <div className="space-y-1 rounded-lg border p-3">
+            <div className="flex items-baseline justify-between gap-2">
+                <span className="text-sm text-muted-foreground">{title}</span>
+                <span className="text-xs text-muted-foreground tabular-nums">
+                    {hover != null ? dayjs(shown.time).format('MM-DD HH:mm') : `${first.label} →`}
+                </span>
             </div>
+            <div className="text-2xl font-semibold tabular-nums">{shown.label}</div>
+            <svg viewBox={`0 0 ${W} ${H}`} className="h-20 w-full text-primary" preserveAspectRatio="none" role="img"
+                 aria-label={`${title}: ${first.label} → ${last.label}`} onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
+                <line x1={PAD} x2={W - PAD} y1={H - PAD} y2={H - PAD} className="stroke-border" strokeWidth={1} vectorEffect="non-scaling-stroke" />
+                <path d={d} fill="none" stroke="currentColor" strokeWidth={2} vectorEffect="non-scaling-stroke" />
+                {hover != null && (
+                    <line x1={x(shown.time)} x2={x(shown.time)} y1={0} y2={H} className="stroke-muted-foreground" strokeWidth={1} strokeDasharray="3 3" vectorEffect="non-scaling-stroke" />
+                )}
+            </svg>
         </div>
     );
 }
