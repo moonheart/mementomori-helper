@@ -52,13 +52,23 @@ public partial class BountyQuestRewardHandler : IGameActionHandler
             // 一个一个领: 一次领多个 (Claim All) 要等级解锁, 没解锁会报 142019 (master #118 的修复)
             foreach (var questId in questIds)
             {
-                var rewardResponse = await nm.SendRequest<RewardRequest, RewardResponse>(
-                    new RewardRequest
-                    {
-                        BountyQuestIds = new List<long> { questId },
-                        ConsumeCurrency = 0,
-                        IsQuick = false
-                    });
+                RewardResponse rewardResponse;
+                try
+                {
+                    rewardResponse = await nm.SendRequest<RewardRequest, RewardResponse>(
+                        new RewardRequest
+                        {
+                            BountyQuestIds = new List<long> { questId },
+                            ConsumeCurrency = 0,
+                            IsQuick = false
+                        });
+                }
+                catch (NetworkManager.ApiErrorException e) when (e.ErrorCode != ErrorCode.CommonNoSession && e.ErrorCode != ErrorCode.CommonLoggedInAnotherDevice)
+                {
+                    // 单个任务领不了 (BountyQuestInvalidRewardBountyQuest 等) 不影响其他的
+                    _logger.LogWarning("Bounty quest {QuestId} claim skipped: {Error}", questId, e.Message);
+                    continue;
+                }
 
                 foreach (var item in rewardResponse.RewardItems ?? new())
                     await _jobLogger.LogAsync(userId, Text.T("BountyRewardItem", item.ItemType, item.ItemCount));

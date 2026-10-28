@@ -113,8 +113,12 @@ public partial class AutoClimbTowerHandler : IGameActionHandler
                 }
                 catch (Exception e)
                 {
-                    // 属性塔未解放时其余属性塔也不用试了
-                    if (e is NetworkManager.ApiErrorException {ErrorCode: ErrorCode.TowerBattleElementTowerNotOpen}) elementLocked = true;
+                    // 属性塔未解放 (或今天不开) 是正常的, 其余属性塔也不用试了, 不刷警告
+                    if (e is NetworkManager.ApiErrorException {ErrorCode: ErrorCode.TowerBattleElementTowerNotOpen})
+                    {
+                        elementLocked = true;
+                        break;
+                    }
                     await _log.LogAsync(userId, $"{name} {questId}: {e.Message}", "Warning");
                     break;
                 }
