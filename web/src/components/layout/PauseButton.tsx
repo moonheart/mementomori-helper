@@ -55,7 +55,7 @@ export function PauseButton() {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" title={t('PAUSE_HINT')}>
                     <Pause className="h-4 w-4" />
-                    <span className="text-sm">{t('PAUSE_BUTTON')}</span>
+                    <span className="hidden text-sm sm:inline">{t('PAUSE_BUTTON')}</span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64">

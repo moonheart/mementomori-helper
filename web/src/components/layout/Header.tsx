@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ChevronDown, Users, User, Star, Calendar, MessageSquare, Clock } from 'lucide-react';
+import { Menu, ChevronDown, Users, User, Star, Calendar, MessageSquare, Clock } from 'lucide-react';
 import { PauseButton } from './PauseButton';
 import { LanguageMenu, ThemeToggle } from './AppControls';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,7 @@ import { useTimeManager } from '@/hooks/useTimeManager';
 import { useMasterStore } from '@/store/masterStore';
 import { TimeServerMB } from '@/api/generated/timeServerMB';
 
-export function Header() {
+export function Header({ onMenu }: { onMenu: () => void }) {
     const navigate = useNavigate();
     const { t, currentLanguage } = useLocalizationStore();
     const currentAccountId = useAccountStore((state) => state.currentAccountId);
@@ -95,18 +95,22 @@ export function Header() {
 
     return (
         <>
-            <header className="flex min-h-16 items-center justify-between border-b bg-background px-6 py-2">
+            <header className="flex min-h-16 items-center justify-between gap-2 border-b bg-background px-3 py-2 md:px-6">
                 {/* Player Info */}
-                <div className="flex min-w-0 items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <div className="flex min-w-0 items-center gap-2 md:gap-3">
+                    <Button variant="ghost" size="icon" className="shrink-0 md:hidden" onClick={onMenu} aria-label="Menu">
+                        <Menu className="h-5 w-5" />
+                    </Button>
+                    <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary sm:flex">
                         <User className="h-6 w-6" />
                     </div>
                     <div className="min-w-0">
                         <div className="flex items-center gap-2">
                             <span className="truncate font-semibold">
-                                {t('[CommonPlayerNameFormat]', [status?.name || '-'])}
+                                <span className="sm:hidden">{status?.name || '-'}</span>
+                                <span className="hidden sm:inline">{t('[CommonPlayerNameFormat]', [status?.name || '-'])}</span>
                             </span>
-                            <Badge variant="outline" className="font-mono">
+                            <Badge variant="outline" className="hidden font-mono sm:inline-flex">
                                 {t('[PlayerId]')}: {status?.playerId ?? '-'}
                             </Badge>
                         </div>
@@ -136,11 +140,11 @@ export function Header() {
                 </div>
 
                 {/* Currency & Actions */}
-                <div className="flex items-center gap-4">
-                    {/* Server Time */}
-                    <div className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 font-mono text-sm" title={t('[MyPagePlayerInformationServerTimeLabel]')}>
+                <div className="flex shrink-0 items-center gap-1 md:gap-4">
+                    {/* Server Time (手机上放不下, 隐藏) */}
+                    <div className="hidden items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 font-mono text-sm lg:flex" title={t('[MyPagePlayerInformationServerTimeLabel]')}>
                         <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
-                        <span className="tabular-nums">{t('[MyPagePlayerInformationServerTimeLabel]')} {serverTimeStr}</span>
+                        <span className="whitespace-nowrap tabular-nums">{t('[MyPagePlayerInformationServerTimeLabel]')} {serverTimeStr}</span>
                     </div>
 
                     <PauseButton />
@@ -152,7 +156,7 @@ export function Header() {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="gap-2">
-                                <span className="max-w-[120px] truncate">
+                                <span className="hidden max-w-[120px] truncate sm:inline">
                                     {status?.name || '-'}
                                 </span>
                                 <ChevronDown className="h-4 w-4" />

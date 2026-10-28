@@ -37,7 +37,7 @@ export function LanguageMenu() {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" title={t('HEADER_SWITCH_LANGUAGE')}>
                     <Globe className="h-4 w-4" />
-                    <span className="text-sm">{LANGUAGES.find(l => l.code === currentLanguage)?.label ?? currentLanguage}</span>
+                    <span className="hidden text-sm sm:inline">{LANGUAGES.find(l => l.code === currentLanguage)?.label ?? currentLanguage}</span>
                     <ChevronDown className="h-3.5 w-3.5" />
                 </Button>
             </DropdownMenuTrigger>

@@ -90,7 +90,7 @@ export function AutopilotPage() {
     return (
         <div className="space-y-6">
             <Card>
-                <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0">
+                <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-1">
                         <CardTitle>{t('AP_TITLE')}</CardTitle>
                         <CardDescription>{t('AP_DESC')}</CardDescription>
@@ -111,7 +111,7 @@ export function AutopilotPage() {
                             <Switch id="ap-enabled" checked={config.enabled} onCheckedChange={(v) => update({ enabled: v })} />
                             <Label htmlFor="ap-enabled">{t('AP_ENABLED')}</Label>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-3">
                             <span className="text-sm text-muted-foreground">{t('AP_SCHEDULE')}</span>
                             <CronPicker value={config.cron} onChange={(cron) => update({ cron })} defaultValue="0 30 * ? * *" />
                         </div>

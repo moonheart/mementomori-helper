@@ -1,4 +1,4 @@
-import { Home, Users, Package, Boxes, ListTodo, ShoppingCart, Swords, Shield, MapPin, Settings, Sparkles, Mountain, Ghost, Bot, ScrollText, Rocket, Crown } from 'lucide-react';
+import { X, Home, Users, Package, Boxes, ListTodo, ShoppingCart, Swords, Shield, MapPin, Settings, Sparkles, Mountain, Ghost, Bot, ScrollText, Rocket, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link, useLocation } from 'react-router-dom';
 import { useLocalizationStore } from '@/store/localization-store';
@@ -106,17 +106,26 @@ const navItems: { titleKey: string; href: string; icon: React.ElementType }[] = 
     }
 ];
 
-export function Sidebar() {
+/** 桌面: 固定在左边; 手机 (<md): 点菜单按钮才滑出来, 点链接或背景关闭 */
+export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
     const { t } = useLocalizationStore();
     const location = useLocation();
 
     return (
-        <div className="flex h-full w-64 flex-col border-r bg-background">
+        <>
+        {open && <div className="fixed inset-0 z-40 bg-black/50 md:hidden" onClick={onClose} aria-hidden />}
+        <div className={cn(
+            'fixed inset-y-0 left-0 z-50 flex h-full w-64 flex-col border-r bg-background transition-transform md:static md:translate-x-0',
+            open ? 'translate-x-0' : '-translate-x-full'
+        )}>
             {/* Logo */}
-            <div className="flex h-16 items-center border-b px-6">
+            <div className="flex h-16 items-center justify-between border-b px-6">
                 <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                     MementoMori
                 </h1>
+                <button className="rounded-md p-2 text-muted-foreground hover:bg-accent md:hidden" onClick={onClose} aria-label="Close menu">
+                    <X className="h-5 w-5" />
+                </button>
             </div>
 
             {/* Navigation */}
@@ -130,6 +139,7 @@ export function Sidebar() {
                         <Link
                             key={item.href}
                             to={item.href}
+                            onClick={onClose}
                             className={cn(
                                 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                                 isActive
@@ -144,5 +154,6 @@ export function Sidebar() {
                 })}
             </nav>
         </div>
+        </>
     );
 }

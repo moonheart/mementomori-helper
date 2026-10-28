@@ -78,7 +78,7 @@ export function LevelLinkPanel() {
                         <CardTitle>{t('LL_LINK_TITLE')}</CardTitle>
                         <CardDescription>{t('LL_LINK_DESC', [info.partyLevel, members.filter((m) => m.userCharacterGuid).length, info.memberMaxCount])}</CardDescription>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                         <Select value={String(sortType)} onValueChange={(v) => setSortType(Number(v))}>
                             <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
                             <SelectContent>

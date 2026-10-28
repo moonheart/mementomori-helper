@@ -153,7 +153,7 @@ export function SettingsPage() {
             </div>
 
             <Tabs defaultValue="automation" className="w-full">
-                <TabsList className="grid w-full max-w-3xl grid-cols-5">
+                <TabsList className="flex h-auto w-full max-w-3xl flex-wrap justify-start sm:grid sm:grid-cols-5">
                     <TabsTrigger value="automation">
                         <Settings className="mr-2 h-4 w-4" />
                         {t('SETTINGS_TAB_AUTOMATION')}
