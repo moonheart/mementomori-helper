@@ -27,7 +27,7 @@ export function ProgressChart({ snapshots }: { snapshots: ProgressSnapshot[] }) 
     const range = { from: at(snapshots[0]), to: at(snapshots[snapshots.length - 1]) };
 
     return (
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="divide-y">
             <Mini title={t('AP_SERIES_QUEST')} points={quest} range={range} />
             <Mini title={t('AP_SERIES_LINK')} points={link} range={range} />
             <Mini title={t('AP_SERIES_TOWER')} points={tower} range={range} />
@@ -59,15 +59,15 @@ function Mini({ title, points, range }: { title: string; points: Point[]; range:
     };
 
     return (
-        <div className="space-y-1 rounded-lg border p-3">
-            <div className="flex items-baseline justify-between gap-2">
-                <span className="text-sm text-muted-foreground">{title}</span>
-                <span className="text-xs text-muted-foreground tabular-nums">
-                    {hover != null ? dayjs(shown.time).format('MM-DD HH:mm') : `${first.label} →`}
-                </span>
+        <div className="flex items-center gap-4 py-3">
+            <div className="w-32 shrink-0">
+                <div className="text-sm text-muted-foreground">{title}</div>
+                <div className="text-2xl font-semibold tabular-nums">{shown.label}</div>
+                <div className="text-xs text-muted-foreground tabular-nums">
+                    {hover != null ? dayjs(shown.time).format('MM-DD HH:mm') : `${first.label} → ${last.label}`}
+                </div>
             </div>
-            <div className="text-2xl font-semibold tabular-nums">{shown.label}</div>
-            <svg viewBox={`0 0 ${W} ${H}`} className="h-20 w-full text-primary" preserveAspectRatio="none" role="img"
+            <svg viewBox={`0 0 ${W} ${H}`} className="h-16 min-w-0 flex-1 text-primary" preserveAspectRatio="none" role="img"
                  aria-label={`${title}: ${first.label} → ${last.label}`} onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
                 <line x1={PAD} x2={W - PAD} y1={H - PAD} y2={H - PAD} className="stroke-border" strokeWidth={1} vectorEffect="non-scaling-stroke" />
                 <path d={d} fill="none" stroke="currentColor" strokeWidth={2} vectorEffect="non-scaling-stroke" />
