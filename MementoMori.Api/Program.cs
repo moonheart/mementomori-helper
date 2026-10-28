@@ -6,6 +6,7 @@ using MementoMori.Api.Infrastructure.Database;
 using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.AddProvider(new MementoMori.Api.Infrastructure.FileLoggerProvider());
 
 // UI language for job logs / API messages: "en" (default) or "zh"
 var uiCulture = System.Globalization.CultureInfo.GetCultureInfo(builder.Configuration["Localization:Culture"] ?? "en");
