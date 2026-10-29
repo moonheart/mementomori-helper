@@ -344,8 +344,8 @@ public partial class AutoFillLevelLinkHandler : IGameActionHandler
             .OrderByDescending(d => wanted.Contains(d.CharacterId)).ThenByDescending(d => team.Contains(d.Guid)).ThenByDescending(d => d.RarityFlags).ThenByDescending(d => d.Level)
             .Select(d => d.CharacterId).Distinct().ToList(); // 同角色只放一个
         var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        // 冷却中的格子放不了, 跳过免得每次报错
-        var freeCells = Enumerable.Range(1, link.MemberMaxCount)
+        // 格子从 0 开始编号; 冷却中的格子放不了, 跳过免得每次报错
+        var freeCells = Enumerable.Range(0, link.MemberMaxCount)
             .Where(n => !members.Any(m => m.CellNo == n && (!string.IsNullOrEmpty(m.UserCharacterGuid) || m.UnavailableTime > now))).ToList();
 
         // 理想队伍里有人进不了链接 (链接满了) → 请走链接里不在理想队/主队的最弱角色; 格子要冷却, 之后的运行再放进来
