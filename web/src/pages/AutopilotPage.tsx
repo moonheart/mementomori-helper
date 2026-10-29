@@ -96,6 +96,7 @@ export function AutopilotPage() {
                 { target: 'step-AutoBuildTeam', title: t('TOUR_TEAM_T'), body: t('TOUR_TEAM_B') },
                 { target: 'step-SmartRankUp', title: t('TOUR_RANKUP_T'), body: t('TOUR_RANKUP_B') },
                 { target: 'fodder', title: t('TOUR_FODDER_T'), body: t('TOUR_FODDER_B') },
+                { target: 'tickets', title: t('TOUR_TICKETS_T'), body: t('TOUR_TICKETS_B') },
             ]} />
             <Card>
                 <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-start sm:justify-between">
@@ -196,6 +197,13 @@ export function AutopilotPage() {
                                 onChange={(e) => update({ gachaSurplusAbove: Math.max(0, Number(e.target.value)) })}
                             />
                             <p className="text-xs text-muted-foreground">{t('AP_SURPLUS_HINT')}</p>
+                        </div>
+                        <div data-tour="tickets" className="flex items-start gap-3 pt-7">
+                            <Switch id="ap-tickets" checked={config.useRewardTickets} onCheckedChange={(v) => update({ useRewardTickets: v })} />
+                            <Label htmlFor="ap-tickets" className="leading-tight">
+                                {t('AP_REWARD_TICKETS')}
+                                <span className="block text-xs font-normal text-muted-foreground">{t('AP_REWARD_TICKETS_HINT')}</span>
+                            </Label>
                         </div>
                         <div data-tour="fodder" className="flex items-start gap-3 pt-7">
                             <Switch id="ap-fodder" checked={config.rankUpWithFodder} onCheckedChange={(v) => update({ rankUpWithFodder: v })} />

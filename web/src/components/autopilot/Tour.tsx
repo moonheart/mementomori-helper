@@ -5,7 +5,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 export type TourStep = { target: string; title: string; body: string };
 
 // 版本号变了就再弹一次 (有新的会花东西/改东西的功能时 +1)
-const KEY = 'autopilot-tour-v2';
+const KEY = 'autopilot-tour-v3';
 
 function seen() {
     try { return localStorage.getItem(KEY) === '1'; } catch { return false; }

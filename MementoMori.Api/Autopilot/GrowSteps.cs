@@ -8,9 +8,11 @@ using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Master.Data;
 using MementoMori.Ortega.Share.Data.Item;
 using MementoMori.Ortega.Custom;
+using MementoMori.Ortega.Common.Utils;
 using static MementoMori.Api.Autopilot.AutopilotExtensions;
 using CharacterApi = MementoMori.Ortega.Share.Data.ApiInterface.Character;
 using LevelLinkApi = MementoMori.Ortega.Share.Data.ApiInterface.LevelLink;
+using ItemApi = MementoMori.Ortega.Share.Data.ApiInterface.Item;
 
 namespace MementoMori.Api.Autopilot;
 
@@ -22,6 +24,7 @@ namespace MementoMori.Api.Autopilot;
 public partial class AutoLevelUpHandler : IGameActionHandler
 {
     private readonly GrowthTracker _tracker;
+    private readonly PlayerSettingService _settings;
     private readonly JobLogger _log;
     public string ActionName => "Level up";
 
@@ -60,6 +63,8 @@ public partial class AutoLevelUpHandler : IGameActionHandler
         var start = data.UserCharacterDtoInfos.ToDictionary(d => d.Guid, d => d.Level);
         var linkBefore = link?.PartyLevel ?? 0;
         var skip = new HashSet<string>();
+        var config = await _settings.GetSettingAsync<AutopilotConfig>(userId, AutopilotJob.SettingKey) ?? new();
+        var ticketsLeft = config.UseRewardTickets ? 50 : 0; // 每次运行最多用 50 个
         while (true)
         {
             data = nm.UserSyncData;
@@ -85,7 +90,18 @@ public partial class AutoLevelUpHandler : IGameActionHandler
                 dest = lv;
             }
 
-            if (dest == c.Level) break;
+            if (dest == c.Level)
+            {
+                // 下一级的材料不够: 用挂机奖励道具 (金币/经验珠/潜在宝珠 N 小时) 补, 补上了就再算一次
+                if (ticketsLeft > 0 && await UseRewardTicketAsync(nm, userId, CharacterLevelTable.GetArray().FirstOrDefault(d => d.Level == c.Level + 1)?.RequiredItemList))
+                {
+                    ticketsLeft--;
+                    continue;
+                }
+
+                break;
+            }
+
             try
             {
                 await nm.SendRequest<CharacterApi.BulkLevelUpRequest, CharacterApi.BulkLevelUpResponse>(new CharacterApi.BulkLevelUpRequest {UserCharacterGuid = c.Guid, DestinationLevel = dest});
@@ -106,6 +122,41 @@ public partial class AutoLevelUpHandler : IGameActionHandler
         var linkAfter = data.UserLevelLinkDtoInfo?.PartyLevel ?? 0;
         if (linkAfter > linkBefore) await _tracker.TrackAsync(userId, GrowthKind.LevelLink, $"Level Link {linkBefore} → {linkAfter}");
         if (changed.Count == 0) await _log.LogAsync(userId, "Level up: not enough gold/potions");
+    }
+
+    // 缺哪种材料就用哪种道具, 只用 1/2 小时的 (6/8/24 小时的留给玩家自己); 育成套装三样都给, 最后才用
+    private static readonly Dictionary<(ItemType, long), QuestQuickTicketType[]> Tickets = new()
+    {
+        [(ItemType.Gold, 1)] = [QuestQuickTicketType.GoldHours1, QuestQuickTicketType.GoldHours2],
+        [(ItemType.CharacterTrainingMaterial, 1)] = [QuestQuickTicketType.ExpHours1, QuestQuickTicketType.ExpHours2],
+        [(ItemType.CharacterTrainingMaterial, 2)] = [QuestQuickTicketType.SeedHours1, QuestQuickTicketType.SeedHours2],
+    };
+
+    private static readonly QuestQuickTicketType[] Luxury =
+        [QuestQuickTicketType.LuxuryHours1, QuestQuickTicketType.LuxuryHours2];
+
+    /// <summary>用掉一个能补上缺的材料的道具; 没有可用的返回 false</summary>
+    private async Task<bool> UseRewardTicketAsync(NetworkManager nm, long userId, IEnumerable<UserItem>? cost)
+    {
+        if (cost == null) return false;
+        var data = nm.UserSyncData;
+        var missing = cost.Where(i => data.GetUserItemCount(i.ItemType, i.ItemId) < i.ItemCount).ToList();
+        if (missing.Count == 0) return false;
+        var candidates = missing.SelectMany(i => Tickets.GetValueOrDefault((i.ItemType, i.ItemId), [])).Concat(Luxury);
+        var ticket = candidates.Cast<QuestQuickTicketType?>().FirstOrDefault(t => data.GetUserItemCount(ItemType.QuestQuickTicket, (long) t!) > 0);
+        if (ticket == null) return false;
+        try
+        {
+            await nm.SendRequest<ItemApi.UseAutoBattleRewardItemRequest, ItemApi.UseAutoBattleRewardItemResponse>(
+                new ItemApi.UseAutoBattleRewardItemRequest {ItemType = ticket.Value, UseCount = 1});
+            await _tracker.TrackAsync(userId, GrowthKind.Reward, $"Used {ItemUtil.GetItemName(ItemType.QuestQuickTicket, (long) ticket.Value)} to keep leveling");
+            return true;
+        }
+        catch (Exception e)
+        {
+            await _log.LogAsync(userId, $"Use {ticket}: {e.Message}", "Warning");
+            return false;
+        }
     }
 }
 

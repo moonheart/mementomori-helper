@@ -37,14 +37,7 @@ public partial class AutoUseItemsHandler : IGameActionHandler
                 return;
             }
 
-            var itemSettings = await _playerSettingService.GetItemSettingsAsync(userId);
-            var autoUseItemTypes = itemSettings.AutoUseItemTypes;
-
-            if (autoUseItemTypes.Count == 0)
-            {
-                await _jobLogger.LogAsync(userId, Text.T("JobAutoUseItemsNoTypes"));
-                return;
-            }
+            // 道具类型设置界面上没有, 一直是空的 → 以前一个箱子都不开; 开关 AutoUseItems 就够了
 
             var openedCount = 0;
             var maxIterations = 20; // 防止无限循环

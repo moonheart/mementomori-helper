@@ -90,6 +90,9 @@ public class AutopilotConfig
     /// </summary>
     public long GachaSurplusAbove { get; set; }
 
+    /// <summary>升级材料不够时用 1/2 小时的挂机奖励道具补; 默认关</summary>
+    public bool UseRewardTickets { get; set; }
+
     /// <summary>升星时允许吃同属性的低强度角色 (不只是重复卡)</summary>
     public bool RankUpWithFodder { get; set; } = true;
 }
