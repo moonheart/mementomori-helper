@@ -901,7 +901,7 @@ export default {
     "TM_KEY_REMOVE": "Remove",
     "TM_KEY_REMOVED": "API key removed",
     "TM_KEY_SAVED": "API key saved",
-    "TM_KEY_HINT": "Stored on your helper only, never shown again. Get one from the tamamo.dev author.",
+    "TM_KEY_HINT": "tamamo.dev doesn't hand out API keys yet, that's coming soon on their side. Sharing your clears already works without one.",
     "TM_KEY_NEEDED": "To see clear teams for your stage here, add a tamamo.dev API key. Sharing your clears works without one.",
     "TM_KEY_LABEL": "tamamo.dev API key",
     "TM_USAGE": "Most used characters in clears ({0})",

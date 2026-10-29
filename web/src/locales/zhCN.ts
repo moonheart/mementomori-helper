@@ -904,7 +904,7 @@ export default {
     "TM_KEY_REMOVE": "删除",
     "TM_KEY_REMOVED": "API key 已删除",
     "TM_KEY_SAVED": "API key 已保存",
-    "TM_KEY_HINT": "只保存在你的助手里, 不会再显示. 向 tamamo.dev 作者申请.",
+    "TM_KEY_HINT": "tamamo.dev 还没有开放申请 API key, 作者那边很快会加上. 分享通关现在不需要 key 就能用.",
     "TM_KEY_NEEDED": "要在这里查看当前关卡的通关队伍, 请填写 tamamo.dev 的 API key. 分享通关不需要 key.",
     "TM_KEY_LABEL": "tamamo.dev API key",
     "TM_USAGE": "通关最常用角色 ({0})",
