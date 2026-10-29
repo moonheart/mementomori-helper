@@ -23,6 +23,8 @@ public partial class AutoClimbQuestHandler : IGameActionHandler
 {
     private readonly GrowthTracker _tracker;
     private readonly BattleLogService _battleLog;
+    private readonly TamamoService _tamamo;
+    private readonly PlayerSettingService _settings;
     private readonly JobLogger _log;
     public string ActionName => "Climb main quest";
 
@@ -33,6 +35,7 @@ public partial class AutoClimbQuestHandler : IGameActionHandler
         int fights = 0, losses = 0, wins = 0;
         string Q(long id) => QuestTable.GetById(id)?.Memo ?? id.ToString();
         var startQuest = nm.UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId;
+        var upload = (await _settings.GetSettingAsync<AutopilotConfig>(userId, AutopilotJob.SettingKey))?.UploadClears == true;
         await nm.SendRequest<MapInfoRequest, MapInfoResponse>(new MapInfoRequest {IsUpdateOtherPlayerInfo = true});
         while (fights < Climb.MaxFights && losses < Climb.MaxLosses)
         {
@@ -50,6 +53,11 @@ public partial class AutoClimbQuestHandler : IGameActionHandler
                 {
                     losses = 0;
                     wins++;
+                    if (upload)
+                    {
+                        try { await _tamamo.UploadQuestClearAsync(nm.UserSyncData, context.AccountInfo.CurrentWorldId ?? 0, questId, resp.BattleResult.SimulationResult); }
+                        catch (Exception e) { await _log.LogAsync(userId, $"Tamamo upload {Q(questId)}: {e.Message}", "Warning"); }
+                    }
                     await nm.SendRequest<MapInfoRequest, MapInfoResponse>(new MapInfoRequest {IsUpdateOtherPlayerInfo = true});
                     try { await nm.SendRequest<NextQuestRequest, NextQuestResponse>(new NextQuestRequest()); }
                     catch (NetworkManager.ApiErrorException) { /* 没有下一关可移动时会报错 */ }

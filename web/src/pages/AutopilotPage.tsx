@@ -97,6 +97,7 @@ export function AutopilotPage() {
                 { target: 'step-SmartRankUp', title: t('TOUR_RANKUP_T'), body: t('TOUR_RANKUP_B') },
                 { target: 'fodder', title: t('TOUR_FODDER_T'), body: t('TOUR_FODDER_B') },
                 { target: 'tickets', title: t('TOUR_TICKETS_T'), body: t('TOUR_TICKETS_B') },
+                { target: 'upload', title: t('TOUR_UPLOAD_T'), body: t('TOUR_UPLOAD_B') },
             ]} />
             <Card>
                 <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-start sm:justify-between">
@@ -203,6 +204,13 @@ export function AutopilotPage() {
                             <Label htmlFor="ap-tickets" className="leading-tight">
                                 {t('AP_REWARD_TICKETS')}
                                 <span className="block text-xs font-normal text-muted-foreground">{t('AP_REWARD_TICKETS_HINT')}</span>
+                            </Label>
+                        </div>
+                        <div data-tour="upload" className="flex items-start gap-3 pt-7">
+                            <Switch id="ap-upload" checked={config.uploadClears} onCheckedChange={(v) => update({ uploadClears: v })} />
+                            <Label htmlFor="ap-upload" className="leading-tight">
+                                {t('AP_UPLOAD_CLEARS')}
+                                <span className="block text-xs font-normal text-muted-foreground">{t('AP_UPLOAD_CLEARS_HINT')}</span>
                             </Label>
                         </div>
                         <div data-tour="fodder" className="flex items-start gap-3 pt-7">

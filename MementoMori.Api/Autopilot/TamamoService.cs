@@ -1,4 +1,8 @@
+using MementoMori.Api.Extensions;
+using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.Battle;
+using MementoMori.Ortega.Share.Data.Battle.Result;
+using MementoMori.Ortega.Share.Master.Data;
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Enums;
 using Newtonsoft.Json.Linq;
@@ -102,6 +106,44 @@ public partial class TamamoService
     {
         var parts = stage.Split('-');
         return parts.Length == 2 && int.TryParse(parts[0], out var a) && int.TryParse(parts[1], out var b) ? a * 1000 + b : 0;
+    }
+
+    /// <summary>
+    /// 把一次主线通关上传到 tamamo (作者的 postClearParty), 补上 tamamo 拿不到的关卡; 用户在 Autopilot 里打开才传.
+    /// 失败只记日志, 不影响推图
+    /// </summary>
+    public async Task UploadQuestClearAsync(UserSyncData data, long worldId, long questId, BattleSimulationResult sim)
+    {
+        if (!Enabled) return;
+        var st = data.UserStatusDtoInfo;
+        var party = JObject.FromObject(sim)["BattleField"]!["Characters"]!
+            .Where(c => (bool) c["DefaultPosition"]!["IsAttacker"]!)
+            .Select(c => new JObject
+            {
+                ["CharacterGuid"] = c["CharacterGuid"], ["CharacterId"] = c["UnitId"], ["RarityFlags"] = c["CharacterRarityFlags"], ["Level"] = c["CharacterLevel"],
+                ["IsLevelLink"] = data.IsLevelLinkMember((string) c["CharacterGuid"]!), ["Position"] = c["DefaultPosition"]!["DeckIndex"],
+                ["BaseParameter"] = c["DefaultBaseParameter"], ["BattleParameter"] = c["DefaultBattleParameter"], ["BattlePower"] = null,
+                // 装备里的 PlayerId/CreateAt 对通关没用, 不传
+                ["UserEquipmentDtoInfos"] = new JArray(c["EquipmentDtoInfos"]!.Select(e =>
+                {
+                    var o = (JObject) e.DeepClone();
+                    o.Remove("PlayerId");
+                    o.Remove("CreateAt");
+                    return o;
+                })),
+            });
+        var body = new JObject
+        {
+            ["Client"] = "MementoMori-Helper", ["PlayerId"] = st.PlayerId, ["PlayerName"] = st.Name, ["Rank"] = st.Rank,
+            ["Type"] = 0, ["Stage"] = QuestTable.GetById(questId)?.Memo, ["StageId"] = questId, ["WorldId"] = worldId,
+            ["BattleToken"] = sim.BattleToken, ["ClearedAt"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), ["EndTurn"] = sim.BattleEndInfo.EndTurn,
+            ["DeckBattlePower"] = GrowthTracker.TeamPower(data), ["ClearPartyCharacterInfos"] = new JArray(party),
+        };
+        using var req = new HttpRequestMessage(HttpMethod.Post, "postClearParty") {Content = new StringContent(body.ToString(Newtonsoft.Json.Formatting.None), System.Text.Encoding.UTF8, "application/json")};
+        req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {ApiKey}");
+        req.Headers.TryAddWithoutValidation("User-Agent", "MementoMori-Helper (+https://github.com/maplehugs/mementomori-helper)");
+        using var resp = await Http.SendAsync(req);
+        resp.EnsureSuccessStatusCode();
     }
 
     private async Task<JToken> GetAsync(string path)

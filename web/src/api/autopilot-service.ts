@@ -15,6 +15,7 @@ export interface AutopilotConfig {
     gachaMinPickupTier: number;
     rankUpWithFodder: boolean;
     useRewardTickets: boolean;
+    uploadClears: boolean;
     gachaSurplusAbove: number;
 }
 
