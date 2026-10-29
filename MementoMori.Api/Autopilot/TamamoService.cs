@@ -130,7 +130,6 @@ public partial class TamamoService
     public async Task UploadQuestClearAsync(string? key, UserSyncData data, long worldId, long questId, BattleSimulationResult sim, DateTime? clearedAtUtc = null)
     {
         var st = data.UserStatusDtoInfo;
-        var report = JObject.FromObject(sim);
         var attackers = sim.BattleField.Characters.Where(c => c.DefaultPosition.IsAttacker).ToList();
         var power = attackers.ToDictionary(c => c.CharacterGuid, c => BattlePowerCalculator.CalculateBattlePower(c.DefaultBattleParameter, c.DefaultBaseParameter));
         var party = attackers.Select(c => new JObject
@@ -154,10 +153,15 @@ public partial class TamamoService
             ["Type"] = 0, ["Stage"] = QuestTable.GetById(questId)?.Memo, ["StageId"] = questId, ["WorldId"] = worldId,
             ["BattleToken"] = sim.BattleToken, ["ClearedAt"] = new DateTimeOffset(clearedAtUtc ?? DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeMilliseconds(), ["EndTurn"] = sim.BattleEndInfo.EndTurn,
             ["DeckBattlePower"] = power.Values.Sum(), ["ClearPartyCharacterInfos"] = new JArray(party),
-            // 完整战斗记录 (BattleSimulationResult), tamamo 用它回放 "バトルレポート"
-            ["BattleReport"] = report,
         };
-        using var req = new HttpRequestMessage(HttpMethod.Post, "postClearParty") {Content = new StringContent(body.ToString(Newtonsoft.Json.Formatting.None), System.Text.Encoding.UTF8, "application/json")};
+        await PostAsync(key, "postClearParty", body);
+        // 完整战斗记录 (BattleSimulationResult) 单独传, tamamo 用它显示 "バトルレポート"
+        await PostAsync(key, "postBattleReport", JObject.FromObject(sim));
+    }
+
+    private static async Task PostAsync(string? key, string path, JObject body)
+    {
+        using var req = new HttpRequestMessage(HttpMethod.Post, path) {Content = new StringContent(body.ToString(Newtonsoft.Json.Formatting.None), System.Text.Encoding.UTF8, "application/json")};
         // 作者说上传不需要 key; 有的话还是带上
         if (key != null) req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {key}");
         req.Headers.TryAddWithoutValidation("User-Agent", "MementoMori-Helper (+https://github.com/maplehugs/mementomori-helper)");
