@@ -1,5 +1,6 @@
 using MementoMori.Api.Services;
 using MementoMori.Api.Extensions;
+using MementoMori.Ortega.Share.Calculators;
 using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.Battle;
 using MementoMori.Ortega.Share.Data.Battle.Result;
@@ -126,34 +127,39 @@ public partial class TamamoService
     /// 把一次主线通关上传到 tamamo (作者的 postClearParty), 补上 tamamo 拿不到的关卡; 用户在 Autopilot 里打开才传.
     /// 失败只记日志, 不影响推图
     /// </summary>
-    public async Task UploadQuestClearAsync(string key, UserSyncData data, long worldId, long questId, BattleSimulationResult sim)
+    public async Task UploadQuestClearAsync(string? key, UserSyncData data, long worldId, long questId, BattleSimulationResult sim)
     {
         var st = data.UserStatusDtoInfo;
-        var party = JObject.FromObject(sim)["BattleField"]!["Characters"]!
-            .Where(c => (bool) c["DefaultPosition"]!["IsAttacker"]!)
-            .Select(c => new JObject
+        var report = JObject.FromObject(sim);
+        var attackers = sim.BattleField.Characters.Where(c => c.DefaultPosition.IsAttacker).ToList();
+        var power = attackers.ToDictionary(c => c.CharacterGuid, c => BattlePowerCalculator.CalculateBattlePower(c.DefaultBattleParameter, c.DefaultBaseParameter));
+        var party = attackers.Select(c => new JObject
+        {
+            ["CharacterGuid"] = c.CharacterGuid, ["CharacterId"] = c.UnitId, ["RarityFlags"] = (int) c.CharacterRarityFlags, ["Level"] = c.CharacterLevel,
+            ["IsLevelLink"] = data.IsLevelLinkMember(c.CharacterGuid), ["Position"] = c.DefaultPosition.DeckIndex,
+            ["BaseParameter"] = JObject.FromObject(c.DefaultBaseParameter), ["BattleParameter"] = JObject.FromObject(c.DefaultBattleParameter),
+            ["BattlePower"] = power[c.CharacterGuid],
+            // 装备里的 PlayerId/CreateAt 对通关没用, 不传
+            ["UserEquipmentDtoInfos"] = new JArray(c.EquipmentDtoInfos.Select(e =>
             {
-                ["CharacterGuid"] = c["CharacterGuid"], ["CharacterId"] = c["UnitId"], ["RarityFlags"] = c["CharacterRarityFlags"], ["Level"] = c["CharacterLevel"],
-                ["IsLevelLink"] = data.IsLevelLinkMember((string) c["CharacterGuid"]!), ["Position"] = c["DefaultPosition"]!["DeckIndex"],
-                ["BaseParameter"] = c["DefaultBaseParameter"], ["BattleParameter"] = c["DefaultBattleParameter"], ["BattlePower"] = null,
-                // 装备里的 PlayerId/CreateAt 对通关没用, 不传
-                ["UserEquipmentDtoInfos"] = new JArray(c["EquipmentDtoInfos"]!.Select(e =>
-                {
-                    var o = (JObject) e.DeepClone();
-                    o.Remove("PlayerId");
-                    o.Remove("CreateAt");
-                    return o;
-                })),
-            });
+                var o = JObject.FromObject(e);
+                o.Remove("PlayerId");
+                o.Remove("CreateAt");
+                return o;
+            })),
+        });
         var body = new JObject
         {
             ["Client"] = "MementoMori-Helper", ["PlayerId"] = st.PlayerId, ["PlayerName"] = st.Name, ["Rank"] = st.Rank,
             ["Type"] = 0, ["Stage"] = QuestTable.GetById(questId)?.Memo, ["StageId"] = questId, ["WorldId"] = worldId,
             ["BattleToken"] = sim.BattleToken, ["ClearedAt"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), ["EndTurn"] = sim.BattleEndInfo.EndTurn,
-            ["DeckBattlePower"] = GrowthTracker.TeamPower(data), ["ClearPartyCharacterInfos"] = new JArray(party),
+            ["DeckBattlePower"] = power.Values.Sum(), ["ClearPartyCharacterInfos"] = new JArray(party),
+            // 完整战斗记录 (BattleSimulationResult), tamamo 用它回放 "バトルレポート"
+            ["BattleReport"] = report,
         };
         using var req = new HttpRequestMessage(HttpMethod.Post, "postClearParty") {Content = new StringContent(body.ToString(Newtonsoft.Json.Formatting.None), System.Text.Encoding.UTF8, "application/json")};
-        req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {key}");
+        // 作者说上传不需要 key; 有的话还是带上
+        if (key != null) req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {key}");
         req.Headers.TryAddWithoutValidation("User-Agent", "MementoMori-Helper (+https://github.com/maplehugs/mementomori-helper)");
         using var resp = await Http.SendAsync(req);
         resp.EnsureSuccessStatusCode();

@@ -35,8 +35,9 @@ public partial class AutoClimbQuestHandler : IGameActionHandler
         int fights = 0, losses = 0, wins = 0;
         string Q(long id) => QuestTable.GetById(id)?.Memo ?? id.ToString();
         var startQuest = nm.UserSyncData.UserBattleBossDtoInfo.BossClearMaxQuestId;
-        // 默认上传; 没有 tamamo key 就不传
-        var uploadKey = (await _settings.GetSettingAsync<AutopilotConfig>(userId, AutopilotJob.SettingKey) ?? new()).UploadClears ? await _tamamo.GetKeyAsync(userId) : null;
+        // 默认上传到 tamamo (不需要 key)
+        var upload = (await _settings.GetSettingAsync<AutopilotConfig>(userId, AutopilotJob.SettingKey) ?? new()).UploadClears;
+        var uploadKey = upload ? await _tamamo.GetKeyAsync(userId) : null;
         await nm.SendRequest<MapInfoRequest, MapInfoResponse>(new MapInfoRequest {IsUpdateOtherPlayerInfo = true});
         while (fights < Climb.MaxFights && losses < Climb.MaxLosses)
         {
@@ -54,7 +55,7 @@ public partial class AutoClimbQuestHandler : IGameActionHandler
                 {
                     losses = 0;
                     wins++;
-                    if (uploadKey != null)
+                    if (upload)
                     {
                         try { await _tamamo.UploadQuestClearAsync(uploadKey, nm.UserSyncData, context.AccountInfo.CurrentWorldId ?? 0, questId, resp.BattleResult.SimulationResult); }
                         catch (Exception e) { await _log.LogAsync(userId, $"Tamamo upload {Q(questId)}: {e.Message}", "Warning"); }

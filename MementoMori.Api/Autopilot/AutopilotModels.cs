@@ -90,7 +90,7 @@ public class AutopilotConfig
     /// </summary>
     public long GachaSurplusAbove { get; set; }
 
-    /// <summary>主线通关后把队伍/装备上传到 tamamo.dev (带玩家ID/名字/等级); 默认开, 需要 tamamo key</summary>
+    /// <summary>主线通关后把队伍/装备上传到 tamamo.dev (带玩家ID/名字/等级); 默认开, 不需要 key</summary>
     public bool UploadClears { get; set; } = true;
 
     /// <summary>升级材料不够时用 1/2 小时的挂机奖励道具补; 默认关</summary>
