@@ -76,6 +76,9 @@ public class AutopilotConfig
     /// <summary>启用的步骤 (handler 的 ActionKey), 执行顺序由 AutopilotSteps 决定</summary>
     public List<string> Steps { get; set; } = new();
 
+    /// <summary>允许用免费钻石抽卡; 默认关, 只用抽卡券</summary>
+    public bool GachaSpendDiamonds { get; set; }
+
     /// <summary>抽卡后至少保留的免费钻石</summary>
     public long GachaDiamondReserve { get; set; } = 3000;
 

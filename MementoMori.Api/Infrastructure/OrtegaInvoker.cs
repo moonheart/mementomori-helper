@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using MementoMori.Api.Services;
 using MementoMori.Ortega.Share.Data.ApiInterface;
+using MementoMori.Ortega.Share;
 
 namespace MementoMori.Api.Infrastructure
 {
@@ -16,6 +17,7 @@ namespace MementoMori.Api.Infrastructure
     public partial class OrtegaInvoker
     {
         private readonly AccountManager _accountManager;
+        private readonly AccountService _accountService;
 
         /// <summary>
         /// 动态调用 Ortega API
@@ -37,10 +39,17 @@ namespace MementoMori.Api.Infrastructure
             // 反序列化请求对象
             var request = DeserializeRequest(requestJson, requestType);
 
-            // 使用 NetworkManager 发送请求
-            var response = await SendRequestDynamic(accountContext.NetworkManager, request, requestType, responseType);
-            
-            return response;
+            try
+            {
+                return await SendRequestDynamic(accountContext.NetworkManager, request, requestType, responseType);
+            }
+            catch (NetworkManager.ApiErrorException e) when (e.ErrorCode == ErrorCode.CommonNoSession)
+            {
+                // 游戏服务器把会话踢了 (自动任务里常见), 网页打开时重新登录再试一次, 不然全显示 0
+                var login = await _accountService.LoginAsync(userId, accountContext.AccountInfo.ClientKey);
+                if (!login.Success) throw;
+                return await SendRequestDynamic(accountContext.NetworkManager, request, requestType, responseType);
+            }
         }
 
         /// <summary>

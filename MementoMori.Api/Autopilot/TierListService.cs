@@ -1,3 +1,4 @@
+using MementoMori.Api.Extensions;
 using System.Reflection;
 using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.DtoInfo;
@@ -75,21 +76,33 @@ public class TierListService
         "SS" => 5, "S" => 4, "A" => 3, "B" => 2, "C" => 1, _ => 0
     };
 
+    /// <summary>理想队伍: 只看 强度 → 稀有度 (不管等级), 决定谁该进等级链接</summary>
+    public List<UserCharacterDtoInfo> GetWantedTeam(UserSyncData data) => Pick(data, _ => true);
+
     /// <summary>
-    /// 推荐队伍: 每个角色取稀有度最高的一张, 按 强度 → 稀有度 → 等级 排, 有像样的奶就保证带一个
+    /// 推荐队伍: 等级跟得上的才上场 (有效等级 >= 链接等级 - 20). 1 级的新 SS 先由 Fill Level Link 放进链接, 跟上了再上场
     /// </summary>
     public List<UserCharacterDtoInfo> GetRecommendedTeam(UserSyncData data)
     {
         if (data?.UserCharacterDtoInfos == null) return new();
+        var linkLevel = data.UserCharacterDtoInfos.Where(c => !data.IsLevelLinkMember(c.Guid))
+            .OrderByDescending(c => c.Level).Take(5).Select(c => c.Level).DefaultIfEmpty(1).Min();
+        return Pick(data, c => data.GetEffectiveLevel(c) >= linkLevel - 20);
+    }
+
+    /// <summary>每个角色取稀有度最高的一张, 按 能上场 → 强度 → 稀有度 → 等级 排, 有像样的奶就保证带一个</summary>
+    private List<UserCharacterDtoInfo> Pick(UserSyncData data, Func<UserCharacterDtoInfo, bool> ready)
+    {
+        if (data?.UserCharacterDtoInfos == null) return new();
         var pool = data.UserCharacterDtoInfos
             .GroupBy(c => c.CharacterId).Select(g => g.MaxBy(c => c.RarityFlags)!)
-            .OrderByDescending(c => Score(c.CharacterId)).ThenByDescending(c => c.RarityFlags).ThenByDescending(c => data.GetEffectiveLevel(c))
+            .OrderByDescending(ready).ThenByDescending(c => Score(c.CharacterId)).ThenByDescending(c => c.RarityFlags).ThenByDescending(c => data.GetEffectiveLevel(c))
             .ToList();
         var team = pool.Take(5).ToList();
         bool IsHealer(UserCharacterDtoInfo c) => GetBuiltinEntry(c.CharacterId)?.Role == "healer";
         if (team.Count == 5 && !team.Any(IsHealer))
         {
-            var healer = pool.Skip(5).FirstOrDefault(c => IsHealer(c) && Score(c.CharacterId) >= 2);
+            var healer = pool.Skip(5).FirstOrDefault(c => IsHealer(c) && Score(c.CharacterId) >= 2 && ready(c));
             if (healer != null) team[4] = healer;
         }
 

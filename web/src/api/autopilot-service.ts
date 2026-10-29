@@ -10,6 +10,7 @@ export interface AutopilotConfig {
     enabled: boolean;
     cron: string;
     steps: string[];
+    gachaSpendDiamonds: boolean;
     gachaDiamondReserve: number;
     gachaMinPickupTier: number;
     rankUpWithFodder: boolean;
@@ -95,7 +96,8 @@ export const toCharacterInfo = (c: { characterId: number; guid: string; rarityFl
 
 export interface TamamoCharacter { characterId: number; name: string; rarityFlags: number; tier: string | null; owned: boolean }
 export interface TamamoTeam { characters: TamamoCharacter[]; clears: number; minPower: number }
-export interface TamamoStageTeams { stage: string; dataStage: string | null; stuck: number; teams: TamamoTeam[]; lowest: TamamoTeam | null; link: string }
+export interface TamamoStageTeams { stage: string; dataStage: string | null; stuck: number; teams: TamamoTeam[]; lowest: TamamoTeam | null; link: string;
+    usageStage: string | null; usage: { character: TamamoCharacter; count: number }[] | null }
 
 export const TIERS = ['SS', 'S', 'A', 'B', 'C'] as const;
 

@@ -323,6 +323,7 @@ public partial class AutoSphereHandler : IGameActionHandler
 public partial class AutoFillLevelLinkHandler : IGameActionHandler
 {
     private readonly GrowthTracker _tracker;
+    private readonly TierListService _tiers;
     private readonly JobLogger _log;
     public string ActionName => "Fill Level Link";
 
@@ -337,12 +338,36 @@ public partial class AutoFillLevelLinkHandler : IGameActionHandler
         var baseFive = data.UserCharacterDtoInfos.Where(d => !data.IsLevelLinkMember(d.Guid))
             .OrderByDescending(d => d.Level).Take(5).Select(d => d.Guid).ToHashSet();
         var team = data.GetMainTeam().Select(d => d.Guid).ToHashSet();
+        var wanted = _tiers.GetWantedTeam(data).Select(d => d.CharacterId).ToHashSet();
         var candidates = data.UserCharacterDtoInfos
             .Where(d => !baseFive.Contains(d.Guid) && !data.IsLevelLinkMember(d.Guid))
-            .OrderByDescending(d => team.Contains(d.Guid)).ThenByDescending(d => d.RarityFlags).ThenByDescending(d => d.Level)
+            .OrderByDescending(d => wanted.Contains(d.CharacterId)).ThenByDescending(d => team.Contains(d.Guid)).ThenByDescending(d => d.RarityFlags).ThenByDescending(d => d.Level)
             .Select(d => d.CharacterId).Distinct().ToList(); // 同角色只放一个
+        var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        // 冷却中的格子放不了, 跳过免得每次报错
         var freeCells = Enumerable.Range(1, link.MemberMaxCount)
-            .Where(n => !members.Any(m => m.CellNo == n && !string.IsNullOrEmpty(m.UserCharacterGuid))).ToList();
+            .Where(n => !members.Any(m => m.CellNo == n && (!string.IsNullOrEmpty(m.UserCharacterGuid) || m.UnavailableTime > now))).ToList();
+
+        // 理想队伍里有人进不了链接 (链接满了) → 请走链接里不在理想队/主队的最弱角色; 格子要冷却, 之后的运行再放进来
+        var emptyCells = link.MemberMaxCount - members.Count(m => !string.IsNullOrEmpty(m.UserCharacterGuid));
+        var waiting = candidates.Count(wanted.Contains) - emptyCells;
+        if (waiting > 0)
+        {
+            var victims = members.Where(m => !string.IsNullOrEmpty(m.UserCharacterGuid) && !wanted.Contains(m.CharacterId) && !team.Contains(m.UserCharacterGuid))
+                .OrderBy(m => _tiers.Score(m.CharacterId)).Take(waiting).ToList();
+            foreach (var m in victims)
+            {
+                try
+                {
+                    await nm.SendRequest<LevelLinkApi.UnSetMemberRequest, LevelLinkApi.UnSetMemberResponse>(new LevelLinkApi.UnSetMemberRequest {LevelLinkCellNo = m.CellNo});
+                    await _tracker.TrackAsync(userId, GrowthKind.LevelLink, $"{CharName(m.CharacterId)} left Level Link (slot {m.CellNo}) to make room for a stronger character");
+                }
+                catch (Exception e)
+                {
+                    await _log.LogAsync(userId, $"Level Link remove slot {m.CellNo}: {e.Message}", "Warning");
+                }
+            }
+        }
         foreach (var (cell, charId) in freeCells.Zip(candidates))
         {
             if (members.Any(m => m.CharacterId == charId)) continue;

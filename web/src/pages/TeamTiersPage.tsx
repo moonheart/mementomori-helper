@@ -183,6 +183,22 @@ export function TeamTiersPage() {
                                 )}
                                 {tamamo.teams.map((team, i) => <TamamoRow key={i} team={team} label={t('TM_CLEARS', [team.clears])} />)}
                                 {tamamo.lowest && <TamamoRow team={tamamo.lowest} label={t('TM_LOWEST')} />}
+                                {tamamo.usage && tamamo.usage.length > 0 && (
+                                    <div className="space-y-1">
+                                        <p className="text-xs text-muted-foreground">{t('TM_USAGE', [tamamo.usageStage ?? ''])}</p>
+                                        <ul className="flex flex-wrap gap-2">
+                                            {tamamo.usage.map(({ character: c, count }) => (
+                                                <li key={c.characterId} className={cn('flex items-center gap-2 rounded-lg border py-1 pl-1 pr-3 text-sm', !c.owned && 'opacity-50')}
+                                                    title={c.owned ? undefined : t('TM_NOT_OWNED')}>
+                                                    <CharacterIcon userCharacterInfo={toCharacterInfo({ characterId: c.characterId, guid: '', rarityFlags: c.rarityFlags, level: 0 })} size={32} />
+                                                    <span className={cn('rounded px-1.5 text-xs font-bold', c.tier ? tierStyle[c.tier] : 'bg-muted')}>{c.tier ?? '?'}</span>
+                                                    <span className="font-medium">{c.name}</span>
+                                                    <span className="text-xs tabular-nums text-muted-foreground">×{count}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
                             </>
                         )}
                     </CardContent>

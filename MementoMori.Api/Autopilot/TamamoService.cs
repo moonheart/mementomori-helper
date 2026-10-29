@@ -22,6 +22,7 @@ public partial class TamamoService
     private readonly TierListService _tiers;
 
     private (DateTime at, JArray quests)? _index;
+    private (DateTime at, JObject stages)? _usage;
     private readonly Dictionary<string, (DateTime at, List<ClearParty> list)> _parties = new();
     private readonly SemaphoreSlim _lock = new(1, 1);
 
@@ -31,7 +32,9 @@ public partial class TamamoService
     public record ClearParty(long DeckBattlePower, int Rank, List<ClearPartyCharacterInfo> ClearPartyCharacterInfos);
     public record TeamCharacter(long CharacterId, string Name, CharacterRarityFlags RarityFlags, string? Tier, bool Owned);
     public record TeamSuggestion(List<TeamCharacter> Characters, int Clears, long MinPower);
-    public record StageTeams(string Stage, string? DataStage, long Stuck, List<TeamSuggestion> Teams, TeamSuggestion? Lowest, string Link);
+    public record UsageEntry(TeamCharacter Character, int Count);
+    public record StageTeams(string Stage, string? DataStage, long Stuck, List<TeamSuggestion> Teams, TeamSuggestion? Lowest, string Link,
+        string? UsageStage = null, List<UsageEntry>? Usage = null);
 
     /// <summary>当前关卡的通关队伍; 这关没数据就用后面最近的有数据的关卡</summary>
     public async Task<StageTeams?> GetQuestTeamsAsync(long questId, string stageName, IEnumerable<UserCharacterDtoInfo> owned, bool refresh)
@@ -44,6 +47,12 @@ public partial class TamamoService
             {
                 var data = await GetAsync("getClearParty");
                 _index = (DateTime.Now, (JArray) data["ClearPartyInfoList"]![0]!["Quest"]!);
+            }
+            if (refresh || _usage == null || DateTime.Now - _usage.Value.at > IndexTtl)
+            {
+                // 一次拿全部主线关卡的角色使用次数 (type=0), 跟索引一样 6 小时一次
+                try { _usage = (DateTime.Now, (JObject) (await GetAsync("getClearPartyUseCharacter?type=0"))["Stages"]!); }
+                catch (HttpRequestException) { }
             }
 
             var quests = _index.Value.quests;
@@ -62,6 +71,8 @@ public partial class TamamoService
             }
 
             var ownedIds = owned.Select(c => c.CharacterId).ToHashSet();
+            var ownedRarity = owned.GroupBy(c => c.CharacterId).ToDictionary(g => g.Key, g => g.Max(c => c.RarityFlags));
+            TeamCharacter Char(long id) => new(id, CharName(id), ownedRarity.GetValueOrDefault(id), _tiers.GetTier(id), ownedIds.Contains(id));
             List<TeamCharacter> Chars(ClearParty p) => p.ClearPartyCharacterInfos
                 .Select(c => new TeamCharacter(c.CharacterId, CharName(c.CharacterId), c.RarityFlags, _tiers.GetTier(c.CharacterId), ownedIds.Contains(c.CharacterId))).ToList();
             // 同一组角色 (不管站位) 算一种队伍, 按通关次数排
@@ -72,13 +83,25 @@ public partial class TamamoService
                 .Select(g => new TeamSuggestion(Chars(g.First()), g.Count(), g.Min(p => p.DeckBattlePower)))
                 .ToList();
             var lowest = cached.list.Where(p => p.ClearPartyCharacterInfos?.Count > 0).MinBy(p => p.DeckBattlePower);
+            // 使用次数: 当前关卡或后面最近的有数据的关卡, 前 10
+            var usageStage = _usage?.stages.Properties().Where(p => p.Value.HasValues && StageKey(p.Name) >= StageKey(stageName))
+                .MinBy(p => StageKey(p.Name));
+            var usage = usageStage?.Value.Children<JProperty>().OrderByDescending(p => (int) p.Value).Take(10)
+                .Select(p => new UsageEntry(Char(long.Parse(p.Name)), (int) p.Value)).ToList();
             return new StageTeams(stageName, (string?) source["StageName"], (long?) here?["StuckPlayer"] ?? 0, teams,
-                lowest == null ? null : new TeamSuggestion(Chars(lowest), 1, lowest.DeckBattlePower), link);
+                lowest == null ? null : new TeamSuggestion(Chars(lowest), 1, lowest.DeckBattlePower), link, usageStage?.Name, usage);
         }
         finally
         {
             _lock.Release();
         }
+    }
+
+    /// <summary>"6-5" → 6005, 排序用</summary>
+    private static int StageKey(string stage)
+    {
+        var parts = stage.Split('-');
+        return parts.Length == 2 && int.TryParse(parts[0], out var a) && int.TryParse(parts[1], out var b) ? a * 1000 + b : 0;
     }
 
     private async Task<JToken> GetAsync(string path)

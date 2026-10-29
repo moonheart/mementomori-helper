@@ -14,6 +14,7 @@ import { autopilotApi, type AutopilotConfig, type AutopilotStep, type GrowthEven
 import { GrowthFeed } from '@/components/autopilot/GrowthFeed';
 import { ProgressChart } from '@/components/autopilot/ProgressChart';
 import { CronPicker } from '@/components/settings/CronPicker';
+import { Tour } from '@/components/autopilot/Tour';
 
 // 抽卡和组队会花钻石/改队伍, 界面上标出来
 const RISKY_STEPS = new Set(['AutoPullGacha', 'AutoBuildTeam', 'SmartRankUp']);
@@ -89,6 +90,13 @@ export function AutopilotPage() {
 
     return (
         <div className="space-y-6">
+            <Tour steps={[
+                { target: 'step-AutoPullGacha', title: t('TOUR_GACHA_T'), body: t('TOUR_GACHA_B') },
+                { target: 'spend-diamonds', title: t('TOUR_DIAMONDS_T'), body: t('TOUR_DIAMONDS_B') },
+                { target: 'step-AutoBuildTeam', title: t('TOUR_TEAM_T'), body: t('TOUR_TEAM_B') },
+                { target: 'step-SmartRankUp', title: t('TOUR_RANKUP_T'), body: t('TOUR_RANKUP_B') },
+                { target: 'fodder', title: t('TOUR_FODDER_T'), body: t('TOUR_FODDER_B') },
+            ]} />
             <Card>
                 <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-1">
@@ -123,7 +131,7 @@ export function AutopilotPage() {
                         <h4 className="text-sm font-semibold text-muted-foreground">{t('AP_STEPS')}</h4>
                         <ol className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
                             {steps.map((s, i) => (
-                                <li key={s.key} className="flex items-center gap-3 rounded-lg border p-2 pl-3">
+                                <li key={s.key} data-tour={`step-${s.key}`} className="flex items-center gap-3 rounded-lg border p-2 pl-3">
                                     <span className="w-5 text-xs tabular-nums text-muted-foreground">{i + 1}</span>
                                     <Switch
                                         id={`step-${s.key}`}
@@ -145,10 +153,18 @@ export function AutopilotPage() {
                     <Separator />
 
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <div data-tour="spend-diamonds" className="flex items-start gap-3 sm:col-span-2 lg:col-span-4">
+                            <Switch id="ap-spend" checked={config.gachaSpendDiamonds} onCheckedChange={(v) => update({ gachaSpendDiamonds: v })} />
+                            <Label htmlFor="ap-spend" className="leading-tight">
+                                {t('AP_SPEND_DIAMONDS')}
+                                <span className="block text-xs font-normal text-amber-600 dark:text-amber-400">{t('AP_SPEND_DIAMONDS_HINT')}</span>
+                            </Label>
+                        </div>
                         <div className="space-y-2">
                             <Label htmlFor="ap-reserve">{t('AP_DIAMOND_RESERVE')}</Label>
                             <Input
                                 id="ap-reserve"
+                                disabled={!config.gachaSpendDiamonds}
                                 type="number"
                                 min={0}
                                 step={500}
@@ -172,6 +188,7 @@ export function AutopilotPage() {
                             <Label htmlFor="ap-surplus">{t('AP_SURPLUS')}</Label>
                             <Input
                                 id="ap-surplus"
+                                disabled={!config.gachaSpendDiamonds}
                                 type="number"
                                 min={0}
                                 step={1000}
@@ -180,7 +197,7 @@ export function AutopilotPage() {
                             />
                             <p className="text-xs text-muted-foreground">{t('AP_SURPLUS_HINT')}</p>
                         </div>
-                        <div className="flex items-start gap-3 pt-7">
+                        <div data-tour="fodder" className="flex items-start gap-3 pt-7">
                             <Switch id="ap-fodder" checked={config.rankUpWithFodder} onCheckedChange={(v) => update({ rankUpWithFodder: v })} />
                             <Label htmlFor="ap-fodder" className="leading-tight">
                                 {t('AP_RANKUP_FODDER')}

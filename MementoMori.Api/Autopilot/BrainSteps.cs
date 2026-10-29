@@ -90,7 +90,7 @@ public partial class SmartRankUpHandler : IGameActionHandler
         {
             var data = nm.UserSyncData;
             var chars = data.UserCharacterDtoInfos;
-            var protectedGuids = _tiers.GetRecommendedTeam(data).Concat(data.GetMainTeam()).Select(c => c.Guid)
+            var protectedGuids = _tiers.GetRecommendedTeam(data).Concat(_tiers.GetWantedTeam(data)).Concat(data.GetMainTeam()).Select(c => c.Guid)
                 .Concat(data.UserLevelLinkMemberDtoInfos?.Select(m => m.UserCharacterGuid) ?? Enumerable.Empty<string>())
                 .Concat(chars.Where(c => !data.IsLevelLinkMember(c.Guid)).OrderByDescending(c => c.Level).Take(5).Select(c => c.Guid))
                 .ToHashSet();
@@ -232,9 +232,10 @@ public partial class AutoPullGachaHandler : IGameActionHandler
                 .Where(a => !closed.Contains(a.TicketButtonId ?? -1) && !closed.Contains(a.DiamondButtonId ?? -1)).ToList();
             var diamonds = nm.UserSyncData.GetUserItemCount(ItemType.CurrencyFree);
             var ticket = advice.FirstOrDefault(a => a.TicketButtonId != null);
-            var pull = advice.FirstOrDefault(a => a.Worth && a.DiamondButtonId != null && diamonds - a.DiamondCost >= config.GachaDiamondReserve);
+            // 钻石默认不花, 用户在设置里打开才抽
+            var pull = !config.GachaSpendDiamonds ? null : advice.FirstOrDefault(a => a.Worth && a.DiamondButtonId != null && diamonds - a.DiamondCost >= config.GachaDiamondReserve);
             // 余量: 钻石多于 GachaSurplusAbove 时, 多的部分抽其他卡池 (限定角色强度高的优先)
-            var surplus = config.GachaSurplusAbove > 0
+            var surplus = config.GachaSurplusAbove > 0 && config.GachaSpendDiamonds
                 ? advice.Where(a => a.DiamondButtonId != null && diamonds - a.DiamondCost >= config.GachaSurplusAbove)
                     .OrderByDescending(a => a.PickupCharacterId > 0 ? _tiers.Score(a.PickupCharacterId) : 0).FirstOrDefault()
                 : null;
