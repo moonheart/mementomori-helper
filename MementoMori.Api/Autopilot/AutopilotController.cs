@@ -87,6 +87,21 @@ public partial class AutopilotController : ControllerBase
         return result == null ? NoContent() : result;
     }
 
+    /// <summary>把战斗日志里最近一次主线胜利重新上传到 tamamo (测试 / 补传用)</summary>
+    [HttpPost("{userId}/tamamo/upload-last")]
+    public async Task<ActionResult<string>> UploadLastClear(long userId, [FromServices] IFreeSql db)
+    {
+        var log = await db.Select<Infrastructure.Database.BattleLogEntity>()
+            .Where(b => b.UserId == userId && b.BattleType == (int) Ortega.Share.Enums.BattleType.Boss && b.IsWin && b.QuestId != null)
+            .OrderByDescending(b => b.CreatedAt).FirstAsync();
+        if (log == null) return NotFound("no quest win in the battle log");
+        var sim = System.Text.Json.JsonSerializer.Deserialize<Ortega.Share.Data.Battle.Result.BattleSimulationResult>(log.BattleDataJson,
+            new System.Text.Json.JsonSerializerOptions {PropertyNameCaseInsensitive = true})!;
+        var account = await _accounts.GetOrCreateAsync(userId);
+        await _tamamo.UploadQuestClearAsync(await _tamamo.GetKeyAsync(userId), account.NetworkManager.UserSyncData, account.AccountInfo.CurrentWorldId ?? 0, log.QuestId!.Value, sim, DateTime.SpecifyKind(log.CreatedAt, DateTimeKind.Utc));
+        return $"uploaded {QuestTable.GetById(log.QuestId.Value)?.Memo} ({log.BattleToken})";
+    }
+
     public record TamamoKeyStatus(bool HasKey, bool OwnKey);
 
     /// <summary>只告诉前端有没有 key, 不把 key 发回去</summary>

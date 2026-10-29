@@ -127,7 +127,7 @@ public partial class TamamoService
     /// 把一次主线通关上传到 tamamo (作者的 postClearParty), 补上 tamamo 拿不到的关卡; 用户在 Autopilot 里打开才传.
     /// 失败只记日志, 不影响推图
     /// </summary>
-    public async Task UploadQuestClearAsync(string? key, UserSyncData data, long worldId, long questId, BattleSimulationResult sim)
+    public async Task UploadQuestClearAsync(string? key, UserSyncData data, long worldId, long questId, BattleSimulationResult sim, DateTime? clearedAtUtc = null)
     {
         var st = data.UserStatusDtoInfo;
         var report = JObject.FromObject(sim);
@@ -152,7 +152,7 @@ public partial class TamamoService
         {
             ["Client"] = "MementoMori-Helper", ["PlayerId"] = st.PlayerId, ["PlayerName"] = st.Name, ["Rank"] = st.Rank,
             ["Type"] = 0, ["Stage"] = QuestTable.GetById(questId)?.Memo, ["StageId"] = questId, ["WorldId"] = worldId,
-            ["BattleToken"] = sim.BattleToken, ["ClearedAt"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), ["EndTurn"] = sim.BattleEndInfo.EndTurn,
+            ["BattleToken"] = sim.BattleToken, ["ClearedAt"] = new DateTimeOffset(clearedAtUtc ?? DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeMilliseconds(), ["EndTurn"] = sim.BattleEndInfo.EndTurn,
             ["DeckBattlePower"] = power.Values.Sum(), ["ClearPartyCharacterInfos"] = new JArray(party),
             // 完整战斗记录 (BattleSimulationResult), tamamo 用它回放 "バトルレポート"
             ["BattleReport"] = report,
