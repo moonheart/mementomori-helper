@@ -129,7 +129,7 @@ public partial class TamamoService
     /// </summary>
     public async Task UploadQuestClearAsync(string? key, UserSyncData data, long worldId, long questId, BattleSimulationResult sim, DateTime? clearedAtUtc = null)
     {
-        var st = data.UserStatusDtoInfo;
+        var st = data.UserStatusDtoInfo ?? throw new InvalidOperationException("player data not loaded yet, try again in a moment");
         var attackers = sim.BattleField.Characters.Where(c => c.DefaultPosition.IsAttacker).ToList();
         var power = attackers.ToDictionary(c => c.CharacterGuid, c => BattlePowerCalculator.CalculateBattlePower(c.DefaultBattleParameter, c.DefaultBaseParameter));
         var party = attackers.Select(c => new JObject
