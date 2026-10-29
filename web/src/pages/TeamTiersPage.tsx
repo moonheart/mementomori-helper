@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Loader2, RefreshCcw, Search } from 'lucide-react';
+import { KeyRound, Loader2, RefreshCcw, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAccountStore } from '@/store/accountStore';
 import { useToast } from '@/hooks/use-toast';
@@ -45,6 +45,9 @@ export function TeamTiersPage() {
     const [rows, setRows] = useState<TierRow[] | null>(null);
     const [banners, setBanners] = useState<BannerAdvice[] | null>(null);
     const [tamamo, setTamamo] = useState<TamamoStageTeams | null | undefined>(undefined);
+    const [keyStatus, setKeyStatus] = useState<{ hasKey: boolean; ownKey: boolean } | null>(null);
+    const [keyInput, setKeyInput] = useState('');
+    const [showKey, setShowKey] = useState(false);
     const [query, setQuery] = useState('');
     const [pending, setPending] = useState<{ banner: BannerAdvice; buttonId: number; diamonds: boolean } | null>(null);
     const [drawing, setDrawing] = useState(false);
@@ -58,12 +61,26 @@ export function TeamTiersPage() {
     const loadTamamo = useCallback(async (refresh = false) => {
         if (!userId) return;
         setTamamo(undefined);
+        autopilotApi.getTamamoKey(userId).then(setKeyStatus).catch(() => setKeyStatus(null));
         try {
             setTamamo(await autopilotApi.getTamamo(userId, refresh));
         } catch {
             setTamamo(null);
         }
     }, [userId]);
+
+    const saveKey = async (key: string) => {
+        if (!userId) return;
+        try {
+            await autopilotApi.setTamamoKey(userId, key);
+            setKeyInput('');
+            setShowKey(false);
+            toast({ title: t(key ? 'TM_KEY_SAVED' : 'TM_KEY_REMOVED') });
+            loadTamamo();
+        } catch (e) {
+            toast({ title: t('AP_SAVE_FAILED'), description: String(e), variant: 'destructive' });
+        }
+    };
 
     const loadBanners = useCallback(async () => {
         if (!userId) return;
@@ -157,53 +174,71 @@ export function TeamTiersPage() {
 
     return (
         <div className="space-y-6">
-            {tamamo !== null && (
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0">
-                        <div className="space-y-1">
-                            <CardTitle className="text-base">{t('TM_TITLE', [tamamo?.stage ?? '…'])}</CardTitle>
-                            <CardDescription>
-                                {t('TM_DESC')} <a href={tamamo?.link ?? 'https://tamamo.dev/ClearPartys'} target="_blank" rel="noreferrer" className="underline">tamamo.dev</a>
-                                {tamamo && tamamo.stuck > 0 && <> · {t('TM_STUCK', [tamamo.stuck.toLocaleString()])}</>}
-                            </CardDescription>
-                        </div>
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                    <div className="space-y-1">
+                        <CardTitle className="text-base">{t('TM_TITLE', [tamamo?.stage ?? '…'])}</CardTitle>
+                        <CardDescription>
+                            {t('TM_DESC')} <a href={tamamo?.link ?? 'https://tamamo.dev/ClearPartys'} target="_blank" rel="noreferrer" className="underline">tamamo.dev</a>
+                            {tamamo && tamamo.stuck > 0 && <> · {t('TM_STUCK', [tamamo.stuck.toLocaleString()])}</>}
+                        </CardDescription>
+                    </div>
+                    <div className="flex shrink-0">
+                        {keyStatus?.hasKey && (
+                            <Button variant="ghost" size="icon" onClick={() => setShowKey((v) => !v)} aria-label={t('TM_KEY_LABEL')} aria-expanded={showKey}>
+                                <KeyRound className="h-4 w-4" />
+                            </Button>
+                        )}
                         <Button variant="ghost" size="icon" onClick={() => loadTamamo(true)} aria-label={t('AP_REFRESH')}>
                             <RefreshCcw className="h-4 w-4" />
                         </Button>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {tamamo === undefined ? (
-                            <div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
-                        ) : tamamo.teams.length === 0 ? (
-                            <p className="text-sm text-muted-foreground">{t('TM_NONE')}</p>
-                        ) : (
-                            <>
-                                {tamamo.dataStage !== tamamo.stage && (
-                                    <p className="text-sm text-amber-600 dark:text-amber-400">{t('TM_CLOSEST', [tamamo.stage, tamamo.dataStage ?? ''])}</p>
-                                )}
-                                {tamamo.teams.map((team, i) => <TamamoRow key={i} team={team} label={t('TM_CLEARS', [team.clears])} />)}
-                                {tamamo.lowest && <TamamoRow team={tamamo.lowest} label={t('TM_LOWEST')} />}
-                                {tamamo.usage && tamamo.usage.length > 0 && (
-                                    <div className="space-y-1">
-                                        <p className="text-xs text-muted-foreground">{t('TM_USAGE', [tamamo.usageStage ?? ''])}</p>
-                                        <ul className="flex flex-wrap gap-2">
-                                            {tamamo.usage.map(({ character: c, count }) => (
-                                                <li key={c.characterId} className={cn('flex items-center gap-2 rounded-lg border py-1 pl-1 pr-3 text-sm', !c.owned && 'opacity-50')}
-                                                    title={c.owned ? undefined : t('TM_NOT_OWNED')}>
-                                                    <CharacterIcon userCharacterInfo={toCharacterInfo({ characterId: c.characterId, guid: '', rarityFlags: c.rarityFlags, level: 0 })} size={32} />
-                                                    <span className={cn('rounded px-1.5 text-xs font-bold', c.tier ? tierStyle[c.tier] : 'bg-muted')}>{c.tier ?? '?'}</span>
-                                                    <span className="font-medium">{c.name}</span>
-                                                    <span className="text-xs tabular-nums text-muted-foreground">×{count}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )}
-                            </>
-                        )}
-                    </CardContent>
-                </Card>
-            )}
+                    </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {(showKey || keyStatus?.hasKey === false) && (
+                        <form className="space-y-2 rounded-lg border p-3" onSubmit={(e) => { e.preventDefault(); if (keyInput.trim()) saveKey(keyInput.trim()); }}>
+                            {keyStatus?.hasKey === false && <p className="text-sm">{t('TM_KEY_NEEDED')}</p>}
+                            <label htmlFor="tamamo-key" className="text-xs text-muted-foreground">{t('TM_KEY_LABEL')}</label>
+                            <div className="flex flex-wrap gap-2">
+                                <Input id="tamamo-key" type="password" autoComplete="off" value={keyInput} onChange={(e) => setKeyInput(e.target.value)}
+                                       placeholder={keyStatus?.ownKey ? '••••••••' : ''} className="min-w-0 flex-1" />
+                                <Button type="submit" disabled={!keyInput.trim()}>{t('AP_SAVE')}</Button>
+                                {keyStatus?.ownKey && <Button type="button" variant="ghost" onClick={() => saveKey('')}>{t('TM_KEY_REMOVE')}</Button>}
+                            </div>
+                            <p className="text-xs text-muted-foreground">{t('TM_KEY_HINT')}</p>
+                        </form>
+                    )}
+                    {keyStatus?.hasKey === false ? null : tamamo === undefined ? (
+                        <div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
+                    ) : !tamamo || tamamo.teams.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">{t('TM_NONE')}</p>
+                    ) : (
+                        <>
+                            {tamamo.dataStage !== tamamo.stage && (
+                                <p className="text-sm text-amber-600 dark:text-amber-400">{t('TM_CLOSEST', [tamamo.stage, tamamo.dataStage ?? ''])}</p>
+                            )}
+                            {tamamo.teams.map((team, i) => <TamamoRow key={i} team={team} label={t('TM_CLEARS', [team.clears])} />)}
+                            {tamamo.lowest && <TamamoRow team={tamamo.lowest} label={t('TM_LOWEST')} />}
+                            {tamamo.usage && tamamo.usage.length > 0 && (
+                                <div className="space-y-1">
+                                    <p className="text-xs text-muted-foreground">{t('TM_USAGE', [tamamo.usageStage ?? ''])}</p>
+                                    <ul className="flex flex-wrap gap-2">
+                                        {tamamo.usage.map(({ character: c, count }) => (
+                                            <li key={c.characterId} className={cn('flex items-center gap-2 rounded-lg border py-1 pl-1 pr-3 text-sm', !c.owned && 'opacity-50')}
+                                                title={c.owned ? undefined : t('TM_NOT_OWNED')}>
+                                                <CharacterIcon userCharacterInfo={toCharacterInfo({ characterId: c.characterId, guid: '', rarityFlags: c.rarityFlags, level: 0 })} size={32} />
+                                                <span className={cn('rounded px-1.5 text-xs font-bold', c.tier ? tierStyle[c.tier] : 'bg-muted')}>{c.tier ?? '?'}</span>
+                                                <span className="font-medium">{c.name}</span>
+                                                <span className="text-xs tabular-nums text-muted-foreground">×{count}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </>
+                    )}
+                </CardContent>
+            </Card>
 
             <div className="grid gap-6 lg:grid-cols-2">
                 <Card>

@@ -120,6 +120,11 @@ export const autopilotApi = {
         (await apiClient.get<GrowthEvent[]>(`/api/autopilot/${userId}/events`, { params: { limit } })).data,
     getSnapshots: async (userId: number, days = 30) =>
         (await apiClient.get<ProgressSnapshot[]>(`/api/autopilot/${userId}/snapshots`, { params: { days } })).data,
+    getTamamoKey: async (userId: number) => (await apiClient.get<{ hasKey: boolean; ownKey: boolean }>(`/api/autopilot/${userId}/tamamo-key`)).data,
+    // 空字符串 = 删掉自己的 key
+    setTamamoKey: async (userId: number, key: string) => {
+        await apiClient.put(`/api/autopilot/${userId}/tamamo-key`, JSON.stringify(key), { headers: { 'Content-Type': 'application/json' } });
+    },
     // 204 = 没配 Tamamo key
     getTamamo: async (userId: number, refresh = false) =>
         (await apiClient.get<TamamoStageTeams | ''>(`/api/autopilot/${userId}/tamamo`, { params: refresh ? { refresh } : undefined })).data || null,

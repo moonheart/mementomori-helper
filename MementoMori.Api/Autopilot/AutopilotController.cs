@@ -78,12 +78,31 @@ public partial class AutopilotController : ControllerBase
     [HttpGet("{userId}/tamamo")]
     public async Task<ActionResult<TamamoService.StageTeams>> GetTamamo(long userId, [FromQuery] bool refresh = false)
     {
-        if (!_tamamo.Enabled) return NoContent();
+        var key = await _tamamo.GetKeyAsync(userId);
+        if (key == null) return NoContent();
         var data = (await _accounts.GetOrCreateAsync(userId)).NetworkManager.UserSyncData;
         if (data?.UserBattleBossDtoInfo == null) return NotFound("not logged in");
         var questId = data.UserBattleBossDtoInfo.BossClearMaxQuestId + 1;
-        var result = await _tamamo.GetQuestTeamsAsync(questId, QuestTable.GetById(questId)?.Memo ?? questId.ToString(), data.UserCharacterDtoInfos, refresh);
+        var result = await _tamamo.GetQuestTeamsAsync(key, questId, QuestTable.GetById(questId)?.Memo ?? questId.ToString(), data.UserCharacterDtoInfos, refresh);
         return result == null ? NoContent() : result;
+    }
+
+    public record TamamoKeyStatus(bool HasKey, bool OwnKey);
+
+    /// <summary>只告诉前端有没有 key, 不把 key 发回去</summary>
+    [HttpGet("{userId}/tamamo-key")]
+    public async Task<TamamoKeyStatus> GetTamamoKey(long userId)
+    {
+        var own = (await _settings.GetSettingAsync<TamamoService.TamamoSettings>(userId, TamamoService.SettingKey))?.ApiKey;
+        return new TamamoKeyStatus(await _tamamo.GetKeyAsync(userId) != null, !string.IsNullOrWhiteSpace(own));
+    }
+
+    [HttpPut("{userId}/tamamo-key")]
+    public async Task<ActionResult> SetTamamoKey(long userId, [FromBody] string? key)
+    {
+        if (key?.Length > 200) return BadRequest("key too long");
+        await _tamamo.SetKeyAsync(userId, key);
+        return Ok();
     }
 
     [HttpGet("{userId}/overview")]

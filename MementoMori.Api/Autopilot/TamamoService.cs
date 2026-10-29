@@ -1,3 +1,4 @@
+using MementoMori.Api.Services;
 using MementoMori.Api.Extensions;
 using MementoMori.Ortega.Share.Data;
 using MementoMori.Ortega.Share.Data.Battle;
@@ -24,14 +25,28 @@ public partial class TamamoService
 
     private readonly IConfiguration _config;
     private readonly TierListService _tiers;
+    private readonly PlayerSettingService _settings;
+    public const string SettingKey = "tamamo";
 
     private (DateTime at, JArray quests)? _index;
     private (DateTime at, JObject stages)? _usage;
     private readonly Dictionary<string, (DateTime at, List<ClearParty> list)> _parties = new();
     private readonly SemaphoreSlim _lock = new(1, 1);
 
-    public bool Enabled => !string.IsNullOrWhiteSpace(ApiKey);
-    private string? ApiKey => _config["Tamamo:ApiKey"];
+    public class TamamoSettings
+    {
+        public string ApiKey { get; set; } = "";
+    }
+
+    /// <summary>用户自己在页面填的 key, 没有就用服务器配置的 (Tamamo:ApiKey / .env)</summary>
+    public async Task<string?> GetKeyAsync(long userId)
+    {
+        var mine = (await _settings.GetSettingAsync<TamamoSettings>(userId, SettingKey))?.ApiKey;
+        var key = string.IsNullOrWhiteSpace(mine) ? _config["Tamamo:ApiKey"] : mine.Trim();
+        return string.IsNullOrWhiteSpace(key) ? null : key;
+    }
+
+    public Task SetKeyAsync(long userId, string? key) => _settings.SaveSettingAsync(userId, SettingKey, new TamamoSettings {ApiKey = key?.Trim() ?? ""});
 
     public record ClearParty(long DeckBattlePower, int Rank, List<ClearPartyCharacterInfo> ClearPartyCharacterInfos);
     public record TeamCharacter(long CharacterId, string Name, CharacterRarityFlags RarityFlags, string? Tier, bool Owned);
@@ -41,21 +56,20 @@ public partial class TamamoService
         string? UsageStage = null, List<UsageEntry>? Usage = null);
 
     /// <summary>当前关卡的通关队伍; 这关没数据就用后面最近的有数据的关卡</summary>
-    public async Task<StageTeams?> GetQuestTeamsAsync(long questId, string stageName, IEnumerable<UserCharacterDtoInfo> owned, bool refresh)
+    public async Task<StageTeams?> GetQuestTeamsAsync(string key, long questId, string stageName, IEnumerable<UserCharacterDtoInfo> owned, bool refresh)
     {
-        if (!Enabled) return null;
         await _lock.WaitAsync();
         try
         {
             if (refresh || _index == null || DateTime.Now - _index.Value.at > IndexTtl)
             {
-                var data = await GetAsync("getClearParty");
+                var data = await GetAsync(key, "getClearParty");
                 _index = (DateTime.Now, (JArray) data["ClearPartyInfoList"]![0]!["Quest"]!);
             }
             if (refresh || _usage == null || DateTime.Now - _usage.Value.at > IndexTtl)
             {
                 // 一次拿全部主线关卡的角色使用次数 (type=0), 跟索引一样 6 小时一次
-                try { _usage = (DateTime.Now, (JObject) (await GetAsync("getClearPartyUseCharacter?type=0"))["Stages"]!); }
+                try { _usage = (DateTime.Now, (JObject) (await GetAsync(key, "getClearPartyUseCharacter?type=0"))["Stages"]!); }
                 catch (HttpRequestException) { }
             }
 
@@ -69,7 +83,7 @@ public partial class TamamoService
             var searchId = (string) source["SearchId"]!;
             if (refresh || !_parties.TryGetValue(searchId, out var cached) || DateTime.Now - cached.at > PartyTtl)
             {
-                var list = (await GetAsync($"getClearPartyList?id={Uri.EscapeDataString(searchId)}"))["result"]!.ToObject<List<ClearParty>>()!;
+                var list = (await GetAsync(key, $"getClearPartyList?id={Uri.EscapeDataString(searchId)}"))["result"]!.ToObject<List<ClearParty>>()!;
                 cached = (DateTime.Now, list);
                 _parties[searchId] = cached;
             }
@@ -112,9 +126,8 @@ public partial class TamamoService
     /// 把一次主线通关上传到 tamamo (作者的 postClearParty), 补上 tamamo 拿不到的关卡; 用户在 Autopilot 里打开才传.
     /// 失败只记日志, 不影响推图
     /// </summary>
-    public async Task UploadQuestClearAsync(UserSyncData data, long worldId, long questId, BattleSimulationResult sim)
+    public async Task UploadQuestClearAsync(string key, UserSyncData data, long worldId, long questId, BattleSimulationResult sim)
     {
-        if (!Enabled) return;
         var st = data.UserStatusDtoInfo;
         var party = JObject.FromObject(sim)["BattleField"]!["Characters"]!
             .Where(c => (bool) c["DefaultPosition"]!["IsAttacker"]!)
@@ -140,16 +153,16 @@ public partial class TamamoService
             ["DeckBattlePower"] = GrowthTracker.TeamPower(data), ["ClearPartyCharacterInfos"] = new JArray(party),
         };
         using var req = new HttpRequestMessage(HttpMethod.Post, "postClearParty") {Content = new StringContent(body.ToString(Newtonsoft.Json.Formatting.None), System.Text.Encoding.UTF8, "application/json")};
-        req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {ApiKey}");
+        req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {key}");
         req.Headers.TryAddWithoutValidation("User-Agent", "MementoMori-Helper (+https://github.com/maplehugs/mementomori-helper)");
         using var resp = await Http.SendAsync(req);
         resp.EnsureSuccessStatusCode();
     }
 
-    private async Task<JToken> GetAsync(string path)
+    private async Task<JToken> GetAsync(string key, string path)
     {
         using var req = new HttpRequestMessage(HttpMethod.Get, path);
-        req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {ApiKey}");
+        req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {key}");
         // 没有 User-Agent 会 400; 顺便让作者知道是谁在请求
         req.Headers.TryAddWithoutValidation("User-Agent", "MementoMori-Helper (+https://github.com/maplehugs/mementomori-helper)");
         using var resp = await Http.SendAsync(req);
