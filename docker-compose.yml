@@ -1,0 +1,18 @@
+# 只监听本机; 外面放一个反向代理 (Caddy/nginx, 最好加密码) 再转到 127.0.0.1:5290
+services:
+  mementomori:
+    image: mementomori-api:latest
+    container_name: mementomori-api
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5290:8080"
+    volumes:
+      - ../data:/data
+    # 密钥 (Tamamo__ApiKey=...) 放在仓库外的 ../.env, 没有也能启动
+    env_file:
+      - path: ../.env
+        required: false
+    environment:
+      - Game__AutoRequestDelay=500   # 2026-10-24 不加延迟刷 boss 被 403 过
+      - TZ=America/Bogota   # 改成你的时区
+    mem_limit: 1g

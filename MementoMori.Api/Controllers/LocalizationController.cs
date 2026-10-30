@@ -1,0 +1,41 @@
+using MementoMori.Api.Services;
+using MementoMori.Ortega.Share.Enums;
+using Microsoft.AspNetCore.Mvc;
+
+namespace MementoMori.Api.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    [AutoConstructor]
+    public partial class LocalizationController : ControllerBase
+    {
+        private readonly LocalizationService _localizationService;
+        private readonly ILogger<LocalizationController> _logger;
+
+        [HttpGet("resources")]
+        public IActionResult GetResources([FromQuery] string lang = "zhCN")
+        {
+            if (!Enum.TryParse<LanguageType>(lang, true, out var languageType))
+            {
+                languageType = LanguageType.zhCN;
+            }
+
+            _logger.LogInformation("Request for localization resources: {Lang}", languageType);
+            var resources = _localizationService.GetResources(languageType);
+            
+            return Ok(resources);
+        }
+
+        [HttpGet("manifest")]
+        public IActionResult GetManifest([FromQuery] string lang = "zhCN")
+        {
+            if (!Enum.TryParse<LanguageType>(lang, true, out var languageType))
+            {
+                languageType = LanguageType.zhCN;
+            }
+
+            var manifest = _localizationService.GetManifest(languageType);
+            return Ok(manifest);
+        }
+    }
+}

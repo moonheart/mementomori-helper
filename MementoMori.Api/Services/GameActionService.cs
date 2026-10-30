@@ -1,0 +1,229 @@
+using MementoMori.Api.Infrastructure;
+using MementoMori.Api.Handlers;
+using MementoMori.Api.Handlers.LocalRaid;
+using MementoMori.Api.Models;
+
+namespace MementoMori.Api.Services;
+
+/// <summary>
+/// 游戏业务动作服务 - 协调各种 Handler 的执行
+/// </summary>
+[RegisterSingleton]
+[AutoConstructor]
+public partial class GameActionService
+{
+    private readonly ILogger<GameActionService> _logger;
+    private readonly AccountManager _accountManager;
+    private readonly JobLogger _jobLogger;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ActionExecutor _executor;
+    private readonly PlayerSettingService _settingService;
+
+    /// <summary>
+    /// 只执行一个动作 (界面上单独点运行); 不存在的 key 返回 false
+    /// </summary>
+    public async Task<bool> ExecuteSingleActionAsync(long userId, string actionKey)
+    {
+        var metadata = GameActionRegistry.GetMetadata(actionKey);
+        if (metadata == null || _serviceProvider.GetService(metadata.HandlerType) is not IGameActionHandler handler) return false;
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        await _executor.ExecuteActionsAsync(context, new[] {handler});
+        return true;
+    }
+
+    /// <summary>
+    /// 执行所有每日自动化任务（DailyJob 使用）
+    /// </summary>
+    public async Task ExecuteDailyActionAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var autoJobConfig = await _settingService.GetAutoJobSettingsAsync(userId);
+        await _jobLogger.LogAsync(userId, Text.T("JobFullRunStarting"));
+
+        var handlers = new List<IGameActionHandler>();
+        var disabledActions = autoJobConfig.DisabledDailyActions ?? new List<string>();
+
+        foreach (var actionKey in GameActionRegistry.DefaultDailyActionKeys)
+        {
+            if (disabledActions.Contains(actionKey))
+            {
+                continue;
+            }
+
+            var metadata = GameActionRegistry.GetMetadata(actionKey);
+            if (metadata == null) continue;
+            if (_serviceProvider.GetService(metadata.HandlerType) is IGameActionHandler handler)
+            {
+                handlers.Add(handler);
+            }
+        }
+
+        await _executor.ExecuteActionsAsync(context, handlers);
+
+        await _jobLogger.LogAsync(userId, Text.T("JobFullRunDone"));
+    }
+
+    /// <summary>
+    /// 执行每小时自动化任务（HourlyJob 使用的轻量版本）
+    /// </summary>
+    public async Task ExecuteHourlyActionAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var autoJobConfig = await _settingService.GetAutoJobSettingsAsync(userId);
+        await _jobLogger.LogAsync(userId, Text.T("JobHourlyRunStarting"));
+
+        var handlers = new List<IGameActionHandler>();
+        var disabledActions = autoJobConfig.DisabledHourlyActions ?? new List<string>();
+
+        foreach (var actionKey in GameActionRegistry.DefaultHourlyActionKeys)
+        {
+            if (disabledActions.Contains(actionKey))
+            {
+                continue;
+            }
+
+            var metadata = GameActionRegistry.GetMetadata(actionKey);
+            if (metadata == null) continue;
+            if (_serviceProvider.GetService(metadata.HandlerType) is IGameActionHandler handler)
+            {
+                handlers.Add(handler);
+            }
+        }
+
+        await _executor.ExecuteActionsAsync(context, handlers);
+
+        await _jobLogger.LogAsync(userId, Text.T("JobHourlyRunDone"));
+    }
+
+    /// <summary>
+    /// 仅执行自动购买商店
+    /// </summary>
+    public async Task AutoBuyShopItemAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<ShopAutoBuyHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 仅执行自动更换圣装目标
+    /// </summary>
+    public async Task AutoSetGachaRelicAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<GachaRelicChangeHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 仅执行自动抽取圣装
+    /// </summary>
+    public async Task AutoDrawGachaRelicAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<GachaRelicDrawHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 仅执行自动开启公会副本
+    /// </summary>
+    public async Task OpenGuildRaidAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<GuildRaidOpenHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 仅执行自动传奇竞技场对战
+    /// </summary>
+    public async Task AutoLegendLeagueAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<LegendLeagueHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 仅执行自动时空洞窟
+    /// </summary>
+    public async Task AutoLocalRaidAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<LocalRaidHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 仅执行自动竞技场对战
+    /// </summary>
+    public async Task AutoArenaPvpAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<ArenaPvpHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 领取所有任务奖励
+    /// </summary>
+    public async Task ClaimMissionRewardsAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<MissionRewardHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 领取自动战斗奖励
+    /// </summary>
+    public async Task GetAutoBattleRewardAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<AutoBattleRewardHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 执行BOSS快速战斗
+    /// </summary>
+    public async Task BossQuickBattleAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<BossQuickBattleHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 执行BOSS高速战斗
+    /// </summary>
+    public async Task BossHighSpeedBattleAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<BossHighSpeedBattleHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+
+    /// <summary>
+    /// 执行自动BOSS挑战
+    /// </summary>
+    public async Task AutoBossChallengeAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var handler = _serviceProvider.GetRequiredService<AutoBossChallengeHandler>();
+
+        await _executor.ExecuteActionsAsync(context, [handler]);
+    }
+}

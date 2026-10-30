@@ -1,4 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
+using MementoMori.Common.CustConverters;
 using MementoMori.Ortega.Share.Data.Character;
 using MementoMori.Ortega.Share.Data.Interface;
 using MementoMori.Ortega.Share.Enums;
@@ -43,6 +45,7 @@ namespace MementoMori.Ortega.Share.Data.Player
 
         public long LocalRaidBattlePower { get; set; }
 
+        [JsonConverter(typeof(LongToStringConverter))]
         public long MainCharacterIconId { get; set; }
 
         public long MainCharacterIconEffectId { get; set; }

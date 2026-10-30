@@ -1,0 +1,146 @@
+using MementoMori.Api.Infrastructure;
+using MementoMori.Api.Services;
+using MementoMori.Ortega.Share;
+using MementoMori.Ortega.Share.Data.ApiInterface.Gacha;
+using MementoMori.Ortega.Share.Data.Gacha;
+using MementoMori.Ortega.Share.Enums;
+
+namespace MementoMori.Api.Handlers;
+
+/// <summary>
+/// 免费扭蛋处理器
+/// </summary>
+[RegisterTransient]
+[AutoConstructor]
+public partial class FreeGachaHandler : IGameActionHandler
+{
+    private readonly ILogger<FreeGachaHandler> _logger;
+    private readonly JobLogger _jobLogger;
+    private readonly PlayerSettingService _playerSettingService;
+
+    public string ActionName => Text.T("ActionFreeGacha");
+
+    public async Task ExecuteAsync(AccountContext context)
+    {
+        var userId = context.AccountInfo.UserId;
+        var nm = context.NetworkManager;
+
+        await _jobLogger.LogAsync(userId, Text.T("GachaCheckingFree"));
+
+        try
+        {
+            var autoJobSettings = await _playerSettingService.GetAutoJobSettingsAsync(userId);
+            if (!autoJobSettings.AutoFreeGacha)
+            {
+                await _jobLogger.LogAsync(userId, Text.T("GachaFreeDisabled"));
+                return;
+            }
+
+            var gachaSettings = await _playerSettingService.GetGachaSettingsAsync(userId);
+            var autoGachaConsumeItems = gachaSettings.AutoGachaConsumeUserItems ?? new List<MementoMori.Ortega.Share.Data.Item.UserItem>();
+
+            var ignoredButtonIds = new HashSet<long>();
+            var drawnCount = 0;
+            var maxIterations = 20;
+
+            for (var i = 0; i < maxIterations; i++)
+            {
+                var drawn = await DoFreeGacha();
+                if (!drawn) break;
+                drawnCount++;
+            }
+
+            if (drawnCount > 0)
+            {
+                await _jobLogger.LogAsync(userId, Text.T("GachaFreeDone", drawnCount));
+            }
+            else
+            {
+                await _jobLogger.LogAsync(userId, Text.T("GachaNoFree"));
+            }
+
+            async Task<bool> DoFreeGacha()
+            {
+                var gachaListResponse = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest());
+
+                foreach (var gachaCaseInfo in gachaListResponse.GachaCaseInfoList)
+                {
+                    var userItems = nm.UserSyncData.UserItemDtoInfo.ToList();
+
+                    // 查找可用的免费抽取按钮
+                    var buttonInfo = gachaCaseInfo.GachaButtonInfoList
+                        .OrderByDescending(d => d.LotteryCount)
+                        .FirstOrDefault(d =>
+                            d.ConsumeUserItem == null ||
+                            d.ConsumeUserItem.ItemCount == 0 ||
+                            CheckConsumeItem(d, userItems, autoGachaConsumeItems));
+
+                    if (buttonInfo == null) continue;
+                    if (ignoredButtonIds.Contains(buttonInfo.GachaButtonId)) continue;
+
+                    // 检查装备扭蛋的主线进度要求（从 OpenContentMB 动态查询）
+                    if (gachaCaseInfo.GachaCategoryType == GachaCategoryType.Equipment)
+                    {
+                        var equipmentGachaOpenContent = OpenContentTable.GetByOpenCommandType(OpenCommandType.GachaEquipment);
+
+                        if (equipmentGachaOpenContent != null)
+                        {
+                            var requiredQuestId = equipmentGachaOpenContent.OpenContentValue;
+                            var currentMaxQuestId = nm.UserSyncData.UserBattleBossDtoInfo?.BossClearMaxQuestId ?? 0;
+
+                            if (currentMaxQuestId < requiredQuestId)
+                            {
+                                _logger.LogInformation(
+                                    "跳过装备扭蛋: 主线进度不足 (需要 {Required}, 当前 {Current}) for user {UserId}",
+                                    requiredQuestId, currentMaxQuestId, userId);
+                                continue;
+                            }
+                        }
+                    }
+
+                    try
+                    {
+                        await nm.SendRequest<DrawRequest, DrawResponse>(
+                            new DrawRequest { GachaButtonId = buttonInfo.GachaButtonId });
+                        return true;
+                    }
+                    catch (NetworkManager.ApiErrorException ex) when (ex.Message.Contains("HaveMaxCharacter"))
+                    {
+                        ignoredButtonIds.Add(buttonInfo.GachaButtonId);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "扭蛋失败 for user {UserId}", userId);
+                    }
+                }
+
+                return false;
+            }
+
+            bool CheckConsumeItem(GachaButtonInfo buttonInfo,
+                List<MementoMori.Ortega.Share.Data.DtoInfo.UserItemDtoInfo> userItems,
+                List<MementoMori.Ortega.Share.Data.Item.UserItem> consumeItems)
+            {
+                if (buttonInfo.ConsumeUserItem == null || buttonInfo.ConsumeUserItem.ItemCount == 0)
+                    return true;
+
+                foreach (var consumeItem in consumeItems)
+                {
+                    if (buttonInfo.ConsumeUserItem.ItemType == consumeItem.ItemType &&
+                        buttonInfo.ConsumeUserItem.ItemId == consumeItem.ItemId)
+                    {
+                        var count = userItems.FirstOrDefault(d =>
+                            d.ItemType == consumeItem.ItemType && d.ItemId == consumeItem.ItemId)?.ItemCount ?? 0;
+                        return buttonInfo.ConsumeUserItem.ItemCount <= count;
+                    }
+                }
+
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "免费扭蛋失败 for user {UserId}", userId);
+        }
+    }
+}

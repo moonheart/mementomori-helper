@@ -5,6 +5,7 @@ riderModule.iml
 /_ReSharper.Caches/
 /MementoMori.WebUI/appsettings.dev.json
 /MementoMori.WebUI/Master/
+/MementoMori.Api/Master/
 /MementoMori.BotServer/Master/
 /MementoMori.BotServer/appsettings*
 /Master/
@@ -28,3 +29,8 @@ publish-android
 *.db
 *.keystore
 *.log
+MementoMori.Api/AssetCache/
+MementoMori.Api/wwwroot/
+.deploy-host
+/release
+logs/

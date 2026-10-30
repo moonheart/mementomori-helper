@@ -8,6 +8,8 @@
 		SkillQlipha,
 		Memory,
 		MyPageQlipha,
-		Monologue
+		Monologue,
+        SkillSp,
+        SkillSpQlipha
 	}
 }

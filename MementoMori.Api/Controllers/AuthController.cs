@@ -1,0 +1,118 @@
+using Microsoft.AspNetCore.Mvc;
+using TypeGen.Core.TypeAnnotations;
+using MementoMori.Api.Models;
+using MementoMori.Api.Services;
+using MementoMori.Ortega.Share.Data.ApiInterface.Auth;
+
+namespace MementoMori.Api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[AutoConstructor]
+public partial class AuthController : ControllerBase
+{
+    private readonly ILogger<AuthController> _logger;
+    private readonly AccountService _accountService;
+
+    /// <summary>
+    /// Get all accounts
+    /// </summary>
+    [HttpGet("accounts")]
+    public ActionResult<List<AccountDto>> GetAccounts()
+    {
+        var accounts = _accountService.GetAllAccounts();
+        return Ok(accounts);
+    }
+
+    /// <summary>
+    /// Add a new account with ClientKey (Method 1)
+    /// </summary>
+    [HttpPost("accounts/with-clientkey")]
+    public async Task<ActionResult<AccountDto>> AddAccountWithClientKey([FromBody] AddAccountWithClientKeyRequest request)
+    {
+        try
+        {
+            var account = await _accountService.AddAccountAsync(
+                request.UserId,
+                request.ClientKey,
+                request.Name
+            );
+            return Ok(account);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to add account with ClientKey");
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Add a new account with Password (Method 2 - get ClientKey from password)
+    /// </summary>
+    [HttpPost("accounts/with-password")]
+    public async Task<ActionResult<GetClientKeyResponse>> AddAccountWithPassword([FromBody] AddAccountWithPasswordRequest request)
+    {
+        try
+        {
+            var result = await _accountService.AddAccountWithPasswordAsync(
+                request.UserId,
+                request.Password,
+                request.Name
+            );
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to add account with password");
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Delete an account
+    /// </summary>
+    [HttpDelete("accounts/{userId}")]
+    public async Task<ActionResult> DeleteAccount(long userId)
+    {
+        try
+        {
+            await _accountService.DeleteAccountAsync(userId);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to delete account {UserId}", userId);
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// 账号在各个世界的角色
+    /// </summary>
+    [HttpGet("accounts/{userId}/worlds")]
+    public async Task<ActionResult<List<AccountService.WorldInfo>>> GetWorlds(long userId) => await _accountService.GetWorldsAsync(userId);
+
+    /// <summary>
+    /// 切换世界并重新登录
+    /// </summary>
+    [HttpPost("accounts/{userId}/world/{worldId}")]
+    public async Task<ActionResult<SimpleLoginResponse>> SwitchWorld(long userId, long worldId) => await _accountService.SwitchWorldAsync(userId, worldId);
+
+    /// <summary>
+    /// Login to account
+    /// </summary>
+    [HttpPost("login")]
+    public async Task<ActionResult<SimpleLoginResponse>> Login([FromBody] SimpleLoginRequest request)
+    {
+        try
+        {
+            var result = await _accountService.LoginAsync(request.UserId, request.ClientKey);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Login failed for user {UserId}", request.UserId);
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+}

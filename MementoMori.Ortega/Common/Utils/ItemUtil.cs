@@ -86,6 +86,10 @@ namespace MementoMori.Ortega.Common.Utils
                     var treasureChestMb = Masters.TreasureChestTable.GetById(itemId);
                     return Masters.TextResourceTable.Get(treasureChestMb.NameKey);
                     break;
+                case ItemType.EquipmentSetMaterialBox:
+                    var equipmentSetMaterialBoxMb = Masters.EquipmentSetMaterialBoxTable.GetById(itemId);
+                    return Masters.TextResourceTable.Get(equipmentSetMaterialBoxMb.NameKey);
+                    break;
                 case ItemType.LevelLinkExp:
                     var levelLinkExpMb = Masters.LevelLinkTable.GetById(itemId);
                     return levelLinkExpMb.Memo;

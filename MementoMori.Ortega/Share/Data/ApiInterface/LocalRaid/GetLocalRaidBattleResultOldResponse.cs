@@ -1,0 +1,12 @@
+﻿using System.Runtime.CompilerServices;
+using MementoMori.Ortega.Share.Data.Battle.Result;
+using MessagePack;
+
+namespace MementoMori.Ortega.Share.Data.ApiInterface.LocalRaid
+{
+	[MessagePackObject(true)]
+	public class GetLocalRaidBattleResultOldResponse : ApiResponseBase
+	{
+		public BattleResult BattleResult { get; set; }
+	}
+}

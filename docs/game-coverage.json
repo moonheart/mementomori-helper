@@ -1,0 +1,11074 @@
+{
+ "calls": {
+  "worldGuidance/cancelWorldGuidanceRead": {
+   "category": "WorldGuidance",
+   "uri": "worldGuidance/cancelWorldGuidanceRead",
+   "request": [],
+   "response": [],
+   "status": "missing"
+  },
+  "worldGuidance/deleteWorldGuidance": {
+   "category": "WorldGuidance",
+   "uri": "worldGuidance/deleteWorldGuidance",
+   "request": [],
+   "response": [],
+   "status": "missing"
+  },
+  "weeklyTopics/getWeeklyTopicsCharacterRanking": {
+   "category": "WeeklyTopics",
+   "uri": "weeklyTopics/getWeeklyTopicsCharacterRanking",
+   "request": [
+    [
+     "ElementType",
+     "ElementType"
+    ]
+   ],
+   "response": [
+    [
+     "TopRankingDataList",
+     "?"
+    ],
+    [
+     "MyRankingData",
+     "WeeklyTopicsCharacterRankingData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "weeklyTopics/getWeeklyTopicsHighlightBattleResultDetail": {
+   "category": "WeeklyTopics",
+   "uri": "weeklyTopics/getWeeklyTopicsHighlightBattleResultDetail",
+   "request": [
+    [
+     "AttackerPlayerId",
+     "long"
+    ],
+    [
+     "BattleType",
+     "BattleType"
+    ],
+    [
+     "BattleToken",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "SimulationResult",
+     "BattleSimulationResult"
+    ]
+   ],
+   "status": "missing"
+  },
+  "weeklyTopics/getWeeklyTopicsInfo": {
+   "category": "WeeklyTopics",
+   "uri": "weeklyTopics/getWeeklyTopicsInfo",
+   "request": [],
+   "response": [
+    [
+     "TopCharacterDataList",
+     "?"
+    ],
+    [
+     "BattleLeagueData",
+     "WeeklyTopicsPvpData"
+    ],
+    [
+     "LegendLeagueData",
+     "WeeklyTopicsPvpData"
+    ],
+    [
+     "BossBattleData",
+     "WeeklyTopicsBossBattleData"
+    ],
+    [
+     "ShopData",
+     "WeeklyTopicsShopData"
+    ]
+   ],
+   "status": "used"
+  },
+  "webStoreLoginCampaign/getLoginCampaignInfo": {
+   "category": "WebStoreLoginCampaign",
+   "uri": "webStoreLoginCampaign/getLoginCampaignInfo",
+   "request": [],
+   "response": [
+    [
+     "ItemList",
+     "?"
+    ],
+    [
+     "IsAchieved",
+     "bool"
+    ]
+   ],
+   "status": "missing"
+  },
+  "webStoreLoginCampaign/rewardLoginCampaignItem": {
+   "category": "WebStoreLoginCampaign",
+   "uri": "webStoreLoginCampaign/rewardLoginCampaignItem",
+   "request": [],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "vip/buyVipGift": {
+   "category": "Vip",
+   "uri": "vip/buyVipGift",
+   "request": [
+    [
+     "VipGiftId",
+     "long"
+    ],
+    [
+     "VipLv",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "ItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "vip/getDailyGift": {
+   "category": "Vip",
+   "uri": "vip/getDailyGift",
+   "request": [],
+   "response": [
+    [
+     "ItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "user/changeMainCharacterIcon": {
+   "category": "User",
+   "uri": "user/changeMainCharacterIcon",
+   "request": [
+    [
+     "CharacterId",
+     "long"
+    ],
+    [
+     "SpecialIconItemId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/changeUserName": {
+   "category": "User",
+   "uri": "user/changeUserName",
+   "request": [
+    [
+     "Name",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/createAuthTokenOfMagicOnion": {
+   "category": "User",
+   "uri": "user/createAuthTokenOfMagicOnion",
+   "request": [],
+   "response": [
+    [
+     "AuthTokenOfMagicOnion",
+     "string"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/getMypage": {
+   "category": "User",
+   "uri": "user/getMypage",
+   "request": [
+    [
+     "LanguageType",
+     "LanguageType"
+    ]
+   ],
+   "response": [
+    [
+     "DisplayNoticeIdList",
+     "?"
+    ],
+    [
+     "ExistNewFriendPointTransfer",
+     "bool"
+    ],
+    [
+     "ExistNewPrivateChat",
+     "bool"
+    ],
+    [
+     "ExistNotReceivedBountyQuestReward",
+     "bool"
+    ],
+    [
+     "ExistNotReceivedMissionReward",
+     "bool"
+    ],
+    [
+     "LatestAnnounceChatRegistrationLocalTimestamp",
+     "long"
+    ],
+    [
+     "MissionGuideInfo",
+     "MissionGuideInfo"
+    ],
+    [
+     "MypageInfo",
+     "DisplayMypageInfo"
+    ],
+    [
+     "NotOrderedBountyQuestIdList",
+     "?"
+    ],
+    [
+     "ReceivableLimitedLoginBonusId",
+     "long"
+    ],
+    [
+     "UnreadIndividualNotificationIdList",
+     "?"
+    ],
+    [
+     "UserFriendDtoInfoList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ],
+    [
+     "WorldGuidanceInfo",
+     "WorldGuidanceInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "user/getPlayerInfo": {
+   "category": "User",
+   "uri": "user/getPlayerInfo",
+   "request": [
+    [
+     "PlayerIds",
+     "?"
+    ],
+    [
+     "DeckUseContentType",
+     "DeckUseContentType"
+    ],
+    [
+     "IsGlobal",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "PlayerInfos",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/getUserData": {
+   "category": "User",
+   "uri": "user/getUserData",
+   "request": [],
+   "response": [
+    [
+     "IsNotClearDungeonBattleMap",
+     "bool"
+    ],
+    [
+     "GachaSelectListCharacterIds",
+     "?"
+    ],
+    [
+     "EquipmentReinforcedCrystalDropStartFloor",
+     "long"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "user/login": {
+   "category": "User",
+   "uri": "user/login",
+   "request": [
+    [
+     "ClientKey",
+     "string"
+    ],
+    [
+     "PlayerId",
+     "long"
+    ],
+    [
+     "SteamTicket",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "AuthTokenOfMagicOnion",
+     "string"
+    ],
+    [
+     "BanChatInfo",
+     "BanChatInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/loginPlayer": {
+   "category": "User",
+   "uri": "user/loginPlayer",
+   "request": [
+    [
+     "Password",
+     "string"
+    ],
+    [
+     "PlayerId",
+     "long"
+    ],
+    [
+     "ErrorLogInfoList",
+     "?"
+    ],
+    [
+     "MusicPlayerPlayLogInfoList",
+     "?"
+    ],
+    [
+     "CustomMusicSettingPlayLogInfoList",
+     "?"
+    ],
+    [
+     "SteamTicket",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "AuthTokenOfMagicOnion",
+     "string"
+    ],
+    [
+     "BanChatInfo",
+     "BanChatInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ],
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "user/registerFavoriteCharacter": {
+   "category": "User",
+   "uri": "user/registerFavoriteCharacter",
+   "request": [
+    [
+     "CharacterIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/saveGvgDeck": {
+   "category": "User",
+   "uri": "user/saveGvgDeck",
+   "request": [
+    [
+     "DeckUseContentType",
+     "DeckUseContentType"
+    ],
+    [
+     "GvgDeckInfoList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/saveUsedDeck": {
+   "category": "User",
+   "uri": "user/saveUsedDeck",
+   "request": [
+    [
+     "CopyPlayerId",
+     "long"
+    ],
+    [
+     "DeckUseContentType",
+     "DeckUseContentType"
+    ],
+    [
+     "UserCharacterGuids",
+     "?"
+    ],
+    [
+     "DeckNo",
+     "int"
+    ],
+    [
+     "UseLockEquipmentInFriendBattle",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "user/setBackgroundCharacter": {
+   "category": "User",
+   "uri": "user/setBackgroundCharacter",
+   "request": [
+    [
+     "CharacterId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/setBirthday": {
+   "category": "User",
+   "uri": "user/setBirthday",
+   "request": [
+    [
+     "Birthday",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/setPlayerSetting": {
+   "category": "User",
+   "uri": "user/setPlayerSetting",
+   "request": [
+    [
+     "PlayerSettingsType",
+     "PlayerSettingsType"
+    ],
+    [
+     "Value",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/syncGvgDeck": {
+   "category": "User",
+   "uri": "user/syncGvgDeck",
+   "request": [
+    [
+     "SelectedDeckType",
+     "DeckUseContentType"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/tapMypageBanner": {
+   "category": "User",
+   "uri": "user/tapMypageBanner",
+   "request": [
+    [
+     "MypageBannerMBId",
+     "long"
+    ],
+    [
+     "LanguageType",
+     "LanguageType"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "user/transitionBackGround": {
+   "category": "User",
+   "uri": "user/transitionBackGround",
+   "request": [
+    [
+     "ClassNameList",
+     "?"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "user/unsyncGvgDeck": {
+   "category": "User",
+   "uri": "user/unsyncGvgDeck",
+   "request": [],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/updateComment": {
+   "category": "User",
+   "uri": "user/updateComment",
+   "request": [
+    [
+     "Comment",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "user/updateGuidanceTime": {
+   "category": "User",
+   "uri": "user/updateGuidanceTime",
+   "request": [
+    [
+     "GuidanceType",
+     "GuidanceType"
+    ],
+    [
+     "GuidanceLocalTime",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "unionMission/entryUnionMission": {
+   "category": "UnionMission",
+   "uri": "unionMission/entryUnionMission",
+   "request": [],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "tutorial/clearTutorial": {
+   "category": "Tutorial",
+   "uri": "tutorial/clearTutorial",
+   "request": [
+    [
+     "ClearTutorialId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "tutorial/openContent": {
+   "category": "Tutorial",
+   "uri": "tutorial/openContent",
+   "request": [
+    [
+     "OpenContentIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "tutorial/skipTutorial": {
+   "category": "Tutorial",
+   "uri": "tutorial/skipTutorial",
+   "request": [
+    [
+     "SkipTutorialIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserBattleAutoDtoInfo",
+     "UserBattleAutoDtoInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "tradeShop/buyItem": {
+   "category": "TradeShop",
+   "uri": "tradeShop/buyItem",
+   "request": [
+    [
+     "TradeShopTabId",
+     "long"
+    ],
+    [
+     "TradeShopItemInfos",
+     "?"
+    ],
+    [
+     "TradeShopSphereId",
+     "long"
+    ],
+    [
+     "TradeSphereCount",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "TradeShopItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "tradeShop/getList": {
+   "category": "TradeShop",
+   "uri": "tradeShop/getList",
+   "request": [],
+   "response": [
+    [
+     "TradeShopTabInfoList",
+     "?"
+    ],
+    [
+     "MinOpenQuestId",
+     "long"
+    ],
+    [
+     "MinOpenPartyLevel",
+     "long"
+    ]
+   ],
+   "status": "used"
+  },
+  "tradeShop/resetTab": {
+   "category": "TradeShop",
+   "uri": "tradeShop/resetTab",
+   "request": [
+    [
+     "TradeShopTabId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "LastFreeManualUpdateTime",
+     "long"
+    ],
+    [
+     "TradeShopItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "towerBattle/buy": {
+   "category": "TowerBattle",
+   "uri": "towerBattle/buy",
+   "request": [
+    [
+     "BuyCount",
+     "int"
+    ],
+    [
+     "IsCurrency",
+     "bool"
+    ],
+    [
+     "TargetTowerType",
+     "TowerType"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "towerBattle/getLotteryRewardInfo": {
+   "category": "TowerBattle",
+   "uri": "towerBattle/getLotteryRewardInfo",
+   "request": [
+    [
+     "TowerType",
+     "TowerType"
+    ],
+    [
+     "FloorUpper",
+     "long"
+    ],
+    [
+     "FloorLower",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "LotteryRewardInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "towerBattle/getTowerBattleClearParty": {
+   "category": "TowerBattle",
+   "uri": "towerBattle/getTowerBattleClearParty",
+   "request": [
+    [
+     "Floor",
+     "long"
+    ],
+    [
+     "TowerType",
+     "TowerType"
+    ]
+   ],
+   "response": [
+    [
+     "SelfClearPartyInfo",
+     "TowerBattleClearPartyInfo"
+    ],
+    [
+     "ClearPartyInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "towerBattle/getTowerBattleClearPartyBattleLog": {
+   "category": "TowerBattle",
+   "uri": "towerBattle/getTowerBattleClearPartyBattleLog",
+   "request": [
+    [
+     "Floor",
+     "long"
+    ],
+    [
+     "PlayerId",
+     "long"
+    ],
+    [
+     "TowerType",
+     "TowerType"
+    ]
+   ],
+   "response": [
+    [
+     "BattleSimulationResult",
+     "BattleSimulationResult"
+    ]
+   ],
+   "status": "missing"
+  },
+  "towerBattle/quick": {
+   "category": "TowerBattle",
+   "uri": "towerBattle/quick",
+   "request": [
+    [
+     "TargetTowerType",
+     "TowerType"
+    ],
+    [
+     "TowerBattleQuestId",
+     "long"
+    ],
+    [
+     "QuickCount",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "BattleRewardList",
+     "?"
+    ],
+    [
+     "BattleRewardResult",
+     "BattleRewardResult"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "towerBattle/start": {
+   "category": "TowerBattle",
+   "uri": "towerBattle/start",
+   "request": [
+    [
+     "TargetTowerType",
+     "TowerType"
+    ],
+    [
+     "TowerBattleQuestId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BattleResult",
+     "BattleResult"
+    ],
+    [
+     "BattleRewardResult",
+     "BattleRewardResult"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "sweepstakes/sweepstakesEntry": {
+   "category": "Sweepstakes",
+   "uri": "sweepstakes/sweepstakesEntry",
+   "request": [
+    [
+     "SweepstakesEntryDataList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "SweepstakesEntryInfoList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "starsGuidanceTradeShop/exchangeItem": {
+   "category": "StarsGuidanceTradeShop",
+   "uri": "starsGuidanceTradeShop/exchangeItem",
+   "request": [
+    [
+     "StarsGuidanceTradeShopId",
+     "long"
+    ],
+    [
+     "ConsumeItem",
+     "UserItem"
+    ]
+   ],
+   "response": [
+    [
+     "GiveItem",
+     "UserItem"
+    ],
+    [
+     "TodayTradeCount",
+     "long"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "starsGuidanceTradeShop/getStarsGuidanceTradeShopInfo": {
+   "category": "StarsGuidanceTradeShop",
+   "uri": "starsGuidanceTradeShop/getStarsGuidanceTradeShopInfo",
+   "request": [],
+   "response": [
+    [
+     "StarsGuidanceTradeShopId",
+     "long"
+    ],
+    [
+     "EndLocalTimestamp",
+     "long"
+    ],
+    [
+     "GiveItemType",
+     "ItemType"
+    ],
+    [
+     "GiveItemId",
+     "long"
+    ],
+    [
+     "TodayTradeCount",
+     "long"
+    ],
+    [
+     "LimitTradeCount",
+     "long"
+    ],
+    [
+     "StarsGuidanceConsumeItemInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/bulkBuyProduct": {
+   "category": "Shop",
+   "uri": "shop/bulkBuyProduct",
+   "request": [
+    [
+     "GivePlayerId",
+     "long"
+    ],
+    [
+     "BulkShopProductInfos",
+     "?"
+    ],
+    [
+     "SessionId",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "GivenPlayerId",
+     "long"
+    ],
+    [
+     "GivenPlayerName",
+     "string"
+    ],
+    [
+     "BulkShopRewardInfos",
+     "?"
+    ],
+    [
+     "ShopProductInfos",
+     "?"
+    ],
+    [
+     "TotalSavePoint",
+     "long"
+    ],
+    [
+     "TotalPrice",
+     "int"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/bulkBuyProductWithWebCrystal": {
+   "category": "Shop",
+   "uri": "shop/bulkBuyProductWithWebCrystal",
+   "request": [
+    [
+     "BulkShopProductInfos",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "BulkShopRewardInfos",
+     "?"
+    ],
+    [
+     "ShopProductInfos",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/buyMissionPassPoint": {
+   "category": "Shop",
+   "uri": "shop/buyMissionPassPoint",
+   "request": [
+    [
+     "BuyPoint",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "RewardPoint",
+     "int"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/buyProduct": {
+   "category": "Shop",
+   "uri": "shop/buyProduct",
+   "request": [
+    [
+     "GivePlayerId",
+     "long"
+    ],
+    [
+     "MbId",
+     "long"
+    ],
+    [
+     "ProductId",
+     "string"
+    ],
+    [
+     "Receipt",
+     "string"
+    ],
+    [
+     "ShopProductType",
+     "ShopProductType"
+    ],
+    [
+     "SteamTicket",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "GivenPlayerId",
+     "long"
+    ],
+    [
+     "GivenPlayerName",
+     "string"
+    ],
+    [
+     "RewardInfo",
+     "AcquisitionShopRewardInfo"
+    ],
+    [
+     "ShopProductInfo",
+     "ShopProductInfo"
+    ],
+    [
+     "SavePoint",
+     "long"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "shop/buyProductWithWebCrystal": {
+   "category": "Shop",
+   "uri": "shop/buyProductWithWebCrystal",
+   "request": [
+    [
+     "MbId",
+     "long"
+    ],
+    [
+     "ProductId",
+     "string"
+    ],
+    [
+     "ShopProductType",
+     "ShopProductType"
+    ]
+   ],
+   "response": [
+    [
+     "RewardInfo",
+     "AcquisitionShopRewardInfo"
+    ],
+    [
+     "ShopProductInfo",
+     "ShopProductInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/cancelShopProduct": {
+   "category": "Shop",
+   "uri": "shop/cancelShopProduct",
+   "request": [
+    [
+     "TargetPlayerId",
+     "long"
+    ],
+    [
+     "MbId",
+     "long"
+    ],
+    [
+     "ProductId",
+     "string"
+    ],
+    [
+     "ShopProductType",
+     "ShopProductType"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "shop/cancelShopProductHistory": {
+   "category": "Shop",
+   "uri": "shop/cancelShopProductHistory",
+   "request": [
+    [
+     "BulkShopProductInfos",
+     "?"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "shop/shopClearTabNewFlag": {
+   "category": "Shop",
+   "uri": "shop/shopClearTabNewFlag",
+   "request": [
+    [
+     "ShopTabIdList",
+     "?"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "shop/getBoiPaymentDetailHistory": {
+   "category": "Shop",
+   "uri": "shop/getBoiPaymentDetailHistory",
+   "request": [
+    [
+     "TransactionId",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserShopPaymentHistoryDetailInfo",
+     "UserShopPaymentHistoryDetailInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/getBoiPaymentHistoryList": {
+   "category": "Shop",
+   "uri": "shop/getBoiPaymentHistoryList",
+   "request": [],
+   "response": [
+    [
+     "UserShopPaymentHistoryInfos",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/getBoiPointHistoryList": {
+   "category": "Shop",
+   "uri": "shop/getBoiPointHistoryList",
+   "request": [],
+   "response": [
+    [
+     "UserShopPointHistoryInfos",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/getDmmPoint": {
+   "category": "Shop",
+   "uri": "shop/getDmmPoint",
+   "request": [],
+   "response": [
+    [
+     "DmmPoint",
+     "int"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/getDmmSubscription": {
+   "category": "Shop",
+   "uri": "shop/getDmmSubscription",
+   "request": [],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/getList": {
+   "category": "Shop",
+   "uri": "shop/getList",
+   "request": [
+    [
+     "LanguageType",
+     "LanguageType"
+    ]
+   ],
+   "response": [
+    [
+     "ShopTabInfoList",
+     "?"
+    ],
+    [
+     "ShopBannerInfo",
+     "ShopBannerInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "shop/getMissionPassInfo": {
+   "category": "Shop",
+   "uri": "shop/getMissionPassInfo",
+   "request": [],
+   "response": [
+    [
+     "ShopProductMissionPassInfo",
+     "ShopProductMissionPassInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/getProductList": {
+   "category": "Shop",
+   "uri": "shop/getProductList",
+   "request": [],
+   "response": [
+    [
+     "ProductSubInfoList",
+     "?"
+    ],
+    [
+     "ContractPrivilegeProductSubInfoList",
+     "?"
+    ]
+   ],
+   "status": "unused"
+  },
+  "shop/getStripeCustomerPortal": {
+   "category": "Shop",
+   "uri": "shop/getStripeCustomerPortal",
+   "request": [],
+   "response": [
+    [
+     "StripeCustomerPortalUrl",
+     "string"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/getWebStoreGuidancePanel": {
+   "category": "Shop",
+   "uri": "shop/getWebStoreGuidancePanel",
+   "request": [],
+   "response": [
+    [
+     "ShopProductWebStoreGuidancePanel",
+     "ShopProductWebStoreGuidancePanel"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/receiveMissionPassReward": {
+   "category": "Shop",
+   "uri": "shop/receiveMissionPassReward",
+   "request": [
+    [
+     "RewardTargetLevel",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "ShopMissionPassRewardInfo",
+     "ShopMissionPassRewardInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "shop/receiveReward": {
+   "category": "Shop",
+   "uri": "shop/receiveReward",
+   "request": [
+    [
+     "IsBulk",
+     "bool"
+    ],
+    [
+     "MBId",
+     "long"
+    ],
+    [
+     "ProductId",
+     "string"
+    ],
+    [
+     "RequiredValue",
+     "long"
+    ],
+    [
+     "ShopProductType",
+     "ShopProductType"
+    ]
+   ],
+   "response": [
+    [
+     "RewardInfo",
+     "AcquisitionShopRewardInfo"
+    ],
+    [
+     "ShopProductInfo",
+     "ShopProductInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "shop/registerActionLog": {
+   "category": "Shop",
+   "uri": "shop/registerActionLog",
+   "request": [
+    [
+     "WebStoreGuidanceType",
+     "WebStoreGuidanceType"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "shop/selectShopProduct": {
+   "category": "Shop",
+   "uri": "shop/selectShopProduct",
+   "request": [
+    [
+     "MbId",
+     "long"
+    ],
+    [
+     "ProductId",
+     "string"
+    ],
+    [
+     "ShopProductType",
+     "ShopProductType"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "shop/startSteamPayment": {
+   "category": "Shop",
+   "uri": "shop/startSteamPayment",
+   "request": [
+    [
+     "Language",
+     "string"
+    ],
+    [
+     "LanguageType",
+     "LanguageType"
+    ],
+    [
+     "MBId",
+     "long"
+    ],
+    [
+     "ProductId",
+     "string"
+    ],
+    [
+     "ShopProductType",
+     "ShopProductType"
+    ],
+    [
+     "SteamTicket",
+     "string"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "shop/startStripePayment": {
+   "category": "Shop",
+   "uri": "shop/startStripePayment",
+   "request": [
+    [
+     "GivePlayerId",
+     "long"
+    ],
+    [
+     "MbId",
+     "long"
+    ],
+    [
+     "ProductId",
+     "string"
+    ],
+    [
+     "ShopProductType",
+     "ShopProductType"
+    ],
+    [
+     "BulkShopProductInfos",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "PurchaseUrl",
+     "string"
+    ],
+    [
+     "SessionId",
+     "string"
+    ],
+    [
+     "SavePoint",
+     "long"
+    ],
+    [
+     "RecoveryPaidShopProductInfo",
+     "StripeShopProductInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "serialCodes/inputSerialCode": {
+   "category": "SerialCodes",
+   "uri": "serialCodes/inputSerialCode",
+   "request": [
+    [
+     "SerialCode",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "PresentItemList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "reviewGuidance/registerActionLog": {
+   "category": "ReviewGuidance",
+   "uri": "reviewGuidance/registerActionLog",
+   "request": [
+    [
+     "ReviewGuidanceActionType",
+     "ReviewGuidanceActionType"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "retrieveItem/getRetrieveItemHistory": {
+   "category": "RetrieveItem",
+   "uri": "retrieveItem/getRetrieveItemHistory",
+   "request": [],
+   "response": [
+    [
+     "RetrieveItemHistoryList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "retrieveItem/getRetrieveItemInfo": {
+   "category": "RetrieveItem",
+   "uri": "retrieveItem/getRetrieveItemInfo",
+   "request": [],
+   "response": [
+    [
+     "RetrieveItemInfoList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "rentalRaid/rentalRaidGetInfo": {
+   "category": "RentalRaid",
+   "uri": "rentalRaid/rentalRaidGetInfo",
+   "request": [],
+   "response": [
+    [
+     "RentalRaidId",
+     "long"
+    ],
+    [
+     "StartTime",
+     "DateTime"
+    ],
+    [
+     "EndTime",
+     "DateTime"
+    ],
+    [
+     "SecondHalfStageStartTime",
+     "DateTime"
+    ],
+    [
+     "BattleChallengeEndTime",
+     "DateTime"
+    ],
+    [
+     "LimitElements",
+     "?"
+    ],
+    [
+     "LimitCharacterCounts",
+     "?"
+    ],
+    [
+     "IsExistsReceivableShareRewards",
+     "bool"
+    ],
+    [
+     "IsNotPlayNormalStageToday",
+     "bool"
+    ],
+    [
+     "NormalStageMaxClearId",
+     "long"
+    ],
+    [
+     "DoneStageOpenEffectType",
+     "RentalRaidStageOpenEffectType"
+    ],
+    [
+     "ShareCharacterLevelLimit",
+     "long"
+    ],
+    [
+     "ShareCharacterList",
+     "?"
+    ],
+    [
+     "FirstHalfNormalStageList",
+     "?"
+    ],
+    [
+     "FirstHalfBossStage",
+     "BossStageInfo"
+    ],
+    [
+     "SecondHalfNormalStageList",
+     "?"
+    ],
+    [
+     "SecondHalfBossStage",
+     "BossStageInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "rentalRaid/getRanking": {
+   "category": "RentalRaid",
+   "uri": "rentalRaid/getRanking",
+   "request": [
+    [
+     "ServerType",
+     "RentalRaidRankingServerType"
+    ],
+    [
+     "FetchType",
+     "RentalRaidRankingFetchType"
+    ]
+   ],
+   "response": [
+    [
+     "IsOpenServerRanking",
+     "bool"
+    ],
+    [
+     "RankingDict",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "rentalRaid/getRentalRaidBattleLog": {
+   "category": "RentalRaid",
+   "uri": "rentalRaid/getRentalRaidBattleLog",
+   "request": [
+    [
+     "TargetPlayerId",
+     "long"
+    ],
+    [
+     "BattleToken",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "BattleSimulationResult",
+     "BattleSimulationResult"
+    ]
+   ],
+   "status": "missing"
+  },
+  "rentalRaid/getShareCharacters": {
+   "category": "RentalRaid",
+   "uri": "rentalRaid/getShareCharacters",
+   "request": [
+    [
+     "IsRecommendOnly",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "FriendShareCharacterList",
+     "?"
+    ],
+    [
+     "GuildShareCharacterList",
+     "?"
+    ],
+    [
+     "RecommendShareCharacterList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "rentalRaid/getShareRewardInfo": {
+   "category": "RentalRaid",
+   "uri": "rentalRaid/getShareRewardInfo",
+   "request": [],
+   "response": [
+    [
+     "CurrentSharePoint",
+     "int"
+    ],
+    [
+     "ShareRewardInfoList",
+     "?"
+    ],
+    [
+     "ShareHistoryList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "rentalRaid/playStageOpenEffect": {
+   "category": "RentalRaid",
+   "uri": "rentalRaid/playStageOpenEffect",
+   "request": [
+    [
+     "EffectType",
+     "RentalRaidStageOpenEffectType"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "rentalRaid/receiveShareReward": {
+   "category": "RentalRaid",
+   "uri": "rentalRaid/receiveShareReward",
+   "request": [
+    [
+     "SharePoint",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "ReceiveItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "rentalRaid/setShareCharacter": {
+   "category": "RentalRaid",
+   "uri": "rentalRaid/setShareCharacter",
+   "request": [
+    [
+     "SetCharacterGuidList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "ShareCharacterList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "rentalRaid/startRentalRaid": {
+   "category": "RentalRaid",
+   "uri": "rentalRaid/startRentalRaid",
+   "request": [
+    [
+     "BattleType",
+     "BattleType"
+    ],
+    [
+     "StageId",
+     "long"
+    ],
+    [
+     "CharacterGuidList",
+     "?"
+    ],
+    [
+     "ShareCharacterGuid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "IsOverRewardLimitDay",
+     "bool"
+    ],
+    [
+     "BeforeMaxDamage",
+     "long"
+    ],
+    [
+     "TotalDamage",
+     "long"
+    ],
+    [
+     "BattleRewardResult",
+     "BattleRewardResult"
+    ],
+    [
+     "BattleResult",
+     "BattleResult"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "ranking/getAchieveRankingPlayerInfo": {
+   "category": "Ranking",
+   "uri": "ranking/getAchieveRankingPlayerInfo",
+   "request": [
+    [
+     "AchieveRankingRewardMBId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "AchieveRankingPlayerInfoList",
+     "?"
+    ],
+    [
+     "NoRecordMBIdList",
+     "?"
+    ],
+    [
+     "ReceivedAchieveRewardPlayerInfoList",
+     "?"
+    ],
+    [
+     "ReceivedAchieveRewardPlayerNameList",
+     "?"
+    ],
+    [
+     "FirstRankPlayerId",
+     "long"
+    ],
+    [
+     "FirstRankClearPartyCharacterInfos",
+     "?"
+    ],
+    [
+     "IsCheckedAwardPresentation",
+     "bool"
+    ]
+   ],
+   "status": "unused"
+  },
+  "ranking/getBulkAchieveRankingPlayerInfo": {
+   "category": "Ranking",
+   "uri": "ranking/getBulkAchieveRankingPlayerInfo",
+   "request": [
+    [
+     "AchieveRankingRewardMBIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "AchieveRankingPlayerInfoMap",
+     "?"
+    ]
+   ],
+   "status": "unused"
+  },
+  "ranking/getGuildRanking": {
+   "category": "Ranking",
+   "uri": "ranking/getGuildRanking",
+   "request": [],
+   "response": [
+    [
+     "GuildApplyingCount",
+     "long"
+    ],
+    [
+     "GuildBattlePowerMax",
+     "long"
+    ],
+    [
+     "GuildBattlePowerRanking",
+     "long"
+    ],
+    [
+     "GuildBattlePowerRankingGuildList",
+     "?"
+    ],
+    [
+     "GuildLvRanking",
+     "long"
+    ],
+    [
+     "GuildLvRankingGuildList",
+     "?"
+    ],
+    [
+     "GuildLvRankingToday",
+     "long"
+    ],
+    [
+     "GuildStockRanking",
+     "long"
+    ],
+    [
+     "GuildStockRankingGuildList",
+     "?"
+    ],
+    [
+     "GuildStockTodayCount",
+     "long"
+    ]
+   ],
+   "status": "used"
+  },
+  "ranking/getPlayerRanking": {
+   "category": "Ranking",
+   "uri": "ranking/getPlayerRanking",
+   "request": [],
+   "response": [
+    [
+     "AutoRanking",
+     "long"
+    ],
+    [
+     "AutoRankingPlayerList",
+     "?"
+    ],
+    [
+     "AutoRankingToday",
+     "long"
+    ],
+    [
+     "BattlePower",
+     "long"
+    ],
+    [
+     "BattlePowerRanking",
+     "long"
+    ],
+    [
+     "BattlePowerRankingPlayerList",
+     "?"
+    ],
+    [
+     "BattlePowerRankingToday",
+     "long"
+    ],
+    [
+     "PlayerRankRanking",
+     "long"
+    ],
+    [
+     "PlayerRankRankingPlayerList",
+     "?"
+    ],
+    [
+     "PlayerRankRankingToday",
+     "long"
+    ],
+    [
+     "TowerBattleRanking",
+     "long"
+    ],
+    [
+     "TowerBattleRankingPlayerList",
+     "?"
+    ],
+    [
+     "TowerBattleRankingToday",
+     "long"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "ranking/getRankingBattleLog": {
+   "category": "Ranking",
+   "uri": "ranking/getRankingBattleLog",
+   "request": [
+    [
+     "TargetPlayerId",
+     "long"
+    ],
+    [
+     "AchieveRankingRewardId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BattleSimulationResult",
+     "BattleSimulationResult"
+    ]
+   ],
+   "status": "unused"
+  },
+  "ranking/getTowerRanking": {
+   "category": "Ranking",
+   "uri": "ranking/getTowerRanking",
+   "request": [],
+   "response": [
+    [
+     "NowRankingMap",
+     "?"
+    ],
+    [
+     "TodayRankingMap",
+     "?"
+    ],
+    [
+     "TopPlayerInfoListMap",
+     "?"
+    ],
+    [
+     "TopPlayerMaxClearQuestIdMap",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "ranking/receiveAchieveRankingReward": {
+   "category": "Ranking",
+   "uri": "ranking/receiveAchieveRankingReward",
+   "request": [
+    [
+     "AchieveRankingRewardMBId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "quest/getAdamantiteQuestInfo": {
+   "category": "Quest",
+   "uri": "quest/getAdamantiteQuestInfo",
+   "request": [
+    [
+     "TargetAdamantiteId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "TargetBossBattleInfo",
+     "BossBattleInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "quest/getQuestInfo ": {
+   "category": "Quest",
+   "uri": "quest/getQuestInfo ",
+   "request": [
+    [
+     "TargetQuestId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "TargetBossBattleInfo",
+     "BossBattleInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "quest/mapBuilding": {
+   "category": "Quest",
+   "uri": "quest/mapBuilding",
+   "request": [
+    [
+     "QuestMapBuildingId",
+     "long"
+    ],
+    [
+     "SelectedIndex",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "quest/mapInfo": {
+   "category": "Quest",
+   "uri": "quest/mapInfo",
+   "request": [
+    [
+     "IsUpdateOtherPlayerInfo",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "AutoBattleDropEquipmentPercent",
+     "int"
+    ],
+    [
+     "CurrentQuestAutoEnemyIds",
+     "?"
+    ],
+    [
+     "MapOtherPlayerInfos",
+     "?"
+    ],
+    [
+     "MapPlayerInfos",
+     "?"
+    ],
+    [
+     "UserMapBuildingDtoInfos",
+     "?"
+    ]
+   ],
+   "status": "used"
+  },
+  "present/deletePresent": {
+   "category": "Present",
+   "uri": "present/deletePresent",
+   "request": [
+    [
+     "PresentGuidList",
+     "?"
+    ]
+   ],
+   "response": [],
+   "status": "used"
+  },
+  "present/getList": {
+   "category": "Present",
+   "uri": "present/getList",
+   "request": [
+    [
+     "LanguageType",
+     "LanguageType"
+    ]
+   ],
+   "response": [
+    [
+     "userPresentDtoInfos",
+     "?"
+    ]
+   ],
+   "status": "used"
+  },
+  "present/receiveItem": {
+   "category": "Present",
+   "uri": "present/receiveItem",
+   "request": [
+    [
+     "LanguageType",
+     "LanguageType"
+    ],
+    [
+     "PresentGuid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "ResultItems",
+     "?"
+    ],
+    [
+     "UpsertPresentDtoInfoList",
+     "?"
+    ],
+    [
+     "WebStoreSdkInfoList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "popularityVote/getDetailInfo": {
+   "category": "PopularityVote",
+   "uri": "popularityVote/getDetailInfo",
+   "request": [],
+   "response": [
+    [
+     "PreliminaryInterimVoteCharacterList",
+     "?"
+    ],
+    [
+     "PreliminaryInterimGroupVoteCharacterDict",
+     "?"
+    ],
+    [
+     "PreliminaryResultVoteCharacterList",
+     "?"
+    ],
+    [
+     "PreliminaryResultGroupVoteCharacterDict",
+     "?"
+    ],
+    [
+     "FinalInterimVoteCharacterList",
+     "?"
+    ],
+    [
+     "FinalResultVoteCharacterList",
+     "?"
+    ],
+    [
+     "PreliminaryTotalVoteCount",
+     "long"
+    ],
+    [
+     "FinalTotalVoteCount",
+     "long"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "popularityVote/getInfo": {
+   "category": "PopularityVote",
+   "uri": "popularityVote/getInfo",
+   "request": [],
+   "response": [
+    [
+     "PopularityVoteRewardInfoList",
+     "?"
+    ],
+    [
+     "TotalVoteCount",
+     "long"
+    ],
+    [
+     "VoteCharacterList",
+     "?"
+    ],
+    [
+     "MyListCharacterIdList",
+     "?"
+    ],
+    [
+     "GroupVotingCharacterIdDict",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "popularityVote/getResultInfo": {
+   "category": "PopularityVote",
+   "uri": "popularityVote/getResultInfo",
+   "request": [
+    [
+     "IsPreliminary",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "VoteCharacterList",
+     "?"
+    ],
+    [
+     "GroupVoteDict",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "popularityVote/registerMyList": {
+   "category": "PopularityVote",
+   "uri": "popularityVote/registerMyList",
+   "request": [
+    [
+     "IsRegister",
+     "bool"
+    ],
+    [
+     "CharacterId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "MyListCharacterIdList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "popularityVote/rewardVoteItem": {
+   "category": "PopularityVote",
+   "uri": "popularityVote/rewardVoteItem",
+   "request": [
+    [
+     "IsAllReward",
+     "bool"
+    ],
+    [
+     "TargetRewardVoteCount",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "PopularityVoteRewardInfoList",
+     "?"
+    ],
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "popularityVote/setGroupVotingCharacters": {
+   "category": "PopularityVote",
+   "uri": "popularityVote/setGroupVotingCharacters",
+   "request": [
+    [
+     "GroupIdCharacterIdDict",
+     "?"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "popularityVote/vote": {
+   "category": "PopularityVote",
+   "uri": "popularityVote/vote",
+   "request": [
+    [
+     "VoteCharacterList",
+     "?"
+    ],
+    [
+     "IsGroupVote",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "playVideo/playVideoComment": {
+   "category": "PlayVideo",
+   "uri": "playVideo/playVideoComment",
+   "request": [
+    [
+     "Comment",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserPlayVideoCommentInfo",
+     "UserPlayVideoCommentInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "playVideo/playVideoGetCommentList": {
+   "category": "PlayVideo",
+   "uri": "playVideo/playVideoGetCommentList",
+   "request": [],
+   "response": [
+    [
+     "UserPlayVideoCommentInfoList",
+     "?"
+    ],
+    [
+     "IsAlreadyCommentedToday",
+     "bool"
+    ]
+   ],
+   "status": "missing"
+  },
+  "playVideo/playVideoLikeComment": {
+   "category": "PlayVideo",
+   "uri": "playVideo/playVideoLikeComment",
+   "request": [
+    [
+     "UserPlayVideoCommentInfoGuidList",
+     "?"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "playVideo/playVideoStart": {
+   "category": "PlayVideo",
+   "uri": "playVideo/playVideoStart",
+   "request": [],
+   "response": [],
+   "status": "missing"
+  },
+  "pictureBook/transitionPanelPictureBook": {
+   "category": "PictureBook",
+   "uri": "pictureBook/transitionPanelPictureBook",
+   "request": [],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "panel/unlockPanel": {
+   "category": "Panel",
+   "uri": "panel/unlockPanel",
+   "request": [
+    [
+     "PanelId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "notification/clearNotification": {
+   "category": "Notification",
+   "uri": "notification/clearNotification",
+   "request": [
+    [
+     "ClearNotificationInfos",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "notification/registerGvGPushSettingLog": {
+   "category": "Notification",
+   "uri": "notification/registerGvGPushSettingLog",
+   "request": [
+    [
+     "LocalNotificationType",
+     "LocalNotificationType"
+    ],
+    [
+     "SendTime",
+     "string"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "notice/getMypageNoticeInfoList": {
+   "category": "Notice",
+   "uri": "notice/getMypageNoticeInfoList",
+   "request": [
+    [
+     "LanguageType",
+     "LanguageType"
+    ]
+   ],
+   "response": [
+    [
+     "NoticeInfoList",
+     "?"
+    ],
+    [
+     "EventInfoList",
+     "?"
+    ],
+    [
+     "DungeonBattleEventTutorialId",
+     "long"
+    ]
+   ],
+   "status": "used"
+  },
+  "notice/getNoticeInfoList": {
+   "category": "Notice",
+   "uri": "notice/getNoticeInfoList",
+   "request": [
+    [
+     "AccessType",
+     "NoticeAccessType"
+    ],
+    [
+     "CountryCode",
+     "string"
+    ],
+    [
+     "LanguageType",
+     "LanguageType"
+    ],
+    [
+     "UserId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "NoticeInfoList",
+     "?"
+    ],
+    [
+     "EventInfoList",
+     "?"
+    ],
+    [
+     "DungeonBattleEventTutorialId",
+     "long"
+    ]
+   ],
+   "status": "unused"
+  },
+  "music/addPlaylist": {
+   "category": "Music",
+   "uri": "music/addPlaylist",
+   "request": [
+    [
+     "PlaylistName",
+     "string"
+    ],
+    [
+     "MusicIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserPlaylistInfo",
+     "UserPlaylistInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "music/buyMusic": {
+   "category": "Music",
+   "uri": "music/buyMusic",
+   "request": [
+    [
+     "MusicIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "MusicIdList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "music/deletePlaylist": {
+   "category": "Music",
+   "uri": "music/deletePlaylist",
+   "request": [
+    [
+     "Guid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserPlaylistInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "music/getCodePlaylist": {
+   "category": "Music",
+   "uri": "music/getCodePlaylist",
+   "request": [
+    [
+     "PlaylistShareCode",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "PlaylistShareInfo",
+     "PlaylistShareInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "music/getMusicInfo": {
+   "category": "Music",
+   "uri": "music/getMusicInfo",
+   "request": [
+    [
+     "VoiceLanguageType",
+     "LanguageType"
+    ],
+    [
+     "IsGiveMusicTicket",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "AllMusicIdList",
+     "?"
+    ],
+    [
+     "MusicIdList",
+     "?"
+    ],
+    [
+     "UserPlaylistInfoList",
+     "?"
+    ],
+    [
+     "NewCharacterCount",
+     "int"
+    ],
+    [
+     "GivenMusicTicketCount",
+     "long"
+    ],
+    [
+     "MusicPlayCountDict",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "music/sharePlaylist": {
+   "category": "Music",
+   "uri": "music/sharePlaylist",
+   "request": [
+    [
+     "IsShareSns",
+     "bool"
+    ],
+    [
+     "ChatType",
+     "ChatType"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ],
+    [
+     "PlaylistGuid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "PlaylistShareCode",
+     "string"
+    ]
+   ],
+   "status": "missing"
+  },
+  "music/updatePlaylist": {
+   "category": "Music",
+   "uri": "music/updatePlaylist",
+   "request": [
+    [
+     "UserPlaylistInfoList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserPlaylistInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "music/updatePlaylistOrder": {
+   "category": "Music",
+   "uri": "music/updatePlaylistOrder",
+   "request": [
+    [
+     "PlaylistGuidList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserPlaylistInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "monologue/registerActionLog": {
+   "category": "Monologue",
+   "uri": "monologue/registerActionLog",
+   "request": [
+    [
+     "MonologueId",
+     "long"
+    ],
+    [
+     "WatchTimeMs",
+     "long"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "mission/buyMissionProduct": {
+   "category": "Mission",
+   "uri": "mission/buyMissionProduct",
+   "request": [
+    [
+     "MissionId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "RewardList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "mission/getCollabMissionInfo": {
+   "category": "Mission",
+   "uri": "mission/getCollabMissionInfo",
+   "request": [
+    [
+     "LanguageType",
+     "LanguageType"
+    ]
+   ],
+   "response": [
+    [
+     "SweepstakesEntryInfoList",
+     "?"
+    ],
+    [
+     "NoticeEndLocalTimeStamp",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "mission/getMissionInfo": {
+   "category": "Mission",
+   "uri": "mission/getMissionInfo",
+   "request": [
+    [
+     "TargetMissionGroupList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "MissionInfoDict",
+     "?"
+    ]
+   ],
+   "status": "used"
+  },
+  "mission/receivePanelMissionBingoReward": {
+   "category": "Mission",
+   "uri": "mission/receivePanelMissionBingoReward",
+   "request": [
+    [
+     "SheetNo",
+     "int"
+    ],
+    [
+     "BingoType",
+     "BingoType"
+    ]
+   ],
+   "response": [
+    [
+     "RewardInfo",
+     "AcquisitionMissionRewardInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "mission/rewardMission": {
+   "category": "Mission",
+   "uri": "mission/rewardMission",
+   "request": [
+    [
+     "TargetMissionIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "MissionGuideInfo",
+     "MissionGuideInfo"
+    ],
+    [
+     "RewardInfo",
+     "AcquisitionMissionRewardInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "mission/rewardMissionActivity": {
+   "category": "Mission",
+   "uri": "mission/rewardMissionActivity",
+   "request": [
+    [
+     "MissionGroupType",
+     "MissionGroupType"
+    ],
+    [
+     "RequiredCount",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "RewardInfo",
+     "AcquisitionMissionRewardInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "mission/updateSnsMission": {
+   "category": "Mission",
+   "uri": "mission/updateSnsMission",
+   "request": [
+    [
+     "MissionType",
+     "MissionType"
+    ],
+    [
+     "MissionAchievementType",
+     "MissionAchievementType"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "miningQuest/miningQuestFinish": {
+   "category": "MiningQuest",
+   "uri": "miningQuest/miningQuestFinish",
+   "request": [
+    [
+     "MinedBlockInfoList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "MinedBlockInfoList",
+     "?"
+    ],
+    [
+     "Score",
+     "long"
+    ],
+    [
+     "GradeType",
+     "MiningQuestGradeType"
+    ],
+    [
+     "GradeNameTextKey",
+     "string"
+    ],
+    [
+     "RewardItem",
+     "UserItem"
+    ],
+    [
+     "TotalRewardCount",
+     "long"
+    ],
+    [
+     "MaxRewardCount",
+     "long"
+    ],
+    [
+     "IsDisplayMissionBadge",
+     "bool"
+    ],
+    [
+     "IsDisplayGradeBadge",
+     "bool"
+    ],
+    [
+     "IsDisplayMaxRewardCountBadge",
+     "bool"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "miningQuest/miningQuestGetBenefitInfo": {
+   "category": "MiningQuest",
+   "uri": "miningQuest/miningQuestGetBenefitInfo",
+   "request": [],
+   "response": [
+    [
+     "CurrentPurchaseCount",
+     "int"
+    ],
+    [
+     "BenefitInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "miningQuest/miningQuestGetCurrentParameters": {
+   "category": "MiningQuest",
+   "uri": "miningQuest/miningQuestGetCurrentParameters",
+   "request": [],
+   "response": [
+    [
+     "AttackPower",
+     "int"
+    ],
+    [
+     "AttackRange",
+     "int"
+    ],
+    [
+     "AttackFrequency",
+     "int"
+    ],
+    [
+     "AttackSpeedAdditionalRate",
+     "int"
+    ],
+    [
+     "SpecialAttackRange",
+     "int"
+    ],
+    [
+     "SpecialAttackCoolTimeMilliseconds",
+     "int"
+    ],
+    [
+     "SpecialAttackSimultaneousCount",
+     "int"
+    ],
+    [
+     "BlockGenerateLimit",
+     "int"
+    ],
+    [
+     "RespawnBlockLevel",
+     "int"
+    ],
+    [
+     "LimitTimeSeconds",
+     "int"
+    ],
+    [
+     "RewardCountAdditionalRate",
+     "int"
+    ],
+    [
+     "SpawnBlockLevel",
+     "int"
+    ],
+    [
+     "BlockLotteryInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "miningQuest/miningQuestGetGradeInfo": {
+   "category": "MiningQuest",
+   "uri": "miningQuest/miningQuestGetGradeInfo",
+   "request": [],
+   "response": [
+    [
+     "ChangeDayLocalTimeStamp",
+     "long"
+    ],
+    [
+     "GradeInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "miningQuest/miningQuestGetInfo": {
+   "category": "MiningQuest",
+   "uri": "miningQuest/miningQuestGetInfo",
+   "request": [],
+   "response": [
+    [
+     "MiningQuestEventId",
+     "long"
+    ],
+    [
+     "MaxScore",
+     "long"
+    ],
+    [
+     "GradeType",
+     "MiningQuestGradeType"
+    ],
+    [
+     "GradeNameTextKey",
+     "string"
+    ],
+    [
+     "EndLocalTimeStamp",
+     "long"
+    ],
+    [
+     "IsDisplayMissionBadge",
+     "bool"
+    ],
+    [
+     "IsDisplayGradeBadge",
+     "bool"
+    ],
+    [
+     "IsDisplayBenefitBadge",
+     "bool"
+    ],
+    [
+     "IsDisplayMaxRewardCountBadge",
+     "bool"
+    ],
+    [
+     "CurrentAttackPower",
+     "int"
+    ],
+    [
+     "CurrentAttackFrequency",
+     "int"
+    ],
+    [
+     "CurrentCollectionLevel",
+     "int"
+    ],
+    [
+     "UserReinforcementInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "miningQuest/miningQuestGetMaxRewardCountInfo": {
+   "category": "MiningQuest",
+   "uri": "miningQuest/miningQuestGetMaxRewardCountInfo",
+   "request": [],
+   "response": [
+    [
+     "ChangeDayLocalTimeStamp",
+     "long"
+    ],
+    [
+     "TotalRewardCount",
+     "long"
+    ],
+    [
+     "MaxRewardCount",
+     "long"
+    ],
+    [
+     "CarryOverMaxRewardCount",
+     "long"
+    ],
+    [
+     "RewardCountLevel",
+     "int"
+    ]
+   ],
+   "status": "missing"
+  },
+  "miningQuest/miningQuestReceiveGradeDailyReward": {
+   "category": "MiningQuest",
+   "uri": "miningQuest/miningQuestReceiveGradeDailyReward",
+   "request": [],
+   "response": [
+    [
+     "RewardItems",
+     "?"
+    ],
+    [
+     "IsDisplayMissionBadge",
+     "bool"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "miningQuest/miningQuestReinforcement": {
+   "category": "MiningQuest",
+   "uri": "miningQuest/miningQuestReinforcement",
+   "request": [
+    [
+     "MiningQuestReinforcementId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "CurrentAttackPower",
+     "int"
+    ],
+    [
+     "CurrentAttackFrequency",
+     "int"
+    ],
+    [
+     "CurrentCollectionLevel",
+     "int"
+    ],
+    [
+     "AfterLevel",
+     "int"
+    ],
+    [
+     "IsDisplayMissionBadge",
+     "bool"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "miningQuest/miningQuestStart": {
+   "category": "MiningQuest",
+   "uri": "miningQuest/miningQuestStart",
+   "request": [],
+   "response": [
+    [
+     "LimitTimeSeconds",
+     "int"
+    ],
+    [
+     "ParameterInfo",
+     "MiningQuestParameterInfo"
+    ],
+    [
+     "BlockInfoList",
+     "?"
+    ],
+    [
+     "BlockRespawnInfoList",
+     "?"
+    ],
+    [
+     "SpecialAttackInfoList",
+     "?"
+    ],
+    [
+     "LayerBlockSizePercentList",
+     "?"
+    ],
+    [
+     "LayerBlockCapacityWeightList",
+     "?"
+    ],
+    [
+     "Seed",
+     "int"
+    ]
+   ],
+   "status": "missing"
+  },
+  "miningQuest/miningQuestUnlockBenefit": {
+   "category": "MiningQuest",
+   "uri": "miningQuest/miningQuestUnlockBenefit",
+   "request": [],
+   "response": [
+    [
+     "BenefitInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "luckyChance/drawLuckyChance": {
+   "category": "LuckyChance",
+   "uri": "luckyChance/drawLuckyChance",
+   "request": [],
+   "response": [
+    [
+     "GetItem",
+     "UserItem"
+    ],
+    [
+     "LotteryItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "luckyChance/luckyChanceGetDetailInfo": {
+   "category": "LuckyChance",
+   "uri": "luckyChance/luckyChanceGetDetailInfo",
+   "request": [
+    [
+     "LuckyChanceButtonId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "LotteryItemList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "luckyChance/getInputFormInfo": {
+   "category": "LuckyChance",
+   "uri": "luckyChance/getInputFormInfo",
+   "request": [],
+   "response": [
+    [
+     "InputFormType",
+     "LuckyChanceInputFormType"
+    ],
+    [
+     "IsRegisteredAddress",
+     "bool"
+    ],
+    [
+     "NotRegisteredPrizeItemList",
+     "?"
+    ],
+    [
+     "RegisteredPrizeItemList",
+     "?"
+    ],
+    [
+     "RegisteredPrizeItemInfoList",
+     "?"
+    ],
+    [
+     "RegisteredMailAddressDomain",
+     "string"
+    ],
+    [
+     "InputLimitDate",
+     "DateTime"
+    ]
+   ],
+   "status": "missing"
+  },
+  "luckyChance/getLuckyChanceInfo": {
+   "category": "LuckyChance",
+   "uri": "luckyChance/getLuckyChanceInfo",
+   "request": [],
+   "response": [
+    [
+     "InputFormType",
+     "LuckyChanceInputFormType"
+    ],
+    [
+     "IsDisplayDetailButton",
+     "bool"
+    ],
+    [
+     "LotteryItemList",
+     "?"
+    ],
+    [
+     "UserDrawCount",
+     "int"
+    ],
+    [
+     "LuckyChanceButtonInfoList",
+     "?"
+    ],
+    [
+     "SelectedLuckyChanceButtonId",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "luckyChance/getPersonalInfo": {
+   "category": "LuckyChance",
+   "uri": "luckyChance/getPersonalInfo",
+   "request": [
+    [
+     "AuthCode",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "PersonalInfo",
+     "LuckyChancePersonalInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "luckyChance/registerPersonalInfo": {
+   "category": "LuckyChance",
+   "uri": "luckyChance/registerPersonalInfo",
+   "request": [
+    [
+     "PersonalInfo",
+     "LuckyChancePersonalInfo"
+    ],
+    [
+     "AuthCode",
+     "string"
+    ],
+    [
+     "RealPrizeCItemInfoList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "MailAddress",
+     "string"
+    ]
+   ],
+   "status": "missing"
+  },
+  "luckyChance/registerPrize": {
+   "category": "LuckyChance",
+   "uri": "luckyChance/registerPrize",
+   "request": [
+    [
+     "ExchangeItemInfoList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "luckyChance/registerRealPrizeCItemInfo": {
+   "category": "LuckyChance",
+   "uri": "luckyChance/registerRealPrizeCItemInfo",
+   "request": [
+    [
+     "RealPrizeCItemInfoList",
+     "?"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "luckyChance/luckyChanceSelectButton": {
+   "category": "LuckyChance",
+   "uri": "luckyChance/luckyChanceSelectButton",
+   "request": [
+    [
+     "LuckyChanceButtonId",
+     "long"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "luckyChance/sendAuthenticationMail": {
+   "category": "LuckyChance",
+   "uri": "luckyChance/sendAuthenticationMail",
+   "request": [
+    [
+     "MailAddress",
+     "string"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "loginBonus/getLimitedLoginBonusInfo": {
+   "category": "LoginBonus",
+   "uri": "loginBonus/getLimitedLoginBonusInfo",
+   "request": [
+    [
+     "LimitedLoginBonusId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "EndLocalTimeStamp",
+     "long"
+    ],
+    [
+     "IsReceivedSpecialReward",
+     "bool"
+    ],
+    [
+     "ReceivedDateList",
+     "?"
+    ],
+    [
+     "TotalLoginCount",
+     "int"
+    ],
+    [
+     "ReceivedSwitchingDailyRewardIdList",
+     "?"
+    ]
+   ],
+   "status": "used"
+  },
+  "loginBonus/getMonthlyLoginBonusInfo": {
+   "category": "LoginBonus",
+   "uri": "loginBonus/getMonthlyLoginBonusInfo",
+   "request": [],
+   "response": [
+    [
+     "MonthlyLoginBonusId",
+     "long"
+    ],
+    [
+     "PastReceivedCount",
+     "int"
+    ],
+    [
+     "ReceivedDailyRewardDayList",
+     "?"
+    ],
+    [
+     "ReceivedLoginCountRewardDayList",
+     "?"
+    ]
+   ],
+   "status": "used"
+  },
+  "loginBonus/receiveDailyLimitedLoginBonus": {
+   "category": "LoginBonus",
+   "uri": "loginBonus/receiveDailyLimitedLoginBonus",
+   "request": [
+    [
+     "LimitedLoginBonusId",
+     "long"
+    ],
+    [
+     "ReceiveDate",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "ReceivedSwitchingDailyRewardIdList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "loginBonus/receiveDailyLoginBonus": {
+   "category": "LoginBonus",
+   "uri": "loginBonus/receiveDailyLoginBonus",
+   "request": [
+    [
+     "ReceiveDay",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "loginBonus/receiveLoginCountBonus": {
+   "category": "LoginBonus",
+   "uri": "loginBonus/receiveLoginCountBonus",
+   "request": [
+    [
+     "ReceiveDayCount",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "loginBonus/receiveSpecialLimitedLoginBonus": {
+   "category": "LoginBonus",
+   "uri": "loginBonus/receiveSpecialLimitedLoginBonus",
+   "request": [
+    [
+     "LimitedLoginBonusId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "localRaid/getLocalRaidBattleLogs": {
+   "category": "LocalRaid",
+   "uri": "localRaid/getLocalRaidBattleLogs",
+   "request": [],
+   "response": [
+    [
+     "LocalRaidBattleLogInfoList",
+     "?"
+    ],
+    [
+     "LocalRaidQuestInfos",
+     "?"
+    ],
+    [
+     "LocalRaidEnemyInfos",
+     "?"
+    ]
+   ],
+   "status": "used"
+  },
+  "localRaid/getLocalRaidBattleResult": {
+   "category": "LocalRaid",
+   "uri": "localRaid/getLocalRaidBattleResult",
+   "request": [],
+   "response": [
+    [
+     "BattleResult",
+     "BattleResult"
+    ],
+    [
+     "BattleRewardResult",
+     "BattleRewardResult"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "localRaid/getLocalRaidBattleResultOld": {
+   "category": "LocalRaid",
+   "uri": "localRaid/getLocalRaidBattleResultOld",
+   "request": [
+    [
+     "LeaderPlayerId",
+     "long"
+    ],
+    [
+     "BattleToken",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "BattleResult",
+     "BattleResult"
+    ]
+   ],
+   "status": "used"
+  },
+  "localRaid/getLocalRaidFriendInfo": {
+   "category": "LocalRaid",
+   "uri": "localRaid/getLocalRaidFriendInfo",
+   "request": [],
+   "response": [
+    [
+     "PlayerChallengeCountDict",
+     "?"
+    ],
+    [
+     "PlayerInfoList",
+     "?"
+    ]
+   ],
+   "status": "unused"
+  },
+  "localRaid/getLocalRaidInfo": {
+   "category": "LocalRaid",
+   "uri": "localRaid/getLocalRaidInfo",
+   "request": [],
+   "response": [
+    [
+     "OpenLocalRaidQuestIds",
+     "?"
+    ],
+    [
+     "OpenEventLocalRaidQuestIds",
+     "?"
+    ],
+    [
+     "LocalRaidQuestInfos",
+     "?"
+    ],
+    [
+     "LocalRaidEnemyInfos",
+     "?"
+    ],
+    [
+     "ClearCountDict",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "localGvg/getLocalGvgBattleLogList": {
+   "category": "LocalGvg",
+   "uri": "localGvg/getLocalGvgBattleLogList",
+   "request": [
+    [
+     "CastleId",
+     "long"
+    ],
+    [
+     "PartyGuid",
+     "string"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ],
+    [
+     "BattleFieldCharacterGroupType",
+     "BattleFieldCharacterGroupType"
+    ]
+   ],
+   "response": [
+    [
+     "CastleBattleHistoryInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "localGvg/getLocalGvgCastleInfoDialogData": {
+   "category": "LocalGvg",
+   "uri": "localGvg/getLocalGvgCastleInfoDialogData",
+   "request": [
+    [
+     "CastleId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BeforeAttackerParty",
+     "RecordInfo"
+    ],
+    [
+     "BeforeReceiverParty",
+     "RecordInfo"
+    ],
+    [
+     "CastleBattleHistoryInfos",
+     "?"
+    ],
+    [
+     "CastleLotteryRewardItemList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "localGvg/getLocalGvgGuildMember": {
+   "category": "LocalGvg",
+   "uri": "localGvg/getLocalGvgGuildMember",
+   "request": [],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "localGvg/getLocalGvgMvpPlayerInfo": {
+   "category": "LocalGvg",
+   "uri": "localGvg/getLocalGvgMvpPlayerInfo",
+   "request": [],
+   "response": [
+    [
+     "MvpPlayerDetailInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "localGvg/getLocalGvgSceneTransitionData": {
+   "category": "LocalGvg",
+   "uri": "localGvg/getLocalGvgSceneTransitionData",
+   "request": [],
+   "response": [
+    [
+     "GuildNameDict",
+     "?"
+    ],
+    [
+     "GuildStockYesterday",
+     "long"
+    ],
+    [
+     "IsNewUi",
+     "bool"
+    ],
+    [
+     "MvpPlayerInfoList",
+     "?"
+    ],
+    [
+     "NpcGuildNameDict",
+     "?"
+    ],
+    [
+     "PlayerNameDict",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "localGvg/receiveLocalGvgReward": {
+   "category": "LocalGvg",
+   "uri": "localGvg/receiveLocalGvgReward",
+   "request": [
+    [
+     "CastleIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "levelLink/addExp": {
+   "category": "LevelLink",
+   "uri": "levelLink/addExp",
+   "request": [],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "levelLink/changePartyMode": {
+   "category": "LevelLink",
+   "uri": "levelLink/changePartyMode",
+   "request": [],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "levelLink/expansionMember": {
+   "category": "LevelLink",
+   "uri": "levelLink/expansionMember",
+   "request": [],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "levelLink/levelUp": {
+   "category": "LevelLink",
+   "uri": "levelLink/levelUp",
+   "request": [],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "levelLink/resetCoolTime": {
+   "category": "LevelLink",
+   "uri": "levelLink/resetCoolTime",
+   "request": [
+    [
+     "LevelLinkCellNo",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "levelLink/setMember": {
+   "category": "LevelLink",
+   "uri": "levelLink/setMember",
+   "request": [
+    [
+     "LevelLinkCellNo",
+     "int"
+    ],
+    [
+     "UserCharacterGuid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "levelLink/sortMember": {
+   "category": "LevelLink",
+   "uri": "levelLink/sortMember",
+   "request": [
+    [
+     "CharacterSortType",
+     "CharacterSortType"
+    ],
+    [
+     "IsAscending",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "levelLink/unsetMember": {
+   "category": "LevelLink",
+   "uri": "levelLink/unsetMember",
+   "request": [
+    [
+     "LevelLinkCellNo",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "legendLeague/buyLegendLeagueIconReward": {
+   "category": "LegendLeague",
+   "uri": "legendLeague/buyLegendLeagueIconReward",
+   "request": [
+    [
+     "IconRewardId",
+     "long"
+    ],
+    [
+     "BuyCount",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "legendLeague/getLegendLeagueIconRewardInfo": {
+   "category": "LegendLeague",
+   "uri": "legendLeague/getLegendLeagueIconRewardInfo",
+   "request": [],
+   "response": [
+    [
+     "IsCurrentTimeInPrevRankRewardPeriod",
+     "bool"
+    ],
+    [
+     "LegendLeagueIconRewardList",
+     "?"
+    ],
+    [
+     "SelectedIconRewardId",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "legendLeague/setLegendLeagueIconReward": {
+   "category": "LegendLeague",
+   "uri": "legendLeague/setLegendLeagueIconReward",
+   "request": [
+    [
+     "IconRewardId",
+     "long"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "item/bulkUseItem": {
+   "category": "Item",
+   "uri": "item/bulkUseItem",
+   "request": [
+    [
+     "ItemMBIdList",
+     "?"
+    ],
+    [
+     "TreasureChestMBIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "item/change": {
+   "category": "Item",
+   "uri": "item/change",
+   "request": [
+    [
+     "ChangeItemType",
+     "ChangeItemType"
+    ],
+    [
+     "ItemType",
+     "ItemType"
+    ],
+    [
+     "ItemId",
+     "long"
+    ],
+    [
+     "Count",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "ChangeItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "item/confirmMaxCount": {
+   "category": "Item",
+   "uri": "item/confirmMaxCount",
+   "request": [
+    [
+     "ConfirmedList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "item/getAutoBattleRewardItemInfo": {
+   "category": "Item",
+   "uri": "item/getAutoBattleRewardItemInfo",
+   "request": [
+    [
+     "ItemType",
+     "QuestQuickTicketType"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ]
+   ],
+   "status": "unused"
+  },
+  "item/getLotteryItemList": {
+   "category": "Item",
+   "uri": "item/getLotteryItemList",
+   "request": [
+    [
+     "TreasureChestId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "TreasureChestRewardList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "item/getLotteryRateList": {
+   "category": "Item",
+   "uri": "item/getLotteryRateList",
+   "request": [
+    [
+     "TreasureChestId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "LotteryRateListInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "item/goldExchange": {
+   "category": "Item",
+   "uri": "item/goldExchange",
+   "request": [
+    [
+     "ExchangeItems",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "GetItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "item/openEquipmentSetMaterialBox": {
+   "category": "Item",
+   "uri": "item/openEquipmentSetMaterialBox",
+   "request": [
+    [
+     "EquipmentSetMaterialBoxId",
+     "long"
+    ],
+    [
+     "OpenCount",
+     "int"
+    ],
+    [
+     "SelectedEquipmentType",
+     "long"
+    ],
+    [
+     "SelectedLevel",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "item/openTreasureChest": {
+   "category": "Item",
+   "uri": "item/openTreasureChest",
+   "request": [
+    [
+     "OpenCount",
+     "int"
+    ],
+    [
+     "TreasureChestId",
+     "long"
+    ],
+    [
+     "SelectedTreasureItemListIndex",
+     "int"
+    ],
+    [
+     "SelectedItemType",
+     "ItemType"
+    ],
+    [
+     "SelectedItemId",
+     "long"
+    ],
+    [
+     "SelectedCharacterId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "item/useAutoBattleRewardGoldItems": {
+   "category": "Item",
+   "uri": "item/useAutoBattleRewardGoldItems",
+   "request": [
+    [
+     "UseCountDict",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "item/useAutoBattleRewardItem": {
+   "category": "Item",
+   "uri": "item/useAutoBattleRewardItem",
+   "request": [
+    [
+     "ItemType",
+     "QuestQuickTicketType"
+    ],
+    [
+     "UseCount",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "individualNotification/getIndividualNotification": {
+   "category": "IndividualNotification",
+   "uri": "individualNotification/getIndividualNotification",
+   "request": [
+    [
+     "IndividualNotificationId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "Title",
+     "string"
+    ],
+    [
+     "Message",
+     "string"
+    ]
+   ],
+   "status": "missing"
+  },
+  "individualNotification/getLiveTicketNotification": {
+   "category": "IndividualNotification",
+   "uri": "individualNotification/getLiveTicketNotification",
+   "request": [
+    [
+     "IndividualNotificationId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BannerId",
+     "int"
+    ],
+    [
+     "LiveTicketCode",
+     "string"
+    ]
+   ],
+   "status": "missing"
+  },
+  "individualNotification/receiveLiveTicketCode": {
+   "category": "IndividualNotification",
+   "uri": "individualNotification/receiveLiveTicketCode",
+   "request": [
+    [
+     "IndividualNotificationId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "LiveTicketCode",
+     "string"
+    ]
+   ],
+   "status": "missing"
+  },
+  "iconEffect/setIconEffect": {
+   "category": "IconEffect",
+   "uri": "iconEffect/setIconEffect",
+   "request": [
+    [
+     "IconEffectInfoList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "iconEffect/unlockIconEffect": {
+   "category": "IconEffect",
+   "uri": "iconEffect/unlockIconEffect",
+   "request": [
+    [
+     "IconId",
+     "long"
+    ],
+    [
+     "IconEffectId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildTower/battle": {
+   "category": "GuildTower",
+   "uri": "guildTower/battle",
+   "request": [
+    [
+     "CharacterGuidList",
+     "?"
+    ],
+    [
+     "Difficulty",
+     "int"
+    ],
+    [
+     "GuildTowerFloor",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "BattleResult",
+     "BattleResult"
+    ],
+    [
+     "BattleRewardResult",
+     "BattleRewardResult"
+    ],
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "guildTower/entryCharacter": {
+   "category": "GuildTower",
+   "uri": "guildTower/entryCharacter",
+   "request": [
+    [
+     "GuildTowerEntryType",
+     "GuildTowerEntryType"
+    ],
+    [
+     "CharacterGuidList",
+     "?"
+    ],
+    [
+     "IsContinueEntry",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "EntryCharacterGuidList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "guildTower/getGuildTowerInfo": {
+   "category": "GuildTower",
+   "uri": "guildTower/getGuildTowerInfo",
+   "request": [],
+   "response": [
+    [
+     "ClearGaugeProgress",
+     "int"
+    ],
+    [
+     "ClearPartyBattlePowerCoefficientMap",
+     "?"
+    ],
+    [
+     "ComboData",
+     "GuildTowerComboData"
+    ],
+    [
+     "CurrentFloorMBId",
+     "long"
+    ],
+    [
+     "EnemyRankCoefficientMap",
+     "?"
+    ],
+    [
+     "GuildTowerEntryCharacterList",
+     "?"
+    ],
+    [
+     "IsAlreadyEntryToday",
+     "bool"
+    ],
+    [
+     "IsChangeDayFromFirstWin",
+     "bool"
+    ],
+    [
+     "IsContinueEntry",
+     "bool"
+    ],
+    [
+     "LastSelectedDifficulty",
+     "int"
+    ],
+    [
+     "LastWinEntryPassedDays",
+     "int"
+    ],
+    [
+     "ReinforcementJobDataList",
+     "?"
+    ],
+    [
+     "ReinforcementMaterialDropCoefficientMap",
+     "?"
+    ],
+    [
+     "TodayWinCount",
+     "int"
+    ],
+    [
+     "LastReinforceLocalTimeStamp",
+     "long"
+    ],
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "guildTower/getGuildTowerRanking": {
+   "category": "GuildTower",
+   "uri": "guildTower/getGuildTowerRanking",
+   "request": [],
+   "response": [
+    [
+     "CurrentGuildRanking",
+     "long"
+    ],
+    [
+     "CurrentTotalStarRanking",
+     "long"
+    ],
+    [
+     "MaxClearedFloorMBId",
+     "long"
+    ],
+    [
+     "TodayGuildRanking",
+     "long"
+    ],
+    [
+     "TodayTotalStarRanking",
+     "long"
+    ],
+    [
+     "TopGuildRankList",
+     "?"
+    ],
+    [
+     "TopTotalStarRankingPlayerList",
+     "?"
+    ],
+    [
+     "TotalStarCount",
+     "long"
+    ],
+    [
+     "ReinforcementJobRankingDataListMap",
+     "?"
+    ]
+   ],
+   "status": "unused"
+  },
+  "guildTower/getReinforcementJobData": {
+   "category": "GuildTower",
+   "uri": "guildTower/getReinforcementJobData",
+   "request": [
+    [
+     "JobLevelMap",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "RankingDataListMap",
+     "?"
+    ],
+    [
+     "ReinforcementJobDataList",
+     "?"
+    ]
+   ],
+   "status": "unused"
+  },
+  "guildTower/receiveFloorReward": {
+   "category": "GuildTower",
+   "uri": "guildTower/receiveFloorReward",
+   "request": [
+    [
+     "FloorRewardMBIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "guildTower/reinforceJob": {
+   "category": "GuildTower",
+   "uri": "guildTower/reinforceJob",
+   "request": [
+    [
+     "JobFlags",
+     "JobFlags"
+    ],
+    [
+     "Level",
+     "int"
+    ],
+    [
+     "MaterialItemList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "NotConsumedItemList",
+     "?"
+    ],
+    [
+     "RankingDataList",
+     "?"
+    ],
+    [
+     "ReinforcementJobData",
+     "GuildTowerReinforcementJobData"
+    ],
+    [
+     "LastReinforceLocalTimeStamp",
+     "long"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "guildSurvey/createGuildSurvey": {
+   "category": "GuildSurvey",
+   "uri": "guildSurvey/createGuildSurvey",
+   "request": [
+    [
+     "VotingEndLocalTimestamp",
+     "long"
+    ],
+    [
+     "Content",
+     "string"
+    ],
+    [
+     "ChoiceMap",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "SurveyList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildSurvey/deleteGuildSurvey": {
+   "category": "GuildSurvey",
+   "uri": "guildSurvey/deleteGuildSurvey",
+   "request": [
+    [
+     "SurveyGuidList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "SurveyList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildSurvey/getGuildSurveyDetailInfo": {
+   "category": "GuildSurvey",
+   "uri": "guildSurvey/getGuildSurveyDetailInfo",
+   "request": [
+    [
+     "SurveyGuid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "VotedPlayerInfoListByChoiceType",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildSurvey/getGuildSurveyList": {
+   "category": "GuildSurvey",
+   "uri": "guildSurvey/getGuildSurveyList",
+   "request": [],
+   "response": [
+    [
+     "SurveyList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildSurvey/voteGuildSurvey": {
+   "category": "GuildSurvey",
+   "uri": "guildSurvey/voteGuildSurvey",
+   "request": [
+    [
+     "SurveyGuid",
+     "string"
+    ],
+    [
+     "SelectedChoiceType",
+     "GuildSurveyChoiceType"
+    ]
+   ],
+   "response": [
+    [
+     "SurveyList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildRaid/getGuildRaidBattleLog": {
+   "category": "GuildRaid",
+   "uri": "guildRaid/getGuildRaidBattleLog",
+   "request": [
+    [
+     "GuildRaidBossType",
+     "GuildRaidBossType"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BattleSimulationResult",
+     "BattleSimulationResult"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildRaid/getGuildRaidInfo": {
+   "category": "GuildRaid",
+   "uri": "guildRaid/getGuildRaidInfo",
+   "request": [
+    [
+     "BelongGuildId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GuildRaidInfos",
+     "?"
+    ],
+    [
+     "CanChallengeReleasableBossTimeStamp",
+     "long"
+    ]
+   ],
+   "status": "used"
+  },
+  "guildRaid/getGuildRaidWorldRewardInfo": {
+   "category": "GuildRaid",
+   "uri": "guildRaid/getGuildRaidWorldRewardInfo",
+   "request": [
+    [
+     "GuildRaidBossId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "TotalWorldDamage",
+     "long"
+    ],
+    [
+     "WorldRewardInfos",
+     "?"
+    ]
+   ],
+   "status": "used"
+  },
+  "guildRaid/giveGuildRaidWorldRewardItem": {
+   "category": "GuildRaid",
+   "uri": "guildRaid/giveGuildRaidWorldRewardItem",
+   "request": [
+    [
+     "GuildRaidBossId",
+     "long"
+    ],
+    [
+     "GoalDamage",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItems",
+     "?"
+    ],
+    [
+     "TotalWorldDamage",
+     "long"
+    ],
+    [
+     "WorldRewardInfos",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "guildRaid/openGuildRaid": {
+   "category": "GuildRaid",
+   "uri": "guildRaid/openGuildRaid",
+   "request": [
+    [
+     "BelongGuildId",
+     "long"
+    ],
+    [
+     "GuildRaidBossType",
+     "GuildRaidBossType"
+    ]
+   ],
+   "response": [
+    [
+     "GuildRaidBossInfo",
+     "GuildRaidBossInfo"
+    ],
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "guildRaid/quickStartGuildRaid": {
+   "category": "GuildRaid",
+   "uri": "guildRaid/quickStartGuildRaid",
+   "request": [
+    [
+     "BelongGuildId",
+     "long"
+    ],
+    [
+     "GuildRaidBossType",
+     "GuildRaidBossType"
+    ]
+   ],
+   "response": [
+    [
+     "BattleRewardResult",
+     "BattleRewardResult"
+    ],
+    [
+     "BattleSimulationResult",
+     "BattleSimulationResult"
+    ],
+    [
+     "UserGuildRaidDtoInfo",
+     "UserGuildRaidDtoInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "guildRaid/startGuildRaid": {
+   "category": "GuildRaid",
+   "uri": "guildRaid/startGuildRaid",
+   "request": [
+    [
+     "BelongGuildId",
+     "long"
+    ],
+    [
+     "GuildRaidBossType",
+     "GuildRaidBossType"
+    ]
+   ],
+   "response": [
+    [
+     "BattleResult",
+     "BattleResult"
+    ],
+    [
+     "BattleRewardResult",
+     "BattleRewardResult"
+    ],
+    [
+     "UserGuildRaidDtoInfo",
+     "UserGuildRaidDtoInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "guildRaid/startGuildRaidTrial": {
+   "category": "GuildRaid",
+   "uri": "guildRaid/startGuildRaidTrial",
+   "request": [
+    [
+     "BelongGuildId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BattleResult",
+     "BattleResult"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildRaid/supportGuildRaid": {
+   "category": "GuildRaid",
+   "uri": "guildRaid/supportGuildRaid",
+   "request": [
+    [
+     "SupportCount",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildNote/createGuildNote": {
+   "category": "GuildNote",
+   "uri": "guildNote/createGuildNote",
+   "request": [
+    [
+     "Title",
+     "string"
+    ],
+    [
+     "Content",
+     "string"
+    ],
+    [
+     "GuildNoteCategoryType",
+     "GuildNoteCategoryType"
+    ]
+   ],
+   "response": [
+    [
+     "IsNgWordReplaced",
+     "bool"
+    ],
+    [
+     "GuildNoteInfoList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildNote/getGuildNoteList": {
+   "category": "GuildNote",
+   "uri": "guildNote/getGuildNoteList",
+   "request": [],
+   "response": [
+    [
+     "GuildNoteInfoList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildNote/getReactionDetailInfo": {
+   "category": "GuildNote",
+   "uri": "guildNote/getReactionDetailInfo",
+   "request": [
+    [
+     "GuildNoteId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "PlayerInfoListByReactionType",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildNote/reactGuildNote": {
+   "category": "GuildNote",
+   "uri": "guildNote/reactGuildNote",
+   "request": [
+    [
+     "GuildNoteId",
+     "long"
+    ],
+    [
+     "ChatReactionType",
+     "ChatReactionType"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "guildNote/shareGuildNote": {
+   "category": "GuildNote",
+   "uri": "guildNote/shareGuildNote",
+   "request": [
+    [
+     "GuildNoteId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildNote/updateGuildNote": {
+   "category": "GuildNote",
+   "uri": "guildNote/updateGuildNote",
+   "request": [
+    [
+     "GuildNoteId",
+     "long"
+    ],
+    [
+     "Title",
+     "string"
+    ],
+    [
+     "Content",
+     "string"
+    ],
+    [
+     "GuildNoteCategoryType",
+     "GuildNoteCategoryType"
+    ]
+   ],
+   "response": [
+    [
+     "IsNgWordReplaced",
+     "bool"
+    ],
+    [
+     "GuildNoteInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildNote/updateGuildNoteList": {
+   "category": "GuildNote",
+   "uri": "guildNote/updateGuildNoteList",
+   "request": [
+    [
+     "BeforeUpdateGuildNoteIdList",
+     "?"
+    ],
+    [
+     "AfterUpdateGuildNoteIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "GuildNoteInfoList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/applyGuild": {
+   "category": "Guild",
+   "uri": "guild/applyGuild",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GuildApplyingCount",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/cancelApplyGuild": {
+   "category": "Guild",
+   "uri": "guild/cancelApplyGuild",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GuildApplyingCount",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/changeLeader": {
+   "category": "Guild",
+   "uri": "guild/changeLeader",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/changePosition": {
+   "category": "Guild",
+   "uri": "guild/changePosition",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ],
+    [
+     "PlayerGuildPositionType",
+     "PlayerGuildPositionType"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/changeSubLeader": {
+   "category": "Guild",
+   "uri": "guild/changeSubLeader",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "IsAppointment",
+     "bool"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/chatRecruitGuildMember": {
+   "category": "Guild",
+   "uri": "guild/chatRecruitGuildMember",
+   "request": [
+    [
+     "RecruitMessage",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "ChatRecruitGuildMemberEndIntervalTimestamp",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/checkGuildName": {
+   "category": "Guild",
+   "uri": "guild/checkGuildName",
+   "request": [
+    [
+     "GuildName",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "IsUsable",
+     "bool"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/createGuild": {
+   "category": "Guild",
+   "uri": "guild/createGuild",
+   "request": [
+    [
+     "GuildOverView",
+     "GuildOverView"
+    ],
+    [
+     "Announcement",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ],
+    [
+     "GuildSystemChatOptionInfos",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/getApplyGuildList": {
+   "category": "Guild",
+   "uri": "guild/getApplyGuildList",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "ApplyPlayerInfoList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guildInfo/getGuildBaseInfo": {
+   "category": "Guild",
+   "uri": "guildInfo/getGuildBaseInfo",
+   "request": [
+    [
+     "BelongGuildId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "DefaultGlobalGvgMatchingNumber",
+     "int"
+    ],
+    [
+     "GlobalGuildGvgInfo",
+     "GuildGvgInfo"
+    ],
+    [
+     "GuildLoginBonusLevel",
+     "long"
+    ],
+    [
+     "GuildSystemChatOptionInfos",
+     "?"
+    ],
+    [
+     "GuildTowerComboData",
+     "GuildTowerComboData"
+    ],
+    [
+     "GuildTowerCurrentFloor",
+     "int"
+    ],
+    [
+     "GuildTowerTodayWinCount",
+     "int"
+    ],
+    [
+     "IsRaidOpen",
+     "bool"
+    ],
+    [
+     "IsUnionMissionMatchingWorld",
+     "bool"
+    ],
+    [
+     "IsAlreadyEntryUnionMission",
+     "bool"
+    ],
+    [
+     "ClassType",
+     "UnionMissionClassType"
+    ],
+    [
+     "LocalGuildGvgInfo",
+     "GuildGvgInfo"
+    ],
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "guildInfo/getGuildId": {
+   "category": "Guild",
+   "uri": "guildInfo/getGuildId",
+   "request": [],
+   "response": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "guildInfo/getGuildMemberInfo": {
+   "category": "Guild",
+   "uri": "guildInfo/getGuildMemberInfo",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "PlayerInfoList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "guild/getGuildRanking": {
+   "category": "Guild",
+   "uri": "guild/getGuildRanking",
+   "request": [],
+   "response": [
+    [
+     "GuildRankList",
+     "?"
+    ],
+    [
+     "GuildApplyingCount",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/getRecommendationGuildInfoList": {
+   "category": "Guild",
+   "uri": "guild/getRecommendationGuildInfoList",
+   "request": [],
+   "response": [
+    [
+     "GuildApplyingCount",
+     "long"
+    ],
+    [
+     "RecommendationGuildInfos",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/joinGuild": {
+   "category": "Guild",
+   "uri": "guild/joinGuild",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/leaveGuild": {
+   "category": "Guild",
+   "uri": "guild/leaveGuild",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/recruitGuildMember": {
+   "category": "Guild",
+   "uri": "guild/recruitGuildMember",
+   "request": [
+    [
+     "PlayerId",
+     "long"
+    ],
+    [
+     "Message",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "PlayerInfo",
+     "PlayerInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/recruitGuildMemberCancel": {
+   "category": "Guild",
+   "uri": "guild/recruitGuildMemberCancel",
+   "request": [
+    [
+     "IsAll",
+     "bool"
+    ],
+    [
+     "PlayerId",
+     "long"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "guild/recruitGuildMemberGetList": {
+   "category": "Guild",
+   "uri": "guild/recruitGuildMemberGetList",
+   "request": [],
+   "response": [
+    [
+     "PlayerInfoList",
+     "?"
+    ],
+    [
+     "ChatRecruitGuildMemberEndIntervalTimestamp",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/recruitGuildMemberGetListOnPlayerSide": {
+   "category": "Guild",
+   "uri": "guild/recruitGuildMemberGetListOnPlayerSide",
+   "request": [],
+   "response": [
+    [
+     "GuildInfoList",
+     "?"
+    ],
+    [
+     "RecruitMessageDict",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/recruitGuildMemberReject": {
+   "category": "Guild",
+   "uri": "guild/recruitGuildMemberReject",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "IsAll",
+     "bool"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "guild/recruitGuildMemberSearch": {
+   "category": "Guild",
+   "uri": "guild/recruitGuildMemberSearch",
+   "request": [
+    [
+     "PlayerBattlePowerLowerLimit",
+     "long"
+    ],
+    [
+     "PlayerId",
+     "long"
+    ],
+    [
+     "PlayerMaxQuestIdLowerLimit",
+     "long"
+    ],
+    [
+     "PlayerRankLowerLimit",
+     "long"
+    ],
+    [
+     "SearchType",
+     "RecruitGuildMemberSearchType"
+    ]
+   ],
+   "response": [
+    [
+     "PlayerInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/recruitGuildMemberSettingSave": {
+   "category": "Guild",
+   "uri": "guild/recruitGuildMemberSettingSave",
+   "request": [
+    [
+     "GuildLvLowerLimit",
+     "long"
+    ],
+    [
+     "GuildPowerLowerLimit",
+     "long"
+    ],
+    [
+     "PlayerRecruitType",
+     "PlayerRecruitType"
+    ],
+    [
+     "CommunicationPolicyType",
+     "PlayerCommunicationPolicyType"
+    ],
+    [
+     "EventPolicyType",
+     "PlayerEventPolicyType"
+    ],
+    [
+     "GuildBattlePolicyType",
+     "PlayerGuildBattlePolicyType"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/rejectAllPlayer": {
+   "category": "Guild",
+   "uri": "guild/rejectAllPlayer",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/removeMember": {
+   "category": "Guild",
+   "uri": "guild/removeMember",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/replyPlayer": {
+   "category": "Guild",
+   "uri": "guild/replyPlayer",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "IsApproval",
+     "bool"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/searchGuildByRecruitGuildMemberChat": {
+   "category": "Guild",
+   "uri": "guild/searchGuildByRecruitGuildMemberChat",
+   "request": [
+    [
+     "ChatIdentityInfo",
+     "ChatIdentityInfo"
+    ]
+   ],
+   "response": [
+    [
+     "GuildApplyingCount",
+     "long"
+    ],
+    [
+     "SearchGuildResultInfo",
+     "SearchGuildResultInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/searchGuildId": {
+   "category": "Guild",
+   "uri": "guild/searchGuildId",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GuildApplyingCount",
+     "long"
+    ],
+    [
+     "SearchResult",
+     "SearchGuildResultInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/searchGuildName": {
+   "category": "Guild",
+   "uri": "guild/searchGuildName",
+   "request": [
+    [
+     "Name",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "SearchResultList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/updateGuildAnnouncement": {
+   "category": "Guild",
+   "uri": "guild/updateGuildAnnouncement",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "GuildAnnouncement",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/updateGuildDescription": {
+   "category": "Guild",
+   "uri": "guild/updateGuildDescription",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "GuildDescription",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/updateGuildJoinCondition": {
+   "category": "Guild",
+   "uri": "guild/updateGuildJoinCondition",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "IsFreeJoin",
+     "?"
+    ],
+    [
+     "RequireBattlePower",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/updateGuildName": {
+   "category": "Guild",
+   "uri": "guild/updateGuildName",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "GuildName",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/updateGuildPolicy": {
+   "category": "Guild",
+   "uri": "guild/updateGuildPolicy",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "CommunicationPolicyType",
+     "?"
+    ],
+    [
+     "EventPolicyType",
+     "?"
+    ],
+    [
+     "BattlePolicyType",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "guild/updateGuildSystemChatOption": {
+   "category": "Guild",
+   "uri": "guild/updateGuildSystemChatOption",
+   "request": [
+    [
+     "GuildId",
+     "long"
+    ],
+    [
+     "GuildSystemChatOptionInfos",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "globalGvg/getGlobalGvgBattleLogList": {
+   "category": "GlobalGvg",
+   "uri": "globalGvg/getGlobalGvgBattleLogList",
+   "request": [
+    [
+     "CastleId",
+     "long"
+    ],
+    [
+     "MatchingNumber",
+     "int"
+    ],
+    [
+     "PartyGuid",
+     "string"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ],
+    [
+     "BattleFieldCharacterGroupType",
+     "BattleFieldCharacterGroupType"
+    ]
+   ],
+   "response": [
+    [
+     "CastleBattleHistoryInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "globalGvg/getGlobalGvgCastleInfoDialogData": {
+   "category": "GlobalGvg",
+   "uri": "globalGvg/getGlobalGvgCastleInfoDialogData",
+   "request": [
+    [
+     "CastleId",
+     "long"
+    ],
+    [
+     "MatchingNumber",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "BeforeAttackerParty",
+     "RecordInfo"
+    ],
+    [
+     "BeforeReceiverParty",
+     "RecordInfo"
+    ],
+    [
+     "CastleBattleHistoryInfos",
+     "?"
+    ],
+    [
+     "CastleLotteryRewardItemList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "globalGvg/getGlobalGvgGroupAll": {
+   "category": "GlobalGvg",
+   "uri": "globalGvg/getGlobalGvgGroupAll",
+   "request": [],
+   "response": [
+    [
+     "GlobalGvgGroupInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "globalGvg/getGlobalGvgGuildMember": {
+   "category": "GlobalGvg",
+   "uri": "globalGvg/getGlobalGvgGuildMember",
+   "request": [],
+   "response": [
+    [
+     "GuildSyncData",
+     "GuildSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "globalGvg/getGlobalGvgMvpPlayerInfo": {
+   "category": "GlobalGvg",
+   "uri": "globalGvg/getGlobalGvgMvpPlayerInfo",
+   "request": [
+    [
+     "MatchingNumber",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "GvgMvpPlayerDetailInfo",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "globalGvg/getGlobalGvgRanking": {
+   "category": "GlobalGvg",
+   "uri": "globalGvg/getGlobalGvgRanking",
+   "request": [],
+   "response": [
+    [
+     "TodayGuildRankList",
+     "?"
+    ],
+    [
+     "MatchingGuildRankList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "globalGvg/getGlobalGvgSceneTransitionData": {
+   "category": "GlobalGvg",
+   "uri": "globalGvg/getGlobalGvgSceneTransitionData",
+   "request": [
+    [
+     "GlobalGvgGroupId",
+     "long"
+    ],
+    [
+     "MatchingNumber",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "GuildNameDict",
+     "?"
+    ],
+    [
+     "IsNewUi",
+     "bool"
+    ],
+    [
+     "MvpPlayerInfoList",
+     "?"
+    ],
+    [
+     "NpcGuildNameDict",
+     "?"
+    ],
+    [
+     "PlayerNameDict",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "globalGvg/receiveGlobalGvgReward": {
+   "category": "GlobalGvg",
+   "uri": "globalGvg/receiveGlobalGvgReward",
+   "request": [
+    [
+     "CastleIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "gacha/changeGachaRelic": {
+   "category": "Gacha",
+   "uri": "gacha/changeGachaRelic",
+   "request": [
+    [
+     "GachaRelicType",
+     "GachaRelicType"
+    ]
+   ],
+   "response": [
+    [
+     "GachaCaseInfoList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "gacha/draw": {
+   "category": "Gacha",
+   "uri": "gacha/draw",
+   "request": [
+    [
+     "GachaButtonId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BonusRewardItemList",
+     "?"
+    ],
+    [
+     "CharacterReleaseItemList",
+     "?"
+    ],
+    [
+     "GachaCaseInfoList",
+     "?"
+    ],
+    [
+     "GachaDestinyLogInfoList",
+     "?"
+    ],
+    [
+     "GachaRewardAddItemList",
+     "?"
+    ],
+    [
+     "GachaRewardItemList",
+     "?"
+    ],
+    [
+     "GachaStarsGuidanceLogInfoList",
+     "?"
+    ],
+    [
+     "IsFreeChangeRelicGacha",
+     "bool"
+    ],
+    [
+     "IsGetFirstBonusRelicGacha",
+     "bool"
+    ],
+    [
+     "IsGetSecondBonusRelicGacha",
+     "bool"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "gacha/getList": {
+   "category": "Gacha",
+   "uri": "gacha/getList",
+   "request": [],
+   "response": [
+    [
+     "GachaCaseInfoList",
+     "?"
+    ],
+    [
+     "GachaDestinyLogInfoList",
+     "?"
+    ],
+    [
+     "GachaElementInfo",
+     "GachaElementInfo"
+    ],
+    [
+     "GachaSelectListCharacterIdMap",
+     "?"
+    ],
+    [
+     "GachaStarsGuidanceLogInfoList",
+     "?"
+    ],
+    [
+     "IsGetFirstBonusRelicGacha",
+     "bool"
+    ],
+    [
+     "IsGetSecondBonusRelicGacha",
+     "bool"
+    ],
+    [
+     "IsFreeChangeRelicGacha",
+     "bool"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "gacha/getLotteryItemList": {
+   "category": "Gacha",
+   "uri": "gacha/getLotteryItemList",
+   "request": [
+    [
+     "GachaButtonId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GachaBonusRateList",
+     "?"
+    ],
+    [
+     "GachaItemRateList",
+     "?"
+    ],
+    [
+     "GachaItemRateSpecialList",
+     "?"
+    ],
+    [
+     "GachaRarityRateList",
+     "?"
+    ],
+    [
+     "GachaRarityRateSpecialList",
+     "?"
+    ]
+   ],
+   "status": "used"
+  },
+  "gacha/openElementGacha": {
+   "category": "Gacha",
+   "uri": "gacha/openElementGacha",
+   "request": [
+    [
+     "ElementType",
+     "ElementType"
+    ]
+   ],
+   "response": [
+    [
+     "GachaElementInfo",
+     "GachaElementInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "gacha/setSelectList": {
+   "category": "Gacha",
+   "uri": "gacha/setSelectList",
+   "request": [
+    [
+     "CharacterIdList",
+     "?"
+    ],
+    [
+     "GachaCaseId",
+     "long"
+    ],
+    [
+     "GachaSelectListType",
+     "GachaSelectListType"
+    ]
+   ],
+   "response": [
+    [
+     "GachaSelectListType",
+     "GachaSelectListType"
+    ],
+    [
+     "SetCharacterIdList",
+     "?"
+    ],
+    [
+     "GachaCaseInfoList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "friendBattle/changeBattlePermission": {
+   "category": "FriendBattle",
+   "uri": "friendBattle/changeBattlePermission",
+   "request": [
+    [
+     "AllowBattle",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "friendBattle/chooseDefenseDeck": {
+   "category": "FriendBattle",
+   "uri": "friendBattle/chooseDefenseDeck",
+   "request": [
+    [
+     "UseBattleLeagueDeck",
+     "bool"
+    ],
+    [
+     "DefenseDeckComment",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "friendBattle/getDefenseDeckInfo": {
+   "category": "FriendBattle",
+   "uri": "friendBattle/getDefenseDeckInfo",
+   "request": [
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "CharacterInfoList",
+     "?"
+    ],
+    [
+     "BattlePower",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "friendBattle/getFriendBattleDetailLog": {
+   "category": "FriendBattle",
+   "uri": "friendBattle/getFriendBattleDetailLog",
+   "request": [
+    [
+     "AttackerPlayerId",
+     "long"
+    ],
+    [
+     "BattleToken",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "BattleSimulationResult",
+     "BattleSimulationResult"
+    ]
+   ],
+   "status": "missing"
+  },
+  "friendBattle/getFriendBattleLogList": {
+   "category": "FriendBattle",
+   "uri": "friendBattle/getFriendBattleLogList",
+   "request": [],
+   "response": [
+    [
+     "AttackBattleLogInfoList",
+     "?"
+    ],
+    [
+     "DefenseBattleLogInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "friendBattle/setFavoritePlayer": {
+   "category": "FriendBattle",
+   "uri": "friendBattle/setFavoritePlayer",
+   "request": [
+    [
+     "FavoritePlayerMap",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "friendBattle/startFriendBattle": {
+   "category": "FriendBattle",
+   "uri": "friendBattle/startFriendBattle",
+   "request": [
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BattleSimulationResult",
+     "BattleSimulationResult"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "friend/applyFriend": {
+   "category": "Friend",
+   "uri": "friend/applyFriend",
+   "request": [
+    [
+     "IsApply",
+     "bool"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [],
+   "status": "used"
+  },
+  "friend/bulkApplyFriends": {
+   "category": "Friend",
+   "uri": "friend/bulkApplyFriends",
+   "request": [
+    [
+     "TargetPlayerIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "AppliedPlayerIdList",
+     "?"
+    ],
+    [
+     "NewFriendNum",
+     "long"
+    ]
+   ],
+   "status": "used"
+  },
+  "friend/bulkTransferFriendPoint": {
+   "category": "Friend",
+   "uri": "friend/bulkTransferFriendPoint",
+   "request": [],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "friend/cancelAllApplyFriend": {
+   "category": "Friend",
+   "uri": "friend/cancelAllApplyFriend",
+   "request": [],
+   "response": [],
+   "status": "used"
+  },
+  "friend/getFriendCampaignInfo": {
+   "category": "Friend",
+   "uri": "friend/getFriendCampaignInfo",
+   "request": [],
+   "response": [
+    [
+     "FriendCode",
+     "string"
+    ],
+    [
+     "IsUsedFriendCode",
+     "bool"
+    ],
+    [
+     "UserFriendMissionDtoInfoList",
+     "?"
+    ]
+   ],
+   "status": "used"
+  },
+  "friend/getPlayerInfoList": {
+   "category": "Friend",
+   "uri": "friend/getPlayerInfoList",
+   "request": [
+    [
+     "FriendInfoType",
+     "FriendInfoType"
+    ],
+    [
+     "LanguageType",
+     "LanguageType"
+    ]
+   ],
+   "response": [
+    [
+     "AlreadyReceiveFriendPointPlayerIdList",
+     "?"
+    ],
+    [
+     "CanReceiveFriendPointPlayerIdList",
+     "?"
+    ],
+    [
+     "CanSendFriendPointPlayerIdList",
+     "?"
+    ],
+    [
+     "CurrentTypePlayerNum",
+     "int"
+    ],
+    [
+     "FriendNum",
+     "int"
+    ],
+    [
+     "NewFriendInfoList",
+     "?"
+    ],
+    [
+     "PlayerInfoList",
+     "?"
+    ],
+    [
+     "ReceivedFriendPointCount",
+     "int"
+    ],
+    [
+     "FriendBattleDefenseDeckCommentMap",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "friend/getFriendStatus": {
+   "category": "Friend",
+   "uri": "friend/getFriendStatus",
+   "request": [
+    [
+     "TargetPlayerIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "FriendStatusInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "friend/receiveFriendPoint": {
+   "category": "Friend",
+   "uri": "friend/receiveFriendPoint",
+   "request": [
+    [
+     "SendPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "friend/removeFriend": {
+   "category": "Friend",
+   "uri": "friend/removeFriend",
+   "request": [
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [],
+   "status": "used"
+  },
+  "friend/replyAllFriend": {
+   "category": "Friend",
+   "uri": "friend/replyAllFriend",
+   "request": [
+    [
+     "IsApproval",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "ProcessedNum",
+     "int"
+    ]
+   ],
+   "status": "used"
+  },
+  "friend/replyFriend": {
+   "category": "Friend",
+   "uri": "friend/replyFriend",
+   "request": [
+    [
+     "IsApproval",
+     "bool"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "ErrorMessageId",
+     "long"
+    ],
+    [
+     "IsSuccess",
+     "bool"
+    ]
+   ],
+   "status": "used"
+  },
+  "friend/rewardFriendMission": {
+   "category": "Friend",
+   "uri": "friend/rewardFriendMission",
+   "request": [
+    [
+     "FriendCampaignId",
+     "long"
+    ],
+    [
+     "AchievementType",
+     "MissionAchievementType"
+    ],
+    [
+     "FriendMissionId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "UserFriendMissionDtoInfoList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "friend/searchFriend": {
+   "category": "Friend",
+   "uri": "friend/searchFriend",
+   "request": [
+    [
+     "SearchPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "PlayerInfo",
+     "PlayerInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "friend/sendFriendPoint": {
+   "category": "Friend",
+   "uri": "friend/sendFriendPoint",
+   "request": [
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [],
+   "status": "used"
+  },
+  "friend/updateBlockList": {
+   "category": "Friend",
+   "uri": "friend/updateBlockList",
+   "request": [
+    [
+     "IsBlock",
+     "bool"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "friend/useFriendCode": {
+   "category": "Friend",
+   "uri": "friend/useFriendCode",
+   "request": [
+    [
+     "FriendCode",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "eventPortal/getEventPortal": {
+   "category": "EventPortal",
+   "uri": "eventPortal/getEventPortal",
+   "request": [
+    [
+     "TransferSpotType",
+     "TransferSpotType"
+    ]
+   ],
+   "response": [
+    [
+     "CharacterId",
+     "long"
+    ],
+    [
+     "EventPortalId",
+     "long"
+    ],
+    [
+     "GachaEventPortalBannerInfo",
+     "EventPortalBannerInfo"
+    ],
+    [
+     "InsideEventPortalBannerInfo",
+     "?"
+    ],
+    [
+     "NoticeEndTimeStamp",
+     "long"
+    ],
+    [
+     "NoticeGroupId",
+     "long"
+    ],
+    [
+     "OutsideEventPortalBannerInfo",
+     "?"
+    ],
+    [
+     "TitleKey",
+     "string"
+    ],
+    [
+     "EventPortalVideoInfo",
+     "EventPortalVideoInfo"
+    ],
+    [
+     "PlayVideoTotalCount",
+     "int"
+    ],
+    [
+     "IsDisplayBadgePlayVideo",
+     "bool"
+    ]
+   ],
+   "status": "missing"
+  },
+  "eventPortal/getEventPortalPlayVideoTotalCount": {
+   "category": "EventPortal",
+   "uri": "eventPortal/getEventPortalPlayVideoTotalCount",
+   "request": [],
+   "response": [
+    [
+     "PlayVideoTotalCount",
+     "int"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipmentSynchro/equipmentSynchroBulkEvolution": {
+   "category": "EquipmentSynchro",
+   "uri": "equipmentSynchro/equipmentSynchroBulkEvolution",
+   "request": [
+    [
+     "EquipmentSynchroGroupId",
+     "long"
+    ],
+    [
+     "EquipmentLv",
+     "long"
+    ],
+    [
+     "IsAllowedTreasureChest",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipmentSynchro/equipmentSynchroGetInfo": {
+   "category": "EquipmentSynchro",
+   "uri": "equipmentSynchro/equipmentSynchroGetInfo",
+   "request": [],
+   "response": [
+    [
+     "UserEquipmentSynchroGroupDtoInfos",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipmentSynchro/equipmentSynchroResetSynchroCell": {
+   "category": "EquipmentSynchro",
+   "uri": "equipmentSynchro/equipmentSynchroResetSynchroCell",
+   "request": [
+    [
+     "EquipmentSynchroGroupId",
+     "long"
+    ],
+    [
+     "IsResetCoolTime",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "ReturnItemList",
+     "?"
+    ],
+    [
+     "UserEquipmentSynchroGroupDtoInfo",
+     "UserEquipmentSynchroGroupDtoInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipmentSynchro/rewardMission": {
+   "category": "EquipmentSynchro",
+   "uri": "equipmentSynchro/rewardMission",
+   "request": [
+    [
+     "IsBulk",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItem",
+     "UserItem"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "equipmentSynchro/equipmentSynchroSetBaseCell": {
+   "category": "EquipmentSynchro",
+   "uri": "equipmentSynchro/equipmentSynchroSetBaseCell",
+   "request": [
+    [
+     "EquipmentSynchroGroupId",
+     "long"
+    ],
+    [
+     "EquipmentGuidList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "ReturnItemList",
+     "?"
+    ],
+    [
+     "UserEquipmentSynchroGroupDtoInfo",
+     "UserEquipmentSynchroGroupDtoInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipmentSynchro/equipmentSynchroSetSynchroCell": {
+   "category": "EquipmentSynchro",
+   "uri": "equipmentSynchro/equipmentSynchroSetSynchroCell",
+   "request": [
+    [
+     "EquipmentSynchroGroupId",
+     "long"
+    ],
+    [
+     "EquipmentGuid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserEquipmentSynchroGroupDtoInfo",
+     "UserEquipmentSynchroGroupDtoInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipmentSynchro/equipmentSynchroUnlock": {
+   "category": "EquipmentSynchro",
+   "uri": "equipmentSynchro/equipmentSynchroUnlock",
+   "request": [
+    [
+     "EquipmentSynchroGroupId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserEquipmentSynchroGroupDtoInfo",
+     "UserEquipmentSynchroGroupDtoInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/absorbSacredTreasure": {
+   "category": "Equipment",
+   "uri": "equipment/absorbSacredTreasure",
+   "request": [
+    [
+     "Guid",
+     "string"
+    ],
+    [
+     "MatchlessSacredTreasureExpItemList",
+     "?"
+    ],
+    [
+     "MaterialGuidList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/bulkTraining": {
+   "category": "Equipment",
+   "uri": "equipment/bulkTraining",
+   "request": [
+    [
+     "EquipmentGuid",
+     "string"
+    ],
+    [
+     "ParameterLockedList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "ResultEquipmentDtoInfoDict",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/bulkTrainingSelect": {
+   "category": "Equipment",
+   "uri": "equipment/bulkTrainingSelect",
+   "request": [
+    [
+     "EquipmentTrainingId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/cancelLeadLockEquipmentDialog": {
+   "category": "Equipment",
+   "uri": "equipment/cancelLeadLockEquipmentDialog",
+   "request": [
+    [
+     "LockEquipmentDeckType",
+     "LockEquipmentDeckType"
+    ],
+    [
+     "DialogType",
+     "LeadLockEquipmentDialogType"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/cast": {
+   "category": "Equipment",
+   "uri": "equipment/cast",
+   "request": [
+    [
+     "Guid",
+     "string"
+    ],
+    [
+     "UserEquipment",
+     "UserEquipment"
+    ]
+   ],
+   "response": [
+    [
+     "ResultEquipmentList",
+     "?"
+    ],
+    [
+     "ResultItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "equipment/castMany": {
+   "category": "Equipment",
+   "uri": "equipment/castMany",
+   "request": [
+    [
+     "RarityFlags",
+     "EquipmentRarityFlags"
+    ]
+   ],
+   "response": [
+    [
+     "ResultEquipmentList",
+     "?"
+    ],
+    [
+     "ResultItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "equipment/changeEquipment": {
+   "category": "Equipment",
+   "uri": "equipment/changeEquipment",
+   "request": [
+    [
+     "UserCharacterGuid",
+     "string"
+    ],
+    [
+     "EquipmentChangeInfos",
+     "?"
+    ],
+    [
+     "IsBulk",
+     "bool"
+    ],
+    [
+     "Code",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "ReturnItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "equipment/changeSphere": {
+   "category": "Equipment",
+   "uri": "equipment/changeSphere",
+   "request": [
+    [
+     "SphereChangeInfos",
+     "?"
+    ],
+    [
+     "IsFromSphereEquipmentListView",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "equipment/combine": {
+   "category": "Equipment",
+   "uri": "equipment/combine",
+   "request": [
+    [
+     "Count",
+     "long"
+    ],
+    [
+     "EquipmentCompositeId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "ResultEquipmentList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/composeManySphere": {
+   "category": "Equipment",
+   "uri": "equipment/composeManySphere",
+   "request": [
+    [
+     "CategoryIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "IsSucceeded",
+     "bool"
+    ],
+    [
+     "ResultItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "equipment/composeSphere": {
+   "category": "Equipment",
+   "uri": "equipment/composeSphere",
+   "request": [
+    [
+     "EquipmentGuid",
+     "string"
+    ],
+    [
+     "SphereId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/evolution": {
+   "category": "Equipment",
+   "uri": "equipment/evolution",
+   "request": [
+    [
+     "Guid",
+     "string"
+    ],
+    [
+     "RarityUp",
+     "bool"
+    ],
+    [
+     "Step",
+     "long"
+    ],
+    [
+     "IsAllowedTreasureChest",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/exchangeFragment": {
+   "category": "Equipment",
+   "uri": "equipment/exchangeFragment",
+   "request": [
+    [
+     "ConsumeCount",
+     "int"
+    ],
+    [
+     "EquipmentCompositeId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "ResultItem",
+     "UserItem"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/getBulkSphereSet": {
+   "category": "Equipment",
+   "uri": "equipment/getBulkSphereSet",
+   "request": [],
+   "response": [
+    [
+     "BulkSphereSetInfos",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/inheritanceEquipment": {
+   "category": "Equipment",
+   "uri": "equipment/inheritanceEquipment",
+   "request": [
+    [
+     "InheritanceEquipmentGuid",
+     "string"
+    ],
+    [
+     "SourceEquipmentGuid",
+     "string"
+    ],
+    [
+     "EquipmentInheritanceTypeList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "ReturnItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "equipment/lockEquipment": {
+   "category": "Equipment",
+   "uri": "equipment/lockEquipment",
+   "request": [
+    [
+     "LockEquipmentDeckType",
+     "LockEquipmentDeckType"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/mergeSacredTreasure": {
+   "category": "Equipment",
+   "uri": "equipment/mergeSacredTreasure",
+   "request": [
+    [
+     "Guid",
+     "string"
+    ],
+    [
+     "MaterialGuid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/reinforcement": {
+   "category": "Equipment",
+   "uri": "equipment/reinforcement",
+   "request": [
+    [
+     "EquipmentGuid",
+     "string"
+    ],
+    [
+     "NumberOfTimes",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "equipment/removeEquipment": {
+   "category": "Equipment",
+   "uri": "equipment/removeEquipment",
+   "request": [
+    [
+     "UserCharacterGuid",
+     "string"
+    ],
+    [
+     "EquipmentSlotTypes",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "equipment/reset": {
+   "category": "Equipment",
+   "uri": "equipment/reset",
+   "request": [
+    [
+     "Guid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "ResultItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/saveBulkSphereSet": {
+   "category": "Equipment",
+   "uri": "equipment/saveBulkSphereSet",
+   "request": [
+    [
+     "ModifiedBulkSphereSetInfos",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UpdatedBulkSphereSetInfos",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/takeApart": {
+   "category": "Equipment",
+   "uri": "equipment/takeApart",
+   "request": [
+    [
+     "Guid",
+     "string"
+    ],
+    [
+     "UserEquipment",
+     "UserEquipment"
+    ]
+   ],
+   "response": [
+    [
+     "ResultItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/training": {
+   "category": "Equipment",
+   "uri": "equipment/training",
+   "request": [
+    [
+     "EquipmentGuid",
+     "string"
+    ],
+    [
+     "ParameterLockedList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "equipment/unlockEquipment": {
+   "category": "Equipment",
+   "uri": "equipment/unlockEquipment",
+   "request": [
+    [
+     "LockEquipmentDeckType",
+     "LockEquipmentDeckType"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "equipment/unlockSphereSlot": {
+   "category": "Equipment",
+   "uri": "equipment/unlockSphereSlot",
+   "request": [
+    [
+     "EquipmentGuid",
+     "string"
+    ],
+    [
+     "UnlockCount",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/iDungeonBattle": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/iDungeonBattle",
+   "request": [],
+   "response": [],
+   "status": "missing"
+  },
+  "dungeonBattle/execBattle": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/execBattle",
+   "request": [
+    [
+     "CharacterGuids",
+     "?"
+    ],
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BattleRewardResult",
+     "BattleRewardResult"
+    ],
+    [
+     "BattleSimulationResult",
+     "BattleSimulationResult"
+    ],
+    [
+     "DungeonBattleAllyInfos",
+     "?"
+    ],
+    [
+     "DungeonCoinCountToReset",
+     "long"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/execGuest": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/execGuest",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "GuestMBId",
+     "long"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserDungeonBattleCharacterDtoInfo",
+     "UserDungeonBattleCharacterDtoInfo"
+    ],
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/execRecovery": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/execRecovery",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "IsHealed",
+     "bool"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserDungeonBattleCharacterDtoInfos",
+     "?"
+    ],
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/execReinforceRelic": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/execReinforceRelic",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "AddedRelicId",
+     "long"
+    ],
+    [
+     "ReinforcedAfterRelicIds",
+     "?"
+    ],
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/execRevive": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/execRevive",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "IsRevived",
+     "bool"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserDungeonBattleCharacterDtoInfos",
+     "?"
+    ],
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/execShop": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/execShop",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "TradeShopItemId",
+     "long"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ],
+    [
+     "UserDungeonBattleShopDtoInfo",
+     "UserDungeonBattleShopDtoInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "dungeonBattle/finishBattle": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/finishBattle",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "VisitDungeonCount",
+     "int"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserDungeonBattleCharacterDtoInfos",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/getBattleGridData": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/getBattleGridData",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "EnemyInfos",
+     "?"
+    ],
+    [
+     "NormalRewardItemList",
+     "?"
+    ],
+    [
+     "SpecialRewardItemList",
+     "?"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/getDungeonBattleInfo": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/getDungeonBattleInfo",
+   "request": [],
+   "response": [
+    [
+     "CurrentDungeonBattleLayer",
+     "DungeonBattleLayer"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ],
+    [
+     "EventItemId",
+     "long"
+    ],
+    [
+     "EventItemType",
+     "ItemType"
+    ],
+    [
+     "EventNo",
+     "long"
+    ],
+    [
+     "EventTutorialId",
+     "long"
+    ],
+    [
+     "GridBattlePowerDict",
+     "?"
+    ],
+    [
+     "RewardRelicIds",
+     "?"
+    ],
+    [
+     "UserDungeonBattleCharacterDtoInfos",
+     "?"
+    ],
+    [
+     "UserDungeonBattleGuestCharacterDtoInfos",
+     "?"
+    ],
+    [
+     "UserDungeonBattleMissedCount",
+     "int"
+    ],
+    [
+     "UserDungeonBattleShopDtoInfos",
+     "?"
+    ],
+    [
+     "UserDungeonDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ],
+    [
+     "SkipRewardList",
+     "?"
+    ],
+    [
+     "UtcEndTimeStamp",
+     "long"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/leaveShop": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/leaveShop",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/proceedLayer": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/proceedLayer",
+   "request": [
+    [
+     "DungeonDifficultyType",
+     "DungeonBattleDifficultyType"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/resetBattle": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/resetBattle",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "dungeonBattle/retireBattle": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/retireBattle",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ]
+   ],
+   "status": "missing"
+  },
+  "dungeonBattle/rewardBattleReceiveRelic": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/rewardBattleReceiveRelic",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "SelectedRelicId",
+     "long"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "AddedRelicId",
+     "long"
+    ],
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/rewardBattleReinforceRelic": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/rewardBattleReinforceRelic",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "SelectedRelicId",
+     "long"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "AddedRelicId",
+     "long"
+    ],
+    [
+     "ReinforcedAfterRelicId",
+     "long"
+    ],
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ]
+   ],
+   "status": "unused"
+  },
+  "dungeonBattle/rewardClearLayer": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/rewardClearLayer",
+   "request": [
+    [
+     "ClearedLayer",
+     "int"
+    ],
+    [
+     "DungeonBattleDifficultyType",
+     "DungeonBattleDifficultyType"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/selectGrid": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/selectGrid",
+   "request": [
+    [
+     "DungeonGridGuid",
+     "string"
+    ],
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "dungeonBattle/skipBattle": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/skipBattle",
+   "request": [
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "RewardRelicIdList",
+     "?"
+    ],
+    [
+     "CurrentDungeonBattleLayer",
+     "DungeonBattleLayer"
+    ],
+    [
+     "UserDungeonBattleShopDtoInfo",
+     "UserDungeonBattleShopDtoInfo"
+    ],
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "dungeonBattle/useRecoveryItem": {
+   "category": "DungeonBattle",
+   "uri": "dungeonBattle/useRecoveryItem",
+   "request": [
+    [
+     "CurrentTermId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserDungeonBattleCharacterDtoInfos",
+     "?"
+    ],
+    [
+     "UserDungeonBattleDtoInfo",
+     "UserDungeonBattleDtoInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "chatShop/buyItem": {
+   "category": "ChatShop",
+   "uri": "chatShop/buyItem",
+   "request": [
+    [
+     "ChatShopId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "GiveItem",
+     "UserItem"
+    ],
+    [
+     "ChatShopItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "chatShop/getList": {
+   "category": "ChatShop",
+   "uri": "chatShop/getList",
+   "request": [
+    [
+     "ItemType",
+     "ItemType"
+    ]
+   ],
+   "response": [
+    [
+     "ChatShopItems",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "chat/addPrivateChatLogPlayer": {
+   "category": "Chat",
+   "uri": "chat/addPrivateChatLogPlayer",
+   "request": [
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "PrivateChatLogPlayerInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "chat/deleteAnnounceChat": {
+   "category": "Chat",
+   "uri": "chat/deleteAnnounceChat",
+   "request": [
+    [
+     "ChatIdentityInfoList",
+     "?"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "chat/deletePrivateChatLogPlayer": {
+   "category": "Chat",
+   "uri": "chat/deletePrivateChatLogPlayer",
+   "request": [
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "PrivateChatLogPlayerInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "chat/getAnnounceChat": {
+   "category": "Chat",
+   "uri": "chat/getAnnounceChat",
+   "request": [],
+   "response": [
+    [
+     "GuildChatInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "chat/getChatBattleLog": {
+   "category": "Chat",
+   "uri": "chat/getChatBattleLog",
+   "request": [
+    [
+     "TargetPlayerId",
+     "long"
+    ],
+    [
+     "ChatBattlePropertyInfo",
+     "ChatBattlePropertyInfo"
+    ]
+   ],
+   "response": [
+    [
+     "BattleSimulationResult",
+     "BattleSimulationResult"
+    ]
+   ],
+   "status": "missing"
+  },
+  "chat/getChatReactionDetailInfo": {
+   "category": "Chat",
+   "uri": "chat/getChatReactionDetailInfo",
+   "request": [
+    [
+     "ChatIdentityInfo",
+     "ChatIdentityInfo"
+    ]
+   ],
+   "response": [
+    [
+     "PlayerInfoListByReactionType",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "chat/getGuildChatTabInfo": {
+   "category": "Chat",
+   "uri": "chat/getGuildChatTabInfo",
+   "request": [],
+   "response": [
+    [
+     "UnreadFinishedSurveyList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "chat/getPlayer": {
+   "category": "Chat",
+   "uri": "chat/getPlayer",
+   "request": [
+    [
+     "WorldPlayerIdList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "FriendPlayerInfoList",
+     "?"
+    ],
+    [
+     "GuildPlayerInfoList",
+     "?"
+    ],
+    [
+     "WorldPlayerInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "chat/getPrivateChatLogPlayer": {
+   "category": "Chat",
+   "uri": "chat/getPrivateChatLogPlayer",
+   "request": [],
+   "response": [
+    [
+     "PrivateChatLogPlayerInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "chat/getPrivateMessage": {
+   "category": "Chat",
+   "uri": "chat/getPrivateMessage",
+   "request": [
+    [
+     "LatestTimestamp",
+     "long"
+    ],
+    [
+     "OldestTimestamp",
+     "long"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "ChatInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "chat/reactChat": {
+   "category": "Chat",
+   "uri": "chat/reactChat",
+   "request": [
+    [
+     "ChatIdentityInfo",
+     "ChatIdentityInfo"
+    ],
+    [
+     "ChatReactionType",
+     "ChatReactionType"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "chat/registerAnnounceChat": {
+   "category": "Chat",
+   "uri": "chat/registerAnnounceChat",
+   "request": [
+    [
+     "ChatIdentityInfo",
+     "ChatIdentityInfo"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "chat/sendChatBattleLog": {
+   "category": "Chat",
+   "uri": "chat/sendChatBattleLog",
+   "request": [
+    [
+     "ChatType",
+     "ChatType"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ],
+    [
+     "ChatBattlePropertyInfo",
+     "ChatBattlePropertyInfo"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "chat/sendPrivateMessage": {
+   "category": "Chat",
+   "uri": "chat/sendPrivateMessage",
+   "request": [
+    [
+     "Message",
+     "string"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "chat/switchChatReactionOption": {
+   "category": "Chat",
+   "uri": "chat/switchChatReactionOption",
+   "request": [
+    [
+     "CanReact",
+     "bool"
+    ],
+    [
+     "ChatIdentityInfo",
+     "ChatIdentityInfo"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "chat/updateSettings": {
+   "category": "Chat",
+   "uri": "chat/updateSettings",
+   "request": [
+    [
+     "ChatSettingData",
+     "ChatSettingData"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "character/bulkLevelUp": {
+   "category": "Character",
+   "uri": "character/bulkLevelUp",
+   "request": [
+    [
+     "DestinationLevel",
+     "long"
+    ],
+    [
+     "UserCharacterGuid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "character/changeLockStatus": {
+   "category": "Character",
+   "uri": "character/changeLockStatus",
+   "request": [
+    [
+     "CharacterGuid",
+     "string"
+    ],
+    [
+     "IsLocked",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "character/collection": {
+   "category": "Character",
+   "uri": "character/collection",
+   "request": [
+    [
+     "CharacterCollectionId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "CollectionLevel",
+     "int"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "character/expansionCharacterBox": {
+   "category": "Character",
+   "uri": "character/expansionCharacterBox",
+   "request": [
+    [
+     "Count",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "character/getCharacterStoryReward": {
+   "category": "Character",
+   "uri": "character/getCharacterStoryReward",
+   "request": [
+    [
+     "CharacterStoryIdList",
+     "?"
+    ],
+    [
+     "IsSkip",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "character/getDetailsInfo": {
+   "category": "Character",
+   "uri": "character/getDetailsInfo",
+   "request": [
+    [
+     "DeckType",
+     "DeckUseContentType"
+    ],
+    [
+     "TargetUserCharacterGuids",
+     "?"
+    ],
+    [
+     "TargetPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "CharacterDetailInfos",
+     "?"
+    ]
+   ],
+   "status": "used"
+  },
+  "character/getRankReleaseInfo": {
+   "category": "Character",
+   "uri": "character/getRankReleaseInfo",
+   "request": [],
+   "response": [
+    [
+     "CharacterIdList",
+     "?"
+    ],
+    [
+     "RankReleasableCount",
+     "int"
+    ],
+    [
+     "RankReleasableMaxCount",
+     "int"
+    ]
+   ],
+   "status": "missing"
+  },
+  "character/levelUp": {
+   "category": "Character",
+   "uri": "character/levelUp",
+   "request": [
+    [
+     "UserCharacterGuid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "character/rankRelease": {
+   "category": "Character",
+   "uri": "character/rankRelease",
+   "request": [
+    [
+     "CharacterId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "character/rankUp": {
+   "category": "Character",
+   "uri": "character/rankUp",
+   "request": [
+    [
+     "RankUpList",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "character/readCharacterStory": {
+   "category": "Character",
+   "uri": "character/readCharacterStory",
+   "request": [
+    [
+     "CharacterStoryId",
+     "long"
+    ],
+    [
+     "IsSkip",
+     "bool"
+    ],
+    [
+     "MemoryLogType",
+     "MemoryLogType"
+    ]
+   ],
+   "response": [],
+   "status": "unused"
+  },
+  "character/resetLevel": {
+   "category": "Character",
+   "uri": "character/resetLevel",
+   "request": [
+    [
+     "UserCharacterGuid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "ReturnItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "character/resetRank": {
+   "category": "Character",
+   "uri": "character/resetRank",
+   "request": [
+    [
+     "UserCharacterGuid",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "ReturnCharacter",
+     "RankResetReceiveCharacter"
+    ],
+    [
+     "ReturnItemList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "character/sell": {
+   "category": "Character",
+   "uri": "character/sell",
+   "request": [
+    [
+     "UserCharacterGuids",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "RemovedEquipmentList",
+     "?"
+    ],
+    [
+     "ResultItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "character/setRankUpPrioritySetting": {
+   "category": "Character",
+   "uri": "character/setRankUpPrioritySetting",
+   "request": [
+    [
+     "Enabled",
+     "bool"
+    ],
+    [
+     "SettingDict",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "character/shardReversion": {
+   "category": "Character",
+   "uri": "character/shardReversion",
+   "request": [
+    [
+     "UserCharacterGuids",
+     "?"
+    ]
+   ],
+   "response": [
+    [
+     "RemovedEquipmentList",
+     "?"
+    ],
+    [
+     "ResultItems",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "character/unlockCharacter": {
+   "category": "Character",
+   "uri": "character/unlockCharacter",
+   "request": [
+    [
+     "CharacterId",
+     "long"
+    ],
+    [
+     "Count",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "bountyQuest/getList": {
+   "category": "BountyQuest",
+   "uri": "bountyQuest/getList",
+   "request": [],
+   "response": [
+    [
+     "BountyQuestInfos",
+     "?"
+    ],
+    [
+     "ChangeDayTime",
+     "long"
+    ],
+    [
+     "UserBoardRank",
+     "long"
+    ],
+    [
+     "UserBountyQuestBoardDtoInfos",
+     "?"
+    ],
+    [
+     "UserBountyQuestDtoInfos",
+     "?"
+    ],
+    [
+     "SelfUserBountyQuestMemberDtoInfos",
+     "?"
+    ],
+    [
+     "FriendAndGuildMemberUserBountyQuestMemberDtoInfos",
+     "?"
+    ]
+   ],
+   "status": "used"
+  },
+  "bountyQuest/getMember": {
+   "category": "BountyQuest",
+   "uri": "bountyQuest/getMember",
+   "request": [
+    [
+     "BountyQuestPlayerType",
+     "BountyQuestPlayerType"
+    ]
+   ],
+   "response": [
+    [
+     "UserBountyQuestMemberDtoInfos",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "bountyQuest/quick": {
+   "category": "BountyQuest",
+   "uri": "bountyQuest/quick",
+   "request": [
+    [
+     "BountyQuestId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BountyQuestInfos",
+     "?"
+    ],
+    [
+     "RewardItems",
+     "?"
+    ],
+    [
+     "UserBoardRank",
+     "long"
+    ],
+    [
+     "UserBountyQuestDtoInfos",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "bountyQuest/remake": {
+   "category": "BountyQuest",
+   "uri": "bountyQuest/remake",
+   "request": [],
+   "response": [
+    [
+     "BountyQuestInfos",
+     "?"
+    ],
+    [
+     "UserBountyQuestDtoInfos",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "bountyQuest/reward": {
+   "category": "BountyQuest",
+   "uri": "bountyQuest/reward",
+   "request": [
+    [
+     "BountyQuestIds",
+     "?"
+    ],
+    [
+     "ConsumeCurrency",
+     "long"
+    ],
+    [
+     "IsQuick",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "BountyQuestInfos",
+     "?"
+    ],
+    [
+     "RewardItems",
+     "?"
+    ],
+    [
+     "UserBoardRank",
+     "long"
+    ],
+    [
+     "UserBountyQuestDtoInfos",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "bountyQuest/setMember": {
+   "category": "BountyQuest",
+   "uri": "bountyQuest/setMember",
+   "request": [
+    [
+     "UserCharacterGuids",
+     "?"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "bountyQuest/start": {
+   "category": "BountyQuest",
+   "uri": "bountyQuest/start",
+   "request": [
+    [
+     "BountyQuestStartInfos",
+     "?"
+    ],
+    [
+     "IsSplit",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "GuerrillaBountyQuestInfos",
+     "?"
+    ],
+    [
+     "UserBountyQuestDtoInfos",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "bookSortAssistance/addAssistance": {
+   "category": "BookSortAssistance",
+   "uri": "bookSortAssistance/addAssistance",
+   "request": [],
+   "response": [
+    [
+     "UserBookSortAssistanceQuestList",
+     "?"
+    ],
+    [
+     "AddedAssistanceConditionCharacterIdList",
+     "?"
+    ]
+   ],
+   "status": "unused"
+  },
+  "bookSortAssistance/getInfo": {
+   "category": "BookSortAssistance",
+   "uri": "bookSortAssistance/getInfo",
+   "request": [],
+   "response": [
+    [
+     "UserBookSortAssistanceQuestList",
+     "?"
+    ],
+    [
+     "ChangeDayLocalTimeStamp",
+     "long"
+    ],
+    [
+     "UserBookSortAssistanceLv",
+     "UserBookSortAssistanceLv"
+    ],
+    [
+     "EndLocalTimeStamp",
+     "long"
+    ],
+    [
+     "AddedAssistanceConditionCharacterIdList",
+     "?"
+    ],
+    [
+     "ShopProductEndLocalTimeStamp",
+     "long"
+    ]
+   ],
+   "status": "unused"
+  },
+  "bookSort/bulkUnlockGridCell": {
+   "category": "BookSort",
+   "uri": "bookSort/bulkUnlockGridCell",
+   "request": [],
+   "response": [
+    [
+     "UnlockGridCellResultList",
+     "?"
+    ],
+    [
+     "BookSortSyncData",
+     "BookSortSyncData"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "bookSort/getInfo": {
+   "category": "BookSort",
+   "uri": "bookSort/getInfo",
+   "request": [],
+   "response": [
+    [
+     "BookSortSyncData",
+     "BookSortSyncData"
+    ],
+    [
+     "IsUpdatedBonusFloorRewardLineup",
+     "bool"
+    ],
+    [
+     "IsExistAssistanceUpdate",
+     "bool"
+    ]
+   ],
+   "status": "used"
+  },
+  "bookSort/getRewardInfo": {
+   "category": "BookSort",
+   "uri": "bookSort/getRewardInfo",
+   "request": [],
+   "response": [
+    [
+     "BookSortRewardList",
+     "?"
+    ]
+   ],
+   "status": "unused"
+  },
+  "bookSort/selectBonusFloorReward": {
+   "category": "BookSort",
+   "uri": "bookSort/selectBonusFloorReward",
+   "request": [
+    [
+     "BonusFloorRewardIndex",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "BookSortSyncData",
+     "BookSortSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "bookSort/unlockGridCell": {
+   "category": "BookSort",
+   "uri": "bookSort/unlockGridCell",
+   "request": [
+    [
+     "GridCellUnlockItemId",
+     "long"
+    ],
+    [
+     "GridCellIndex",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "UnlockGridCellResultList",
+     "?"
+    ],
+    [
+     "BookSortSyncData",
+     "BookSortSyncData"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "bookSort/upFloor": {
+   "category": "BookSort",
+   "uri": "bookSort/upFloor",
+   "request": [],
+   "response": [
+    [
+     "BookSortSyncData",
+     "BookSortSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "badge/getCompetitionInfo": {
+   "category": "Battle",
+   "uri": "badge/getCompetitionInfo",
+   "request": [],
+   "response": [
+    [
+     "ExistDungeonBattleMissedCompensation",
+     "bool"
+    ],
+    [
+     "DungeonBattleMissedCount",
+     "int"
+    ],
+    [
+     "IsDungeonBattleEventOpen",
+     "bool"
+    ],
+    [
+     "DungeonBattleEventItemType",
+     "ItemType"
+    ],
+    [
+     "DungeonBattleEventItemId",
+     "long"
+    ]
+   ],
+   "status": "unused"
+  },
+  "battle/auto": {
+   "category": "Battle",
+   "uri": "battle/auto",
+   "request": [],
+   "response": [
+    [
+     "UserBattleAuto",
+     "UserBattleAutoDtoInfo"
+    ],
+    [
+     "RemainNextRankUpTime",
+     "long"
+    ]
+   ],
+   "status": "used"
+  },
+  "battle/boss": {
+   "category": "Battle",
+   "uri": "battle/boss",
+   "request": [
+    [
+     "QuestId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BattleResult",
+     "BattleResult"
+    ],
+    [
+     "BattleRewardResult",
+     "BattleRewardResult"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "battle/bossRewardInfo": {
+   "category": "Battle",
+   "uri": "battle/bossRewardInfo",
+   "request": [],
+   "response": [
+    [
+     "QuestId",
+     "long"
+    ],
+    [
+     "BattleRewardResult",
+     "BattleRewardResult"
+    ]
+   ],
+   "status": "unused"
+  },
+  "battle/bossQuick": {
+   "category": "Battle",
+   "uri": "battle/bossQuick",
+   "request": [
+    [
+     "QuestId",
+     "long"
+    ],
+    [
+     "QuickCount",
+     "int"
+    ],
+    [
+     "IsAvailableBossChallengeTicket",
+     "bool"
+    ],
+    [
+     "TargetEquipmentSetMaterialId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BattleRewardList",
+     "?"
+    ],
+    [
+     "BattleRewardResult",
+     "BattleRewardResult"
+    ],
+    [
+     "ConsumeBossChallengeTicketCount",
+     "int"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "battle/buyBossChallenge": {
+   "category": "Battle",
+   "uri": "battle/buyBossChallenge",
+   "request": [
+    [
+     "BuyCount",
+     "long"
+    ],
+    [
+     "IsUseCurrency",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/buyLegendLeagueChallenge": {
+   "category": "Battle",
+   "uri": "battle/buyLegendLeagueChallenge",
+   "request": [
+    [
+     "BuyCount",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/buyPvpChallenge": {
+   "category": "Battle",
+   "uri": "battle/buyPvpChallenge",
+   "request": [
+    [
+     "BuyCount",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/changeQuest": {
+   "category": "Battle",
+   "uri": "battle/changeQuest",
+   "request": [
+    [
+     "QuestId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserBattleAuto",
+     "UserBattleAutoDtoInfo"
+    ],
+    [
+     "CurrentQuestAutoEnemyIds",
+     "?"
+    ],
+    [
+     "RemainNextRankUpTime",
+     "long"
+    ],
+    [
+     "AutoBattleDropEquipmentPercent",
+     "int"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/getBattleLog": {
+   "category": "Battle",
+   "uri": "battle/getBattleLog",
+   "request": [
+    [
+     "BattleToken",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "BattleSimulationResult",
+     "BattleSimulationResult"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/getBattleLogCharacterInfo": {
+   "category": "Battle",
+   "uri": "battle/getBattleLogCharacterInfo",
+   "request": [
+    [
+     "TargetPlayerId",
+     "long"
+    ],
+    [
+     "BattleLogFilePathPlayerId",
+     "long"
+    ],
+    [
+     "BattleType",
+     "BattleType"
+    ],
+    [
+     "BattleToken",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "TargetCharacterBaseParameterMap",
+     "?"
+    ],
+    [
+     "TargetCharacterBattleParameterMap",
+     "?"
+    ],
+    [
+     "TargetCharacterInfoList",
+     "?"
+    ],
+    [
+     "TargetEquipmentDtoInfoListMap",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/getClearPartyBattleLog": {
+   "category": "Battle",
+   "uri": "battle/getClearPartyBattleLog",
+   "request": [
+    [
+     "LogQuestId",
+     "long"
+    ],
+    [
+     "LogPlayerId",
+     "long"
+    ],
+    [
+     "BattleType",
+     "BattleType"
+    ]
+   ],
+   "response": [
+    [
+     "BattleSimulationResult",
+     "BattleSimulationResult"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/getClearPartyLog": {
+   "category": "Battle",
+   "uri": "battle/getClearPartyLog",
+   "request": [
+    [
+     "QuestId",
+     "long"
+    ],
+    [
+     "BattleType",
+     "BattleType"
+    ]
+   ],
+   "response": [
+    [
+     "SelfClearPartyInfo",
+     "ClearPartyInfo"
+    ],
+    [
+     "ClearPartyInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/getLegendLeagueInfo": {
+   "category": "Battle",
+   "uri": "battle/getLegendLeagueInfo",
+   "request": [
+    [
+     "IsRankingTab",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "ConsecutiveVictoryCount",
+     "int"
+    ],
+    [
+     "CurrentPoint",
+     "long"
+    ],
+    [
+     "CurrentRanking",
+     "long"
+    ],
+    [
+     "ExistNewDefenseBattleLog",
+     "bool"
+    ],
+    [
+     "IsDisplayRewardBadge",
+     "bool"
+    ],
+    [
+     "IsInTimeCanChallenge",
+     "bool"
+    ],
+    [
+     "MatchingRivalList",
+     "?"
+    ],
+    [
+     "PvpBattlePower",
+     "long"
+    ],
+    [
+     "TopRankerList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "battle/getLegendLeagueLogs": {
+   "category": "Battle",
+   "uri": "battle/getLegendLeagueLogs",
+   "request": [],
+   "response": [
+    [
+     "AttackLegendLeagueLogInfoList",
+     "?"
+    ],
+    [
+     "DefenseLegendLeagueLogInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/getLegendLeaguePreviousRanker": {
+   "category": "Battle",
+   "uri": "battle/getLegendLeaguePreviousRanker",
+   "request": [],
+   "response": [
+    [
+     "TopRankerList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/getLegendLeagueResultDetail": {
+   "category": "Battle",
+   "uri": "battle/getLegendLeagueResultDetail",
+   "request": [
+    [
+     "BattleToken",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "BattleResult",
+     "BattleResult"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/getLegendLeagueTopRanker": {
+   "category": "Battle",
+   "uri": "battle/getLegendLeagueTopRanker",
+   "request": [],
+   "response": [
+    [
+     "TopRankerList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/getPvpBattleLogs": {
+   "category": "Battle",
+   "uri": "battle/getPvpBattleLogs",
+   "request": [],
+   "response": [
+    [
+     "AttackPvpBattleLogInfoList",
+     "?"
+    ],
+    [
+     "DefensePvpBattleLogInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/getPvpBattleResultDetail": {
+   "category": "Battle",
+   "uri": "battle/getPvpBattleResultDetail",
+   "request": [
+    [
+     "BattleToken",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "BattleResult",
+     "BattleResult"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/getPvpInfo": {
+   "category": "Battle",
+   "uri": "battle/getPvpInfo",
+   "request": [
+    [
+     "IsRankingTab",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "CurrentRank",
+     "long"
+    ],
+    [
+     "ExistNewDefenseBattleLog",
+     "bool"
+    ],
+    [
+     "MatchingRivalList",
+     "?"
+    ],
+    [
+     "TopRankerList",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "battle/getPvpTopRanker": {
+   "category": "Battle",
+   "uri": "battle/getPvpTopRanker",
+   "request": [],
+   "response": [
+    [
+     "TopRankerList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/legendLeagueStart": {
+   "category": "Battle",
+   "uri": "battle/legendLeagueStart",
+   "request": [
+    [
+     "RivalPlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "BattleResult",
+     "BattleResult"
+    ],
+    [
+     "CanBattle",
+     "bool"
+    ],
+    [
+     "GetPoint",
+     "long"
+    ],
+    [
+     "BeforePoint",
+     "long"
+    ],
+    [
+     "Ranking",
+     "long"
+    ],
+    [
+     "BeforeRanking",
+     "long"
+    ],
+    [
+     "RivalPlayerInfo",
+     "PlayerInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ],
+    [
+     "Point",
+     "long"
+    ]
+   ],
+   "status": "used"
+  },
+  "battle/nextQuest": {
+   "category": "Battle",
+   "uri": "battle/nextQuest",
+   "request": [],
+   "response": [
+    [
+     "AutoBattleDropEquipmentPercent",
+     "int"
+    ],
+    [
+     "CurrentQuestAutoEnemyIds",
+     "?"
+    ],
+    [
+     "RemainNextRankUpTime",
+     "long"
+    ],
+    [
+     "UserBattleAuto",
+     "UserBattleAutoDtoInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "battle/pvpStart": {
+   "category": "Battle",
+   "uri": "battle/pvpStart",
+   "request": [
+    [
+     "RivalPlayerId",
+     "long"
+    ],
+    [
+     "RivalPlayerRank",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "AfterRank",
+     "long"
+    ],
+    [
+     "BattleResult",
+     "BattleResult"
+    ],
+    [
+     "BattleRewardResult",
+     "BattleRewardResult"
+    ],
+    [
+     "BeforeRank",
+     "long"
+    ],
+    [
+     "CanBattle",
+     "bool"
+    ],
+    [
+     "IsNewRecord",
+     "bool"
+    ],
+    [
+     "RivalBattlePower",
+     "long"
+    ],
+    [
+     "RivalPlayerInfo",
+     "PlayerInfo"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "battle/quick": {
+   "category": "Battle",
+   "uri": "battle/quick",
+   "request": [
+    [
+     "QuestQuickExecuteType",
+     "QuestQuickExecuteType"
+    ],
+    [
+     "QuickCount",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "AutoBattleRewardResult",
+     "AutoBattleRewardResult"
+    ],
+    [
+     "QuickLastExecuteTime",
+     "long"
+    ],
+    [
+     "QuickTodayUseCurrencyCount",
+     "long"
+    ],
+    [
+     "QuickTodayUsePrivilegeCount",
+     "long"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "battle/reloadLegendLeagueRivalList": {
+   "category": "Battle",
+   "uri": "battle/reloadLegendLeagueRivalList",
+   "request": [],
+   "response": [
+    [
+     "MatchingRivalList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/reloadRivalList": {
+   "category": "Battle",
+   "uri": "battle/reloadRivalList",
+   "request": [],
+   "response": [
+    [
+     "MatchingRivalList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "battle/rewardAutoBattle": {
+   "category": "Battle",
+   "uri": "battle/rewardAutoBattle",
+   "request": [],
+   "response": [
+    [
+     "AutoBattleRewardResult",
+     "AutoBattleRewardResult"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "auth/addSnsAccount": {
+   "category": "Auth",
+   "uri": "auth/addSnsAccount",
+   "request": [
+    [
+     "AppleIdToken",
+     "string"
+    ],
+    [
+     "GoogleAuthorizationCode",
+     "string"
+    ],
+    [
+     "Password",
+     "string"
+    ],
+    [
+     "SnsType",
+     "SnsType"
+    ],
+    [
+     "TwitterAccessToken",
+     "string"
+    ],
+    [
+     "TwitterAccessTokenSecret",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/askOpenAi": {
+   "category": "Auth",
+   "uri": "auth/askOpenAi",
+   "request": [
+    [
+     "Model",
+     "string"
+    ],
+    [
+     "SystemPrompt",
+     "string"
+    ],
+    [
+     "Message",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "IsSuccess",
+     "bool"
+    ],
+    [
+     "Answer",
+     "string"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/cancelReservedAccountDeletion": {
+   "category": "Auth",
+   "uri": "auth/cancelReservedAccountDeletion",
+   "request": [],
+   "response": [],
+   "status": "missing"
+  },
+  "auth/checkDmmAccount": {
+   "category": "Auth",
+   "uri": "auth/checkDmmAccount",
+   "request": [],
+   "response": [
+    [
+     "ClientKey",
+     "string"
+    ],
+    [
+     "UserId",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/checkSteamAccount": {
+   "category": "Auth",
+   "uri": "auth/checkSteamAccount",
+   "request": [
+    [
+     "SteamTicket",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "ClientKey",
+     "string"
+    ],
+    [
+     "CurrencyCode",
+     "string"
+    ],
+    [
+     "UserId",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/comebackUser": {
+   "category": "Auth",
+   "uri": "auth/comebackUser",
+   "request": [
+    [
+     "FromUserId",
+     "long"
+    ],
+    [
+     "OneTimeToken",
+     "string"
+    ],
+    [
+     "ToUserId",
+     "long"
+    ],
+    [
+     "SteamTicket",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "ClientKey",
+     "string"
+    ]
+   ],
+   "status": "used"
+  },
+  "auth/confirmWarning": {
+   "category": "Auth",
+   "uri": "auth/confirmWarning",
+   "request": [
+    [
+     "WarningId",
+     "long"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "auth/copyPlayerData": {
+   "category": "Auth",
+   "uri": "auth/copyPlayerData",
+   "request": [
+    [
+     "PlayerId",
+     "long"
+    ],
+    [
+     "TimeServerId",
+     "long"
+    ],
+    [
+     "TargetWorldId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "PlayerId",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/createAccessToken": {
+   "category": "Auth",
+   "uri": "auth/createAccessToken",
+   "request": [
+    [
+     "ClientKey",
+     "string"
+    ],
+    [
+     "UserId",
+     "long"
+    ]
+   ],
+   "response": [],
+   "status": "unused"
+  },
+  "auth/createUser": {
+   "category": "Auth",
+   "uri": "auth/createUser",
+   "request": [
+    [
+     "AdverisementId",
+     "string"
+    ],
+    [
+     "AppVersion",
+     "string"
+    ],
+    [
+     "CountryCode",
+     "string"
+    ],
+    [
+     "DeviceToken",
+     "string"
+    ],
+    [
+     "DisplayLanguage",
+     "LanguageType"
+    ],
+    [
+     "ModelName",
+     "string"
+    ],
+    [
+     "OSVersion",
+     "string"
+    ],
+    [
+     "SteamTicket",
+     "string"
+    ],
+    [
+     "AuthToken",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "AccountMessageInfo",
+     "AccountMessageInfo"
+    ],
+    [
+     "ClientKey",
+     "string"
+    ],
+    [
+     "RecommendWorldId",
+     "long"
+    ],
+    [
+     "UserId",
+     "long"
+    ],
+    [
+     "WarningMessageInfos",
+     "?"
+    ],
+    [
+     "WorldIdList",
+     "?"
+    ],
+    [
+     "SpecialWorldDict",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "auth/createWorldPlayer": {
+   "category": "Auth",
+   "uri": "auth/createWorldPlayer",
+   "request": [
+    [
+     "WorldId",
+     "long"
+    ],
+    [
+     "Comment",
+     "string"
+    ],
+    [
+     "Name",
+     "string"
+    ],
+    [
+     "DeepLinkId",
+     "long"
+    ],
+    [
+     "SteamTicket",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "ApiHost",
+     "string"
+    ],
+    [
+     "CanSkipTutorial",
+     "bool"
+    ],
+    [
+     "MagicOnionHost",
+     "string"
+    ],
+    [
+     "MagicOnionPort",
+     "int"
+    ],
+    [
+     "PlayerId",
+     "long"
+    ],
+    [
+     "Password",
+     "string"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "unused"
+  },
+  "auth/deleteSnsAccount": {
+   "category": "Auth",
+   "uri": "auth/deleteSnsAccount",
+   "request": [
+    [
+     "AppleIdToken",
+     "string"
+    ],
+    [
+     "GoogleAuthorizationCode",
+     "string"
+    ],
+    [
+     "Password",
+     "string"
+    ],
+    [
+     "SnsType",
+     "SnsType"
+    ],
+    [
+     "TwitterAccessToken",
+     "string"
+    ],
+    [
+     "TwitterAccessTokenSecret",
+     "string"
+    ],
+    [
+     "UserId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/generateAppleNonce": {
+   "category": "Auth",
+   "uri": "auth/generateAppleNonce",
+   "request": [],
+   "response": [
+    [
+     "Nonce",
+     "string"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/getComebackUserData": {
+   "category": "Auth",
+   "uri": "auth/getComebackUserData",
+   "request": [
+    [
+     "AppleIdToken",
+     "string"
+    ],
+    [
+     "FromUserId",
+     "long"
+    ],
+    [
+     "GoogleAuthorizationCode",
+     "string"
+    ],
+    [
+     "Password",
+     "string"
+    ],
+    [
+     "SnsType",
+     "SnsType"
+    ],
+    [
+     "TwitterAccessToken",
+     "string"
+    ],
+    [
+     "TwitterAccessTokenSecret",
+     "string"
+    ],
+    [
+     "UserId",
+     "long"
+    ],
+    [
+     "AuthToken",
+     "int"
+    ]
+   ],
+   "response": [
+    [
+     "IsReservedAccountDeletion",
+     "bool"
+    ],
+    [
+     "LastLoginPlayerDataInfo",
+     "PlayerDataInfo"
+    ],
+    [
+     "OneTimeToken",
+     "string"
+    ],
+    [
+     "UserId",
+     "long"
+    ]
+   ],
+   "status": "used"
+  },
+  "auth/getDataUri": {
+   "category": "Auth",
+   "uri": "auth/getDataUri",
+   "request": [
+    [
+     "CountryCode",
+     "string"
+    ],
+    [
+     "UserId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "AppAssetVersionInfo",
+     "AppAssetVersionInfo"
+    ],
+    [
+     "WorldInfos",
+     "?"
+    ],
+    [
+     "MaintenanceInfos",
+     "?"
+    ],
+    [
+     "ManagementNewUserInfos",
+     "?"
+    ],
+    [
+     "AssetCatalogFixedUriFormat",
+     "string"
+    ],
+    [
+     "MasterUriFormat",
+     "string"
+    ],
+    [
+     "RawDataUriFormat",
+     "string"
+    ],
+    [
+     "TitleInfo",
+     "TitleInfo"
+    ]
+   ],
+   "status": "used"
+  },
+  "auth/getLauncherData": {
+   "category": "Auth",
+   "uri": "auth/getLauncherData",
+   "request": [],
+   "response": [
+    [
+     "AppVersion",
+     "string"
+    ],
+    [
+     "LauncherVersion",
+     "string"
+    ],
+    [
+     "AppDownloadUri",
+     "string"
+    ],
+    [
+     "LauncherDownloadUri",
+     "string"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/getNoticeInfo": {
+   "category": "Auth",
+   "uri": "auth/getNoticeInfo",
+   "request": [
+    [
+     "Env",
+     "string"
+    ],
+    [
+     "GetLanguageType",
+     "LanguageType"
+    ],
+    [
+     "DisplayLanguageType",
+     "LanguageType"
+    ],
+    [
+     "TimeServerId",
+     "long"
+    ],
+    [
+     "DeviceType",
+     "DeviceType"
+    ],
+    [
+     "WorldId",
+     "long"
+    ],
+    [
+     "WorldGroupId",
+     "long"
+    ],
+    [
+     "QuestId",
+     "long"
+    ],
+    [
+     "NoticeMBIdRange",
+     "?"
+    ],
+    [
+     "SearchWord",
+     "string"
+    ],
+    [
+     "IsDisableOnTitle",
+     "?"
+    ],
+    [
+     "TargetDate",
+     "string"
+    ],
+    [
+     "IsWholeDaySearch",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "NoticeInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/getNoticeMb": {
+   "category": "Auth",
+   "uri": "auth/getNoticeMb",
+   "request": [
+    [
+     "Env",
+     "string"
+    ],
+    [
+     "NoticeId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "NoticeMbJson",
+     "string"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/getServerHost": {
+   "category": "Auth",
+   "uri": "auth/getServerHost",
+   "request": [
+    [
+     "WorldId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "ApiHost",
+     "string"
+    ],
+    [
+     "MagicOnionHost",
+     "string"
+    ],
+    [
+     "MagicOnionPort",
+     "int"
+    ]
+   ],
+   "status": "used"
+  },
+  "auth/getSwitchWorldData": {
+   "category": "Auth",
+   "uri": "auth/getSwitchWorldData",
+   "request": [
+    [
+     "ClientKey",
+     "string"
+    ],
+    [
+     "UserId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "WorldIdList",
+     "?"
+    ],
+    [
+     "PlayerDataInfoList",
+     "?"
+    ],
+    [
+     "RecommendWorldId",
+     "long"
+    ],
+    [
+     "SpecialWorldDict",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/getUserDataForKoiniwa": {
+   "category": "Auth",
+   "uri": "auth/getUserDataForKoiniwa",
+   "request": [
+    [
+     "UserId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "MaxQuestId",
+     "long"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/getWarningMessageInfo": {
+   "category": "Auth",
+   "uri": "auth/getWarningMessageInfo",
+   "request": [],
+   "response": [
+    [
+     "WarningMessageInfoList",
+     "?"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/giveSnsShareReward": {
+   "category": "Auth",
+   "uri": "auth/giveSnsShareReward",
+   "request": [
+    [
+     "PlayerId",
+     "long"
+    ]
+   ],
+   "response": [
+    [
+     "RewardItem",
+     "UserItem"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/login": {
+   "category": "Auth",
+   "uri": "auth/login",
+   "request": [
+    [
+     "ClientKey",
+     "string"
+    ],
+    [
+     "DeviceToken",
+     "string"
+    ],
+    [
+     "AppVersion",
+     "string"
+    ],
+    [
+     "OSVersion",
+     "string"
+    ],
+    [
+     "ModelName",
+     "string"
+    ],
+    [
+     "AdverisementId",
+     "string"
+    ],
+    [
+     "UserId",
+     "long"
+    ],
+    [
+     "IsPushNotificationAllowed",
+     "bool"
+    ]
+   ],
+   "response": [
+    [
+     "AccountMessageInfo",
+     "AccountMessageInfo"
+    ],
+    [
+     "AccountMessageInfos",
+     "?"
+    ],
+    [
+     "IsReservedAccountDeletion",
+     "bool"
+    ],
+    [
+     "IgnoreTypes",
+     "?"
+    ],
+    [
+     "MaxVip",
+     "long"
+    ],
+    [
+     "PlayerDataInfoList",
+     "?"
+    ],
+    [
+     "RecommendWorldId",
+     "long"
+    ],
+    [
+     "TextLanguageType",
+     "LanguageType"
+    ],
+    [
+     "VoiceLanguageType",
+     "LanguageType"
+    ],
+    [
+     "WarningMessageInfos",
+     "?"
+    ],
+    [
+     "WorldIdList",
+     "?"
+    ],
+    [
+     "SelectShopProductInfoDict",
+     "?"
+    ],
+    [
+     "StripeShopProductInfo",
+     "StripeShopProductInfo"
+    ],
+    [
+     "SpecialWorldDict",
+     "?"
+    ],
+    [
+     "MaintenanceDebugUserInfos",
+     "?"
+    ],
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "used"
+  },
+  "auth/reserveAccountDeletion": {
+   "category": "Auth",
+   "uri": "auth/reserveAccountDeletion",
+   "request": [],
+   "response": [],
+   "status": "missing"
+  },
+  "auth/resetMission": {
+   "category": "Auth",
+   "uri": "auth/resetMission",
+   "request": [],
+   "response": [],
+   "status": "missing"
+  },
+  "auth/resetSteamAccount": {
+   "category": "Auth",
+   "uri": "auth/resetSteamAccount",
+   "request": [
+    [
+     "SteamId",
+     "UInt64"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "auth/sendChatWorkMessageAuth": {
+   "category": "Auth",
+   "uri": "auth/sendChatWorkMessageAuth",
+   "request": [
+    [
+     "Title",
+     "string"
+    ],
+    [
+     "Message",
+     "string"
+    ],
+    [
+     "RoomId",
+     "string"
+    ],
+    [
+     "ImageBytes",
+     "?"
+    ],
+    [
+     "FileName",
+     "string"
+    ],
+    [
+     "UserIds",
+     "string"
+    ],
+    [
+     "MessageTs",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "Ts",
+     "string"
+    ]
+   ],
+   "status": "missing"
+  },
+  "auth/setRemoteNotificationSetting": {
+   "category": "Auth",
+   "uri": "auth/setRemoteNotificationSetting",
+   "request": [
+    [
+     "DeviceToken",
+     "string"
+    ],
+    [
+     "IgnoreTypes",
+     "?"
+    ]
+   ],
+   "response": [],
+   "status": "missing"
+  },
+  "auth/setUserSetting": {
+   "category": "Auth",
+   "uri": "auth/setUserSetting",
+   "request": [
+    [
+     "UserSettingsType",
+     "UserSettingsType"
+    ],
+    [
+     "Value",
+     "long"
+    ],
+    [
+     "DeviceToken",
+     "string"
+    ]
+   ],
+   "response": [
+    [
+     "UserSyncData",
+     "UserSyncData"
+    ]
+   ],
+   "status": "missing"
+  }
+ },
+ "masters": [
+  "AchieveRankingRewardMB",
+  "ActiveSkillMB",
+  "AppVersionMB",
+  "AutoBattleEnemyMB",
+  "BattleScheduleMB",
+  "BattleSkillCharacterSettingMB",
+  "BattleSkillNameSettingMB",
+  "BoardRankMB",
+  "BookSortAssistanceMB",
+  "BookSortBonusFloorRewardMB",
+  "BookSortEventMB",
+  "BossBattleEnemyMB",
+  "ChangeItemMB",
+  "ChapterMB",
+  "CharacterBoxSizeMB",
+  "CharacterCollectionLevelMB",
+  "CharacterCollectionMB",
+  "CharacterCollectionRewardMB",
+  "CharacterDetailVoiceMB",
+  "CharacterLevelMB",
+  "CharacterLiveModeMB",
+  "CharacterMB",
+  "CharacterPotentialCoefficientMB",
+  "CharacterPotentialMB",
+  "CharacterProfileMB",
+  "CharacterRankUpMaterialMB",
+  "CharacterResetMB",
+  "CharacterStoryMB",
+  "ChatEffectKeywordMB",
+  "ChatEmoticonMB",
+  "CollabMissionMB",
+  "CommunityMB",
+  "DeepLinkMB",
+  "DownloadRawDataMB",
+  "DungeonBattleGridMB",
+  "DungeonBattleGuestMB",
+  "DungeonBattleRelicMB",
+  "EffectGroupMB",
+  "ElementBonusMB",
+  "EquipmentCompositeMB",
+  "EquipmentEvolutionMB",
+  "EquipmentExclusiveEffectMB",
+  "EquipmentExclusiveSkillDescriptionMB",
+  "EquipmentForgeMB",
+  "EquipmentLegendSacredTreasureMB",
+  "EquipmentMB",
+  "EquipmentMatchlessSacredTreasureMB",
+  "EquipmentReinforcementMaterialMB",
+  "EquipmentReinforcementParameterMB",
+  "EquipmentSetMB",
+  "EquipmentSetMaterialBoxMB",
+  "EquipmentSetMaterialMB",
+  "EquipmentSynchroGroupMB",
+  "ErrorCodeMB",
+  "FaqListMB",
+  "FriendCampaignMB",
+  "FriendMissionMB",
+  "GachaCaseMB",
+  "GachaCaseUiMB",
+  "GachaDestinyAddCharacterMB",
+  "GachaSelectListMB",
+  "GlobalGvgCastleMB",
+  "GuildLevelMB",
+  "GuildMissionMB",
+  "GuildRaidBossMB",
+  "GuildRaidRewardMB",
+  "GuildTowerChallengeRewardMB",
+  "GuildTowerEnemyMB",
+  "GuildTowerEventMB",
+  "GuildTowerFloorMB",
+  "GuildTowerReinforcementJobLevelMB",
+  "HelpMB",
+  "InquiryButtonMB",
+  "ItemMB",
+  "ItemMaxCountSwitchingQuestMB",
+  "LeadReviewMB",
+  "LegendLeagueClassMB",
+  "LevelLinkMB",
+  "LimitedEventMB",
+  "LimitedLoginBonusMB",
+  "LimitedLoginBonusRewardListMB",
+  "LimitedLoginBonusSwitchingDailyRewardMB",
+  "LimitedMissionMB",
+  "LocalGvgCastleMB",
+  "LocalPushNotificationMB",
+  "LocalRaidBannerMB",
+  "LocalRaidBonusScheduleMB",
+  "LocalRaidEventScheduleMB",
+  "LocalRaidQuestGroupMB",
+  "LuckyChanceMB",
+  "MediaMB",
+  "MiningQuestBaseParametersMB",
+  "MiningQuestReinforcementMB",
+  "MissionClearCountRewardMB",
+  "MissionGuideMB",
+  "MissionMB",
+  "MissionOpenContentMB",
+  "MissionTabNameMB",
+  "MonologueMB",
+  "MonthlyLoginBonusMB",
+  "MonthlyLoginBonusRewardListMB",
+  "MusicMB",
+  "NewCharacterMissionMB",
+  "OpenContentMB",
+  "PanelMB",
+  "PanelMissionMB",
+  "PassiveSkillMB",
+  "PatternSettingMB",
+  "PlayerRankMB",
+  "PopularityVoteMB",
+  "PvpRankingRewardMB",
+  "QuestMB",
+  "QuestMapBuildingMB",
+  "RequiredCurrencyMB",
+  "ShopPointRateMB",
+  "SkillDescriptionLinkTextMB",
+  "SpecialIconItemMB",
+  "SphereMB",
+  "StateBonusMB",
+  "StateMB",
+  "SteamProductPriceListMB",
+  "StripePointMB",
+  "TermsMB",
+  "TextLanguageMB",
+  "TextResourceEnUsMB",
+  "TextResourceJaJpMB",
+  "TextResourceKoKrMB",
+  "TextResourceZhCnMB",
+  "TextResourceZhTwMB",
+  "TimeServerMB",
+  "TipMB",
+  "TotalActivityMedalRewardMB",
+  "TowerBattleEnemyMB",
+  "TowerBattleQuestMB",
+  "TradeShopSphereMB",
+  "TradeShopTabMB",
+  "TreasureChestCeilingMB",
+  "TreasureChestItemMB",
+  "TreasureChestMB",
+  "TutorialDescriptionMB",
+  "TutorialTextBoxMB",
+  "UnionMissionClassMB",
+  "UnionMissionEventMB",
+  "VipMB",
+  "WorldGroupMB"
+ ],
+ "hubs": [
+  "IMagicOnionAchieveRewardReceiver",
+  "IMagicOnionAuthenticateReceiver",
+  "IMagicOnionChatReceiver",
+  "IMagicOnionErrorReceiver",
+  "IMagicOnionGuildTowerReceiver",
+  "IMagicOnionGvgReceiver",
+  "IMagicOnionLocalRaidReceiver"
+ ]
+}

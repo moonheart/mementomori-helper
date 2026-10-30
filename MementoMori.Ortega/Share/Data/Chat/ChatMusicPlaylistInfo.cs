@@ -1,3 +1,4 @@
+﻿using System.Runtime.CompilerServices;
 using MessagePack;
 
 namespace MementoMori.Ortega.Share.Data.Chat

@@ -1,0 +1,884 @@
+[
+ {
+  "Name": "Cordie",
+  "Tier": "SS",
+  "Role": "dps",
+  "Element": "emerald",
+  "Notes": "[standard] best standard SR carry; DEF debuff; Space-Time shop"
+ },
+ {
+  "Name": "Merlyn",
+  "Tier": "SS",
+  "Role": "support",
+  "Element": "emerald",
+  "Notes": "[standard] core buffer/cleanse for Cordie/Florence; Space-Time shop"
+ },
+ {
+  "Name": "Primavera",
+  "Tier": "SS",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[standard] Faint CC, fast; ToI SS"
+ },
+ {
+  "Name": "Florence",
+  "Tier": "S",
+  "Role": "dps",
+  "Element": "azure",
+  "Notes": "[standard] standard main DPS, more hits than Cordie"
+ },
+ {
+  "Name": "Witch Illya",
+  "Tier": "SS",
+  "Role": "dps",
+  "Element": "chaos",
+  "Notes": "[limited] top PvE DPS (limited)"
+ },
+ {
+  "Name": "Fia",
+  "Tier": "SS",
+  "Role": "dps",
+  "Element": "emerald",
+  "Notes": "[standard] top PvE DPS / tanky, emerald"
+ },
+ {
+  "Name": "Sivi",
+  "Tier": "SS",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[standard] ramping buffs + cleanse; sub-DPS"
+ },
+ {
+  "Name": "Meria",
+  "Tier": "SS",
+  "Role": "support",
+  "Element": "radiance",
+  "Notes": "[witch] Multi-Barrier on top ATK ally (witch)"
+ },
+ {
+  "Name": "Rusalka",
+  "Tier": "S",
+  "Role": "dps",
+  "Element": "radiance",
+  "Notes": "[witch] ToI SS; ATK debuff (witch)"
+ },
+ {
+  "Name": "Nina",
+  "Tier": "S",
+  "Role": "support",
+  "Element": "emerald",
+  "Notes": "[standard] ToI SS; standard, buff steal"
+ },
+ {
+  "Name": "Festive Natasha",
+  "Tier": "S",
+  "Role": "tank",
+  "Element": "chaos",
+  "Notes": "[limited] tank/debuffer/sub-DPS (limited)"
+ },
+ {
+  "Name": "Cattleya",
+  "Tier": "S",
+  "Role": "dps",
+  "Element": "amber",
+  "Notes": "[standard] new 2026 DPS"
+ },
+ {
+  "Name": "Guinevere",
+  "Tier": "S",
+  "Role": "dps",
+  "Element": "crimson",
+  "Notes": "[standard] new 2026 DPS"
+ },
+ {
+  "Name": "Yuni",
+  "Tier": "S",
+  "Role": "healer",
+  "Element": "emerald",
+  "Notes": "[standard] best healer (game8 SS healer)"
+ },
+ {
+  "Name": "Matilda",
+  "Tier": "S",
+  "Role": "support",
+  "Element": "crimson",
+  "Notes": "[standard] ATK/crit buffs; ToI S"
+ },
+ {
+  "Name": "Summer Amleth",
+  "Tier": "S",
+  "Role": "tank",
+  "Element": "amber",
+  "Notes": "[limited] tank/debuffer/DPS (limited)"
+ },
+ {
+  "Name": "Moineau",
+  "Tier": "S",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[standard] PvE team staple"
+ },
+ {
+  "Name": "Yildiz",
+  "Tier": "S",
+  "Role": "support",
+  "Element": "emerald",
+  "Notes": "[standard] buffs top-ATK ally; sub-DPS"
+ },
+ {
+  "Name": "Luke",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "emerald",
+  "Notes": "[standard] support A+ PvE"
+ },
+ {
+  "Name": "Stella",
+  "Tier": "A",
+  "Role": "healer",
+  "Element": "azure",
+  "Notes": "[standard] Silence + heals; support A+"
+ },
+ {
+  "Name": "Milla",
+  "Tier": "A",
+  "Role": "healer",
+  "Element": "emerald",
+  "Notes": "[standard] max HP buff, regen"
+ },
+ {
+  "Name": "Twilight Fortina",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "radiance",
+  "Notes": "[limited] Multi-Barrier (limited, new)"
+ },
+ {
+  "Name": "Mimi",
+  "Tier": "A",
+  "Role": "tank",
+  "Element": "amber",
+  "Notes": "[standard] early-game team tank/support; ToI S"
+ },
+ {
+  "Name": "Amleth",
+  "Tier": "A",
+  "Role": "dps",
+  "Element": "azure",
+  "Notes": "[standard] F2P backup carry; Space-Time shop"
+ },
+ {
+  "Name": "Soltina",
+  "Tier": "A",
+  "Role": "tank",
+  "Element": "azure",
+  "Notes": "[standard] Multi-Barrier tank; ToI S"
+ },
+ {
+  "Name": "Lunalynn",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "chaos",
+  "Notes": "[witch] group Silence; ToI S (witch)"
+ },
+ {
+  "Name": "Belle",
+  "Tier": "A",
+  "Role": "tank",
+  "Element": "crimson",
+  "Notes": "[standard] sustain/stall; ToI S"
+ },
+ {
+  "Name": "Elfriede",
+  "Tier": "A",
+  "Role": "dps",
+  "Element": "radiance",
+  "Notes": "[witch] ToI S (witch)"
+ },
+ {
+  "Name": "Paladea",
+  "Tier": "A",
+  "Role": "dps",
+  "Element": "chaos",
+  "Notes": "[witch] undispellable barriers; chaos crit team (witch)"
+ },
+ {
+  "Name": "Tainted Iris",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[limited] Force Field; ToI S (limited)"
+ },
+ {
+  "Name": "Summer Cordie",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "crimson",
+  "Notes": "[limited] ToI S (limited)"
+ },
+ {
+  "Name": "Summer Sabrina",
+  "Tier": "A",
+  "Role": "tank",
+  "Element": "emerald",
+  "Notes": "[limited] ToI S (limited)"
+ },
+ {
+  "Name": "Armstrong",
+  "Tier": "A",
+  "Role": "dps",
+  "Element": "chaos",
+  "Notes": "[witch] PvE DPS A (witch)"
+ },
+ {
+  "Name": "Treasured Cerberus",
+  "Tier": "A",
+  "Role": "tank",
+  "Element": "chaos",
+  "Notes": "[limited] self-revive tank/DPS (limited)"
+ },
+ {
+  "Name": "Myrlennia",
+  "Tier": "A",
+  "Role": "dps",
+  "Element": "amber",
+  "Notes": "[standard] PvE DPS A"
+ },
+ {
+  "Name": "Kobel",
+  "Tier": "A",
+  "Role": "healer",
+  "Element": "emerald",
+  "Notes": "[standard] HP boost + heals; DPS A"
+ },
+ {
+  "Name": "Trixie",
+  "Tier": "A",
+  "Role": "dps",
+  "Element": "amber",
+  "Notes": "[standard] slow, shields"
+ },
+ {
+  "Name": "Eidene",
+  "Tier": "A",
+  "Role": "dps",
+  "Element": "emerald",
+  "Notes": "[standard] emerald sustain team"
+ },
+ {
+  "Name": "Winter Soltina",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "crimson",
+  "Notes": "[limited] ATK/ACC debuff (limited)"
+ },
+ {
+  "Name": "Winter Tropon",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[limited] buff steal; main-quest team"
+ },
+ {
+  "Name": "Summer Moddey",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[limited] limited"
+ },
+ {
+  "Name": "Artie",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "crimson",
+  "Notes": "[standard] CRIT RES buffs, damage cut"
+ },
+ {
+  "Name": "Mertillier",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "emerald",
+  "Notes": "[standard] standard; ToI A"
+ },
+ {
+  "Name": "Kaguya",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "chaos",
+  "Notes": "[witch] crit buffs, chaos team (witch)"
+ },
+ {
+  "Name": "Regina",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "chaos",
+  "Notes": "[standard] max HP/cooldown; chaos team"
+ },
+ {
+  "Name": "Eirene",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "radiance",
+  "Notes": "[standard] PvE support"
+ },
+ {
+  "Name": "Rustica",
+  "Tier": "A",
+  "Role": "tank",
+  "Element": "amber",
+  "Notes": "[standard] shields"
+ },
+ {
+  "Name": "Potpourri",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Apostle Rosalie",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "radiance",
+  "Notes": "[limited] limited"
+ },
+ {
+  "Name": "Summer Nina",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[limited] limited"
+ },
+ {
+  "Name": "Winter Amour",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[limited] limited"
+ },
+ {
+  "Name": "Winter Lunalynn",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "emerald",
+  "Notes": "[limited] limited"
+ },
+ {
+  "Name": "Uniform A.A.",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "radiance",
+  "Notes": "[limited] big shields (limited)"
+ },
+ {
+  "Name": "Aine",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "radiance",
+  "Notes": "[standard] CRIT RES buff"
+ },
+ {
+  "Name": "Tama",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[standard] ACC buff, shields"
+ },
+ {
+  "Name": "Flack",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "crimson",
+  "Notes": "[standard] EVD debuff"
+ },
+ {
+  "Name": "Lillicotte",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "crimson",
+  "Notes": "[standard] Silence, buff removal"
+ },
+ {
+  "Name": "Elaine",
+  "Tier": "A",
+  "Role": "support",
+  "Element": "chaos",
+  "Notes": "[witch] DEF buffs (witch)"
+ },
+ {
+  "Name": "Pola",
+  "Tier": "B",
+  "Role": "dps",
+  "Element": "emerald",
+  "Notes": "[standard] emerald ATK buff"
+ },
+ {
+  "Name": "Dian",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "crimson",
+  "Notes": "[standard] evasion buff; early-team swap for Mimi"
+ },
+ {
+  "Name": "Rean",
+  "Tier": "B",
+  "Role": "tank",
+  "Element": "crimson",
+  "Notes": "[standard] standard tank; ToI A"
+ },
+ {
+  "Name": "Fenrir",
+  "Tier": "B",
+  "Role": "healer",
+  "Element": "azure",
+  "Notes": "[standard] standard; ToI A"
+ },
+ {
+  "Name": "Hathor",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[standard] ToI A"
+ },
+ {
+  "Name": "Natasha",
+  "Tier": "B",
+  "Role": "tank",
+  "Element": "radiance",
+  "Notes": "[witch] witch; ToI A"
+ },
+ {
+  "Name": "Morgana",
+  "Tier": "B",
+  "Role": "dps",
+  "Element": "crimson",
+  "Notes": "[standard] ToI A"
+ },
+ {
+  "Name": "Claudia",
+  "Tier": "B",
+  "Role": "tank",
+  "Element": "emerald",
+  "Notes": "[standard] ToI A"
+ },
+ {
+  "Name": "Liselotte",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[standard] ToI A"
+ },
+ {
+  "Name": "Eir",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[standard] ToI A"
+ },
+ {
+  "Name": "Asahi",
+  "Tier": "B",
+  "Role": "dps",
+  "Element": "amber",
+  "Notes": "[standard] ToI A"
+ },
+ {
+  "Name": "Minasumari",
+  "Tier": "B",
+  "Role": "dps",
+  "Element": "azure",
+  "Notes": "[standard] Stealth; ToI A"
+ },
+ {
+  "Name": "Fenny",
+  "Tier": "B",
+  "Role": "dps",
+  "Element": "azure",
+  "Notes": "[standard] HP boost w/ UW"
+ },
+ {
+  "Name": "Cerberus",
+  "Tier": "B",
+  "Role": "dps",
+  "Element": "radiance",
+  "Notes": "[witch] witch; ToI A"
+ },
+ {
+  "Name": "Ophelia",
+  "Tier": "B",
+  "Role": "tank",
+  "Element": "chaos",
+  "Notes": "[witch] witch; ToI A"
+ },
+ {
+  "Name": "Veela",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[standard] ToI A"
+ },
+ {
+  "Name": "Lea",
+  "Tier": "B",
+  "Role": "dps",
+  "Element": "emerald",
+  "Notes": "[standard] ToI A"
+ },
+ {
+  "Name": "Priscilla",
+  "Tier": "B",
+  "Role": "healer",
+  "Element": "crimson",
+  "Notes": "[standard] S-tier healer, cleanse"
+ },
+ {
+  "Name": "Freesia",
+  "Tier": "B",
+  "Role": "healer",
+  "Element": "crimson",
+  "Notes": "[standard] standard healer (game8 S healer)"
+ },
+ {
+  "Name": "Fortina",
+  "Tier": "B",
+  "Role": "healer",
+  "Element": "radiance",
+  "Notes": "[witch] S-tier healer (witch)"
+ },
+ {
+  "Name": "Chiffon",
+  "Tier": "B",
+  "Role": "healer",
+  "Element": "crimson",
+  "Notes": "[standard] ATK buff + heal"
+ },
+ {
+  "Name": "Richesse",
+  "Tier": "B",
+  "Role": "tank",
+  "Element": "amber",
+  "Notes": "[standard] Silence, shields"
+ },
+ {
+  "Name": "A.A.",
+  "Tier": "B",
+  "Role": "dps",
+  "Element": "chaos",
+  "Notes": "[witch] witch"
+ },
+ {
+  "Name": "Valeriede",
+  "Tier": "B",
+  "Role": "tank",
+  "Element": "chaos",
+  "Notes": "[witch] witch"
+ },
+ {
+  "Name": "Nebra",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "chaos",
+  "Notes": "[witch] undispellable ATK buff (witch)"
+ },
+ {
+  "Name": "Ringmaster Cordie",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[limited] limited"
+ },
+ {
+  "Name": "Carmilla",
+  "Tier": "B",
+  "Role": "dps",
+  "Element": "chaos",
+  "Notes": "[standard] chaos sub-attacker"
+ },
+ {
+  "Name": "Evelyn",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[standard] 80% HP shield"
+ },
+ {
+  "Name": "Lily",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "radiance",
+  "Notes": "[standard] Faint top-3 ATK"
+ },
+ {
+  "Name": "Sophia",
+  "Tier": "B",
+  "Role": "tank",
+  "Element": "crimson",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Treasured Fenrir",
+  "Tier": "B",
+  "Role": "healer",
+  "Element": "amber",
+  "Notes": "[limited] limited"
+ },
+ {
+  "Name": "Sage Merlyn",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[limited] limited"
+ },
+ {
+  "Name": "Winter Stella",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "emerald",
+  "Notes": "[limited] limited"
+ },
+ {
+  "Name": "Liberia",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "radiance",
+  "Notes": "[witch] witch"
+ },
+ {
+  "Name": "Traces Fia",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[limited] Force Field (limited)"
+ },
+ {
+  "Name": "Cu Sith",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[standard] opening shield (new)"
+ },
+ {
+  "Name": "Shiloh",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[standard] new, unranked-ish"
+ },
+ {
+  "Name": "Golden Artoria",
+  "Tier": "B",
+  "Role": "support",
+  "Element": "emerald",
+  "Notes": "[limited] new, limited"
+ },
+ {
+  "Name": "Twilight Florence",
+  "Tier": "B",
+  "Role": "healer",
+  "Element": "emerald",
+  "Notes": "[limited] heals, CC cleanse (limited)"
+ },
+ {
+  "Name": "Illya",
+  "Tier": "C",
+  "Role": "dps",
+  "Element": "azure",
+  "Notes": "[R] R; early filler, level for Level Link"
+ },
+ {
+  "Name": "Olivia",
+  "Tier": "C",
+  "Role": "tank",
+  "Element": "amber",
+  "Notes": "[standard] standard tank"
+ },
+ {
+  "Name": "Tropon",
+  "Tier": "C",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Ivy",
+  "Tier": "C",
+  "Role": "dps",
+  "Element": "emerald",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Amour",
+  "Tier": "C",
+  "Role": "dps",
+  "Element": "crimson",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Sabrina",
+  "Tier": "C",
+  "Role": "tank",
+  "Element": "crimson",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Moddey",
+  "Tier": "C",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Gil'uial",
+  "Tier": "C",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Sonya",
+  "Tier": "C",
+  "Role": "dps",
+  "Element": "azure",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Carol",
+  "Tier": "C",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Alexandra",
+  "Tier": "C",
+  "Role": "tank",
+  "Element": "emerald",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Artoria",
+  "Tier": "C",
+  "Role": "support",
+  "Element": "crimson",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Spring Shizu",
+  "Tier": "C",
+  "Role": "dps",
+  "Element": "crimson",
+  "Notes": "[limited] limited"
+ },
+ {
+  "Name": "Lucille",
+  "Tier": "C",
+  "Role": "support",
+  "Element": "crimson",
+  "Notes": "[standard] mono-crimson only"
+ },
+ {
+  "Name": "Liebe",
+  "Tier": "C",
+  "Role": "support",
+  "Element": "crimson",
+  "Notes": "[standard] mono-crimson only"
+ },
+ {
+  "Name": "Ayse",
+  "Tier": "C",
+  "Role": "dps",
+  "Element": "crimson",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Lumica",
+  "Tier": "C",
+  "Role": "dps",
+  "Element": "radiance",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Tillie",
+  "Tier": "C",
+  "Role": "support",
+  "Element": "emerald",
+  "Notes": "[standard] CRIT RES, slow ramp"
+ },
+ {
+  "Name": "D.D.",
+  "Tier": "C",
+  "Role": "support",
+  "Element": "emerald",
+  "Notes": "[standard] CRIT RES, Faint"
+ },
+ {
+  "Name": "Mihri",
+  "Tier": "C",
+  "Role": "support",
+  "Element": "amber",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Eureka",
+  "Tier": "C",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Serruria",
+  "Tier": "C",
+  "Role": "dps",
+  "Element": "azure",
+  "Notes": "[standard]"
+ },
+ {
+  "Name": "Summer Primavera",
+  "Tier": "C",
+  "Role": "support",
+  "Element": "azure",
+  "Notes": "[limited] self-disrupting Imprison (limited)"
+ },
+ {
+  "Name": "Skuld",
+  "Tier": "C",
+  "Role": "healer",
+  "Element": "amber",
+  "Notes": "[R] R healer (game8 A healer); early filler"
+ },
+ {
+  "Name": "Monica",
+  "Tier": "C",
+  "Role": "healer",
+  "Element": "azure",
+  "Notes": "[N] N healer; early filler"
+ },
+ {
+  "Name": "Rosalie",
+  "Tier": "C",
+  "Role": "healer",
+  "Element": "emerald",
+  "Notes": "[R] R; early filler"
+ },
+ {
+  "Name": "Iris",
+  "Tier": "C",
+  "Role": "tank",
+  "Element": "azure",
+  "Notes": "[R] R; early filler"
+ },
+ {
+  "Name": "Zara",
+  "Tier": "C",
+  "Role": "tank",
+  "Element": "emerald",
+  "Notes": "[R] R; early filler"
+ },
+ {
+  "Name": "Charlotte",
+  "Tier": "C",
+  "Role": "tank",
+  "Element": "crimson",
+  "Notes": "[N] N; early filler"
+ }
+]
