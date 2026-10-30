@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Standalone builds (no Docker, no .NET install needed) -> release/*.zip / *.tar.gz
-# Usage: ./build-release.sh [win-x64 linux-x64 ...]
+# Usage: [VERSION=v1.2.3] ./build-release.sh [win-x64 linux-x64 ...]
 set -euo pipefail
 cd "$(dirname "$0")"
 DOTNET=${DOTNET:-$( [ -x ~/.dotnet/dotnet ] && echo ~/.dotnet/dotnet || echo dotnet )}
@@ -14,7 +14,7 @@ rm -rf release && mkdir release
 for rid in $RIDS; do
   out=release/MementoMori-$rid
   "$DOTNET" publish MementoMori.Api -c Release -r "$rid" --self-contained \
-    -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=none -o "$out"
+    -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=none ${VERSION:+-p:Version=${VERSION#v}} -o "$out"
   cp -r web/dist "$out/wwwroot"
 
   if [[ $rid == win-* ]]; then
