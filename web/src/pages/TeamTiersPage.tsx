@@ -205,12 +205,15 @@ export function TeamTiersPage() {
                                 <Button type="submit" disabled={!keyInput.trim()}>{t('AP_SAVE')}</Button>
                                 {keyStatus?.ownKey && <Button type="button" variant="ghost" onClick={() => saveKey('')}>{t('TM_KEY_REMOVE')}</Button>}
                             </div>
-                            <p className="text-xs text-muted-foreground">{t('TM_KEY_HINT')}</p>
+                            <p className="text-xs text-muted-foreground">
+                                {t('TM_KEY_HINT')}{' '}
+                                <a href="https://tamamo.dev" target="_blank" rel="noreferrer" className="underline hover:text-foreground">{t('TM_KEY_CHECK')}</a>
+                            </p>
                         </form>
                     )}
                     {keyStatus?.hasKey === false ? null : tamamo === undefined ? (
                         <div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
-                    ) : !tamamo || tamamo.teams.length === 0 ? (
+                    ) : !tamamo || (tamamo.teams.length === 0 && !tamamo.usage?.length) ? (
                         <p className="text-sm text-muted-foreground">{t('TM_NONE')}</p>
                     ) : (
                         <>

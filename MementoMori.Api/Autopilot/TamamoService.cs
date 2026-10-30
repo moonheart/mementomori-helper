@@ -84,9 +84,14 @@ public partial class TamamoService
             var searchId = (string) source["SearchId"]!;
             if (refresh || !_parties.TryGetValue(searchId, out var cached) || DateTime.Now - cached.at > PartyTtl)
             {
-                var list = (await GetAsync(key, $"getClearPartyList?id={Uri.EscapeDataString(searchId)}"))["result"]!.ToObject<List<ClearParty>>()!;
-                cached = (DateTime.Now, list);
-                _parties[searchId] = cached;
+                // tamamo 账号的 authtoken 目前不能调这个接口 (只有 API key 可以), 拿不到就只显示使用次数, 不缓存
+                try
+                {
+                    var list = (await GetAsync(key, $"getClearPartyList?id={Uri.EscapeDataString(searchId)}"))["result"]!.ToObject<List<ClearParty>>()!;
+                    cached = (DateTime.Now, list);
+                    _parties[searchId] = cached;
+                }
+                catch (HttpRequestException) { cached = (DateTime.Now, new()); }
             }
 
             var ownedIds = owned.Select(c => c.CharacterId).ToHashSet();
@@ -172,7 +177,9 @@ public partial class TamamoService
     private async Task<JToken> GetAsync(string key, string path)
     {
         using var req = new HttpRequestMessage(HttpMethod.Get, path);
+        // 填的可能是作者给的 API key, 也可能是 tamamo 账号的 authtoken (localStorage.tamamo_authtoken); 两个头都带, 哪个有效用哪个
         req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {key}");
+        req.Headers.TryAddWithoutValidation("X-Auth-Token", key);
         // 没有 User-Agent 会 400; 顺便让作者知道是谁在请求
         req.Headers.TryAddWithoutValidation("User-Agent", "MementoMori-Helper (+https://github.com/maplehugs/mementomori-helper)");
         using var resp = await Http.SendAsync(req);
