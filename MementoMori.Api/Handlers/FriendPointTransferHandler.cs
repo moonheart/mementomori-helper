@@ -14,24 +14,24 @@ public partial class FriendPointTransferHandler : IGameActionHandler
     private readonly ILogger<FriendPointTransferHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "批量转移友情点";
+    public string ActionName => Text.T("ActionFriendPointTransfer");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在批量转移友情点...");
+        await _jobLogger.LogAsync(userId, Text.T("FriendPointTransferring"));
 
         try
         {
             await nm.SendRequest<BulkTransferFriendPointRequest, BulkTransferFriendPointResponse>(
                 new BulkTransferFriendPointRequest());
-            await _jobLogger.LogAsync(userId, "友情点批量转移完成。");
+            await _jobLogger.LogAsync(userId, Text.T("FriendPointTransferDone"));
         }
         catch (Exception ex) when (ex.Message.Contains("AlreadyMaxReceived"))
         {
-            await _jobLogger.LogAsync(userId, "今日友情点已达上限。");
+            await _jobLogger.LogAsync(userId, Text.T("FriendPointLimitReached"));
         }
         catch (Exception ex)
         {

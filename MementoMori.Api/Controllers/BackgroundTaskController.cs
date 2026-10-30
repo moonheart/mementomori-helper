@@ -25,10 +25,10 @@ public partial class BackgroundTaskController : ControllerBase
 
         if (!started)
         {
-            return BadRequest(new { Message = "任务已在运行中" });
+            return BadRequest(new { Message = Text.T("ApiTaskAlreadyRunning") });
         }
 
-        return Ok(new { Message = "自动刷主线任务已启动" });
+        return Ok(new { Message = Text.T("ApiAutoBossTaskStarted") });
     }
 
     /// <summary>
@@ -41,10 +41,10 @@ public partial class BackgroundTaskController : ControllerBase
 
         if (!stopped)
         {
-            return BadRequest(new { Message = "没有正在运行的任务" });
+            return BadRequest(new { Message = Text.T("ApiNoRunningTask") });
         }
 
-        return Ok(new { Message = "自动刷主线任务已停止" });
+        return Ok(new { Message = Text.T("ApiAutoBossTaskStopped") });
     }
 
     /// <summary>
@@ -58,10 +58,10 @@ public partial class BackgroundTaskController : ControllerBase
 
         if (!started)
         {
-            return BadRequest(new { Message = "任务已在运行中" });
+            return BadRequest(new { Message = Text.T("ApiTaskAlreadyRunning") });
         }
 
-        return Ok(new { Message = $"自动爬塔任务已启动 (塔类型: {towerType})" });
+        return Ok(new { Message = Text.T("ApiAutoTowerTaskStarted", towerType) });
     }
 
     /// <summary>
@@ -74,10 +74,10 @@ public partial class BackgroundTaskController : ControllerBase
 
         if (!stopped)
         {
-            return BadRequest(new { Message = "没有正在运行的任务" });
+            return BadRequest(new { Message = Text.T("ApiNoRunningTask") });
         }
 
-        return Ok(new { Message = "自动爬塔任务已停止" });
+        return Ok(new { Message = Text.T("ApiAutoTowerTaskStopped") });
     }
 
     /// <summary>

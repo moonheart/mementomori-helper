@@ -71,7 +71,7 @@ public partial class MissionController : ControllerBase
                 return BadRequest(new ApiClaimMissionResponse
                 {
                     Success = false,
-                    Message = "任务ID列表不能为空"
+                    Message = Text.T("ApiMissionIdListEmpty")
                 });
             }
 

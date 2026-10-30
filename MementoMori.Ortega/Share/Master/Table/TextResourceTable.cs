@@ -58,6 +58,18 @@ public class TextResourceTable : ITable
         return GetMbName(_languageType);
     }
 
+    /// <summary>
+    /// 读某个语言的全部文本, 不改服务器自己用的语言 (以前前端拉语言包会把全局语言切过去)
+    /// </summary>
+    public Dictionary<string, string> ReadAll(LanguageType languageType)
+    {
+        if (languageType == LanguageType.None) languageType = LanguageType.zhTW;
+        using var fileStream = new FileStream($"./Master/{GetMbName(languageType)}", FileMode.Open, FileAccess.Read);
+        var result = new Dictionary<string, string>();
+        foreach (var textResource in Deserialize(languageType, fileStream)) result[textResource.StringKey] = textResource.Text;
+        return result;
+    }
+
     public void SetLanguageType(LanguageType languageType)
     {
         _languageType = languageType;

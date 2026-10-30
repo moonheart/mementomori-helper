@@ -99,6 +99,10 @@ namespace MementoMori.Ortega.Share.Enums
 		PlayVideo = 330,
 		[Description("レンタルレイド")]
 		RentalRaid = 340,
+		[Description("Webストアログインキャンペーン")]
+		WebStoreLoginCampaign = 350,
+		[Description("マイニングクエスト")]
+		MiningQuest = 360,
 		[Description("フレンド")]
 		Friend = 4
 	}

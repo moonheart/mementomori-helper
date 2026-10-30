@@ -57,6 +57,7 @@ public partial class AccountManager
                 // 为该账户创建独立的 NetworkManager 实例
                 var networkManager = _serviceProvider.GetRequiredService<NetworkManager>();
                 networkManager.UserId = id;
+                networkManager.SessionLost += () => UpdateLoginStatus(id, false);
 
                 // 恢复持久化的 AccessToken（若存在）
                 if (!string.IsNullOrWhiteSpace(entity.OrtegaAccessToken))

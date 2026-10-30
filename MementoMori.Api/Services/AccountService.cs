@@ -15,6 +15,7 @@ public partial class AccountService
     private readonly AccountCredentialService _credentialService;
     private readonly JobManagerService _jobManager;
     private readonly PlayerSettingService _settingService;
+    private readonly Autopilot.GrowthTracker _growthTracker;
 
     public List<AccountDto> GetAllAccounts()
     {
@@ -74,6 +75,30 @@ public partial class AccountService
         await _accountManager.DeleteAccountAsync(userId);
     }
 
+    public record WorldInfo(long WorldId, long PlayerId, string Name, long PlayerRank, long LastLoginTime, bool Current);
+
+    /// <summary>这个账号在每个世界的角色 (同一个引继码可以在多个世界各有一个角色)</summary>
+    public async Task<List<WorldInfo>> GetWorldsAsync(long userId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        var list = await context.NetworkManager.GetPlayerDataInfoListAsync(new MementoMori.Ortega.Share.Data.ApiInterface.Auth.LoginRequest
+        {
+            UserId = userId, ClientKey = context.AccountInfo.ClientKey
+        });
+        return (list ?? new()).OrderByDescending(p => p.PlayerRank)
+            .Select(p => new WorldInfo(p.WorldId, p.PlayerId, p.Name, p.PlayerRank, p.LastLoginTime, p.WorldId == context.AccountInfo.CurrentWorldId))
+            .ToList();
+    }
+
+    /// <summary>换到另一个世界的角色并重新登录 (之后自动登录也会留在这个世界)</summary>
+    public async Task<SimpleLoginResponse> SwitchWorldAsync(long userId, long worldId)
+    {
+        var context = await _accountManager.GetOrCreateAsync(userId);
+        _accountManager.UpdateLoginStatus(userId, false);
+        context.AccountInfo.CurrentWorldId = worldId; // LoginAsync 会优先选它, 登录成功后写进数据库
+        return await LoginAsync(userId, context.AccountInfo.ClientKey);
+    }
+
     public async Task<SimpleLoginResponse> LoginAsync(long userId, string clientKey)
     {
         try
@@ -102,7 +127,10 @@ public partial class AccountService
             }
 
             // 3. 选择最近登录的世界
-            var latestWorld = playerDataList.OrderByDescending(p => p.LastLoginTime).First();
+            // 留在上次用的世界; 没有就选等级最高的角色. 以前选 "最近登录" 的世界,
+            // 玩家在别的世界开个新号 (或用游戏客户端登录过) 就会被切到那个 2 级的新号上
+            var latestWorld = playerDataList.FirstOrDefault(p => p.WorldId == context.AccountInfo.CurrentWorldId)
+                              ?? playerDataList.OrderByDescending(p => p.PlayerRank).ThenByDescending(p => p.LastLoginTime).First();
             
             // 4. 执行真正登录流程（发送 LoginPlayerRequest，建立 Session）
             _logger.LogInformation("Attempting full login for user {UserId} on World {WorldId}", userId, latestWorld.WorldId);
@@ -123,6 +151,7 @@ public partial class AccountService
 
             // 6. 注册/刷新定时任务
             await _jobManager.RegisterJobsAsync(userId);
+            await _growthTracker.SnapshotAsync(userId, context.NetworkManager.UserSyncData);
             
             _logger.LogInformation("Login successful and Session established. WorldId: {WorldId}", latestWorld.WorldId);
             

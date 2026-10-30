@@ -15,14 +15,14 @@ public partial class AutoBattleRewardHandler : IGameActionHandler
     private readonly ILogger<AutoBattleRewardHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "领取自动战斗奖励";
+    public string ActionName => Text.T("ActionAutoBattleReward");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在领取自动战斗奖励...");
+        await _jobLogger.LogAsync(userId, Text.T("JobClaimingAutoBattleRewards"));
 
         try
         {
@@ -41,33 +41,32 @@ public partial class AutoBattleRewardHandler : IGameActionHandler
             var result = bonus.AutoBattleRewardResult;
             
             await _jobLogger.LogAsync(userId, 
-                $"自动战斗奖励领取完成 - 胜利: {result.BattleCountWin}, 失败: {result.BattleCountAll - result.BattleCountWin}, " +
-                $"总战斗时间: {TimeSpan.FromMilliseconds(result.BattleTotalTime)}");
+                Text.T("JobAutoBattleRewardSummary", result.BattleCountWin, result.BattleCountAll - result.BattleCountWin, TimeSpan.FromMilliseconds(result.BattleTotalTime)));
 
             // 记录收益
             if (result.GoldByPopulation > 0)
             {
-                await _jobLogger.LogAsync(userId, $"金币收益: {result.GoldByPopulation}");
+                await _jobLogger.LogAsync(userId, Text.T("JobGoldIncome", result.GoldByPopulation));
             }
             if (result.PotentialJewelByPopulation > 0)
             {
-                await _jobLogger.LogAsync(userId, $"潜能宝石收益: {result.PotentialJewelByPopulation}");
+                await _jobLogger.LogAsync(userId, Text.T("JobPotentialJewelIncome", result.PotentialJewelByPopulation));
             }
             if (result.BattleRewardResult?.FixedItemList?.Count > 0)
             {
                 var items = string.Join(", ", result.BattleRewardResult.FixedItemList.Select(i => $"{i.ItemType}:{i.ItemId} x{i.ItemCount}"));
-                await _jobLogger.LogAsync(userId, $"固定掉落: {items}");
+                await _jobLogger.LogAsync(userId, Text.T("JobFixedDrops", items));
             }
             if (result.BattleRewardResult?.DropItemList?.Count > 0)
             {
                 var items = string.Join(", ", result.BattleRewardResult.DropItemList.Select(i => $"{i.ItemType}:{i.ItemId} x{i.ItemCount}"));
-                await _jobLogger.LogAsync(userId, $"随机掉落: {items}");
+                await _jobLogger.LogAsync(userId, Text.T("JobRandomDrops", items));
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in AutoBattleRewardHandler for user {UserId}", userId);
-            await _jobLogger.LogAsync(userId, $"领取自动战斗奖励失败: {ex.Message}", "Error");
+            await _jobLogger.LogAsync(userId, Text.T("JobAutoBattleRewardFailed", ex.Message), "Error");
             throw;
         }
     }

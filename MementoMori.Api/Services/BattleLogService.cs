@@ -22,6 +22,8 @@ public class BattleLogService
         "battle/boss",
         "battle/pvpStart",
         "battle/legendLeagueStart",
+        "battle/getPvpBattleResultDetail",
+        "battle/getLegendLeagueResultDetail",
         "towerBattle/start",
         "dungeonBattle/execBattle",
         "guildRaid/startGuildRaid",
@@ -95,6 +97,8 @@ public class BattleLogService
                     break;
 
                 case "battle/legendleaguestart":
+                case "battle/getpvpbattleresultdetail":
+                case "battle/getlegendleagueresultdetail":
                     battleResult = GetPropertyValue<BattleResult>(response, "BattleResult");
                     break;
 
@@ -188,7 +192,8 @@ public class BattleLogService
             return 0;
         }
 
-        return (battleTime.EndBattle - battleTime.StartBattle) / 10000; // 转换为毫秒
+        // 两个都是毫秒时间戳; EndBattle 以前没 setter 读不到 (=0), 算出来是负数
+        return battleTime.EndBattle > battleTime.StartBattle ? battleTime.EndBattle - battleTime.StartBattle : 0;
     }
 
     /// <summary>

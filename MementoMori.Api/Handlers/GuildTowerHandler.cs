@@ -20,7 +20,7 @@ public partial class GuildTowerHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly PlayerSettingService _playerSettingService;
 
-    public string ActionName => "公会塔自动战斗";
+    public string ActionName => Text.T("ActionGuildTower");
 
     public async Task ExecuteAsync(AccountContext context)
     {
@@ -28,7 +28,7 @@ public partial class GuildTowerHandler : IGameActionHandler
         var nm = context.NetworkManager;
         var timeManager = context.TimeManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查公会塔...");
+        await _jobLogger.LogAsync(userId, Text.T("GuildTowerChecking"));
 
         try
         {
@@ -37,7 +37,7 @@ public partial class GuildTowerHandler : IGameActionHandler
             var guildTowerEventMb = Masters.GuildTowerEventTable.GetByInTime(timeManager.IsInTime);
             if (guildTowerEventMb == null)
             {
-                await _jobLogger.LogAsync(userId, "当前无公会塔活动。");
+                await _jobLogger.LogAsync(userId, Text.T("GuildTowerNoEvent"));
                 return;
             }
 
@@ -45,7 +45,7 @@ public partial class GuildTowerHandler : IGameActionHandler
             var guildId = await nm.SendRequest<GetGuildIdRequest, GetGuildIdResponse>(new GetGuildIdRequest());
             if (guildId.GuildId == 0)
             {
-                await _jobLogger.LogAsync(userId, "未加入公会，跳过公会塔。");
+                await _jobLogger.LogAsync(userId, Text.T("GuildTowerNotJoined"));
                 return;
             }
 
@@ -57,7 +57,7 @@ public partial class GuildTowerHandler : IGameActionHandler
             {
                 if (!guildTowerSettings.AutoEntry)
                 {
-                    await _jobLogger.LogAsync(userId, "公会塔自动报名未开启，跳过。");
+                    await _jobLogger.LogAsync(userId, Text.T("GuildTowerAutoEntryDisabled"));
                     return;
                 }
 
@@ -77,7 +77,7 @@ public partial class GuildTowerHandler : IGameActionHandler
                         IsContinueEntry = false
                     });
 
-                await _jobLogger.LogAsync(userId, "公会塔已报名。");
+                await _jobLogger.LogAsync(userId, Text.T("GuildTowerEntered"));
                 guildTowerInfo = await nm.SendRequest<GetGuildTowerInfoRequest, GetGuildTowerInfoResponse>(
                     new GetGuildTowerInfoRequest());
             }
@@ -158,7 +158,7 @@ public partial class GuildTowerHandler : IGameActionHandler
                         new GetGuildTowerInfoRequest());
                 }
 
-                await _jobLogger.LogAsync(userId, $"公会塔挑战完成，胜利 {winCount} 场。");
+                await _jobLogger.LogAsync(userId, Text.T("GuildTowerChallengeDone", winCount));
             }
 
             // 领取层奖励
@@ -180,11 +180,11 @@ public partial class GuildTowerHandler : IGameActionHandler
                 {
                     await nm.SendRequest<ReceiveFloorRewardRequest, ReceiveFloorRewardResponse>(
                         new ReceiveFloorRewardRequest { FloorRewardMBIdList = notRewardedIds });
-                    await _jobLogger.LogAsync(userId, $"公会塔层奖励已领取 {notRewardedIds.Count} 项。");
+                    await _jobLogger.LogAsync(userId, Text.T("GuildTowerFloorRewardsClaimed", notRewardedIds.Count));
                 }
             }
 
-            await _jobLogger.LogAsync(userId, "公会塔处理完毕。");
+            await _jobLogger.LogAsync(userId, Text.T("GuildTowerDone"));
         }
         catch (Exception ex)
         {

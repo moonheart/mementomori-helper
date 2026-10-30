@@ -14,7 +14,7 @@ public partial class BountyQuestRewardHandler : IGameActionHandler
     private readonly ILogger<BountyQuestRewardHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "领取悬赏任务奖励";
+    public string ActionName => Text.T("ActionBountyQuestReward");
 
     public async Task ExecuteAsync(AccountContext context)
     {
@@ -32,7 +32,7 @@ public partial class BountyQuestRewardHandler : IGameActionHandler
             return;
         }
 
-        await _jobLogger.LogAsync(userId, "开始领取悬赏任务奖励...");
+        await _jobLogger.LogAsync(userId, Text.T("BountyRewardStarting"));
 
         // 获取悬赏任务列表
         var getListResponse = await nm.SendRequest<GetListRequest, GetListResponse>(
@@ -49,32 +49,39 @@ public partial class BountyQuestRewardHandler : IGameActionHandler
 
         if (questIds.Count > 0)
         {
-            // 领取奖励
-            var rewardResponse = await nm.SendRequest<RewardRequest, RewardResponse>(
-                new RewardRequest 
-                { 
-                    BountyQuestIds = questIds, 
-                    ConsumeCurrency = 0, 
-                    IsQuick = false 
-                });
-
-            // 记录奖励
-            if (rewardResponse.RewardItems?.Count > 0)
+            // 一个一个领: 一次领多个 (Claim All) 要等级解锁, 没解锁会报 142019 (master #118 的修复)
+            foreach (var questId in questIds)
             {
-                foreach (var item in rewardResponse.RewardItems)
+                RewardResponse rewardResponse;
+                try
                 {
-                    await _jobLogger.LogAsync(userId, $"获得奖励: {item.ItemType} x{item.ItemCount}");
+                    rewardResponse = await nm.SendRequest<RewardRequest, RewardResponse>(
+                        new RewardRequest
+                        {
+                            BountyQuestIds = new List<long> { questId },
+                            ConsumeCurrency = 0,
+                            IsQuick = false
+                        });
                 }
+                catch (NetworkManager.ApiErrorException e) when (e.ErrorCode != ErrorCode.CommonNoSession && e.ErrorCode != ErrorCode.CommonLoggedInAnotherDevice)
+                {
+                    // 单个任务领不了 (BountyQuestInvalidRewardBountyQuest 等) 不影响其他的
+                    _logger.LogWarning("Bounty quest {QuestId} claim skipped: {Error}", questId, e.Message);
+                    continue;
+                }
+
+                foreach (var item in rewardResponse.RewardItems ?? new())
+                    await _jobLogger.LogAsync(userId, Text.T("BountyRewardItem", item.ItemType, item.ItemCount));
             }
 
             // 刷新任务列表
             await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest());
             
-            await _jobLogger.LogAsync(userId, $"已领取 {questIds.Count} 个悬赏任务的奖励");
+            await _jobLogger.LogAsync(userId, Text.T("BountyRewardsClaimed", questIds.Count));
         }
         else
         {
-            await _jobLogger.LogAsync(userId, "没有可领取的悬赏任务奖励");
+            await _jobLogger.LogAsync(userId, Text.T("BountyNoRewards"));
         }
 
         // 最后获取一次任务列表更新状态

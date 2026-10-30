@@ -14,6 +14,7 @@ public partial class JobsController : ControllerBase
 {
     private readonly JobManagerService _jobManager;
     private readonly PlayerSettingService _settingService;
+    private readonly GameActionService _gameActionService;
 
     /// <summary>
     /// 获取账户的所有任务状态
@@ -46,8 +47,38 @@ public partial class JobsController : ControllerBase
         // 刷新 Quartz 任务
         await _jobManager.RegisterJobsAsync(userId);
         
-        return Ok(new { Message = "配置已保存并刷新任务" });
+        return Ok(new { Message = Text.T("ApiJobConfigSaved") });
     }
+
+    public record PauseRequest(double? Hours);
+
+    [HttpGet("{userId}/pause")]
+    public Task<JobManagerService.PauseState> GetPause(long userId) => _jobManager.GetPauseAsync(userId);
+
+    /// <summary>暂停所有定时任务; hours 为空 = 一直暂停到手动恢复</summary>
+    [HttpPost("{userId}/pause")]
+    public async Task<ActionResult> Pause(long userId, [FromBody] PauseRequest request)
+    {
+        await _jobManager.SetPauseAsync(userId, new JobManagerService.PauseState
+        {
+            Paused = true, Until = request.Hours is > 0 ? DateTime.Now.AddHours(request.Hours.Value) : null
+        });
+        return Ok();
+    }
+
+    [HttpDelete("{userId}/pause")]
+    public async Task<ActionResult> Resume(long userId)
+    {
+        await _jobManager.SetPauseAsync(userId, new JobManagerService.PauseState());
+        return Ok();
+    }
+
+    /// <summary>
+    /// 立即执行一个动作 (例如 CharacterStoryReward), 等它跑完再返回
+    /// </summary>
+    [HttpPost("{userId}/action/{actionKey}")]
+    public async Task<ActionResult> RunAction(long userId, string actionKey) =>
+        await _gameActionService.ExecuteSingleActionAsync(userId, actionKey) ? Ok() : NotFound($"unknown action {actionKey}");
 
     /// <summary>
     /// 立即触发某个任务
@@ -61,6 +92,6 @@ public partial class JobsController : ControllerBase
         
         // 立即触发 Quartz 任务
         await _jobManager.TriggerJobAsync(userId, request.JobType);
-        return Ok(new { Message = $"任务 {request.JobType} 已手动触发" });
+        return Ok(new { Message = Text.T("ApiJobTriggered", request.JobType) });
     }
 }

@@ -26,7 +26,7 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
     private readonly JobLogger _jobLogger;
     private readonly IServiceProvider _serviceProvider;
 
-    public string ActionName => "自动时空洞窟";
+    public string ActionName => Text.T("ActionLocalRaid");
 
     public async Task ExecuteAsync(AccountContext context)
     {
@@ -64,12 +64,16 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
         var localRaidInfo = await nm.SendRequest<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
         var questId = GetQuestId(localRaidInfo, rewardItems);
 
-        await _jobLogger.LogAsync(userId, $"开始时空洞窟任务 (QuestId: {questId}, 自建房: {createRoom})...");
+        await _jobLogger.LogAsync(userId, Text.T("LocalRaidStarting", questId, createRoom));
 
         // 2. 连接 MagicOnion
-        var cts = new CancellationTokenSource(TimeSpan.FromMinutes(15)); // 总时长限制
+        var cts = new CancellationTokenSource(TimeSpan.FromMinutes(30)); // 总时长限制 (加入等 10 分钟 + 自己开房)
         var logAction = new Action<string>(async msg => await _jobLogger.LogAsync(userId, msg));
 
+        // 加入模式等不到房间时, 改成自己开房间单刷 (master #119); 单刷连输 3 次就停
+        for (var pass = 0; pass < 2; pass++)
+        {
+        var soloLosses = 0;
         OrtegaMagicOnionClient? client = null;
         try
         {
@@ -94,12 +98,12 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
 
                 if (createRoom)
                 {
-                    await _jobLogger.LogAsync(userId, "正在创建房间...");
+                    await _jobLogger.LogAsync(userId, Text.T("LocalRaidCreatingRoom"));
                     client.SendLocalRaidOpenRoom(LocalRaidRoomConditionsType.None, questId, 0, 0);
                 }
                 else
                 {
-                    await _jobLogger.LogAsync(userId, "正在寻找随机房间...");
+                    await _jobLogger.LogAsync(userId, Text.T("LocalRaidFindingRoom"));
                     client.SendLocalRaidJoinRandomRoom(questId);
                 }
 
@@ -109,13 +113,13 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
                     await Task.Delay(2000, cts.Token);
                     if (receiver.IsNoRemainingChallenges)
                     {
-                        await _jobLogger.LogAsync(userId, "挑战次数已用完。");
+                        await _jobLogger.LogAsync(userId, Text.T("LocalRaidNoAttempts"));
                         return;
                     }
                     if (receiver.IsMaxTimeExceeded)
                     {
-                        await _jobLogger.LogAsync(userId, "等待超时。");
-                        return;
+                        await _jobLogger.LogAsync(userId, Text.T("LocalRaidWaitTimeout"));
+                        goto PassDone;
                     }
 
                     if (receiver.IsBattleStarted)
@@ -125,7 +129,13 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
                         {
                             var battleResult = await nm.SendRequest<GetLocalRaidBattleResultRequest, GetLocalRaidBattleResultResponse>(new GetLocalRaidBattleResultRequest());
                             bool isWin = battleResult.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
-                            await _jobLogger.LogAsync(userId, isWin ? "战斗胜利！" : "战斗失败。");
+                            await _jobLogger.LogAsync(userId, isWin ? Text.T("LocalRaidVictory") : Text.T("LocalRaidDefeat"));
+                            soloLosses = isWin ? 0 : soloLosses + 1;
+                            if (createRoom && soloLosses >= 3)
+                            {
+                                await _jobLogger.LogAsync(userId, Text.T("LocalRaidSoloStop"));
+                                return;
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -138,12 +148,12 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
         }
         catch (OperationCanceledException)
         {
-            await _jobLogger.LogAsync(userId, "任务超时或被取消。");
+            await _jobLogger.LogAsync(userId, Text.T("LocalRaidTimeoutOrCancelled"));
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "LocalRaidHandler error for user {UserId}", userId);
-            await _jobLogger.LogAsync(userId, $"发生错误: {ex.Message}", "Error");
+            await _jobLogger.LogAsync(userId, Text.T("LocalRaidError", ex.Message), "Error");
         }
         finally
         {
@@ -152,6 +162,13 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
                 client.ClearLocalRaidReceiver();
                 await client.DisposeAsync();
             }
+        }
+
+        PassDone:
+        // 只有 "加入模式等超时" 才换成自己开房间再来一轮
+        if (createRoom || cts.IsCancellationRequested) return;
+        await _jobLogger.LogAsync(userId, Text.T("LocalRaidHostingOwnRoom"));
+        createRoom = true;
         }
     }
 
@@ -173,7 +190,7 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
 
         if (channel == null || string.IsNullOrEmpty(token))
         {
-            log("MagicOnion 通道未就绪，请确保已登录。");
+            log(Text.T("LocalRaidOnionNotReady"));
             return null;
         }
 
@@ -188,7 +205,7 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
 
         if (client.GetState() != HubClientState.Ready)
         {
-            log("无法连接到 MagicOnion 服务。");
+            log(Text.T("LocalRaidOnionConnectFailed"));
             await client.DisposeAsync();
             return null;
         }

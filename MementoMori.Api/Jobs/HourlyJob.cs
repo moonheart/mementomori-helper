@@ -25,5 +25,7 @@ public class HourlyJob : AccountJobBase
         // 每小时任务执行14个特定的轻量动作（原始 HourlyJob 的子集）
         // 不包括：VIP礼物、月卡、装备强化、BOSS战斗、无限塔、公会签到、好友管理、成就、地下城、角色升阶
         await _gameActionService.ExecuteHourlyActionAsync(accountContext.AccountInfo.UserId);
+        // 进度快照: Home 页面的 24h 变化和曲线靠它
+        await ServiceProvider.GetRequiredService<Autopilot.GrowthTracker>().SnapshotAsync(accountContext.AccountInfo.UserId, accountContext.NetworkManager.UserSyncData);
     }
 }

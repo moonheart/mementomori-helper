@@ -21,6 +21,7 @@
 		AddressableNetwork = 101,
 		AddressableStorage,
 		RawDataNetwork,
+		AddressableCacheCleaner,
 		MasterDataCatalog = 201,
 		MasterDataDownload,
 		MasterDataLoadFromLocal,
@@ -437,6 +438,8 @@
 		LuckyChanceInputFormPrefectureTextError,
 		LuckyChanceInputFormMunicipalityEmpty,
 		LuckyChanceInputFormBlockNumberEmpty,
+		LuckyChanceInputFormNotSelectedPrizeCharacter,
+		LuckyChancePrizeCharacterSettingNotSelected = 3000101,
 		BulkSphereSetMaxCustomCount = 3100001,
 		BulkSphereSetMaxCustomCountPerCharacter,
 		BulkSphereSetAlreadyTop,
@@ -480,6 +483,12 @@
 		RentalRaidChallengePeriodEnded,
 		RentalRaidMaxCoopCharactersExceeded,
 		DeepLinkTutorial = 40000001,
-		DeepLinkPurchaseState
+		DeepLinkPurchaseState,
+		MiningQuestLocked = 41000001,
+		MiningQuestReinforcementNotEnoughItem,
+		MiningQuestReinforcementMaxLevel,
+		MiningQuestReinforcementCollectionLevel,
+		MiningQuestRewardReceived,
+		MiningQuestGameStartBlocked
 	}
 }

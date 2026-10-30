@@ -93,18 +93,19 @@ public partial class MementoMoriFuncs
             {
                 if (pair.Value.UserMissionActivityDtoInfo == null) continue;
 
-                foreach (var (rewardId, statusType) in pair.Value.UserMissionActivityDtoInfo.RewardStatusDict)
-                {
-                    if (statusType == MissionActivityRewardStatusType.NotReceived)
-                    {
-                        var rewardMb = TotalActivityMedalRewardTable.GetById(rewardId);
-                        log(string.Format(ResourceStrings.RewardMissionMsg, pair.Key, rewardMb.RequiredActivityMedalCount));
-                        var response = await GetResponse<RewardMissionActivityRequest, RewardMissionActivityResponse>(new RewardMissionActivityRequest
-                            {MissionGroupType = pair.Key, RequiredCount = rewardMb.RequiredActivityMedalCount});
-                        response.RewardInfo.ItemList.PrintUserItems(log);
-                        response.RewardInfo.CharacterList.PrintCharacterDtos(log);
-                    }
-                }
+                // 客户端改为一次领取最高可领档位，并自动包含此前未领的较低档位
+                var maxRequiredCount = pair.Value.UserMissionActivityDtoInfo.RewardStatusDict
+                    .Where(d => d.Value == MissionActivityRewardStatusType.NotReceived)
+                    .Select(d => TotalActivityMedalRewardTable.GetById(d.Key).RequiredActivityMedalCount)
+                    .DefaultIfEmpty(0)
+                    .Max();
+                if (maxRequiredCount <= 0) continue;
+
+                log(string.Format(ResourceStrings.RewardMissionMsg, pair.Key, maxRequiredCount));
+                var response = await GetResponse<RewardMissionActivityRequest, RewardMissionActivityResponse>(new RewardMissionActivityRequest
+                    {MissionGroupType = pair.Key, RequiredCount = maxRequiredCount});
+                response.RewardInfo.ItemList.PrintUserItems(log);
+                response.RewardInfo.CharacterList.PrintCharacterDtos(log);
             }
         });
     }

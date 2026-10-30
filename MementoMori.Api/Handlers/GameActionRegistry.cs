@@ -67,7 +67,14 @@ public static class GameActionRegistry
         typeof(AutoUseItemsHandler),
         typeof(FreeGachaHandler),
         typeof(AutoUseItemsHandler),
-        typeof(CharacterRankUpHandler)
+        typeof(CharacterRankUpHandler),
+        // Freebies: 只领不花的奖励
+        typeof(Freebies.CharacterStoryRewardHandler),
+        typeof(Freebies.FriendMissionRewardHandler),
+        typeof(Freebies.PanelBingoRewardHandler),
+        typeof(Freebies.PopularityVoteRewardHandler),
+        typeof(Freebies.RentalRaidShareRewardHandler),
+        typeof(Freebies.EquipmentSynchroMissionHandler)
     }.Select(GetActionKey).ToList();
 
     /// <summary>

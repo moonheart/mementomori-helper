@@ -17,21 +17,21 @@ public partial class CharacterRankUpHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly PlayerSettingService _playerSettingService;
 
-    public string ActionName => "角色升阶";
+    public string ActionName => Text.T("ActionCharacterRankUp");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查角色升阶...");
+        await _jobLogger.LogAsync(userId, Text.T("JobCheckingRankUp"));
 
         try
         {
             var autoJobSettings = await _playerSettingService.GetAutoJobSettingsAsync(userId);
             if (!autoJobSettings.AutoRankUpCharacter)
             {
-                await _jobLogger.LogAsync(userId, "角色升阶未开启，跳过。");
+                await _jobLogger.LogAsync(userId, Text.T("JobRankUpDisabled"));
                 return;
             }
 
@@ -45,11 +45,11 @@ public partial class CharacterRankUpHandler : IGameActionHandler
 
             if (rankUpCount > 0)
             {
-                await _jobLogger.LogAsync(userId, $"角色升阶完成，共升阶 {rankUpCount} 个角色。");
+                await _jobLogger.LogAsync(userId, Text.T("JobRankUpDone", rankUpCount));
             }
             else
             {
-                await _jobLogger.LogAsync(userId, "暂无可升阶的角色。");
+                await _jobLogger.LogAsync(userId, Text.T("JobNoRankUp"));
             }
         }
         catch (Exception ex)

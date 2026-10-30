@@ -109,7 +109,7 @@ public partial class BackgroundTaskManager
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Auto boss challenge failed for user {UserId}", userId);
-                _ = _jobLogger.LogAsync(userId, $"任务失败: {ex.Message}");
+                _ = _jobLogger.LogAsync(userId, Text.T("JobTaskFailed", ex.Message));
             }
             finally
             {
@@ -172,7 +172,7 @@ public partial class BackgroundTaskManager
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Auto tower challenge failed for user {UserId}", userId);
-                _ = _jobLogger.LogAsync(userId, $"任务失败: {ex.Message}");
+                _ = _jobLogger.LogAsync(userId, Text.T("JobTaskFailed", ex.Message));
             }
             finally
             {
@@ -205,7 +205,7 @@ public partial class BackgroundTaskManager
         }
 
         session.CancellationTokenSource.Cancel();
-        _ = _jobLogger.LogAsync(userId, "任务已停止");
+        _ = _jobLogger.LogAsync(userId, Text.T("JobTaskStopped"));
 
         _logger.LogInformation("Stopped {TaskType} for user {UserId}", taskType, userId);
         return true;

@@ -19,16 +19,8 @@ namespace MementoMori.Api.Services
             {
                 _logger.LogInformation("Fetching resources for language: {Lang}", lang);
                 
-                // 设置语言
-                Masters.TextResourceTable.SetLanguageType(lang);
-                
-                // 加载资源
-                if (Masters.TextResourceTable.Load())
-                {
-                    return Masters.TextResourceTable.AllResources;
-                }
-                
-                return new Dictionary<string, string>();
+                // ponytail: 每次都读文件 (~30k 条, 前端有 hash 缓存), 慢了再按语言缓存
+                return Masters.TextResourceTable.ReadAll(lang);
             }
             catch (Exception ex)
             {

@@ -252,6 +252,7 @@ public partial class MementoMoriFuncs : ReactiveObject, IDisposable
         await AutoGuildTower();
         await AutoFriendManage();
         await ReceiveAchievementReward();
+        await ReadAllMemories();
         await BountyQuestRewardAuto();
         await BountyQuestStartAuto();
         if (GameConfig.AutoJob.AutoDungeonBattle) await AutoDungeonBattle();

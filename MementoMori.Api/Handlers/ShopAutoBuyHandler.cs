@@ -21,7 +21,7 @@ public partial class ShopAutoBuyHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly IServiceProvider _serviceProvider;
 
-    public string ActionName => "商店自动购买";
+    public string ActionName => Text.T("ActionShopAutoBuy");
 
     public async Task ExecuteAsync(AccountContext context)
     {
@@ -35,11 +35,11 @@ public partial class ShopAutoBuyHandler : IGameActionHandler
 
         if (shopConfig == null || shopConfig.AutoBuyItems.Count == 0)
         {
-            await _jobLogger.LogAsync(userId, "未配置商店自动购买项。");
+            await _jobLogger.LogAsync(userId, Text.T("ShopNoItemsConfigured"));
             return;
         }
 
-        await _jobLogger.LogAsync(userId, "正在检查商店物品...");
+        await _jobLogger.LogAsync(userId, Text.T("ShopChecking"));
 
         // 1. 获取常规商店列表
         var listResp = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest());
@@ -115,15 +115,15 @@ public partial class ShopAutoBuyHandler : IGameActionHandler
                     await nm.SendRequest<BuyItemRequest, BuyItemResponse>(buyReq);
                     
                     var itemName = ItemUtil.GetItemName(shopItem.GiveItem.ItemType, shopItem.GiveItem.ItemId);
-                    await _jobLogger.LogAsync(userId, $"成功购买: {itemName} x {shopItem.GiveItem.ItemCount}");
+                    await _jobLogger.LogAsync(userId, Text.T("ShopBought", itemName, shopItem.GiveItem.ItemCount));
                 }
                 catch (Exception ex)
                 {
-                    await _jobLogger.LogAsync(userId, $"购买失败 ({shopItem.TradeShopItemId}): {ex.Message}", "Error");
+                    await _jobLogger.LogAsync(userId, Text.T("ShopBuyFailed", shopItem.TradeShopItemId, ex.Message), "Error");
                 }
             }
         }
 
-        await _jobLogger.LogAsync(userId, "商店自动购买检查完毕。");
+        await _jobLogger.LogAsync(userId, Text.T("ShopDone"));
     }
 }

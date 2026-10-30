@@ -76,6 +76,8 @@ namespace MementoMori.Ortega.Share.Enums
 		Collab,
 		PopularityVote,
 		BookSort,
-		RentalRaid
+		RentalRaid,
+		[Description("マイニングクエスト")]
+		MiningQuest = 17
 	}
 }

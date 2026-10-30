@@ -14,14 +14,14 @@ public partial class GuildCheckinHandler : IGameActionHandler
     private readonly ILogger<GuildCheckinHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "公会签到";
+    public string ActionName => Text.T("ActionGuildCheckin");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在执行公会签到...");
+        await _jobLogger.LogAsync(userId, Text.T("GuildCheckingIn"));
 
         try
         {
@@ -29,14 +29,14 @@ public partial class GuildCheckinHandler : IGameActionHandler
 
             if (guildIdResponse.GuildId == 0)
             {
-                await _jobLogger.LogAsync(userId, "未加入公会，跳过签到。");
+                await _jobLogger.LogAsync(userId, Text.T("GuildNotJoinedSkipCheckin"));
                 return;
             }
 
             var guildInfoResponse = await nm.SendRequest<GetGuildBaseInfoRequest, GetGuildBaseInfoResponse>(
                 new GetGuildBaseInfoRequest { BelongGuildId = guildIdResponse.GuildId });
 
-            await _jobLogger.LogAsync(userId, $"公会签到完成，公会ID: {guildIdResponse.GuildId}。");
+            await _jobLogger.LogAsync(userId, Text.T("GuildCheckinDone", guildIdResponse.GuildId));
         }
         catch (Exception ex)
         {

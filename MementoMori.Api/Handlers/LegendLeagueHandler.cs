@@ -23,7 +23,7 @@ public partial class LegendLeagueHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly IServiceProvider _serviceProvider;
 
-    public string ActionName => "传奇竞技场自动对战";
+    public string ActionName => Text.T("ActionLegendLeague");
 
     public async Task ExecuteAsync(AccountContext context)
     {
@@ -41,7 +41,7 @@ public partial class LegendLeagueHandler : IGameActionHandler
             return;
         }
 
-        await _jobLogger.LogAsync(userId, "正在检查传奇竞技场...");
+        await _jobLogger.LogAsync(userId, Text.T("LegendChecking"));
 
         var characterDetailInfoDict = new Dictionary<long, List<(string? guid, CharacterDetailInfo? details)>>();
         int count = 10; // 限制单次任务最多打10次，防止死循环
@@ -56,7 +56,7 @@ public partial class LegendLeagueHandler : IGameActionHandler
                 if (!leagueInfoResp.IsInTimeCanChallenge)
                 {
                     _logger.LogInformation("Legend league is not open for user {UserId}.", userId);
-                    await _jobLogger.LogAsync(userId, "传奇竞技场当前未开放。");
+                    await _jobLogger.LogAsync(userId, Text.T("LegendNotOpen"));
                     return;
                 }
 
@@ -65,7 +65,7 @@ public partial class LegendLeagueHandler : IGameActionHandler
                     nm.UserSyncData.UserBattleLegendLeagueDtoInfo.LegendLeagueTodayCount >= 2) // OrtegaConst.BattlePvp.MaxLegendLeagueBattleFreeCount = 2
                 {
                     _logger.LogInformation("User {UserId} has no free challenge counts left.", userId);
-                    await _jobLogger.LogAsync(userId, "传奇竞技场今日免费次数已用完。");
+                    await _jobLogger.LogAsync(userId, Text.T("LegendFreeUsedUp"));
                     return;
                 }
 
@@ -85,7 +85,7 @@ public partial class LegendLeagueHandler : IGameActionHandler
                 if (targetPlayerId == 0)
                 {
                     _logger.LogInformation("No suitable target found for user {UserId} in Legend League.", userId);
-                    await _jobLogger.LogAsync(userId, "未找到符合筛选条件的对手，跳过对战。");
+                    await _jobLogger.LogAsync(userId, Text.T("LegendNoRival"));
                     break;
                 }
 
@@ -96,7 +96,7 @@ public partial class LegendLeagueHandler : IGameActionHandler
                 bool isWin = startResp.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                 string rivalName = startResp.RivalPlayerInfo?.PlayerName ?? "Unknown";
                 
-                await _jobLogger.LogAsync(userId, $"对战 {rivalName}: {(isWin ? "胜利" : "失败")} (获得积分: {startResp.GetPoint})");
+                await _jobLogger.LogAsync(userId, Text.T("LegendBattleResult", rivalName, (isWin ? Text.T("CommonVictory") : Text.T("CommonDefeat")), startResp.GetPoint));
                 
                 // 稍微延迟
                 await Task.Delay(Random.Shared.Next(1000, 3000));
@@ -104,7 +104,7 @@ public partial class LegendLeagueHandler : IGameActionHandler
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in LegendLeagueHandler for user {UserId}", userId);
-                await _jobLogger.LogAsync(userId, $"竞技场对战异常: {ex.Message}", "Error");
+                await _jobLogger.LogAsync(userId, Text.T("ArenaBattleError", ex.Message), "Error");
                 break;
             }
         }

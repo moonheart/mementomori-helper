@@ -16,14 +16,14 @@ public partial class EquipmentReinforcementHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly PlayerSettingService _playerSettingService;
 
-    public string ActionName => "装备强化";
+    public string ActionName => Text.T("ActionEquipmentReinforce");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查装备强化...");
+        await _jobLogger.LogAsync(userId, Text.T("JobCheckingEquipmentReinforce"));
 
         try
         {
@@ -37,11 +37,11 @@ public partial class EquipmentReinforcementHandler : IGameActionHandler
             {
                 var response = await nm.SendRequest<ReinforcementRequest, ReinforcementResponse>(
                     new ReinforcementRequest { EquipmentGuid = equipmentDtoInfo.Guid, NumberOfTimes = 1 });
-                await _jobLogger.LogAsync(userId, "装备强化完成。");
+                await _jobLogger.LogAsync(userId, Text.T("JobEquipmentReinforceDone"));
             }
             else
             {
-                await _jobLogger.LogAsync(userId, "暂无可强化的装备。");
+                await _jobLogger.LogAsync(userId, Text.T("JobNoEquipmentToReinforce"));
             }
         }
         catch (Exception ex)

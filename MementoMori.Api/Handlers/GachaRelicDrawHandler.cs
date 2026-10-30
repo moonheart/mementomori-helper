@@ -19,7 +19,7 @@ public partial class GachaRelicDrawHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly IServiceProvider _serviceProvider;
 
-    public string ActionName => "自动抽取圣装";
+    public string ActionName => Text.T("ActionGachaRelicDraw");
 
     public async Task ExecuteAsync(AccountContext context)
     {
@@ -78,7 +78,7 @@ public partial class GachaRelicDrawHandler : IGameActionHandler
             if (currentCurrency < 300)
             {
                 _logger.LogInformation("User {UserId} has insufficient diamonds ({Current}/300).", userId, currentCurrency);
-                await _jobLogger.LogAsync(userId, "钻石不足，停止自动抽取圣装。");
+                await _jobLogger.LogAsync(userId, Text.T("GachaRelicNoDiamonds"));
                 break;
             }
 
@@ -91,14 +91,14 @@ public partial class GachaRelicDrawHandler : IGameActionHandler
                 // 更新进度信息（从响应中获取最新的卡池信息）
                 gachaCaseInfo = drawResp.GachaCaseInfoList?.FirstOrDefault(d => d.GachaGroupType == GachaGroupType.HolyAngel) ?? gachaCaseInfo;
 
-                await _jobLogger.LogAsync(userId, $"成功抽取圣天使卡池一次。当前保底进度: {gachaCaseInfo.GachaBonusDrawCount}/10");
+                await _jobLogger.LogAsync(userId, Text.T("GachaRelicDrawn", gachaCaseInfo.GachaBonusDrawCount));
                 _logger.LogInformation("Successfully drew gacha for user {UserId}, count: {Count}, new progress: {Progress}", 
                     userId, drawCount, gachaCaseInfo.GachaBonusDrawCount);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to draw gacha for user {UserId}", userId);
-                await _jobLogger.LogAsync(userId, $"抽取圣装失败: {ex.Message}", "Error");
+                await _jobLogger.LogAsync(userId, Text.T("GachaRelicDrawFailed", ex.Message), "Error");
                 break;
             }
         }

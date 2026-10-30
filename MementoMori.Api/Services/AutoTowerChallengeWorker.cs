@@ -50,35 +50,35 @@ public class AutoTowerChallengeWorker
 
         var towerTypeName = towerType switch
         {
-            TowerType.Infinite => "无限塔",
-            TowerType.Blue => "水塔",
-            TowerType.Red => "火塔",
-            TowerType.Green => "风塔",
-            TowerType.Yellow => "地塔",
-            _ => "未知塔"
+            TowerType.Infinite => Text.T("TowerNameInfinite"),
+            TowerType.Blue => Text.T("TowerNameBlue"),
+            TowerType.Red => Text.T("TowerNameRed"),
+            TowerType.Green => Text.T("TowerNameGreen"),
+            TowerType.Yellow => Text.T("TowerNameYellow"),
+            _ => Text.T("TowerNameUnknown")
         };
 
-        log($"开始自动爬{towerTypeName}...");
+        log(Text.T("TowerAutoStarting", towerTypeName));
 
         try
         {
             // 先同步用户数据
-            log("正在同步用户数据...");
+            log(Text.T("JobSyncingUserData"));
             try
             {
                 await nm.SendRequest<GetUserDataRequest, GetUserDataResponse>(new GetUserDataRequest());
-                log("用户数据同步完成");
+                log(Text.T("JobUserDataSynced"));
             }
             catch (Exception ex)
             {
-                log($"同步用户数据失败: {ex.Message}");
+                log(Text.T("JobUserDataSyncFailed", ex.Message));
                 return;
             }
 
             // 检查塔是否开放
             if (towerType != TowerType.Infinite && !IsTowerAvailable(towerType, context))
             {
-                log($"{towerTypeName}今日未开放");
+                log(Text.T("TowerNotOpenToday", towerTypeName));
                 return;
             }
 
@@ -90,7 +90,7 @@ public class AutoTowerChallengeWorker
                     var towerBattleDtoInfos = nm.UserSyncData?.UserTowerBattleDtoInfos;
                     if (towerBattleDtoInfos == null || !towerBattleDtoInfos.Any())
                     {
-                        log("塔数据不可用，请先同步用户数据");
+                        log(Text.T("TowerNoData"));
                         break;
                     }
 
@@ -98,7 +98,7 @@ public class AutoTowerChallengeWorker
 
                     if (towerBattleDtoInfo == null)
                     {
-                        log($"未找到{towerTypeName}的数据");
+                        log(Text.T("TowerDataNotFound", towerTypeName));
                         break;
                     }
 
@@ -107,7 +107,7 @@ public class AutoTowerChallengeWorker
                     {
                         if (towerBattleDtoInfo.TodayClearNewFloorCount >= ElementalTowerDailyLimit)
                         {
-                            log($"{towerTypeName}今日已通关{towerBattleDtoInfo.TodayClearNewFloorCount}层，达到每日上限");
+                            log(Text.T("TowerDailyLimitReached", towerTypeName, towerBattleDtoInfo.TodayClearNewFloorCount));
                             break;
                         }
                     }
@@ -118,7 +118,7 @@ public class AutoTowerChallengeWorker
                     // 检查是否达到目标
                     if (targetFloor.HasValue && nextFloor > targetFloor.Value)
                     {
-                        log($"已达到目标层数 {targetFloor.Value}，停止挑战");
+                        log(Text.T("TowerReachedTargetFloor", targetFloor.Value));
                         break;
                     }
 
@@ -144,24 +144,24 @@ public class AutoTowerChallengeWorker
                     {
                         winCount++;
                         progress.WinCount = winCount;
-                        log($"第 {nextFloor} 层: 胜利 (总{totalCount}次, 胜{winCount}次, 错{errCount}次)");
+                        log(Text.T("TowerFloorVictory", nextFloor, totalCount, winCount, errCount));
 
                         // 达到目标层数才停止
                         if (targetFloor.HasValue && nextFloor >= targetFloor.Value)
                         {
-                            log($"已达到目标层数 {targetFloor.Value}，停止挑战");
+                            log(Text.T("TowerReachedTargetFloor", targetFloor.Value));
                             break;
                         }
                     }
                     else
                     {
-                        log($"第 {nextFloor} 层: 失败 (总{totalCount}次, 胜{winCount}次, 错{errCount}次)");
+                        log(Text.T("TowerFloorDefeat", nextFloor, totalCount, winCount, errCount));
                         // 失败不停止，继续挑战
                     }
                 }
                 catch (OperationCanceledException)
                 {
-                    log("任务已取消");
+                    log(Text.T("JobTaskCancelled"));
                     break;
                 }
                 catch (Exception ex)
@@ -170,11 +170,11 @@ public class AutoTowerChallengeWorker
                     progress.TotalCount = totalCount;
                     progress.WinCount = winCount;
                     progress.ErrorCount = errCount;
-                    log($"挑战出错: {ex.Message}");
+                    log(Text.T("JobChallengeError", ex.Message));
 
                     if (errCount > MaxErrorCount)
                     {
-                        log($"错误次数超过{MaxErrorCount}次，停止挑战");
+                        log(Text.T("JobTooManyErrorsStopping", MaxErrorCount));
                         break;
                     }
 
@@ -184,7 +184,7 @@ public class AutoTowerChallengeWorker
                         // 检查是否是挑战次数不足
                         if (apiEx.ErrorCode == ErrorCode.TowerBattleNotEnoughChallengeCount)
                         {
-                            log("挑战次数不足");
+                            log(Text.T("TowerNotEnoughAttempts"));
                             break;
                         }
 
@@ -193,12 +193,12 @@ public class AutoTowerChallengeWorker
                 }
             }
 
-            log($"自动爬{towerTypeName}结束 - 总计{totalCount}次，胜利{winCount}次");
+            log(Text.T("TowerAutoSummary", towerTypeName, totalCount, winCount));
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in AutoTowerChallengeWorker for user {UserId}", userId);
-            log($"自动爬塔失败: {ex.Message}");
+            log(Text.T("TowerAutoFailed", ex.Message));
             throw;
         }
     }

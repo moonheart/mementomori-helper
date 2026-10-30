@@ -20,7 +20,7 @@
     "enumValueNameConverters": [],
     "externalAssemblyPaths": [],
     "createIndexFile": false,
-    "outputPath": "../../src/api/generated",
+    "outputPath": "../web/src/api/generated",
     "customTypeMappings": {
         "System.Guid": "string",
         "System.DateTime": "Date",

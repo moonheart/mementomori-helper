@@ -65,7 +65,7 @@ public partial class BountyQuestController : ControllerBase
             
             if (targetQuests.Count == 0)
             {
-                return Ok(new { successCount = 0, message = "没有待派遣的任务" });
+                return Ok(new { successCount = 0, message = Text.T("BountyNoPendingQuests") });
             }
 
             // 4. 调用计算逻辑

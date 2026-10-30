@@ -20,7 +20,7 @@ public partial class GuildRaidOpenHandler : IGameActionHandler
     private readonly JobLogger _jobLogger;
     private readonly IServiceProvider _serviceProvider;
 
-    public string ActionName => "自动开启公会副本";
+    public string ActionName => Text.T("ActionGuildRaidOpen");
 
     public async Task ExecuteAsync(AccountContext context)
     {
@@ -88,13 +88,13 @@ public partial class GuildRaidOpenHandler : IGameActionHandler
                     GuildRaidBossType = GuildRaidBossType.Releasable 
                 });
 
-            await _jobLogger.LogAsync(userId, "成功开启公会副本 (消耗公会点数)。");
+            await _jobLogger.LogAsync(userId, Text.T("GuildRaidOpened"));
             _logger.LogInformation("Successfully opened guild raid for user {UserId}, GuildId: {GuildId}", userId, guildIdResp.GuildId);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to open guild raid for user {UserId}", userId);
-            await _jobLogger.LogAsync(userId, $"开启公会副本失败: {ex.Message}", "Error");
+            await _jobLogger.LogAsync(userId, Text.T("GuildRaidOpenFailed", ex.Message), "Error");
         }
     }
 }

@@ -1,5 +1,6 @@
 name: Publish dev Build
 
+# master -> "dev" 预发布; v*.*.* 标签 -> 正式 release (zip + docker)
 on:
   push:
     branches:
@@ -8,139 +9,70 @@ on:
       - "v*.*.*"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   publish:
-    strategy:
-      matrix:
-        rid: [ win-x64, linux-x64, linux-arm64, linux-arm, osx-x64, osx-arm64 ]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
         with:
-          submodules: true
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+          global-json-file: global.json
+      - uses: actions/setup-node@v4
         with:
-          dotnet-version: 9.0.x
-#      - name: Restore dependencies
-#        run: dotnet restore
-      - name: Set Version in csproj
-        # replace <Version>0.0.0</Version> with <Version>tag</Version>, where tag is the tag name, tag should trim start "v"
-        run: sed -i "s/<Version>.*<\/Version>/<Version>$(echo ${{github.ref_name}} | sed 's@v@@g')<\/Version>/g" ./MementoMori.WebUI/MementoMori.WebUI.csproj
-        if: startsWith(github.ref, 'refs/tags/')
-      - name: Publish ${{matrix.rid}}
-        run: dotnet workload restore && dotnet publish ./MementoMori.WebUI/MementoMori.WebUI.csproj -f net9.0 -c Release -r ${{matrix.rid}} -o publish-${{matrix.rid}} --sc -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true
-      - name: Archive Release ${{matrix.rid}}
-        uses: thedoctor0/zip-release@0.7.1
-        with:
-          type: 'zip'
-          filename: 'publish-${{matrix.rid}}.zip'
-          path: './publish-${{matrix.rid}}/'
+          node-version: 22
+      # 前端打包 + 各平台单文件自包含版本 + start 脚本, 和本地发版用同一个脚本
+      - name: Build
+        run: ./build-release.sh win-x64 linux-x64 linux-arm64 linux-arm osx-x64 osx-arm64
+        env:
+          VERSION: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
       - name: Create Dev Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/master'
         with:
           files: |
-            ./publish-${{matrix.rid}}.zip
+            release/*.zip
+            release/*.tar.gz
           tag_name: dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: true
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            ./publish-${{matrix.rid}}.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+            release/*.zip
+            release/*.tar.gz
+
   publish-docker:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
-          # list of Docker images to use as base name for tags
           images: |
-            moonheartmoon/mementomori-webui         
-          # generate Docker tags based on the following events/attributes
+            moonheartmoon/mementomori-webui
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}} 
-            type=sha          
+            type=semver,pattern={{major}}
+            type=raw,value=dev,enable=${{ github.ref == 'refs/heads/master' }}
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Set Version in csproj
-        # replace <Version>0.0.0</Version> with <Version>tag</Version>, where tag is the tag name, tag should trim start "v"
-        run: sed -i "s/<Version>.*<\/Version>/<Version>$(echo ${{github.ref_name}} | sed 's@v@@g')<\/Version>/g" ./MementoMori.WebUI/MementoMori.WebUI.csproj
-        if: startsWith(github.ref, 'refs/tags/')
       - name: Build and push
-        uses: docker/build-push-action@v5
-        if: startsWith(github.ref, 'refs/tags/')
+        uses: docker/build-push-action@v6
         with:
-          push: true
+          push: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/') }}
           tags: ${{ steps.meta.outputs.tags }}
-          context: .
-          platforms: linux/amd64,linux/arm64
-          file: ./MementoMori.WebUI/Dockerfile
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        if: startsWith(github.ref, 'refs/heads/master')
-        with:
-          push: true
-          tags: moonheartmoon/mementomori-webui:dev
           context: .
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
-          file: ./MementoMori.WebUI/Dockerfile
-
-  publish-maui-android:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 9.0.x
-      - name: Install MAUI workload
-        run: dotnet workload install maui
-      - name: Write keystore
-        run: |
-          $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.KEYSTORE_BASE64_ENCODED }}")
-          [IO.File]::WriteAllBytes("MementoMori.Maui/mementomori-helper.keystore", $pfx_cert_byte)
-      - name: Build Android
-        run: dotnet publish .\MementoMori.Maui\MementoMori.Maui.csproj -c Release -f net9.0-android -p:AndroidSigningStorePass=env:KEYSTORE_PASSWORD -p:AndroidSigningKeyPass=env:KEYSTORE_PASSWORD -p:ApplicationDisplayVersion=$((echo ${{github.ref_name}}) -replace 'v') -p:ApplicationVersion=${{github.run_number}} -o publish-android
-        env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-      - name: Create Dev Release
-        uses: softprops/action-gh-release@v1
-        if: github.ref == 'refs/heads/master'
-        with:
-          files: |
-            ./publish-android/io.github.moonheart.mementomorihelper-Signed.apk
-          tag_name: dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            ./publish-android/io.github.moonheart.mementomorihelper-Signed.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+          file: ./MementoMori.Api/Dockerfile
+          platforms: linux/amd64,linux/arm64

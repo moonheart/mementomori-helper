@@ -85,7 +85,25 @@ namespace MementoMori.Ortega.Share.Enums
 		GuildBattleDeclaration,
 		[Description("グランドバトル布告")]
 		GrandBattleDeclaration,
+		[Description("Webストア")]
+		WebStore,
         [Description("お手伝い派遣")]
-        BookSortAssistance = 41
+        BookSortAssistance = 41,
+		[Description("Webストア(クレジットカード)")]
+		WebStoreCreditCard,
+		[Description("Webストア(Apple Pay)")]
+		WebStoreApplePay,
+		[Description("Webストア(Google Pay)")]
+		WebStoreGooglePay,
+		[Description("Webストア(Amazon Pay)")]
+		WebStoreAmazonPay,
+		[Description("Webストア(PayPay)")]
+		WebStorePayPay,
+		[Description("Webストア(d払い)")]
+		WebStoreDPay,
+		[Description("Webストア(au PAY)")]
+		WebStoreAuPay,
+		[Description("Webストア(ソフトバンクまとめて支払い)")]
+		WebStoreSoftBankPay
 	}
 }

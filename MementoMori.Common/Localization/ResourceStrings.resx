@@ -587,4 +587,817 @@
   <data name="Confirm" xml:space="preserve">
       <value>Confirm</value>
   </data>
+  <data name="ActionAchievementReward" xml:space="preserve">
+      <value>Claim achievement rewards</value>
+  </data>
+  <data name="ActionArenaPvp" xml:space="preserve">
+      <value>Arena auto-battle</value>
+  </data>
+  <data name="ActionAutoBattleReward" xml:space="preserve">
+      <value>Claim auto-battle rewards</value>
+  </data>
+  <data name="ActionAutoBossChallenge" xml:space="preserve">
+      <value>Auto boss challenge</value>
+  </data>
+  <data name="ActionAutoUseItems" xml:space="preserve">
+      <value>Auto-use items</value>
+  </data>
+  <data name="ActionBookSortAuto" xml:space="preserve">
+      <value>Library Cleanup auto-sweep</value>
+  </data>
+  <data name="ActionBossHighSpeedBattle" xml:space="preserve">
+      <value>Boss high-speed battle</value>
+  </data>
+  <data name="ActionBossQuickBattle" xml:space="preserve">
+      <value>Boss quick battle</value>
+  </data>
+  <data name="ActionBountyQuestDispatch" xml:space="preserve">
+      <value>Bounty quest auto-dispatch</value>
+  </data>
+  <data name="ActionBountyQuestReward" xml:space="preserve">
+      <value>Claim bounty quest rewards</value>
+  </data>
+  <data name="ActionCharacterRankUp" xml:space="preserve">
+      <value>Character rank-up</value>
+  </data>
+  <data name="ActionDailyLoginBonus" xml:space="preserve">
+      <value>Claim login bonus</value>
+  </data>
+  <data name="ActionDungeonBattle" xml:space="preserve">
+      <value>Dungeon battle</value>
+  </data>
+  <data name="ActionEquipmentReinforce" xml:space="preserve">
+      <value>Equipment reinforcement</value>
+  </data>
+  <data name="ActionFreeGacha" xml:space="preserve">
+      <value>Free gacha</value>
+  </data>
+  <data name="ActionFriendManage" xml:space="preserve">
+      <value>Friend management</value>
+  </data>
+  <data name="ActionFriendPointTransfer" xml:space="preserve">
+      <value>Bulk send friend points</value>
+  </data>
+  <data name="ActionGachaRelicChange" xml:space="preserve">
+      <value>Auto-change relic</value>
+  </data>
+  <data name="ActionGachaRelicDraw" xml:space="preserve">
+      <value>Auto-draw relic</value>
+  </data>
+  <data name="ActionGuildCheckin" xml:space="preserve">
+      <value>Guild check-in</value>
+  </data>
+  <data name="ActionGuildRaidBattle" xml:space="preserve">
+      <value>Guild raid auto-battle</value>
+  </data>
+  <data name="ActionGuildRaidOpen" xml:space="preserve">
+      <value>Auto-open guild raid</value>
+  </data>
+  <data name="ActionGuildTower" xml:space="preserve">
+      <value>Guild tower auto-battle</value>
+  </data>
+  <data name="ActionGvgReward" xml:space="preserve">
+      <value>Claim GvG rewards</value>
+  </data>
+  <data name="ActionInfiniteTower" xml:space="preserve">
+      <value>Tower of Infinity quick battle</value>
+  </data>
+  <data name="ActionLegendLeague" xml:space="preserve">
+      <value>Legend League auto-battle</value>
+  </data>
+  <data name="ActionLocalRaid" xml:space="preserve">
+      <value>Auto Temporal Cave</value>
+  </data>
+  <data name="ActionMissionReward" xml:space="preserve">
+      <value>Claim mission rewards</value>
+  </data>
+  <data name="ActionMonthlyBoost" xml:space="preserve">
+      <value>Claim monthly pass rewards</value>
+  </data>
+  <data name="ActionPresentReceive" xml:space="preserve">
+      <value>Claim gift box</value>
+  </data>
+  <data name="ActionShopAutoBuy" xml:space="preserve">
+      <value>Shop auto-buy</value>
+  </data>
+  <data name="ActionVipDailyGift" xml:space="preserve">
+      <value>Claim VIP daily gift</value>
+  </data>
+  <data name="ApiAutoBossTaskStarted" xml:space="preserve">
+      <value>Auto main-quest task started</value>
+  </data>
+  <data name="ApiAutoBossTaskStopped" xml:space="preserve">
+      <value>Auto main-quest task stopped</value>
+  </data>
+  <data name="ApiAutoTowerTaskStarted" xml:space="preserve">
+      <value>Auto tower climb task started (tower type: {0})</value>
+  </data>
+  <data name="ApiAutoTowerTaskStopped" xml:space="preserve">
+      <value>Auto tower climb task stopped</value>
+  </data>
+  <data name="ApiJobConfigSaved" xml:space="preserve">
+      <value>Settings saved and jobs refreshed</value>
+  </data>
+  <data name="ApiJobNotRegistered" xml:space="preserve">
+      <value>Job {0} is not registered or is disabled</value>
+  </data>
+  <data name="ApiJobTriggered" xml:space="preserve">
+      <value>Job {0} triggered manually</value>
+  </data>
+  <data name="ApiMissionIdListEmpty" xml:space="preserve">
+      <value>Mission ID list must not be empty</value>
+  </data>
+  <data name="ApiNoRunningTask" xml:space="preserve">
+      <value>No task is running</value>
+  </data>
+  <data name="ApiTaskAlreadyRunning" xml:space="preserve">
+      <value>A task is already running</value>
+  </data>
+  <data name="ArenaBattleError" xml:space="preserve">
+      <value>Arena battle error: {0}</value>
+  </data>
+  <data name="ArenaBattleResult" xml:space="preserve">
+      <value>Vs {0} (rank {1}): {2}</value>
+  </data>
+  <data name="ArenaChecking" xml:space="preserve">
+      <value>Checking arena attempts...</value>
+  </data>
+  <data name="ArenaFreeUsedUp" xml:space="preserve">
+      <value>Today's free arena attempts are used up.</value>
+  </data>
+  <data name="ArenaNoRival" xml:space="preserve">
+      <value>No arena rival matches the filters.</value>
+  </data>
+  <data name="BookSortFetchFailed" xml:space="preserve">
+      <value>Failed to fetch Library Cleanup data.</value>
+  </data>
+  <data name="BookSortFinished" xml:space="preserve">
+      <value>Library Cleanup auto-sweep finished.</value>
+  </data>
+  <data name="BookSortFloorCleared" xml:space="preserve">
+      <value>Floor {0} fully cleared, moving to next floor...</value>
+  </data>
+  <data name="BookSortKeyAndRewardFound" xml:space="preserve">
+      <value>Floor {0}: key and locked reward found, moving to next floor...</value>
+  </data>
+  <data name="BookSortMissionRewardsClaimed" xml:space="preserve">
+      <value>Claimed {0} Library Cleanup mission rewards.</value>
+  </data>
+  <data name="BookSortNotActive" xml:space="preserve">
+      <value>Library Cleanup event is not active, skipping auto-sweep.</value>
+  </data>
+  <data name="BookSortNothingLeft" xml:space="preserve">
+      <value>No sweeping items left and no mission rewards to claim, auto-sweep finished.</value>
+  </data>
+  <data name="BookSortRewardFloor" xml:space="preserve">
+      <value>Reached reward floor (floor {0}), auto-selected reward index: {1}</value>
+  </data>
+  <data name="BookSortStarting" xml:space="preserve">
+      <value>Starting Library Cleanup auto-sweep...</value>
+  </data>
+  <data name="BookSortUseBigItem" xml:space="preserve">
+      <value>Using big item (ID:{0}) on cell {1}, expected to clear {2} cells</value>
+  </data>
+  <data name="BookSortUseDuster" xml:space="preserve">
+      <value>Batch-sweeping with regular dusters...</value>
+  </data>
+  <data name="BossAutoError" xml:space="preserve">
+      <value>Boss challenge error: {0}</value>
+  </data>
+  <data name="BossAutoFailed" xml:space="preserve">
+      <value>Auto boss challenge failed: {0}</value>
+  </data>
+  <data name="BossAutoLostStopping" xml:space="preserve">
+      <value>Boss challenge lost, stopping auto challenge</value>
+  </data>
+  <data name="BossAutoStageResult" xml:space="preserve">
+      <value>Boss stage {0}: {1} (total {2}, wins {3}, errors {4})</value>
+  </data>
+  <data name="BossAutoStarting" xml:space="preserve">
+      <value>Starting auto boss challenge...</value>
+  </data>
+  <data name="BossAutoSummary" xml:space="preserve">
+      <value>Auto boss challenge finished - total {0}, wins {1}</value>
+  </data>
+  <data name="BossAutoTooManyErrors" xml:space="preserve">
+      <value>More than {0} errors, stopping auto challenge</value>
+  </data>
+  <data name="BossDropItems" xml:space="preserve">
+      <value>Dropped items: {0}</value>
+  </data>
+  <data name="BossDropRewards" xml:space="preserve">
+      <value>  Dropped rewards: {0}</value>
+  </data>
+  <data name="BossFixedItems" xml:space="preserve">
+      <value>Fixed items: {0}</value>
+  </data>
+  <data name="BossFixedRewards" xml:space="preserve">
+      <value>  Fixed rewards: {0}</value>
+  </data>
+  <data name="BossHighSpeedFailed" xml:space="preserve">
+      <value>Boss high-speed battle failed: {0}</value>
+  </data>
+  <data name="BossHighSpeedFreeUsedUp" xml:space="preserve">
+      <value>Today's free high-speed battles are used up</value>
+  </data>
+  <data name="BossHighSpeedMonthlyBoostUsedUp" xml:space="preserve">
+      <value>Monthly pass high-speed battles used up</value>
+  </data>
+  <data name="BossHighSpeedStarting" xml:space="preserve">
+      <value>Starting boss high-speed battle...</value>
+  </data>
+  <data name="BossHighSpeedSummary" xml:space="preserve">
+      <value>High-speed battle done - population gold: {0}, population potential jewels: {1}, character EXP: {2}, gold: {3}, player EXP: {4}, rank up: {5}</value>
+  </data>
+  <data name="BossHighSpeedUsingFree" xml:space="preserve">
+      <value>Using free high-speed battle...</value>
+  </data>
+  <data name="BossHighSpeedUsingMonthlyBoost" xml:space="preserve">
+      <value>Using monthly pass high-speed battles, available: {0}</value>
+  </data>
+  <data name="BossMainQuestFailed" xml:space="preserve">
+      <value>Auto main quest failed: {0}</value>
+  </data>
+  <data name="BossMainQuestStarting" xml:space="preserve">
+      <value>Starting auto main quest...</value>
+  </data>
+  <data name="BossMainQuestSummary" xml:space="preserve">
+      <value>Auto main quest finished - total {0}, wins {1}</value>
+  </data>
+  <data name="BossNotEnoughAttempts" xml:space="preserve">
+      <value>Not enough boss challenge attempts</value>
+  </data>
+  <data name="BossQuestDefeat" xml:space="preserve">
+      <value>Stage {0}: defeat (total {1}, wins {2}, errors {3})</value>
+  </data>
+  <data name="BossQuestVictory" xml:space="preserve">
+      <value>Stage {0}: victory (total {1}, wins {2}, errors {3})</value>
+  </data>
+  <data name="BossQuickBattleDone" xml:space="preserve">
+      <value>Boss battle {0}/3 done</value>
+  </data>
+  <data name="BossQuickDone" xml:space="preserve">
+      <value>Boss quick battle done (quick mode)</value>
+  </data>
+  <data name="BossQuickFailed" xml:space="preserve">
+      <value>Boss quick battle failed: {0}</value>
+  </data>
+  <data name="BossQuickNoReward" xml:space="preserve">
+      <value>Boss battle {0}/3 gave no rewards</value>
+  </data>
+  <data name="BossQuickStarting" xml:space="preserve">
+      <value>Starting boss quick battle...</value>
+  </data>
+  <data name="BossQuickUsingNormal" xml:space="preserve">
+      <value>Using normal boss battle mode...</value>
+  </data>
+  <data name="BossReachedMaxStage" xml:space="preserve">
+      <value>Reached the highest stage currently available</value>
+  </data>
+  <data name="BossReachedTargetQuest" xml:space="preserve">
+      <value>Reached target stage {0}, stopping</value>
+  </data>
+  <data name="BountyDispatchDone" xml:space="preserve">
+      <value>Bounty quest auto-dispatch done</value>
+  </data>
+  <data name="BountyDispatchStarting" xml:space="preserve">
+      <value>Starting bounty quest auto-dispatch...</value>
+  </data>
+  <data name="BountyDispatched" xml:space="preserve">
+      <value>Dispatched bounty quest: {0}</value>
+  </data>
+  <data name="BountyDispatchingAll" xml:space="preserve">
+      <value>No target items set, dispatching all available quests...</value>
+  </data>
+  <data name="BountyDispatchingTargeted" xml:space="preserve">
+      <value>Dispatching quests that match the target items...</value>
+  </data>
+  <data name="BountyLowExpectedValue" xml:space="preserve">
+      <value>Expected diamond value of current quests is below 20, not refreshing, dispatching now...</value>
+  </data>
+  <data name="BountyNoPendingQuests" xml:space="preserve">
+      <value>No quests waiting to be dispatched</value>
+  </data>
+  <data name="BountyNoRewards" xml:space="preserve">
+      <value>No bounty quest rewards to claim</value>
+  </data>
+  <data name="BountyNotUnlocked" xml:space="preserve">
+      <value>Bounty quests are not unlocked yet</value>
+  </data>
+  <data name="BountyRefreshLimitReached" xml:space="preserve">
+      <value>Refresh limit reached ({0}/{1}), dispatching now...</value>
+  </data>
+  <data name="BountyRefreshing" xml:space="preserve">
+      <value>Current expected value: {0:F1} diamonds, refreshed today: {1}/{2}, refreshing...</value>
+  </data>
+  <data name="BountyRewardItem" xml:space="preserve">
+      <value>Got reward: {0} x{1}</value>
+  </data>
+  <data name="BountyRewardStarting" xml:space="preserve">
+      <value>Claiming bounty quest rewards...</value>
+  </data>
+  <data name="BountyRewardsClaimed" xml:space="preserve">
+      <value>Claimed rewards for {0} bounty quests</value>
+  </data>
+  <data name="BountyTargetItems" xml:space="preserve">
+      <value>Target items: {0}</value>
+  </data>
+  <data name="DungeonAlreadyCleared" xml:space="preserve">
+      <value>Dungeon already fully cleared.</value>
+  </data>
+  <data name="DungeonAutoDisabled" xml:space="preserve">
+      <value>Dungeon auto-battle is disabled.</value>
+  </data>
+  <data name="DungeonChecking" xml:space="preserve">
+      <value>Checking dungeon battle...</value>
+  </data>
+  <data name="DungeonCompleted" xml:space="preserve">
+      <value>Dungeon completed!</value>
+  </data>
+  <data name="DungeonDone" xml:space="preserve">
+      <value>Dungeon battle processing done.</value>
+  </data>
+  <data name="DungeonStarting" xml:space="preserve">
+      <value>Starting dungeon battle, current layer: {0}</value>
+  </data>
+  <data name="FriendAcceptedRequests" xml:space="preserve">
+      <value>Accepted {0} friend requests.</value>
+  </data>
+  <data name="FriendManageDone" xml:space="preserve">
+      <value>Friend management done.</value>
+  </data>
+  <data name="FriendManaging" xml:space="preserve">
+      <value>Running friend management...</value>
+  </data>
+  <data name="FriendPointLimitReached" xml:space="preserve">
+      <value>Today's friend point limit reached.</value>
+  </data>
+  <data name="FriendPointTransferDone" xml:space="preserve">
+      <value>Friend points sent.</value>
+  </data>
+  <data name="FriendPointTransferring" xml:space="preserve">
+      <value>Bulk sending friend points...</value>
+  </data>
+  <data name="FriendRemovedInactive" xml:space="preserve">
+      <value>Removed {0} inactive friends.</value>
+  </data>
+  <data name="FriendSentRequests" xml:space="preserve">
+      <value>Sent {0} friend requests.</value>
+  </data>
+  <data name="GachaCheckingFree" xml:space="preserve">
+      <value>Checking free gacha...</value>
+  </data>
+  <data name="GachaFreeDisabled" xml:space="preserve">
+      <value>Free gacha is disabled, skipping.</value>
+  </data>
+  <data name="GachaFreeDone" xml:space="preserve">
+      <value>Free gacha done, drew {0} times.</value>
+  </data>
+  <data name="GachaNoFree" xml:space="preserve">
+      <value>No free gacha available.</value>
+  </data>
+  <data name="GachaRelicChangeFailed" xml:space="preserve">
+      <value>Failed to change relic target: {0}</value>
+  </data>
+  <data name="GachaRelicChanged" xml:space="preserve">
+      <value>Holy Angel banner target changed to: {0}</value>
+  </data>
+  <data name="GachaRelicDrawFailed" xml:space="preserve">
+      <value>Relic draw failed: {0}</value>
+  </data>
+  <data name="GachaRelicDrawn" xml:space="preserve">
+      <value>Drew the Holy Angel banner once. Pity progress: {0}/10</value>
+  </data>
+  <data name="GachaRelicHasPity" xml:space="preserve">
+      <value>Holy Angel banner already has pity progress ({0}/10), skipping auto-change to keep it.</value>
+  </data>
+  <data name="GachaRelicNoDiamonds" xml:space="preserve">
+      <value>Not enough diamonds, stopping relic auto-draw.</value>
+  </data>
+  <data name="GuildCheckinDone" xml:space="preserve">
+      <value>Guild check-in done, guild ID: {0}.</value>
+  </data>
+  <data name="GuildCheckingIn" xml:space="preserve">
+      <value>Running guild check-in...</value>
+  </data>
+  <data name="GuildNotJoinedSkipCheckin" xml:space="preserve">
+      <value>Not in a guild, skipping check-in.</value>
+  </data>
+  <data name="GuildRaidBattleFailed" xml:space="preserve">
+      <value>Guild raid battle failed: {0}</value>
+  </data>
+  <data name="GuildRaidBattleResult" xml:space="preserve">
+      <value>Guild raid battle done, result: {0}</value>
+  </data>
+  <data name="GuildRaidGlobalDamageRewards" xml:space="preserve">
+      <value>Claimed {0} guild raid global damage rewards.</value>
+  </data>
+  <data name="GuildRaidOpenFailed" xml:space="preserve">
+      <value>Failed to open guild raid: {0}</value>
+  </data>
+  <data name="GuildRaidOpened" xml:space="preserve">
+      <value>Guild raid opened (guild points spent).</value>
+  </data>
+  <data name="GuildRaidQuickResult" xml:space="preserve">
+      <value>Guild raid quick battle done, result: {0}</value>
+  </data>
+  <data name="GuildRaidStarting" xml:space="preserve">
+      <value>Starting guild raid auto-battle, guild ID: {0}</value>
+  </data>
+  <data name="GuildRaidSummary" xml:space="preserve">
+      <value>Guild raid auto-battle done, {0} battles fought.</value>
+  </data>
+  <data name="GuildTowerAutoEntryDisabled" xml:space="preserve">
+      <value>Guild tower auto-entry is disabled, skipping.</value>
+  </data>
+  <data name="GuildTowerChallengeDone" xml:space="preserve">
+      <value>Guild tower challenges done, {0} wins.</value>
+  </data>
+  <data name="GuildTowerChecking" xml:space="preserve">
+      <value>Checking guild tower...</value>
+  </data>
+  <data name="GuildTowerDone" xml:space="preserve">
+      <value>Guild tower processing done.</value>
+  </data>
+  <data name="GuildTowerEntered" xml:space="preserve">
+      <value>Entered guild tower.</value>
+  </data>
+  <data name="GuildTowerFloorRewardsClaimed" xml:space="preserve">
+      <value>Claimed {0} guild tower floor rewards.</value>
+  </data>
+  <data name="GuildTowerNoEvent" xml:space="preserve">
+      <value>No guild tower event right now.</value>
+  </data>
+  <data name="GuildTowerNotJoined" xml:space="preserve">
+      <value>Not in a guild, skipping guild tower.</value>
+  </data>
+  <data name="GvgChecking" xml:space="preserve">
+      <value>Checking GvG rewards...</value>
+  </data>
+  <data name="GvgDone" xml:space="preserve">
+      <value>GvG reward check done.</value>
+  </data>
+  <data name="GvgGlobalClaimed" xml:space="preserve">
+      <value>Global GvG rewards claimed.</value>
+  </data>
+  <data name="GvgLocalClaimed" xml:space="preserve">
+      <value>Local GvG rewards claimed.</value>
+  </data>
+  <data name="GvgNotJoined" xml:space="preserve">
+      <value>Not in a guild, skipping GvG rewards.</value>
+  </data>
+  <data name="JobAchievementRewardsClaimed" xml:space="preserve">
+      <value>Claimed {0} achievement rewards.</value>
+  </data>
+  <data name="JobActionFailed" xml:space="preserve">
+      <value>{0} failed: {1}</value>
+  </data>
+  <data name="JobAutoBattleRewardFailed" xml:space="preserve">
+      <value>Failed to claim auto-battle rewards: {0}</value>
+  </data>
+  <data name="JobAutoBattleRewardSummary" xml:space="preserve">
+      <value>Auto-battle rewards claimed - wins: {0}, losses: {1}, total battle time: {2}</value>
+  </data>
+  <data name="JobAutoUseItemsDisabled" xml:space="preserve">
+      <value>Auto-use items is disabled, skipping.</value>
+  </data>
+  <data name="JobAutoUseItemsNoTypes" xml:space="preserve">
+      <value>No item types configured for auto-use.</value>
+  </data>
+  <data name="JobChallengeError" xml:space="preserve">
+      <value>Challenge error: {0}</value>
+  </data>
+  <data name="JobCheckingAchievementRewards" xml:space="preserve">
+      <value>Checking achievement rewards...</value>
+  </data>
+  <data name="JobCheckingAutoUseItems" xml:space="preserve">
+      <value>Checking items to auto-use...</value>
+  </data>
+  <data name="JobCheckingEquipmentReinforce" xml:space="preserve">
+      <value>Checking equipment reinforcement...</value>
+  </data>
+  <data name="JobCheckingLoginBonus" xml:space="preserve">
+      <value>Checking login bonus...</value>
+  </data>
+  <data name="JobCheckingRankUp" xml:space="preserve">
+      <value>Checking character rank-up...</value>
+  </data>
+  <data name="JobChestsOpened" xml:space="preserve">
+      <value>Opened {0} kinds of chests.</value>
+  </data>
+  <data name="JobClaimingAutoBattleRewards" xml:space="preserve">
+      <value>Claiming auto-battle rewards...</value>
+  </data>
+  <data name="JobDescDaily" xml:space="preserve">
+      <value>Daily job</value>
+  </data>
+  <data name="JobDescHourly" xml:space="preserve">
+      <value>Hourly rewards/stamina job</value>
+  </data>
+  <data name="JobDescPvp" xml:space="preserve">
+      <value>PvP arena job</value>
+  </data>
+  <data name="JobEquipmentReinforceDone" xml:space="preserve">
+      <value>Equipment reinforcement done.</value>
+  </data>
+  <data name="JobExecutionError" xml:space="preserve">
+      <value>Job error: {0}</value>
+  </data>
+  <data name="JobFixedDrops" xml:space="preserve">
+      <value>Fixed drops: {0}</value>
+  </data>
+  <data name="JobFullRunDone" xml:space="preserve">
+      <value>Full automation run done.</value>
+  </data>
+  <data name="JobFullRunStarting" xml:space="preserve">
+      <value>Starting full automation run...</value>
+  </data>
+  <data name="JobGoldIncome" xml:space="preserve">
+      <value>Gold earned: {0}</value>
+  </data>
+  <data name="JobHourlyRunDone" xml:space="preserve">
+      <value>Hourly automation run done.</value>
+  </data>
+  <data name="JobHourlyRunStarting" xml:space="preserve">
+      <value>Starting hourly automation run...</value>
+  </data>
+  <data name="JobLoginBonusDone" xml:space="preserve">
+      <value>Login bonus check/claim done.</value>
+  </data>
+  <data name="JobLoginBonusError" xml:space="preserve">
+      <value>Login bonus error: {0}</value>
+  </data>
+  <data name="JobLoginExpiredRelogin" xml:space="preserve">
+      <value>Login expired, trying to log in again...</value>
+  </data>
+  <data name="JobNoAchievementRewards" xml:space="preserve">
+      <value>No achievement rewards to claim.</value>
+  </data>
+  <data name="JobNoEquipmentToReinforce" xml:space="preserve">
+      <value>No equipment to reinforce.</value>
+  </data>
+  <data name="JobNoRankUp" xml:space="preserve">
+      <value>No characters to rank up.</value>
+  </data>
+  <data name="JobNoUsableItems" xml:space="preserve">
+      <value>No usable items.</value>
+  </data>
+  <data name="JobPotentialJewelIncome" xml:space="preserve">
+      <value>Potential jewels earned: {0}</value>
+  </data>
+  <data name="JobRandomDrops" xml:space="preserve">
+      <value>Random drops: {0}</value>
+  </data>
+  <data name="JobRankUpDisabled" xml:space="preserve">
+      <value>Character rank-up is disabled, skipping.</value>
+  </data>
+  <data name="JobRankUpDone" xml:space="preserve">
+      <value>Rank-up done, {0} characters ranked up.</value>
+  </data>
+  <data name="JobReloginFailed" xml:space="preserve">
+      <value>Automatic re-login failed: {0}</value>
+  </data>
+  <data name="JobReloginSucceeded" xml:space="preserve">
+      <value>Automatic re-login succeeded.</value>
+  </data>
+  <data name="JobSyncingUserData" xml:space="preserve">
+      <value>Syncing user data...</value>
+  </data>
+  <data name="JobTaskCancelled" xml:space="preserve">
+      <value>Task cancelled</value>
+  </data>
+  <data name="JobTaskFailed" xml:space="preserve">
+      <value>Task failed: {0}</value>
+  </data>
+  <data name="JobTaskStopped" xml:space="preserve">
+      <value>Task stopped</value>
+  </data>
+  <data name="JobTooManyErrorsStopping" xml:space="preserve">
+      <value>More than {0} errors, stopping</value>
+  </data>
+  <data name="JobUserDataSyncFailed" xml:space="preserve">
+      <value>Failed to sync user data: {0}</value>
+  </data>
+  <data name="JobUserDataSynced" xml:space="preserve">
+      <value>User data synced</value>
+  </data>
+  <data name="LegendBattleResult" xml:space="preserve">
+      <value>Vs {0}: {1} (points gained: {2})</value>
+  </data>
+  <data name="LegendChecking" xml:space="preserve">
+      <value>Checking Legend League...</value>
+  </data>
+  <data name="LegendFreeUsedUp" xml:space="preserve">
+      <value>Today's free Legend League attempts are used up.</value>
+  </data>
+  <data name="LegendNoRival" xml:space="preserve">
+      <value>No rival matches the filters, skipping battle.</value>
+  </data>
+  <data name="LegendNotOpen" xml:space="preserve">
+      <value>Legend League is not open right now.</value>
+  </data>
+  <data name="LocalRaidCreatingRoom" xml:space="preserve">
+      <value>Creating room...</value>
+  </data>
+  <data name="LocalRaidDefeat" xml:space="preserve">
+      <value>Defeat.</value>
+  </data>
+  <data name="LocalRaidError" xml:space="preserve">
+      <value>An error occurred: {0}</value>
+  </data>
+  <data name="LocalRaidFindingRoom" xml:space="preserve">
+      <value>Looking for a random room...</value>
+  </data>
+  <data name="LocalRaidJoinedRoom" xml:space="preserve">
+      <value>Joined room, sending ready.</value>
+  </data>
+  <data name="LocalRaidNoAttempts" xml:space="preserve">
+      <value>Challenge attempts used up.</value>
+  </data>
+  <data name="LocalRaidOnionConnectFailed" xml:space="preserve">
+      <value>Could not connect to the MagicOnion service.</value>
+  </data>
+  <data name="LocalRaidOnionNotReady" xml:space="preserve">
+      <value>MagicOnion channel is not ready, make sure you are logged in.</value>
+  </data>
+  <data name="LocalRaidRoomUpdated" xml:space="preserve">
+      <value>Room info updated.</value>
+  </data>
+  <data name="LocalRaidSomeoneJoined" xml:space="preserve">
+      <value>Someone joined the room, getting ready to battle.</value>
+  </data>
+  <data name="LocalRaidStarting" xml:space="preserve">
+      <value>Starting Temporal Cave quest (QuestId: {0}, own room: {1})...</value>
+  </data>
+  <data name="LocalRaidTimeoutOrCancelled" xml:space="preserve">
+      <value>Task timed out or was cancelled.</value>
+  </data>
+  <data name="LocalRaidVictory" xml:space="preserve">
+      <value>Victory!</value>
+  </data>
+  <data name="LocalRaidWaitTimeout" xml:space="preserve">
+      <value>Timed out waiting.</value>
+  </data>
+  <data name="MissionActivityClaimed" xml:space="preserve">
+      <value>Claimed {0} activity reward ({1}).</value>
+  </data>
+  <data name="MissionCheckDone" xml:space="preserve">
+      <value>Mission reward check done.</value>
+  </data>
+  <data name="MissionChecking" xml:space="preserve">
+      <value>Checking mission rewards...</value>
+  </data>
+  <data name="MissionInfoFetchFailed" xml:space="preserve">
+      <value>Failed to fetch mission info: {0}</value>
+  </data>
+  <data name="MissionInfoFetched" xml:space="preserve">
+      <value>Mission info fetched</value>
+  </data>
+  <data name="MissionPanelRewardClaimFailed" xml:space="preserve">
+      <value>Failed to claim merit rewards: {0}</value>
+  </data>
+  <data name="MissionPanelRewardClaimSucceeded" xml:space="preserve">
+      <value>Merit rewards claimed</value>
+  </data>
+  <data name="MissionRewardClaimFailed" xml:space="preserve">
+      <value>Failed to claim mission rewards: {0}</value>
+  </data>
+  <data name="MissionRewardClaimSucceeded" xml:space="preserve">
+      <value>Mission rewards claimed</value>
+  </data>
+  <data name="MissionRewardsClaimed" xml:space="preserve">
+      <value>Claimed {0} mission rewards.</value>
+  </data>
+  <data name="MonthlyBoostAlreadyClaimed" xml:space="preserve">
+      <value>Monthly pass rewards already claimed today.</value>
+  </data>
+  <data name="MonthlyBoostChecking" xml:space="preserve">
+      <value>Checking monthly pass rewards...</value>
+  </data>
+  <data name="MonthlyBoostClaimed" xml:space="preserve">
+      <value>Monthly pass rewards claimed.</value>
+  </data>
+  <data name="MonthlyBoostInactive" xml:space="preserve">
+      <value>Monthly pass inactive or expired.</value>
+  </data>
+  <data name="PresentChecking" xml:space="preserve">
+      <value>Checking gift box...</value>
+  </data>
+  <data name="PresentClaimed" xml:space="preserve">
+      <value>Claimed {0} items from the gift box.</value>
+  </data>
+  <data name="PresentClaimedOneByOne" xml:space="preserve">
+      <value>Claimed gift box items one by one, {0} succeeded.</value>
+  </data>
+  <data name="PresentEmpty" xml:space="preserve">
+      <value>Gift box is empty.</value>
+  </data>
+  <data name="ShopBought" xml:space="preserve">
+      <value>Bought: {0} x {1}</value>
+  </data>
+  <data name="ShopBuyFailed" xml:space="preserve">
+      <value>Purchase failed ({0}): {1}</value>
+  </data>
+  <data name="ShopChecking" xml:space="preserve">
+      <value>Checking shop items...</value>
+  </data>
+  <data name="ShopDone" xml:space="preserve">
+      <value>Shop auto-buy check done.</value>
+  </data>
+  <data name="ShopNoItemsConfigured" xml:space="preserve">
+      <value>No shop auto-buy items configured.</value>
+  </data>
+  <data name="TowerAutoFailed" xml:space="preserve">
+      <value>Auto tower climb failed: {0}</value>
+  </data>
+  <data name="TowerAutoStarting" xml:space="preserve">
+      <value>Starting auto climb of {0}...</value>
+  </data>
+  <data name="TowerAutoSummary" xml:space="preserve">
+      <value>Auto climb of {0} finished - total {1}, wins {2}</value>
+  </data>
+  <data name="TowerDailyLimitReached" xml:space="preserve">
+      <value>{0}: cleared {1} floors today, daily limit reached</value>
+  </data>
+  <data name="TowerDataNotFound" xml:space="preserve">
+      <value>No data found for {0}</value>
+  </data>
+  <data name="TowerFloorDefeat" xml:space="preserve">
+      <value>Floor {0}: defeat (total {1}, wins {2}, errors {3})</value>
+  </data>
+  <data name="TowerFloorVictory" xml:space="preserve">
+      <value>Floor {0}: victory (total {1}, wins {2}, errors {3})</value>
+  </data>
+  <data name="TowerInfiniteNoData" xml:space="preserve">
+      <value>Tower of Infinity data unavailable.</value>
+  </data>
+  <data name="TowerInfiniteNormalDone" xml:space="preserve">
+      <value>Tower of Infinity battle done (normal mode).</value>
+  </data>
+  <data name="TowerInfiniteNotEnoughAttempts" xml:space="preserve">
+      <value>Not enough Tower of Infinity attempts.</value>
+  </data>
+  <data name="TowerInfiniteQuickDone" xml:space="preserve">
+      <value>Tower of Infinity quick battle done.</value>
+  </data>
+  <data name="TowerInfiniteQuickStarting" xml:space="preserve">
+      <value>Running Tower of Infinity quick battle...</value>
+  </data>
+  <data name="TowerInfiniteSpentDiamonds" xml:space="preserve">
+      <value>Tower of Infinity quick battle spent {0} diamonds, the free count may have changed!</value>
+  </data>
+  <data name="TowerInfiniteUsedUp" xml:space="preserve">
+      <value>Tower of Infinity attempts used up for today.</value>
+  </data>
+  <data name="TowerNameBlue" xml:space="preserve">
+      <value>Azure Tower</value>
+  </data>
+  <data name="TowerNameGreen" xml:space="preserve">
+      <value>Emerald Tower</value>
+  </data>
+  <data name="TowerNameInfinite" xml:space="preserve">
+      <value>Tower of Infinity</value>
+  </data>
+  <data name="TowerNameRed" xml:space="preserve">
+      <value>Crimson Tower</value>
+  </data>
+  <data name="TowerNameUnknown" xml:space="preserve">
+      <value>Unknown tower</value>
+  </data>
+  <data name="TowerNameYellow" xml:space="preserve">
+      <value>Amber Tower</value>
+  </data>
+  <data name="TowerNoData" xml:space="preserve">
+      <value>Tower data unavailable, sync user data first</value>
+  </data>
+  <data name="TowerNotEnoughAttempts" xml:space="preserve">
+      <value>Not enough challenge attempts</value>
+  </data>
+  <data name="TowerNotOpenToday" xml:space="preserve">
+      <value>{0} is not open today</value>
+  </data>
+  <data name="TowerReachedTargetFloor" xml:space="preserve">
+      <value>Reached target floor {0}, stopping</value>
+  </data>
+  <data name="VipChecking" xml:space="preserve">
+      <value>Checking VIP daily gift...</value>
+  </data>
+  <data name="VipGiftClaimed" xml:space="preserve">
+      <value>VIP{0} daily gift claimed.</value>
+  </data>
+  <data name="VipGiftUnavailable" xml:space="preserve">
+      <value>VIP daily gift already claimed or unavailable.</value>
+  </data>
+  <data name="CommonVictory" xml:space="preserve">
+      <value>Victory</value>
+  </data>
+  <data name="CommonDefeat" xml:space="preserve">
+      <value>Defeat</value>
+  </data>
+  <data name="LocalRaidHostingOwnRoom" xml:space="preserve">
+    <value>No rooms to join, hosting our own room</value>
+  </data>
+  <data name="LocalRaidSoloStop" xml:space="preserve">
+    <value>Lost 3 times in a row hosting alone, stopping until the next run</value>
+  </data>
 </root>

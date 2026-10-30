@@ -17,8 +17,8 @@ namespace MementoMori.Ortega.Share.Data.Chat
 		[Key(13)]
 		public ChatBattleInfo ChatBattleInfo { get; set; }
 
-        [Key(14)]
-        public ChatMusicPlaylistInfo ChatMusicPlaylistInfo { get; set; }
+		[Key(14)]
+		public ChatMusicPlaylistInfo ChatMusicPlaylistInfo { get; set; }
 
 		[Key(1)]
 		public ChatType ChatType { get; set; }

@@ -14,21 +14,21 @@ public partial class VipDailyGiftHandler : IGameActionHandler
     private readonly ILogger<VipDailyGiftHandler> _logger;
     private readonly JobLogger _jobLogger;
 
-    public string ActionName => "领取VIP每日礼包";
+    public string ActionName => Text.T("ActionVipDailyGift");
 
     public async Task ExecuteAsync(AccountContext context)
     {
         var userId = context.AccountInfo.UserId;
         var nm = context.NetworkManager;
 
-        await _jobLogger.LogAsync(userId, "正在检查VIP每日礼包...");
+        await _jobLogger.LogAsync(userId, Text.T("VipChecking"));
 
         if (nm.UserSyncData.ExistVipDailyGift == true)
         {
             try
             {
                 var bonus = await nm.SendRequest<GetDailyGiftRequest, GetDailyGiftResponse>(new GetDailyGiftRequest());
-                await _jobLogger.LogAsync(userId, $"VIP{nm.UserSyncData.UserStatusDtoInfo.Vip}每日礼包已领取。");
+                await _jobLogger.LogAsync(userId, Text.T("VipGiftClaimed", nm.UserSyncData.UserStatusDtoInfo.Vip));
             }
             catch (Exception ex)
             {
@@ -37,7 +37,7 @@ public partial class VipDailyGiftHandler : IGameActionHandler
         }
         else
         {
-            await _jobLogger.LogAsync(userId, "VIP每日礼包已领取或不可用。");
+            await _jobLogger.LogAsync(userId, Text.T("VipGiftUnavailable"));
         }
     }
 }
