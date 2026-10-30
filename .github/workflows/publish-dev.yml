@@ -45,6 +45,56 @@ jobs:
             release/*.zip
             release/*.tar.gz
 
+  publish-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build web
+        working-directory: web
+        run: npx -y pnpm@9.15.0 install --frozen-lockfile && npx -y pnpm@9.15.0 exec tsc -b && npx -y pnpm@9.15.0 exec vite build
+      - name: Install Android workload
+        run: |
+          dotnet workload install android
+          dotnet build MementoMori.Android -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=$ANDROID_HOME -p:AcceptAndroidSDKLicenses=True
+      # 和旧版 APK 同一个 keystore/包名, 可以直接覆盖安装; 没有 secret (fork) 就用调试签名
+      - name: Build APK
+        env:
+          KEYSTORE_BASE64_ENCODED: ${{ secrets.KEYSTORE_BASE64_ENCODED }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          SIGN=()
+          if [ -n "$KEYSTORE_BASE64_ENCODED" ]; then
+            echo "$KEYSTORE_BASE64_ENCODED" | base64 -d > "$RUNNER_TEMP/mementomori-helper.keystore"
+            SIGN=(-p:AndroidKeyStore=true "-p:AndroidSigningKeyStore=$RUNNER_TEMP/mementomori-helper.keystore" -p:AndroidSigningKeyAlias=mementomori-helper
+                  -p:AndroidSigningStorePass=env:KEYSTORE_PASSWORD -p:AndroidSigningKeyPass=env:KEYSTORE_PASSWORD)
+          fi
+          VERSION=0.0.0
+          [[ $GITHUB_REF == refs/tags/v* ]] && VERSION=${GITHUB_REF_NAME#v}
+          dotnet publish MementoMori.Android -c Release -p:AndroidSdkDirectory=$ANDROID_HOME -p:ApplicationDisplayVersion=$VERSION -p:ApplicationVersion=${{ github.run_number }} "${SIGN[@]}" -o publish-android
+          cp publish-android/*-Signed.apk MementoMori-android.apk
+      - name: Create Dev Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/master'
+        with:
+          files: MementoMori-android.apk
+          tag_name: dev
+          prerelease: true
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: MementoMori-android.apk
+
   publish-docker:
     runs-on: ubuntu-latest
     steps:
