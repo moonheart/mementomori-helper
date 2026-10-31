@@ -29,7 +29,7 @@ public partial class GachaRelicDrawHandler : IGameActionHandler
         // 获取配置
         using var scope = _serviceProvider.CreateScope();
         var settingService = scope.ServiceProvider.GetRequiredService<PlayerSettingService>();
-        var gachaConfig = await settingService.GetSettingAsync<GameConfig.GachaConfigModel>(userId, "GachaConfig");
+        var gachaConfig = await settingService.GetGachaSettingsAsync(userId);
 
         if (gachaConfig == null || !gachaConfig.AutoGachaRelic)
         {

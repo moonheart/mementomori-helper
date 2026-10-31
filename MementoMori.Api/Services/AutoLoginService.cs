@@ -30,7 +30,8 @@ public class AutoLoginService : BackgroundService
         if (!_configuration.GetValue("AutoLogin:Enabled", true)) return;
 
         var accounts = await _db.Select<AccountEntity>().Where(a => a.ClientKey != "").ToListAsync(ct);
-        foreach (var account in accounts)
+        // AutoLogin == false: 旧配置明确关闭了自动登录, 等用户手动登录
+        foreach (var account in accounts.Where(a => a.AutoLogin != false))
         {
             for (var attempt = 1; attempt <= Attempts && !ct.IsCancellationRequested; attempt++)
             {

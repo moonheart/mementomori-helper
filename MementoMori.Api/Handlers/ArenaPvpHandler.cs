@@ -32,13 +32,7 @@ public partial class ArenaPvpHandler : IGameActionHandler
         // 获取配置
         using var scope = _serviceProvider.CreateScope();
         var settingService = scope.ServiceProvider.GetRequiredService<PlayerSettingService>();
-        var playerOption = await settingService.GetSettingAsync<PlayerOption>(userId, "PlayerOption");
-
-        if (playerOption == null)
-        {
-            _logger.LogDebug("User {UserId} has no PlayerOption configured, skipping.", userId);
-            return;
-        }
+        var battleLeague = await settingService.GetBattleLeagueSettingsAsync(userId);
 
         await _jobLogger.LogAsync(userId, Text.T("ArenaChecking"));
 
@@ -71,7 +65,7 @@ public partial class ArenaPvpHandler : IGameActionHandler
                 }
 
                 // 4. 选择目标 (复用 LegendLeague 的简单选择逻辑)
-                var target = SelectTarget(playerOption.BattleLeague, rivals);
+                var target = SelectTarget(battleLeague, rivals);
                 if (target.playerId == 0)
                 {
                     _logger.LogInformation("No suitable arena target found for user {UserId}.", userId);

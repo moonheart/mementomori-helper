@@ -24,6 +24,12 @@ public class AccountEntity
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
+    /// 启动时是否自动登录; null/true = 自动登录, false = 仅手动登录
+    /// (旧版 appsettings.user.json 里的 AutoLogin, 新账号默认 null)
+    /// </summary>
+    public bool? AutoLogin { get; set; }
+
+    /// <summary>
     /// 最后登录时间
     /// </summary>
     public DateTime? LastLoginTime { get; set; }

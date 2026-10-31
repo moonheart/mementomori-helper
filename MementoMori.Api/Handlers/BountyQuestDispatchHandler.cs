@@ -55,9 +55,8 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
         await _jobLogger.LogAsync(userId, Text.T("BountyDispatchStarting"));
 
         // 获取配置
-        var bountyQuestAuto = await _settingService.GetSettingAsync<GameConfig.BountyQuestAutoConfig>(userId, "bountyquestauto");
-        var playerOption = await _settingService.GetSettingAsync<PlayerOption>(userId, "playeroption");
-        var bountyQuestOption = playerOption?.BountyQuest ?? new BountyQuestOption();
+        var bountyQuestAuto = await _settingService.GetBountyQuestAutoSettingsAsync(userId);
+        var bountyQuestOption = await _settingService.GetBountyQuestSettingsAsync(userId);
 
         // 获取悬赏任务列表
         var response1 = await GetBountyRequestInfo(nm);
@@ -101,11 +100,7 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
             bountyQuestOption.TodayRefreshCount.Add(date, 0);
             
             // 保存更新后的配置
-            if (playerOption != null)
-            {
-                playerOption.BountyQuest = bountyQuestOption;
-                await _settingService.SaveSettingAsync(userId, "playeroption", playerOption);
-            }
+            await _settingService.SaveSettingAsync(userId, SettingKeys.BountyQuest, bountyQuestOption);
         }
 
         // 自动刷新逻辑（最多100次循环，防止无限循环）
@@ -153,11 +148,7 @@ public partial class BountyQuestDispatchHandler : IGameActionHandler
             
             // 更新刷新计数
             bountyQuestOption.TodayRefreshCount[date]++;
-            if (playerOption != null)
-            {
-                playerOption.BountyQuest = bountyQuestOption;
-                await _settingService.SaveSettingAsync(userId, "playeroption", playerOption);
-            }
+            await _settingService.SaveSettingAsync(userId, SettingKeys.BountyQuest, bountyQuestOption);
 
             // 重新获取任务列表
             response1 = await GetBountyRequestInfo(nm);

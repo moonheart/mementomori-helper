@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi;
+using MementoMori.Api.Import;
 using MementoMori.Api.Infrastructure.Database;
 using Quartz;
 
@@ -88,6 +89,48 @@ if (args.Contains("--export-rpc"))
     var outputDir = Path.Combine(builder.Environment.ContentRootPath, "../web/src/api");
     MementoMori.Api.Infrastructure.RpcManifestGenerator.Generate(discoveryService, outputDir);
     return;
+}
+
+// 一次性导入旧 Blazor 配置。只在数据库没有账号时自动检测; 也可用 --import-legacy 手动执行。
+try
+{
+    using var legacyScope = app.Services.CreateScope();
+    var legacyImporter = legacyScope.ServiceProvider.GetRequiredService<LegacyConfigImporter>();
+
+    var importArg = args.FirstOrDefault(a => a == "--import-legacy" || a.StartsWith("--import-legacy="));
+    if (importArg != null)
+    {
+        var importIndex = Array.IndexOf(args, "--import-legacy");
+        var importPath = importArg.StartsWith("--import-legacy=")
+            ? importArg["--import-legacy=".Length..]
+            : importIndex >= 0 && importIndex + 1 < args.Length ? args[importIndex + 1] : null;
+        importPath ??= legacyImporter.ResolveAutoPath();
+
+        if (string.IsNullOrWhiteSpace(importPath))
+        {
+            Console.Error.WriteLine("用法: MementoMori.Api --import-legacy <path-to-appsettings.user.json> [--dry-run] [--force]");
+            Environment.ExitCode = 1;
+            return;
+        }
+
+        var importResult = await legacyImporter.ImportAsync(importPath, args.Contains("--force"), args.Contains("--dry-run"));
+        Console.WriteLine(importResult.ToSummary());
+        if (importResult.Errors.Count > 0) Environment.ExitCode = 1;
+        return;
+    }
+
+    await legacyImporter.AutoImportAsync();
+}
+catch (Exception ex)
+{
+    if (args.Any(a => a.StartsWith("--import-legacy")))
+    {
+        Console.Error.WriteLine(ex is InvalidOperationException ? ex.Message : ex.ToString());
+        Environment.ExitCode = 1;
+        return;
+    }
+
+    app.Services.GetRequiredService<ILogger<Program>>().LogError(ex, "Legacy config import failed");
 }
 
 // 启动时的阻塞式 Master 数据更新

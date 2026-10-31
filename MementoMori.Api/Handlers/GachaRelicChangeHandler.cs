@@ -28,7 +28,7 @@ public partial class GachaRelicChangeHandler : IGameActionHandler
         // 获取配置
         using var scope = _serviceProvider.CreateScope();
         var settingService = scope.ServiceProvider.GetRequiredService<PlayerSettingService>();
-        var gachaConfig = await settingService.GetSettingAsync<GameConfig.GachaConfigModel>(userId, "GachaConfig");
+        var gachaConfig = await settingService.GetGachaSettingsAsync(userId);
 
         var targetRelicType = gachaConfig?.TargetRelicType ?? GachaRelicType.None;
         if (targetRelicType == GachaRelicType.None)

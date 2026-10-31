@@ -36,15 +36,9 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
         // 获取配置
         using var scope = _serviceProvider.CreateScope();
         var settingService = scope.ServiceProvider.GetRequiredService<PlayerSettingService>();
-        var playerOption = await settingService.GetSettingAsync<PlayerOption>(userId, "PlayerOption");
+        var localRaid = await settingService.GetLocalRaidSettingsAsync(userId);
 
-        if (playerOption == null)
-        {
-            _logger.LogDebug("User {UserId} has no PlayerOption configured, skipping.", userId);
-            return;
-        }
-
-        var rewardItems = playerOption.LocalRaid.RewardItems;
+        var rewardItems = localRaid.RewardItems;
         if (rewardItems.Count == 0)
         {
             // 默认奖励权重
@@ -58,7 +52,7 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
             });
         }
 
-        var createRoom = playerOption.LocalRaid.SelfCreateRoom;
+        var createRoom = localRaid.SelfCreateRoom;
         
         // 1. 获取活动信息
         var localRaidInfo = await nm.SendRequest<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
@@ -81,7 +75,7 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
             if (client == null) return;
 
             LocalRaidBaseReceiver receiver = createRoom 
-                ? new LocalRaidCreateRoomReceiver(client, logAction, playerOption.LocalRaid.WaitSeconds, cts.Token)
+                ? new LocalRaidCreateRoomReceiver(client, logAction, localRaid.WaitSeconds, cts.Token)
                 : new LocalRaidJoinRoomReceiver(client, logAction, cts.Token);
 
             receiver.QuestId = questId;

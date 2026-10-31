@@ -31,7 +31,7 @@ public partial class ShopAutoBuyHandler : IGameActionHandler
         // 获取配置
         using var scope = _serviceProvider.CreateScope();
         var settingService = scope.ServiceProvider.GetRequiredService<PlayerSettingService>();
-        var shopConfig = await settingService.GetSettingAsync<GameConfig.ShopConfig>(userId, "ShopConfig");
+        var shopConfig = await settingService.GetShopSettingsAsync(userId);
 
         if (shopConfig == null || shopConfig.AutoBuyItems.Count == 0)
         {

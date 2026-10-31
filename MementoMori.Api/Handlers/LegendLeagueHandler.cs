@@ -33,13 +33,7 @@ public partial class LegendLeagueHandler : IGameActionHandler
         // 获取配置
         using var scope = _serviceProvider.CreateScope();
         var settingService = scope.ServiceProvider.GetRequiredService<PlayerSettingService>();
-        var playerOption = await settingService.GetSettingAsync<PlayerOption>(userId, "PlayerOption");
-
-        if (playerOption == null)
-        {
-            _logger.LogDebug("User {UserId} has no PlayerOption configured, skipping.", userId);
-            return;
-        }
+        var legendLeague = await settingService.GetLegendLeagueSettingsAsync(userId);
 
         await _jobLogger.LogAsync(userId, Text.T("LegendChecking"));
 
@@ -81,7 +75,7 @@ public partial class LegendLeagueHandler : IGameActionHandler
                 }
 
                 // 4. 选择目标
-                var targetPlayerId = await SelectTargetAsync(nm, playerOption.LegendLeague, rivals, characterDetailInfoDict);
+                var targetPlayerId = await SelectTargetAsync(nm, legendLeague, rivals, characterDetailInfoDict);
                 if (targetPlayerId == 0)
                 {
                     _logger.LogInformation("No suitable target found for user {UserId} in Legend League.", userId);

@@ -37,8 +37,7 @@ public partial class BountyQuestController : ControllerBase
             // 2. 获取当前悬赏列表和玩家数据
             var getListResponse = await nm.SendRequest<GetListRequest, GetListResponse>(new GetListRequest());
             var userSyncData = nm.UserSyncData;
-            var bountyQuestAuto = await _settingService.GetSettingAsync<GameConfig.BountyQuestAutoConfig>(userId, "bountyquestauto") 
-                                 ?? new GameConfig.BountyQuestAutoConfig();
+            var bountyQuestAuto = await _settingService.GetBountyQuestAutoSettingsAsync(userId);
 
             // 3. 筛选需要派遣的任务
             var questsToCalculate = getListResponse.BountyQuestInfos.AsEnumerable();
