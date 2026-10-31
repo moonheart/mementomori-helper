@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { useAccountStore } from '@/store/accountStore';
 import { parseOrtegaError } from '@/lib/errorHandler';
+import { API_BASE, BASE_PATH } from '@/lib/base-path';
 
 const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:5000',
+    baseURL: API_BASE,
     timeout: 30000,
     headers: {
         'Content-Type': 'application/json',
@@ -61,8 +62,9 @@ apiClient.interceptors.response.use(
             // Clear current account
             useAccountStore.getState().setCurrentAccount(null);
             // Redirect to accounts page if not already there
-            if (!window.location.pathname.startsWith('/accounts')) {
-                window.location.href = '/accounts';
+            const accountsPath = `${BASE_PATH}/accounts`;
+            if (!window.location.pathname.startsWith(accountsPath)) {
+                window.location.href = accountsPath;
             }
         }
 

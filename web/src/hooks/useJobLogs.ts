@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
+import { API_BASE } from '@/lib/base-path';
 
 export interface JobLog {
     time: string;
@@ -28,7 +29,7 @@ export function useJobLogs(userId: number | null) {
         }
 
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(`${import.meta.env.VITE_API_URL ?? 'http://localhost:5000'}/hubs/jobs?userId=${userId}`)
+            .withUrl(`${API_BASE}/hubs/jobs?userId=${userId}`)
             .withAutomaticReconnect()
             .build();
 

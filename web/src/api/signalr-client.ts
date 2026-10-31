@@ -1,12 +1,12 @@
 import * as signalR from '@microsoft/signalr';
+import { API_BASE } from '@/lib/base-path';
 
 class SignalRService {
     private connection: signalR.HubConnection | null = null;
     private readonly hubUrl: string;
 
     constructor() {
-        const baseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
-        this.hubUrl = `${baseUrl}/hubs/game`;
+        this.hubUrl = `${API_BASE}/hubs/game`;
     }
 
     async start() {
@@ -64,8 +64,7 @@ class SignalRService {
  * 创建 JobHub 连接用于接收后台任务日志
  */
 export function createJobHubConnection(userId: number, onReceiveLog: (message: string) => void) {
-    const baseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
-    const hubUrl = `${baseUrl}/hubs/jobs?userId=${userId}`;
+    const hubUrl = `${API_BASE}/hubs/jobs?userId=${userId}`;
 
     const connection = new signalR.HubConnectionBuilder()
         .withUrl(hubUrl)

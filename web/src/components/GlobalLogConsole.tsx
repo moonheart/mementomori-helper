@@ -8,6 +8,7 @@ import { useAccountStore } from '@/store/accountStore';
 import * as signalR from '@microsoft/signalr';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/hooks/useTranslation';
+import { API_BASE } from '@/lib/base-path';
 
 export function GlobalLogConsole() {
     const { t } = useTranslation();
@@ -46,7 +47,7 @@ export function GlobalLogConsole() {
         }
 
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(`${import.meta.env.VITE_API_URL ?? 'http://localhost:5000'}/hubs/jobs?userId=${currentAccountId}`)
+            .withUrl(`${API_BASE}/hubs/jobs?userId=${currentAccountId}`)
             .withAutomaticReconnect()
             .build();
 

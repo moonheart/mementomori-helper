@@ -1,6 +1,7 @@
 import * as signalR from '@microsoft/signalr';
 import { LocalRaidPartyInfo } from '@/api/generated';
 import { useAccountStore } from '@/store/accountStore';
+import { API_BASE } from '@/lib/base-path';
 
 // 重新导出类型
 export type { LocalRaidPartyInfo } from '@/api/generated';
@@ -99,8 +100,7 @@ class LocalRaidSignalRService {
     private maxReconnectAttempts = 5;
 
     constructor() {
-        const baseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
-        this.hubUrl = `${baseUrl}/hubs/localraid`;
+        this.hubUrl = `${API_BASE}/hubs/localraid`;
     }
 
     /**

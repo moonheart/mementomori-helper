@@ -25,6 +25,7 @@ import { AutomationPage } from './pages/AutomationPage';
 import { BattleLogPage } from './pages/BattleLogPage';
 import { AutopilotPage } from './pages/AutopilotPage';
 import { TeamTiersPage } from './pages/TeamTiersPage';
+import { BASE_PATH } from './lib/base-path';
 import './index.css';
 
 function App() {
@@ -82,7 +83,7 @@ function App() {
           />
         </filter>
       </svg>
-      <BrowserRouter>
+      <BrowserRouter basename={BASE_PATH || undefined}>
         <Routes>
           {/* 账号管理页面 - 独立页面，不使用 MainLayout */}
           <Route path="/accounts" element={<AccountsPage />} />

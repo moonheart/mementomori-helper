@@ -1,7 +1,7 @@
 import axios from 'axios';
+import { API_BASE } from '@/lib/base-path';
 
-// 从环境变量获取 API URL，默认为 localhost:5000
-const baseURL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
+const baseURL = API_BASE;
 
 export const apiClient = axios.create({
     baseURL,
