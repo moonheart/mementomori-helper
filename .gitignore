@@ -29,6 +29,7 @@ publish-android
 *.db
 *.keystore
 *.log
+release-notes.md
 MementoMori.Api/AssetCache/
 MementoMori.Api/wwwroot/
 .deploy-host
