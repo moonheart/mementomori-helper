@@ -146,6 +146,10 @@ To run the program, you need to configure your account information. After that, 
 
 See [docker-compose](expamples/docker-compose)
 
+### Method 3: Android
+
+Download `MementoMori-android.apk` from the release page and install it (allow installing apps from unknown sources). The app runs the same helper and web UI on the phone itself, no PC or server needed. The first start downloads game data and can take a few minutes. While it runs it keeps a notification so Android doesn't stop the auto tasks in the background; tap "Stop" on the notification to quit.
+
 ## Automatic Tasks
 
 The program will execute specific actions at certain times.

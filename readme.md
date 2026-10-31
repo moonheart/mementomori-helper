@@ -144,6 +144,10 @@
 
 见 [docker-compose](expamples/docker-compose)
 
+### 方式3 Android
+
+在发布页面下载 `MementoMori-android.apk` 安装 (需要允许安装未知来源应用). app 在手机上直接运行同样的助手和网页界面, 不需要电脑或服务器. 第一次启动会下载游戏数据, 可能要几分钟. 运行时会有一个常驻通知, 这样 Android 不会在后台停掉自动任务; 点通知上的 "Stop" 退出.
+
 ## 自动任务
 
 程序会在特定时间执行特定操作
