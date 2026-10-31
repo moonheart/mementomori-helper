@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.CommandLine;
+using Microsoft.Extensions.Configuration.EnvironmentVariables;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi;
@@ -7,6 +10,7 @@ using MementoMori.Api.Infrastructure.Database;
 using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
+AddUserConfiguration(builder);
 builder.Logging.AddProvider(new MementoMori.Api.Infrastructure.FileLoggerProvider());
 
 // UI language for job logs / API messages: "en" (default) or "zh"
@@ -173,3 +177,40 @@ app.MapHub<MementoMori.Api.Infrastructure.LocalRaidHub>("/hubs/localraid");
 app.MapFallbackToFile("index.html"); // React 路由 (/dashboard 等)
 
 app.Run();
+
+// 加载用户覆盖配置: appsettings.json 会被新版本覆盖, 但 appsettings.user.json 不会。
+// 必须插到环境变量之前, 保证 Docker/.env 仍然能覆盖文件。
+static void AddUserConfiguration(WebApplicationBuilder builder)
+{
+    var candidates = new[]
+    {
+        Path.Combine(Directory.GetCurrentDirectory(), "appsettings.user.json"),
+        Path.Combine(builder.Environment.ContentRootPath, "appsettings.user.json"),
+        Path.Combine(AppContext.BaseDirectory, "appsettings.user.json")
+    };
+    var userConfigPath = candidates
+        .Select(Path.GetFullPath)
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .FirstOrDefault(File.Exists);
+    if (userConfigPath == null) return;
+
+    var sources = builder.Configuration.Sources;
+
+    // WebApplication.CreateBuilder 已经把环境变量/命令行加到末尾;
+    // 先移出来, 添加 user json, 再按原顺序放回去。
+    var deferredSources = sources
+        .Where(s => s is EnvironmentVariablesConfigurationSource or CommandLineConfigurationSource)
+        .ToList();
+
+    foreach (var source in deferredSources)
+    {
+        sources.Remove(source);
+    }
+
+    builder.Configuration.AddJsonFile(userConfigPath, optional: true, reloadOnChange: true);
+
+    foreach (var source in deferredSources)
+    {
+        sources.Add(source);
+    }
+}
