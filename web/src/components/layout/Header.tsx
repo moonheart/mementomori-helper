@@ -22,6 +22,7 @@ import { useUserStore } from '@/store/userStore';
 import { useTimeManager } from '@/hooks/useTimeManager';
 import { useMasterStore } from '@/store/masterStore';
 import { TimeServerMB } from '@/api/generated/timeServerMB';
+import { untilReady } from '@/lib/retry';
 
 export function Header({ onMenu }: { onMenu: () => void }) {
     const navigate = useNavigate();
@@ -35,15 +36,24 @@ export function Header({ onMenu }: { onMenu: () => void }) {
 
     // 获取用户数据，并初始化时间偏移
     useEffect(() => {
+        let cancelled = false;
+
         async function fetchHeaderData() {
+            // 后端刚启动还在自动登录时 getUserData 是空的, 轮询到有数据再渲染
+            const response = await untilReady(
+                () => ortegaApi.user.getUserData({}) as Promise<UserGetUserDataResponse>,
+                (r) => !!r?.userSyncData?.userStatusDtoInfo
+            );
+            if (cancelled || !response?.userSyncData) return;
+
+            const statusInfo = response.userSyncData.userStatusDtoInfo;
+            if (statusInfo) {
+                setStatus(statusInfo);
+                setUserInfo(statusInfo);
+            }
+            // 初始化服务器时间偏移
             try {
-                const response = await ortegaApi.user.getUserData({}) as UserGetUserDataResponse;
-                if (response?.userSyncData?.userStatusDtoInfo) {
-                    setStatus(response.userSyncData.userStatusDtoInfo);
-                    setUserInfo(response.userSyncData.userStatusDtoInfo);
-                }
-                // 初始化服务器时间偏移
-                const timeServerId = response?.userSyncData?.timeServerId;
+                const timeServerId = response.userSyncData.timeServerId;
                 if (timeServerId) {
                     const timeServers = await getTable<TimeServerMB>('TimeServerTable');
                     const ts = timeServers.find(s => s.timeServerType === timeServerId);
@@ -57,6 +67,7 @@ export function Header({ onMenu }: { onMenu: () => void }) {
         }
 
         fetchHeaderData();
+        return () => { cancelled = true; };
     }, [currentAccountId, setUserInfo, getTable, timeManager]);
 
     // 每秒刷新服务器时间显示
@@ -95,7 +106,7 @@ export function Header({ onMenu }: { onMenu: () => void }) {
 
     return (
         <>
-            <header className="flex min-h-16 items-center justify-between gap-2 border-b bg-background px-3 py-2 md:px-6">
+            <header className="flex min-h-14 items-center justify-between gap-2 border-b bg-background px-3 py-2 sm:min-h-16 md:px-6">
                 {/* Player Info */}
                 <div className="flex min-w-0 items-center gap-2 md:gap-3">
                     <Button variant="ghost" size="icon" className="shrink-0 md:hidden" onClick={onMenu} aria-label="Menu">
@@ -114,12 +125,12 @@ export function Header({ onMenu }: { onMenu: () => void }) {
                                 {t('[PlayerId]')}: {status?.playerId ?? '-'}
                             </Badge>
                         </div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="whitespace-nowrap text-xs text-muted-foreground">
                             <span className="inline-flex items-center gap-1">
                                 <Star className="h-3 w-3" />
                                 {t('[CommonPlayerRankLabel]')}: {status?.rank ?? '-'}
                             </span>
-                            <span className="mx-2">|</span>
+                            <span className="mx-1">|</span>
                             <span>{t('[CommonVipWithSpaceFormat]', [status?.vip ?? 0])}</span>
                             <span className="mx-2 hidden lg:inline">|</span>
                             <span className="hidden items-center gap-1 lg:inline-flex">
@@ -140,7 +151,7 @@ export function Header({ onMenu }: { onMenu: () => void }) {
                 </div>
 
                 {/* Currency & Actions */}
-                <div className="flex shrink-0 items-center gap-1 md:gap-4">
+                <div className="flex shrink-0 items-center gap-0.5 md:gap-4">
                     {/* Server Time (手机上放不下, 隐藏) */}
                     <div className="hidden items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 font-mono text-sm lg:flex" title={t('[MyPagePlayerInformationServerTimeLabel]')}>
                         <Clock className="h-4 w-4 text-muted-foreground shrink-0" />

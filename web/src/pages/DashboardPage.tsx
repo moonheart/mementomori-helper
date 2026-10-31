@@ -25,6 +25,7 @@ import { BookSortDialog } from '@/components/booksort/BookSortDialog';
 import { LeaderboardDialog } from '@/components/leaderboard/LeaderboardDialog';
 import { PresentBoxDialog } from '@/components/present/PresentBoxDialog';
 import { AutopilotOverview } from '@/components/autopilot/AutopilotOverview';
+import { untilReady } from '@/lib/retry';
 
 export function DashboardPage() {
     const navigate = useNavigate();
@@ -42,26 +43,33 @@ export function DashboardPage() {
     const getLanguageType = () => LanguageType[currentLanguage as keyof typeof LanguageType] ?? LanguageType.zhCN;
 
     useEffect(() => {
+        let cancelled = false;
+
         async function fetchData() {
-            try {
-                setIsLoading(true);
-                const [userResponse, mypageResponse] = await Promise.all([
-                    ortegaApi.user.getUserData({}) as Promise<UserGetUserDataResponse>,
-                    ortegaApi.user.getMypage({ languageType: getLanguageType() }) as Promise<UserGetMypageResponse>
-                ]);
-                if (userResponse && userResponse.userSyncData) {
-                    setUserData(userResponse.userSyncData);
-                }
-                if (mypageResponse) {
-                    setMypageData(mypageResponse);
-                }
-            } catch (error) {
-                console.error('Failed to fetch user data:', error);
-            } finally {
+            // 后端启动时还在自动登录账号, 这期间 getUserData 是空的 (缓存的, 很便宜), 轮询到有数据再取 mypage
+            const userResponse = await untilReady(
+                () => ortegaApi.user.getUserData({}) as Promise<UserGetUserDataResponse>,
+                (r) => !!r?.userSyncData
+            );
+            if (cancelled) return;
+            if (!userResponse?.userSyncData) {
+                console.error('Failed to fetch user data: backend still had no data');
                 setIsLoading(false);
+                return;
             }
+            setUserData(userResponse.userSyncData);
+
+            try {
+                const mypageResponse = await ortegaApi.user.getMypage({ languageType: getLanguageType() }) as UserGetMypageResponse;
+                if (!cancelled && mypageResponse) setMypageData(mypageResponse);
+            } catch (error) {
+                console.error('Failed to fetch mypage:', error);
+            }
+            if (!cancelled) setIsLoading(false);
         }
+
         fetchData();
+        return () => { cancelled = true; };
     }, []);
 
     // 从 UserSyncData 派生实时数据
