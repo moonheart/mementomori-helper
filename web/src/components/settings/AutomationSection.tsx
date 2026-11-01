@@ -41,7 +41,7 @@ const cronItems = [
 ] as const;
 
 // Not scheduled; only run from the button (the old version's quick actions)
-const manualActions = ['LegendInheritance', 'MatchlessInheritance'];
+const manualActions = ['BountyQuestRemake', 'LegendInheritance', 'MatchlessInheritance'];
 
 // 独立的 Cron 配置（没有对应的开关）
 const standaloneCrons = [

@@ -935,6 +935,15 @@
   <data name="InheritFinished" xml:space="preserve">
     <value>{0}: {1} piece(s) inherited</value>
   </data>
+  <data name="ActionBountyQuestRemake" xml:space="preserve">
+    <value>Reroll bounty quests</value>
+  </data>
+  <data name="BountyRemakeNothing" xml:space="preserve">
+    <value>Bounty quests: nothing left undispatched to reroll</value>
+  </data>
+  <data name="BountyRemakeDone" xml:space="preserve">
+    <value>Bounty quests rerolled</value>
+  </data>
   <data name="DungeonAlreadyCleared" xml:space="preserve">
       <value>Dungeon already fully cleared.</value>
   </data>

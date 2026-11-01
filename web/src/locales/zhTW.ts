@@ -808,6 +808,7 @@ export default {
     "ACCOUNT_RELOGIN": "重新登入",
     "ACCOUNT_REMOVE": "刪除帳號",
     "ACTION_CharacterStoryReward": "角色回憶獎勵",
+    "ACTION_BountyQuestRemake": "刷新懸賞任務",
     "GUILD_LOAD_FAILED": "無法載入公會資訊",
     "GUILD_NOT_IN_GUILD": "你還沒有加入公會",
     "GUILD_RELOAD": "重新載入",
