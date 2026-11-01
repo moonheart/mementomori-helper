@@ -809,6 +809,7 @@ export default {
     "ACCOUNT_RELOGIN": "再ログイン",
     "ACCOUNT_REMOVE": "アカウント削除",
     "ACTION_CharacterStoryReward": "キャラクターの記憶（ストーリー報酬）",
+    "GUILD_RAID_TOTAL_DAMAGE": "ギルド総ダメージ",
     "ACTION_BountyQuestRemake": "祈りの泉を更新",
     "GUILD_LOAD_FAILED": "ギルド情報を読み込めませんでした",
     "GUILD_NOT_IN_GUILD": "ギルドに所属していません",

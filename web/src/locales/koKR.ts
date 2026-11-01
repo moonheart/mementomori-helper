@@ -809,6 +809,7 @@ export default {
     "ACCOUNT_RELOGIN": "다시 로그인",
     "ACCOUNT_REMOVE": "계정 삭제",
     "ACTION_CharacterStoryReward": "캐릭터의 기억(스토리 보상)",
+    "GUILD_RAID_TOTAL_DAMAGE": "길드 총 대미지",
     "ACTION_BountyQuestRemake": "현상 수배 새로고침",
     "GUILD_LOAD_FAILED": "길드 정보를 불러오지 못했습니다",
     "GUILD_NOT_IN_GUILD": "길드에 가입되어 있지 않습니다",

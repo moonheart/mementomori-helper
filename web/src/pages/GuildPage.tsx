@@ -24,9 +24,11 @@ const POSITION_ORDER: Record<number, number> = {
     [PlayerGuildPositionType.Member]: 4,
 };
 
-function sinceLogin(ms: number): string {
-    if (!ms) return '-';
-    const minutes = Math.max(0, Math.floor((Date.now() - ms) / 60000));
+// lastLoginTime comes over the wire as a .NET TimeSpan string ("d.hh:mm:ss.fffffff"): time since last login, not a date.
+function sinceLogin(value: unknown): string {
+    const m = /^(?:(\d+)\.)?(\d+):(\d+):\d+/.exec(String(value ?? ''));
+    if (!m) return '-';
+    const minutes = Number(m[1] ?? 0) * 1440 + Number(m[2]) * 60 + Number(m[3]);
     if (minutes < 60) return `${minutes}m`;
     if (minutes < 60 * 24) return `${Math.floor(minutes / 60)}h`;
     return `${Math.floor(minutes / 1440)}d`;
@@ -233,11 +235,21 @@ export function GuildPage() {
                                     <CardTitle>{boss?.name ?? t('[CommonHeaderGuildRaidLabel]')}</CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-3">
-                                    <div className="flex items-center justify-between text-sm">
-                                        <span>HP</span>
-                                        <span>{boss?.currentHp.toLocaleString()} / {boss?.maxHp.toLocaleString()}</span>
-                                    </div>
-                                    <Progress value={hpPercent} className="h-3" />
+                                    {boss?.maxHp ? (
+                                        <>
+                                            <div className="flex items-center justify-between text-sm">
+                                                <span>HP</span>
+                                                <span>{boss.currentHp.toLocaleString()} / {boss.maxHp.toLocaleString()}</span>
+                                            </div>
+                                            <Progress value={hpPercent} className="h-3" />
+                                        </>
+                                    ) : (
+                                        // Damage-race bosses (Sonia) have no HP: show the guild's total damage instead.
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span>{t('GUILD_RAID_TOTAL_DAMAGE')}</span>
+                                            <span>{(raid.guildRaidDtoInfo?.totalDamage ?? 0).toLocaleString()}</span>
+                                        </div>
+                                    )}
                                     <div className="flex items-center justify-between text-sm">
                                         <span>{t('GUILD_TODAY_CHALLENGES')}</span>
                                         <Badge>{t('GUILD_TIMES', [raid.userGuildRaidDtoInfo?.challengeCount ?? 0])}</Badge>

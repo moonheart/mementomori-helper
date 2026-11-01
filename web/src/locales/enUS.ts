@@ -1292,6 +1292,7 @@ export default {
     'ITEM_FALLBACK_SET_MATERIAL_BOX': 'Set material box {0}',
     'ITEM_FALLBACK_ITEM': 'Item {0}',
     "ACTION_CharacterStoryReward": "Character memories (story rewards)",
+    "GUILD_RAID_TOTAL_DAMAGE": "Guild total damage",
     "ACTION_BountyQuestRemake": "Reroll bounty quests",
     "GUILD_LOAD_FAILED": "Could not load your guild",
     "GUILD_NOT_IN_GUILD": "You are not in a guild",

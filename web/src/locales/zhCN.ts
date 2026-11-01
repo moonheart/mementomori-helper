@@ -1295,6 +1295,7 @@ export default {
     'ITEM_FALLBACK_SET_MATERIAL_BOX': '套装材料箱 {0}',
     'ITEM_FALLBACK_ITEM': '道具 {0}',
     "ACTION_CharacterStoryReward": "角色回忆奖励",
+    "GUILD_RAID_TOTAL_DAMAGE": "公会总伤害",
     "ACTION_BountyQuestRemake": "刷新悬赏任务",
     "GUILD_LOAD_FAILED": "无法加载公会信息",
     "GUILD_NOT_IN_GUILD": "你还没有加入公会",
