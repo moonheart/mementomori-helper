@@ -95,13 +95,20 @@ public abstract class LocalRaidBaseReceiver : IMagicOnionLocalRaidReceiver, IMag
 
 public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
 {
-    public LocalRaidJoinRoomReceiver(OrtegaMagicOnionClient ortegaMagicOnionClient, Action<string> log, CancellationToken cancellationToken) 
+    private readonly TimeSpan _maxWait;
+
+    /// <summary>Running while we sit in a joined room whose battle hasn't started; null otherwise.</summary>
+    public Stopwatch? InRoomSw { get; set; }
+
+    public LocalRaidJoinRoomReceiver(OrtegaMagicOnionClient ortegaMagicOnionClient, Action<string> log, TimeSpan maxWait, CancellationToken cancellationToken) 
         : base(ortegaMagicOnionClient, log, cancellationToken)
     {
+        _maxWait = maxWait;
     }
 
     public override async void OnDisbandRoom()
     {
+        InRoomSw = null;
         _log(Masters.TextResourceTable.GetErrorCodeMessage(ClientErrorCode.LocalRaidDismissedRoom));
         await Task.Delay(3000);
         _log(Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
@@ -117,6 +124,7 @@ public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
 
     public override async void OnLeaveRoom()
     {
+        InRoomSw = null;
         await Task.Delay(3000);
         _log(Masters.TextResourceTable.Get("[LocalRaidRoomSearchButtonJoinRandomRoom]"));
         try
@@ -131,6 +139,7 @@ public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
 
     public override async void OnRefuse()
     {
+        InRoomSw = null;
         _log(Masters.TextResourceTable.Get("[LocalRaidRoomRefuseReceiveDialogMessage]"));
         await Task.Delay(3000);
         try
@@ -145,6 +154,7 @@ public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
 
     public override void OnJoinRoom(OnJoinRoomResponse response)
     {
+        InRoomSw = Stopwatch.StartNew();
         _log(Text.T("LocalRaidJoinedRoom"));
         _ortegaMagicOnionClient.SendLocalRaidReady(true);
     }
@@ -157,7 +167,7 @@ public class LocalRaidJoinRoomReceiver : LocalRaidBaseReceiver
             switch (errorCode)
             {
                 case ErrorCode.MagicOnionLocalRaidJoinRandomRoomNotExistRoom:
-                    if (_startSw.Elapsed > TimeSpan.FromMinutes(10))
+                    if (_startSw.Elapsed > _maxWait)
                     {
                         IsMaxTimeExceeded = true;
                         _startSw.Stop();

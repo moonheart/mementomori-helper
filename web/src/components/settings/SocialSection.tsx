@@ -222,16 +222,112 @@ export function SocialSection({
                         />
                     </div>
 
-                    {localRaid.selfCreateRoom && (
+                    {!localRaid.selfCreateRoom && (
+                        <>
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                <div className="space-y-2">
+                                    <Label>{t('SETTINGS_SOCIAL_LOCAL_RAID_JOIN_WAIT_MINUTES')}</Label>
+                                    <Input
+                                        type="number"
+                                        min={1}
+                                        value={localRaid.joinWaitMinutes ?? 10}
+                                        onChange={(e) => onUpdateLocalRaid({ ...localRaid, joinWaitMinutes: Math.max(1, parseInt(e.target.value) || 1) })}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>{t('SETTINGS_SOCIAL_LOCAL_RAID_ROOM_WAIT_MINUTES')}</Label>
+                                    <Input
+                                        type="number"
+                                        min={1}
+                                        value={localRaid.roomWaitMinutes ?? 3}
+                                        onChange={(e) => onUpdateLocalRaid({ ...localRaid, roomWaitMinutes: Math.max(1, parseInt(e.target.value) || 1) })}
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between space-x-2 rounded-lg border p-3">
+                                <Label htmlFor="host-when-no-room" className="flex flex-col space-y-1">
+                                    <span>{t('SETTINGS_SOCIAL_LOCAL_RAID_HOST_WHEN_NO_ROOM')}</span>
+                                    <span className="font-normal text-xs text-muted-foreground text-wrap">
+                                        {t('SETTINGS_SOCIAL_LOCAL_RAID_HOST_WHEN_NO_ROOM_DESC')}
+                                    </span>
+                                </Label>
+                                <Switch
+                                    id="host-when-no-room"
+                                    checked={!!localRaid.hostWhenNoRoom}
+                                    onCheckedChange={(checked) => onUpdateLocalRaid({ ...localRaid, hostWhenNoRoom: checked })}
+                                />
+                            </div>
+                        </>
+                    )}
+
+                    {(localRaid.selfCreateRoom || localRaid.hostWhenNoRoom) && (
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <div className="space-y-2">
+                                <Label>{t('SETTINGS_SOCIAL_LOCAL_RAID_WAIT_SECONDS')}</Label>
+                                <Input
+                                    type="number"
+                                    value={localRaid.waitSeconds}
+                                    onChange={(e) => onUpdateLocalRaid({ ...localRaid, waitSeconds: parseInt(e.target.value) || 0 })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>{t('SETTINGS_SOCIAL_LOCAL_RAID_MAX_SOLO_LOSSES')}</Label>
+                                <Input
+                                    type="number"
+                                    min={0}
+                                    value={localRaid.maxSoloLosses ?? 3}
+                                    onChange={(e) => onUpdateLocalRaid({ ...localRaid, maxSoloLosses: Math.max(0, parseInt(e.target.value) || 0) })}
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="space-y-2">
+                        <Label>{t('SETTINGS_SOCIAL_LOCAL_RAID_QUEST_LEVEL')}</Label>
+                        <Input
+                            type="number"
+                            min={0}
+                            value={localRaid.questLevel ?? 0}
+                            onChange={(e) => onUpdateLocalRaid({ ...localRaid, questLevel: Math.max(0, parseInt(e.target.value) || 0) })}
+                        />
+                        <span className="text-xs text-muted-foreground">{t('SETTINGS_SOCIAL_LOCAL_RAID_QUEST_LEVEL_DESC')}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between space-x-2 rounded-lg border p-3">
+                        <Label htmlFor="drop-lower-quest" className="flex flex-col space-y-1">
+                            <span>{t('SETTINGS_SOCIAL_LOCAL_RAID_DROP_LOWER')}</span>
+                            <span className="font-normal text-xs text-muted-foreground text-wrap">
+                                {t('SETTINGS_SOCIAL_LOCAL_RAID_DROP_LOWER_DESC')}
+                            </span>
+                        </Label>
+                        <Switch
+                            id="drop-lower-quest"
+                            checked={!!localRaid.dropToLowerQuest}
+                            onCheckedChange={(checked) => onUpdateLocalRaid({ ...localRaid, dropToLowerQuest: checked })}
+                        />
+                    </div>
+
+                    {localRaid.dropToLowerQuest && !localRaid.selfCreateRoom && (
                         <div className="space-y-2">
-                            <Label>{t('SETTINGS_SOCIAL_LOCAL_RAID_WAIT_SECONDS')}</Label>
+                            <Label>{t('SETTINGS_SOCIAL_LOCAL_RAID_LOWER_AFTER_MINUTES')}</Label>
                             <Input
                                 type="number"
-                                value={localRaid.waitSeconds}
-                                onChange={(e) => onUpdateLocalRaid({ ...localRaid, waitSeconds: parseInt(e.target.value) || 0 })}
+                                min={1}
+                                value={localRaid.lowerQuestAfterMinutes ?? 3}
+                                onChange={(e) => onUpdateLocalRaid({ ...localRaid, lowerQuestAfterMinutes: Math.max(1, parseInt(e.target.value) || 1) })}
                             />
                         </div>
                     )}
+
+                    <div className="space-y-2">
+                        <Label>{t('SETTINGS_SOCIAL_LOCAL_RAID_MAX_TASK_MINUTES')}</Label>
+                        <Input
+                            type="number"
+                            min={1}
+                            value={localRaid.maxTaskMinutes ?? 20}
+                            onChange={(e) => onUpdateLocalRaid({ ...localRaid, maxTaskMinutes: Math.max(1, parseInt(e.target.value) || 1) })}
+                        />
+                    </div>
 
                     <div className="space-y-4">
                         <div className="flex flex-col space-y-1">

@@ -168,7 +168,11 @@ public partial class TamamoService
     {
         using var req = new HttpRequestMessage(HttpMethod.Post, path) {Content = new StringContent(body.ToString(Newtonsoft.Json.Formatting.None), System.Text.Encoding.UTF8, "application/json")};
         // 作者说上传不需要 key; 有的话还是带上
-        if (key != null) req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {key}");
+        if (key != null)
+        {
+            req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {key}");
+            req.Headers.TryAddWithoutValidation("X-Api-Auth-Token", key);
+        }
         req.Headers.TryAddWithoutValidation("User-Agent", "MementoMori-Helper (+https://github.com/maplehugs/mementomori-helper)");
         using var resp = await Http.SendAsync(req);
         resp.EnsureSuccessStatusCode();
@@ -177,9 +181,11 @@ public partial class TamamoService
     private async Task<JToken> GetAsync(string key, string path)
     {
         using var req = new HttpRequestMessage(HttpMethod.Get, path);
-        // 填的可能是作者给的 API key, 也可能是 tamamo 账号的 authtoken (localStorage.tamamo_authtoken); 两个头都带, 哪个有效用哪个
+        // 填的可能是: 账号菜单 "Issue Dedicated Key" 发的专用 key (X-Api-Auth-Token), 登录的 authtoken (X-Auth-Token),
+        // 或作者给的 API key (Authorization: ApiKey); 三个头都带, 哪个有效用哪个
         req.Headers.TryAddWithoutValidation("Authorization", $"ApiKey {key}");
         req.Headers.TryAddWithoutValidation("X-Auth-Token", key);
+        req.Headers.TryAddWithoutValidation("X-Api-Auth-Token", key);
         // 没有 User-Agent 会 400; 顺便让作者知道是谁在请求
         req.Headers.TryAddWithoutValidation("User-Agent", "MementoMori-Helper (+https://github.com/maplehugs/mementomori-helper)");
         using var resp = await Http.SendAsync(req);

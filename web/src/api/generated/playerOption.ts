@@ -16,7 +16,7 @@ export class PlayerOption {
     playerId: number;
     battleLeague: PvpOption = {"selectStrategy":0,"characterFilters":[],"excludePlayerIds":[]};
     legendLeague: PvpOption = {"selectStrategy":0,"characterFilters":[],"excludePlayerIds":[]};
-    localRaid: LocalRaidConfig = {"rewardItems":[],"selfCreateRoom":false,"waitSeconds":3};
+    localRaid: LocalRaidConfig = {"rewardItems":[],"selfCreateRoom":false,"waitSeconds":3,"joinWaitMinutes":10,"hostWhenNoRoom":false,"maxSoloLosses":3,"roomWaitMinutes":3,"questLevel":0,"dropToLowerQuest":false,"lowerQuestAfterMinutes":3,"maxTaskMinutes":20};
     friendManage: FriendManageOption = {"autoRemoveInactiveFriend":false,"autoRemoveWhitelist":[],"autoSendFriendRequest":false,"autoAcceptFriendRequest":false};
     guildTower: GuildTowerOption = {"autoEntry":false,"autoChallenge":false,"autoChallengeRetryCount":10,"autoReinforcement":false,"autoReceiveReward":false};
     bountyQuest: BountyQuestOption = {"maxRefreshCount":0,"todayRefreshCount":{}};

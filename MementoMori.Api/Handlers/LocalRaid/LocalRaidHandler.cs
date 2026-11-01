@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using MementoMori.Api.Infrastructure;
 using MementoMori.Api.Models;
 using MementoMori.Api.Services;
@@ -53,19 +54,25 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
         }
 
         var createRoom = localRaid.SelfCreateRoom;
-        
+        var questStep = 0; // 0 = 最佳关卡; DropToLowerQuest 时每一步降一级
+
         // 1. 获取活动信息
         var localRaidInfo = await nm.SendRequest<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
-        var questId = GetQuestId(localRaidInfo, rewardItems);
+        var questId = GetQuestId(localRaidInfo, rewardItems, localRaid.QuestLevel, questStep);
 
         await _jobLogger.LogAsync(userId, Text.T("LocalRaidStarting", questId, createRoom));
 
         // 2. 连接 MagicOnion
-        var cts = new CancellationTokenSource(TimeSpan.FromMinutes(30)); // 总时长限制 (加入等 10 分钟 + 自己开房)
+        var joinWait = TimeSpan.FromMinutes(Math.Max(1, localRaid.JoinWaitMinutes));
+        var lowerAfter = TimeSpan.FromMinutes(Math.Max(1, localRaid.LowerQuestAfterMinutes));
+        var roomWait = TimeSpan.FromMinutes(Math.Max(1, localRaid.RoomWaitMinutes));
+        var cts = new CancellationTokenSource(TimeSpan.FromMinutes(Math.Max(1, localRaid.MaxTaskMinutes))); // 整个任务的时长上限, 防止卡住
+        var joinSw = Stopwatch.StartNew();
         var logAction = new Action<string>(async msg => await _jobLogger.LogAsync(userId, msg));
 
-        // 加入模式等不到房间时, 改成自己开房间单刷 (master #119); 单刷连输 3 次就停
-        for (var pass = 0; pass < 2; pass++)
+        // 加入模式等不到房间: 可选先降一级关卡再找 (DropToLowerQuest), 再可选自己开房单刷 (HostWhenNoRoom), 否则放弃.
+        // 自己开房连输 MaxSoloLosses 次: 可选降一级关卡继续, 否则停止. 全部受 MaxTaskMinutes 限制.
+        while (!cts.IsCancellationRequested)
         {
         var soloLosses = 0;
         OrtegaMagicOnionClient? client = null;
@@ -74,9 +81,16 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
             client = await ConnectOnionAsync(nm, logAction, cts.Token);
             if (client == null) return;
 
+            // 这一轮加入等待: 剩余的加入时间, 或者 (可降级时) 先等 LowerQuestAfterMinutes
+            var remaining = joinWait - joinSw.Elapsed;
+            if (remaining < TimeSpan.FromMinutes(1)) remaining = TimeSpan.FromMinutes(1);
+            var passWait = localRaid.DropToLowerQuest && HasLowerQuest(localRaidInfo, rewardItems, localRaid.QuestLevel, questStep) && lowerAfter < remaining
+                ? lowerAfter
+                : remaining;
+
             LocalRaidBaseReceiver receiver = createRoom 
                 ? new LocalRaidCreateRoomReceiver(client, logAction, localRaid.WaitSeconds, cts.Token)
-                : new LocalRaidJoinRoomReceiver(client, logAction, cts.Token);
+                : new LocalRaidJoinRoomReceiver(client, logAction, passWait, cts.Token);
 
             receiver.QuestId = questId;
             client.SetupLocalRaid(receiver, receiver);
@@ -86,7 +100,7 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
             {
                 // 获取最新信息
                 localRaidInfo = await nm.SendRequest<GetLocalRaidInfoRequest, GetLocalRaidInfoResponse>(new GetLocalRaidInfoRequest());
-                questId = GetQuestId(localRaidInfo, rewardItems);
+                questId = GetQuestId(localRaidInfo, rewardItems, localRaid.QuestLevel, questStep);
                 receiver.QuestId = questId;
                 receiver.IsBattleStarted = false;
 
@@ -116,8 +130,17 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
                         goto PassDone;
                     }
 
+                    // 进了房间但一直不开战 (房主挂机等), 退出再找别的房间
+                    if (receiver is LocalRaidJoinRoomReceiver joined && !receiver.IsBattleStarted && joined.InRoomSw?.Elapsed > roomWait)
+                    {
+                        joined.InRoomSw = null;
+                        await _jobLogger.LogAsync(userId, Text.T("LocalRaidRoomStuck", localRaid.RoomWaitMinutes));
+                        client.SendLocalRaidLeaveRoom();
+                    }
+
                     if (receiver.IsBattleStarted)
                     {
+                        if (receiver is LocalRaidJoinRoomReceiver started) started.InRoomSw = null;
                         await Task.Delay(3000, cts.Token); // 等待服务器同步结果
                         try
                         {
@@ -125,10 +148,16 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
                             bool isWin = battleResult.BattleResult.SimulationResult.BattleEndInfo.IsWinAttacker();
                             await _jobLogger.LogAsync(userId, isWin ? Text.T("LocalRaidVictory") : Text.T("LocalRaidDefeat"));
                             soloLosses = isWin ? 0 : soloLosses + 1;
-                            if (createRoom && soloLosses >= 3)
+                            if (createRoom && localRaid.MaxSoloLosses > 0 && soloLosses >= localRaid.MaxSoloLosses)
                             {
-                                await _jobLogger.LogAsync(userId, Text.T("LocalRaidSoloStop"));
-                                return;
+                                if (!localRaid.DropToLowerQuest || !HasLowerQuest(localRaidInfo, rewardItems, localRaid.QuestLevel, questStep))
+                                {
+                                    await _jobLogger.LogAsync(userId, Text.T("LocalRaidSoloStop"));
+                                    return;
+                                }
+                                questStep++;
+                                soloLosses = 0;
+                                await _jobLogger.LogAsync(userId, Text.T("LocalRaidLowerQuest", GetQuestId(localRaidInfo, rewardItems, localRaid.QuestLevel, questStep)));
                             }
                         }
                         catch (Exception ex)
@@ -159,8 +188,16 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
         }
 
         PassDone:
-        // 只有 "加入模式等超时" 才换成自己开房间再来一轮
         if (createRoom || cts.IsCancellationRequested) return;
+        // 加入等超时: 还在加入时间内且有更低的关卡 -> 降一级再找
+        if (localRaid.DropToLowerQuest && joinSw.Elapsed < joinWait && HasLowerQuest(localRaidInfo, rewardItems, localRaid.QuestLevel, questStep))
+        {
+            questStep++;
+            await _jobLogger.LogAsync(userId, Text.T("LocalRaidLowerQuest", GetQuestId(localRaidInfo, rewardItems, localRaid.QuestLevel, questStep)));
+            continue;
+        }
+        // 否则: 开启 HostWhenNoRoom 才自己开房间, 不然就放弃 (旧模式)
+        if (!localRaid.HostWhenNoRoom) return;
         await _jobLogger.LogAsync(userId, Text.T("LocalRaidHostingOwnRoom"));
         createRoom = true;
         }
@@ -217,7 +254,44 @@ public partial class LocalRaidHandler : IGameActionHandler, IMagicOnionLocalRaid
         return client;
     }
 
-    private long GetQuestId(GetLocalRaidInfoResponse response, List<GameConfig.WeightedItem> rewardItems)
+    // step 0: 起始关卡 (手动等级, 或按奖励自动选); step N: 比它低的第 N 个关卡 (同一类: 活动本或常规本)
+    private long GetQuestId(GetLocalRaidInfoResponse response, List<GameConfig.WeightedItem> rewardItems, int questLevel, int step)
+    {
+        var best = GetStartQuestId(response, rewardItems, questLevel);
+        if (step <= 0) return best;
+        var lower = LowerQuests(response, best);
+        return lower.Count == 0 ? best : lower[Math.Min(step, lower.Count) - 1];
+    }
+
+    private bool HasLowerQuest(GetLocalRaidInfoResponse response, List<GameConfig.WeightedItem> rewardItems, int questLevel, int step) =>
+        LowerQuests(response, GetStartQuestId(response, rewardItems, questLevel)).Count > step;
+
+    // 手动指定等级 (给低等级小号用): 该等级的关卡, 没有就取低于它的最高一级, 再没有就最低的; 0 = 按奖励自动选
+    private long GetStartQuestId(GetLocalRaidInfoResponse response, List<GameConfig.WeightedItem> rewardItems, int questLevel)
+    {
+        if (questLevel <= 0) return GetBestQuestId(response, rewardItems);
+        var events = response.OpenEventLocalRaidQuestIds;
+        var pool = response.LocalRaidQuestInfos.Where(q => events.Contains(q.Id)).ToList();
+        if (pool.Count == 0) pool = response.LocalRaidQuestInfos.ToList();
+        var pick = pool.Where(q => q.Level <= questLevel).OrderByDescending(q => q.Level).FirstOrDefault()
+                   ?? pool.OrderBy(q => q.Level).FirstOrDefault();
+        return pick?.Id ?? GetBestQuestId(response, rewardItems);
+    }
+
+    private static List<long> LowerQuests(GetLocalRaidInfoResponse response, long best)
+    {
+        var quests = response.LocalRaidQuestInfos;
+        var bestQuest = quests.FirstOrDefault(q => q.Id == best);
+        if (bestQuest == null) return new List<long>();
+        var isEvent = response.OpenEventLocalRaidQuestIds.Contains(best);
+        return quests
+            .Where(q => q.Level < bestQuest.Level && response.OpenEventLocalRaidQuestIds.Contains(q.Id) == isEvent)
+            .OrderByDescending(q => q.Level)
+            .Select(q => q.Id)
+            .ToList();
+    }
+
+    private long GetBestQuestId(GetLocalRaidInfoResponse response, List<GameConfig.WeightedItem> rewardItems)
     {
         if (response.OpenEventLocalRaidQuestIds.Count > 0)
         {
