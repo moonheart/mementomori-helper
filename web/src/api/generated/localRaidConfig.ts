@@ -9,4 +9,12 @@ export class LocalRaidConfig {
     rewardItems: WeightedItem[] = [];
     selfCreateRoom: boolean;
     waitSeconds: number = 3;
+    joinWaitMinutes: number = 10;
+    hostWhenNoRoom: boolean;
+    maxSoloLosses: number = 3;
+    roomWaitMinutes: number = 3;
+    questLevel: number;
+    dropToLowerQuest: boolean;
+    lowerQuestAfterMinutes: number = 3;
+    maxTaskMinutes: number = 20;
 }

@@ -147,7 +147,15 @@ public partial class PlayerSettingService
                 new() { ItemType = ItemType.EquipmentReinforcementItem, ItemId = 1, Weight = 1.0 }
             },
             SelfCreateRoom = false,
-            WaitSeconds = 3
+            WaitSeconds = 3,
+            JoinWaitMinutes = 10,
+            HostWhenNoRoom = false,
+            MaxSoloLosses = 3,
+            RoomWaitMinutes = 3,
+            QuestLevel = 0,
+            DropToLowerQuest = false,
+            LowerQuestAfterMinutes = 3,
+            MaxTaskMinutes = 20
         };
         await SaveSettingAsync(userId, SettingKeys.LocalRaid, localRaid);
 

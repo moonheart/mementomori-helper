@@ -1398,6 +1398,12 @@
   <data name="LocalRaidHostingOwnRoom" xml:space="preserve">
     <value>没有可加入的房间, 改为自己开房间</value>
   </data>
+  <data name="LocalRaidRoomStuck" xml:space="preserve">
+    <value>房间 {0} 分钟没有开战, 退出寻找其他房间</value>
+  </data>
+  <data name="LocalRaidLowerQuest" xml:space="preserve">
+    <value>改打低一级的关卡 (QuestId: {0})</value>
+  </data>
   <data name="LocalRaidSoloStop" xml:space="preserve">
     <value>自己开房间连输 3 次, 等下一轮再打</value>
   </data>

@@ -118,6 +118,30 @@ public class GameConfig
         public List<WeightedItem> RewardItems { get; set; } = new();
         public bool SelfCreateRoom { get; set; }
         public int WaitSeconds { get; set; } = 3;
+
+        /// <summary>Join mode: minutes to keep looking for a room before giving up.</summary>
+        public int JoinWaitMinutes { get; set; } = 10;
+
+        /// <summary>Join mode: when no room turns up in time, host one and run it solo (off = give up, like before 2.2).</summary>
+        public bool HostWhenNoRoom { get; set; }
+
+        /// <summary>Hosting: stop after this many losses in a row (losses don't use attempts). 0 = never stop.</summary>
+        public int MaxSoloLosses { get; set; } = 3;
+
+        /// <summary>Join mode: leave a joined room whose battle hasn't started after this many minutes, and look for another.</summary>
+        public int RoomWaitMinutes { get; set; } = 3;
+
+        /// <summary>Quest level to join/host (for low-level alts). 0 = pick automatically by reward weights.</summary>
+        public int QuestLevel { get; set; }
+
+        /// <summary>Try the next lower quest when no room shows up (join mode) or after MaxSoloLosses (hosting) instead of stopping.</summary>
+        public bool DropToLowerQuest { get; set; }
+
+        /// <summary>Join mode with DropToLowerQuest: minutes on one quest before trying a lower one.</summary>
+        public int LowerQuestAfterMinutes { get; set; } = 3;
+
+        /// <summary>Hard limit for the whole task, so no account stays stuck.</summary>
+        public int MaxTaskMinutes { get; set; } = 20;
     }
 
     [ExportTsClass]
