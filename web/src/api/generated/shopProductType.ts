@@ -10,11 +10,12 @@ export enum ShopProductType {
     GrowthPack = 4,
     ContractPrivilege = 5,
     MonthlyBoost = 6,
-    CurrencyMission = 7,
     FirstChargeBonus = 8,
     AchievementPack = 9,
     ChargeBonus = 10,
     GuerrillaPack = 11,
     MissionPass = 12,
+    WebStore = 13,
+    WebStoreGuidancePanel = 14,
     AllSearch = 99,
 }

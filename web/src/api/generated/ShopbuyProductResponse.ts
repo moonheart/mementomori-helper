@@ -15,6 +15,7 @@ export class ShopBuyProductResponse extends ApiResponseBase implements IUserSync
     givenPlayerName: string;
     rewardInfo: AcquisitionShopRewardInfo;
     shopProductInfo: ShopProductInfo;
+    savePoint: number;
     userStripePointHistoryInfo: UserStripePointHistoryInfo;
     userSyncData: UserSyncData;
 }

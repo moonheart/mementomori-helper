@@ -11,7 +11,7 @@ export enum CommonJingleType {
     BattleChapterClear = 2202,
     NextChapter = 2203,
     BattleSecondContinentChapterClear = 2204,
-    BattleThirdAndFourthContinentChapterClear = 2205,
+    BattleThirdToFifthContinentChapterClear = 2205,
     CharacterEquip = 3005,
     GachaCharacterResultOpen = 7002,
     GachaDestinyResultOpen = 7006,
@@ -32,4 +32,5 @@ export enum CommonJingleType {
     LuckyChanceResultRainbow = 14002,
     MonologueIn = 15001,
     MonologueOut = 15002,
+    MiningQuestSpecialAttack = 16001,
 }

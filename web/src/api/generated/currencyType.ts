@@ -11,4 +11,5 @@ export enum CurrencyType {
     PaidDMM = 5,
     PaidSteam = 6,
     PaidApk = 7,
+    PaidWebCrystal = 100,
 }

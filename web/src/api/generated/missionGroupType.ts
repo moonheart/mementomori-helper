@@ -18,5 +18,6 @@ export enum MissionGroupType {
     PopularityVote = 13,
     BookSort = 14,
     RentalRaid = 15,
+    MiningQuest = 17,
     DailyBonus = 1000,
 }

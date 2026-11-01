@@ -9,4 +9,5 @@ import { NoticeInfo } from "./noticeInfo";
 export class NoticeGetNoticeInfoListResponse extends ApiResponseBase {
     noticeInfoList: NoticeInfo[];
     eventInfoList: NoticeInfo[];
+    dungeonBattleEventTutorialId: number;
 }

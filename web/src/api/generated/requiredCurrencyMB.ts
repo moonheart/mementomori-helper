@@ -13,4 +13,5 @@ export class RequiredCurrencyMB extends MasterBookBase {
     quick: number;
     towerBattle: number;
     levelLinkMember: number;
+    unionMission: number;
 }

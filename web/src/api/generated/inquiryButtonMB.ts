@@ -15,4 +15,5 @@ export class InquiryButtonMB extends MasterBookBase {
     timeServerIds: number[];
     transferUrl: TranslatedText;
     deviceTypes: number[];
+    precautionTextKey: string;
 }

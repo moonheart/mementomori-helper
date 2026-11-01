@@ -4,7 +4,8 @@
  */
 
 import { ApiResponseBase } from "./apiResponseBase";
+import { UserSyncData } from "./userSyncData";
 
 export class DebugSetVipLevelResponse extends ApiResponseBase {
-
+    userSyncData: UserSyncData;
 }

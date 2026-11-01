@@ -51,5 +51,7 @@ export enum TransferSpotType {
     WorldGuidance = 300,
     PlayVideo = 330,
     RentalRaid = 340,
+    WebStoreDescription = 350,
+    MiningQuest = 360,
     Friend = 4,
 }

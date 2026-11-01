@@ -4,6 +4,7 @@
  */
 
 import { CharacterRarityFlags } from "./characterRarityFlags";
+import { EquipmentRarityFlags } from "./equipmentRarityFlags";
 import { UserEquipmentDtoInfo } from "./userEquipmentDtoInfo";
 import { UnitType } from "./unitType";
 import { JobFlags } from "./jobFlags";
@@ -20,6 +21,7 @@ export class BattleFieldCharacter {
     characterGuid: string;
     characterLevel: number;
     characterRarityFlags: CharacterRarityFlags;
+    exclusiveEquipmentRarityFlags: EquipmentRarityFlags;
     equipmentMaxLevel: number;
     equipmentDtoInfos: UserEquipmentDtoInfo[];
     unitType: UnitType;

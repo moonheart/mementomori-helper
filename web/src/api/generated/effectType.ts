@@ -161,6 +161,7 @@ export enum EffectType {
     Confuse = 6002,
     Silence = 6003,
     Stubborn = 6004,
+    Imprison = 6005,
     HpRecoveryForbidden = 7002,
     BuffForbidden = 7003,
     AvoidanceForbidden = 7004,

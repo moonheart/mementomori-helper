@@ -12,4 +12,5 @@ export enum PatternSettingType {
     InviteWorldByDynamicLink = 5,
     FirstChargeBonusButton = 6,
     OneWeekLimitedPackPushNotification = 7,
+    WebStoreGuidance = 8,
 }

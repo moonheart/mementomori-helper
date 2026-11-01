@@ -12,4 +12,5 @@ export enum ActivityMedalType {
     Guild = 6,
     Collab = 7,
     Collab2 = 8,
+    UnionMission = 9,
 }

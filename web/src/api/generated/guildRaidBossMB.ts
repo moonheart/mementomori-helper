@@ -43,4 +43,5 @@ export class GuildRaidBossMB extends MasterBookBase implements IHasStartEndTime 
     worldDamageBarRewardCharacterImageSize: number;
     worldDamageBarRewardCharacterImageX: number;
     worldDamageBarRewardCharacterImageY: number;
+    eventTutorialId: number;
 }

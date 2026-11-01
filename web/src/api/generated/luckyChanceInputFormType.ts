@@ -9,4 +9,5 @@ export enum LuckyChanceInputFormType {
     InputPersonalInfo = 2,
     InputMailAddress = 3,
     RegisteredPersonalInfo = 4,
+    InputSelectCharacter = 5,
 }

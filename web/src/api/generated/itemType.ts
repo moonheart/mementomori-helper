@@ -57,5 +57,9 @@ export enum ItemType {
     EventExchangePlaceItem = 50,
     IconEffect = 51,
     SynchroCellUnlockItem = 52,
+    RealPrizeC = 54,
+    MiningQuestEventRewardItem = 56,
+    UnionMissionTicket = 57,
     StripeCoupon = 1001,
+    WebCrystal = 2001,
 }

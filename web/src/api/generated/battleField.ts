@@ -15,4 +15,5 @@ export class BattleField {
     attackTeamTotalKillCount: number;
     receiveTeamTotalKillCount: number;
     damageBarList: DamageBar[];
+    joinPlayerIds: number[];
 }

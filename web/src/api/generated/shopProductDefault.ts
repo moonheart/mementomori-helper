@@ -24,4 +24,5 @@ export class ShopProductDefault {
     shopProductPrice: number;
     shopProductUiType: ShopProductUiType;
     userItemList: ShopItem[];
+    openVipLevel: number;
 }

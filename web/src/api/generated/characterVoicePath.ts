@@ -7,5 +7,6 @@ import { CommonTimelineType } from "./CommontimelineType";
 
 export class CharacterVoicePath {
     timelineId: number;
+    voiceId: number;
     timelineType: CommonTimelineType;
 }

@@ -24,5 +24,6 @@ export class CharacterProfileMB extends MasterBookBase {
     movieUsUrl: TranslatedText;
     vocalJPKey: string;
     vocalUSKey: string;
+    searchKeywordsJP: string[];
     weight: number;
 }

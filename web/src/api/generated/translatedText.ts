@@ -3,7 +3,10 @@
  * Any changes made to this file can be lost when this file is regenerated.
  */
 
+import { LanguageType } from "./languageType";
+
 export class TranslatedText {
+    static readonly supportedLanguageTypes: LanguageType[];
     jaJP: string;
     enUS: string;
     koKR: string;

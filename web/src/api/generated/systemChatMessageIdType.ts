@@ -23,4 +23,5 @@ export enum SystemChatMessageIdType {
     GuildTowerAchieveCombo = 17,
     DeclareToTargetGuild = 18,
     RecaptureToTargetGuild = 19,
+    ExpireChatRecruitGuildMember = 20,
 }

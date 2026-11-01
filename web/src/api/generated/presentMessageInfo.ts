@@ -12,4 +12,8 @@ export class PresentMessageInfo {
     characterCollectionLevel: number;
     guildRaidEventNameKey: string;
     relatedPlayerName: string;
+    serialCode: string;
+    serialCodeGroupId: string;
+    rentalRaidRankingType: number;
+    miningQuestGradeType: number;
 }

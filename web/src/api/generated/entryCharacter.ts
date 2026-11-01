@@ -5,5 +5,6 @@
 
 export class EntryCharacter {
     entryCharacterId: number;
+    groupId: number;
     subDisplayCharacterIdList: number[];
 }

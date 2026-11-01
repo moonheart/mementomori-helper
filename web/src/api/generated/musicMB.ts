@@ -14,4 +14,5 @@ export class MusicMB extends MasterBookBase {
     musicPath: string;
     thumbnailPath: string;
     consumeMusicTicketCount: number;
+    searchKeywordsJP: string[];
 }

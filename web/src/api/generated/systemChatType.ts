@@ -13,4 +13,5 @@ export enum SystemChatType {
     BattleLeague = 6,
     Guild = 7,
     ChangePlayerName = 8,
+    ChatRecruitGuildMember = 9,
 }

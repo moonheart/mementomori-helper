@@ -6,6 +6,8 @@
 import { IPlayerIconInfo } from "./iPlayerIconInfo";
 import { ChatBattleInfo } from "./chatBattleInfo";
 import { ChatMusicPlaylistInfo } from "./chatMusicPlaylistInfo";
+import { ChatRecruitGuildMemberInfo } from "./chatRecruitGuildMemberInfo";
+import { ChatGuildNoteInfo } from "./chatGuildNoteInfo";
 import { ChatType } from "./chatType";
 import { LegendLeagueClassType } from "./legendLeagueClassType";
 import { SystemChatMessageIdType } from "./systemChatMessageIdType";
@@ -16,6 +18,8 @@ export class ChatInfo implements IPlayerIconInfo {
     iconEffectId: number;
     chatBattleInfo: ChatBattleInfo;
     chatMusicPlaylistInfo: ChatMusicPlaylistInfo;
+    chatRecruitGuildMemberInfo: ChatRecruitGuildMemberInfo;
+    chatGuildNoteInfo: ChatGuildNoteInfo;
     chatType: ChatType;
     guildName: string;
     legendLeagueClass: LegendLeagueClassType;

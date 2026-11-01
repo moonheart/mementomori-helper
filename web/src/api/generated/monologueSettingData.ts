@@ -7,6 +7,8 @@ import { MonologueTextType } from "./monologueTextType";
 
 export class MonologueSettingData {
     songLyricsStartTime: number;
+    songLyricsEndTime: number;
     songLyricsKey: string;
+    monologueTextType: MonologueTextType;
     recitationTextType: MonologueTextType;
 }

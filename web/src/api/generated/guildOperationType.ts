@@ -23,4 +23,10 @@ export enum GuildOperationType {
     ManagementGvgCastleMemo = 17,
     ManagementGuildSurvey = 18,
     DeleteNotOwnChatAnnounceAndSurvey = 19,
+    ChatRecruitGuildMember = 20,
+    DeleteNotOwnGuildNote = 21,
+    ManagementGuildNote = 22,
+    SortGuildNote = 23,
+    EntryUnionMission = 24,
+    RefreshUnionSharedMission = 25,
 }

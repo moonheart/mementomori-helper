@@ -53,9 +53,27 @@ export const ortegaApi = {
         /** battle/getLegendLeagueInfo */
         getLegendLeagueInfo: (request: OrtegaRpcMap["battle/getLegendLeagueInfo"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["battle/getLegendLeagueInfo"]["response"]>("battle/getLegendLeagueInfo", request),
+        /** battle/getLegendLeagueLogs */
+        getLegendLeagueLogs: (request: OrtegaRpcMap["battle/getLegendLeagueLogs"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["battle/getLegendLeagueLogs"]["response"]>("battle/getLegendLeagueLogs", request),
+        /** battle/getLegendLeagueResultDetail */
+        getLegendLeagueResultDetail: (request: OrtegaRpcMap["battle/getLegendLeagueResultDetail"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["battle/getLegendLeagueResultDetail"]["response"]>("battle/getLegendLeagueResultDetail", request),
+        /** battle/getLegendLeagueTopRanker */
+        getLegendLeagueTopRanker: (request: OrtegaRpcMap["battle/getLegendLeagueTopRanker"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["battle/getLegendLeagueTopRanker"]["response"]>("battle/getLegendLeagueTopRanker", request),
+        /** battle/getPvpBattleLogs */
+        getPvpBattleLogs: (request: OrtegaRpcMap["battle/getPvpBattleLogs"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["battle/getPvpBattleLogs"]["response"]>("battle/getPvpBattleLogs", request),
+        /** battle/getPvpBattleResultDetail */
+        getPvpBattleResultDetail: (request: OrtegaRpcMap["battle/getPvpBattleResultDetail"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["battle/getPvpBattleResultDetail"]["response"]>("battle/getPvpBattleResultDetail", request),
         /** battle/getPvpInfo */
         getPvpInfo: (request: OrtegaRpcMap["battle/getPvpInfo"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["battle/getPvpInfo"]["response"]>("battle/getPvpInfo", request),
+        /** battle/getPvpTopRanker */
+        getPvpTopRanker: (request: OrtegaRpcMap["battle/getPvpTopRanker"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["battle/getPvpTopRanker"]["response"]>("battle/getPvpTopRanker", request),
         /** battle/legendLeagueStart */
         legendLeagueStart: (request: OrtegaRpcMap["battle/legendLeagueStart"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["battle/legendLeagueStart"]["response"]>("battle/legendLeagueStart", request),
@@ -110,6 +128,9 @@ export const ortegaApi = {
         /** bountyQuest/getList */
         getList: (request: OrtegaRpcMap["bountyQuest/getList"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["bountyQuest/getList"]["response"]>("bountyQuest/getList", request),
+        /** bountyQuest/quick */
+        quick: (request: OrtegaRpcMap["bountyQuest/quick"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["bountyQuest/quick"]["response"]>("bountyQuest/quick", request),
         /** bountyQuest/remake */
         remake: (request: OrtegaRpcMap["bountyQuest/remake"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["bountyQuest/remake"]["response"]>("bountyQuest/remake", request),
@@ -121,12 +142,18 @@ export const ortegaApi = {
             rpcClient.call<OrtegaRpcMap["bountyQuest/start"]["response"]>("bountyQuest/start", request),
     },
     character: {
+        /** character/bulkLevelUp */
+        bulkLevelUp: (request: OrtegaRpcMap["character/bulkLevelUp"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["character/bulkLevelUp"]["response"]>("character/bulkLevelUp", request),
         /** character/getCharacterStoryReward */
         getCharacterStoryReward: (request: OrtegaRpcMap["character/getCharacterStoryReward"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["character/getCharacterStoryReward"]["response"]>("character/getCharacterStoryReward", request),
         /** character/getDetailsInfo */
         getDetailsInfo: (request: OrtegaRpcMap["character/getDetailsInfo"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["character/getDetailsInfo"]["response"]>("character/getDetailsInfo", request),
+        /** character/levelUp */
+        levelUp: (request: OrtegaRpcMap["character/levelUp"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["character/levelUp"]["response"]>("character/levelUp", request),
         /** character/rankUp */
         rankUp: (request: OrtegaRpcMap["character/rankUp"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["character/rankUp"]["response"]>("character/rankUp", request),
@@ -135,12 +162,27 @@ export const ortegaApi = {
             rpcClient.call<OrtegaRpcMap["character/readCharacterStory"]["response"]>("character/readCharacterStory", request),
     },
     debug: {
+        /** debug/addMusicPlayLog */
+        addMusicPlayLog: (request: OrtegaRpcMap["debug/addMusicPlayLog"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["debug/addMusicPlayLog"]["response"]>("debug/addMusicPlayLog", request),
         /** debug/giveAllSrCharacter */
         giveAllSrCharacter: (request: OrtegaRpcMap["debug/giveAllSrCharacter"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["debug/giveAllSrCharacter"]["response"]>("debug/giveAllSrCharacter", request),
+        /** debug/setMiningQuestBenefitPurchaseCount */
+        setMiningQuestBenefitPurchaseCount: (request: OrtegaRpcMap["debug/setMiningQuestBenefitPurchaseCount"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["debug/setMiningQuestBenefitPurchaseCount"]["response"]>("debug/setMiningQuestBenefitPurchaseCount", request),
+        /** debug/setMiningQuestMaxScore */
+        setMiningQuestMaxScore: (request: OrtegaRpcMap["debug/setMiningQuestMaxScore"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["debug/setMiningQuestMaxScore"]["response"]>("debug/setMiningQuestMaxScore", request),
+        /** debug/setMiningQuestTotalRewardCount */
+        setMiningQuestTotalRewardCount: (request: OrtegaRpcMap["debug/setMiningQuestTotalRewardCount"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["debug/setMiningQuestTotalRewardCount"]["response"]>("debug/setMiningQuestTotalRewardCount", request),
         /** debug/setVipLevel */
         setVipLevel: (request: OrtegaRpcMap["debug/setVipLevel"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["debug/setVipLevel"]["response"]>("debug/setVipLevel", request),
+        /** debug/unionMissionResetAcceptCount */
+        unionMissionResetAcceptCount: (request: OrtegaRpcMap["debug/unionMissionResetAcceptCount"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["debug/unionMissionResetAcceptCount"]["response"]>("debug/unionMissionResetAcceptCount", request),
     },
     dungeonBattle: {
         /** dungeonBattle/execBattle */
@@ -205,6 +247,12 @@ export const ortegaApi = {
         /** equipment/changeEquipment */
         changeEquipment: (request: OrtegaRpcMap["equipment/changeEquipment"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["equipment/changeEquipment"]["response"]>("equipment/changeEquipment", request),
+        /** equipment/changeSphere */
+        changeSphere: (request: OrtegaRpcMap["equipment/changeSphere"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["equipment/changeSphere"]["response"]>("equipment/changeSphere", request),
+        /** equipment/composeManySphere */
+        composeManySphere: (request: OrtegaRpcMap["equipment/composeManySphere"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["equipment/composeManySphere"]["response"]>("equipment/composeManySphere", request),
         /** equipment/inheritanceEquipment */
         inheritanceEquipment: (request: OrtegaRpcMap["equipment/inheritanceEquipment"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["equipment/inheritanceEquipment"]["response"]>("equipment/inheritanceEquipment", request),
@@ -217,6 +265,14 @@ export const ortegaApi = {
         /** equipment/training */
         training: (request: OrtegaRpcMap["equipment/training"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["equipment/training"]["response"]>("equipment/training", request),
+        /** equipment/unlockSphereSlot */
+        unlockSphereSlot: (request: OrtegaRpcMap["equipment/unlockSphereSlot"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["equipment/unlockSphereSlot"]["response"]>("equipment/unlockSphereSlot", request),
+    },
+    equipmentSynchro: {
+        /** equipmentSynchro/rewardMission */
+        rewardMission: (request: OrtegaRpcMap["equipmentSynchro/rewardMission"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["equipmentSynchro/rewardMission"]["response"]>("equipmentSynchro/rewardMission", request),
     },
     friend: {
         /** friend/applyFriend */
@@ -234,6 +290,9 @@ export const ortegaApi = {
         /** friend/getFriendCampaignInfo */
         getFriendCampaignInfo: (request: OrtegaRpcMap["friend/getFriendCampaignInfo"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["friend/getFriendCampaignInfo"]["response"]>("friend/getFriendCampaignInfo", request),
+        /** friend/getFriendStatus */
+        getFriendStatus: (request: OrtegaRpcMap["friend/getFriendStatus"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["friend/getFriendStatus"]["response"]>("friend/getFriendStatus", request),
         /** friend/getPlayerInfoList */
         getPlayerInfoList: (request: OrtegaRpcMap["friend/getPlayerInfoList"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["friend/getPlayerInfoList"]["response"]>("friend/getPlayerInfoList", request),
@@ -287,6 +346,14 @@ export const ortegaApi = {
         receiveGlobalGvgReward: (request: OrtegaRpcMap["globalGvg/receiveGlobalGvgReward"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["globalGvg/receiveGlobalGvgReward"]["response"]>("globalGvg/receiveGlobalGvgReward", request),
     },
+    guild: {
+        /** guild/chatRecruitGuildMember */
+        chatRecruitGuildMember: (request: OrtegaRpcMap["guild/chatRecruitGuildMember"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["guild/chatRecruitGuildMember"]["response"]>("guild/chatRecruitGuildMember", request),
+        /** guild/searchGuildByRecruitGuildMemberChat */
+        searchGuildByRecruitGuildMemberChat: (request: OrtegaRpcMap["guild/searchGuildByRecruitGuildMemberChat"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["guild/searchGuildByRecruitGuildMemberChat"]["response"]>("guild/searchGuildByRecruitGuildMemberChat", request),
+    },
     guildInfo: {
         /** guildInfo/getGuildBaseInfo */
         getGuildBaseInfo: (request: OrtegaRpcMap["guildInfo/getGuildBaseInfo"]["request"]) =>
@@ -297,6 +364,29 @@ export const ortegaApi = {
         /** guildInfo/getGuildMemberInfo */
         getGuildMemberInfo: (request: OrtegaRpcMap["guildInfo/getGuildMemberInfo"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["guildInfo/getGuildMemberInfo"]["response"]>("guildInfo/getGuildMemberInfo", request),
+    },
+    guildNote: {
+        /** guildNote/createGuildNote */
+        createGuildNote: (request: OrtegaRpcMap["guildNote/createGuildNote"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["guildNote/createGuildNote"]["response"]>("guildNote/createGuildNote", request),
+        /** guildNote/getGuildNoteList */
+        getGuildNoteList: (request: OrtegaRpcMap["guildNote/getGuildNoteList"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["guildNote/getGuildNoteList"]["response"]>("guildNote/getGuildNoteList", request),
+        /** guildNote/getReactionDetailInfo */
+        getReactionDetailInfo: (request: OrtegaRpcMap["guildNote/getReactionDetailInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["guildNote/getReactionDetailInfo"]["response"]>("guildNote/getReactionDetailInfo", request),
+        /** guildNote/reactGuildNote */
+        reactGuildNote: (request: OrtegaRpcMap["guildNote/reactGuildNote"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["guildNote/reactGuildNote"]["response"]>("guildNote/reactGuildNote", request),
+        /** guildNote/shareGuildNote */
+        shareGuildNote: (request: OrtegaRpcMap["guildNote/shareGuildNote"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["guildNote/shareGuildNote"]["response"]>("guildNote/shareGuildNote", request),
+        /** guildNote/updateGuildNote */
+        updateGuildNote: (request: OrtegaRpcMap["guildNote/updateGuildNote"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["guildNote/updateGuildNote"]["response"]>("guildNote/updateGuildNote", request),
+        /** guildNote/updateGuildNoteList */
+        updateGuildNoteList: (request: OrtegaRpcMap["guildNote/updateGuildNoteList"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["guildNote/updateGuildNoteList"]["response"]>("guildNote/updateGuildNoteList", request),
     },
     guildRaid: {
         /** guildRaid/getGuildRaidInfo */
@@ -317,6 +407,9 @@ export const ortegaApi = {
         /** guildRaid/startGuildRaid */
         startGuildRaid: (request: OrtegaRpcMap["guildRaid/startGuildRaid"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["guildRaid/startGuildRaid"]["response"]>("guildRaid/startGuildRaid", request),
+        /** guildRaid/startGuildRaidTrial */
+        startGuildRaidTrial: (request: OrtegaRpcMap["guildRaid/startGuildRaidTrial"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["guildRaid/startGuildRaidTrial"]["response"]>("guildRaid/startGuildRaidTrial", request),
     },
     guildTower: {
         /** guildTower/battle */
@@ -351,6 +444,34 @@ export const ortegaApi = {
         /** item/useAutoBattleRewardItem */
         useAutoBattleRewardItem: (request: OrtegaRpcMap["item/useAutoBattleRewardItem"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["item/useAutoBattleRewardItem"]["response"]>("item/useAutoBattleRewardItem", request),
+    },
+    legendLeague: {
+        /** legendLeague/buyLegendLeagueIconReward */
+        buyLegendLeagueIconReward: (request: OrtegaRpcMap["legendLeague/buyLegendLeagueIconReward"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["legendLeague/buyLegendLeagueIconReward"]["response"]>("legendLeague/buyLegendLeagueIconReward", request),
+        /** legendLeague/getLegendLeagueIconRewardInfo */
+        getLegendLeagueIconRewardInfo: (request: OrtegaRpcMap["legendLeague/getLegendLeagueIconRewardInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["legendLeague/getLegendLeagueIconRewardInfo"]["response"]>("legendLeague/getLegendLeagueIconRewardInfo", request),
+    },
+    levelLink: {
+        /** levelLink/addExp */
+        addExp: (request: OrtegaRpcMap["levelLink/addExp"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["levelLink/addExp"]["response"]>("levelLink/addExp", request),
+        /** levelLink/levelUp */
+        levelUp: (request: OrtegaRpcMap["levelLink/levelUp"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["levelLink/levelUp"]["response"]>("levelLink/levelUp", request),
+        /** levelLink/resetCoolTime */
+        resetCoolTime: (request: OrtegaRpcMap["levelLink/resetCoolTime"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["levelLink/resetCoolTime"]["response"]>("levelLink/resetCoolTime", request),
+        /** levelLink/setMember */
+        setMember: (request: OrtegaRpcMap["levelLink/setMember"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["levelLink/setMember"]["response"]>("levelLink/setMember", request),
+        /** levelLink/sortMember */
+        sortMember: (request: OrtegaRpcMap["levelLink/sortMember"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["levelLink/sortMember"]["response"]>("levelLink/sortMember", request),
+        /** levelLink/unSetMember */
+        unSetMember: (request: OrtegaRpcMap["levelLink/unSetMember"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["levelLink/unSetMember"]["response"]>("levelLink/unSetMember", request),
     },
     localGvg: {
         /** localGvg/receiveLocalGvgReward */
@@ -394,6 +515,49 @@ export const ortegaApi = {
         receiveSpecialLimitedLoginBonus: (request: OrtegaRpcMap["loginBonus/receiveSpecialLimitedLoginBonus"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["loginBonus/receiveSpecialLimitedLoginBonus"]["response"]>("loginBonus/receiveSpecialLimitedLoginBonus", request),
     },
+    luckyChance: {
+        /** luckyChance/GetDetailInfo */
+        GetDetailInfo: (request: OrtegaRpcMap["luckyChance/GetDetailInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["luckyChance/GetDetailInfo"]["response"]>("luckyChance/GetDetailInfo", request),
+        /** luckyChance/registerRealPrizeCItemInfo */
+        registerRealPrizeCItemInfo: (request: OrtegaRpcMap["luckyChance/registerRealPrizeCItemInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["luckyChance/registerRealPrizeCItemInfo"]["response"]>("luckyChance/registerRealPrizeCItemInfo", request),
+        /** luckyChance/SelectButton */
+        SelectButton: (request: OrtegaRpcMap["luckyChance/SelectButton"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["luckyChance/SelectButton"]["response"]>("luckyChance/SelectButton", request),
+    },
+    miningQuest: {
+        /** miningQuest/finish */
+        finish: (request: OrtegaRpcMap["miningQuest/finish"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["miningQuest/finish"]["response"]>("miningQuest/finish", request),
+        /** miningQuest/getBenefitInfo */
+        getBenefitInfo: (request: OrtegaRpcMap["miningQuest/getBenefitInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["miningQuest/getBenefitInfo"]["response"]>("miningQuest/getBenefitInfo", request),
+        /** miningQuest/getCurrentParameters */
+        getCurrentParameters: (request: OrtegaRpcMap["miningQuest/getCurrentParameters"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["miningQuest/getCurrentParameters"]["response"]>("miningQuest/getCurrentParameters", request),
+        /** miningQuest/getGradeInfo */
+        getGradeInfo: (request: OrtegaRpcMap["miningQuest/getGradeInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["miningQuest/getGradeInfo"]["response"]>("miningQuest/getGradeInfo", request),
+        /** miningQuest/getInfo */
+        getInfo: (request: OrtegaRpcMap["miningQuest/getInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["miningQuest/getInfo"]["response"]>("miningQuest/getInfo", request),
+        /** miningQuest/getMaxRewardCountInfo */
+        getMaxRewardCountInfo: (request: OrtegaRpcMap["miningQuest/getMaxRewardCountInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["miningQuest/getMaxRewardCountInfo"]["response"]>("miningQuest/getMaxRewardCountInfo", request),
+        /** miningQuest/receiveGradeDailyReward */
+        receiveGradeDailyReward: (request: OrtegaRpcMap["miningQuest/receiveGradeDailyReward"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["miningQuest/receiveGradeDailyReward"]["response"]>("miningQuest/receiveGradeDailyReward", request),
+        /** miningQuest/reinforcement */
+        reinforcement: (request: OrtegaRpcMap["miningQuest/reinforcement"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["miningQuest/reinforcement"]["response"]>("miningQuest/reinforcement", request),
+        /** miningQuest/start */
+        start: (request: OrtegaRpcMap["miningQuest/start"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["miningQuest/start"]["response"]>("miningQuest/start", request),
+        /** miningQuest/unlockBenefit */
+        unlockBenefit: (request: OrtegaRpcMap["miningQuest/unlockBenefit"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["miningQuest/unlockBenefit"]["response"]>("miningQuest/unlockBenefit", request),
+    },
     mission: {
         /** mission/getMissionInfo */
         getMissionInfo: (request: OrtegaRpcMap["mission/getMissionInfo"]["request"]) =>
@@ -415,6 +579,14 @@ export const ortegaApi = {
         /** notice/getNoticeInfoList */
         getNoticeInfoList: (request: OrtegaRpcMap["notice/getNoticeInfoList"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["notice/getNoticeInfoList"]["response"]>("notice/getNoticeInfoList", request),
+    },
+    popularityVote: {
+        /** popularityVote/getInfo */
+        getInfo: (request: OrtegaRpcMap["popularityVote/getInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["popularityVote/getInfo"]["response"]>("popularityVote/getInfo", request),
+        /** popularityVote/rewardVoteItem */
+        rewardVoteItem: (request: OrtegaRpcMap["popularityVote/rewardVoteItem"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["popularityVote/rewardVoteItem"]["response"]>("popularityVote/rewardVoteItem", request),
     },
     present: {
         /** present/deletePresent */
@@ -458,19 +630,56 @@ export const ortegaApi = {
         receiveAchieveRankingReward: (request: OrtegaRpcMap["ranking/receiveAchieveRankingReward"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["ranking/receiveAchieveRankingReward"]["response"]>("ranking/receiveAchieveRankingReward", request),
     },
+    rentalRaid: {
+        /** rentalRaid/getShareRewardInfo */
+        getShareRewardInfo: (request: OrtegaRpcMap["rentalRaid/getShareRewardInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["rentalRaid/getShareRewardInfo"]["response"]>("rentalRaid/getShareRewardInfo", request),
+        /** rentalRaid/receiveShareReward */
+        receiveShareReward: (request: OrtegaRpcMap["rentalRaid/receiveShareReward"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["rentalRaid/receiveShareReward"]["response"]>("rentalRaid/receiveShareReward", request),
+    },
     shop: {
+        /** shop/bulkBuyProductWithWebCrystal */
+        bulkBuyProductWithWebCrystal: (request: OrtegaRpcMap["shop/bulkBuyProductWithWebCrystal"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["shop/bulkBuyProductWithWebCrystal"]["response"]>("shop/bulkBuyProductWithWebCrystal", request),
         /** shop/buyProduct */
         buyProduct: (request: OrtegaRpcMap["shop/buyProduct"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["shop/buyProduct"]["response"]>("shop/buyProduct", request),
+        /** shop/buyProductWithWebCrystal */
+        buyProductWithWebCrystal: (request: OrtegaRpcMap["shop/buyProductWithWebCrystal"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["shop/buyProductWithWebCrystal"]["response"]>("shop/buyProductWithWebCrystal", request),
+        /** shop/getBoiPaymentDetailHistory */
+        getBoiPaymentDetailHistory: (request: OrtegaRpcMap["shop/getBoiPaymentDetailHistory"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["shop/getBoiPaymentDetailHistory"]["response"]>("shop/getBoiPaymentDetailHistory", request),
+        /** shop/getBoiPaymentHistoryList */
+        getBoiPaymentHistoryList: (request: OrtegaRpcMap["shop/getBoiPaymentHistoryList"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["shop/getBoiPaymentHistoryList"]["response"]>("shop/getBoiPaymentHistoryList", request),
+        /** shop/getBoiPointHistoryList */
+        getBoiPointHistoryList: (request: OrtegaRpcMap["shop/getBoiPointHistoryList"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["shop/getBoiPointHistoryList"]["response"]>("shop/getBoiPointHistoryList", request),
         /** shop/getList */
         getList: (request: OrtegaRpcMap["shop/getList"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["shop/getList"]["response"]>("shop/getList", request),
         /** shop/getProductList */
         getProductList: (request: OrtegaRpcMap["shop/getProductList"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["shop/getProductList"]["response"]>("shop/getProductList", request),
+        /** shop/getWebStoreGuidancePanel */
+        getWebStoreGuidancePanel: (request: OrtegaRpcMap["shop/getWebStoreGuidancePanel"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["shop/getWebStoreGuidancePanel"]["response"]>("shop/getWebStoreGuidancePanel", request),
         /** shop/receiveReward */
         receiveReward: (request: OrtegaRpcMap["shop/receiveReward"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["shop/receiveReward"]["response"]>("shop/receiveReward", request),
+        /** shop/registerActionLog */
+        registerActionLog: (request: OrtegaRpcMap["shop/registerActionLog"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["shop/registerActionLog"]["response"]>("shop/registerActionLog", request),
+    },
+    starsGuidanceTradeShop: {
+        /** starsGuidanceTradeShop/exchangeItem */
+        exchangeItem: (request: OrtegaRpcMap["starsGuidanceTradeShop/exchangeItem"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["starsGuidanceTradeShop/exchangeItem"]["response"]>("starsGuidanceTradeShop/exchangeItem", request),
+        /** starsGuidanceTradeShop/getStarsGuidanceTradeShopInfo */
+        getStarsGuidanceTradeShopInfo: (request: OrtegaRpcMap["starsGuidanceTradeShop/getStarsGuidanceTradeShopInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["starsGuidanceTradeShop/getStarsGuidanceTradeShopInfo"]["response"]>("starsGuidanceTradeShop/getStarsGuidanceTradeShopInfo", request),
     },
     towerBattle: {
         /** towerBattle/quick */
@@ -491,6 +700,47 @@ export const ortegaApi = {
         resetTab: (request: OrtegaRpcMap["tradeShop/resetTab"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["tradeShop/resetTab"]["response"]>("tradeShop/resetTab", request),
     },
+    unionMission: {
+        /** unionMission/acceptMission */
+        acceptMission: (request: OrtegaRpcMap["unionMission/acceptMission"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/acceptMission"]["response"]>("unionMission/acceptMission", request),
+        /** unionMission/buyAcceptCount */
+        buyAcceptCount: (request: OrtegaRpcMap["unionMission/buyAcceptCount"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/buyAcceptCount"]["response"]>("unionMission/buyAcceptCount", request),
+        /** unionMission/entryUnionMission */
+        entryUnionMission: (request: OrtegaRpcMap["unionMission/entryUnionMission"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/entryUnionMission"]["response"]>("unionMission/entryUnionMission", request),
+        /** unionMission/getInfo */
+        getInfo: (request: OrtegaRpcMap["unionMission/getInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/getInfo"]["response"]>("unionMission/getInfo", request),
+        /** unionMission/getRanking */
+        getRanking: (request: OrtegaRpcMap["unionMission/getRanking"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/getRanking"]["response"]>("unionMission/getRanking", request),
+        /** unionMission/receiveIndividualTotalPointReward */
+        receiveIndividualTotalPointReward: (request: OrtegaRpcMap["unionMission/receiveIndividualTotalPointReward"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/receiveIndividualTotalPointReward"]["response"]>("unionMission/receiveIndividualTotalPointReward", request),
+        /** unionMission/receiveMissionReward */
+        receiveMissionReward: (request: OrtegaRpcMap["unionMission/receiveMissionReward"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/receiveMissionReward"]["response"]>("unionMission/receiveMissionReward", request),
+        /** unionMission/receiveTotalPointReward */
+        receiveTotalPointReward: (request: OrtegaRpcMap["unionMission/receiveTotalPointReward"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/receiveTotalPointReward"]["response"]>("unionMission/receiveTotalPointReward", request),
+        /** unionMission/refreshPersonalMission */
+        refreshPersonalMission: (request: OrtegaRpcMap["unionMission/refreshPersonalMission"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/refreshPersonalMission"]["response"]>("unionMission/refreshPersonalMission", request),
+        /** unionMission/refreshSharedMission */
+        refreshSharedMission: (request: OrtegaRpcMap["unionMission/refreshSharedMission"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/refreshSharedMission"]["response"]>("unionMission/refreshSharedMission", request),
+        /** unionMission/resetCoolTimeMission */
+        resetCoolTimeMission: (request: OrtegaRpcMap["unionMission/resetCoolTimeMission"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/resetCoolTimeMission"]["response"]>("unionMission/resetCoolTimeMission", request),
+        /** unionMission/retireMission */
+        retireMission: (request: OrtegaRpcMap["unionMission/retireMission"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/retireMission"]["response"]>("unionMission/retireMission", request),
+        /** unionMission/selectMission */
+        selectMission: (request: OrtegaRpcMap["unionMission/selectMission"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["unionMission/selectMission"]["response"]>("unionMission/selectMission", request),
+    },
     user: {
         /** user/getMypage */
         getMypage: (request: OrtegaRpcMap["user/getMypage"]["request"]) =>
@@ -501,11 +751,22 @@ export const ortegaApi = {
         /** user/loginPlayer */
         loginPlayer: (request: OrtegaRpcMap["user/loginPlayer"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["user/loginPlayer"]["response"]>("user/loginPlayer", request),
+        /** user/saveUsedDeck */
+        saveUsedDeck: (request: OrtegaRpcMap["user/saveUsedDeck"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["user/saveUsedDeck"]["response"]>("user/saveUsedDeck", request),
     },
     vip: {
         /** vip/getDailyGift */
         getDailyGift: (request: OrtegaRpcMap["vip/getDailyGift"]["request"]) =>
             rpcClient.call<OrtegaRpcMap["vip/getDailyGift"]["response"]>("vip/getDailyGift", request),
+    },
+    webStore: {
+        /** webStore/getLoginCampaignInfo */
+        getLoginCampaignInfo: (request: OrtegaRpcMap["webStore/getLoginCampaignInfo"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["webStore/getLoginCampaignInfo"]["response"]>("webStore/getLoginCampaignInfo", request),
+        /** webStore/rewardLoginCampaignItem */
+        rewardLoginCampaignItem: (request: OrtegaRpcMap["webStore/rewardLoginCampaignItem"]["request"]) =>
+            rpcClient.call<OrtegaRpcMap["webStore/rewardLoginCampaignItem"]["response"]>("webStore/rewardLoginCampaignItem", request),
     },
     weeklyTopics: {
         /** weeklyTopics/getWeeklyTopicsInfo */

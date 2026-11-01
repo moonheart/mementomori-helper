@@ -4,12 +4,14 @@
  */
 
 import { ShopProductType } from "./shopProductType";
+import { BulkShopProductInfo } from "./bulkShopProductInfo";
 
 export class StripeShopProductInfo {
     givePlayerId: number;
     mbId: number;
     productId: string;
     shopProductType: ShopProductType;
+    bulkShopProductInfos: BulkShopProductInfo[];
     sessionId: string;
     isStripePaidStatus: boolean;
 }

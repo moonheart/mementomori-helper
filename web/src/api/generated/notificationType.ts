@@ -34,4 +34,8 @@ export enum NotificationType {
     PlayVideoFromMyPage = 27,
     PlayVideoFromEventPortal = 28,
     NotPopularityVoteGroupOnDay = 29,
+    EntryUnionMissionAvailable = 30,
+    NotVisitUnionMissionOnDay = 31,
+    ReceivableUnionMissionPoint = 32,
+    ReceivableUnionMissionReward = 33,
 }

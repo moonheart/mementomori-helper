@@ -31,8 +31,20 @@ import type {
     BattleGetCompetitionInfoResponse,
     BattleGetLegendLeagueInfoRequest,
     BattleGetLegendLeagueInfoResponse,
+    BattleGetLegendLeagueLogsRequest,
+    BattleGetLegendLeagueLogsResponse,
+    BattleGetLegendLeagueResultDetailRequest,
+    BattleGetLegendLeagueResultDetailResponse,
+    BattleGetLegendLeagueTopRankerRequest,
+    BattleGetLegendLeagueTopRankerResponse,
+    BattleGetPvpBattleLogsRequest,
+    BattleGetPvpBattleLogsResponse,
+    BattleGetPvpBattleResultDetailRequest,
+    BattleGetPvpBattleResultDetailResponse,
     BattleGetPvpInfoRequest,
     BattleGetPvpInfoResponse,
+    BattleGetPvpTopRankerRequest,
+    BattleGetPvpTopRankerResponse,
     BattleLegendLeagueStartRequest,
     BattleLegendLeagueStartResponse,
     BattleNextQuestRequest,
@@ -65,24 +77,40 @@ import type {
     BookSortBookSortUpFloorResponse,
     BountyQuestGetListRequest,
     BountyQuestGetListResponse,
+    BountyQuestQuickRequest,
+    BountyQuestQuickResponse,
     BountyQuestRemakeRequest,
     BountyQuestRemakeResponse,
     BountyQuestRewardRequest,
     BountyQuestRewardResponse,
     BountyQuestStartRequest,
     BountyQuestStartResponse,
+    CharacterBulkLevelUpRequest,
+    CharacterBulkLevelUpResponse,
     CharacterGetCharacterStoryRewardRequest,
     CharacterGetCharacterStoryRewardResponse,
     CharacterGetDetailsInfoRequest,
     CharacterGetDetailsInfoResponse,
+    CharacterLevelUpRequest,
+    CharacterLevelUpResponse,
     CharacterRankUpRequest,
     CharacterRankUpResponse,
     CharacterReadCharacterStoryRequest,
     CharacterReadCharacterStoryResponse,
+    DebugAddMusicPlayLogRequest,
+    DebugAddMusicPlayLogResponse,
     DebugGiveAllSrCharacterRequest,
     DebugGiveAllSrCharacterResponse,
+    DebugSetMiningQuestBenefitPurchaseCountRequest,
+    DebugSetMiningQuestBenefitPurchaseCountResponse,
+    DebugSetMiningQuestMaxScoreRequest,
+    DebugSetMiningQuestMaxScoreResponse,
+    DebugSetMiningQuestTotalRewardCountRequest,
+    DebugSetMiningQuestTotalRewardCountResponse,
     DebugSetVipLevelRequest,
     DebugSetVipLevelResponse,
+    DebugUnionMissionResetAcceptCountRequest,
+    DebugUnionMissionResetAcceptCountResponse,
     DungeonBattleExecBattleRequest,
     DungeonBattleExecBattleResponse,
     DungeonBattleExecGuestRequest,
@@ -123,14 +151,22 @@ import type {
     EquipmentCastResponse,
     EquipmentChangeEquipmentRequest,
     EquipmentChangeEquipmentResponse,
+    EquipmentChangeSphereRequest,
+    EquipmentChangeSphereResponse,
+    EquipmentComposeManySphereRequest,
+    EquipmentComposeManySphereResponse,
     EquipmentInheritanceEquipmentRequest,
     EquipmentInheritanceEquipmentResponse,
     EquipmentReinforcementRequest,
     EquipmentReinforcementResponse,
     EquipmentRemoveEquipmentRequest,
     EquipmentRemoveEquipmentResponse,
+    EquipmentSynchroEquipmentSynchroRewardMissionRequest,
+    EquipmentSynchroEquipmentSynchroRewardMissionResponse,
     EquipmentTrainingRequest,
     EquipmentTrainingResponse,
+    EquipmentUnlockSphereSlotRequest,
+    EquipmentUnlockSphereSlotResponse,
     FriendApplyFriendRequest,
     FriendApplyFriendResponse,
     FriendBulkApplyFriendsRequest,
@@ -141,6 +177,8 @@ import type {
     FriendCancelAllApplyFriendResponse,
     FriendGetFriendCampaignInfoRequest,
     FriendGetFriendCampaignInfoResponse,
+    FriendGetFriendStatusRequest,
+    FriendGetFriendStatusResponse,
     FriendGetPlayerInfoListRequest,
     FriendGetPlayerInfoListResponse,
     FriendReceiveFriendPointRequest,
@@ -173,12 +211,28 @@ import type {
     GachaSetSelectListResponse,
     GlobalGvgReceiveGlobalGvgRewardRequest,
     GlobalGvgReceiveGlobalGvgRewardResponse,
+    GuildChatRecruitGuildMemberRequest,
+    GuildChatRecruitGuildMemberResponse,
     GuildGetGuildBaseInfoRequest,
     GuildGetGuildBaseInfoResponse,
     GuildGetGuildIdRequest,
     GuildGetGuildIdResponse,
     GuildGetGuildMemberInfoRequest,
     GuildGetGuildMemberInfoResponse,
+    GuildNoteCreateGuildNoteRequest,
+    GuildNoteCreateGuildNoteResponse,
+    GuildNoteGetGuildNoteListRequest,
+    GuildNoteGetGuildNoteListResponse,
+    GuildNoteGetReactionDetailInfoRequest,
+    GuildNoteGetReactionDetailInfoResponse,
+    GuildNoteReactGuildNoteRequest,
+    GuildNoteReactGuildNoteResponse,
+    GuildNoteShareGuildNoteRequest,
+    GuildNoteShareGuildNoteResponse,
+    GuildNoteUpdateGuildNoteListRequest,
+    GuildNoteUpdateGuildNoteListResponse,
+    GuildNoteUpdateGuildNoteRequest,
+    GuildNoteUpdateGuildNoteResponse,
     GuildRaidGetGuildRaidInfoRequest,
     GuildRaidGetGuildRaidInfoResponse,
     GuildRaidGetGuildRaidWorldRewardInfoRequest,
@@ -191,6 +245,10 @@ import type {
     GuildRaidQuickStartGuildRaidResponse,
     GuildRaidStartGuildRaidRequest,
     GuildRaidStartGuildRaidResponse,
+    GuildRaidStartGuildRaidTrialRequest,
+    GuildRaidStartGuildRaidTrialResponse,
+    GuildSearchGuildByRecruitGuildMemberChatRequest,
+    GuildSearchGuildByRecruitGuildMemberChatResponse,
     GuildTowerBattleRequest,
     GuildTowerBattleResponse,
     GuildTowerEntryCharacterRequest,
@@ -211,6 +269,22 @@ import type {
     ItemOpenTreasureChestResponse,
     ItemUseAutoBattleRewardItemRequest,
     ItemUseAutoBattleRewardItemResponse,
+    LegendLeagueBuyLegendLeagueIconRewardRequest,
+    LegendLeagueBuyLegendLeagueIconRewardResponse,
+    LegendLeagueGetLegendLeagueIconRewardInfoRequest,
+    LegendLeagueGetLegendLeagueIconRewardInfoResponse,
+    LevelLinkAddExpRequest,
+    LevelLinkAddExpResponse,
+    LevelLinkLevelUpRequest,
+    LevelLinkLevelUpResponse,
+    LevelLinkResetCoolTimeRequest,
+    LevelLinkResetCoolTimeResponse,
+    LevelLinkSetMemberRequest,
+    LevelLinkSetMemberResponse,
+    LevelLinkSortMemberRequest,
+    LevelLinkSortMemberResponse,
+    LevelLinkUnSetMemberRequest,
+    LevelLinkUnSetMemberResponse,
     LocalGvgReceiveLocalGvgRewardRequest,
     LocalGvgReceiveLocalGvgRewardResponse,
     LocalRaidGetLocalRaidBattleLogsRequest,
@@ -235,6 +309,32 @@ import type {
     LoginBonusReceiveLoginCountBonusResponse,
     LoginBonusReceiveSpecialLimitedLoginBonusRequest,
     LoginBonusReceiveSpecialLimitedLoginBonusResponse,
+    LuckyChanceLuckyChanceGetDetailInfoRequest,
+    LuckyChanceLuckyChanceGetDetailInfoResponse,
+    LuckyChanceLuckyChanceSelectButtonRequest,
+    LuckyChanceLuckyChanceSelectButtonResponse,
+    LuckyChanceRegisterRealPrizeCItemInfoRequest,
+    LuckyChanceRegisterRealPrizeCItemInfoResponse,
+    MiningQuestMiningQuestFinishRequest,
+    MiningQuestMiningQuestFinishResponse,
+    MiningQuestMiningQuestGetBenefitInfoRequest,
+    MiningQuestMiningQuestGetBenefitInfoResponse,
+    MiningQuestMiningQuestGetCurrentParametersRequest,
+    MiningQuestMiningQuestGetCurrentParametersResponse,
+    MiningQuestMiningQuestGetGradeInfoRequest,
+    MiningQuestMiningQuestGetGradeInfoResponse,
+    MiningQuestMiningQuestGetInfoRequest,
+    MiningQuestMiningQuestGetInfoResponse,
+    MiningQuestMiningQuestGetMaxRewardCountInfoRequest,
+    MiningQuestMiningQuestGetMaxRewardCountInfoResponse,
+    MiningQuestMiningQuestReceiveGradeDailyRewardRequest,
+    MiningQuestMiningQuestReceiveGradeDailyRewardResponse,
+    MiningQuestMiningQuestReinforcementRequest,
+    MiningQuestMiningQuestReinforcementResponse,
+    MiningQuestMiningQuestStartRequest,
+    MiningQuestMiningQuestStartResponse,
+    MiningQuestMiningQuestUnlockBenefitRequest,
+    MiningQuestMiningQuestUnlockBenefitResponse,
     MissionGetMissionInfoRequest,
     MissionGetMissionInfoResponse,
     MissionReceivePanelMissionBingoRewardRequest,
@@ -247,6 +347,10 @@ import type {
     NoticeGetMyPageNoticeInfoListResponse,
     NoticeGetNoticeInfoListRequest,
     NoticeGetNoticeInfoListResponse,
+    PopularityVoteGetInfoRequest,
+    PopularityVoteGetInfoResponse,
+    PopularityVoteRewardVoteItemRequest,
+    PopularityVoteRewardVoteItemResponse,
     PresentDeletePresentRequest,
     PresentDeletePresentResponse,
     PresentGetListRequest,
@@ -271,14 +375,36 @@ import type {
     RankingGetTowerRankingResponse,
     RankingReceiveAchieveRankingRewardRequest,
     RankingReceiveAchieveRankingRewardResponse,
+    RentalRaidGetShareRewardInfoRequest,
+    RentalRaidGetShareRewardInfoResponse,
+    RentalRaidReceiveShareRewardRequest,
+    RentalRaidReceiveShareRewardResponse,
+    ShopBulkBuyProductWithWebCrystalRequest,
+    ShopBulkBuyProductWithWebCrystalResponse,
     ShopBuyProductRequest,
     ShopBuyProductResponse,
+    ShopBuyProductWithWebCrystalRequest,
+    ShopBuyProductWithWebCrystalResponse,
+    ShopGetBoiPaymentDetailHistoryRequest,
+    ShopGetBoiPaymentDetailHistoryResponse,
+    ShopGetBoiPaymentHistoryListRequest,
+    ShopGetBoiPaymentHistoryListResponse,
+    ShopGetBoiPointHistoryListRequest,
+    ShopGetBoiPointHistoryListResponse,
     ShopGetListRequest,
     ShopGetListResponse,
     ShopGetProductListRequest,
     ShopGetProductListResponse,
+    ShopGetWebStoreGuidancePanelRequest,
+    ShopGetWebStoreGuidancePanelResponse,
     ShopReceiveRewardRequest,
     ShopReceiveRewardResponse,
+    ShopRegisterActionLogRequest,
+    ShopRegisterActionLogResponse,
+    StarsGuidanceTradeShopExchangeItemRequest,
+    StarsGuidanceTradeShopExchangeItemResponse,
+    StarsGuidanceTradeShopGetStarsGuidanceTradeShopInfoRequest,
+    StarsGuidanceTradeShopGetStarsGuidanceTradeShopInfoResponse,
     TowerBattleStartRequest,
     TowerBattleStartResponse,
     TowerBattleTowerBattleQuickRequest,
@@ -289,14 +415,46 @@ import type {
     TradeShopGetListResponse,
     TradeShopResetTabRequest,
     TradeShopResetTabResponse,
+    UnionMissionEntryUnionMissionRequest,
+    UnionMissionEntryUnionMissionResponse,
+    UnionMissionUnionMissionAcceptMissionRequest,
+    UnionMissionUnionMissionAcceptMissionResponse,
+    UnionMissionUnionMissionBuyAcceptCountRequest,
+    UnionMissionUnionMissionBuyAcceptCountResponse,
+    UnionMissionUnionMissionGetInfoRequest,
+    UnionMissionUnionMissionGetInfoResponse,
+    UnionMissionUnionMissionGetRankingRequest,
+    UnionMissionUnionMissionGetRankingResponse,
+    UnionMissionUnionMissionReceiveIndividualTotalPointRewardRequest,
+    UnionMissionUnionMissionReceiveIndividualTotalPointRewardResponse,
+    UnionMissionUnionMissionReceiveMissionRewardRequest,
+    UnionMissionUnionMissionReceiveMissionRewardResponse,
+    UnionMissionUnionMissionReceiveTotalPointRewardRequest,
+    UnionMissionUnionMissionReceiveTotalPointRewardResponse,
+    UnionMissionUnionMissionRefreshPersonalMissionRequest,
+    UnionMissionUnionMissionRefreshPersonalMissionResponse,
+    UnionMissionUnionMissionRefreshSharedMissionRequest,
+    UnionMissionUnionMissionRefreshSharedMissionResponse,
+    UnionMissionUnionMissionResetCoolTimeMissionRequest,
+    UnionMissionUnionMissionResetCoolTimeMissionResponse,
+    UnionMissionUnionMissionRetireMissionRequest,
+    UnionMissionUnionMissionRetireMissionResponse,
+    UnionMissionUnionMissionSelectMissionRequest,
+    UnionMissionUnionMissionSelectMissionResponse,
     UserGetMypageRequest,
     UserGetMypageResponse,
     UserGetUserDataRequest,
     UserGetUserDataResponse,
     UserLoginPlayerRequest,
     UserLoginPlayerResponse,
+    UserSaveUsedDeckRequest,
+    UserSaveUsedDeckResponse,
     VipGetDailyGiftRequest,
     VipGetDailyGiftResponse,
+    WebStoreLoginCampaignGetLoginCampaignInfoRequest,
+    WebStoreLoginCampaignGetLoginCampaignInfoResponse,
+    WebStoreLoginCampaignRewardLoginCampaignItemRequest,
+    WebStoreLoginCampaignRewardLoginCampaignItemResponse,
     WeeklyTopicsGetWeeklyTopicsInfoRequest,
     WeeklyTopicsGetWeeklyTopicsInfoResponse,
 } from './generated';
@@ -358,9 +516,33 @@ export interface OrtegaRpcMap {
         request: BattleGetLegendLeagueInfoRequest;
         response: BattleGetLegendLeagueInfoResponse;
     };
+    "battle/getLegendLeagueLogs": {
+        request: BattleGetLegendLeagueLogsRequest;
+        response: BattleGetLegendLeagueLogsResponse;
+    };
+    "battle/getLegendLeagueResultDetail": {
+        request: BattleGetLegendLeagueResultDetailRequest;
+        response: BattleGetLegendLeagueResultDetailResponse;
+    };
+    "battle/getLegendLeagueTopRanker": {
+        request: BattleGetLegendLeagueTopRankerRequest;
+        response: BattleGetLegendLeagueTopRankerResponse;
+    };
+    "battle/getPvpBattleLogs": {
+        request: BattleGetPvpBattleLogsRequest;
+        response: BattleGetPvpBattleLogsResponse;
+    };
+    "battle/getPvpBattleResultDetail": {
+        request: BattleGetPvpBattleResultDetailRequest;
+        response: BattleGetPvpBattleResultDetailResponse;
+    };
     "battle/getPvpInfo": {
         request: BattleGetPvpInfoRequest;
         response: BattleGetPvpInfoResponse;
+    };
+    "battle/getPvpTopRanker": {
+        request: BattleGetPvpTopRankerRequest;
+        response: BattleGetPvpTopRankerResponse;
     };
     "battle/legendLeagueStart": {
         request: BattleLegendLeagueStartRequest;
@@ -426,6 +608,10 @@ export interface OrtegaRpcMap {
         request: BountyQuestGetListRequest;
         response: BountyQuestGetListResponse;
     };
+    "bountyQuest/quick": {
+        request: BountyQuestQuickRequest;
+        response: BountyQuestQuickResponse;
+    };
     "bountyQuest/remake": {
         request: BountyQuestRemakeRequest;
         response: BountyQuestRemakeResponse;
@@ -438,6 +624,10 @@ export interface OrtegaRpcMap {
         request: BountyQuestStartRequest;
         response: BountyQuestStartResponse;
     };
+    "character/bulkLevelUp": {
+        request: CharacterBulkLevelUpRequest;
+        response: CharacterBulkLevelUpResponse;
+    };
     "character/getCharacterStoryReward": {
         request: CharacterGetCharacterStoryRewardRequest;
         response: CharacterGetCharacterStoryRewardResponse;
@@ -445,6 +635,10 @@ export interface OrtegaRpcMap {
     "character/getDetailsInfo": {
         request: CharacterGetDetailsInfoRequest;
         response: CharacterGetDetailsInfoResponse;
+    };
+    "character/levelUp": {
+        request: CharacterLevelUpRequest;
+        response: CharacterLevelUpResponse;
     };
     "character/rankUp": {
         request: CharacterRankUpRequest;
@@ -454,13 +648,33 @@ export interface OrtegaRpcMap {
         request: CharacterReadCharacterStoryRequest;
         response: CharacterReadCharacterStoryResponse;
     };
+    "debug/addMusicPlayLog": {
+        request: DebugAddMusicPlayLogRequest;
+        response: DebugAddMusicPlayLogResponse;
+    };
     "debug/giveAllSrCharacter": {
         request: DebugGiveAllSrCharacterRequest;
         response: DebugGiveAllSrCharacterResponse;
     };
+    "debug/setMiningQuestBenefitPurchaseCount": {
+        request: DebugSetMiningQuestBenefitPurchaseCountRequest;
+        response: DebugSetMiningQuestBenefitPurchaseCountResponse;
+    };
+    "debug/setMiningQuestMaxScore": {
+        request: DebugSetMiningQuestMaxScoreRequest;
+        response: DebugSetMiningQuestMaxScoreResponse;
+    };
+    "debug/setMiningQuestTotalRewardCount": {
+        request: DebugSetMiningQuestTotalRewardCountRequest;
+        response: DebugSetMiningQuestTotalRewardCountResponse;
+    };
     "debug/setVipLevel": {
         request: DebugSetVipLevelRequest;
         response: DebugSetVipLevelResponse;
+    };
+    "debug/unionMissionResetAcceptCount": {
+        request: DebugUnionMissionResetAcceptCountRequest;
+        response: DebugUnionMissionResetAcceptCountResponse;
     };
     "dungeonBattle/execBattle": {
         request: DungeonBattleExecBattleRequest;
@@ -542,6 +756,14 @@ export interface OrtegaRpcMap {
         request: EquipmentChangeEquipmentRequest;
         response: EquipmentChangeEquipmentResponse;
     };
+    "equipment/changeSphere": {
+        request: EquipmentChangeSphereRequest;
+        response: EquipmentChangeSphereResponse;
+    };
+    "equipment/composeManySphere": {
+        request: EquipmentComposeManySphereRequest;
+        response: EquipmentComposeManySphereResponse;
+    };
     "equipment/inheritanceEquipment": {
         request: EquipmentInheritanceEquipmentRequest;
         response: EquipmentInheritanceEquipmentResponse;
@@ -557,6 +779,14 @@ export interface OrtegaRpcMap {
     "equipment/training": {
         request: EquipmentTrainingRequest;
         response: EquipmentTrainingResponse;
+    };
+    "equipment/unlockSphereSlot": {
+        request: EquipmentUnlockSphereSlotRequest;
+        response: EquipmentUnlockSphereSlotResponse;
+    };
+    "equipmentSynchro/rewardMission": {
+        request: EquipmentSynchroEquipmentSynchroRewardMissionRequest;
+        response: EquipmentSynchroEquipmentSynchroRewardMissionResponse;
     };
     "friend/applyFriend": {
         request: FriendApplyFriendRequest;
@@ -577,6 +807,10 @@ export interface OrtegaRpcMap {
     "friend/getFriendCampaignInfo": {
         request: FriendGetFriendCampaignInfoRequest;
         response: FriendGetFriendCampaignInfoResponse;
+    };
+    "friend/getFriendStatus": {
+        request: FriendGetFriendStatusRequest;
+        response: FriendGetFriendStatusResponse;
     };
     "friend/getPlayerInfoList": {
         request: FriendGetPlayerInfoListRequest;
@@ -642,6 +876,14 @@ export interface OrtegaRpcMap {
         request: GlobalGvgReceiveGlobalGvgRewardRequest;
         response: GlobalGvgReceiveGlobalGvgRewardResponse;
     };
+    "guild/chatRecruitGuildMember": {
+        request: GuildChatRecruitGuildMemberRequest;
+        response: GuildChatRecruitGuildMemberResponse;
+    };
+    "guild/searchGuildByRecruitGuildMemberChat": {
+        request: GuildSearchGuildByRecruitGuildMemberChatRequest;
+        response: GuildSearchGuildByRecruitGuildMemberChatResponse;
+    };
     "guildInfo/getGuildBaseInfo": {
         request: GuildGetGuildBaseInfoRequest;
         response: GuildGetGuildBaseInfoResponse;
@@ -653,6 +895,34 @@ export interface OrtegaRpcMap {
     "guildInfo/getGuildMemberInfo": {
         request: GuildGetGuildMemberInfoRequest;
         response: GuildGetGuildMemberInfoResponse;
+    };
+    "guildNote/createGuildNote": {
+        request: GuildNoteCreateGuildNoteRequest;
+        response: GuildNoteCreateGuildNoteResponse;
+    };
+    "guildNote/getGuildNoteList": {
+        request: GuildNoteGetGuildNoteListRequest;
+        response: GuildNoteGetGuildNoteListResponse;
+    };
+    "guildNote/getReactionDetailInfo": {
+        request: GuildNoteGetReactionDetailInfoRequest;
+        response: GuildNoteGetReactionDetailInfoResponse;
+    };
+    "guildNote/reactGuildNote": {
+        request: GuildNoteReactGuildNoteRequest;
+        response: GuildNoteReactGuildNoteResponse;
+    };
+    "guildNote/shareGuildNote": {
+        request: GuildNoteShareGuildNoteRequest;
+        response: GuildNoteShareGuildNoteResponse;
+    };
+    "guildNote/updateGuildNote": {
+        request: GuildNoteUpdateGuildNoteRequest;
+        response: GuildNoteUpdateGuildNoteResponse;
+    };
+    "guildNote/updateGuildNoteList": {
+        request: GuildNoteUpdateGuildNoteListRequest;
+        response: GuildNoteUpdateGuildNoteListResponse;
     };
     "guildRaid/getGuildRaidInfo": {
         request: GuildRaidGetGuildRaidInfoRequest;
@@ -677,6 +947,10 @@ export interface OrtegaRpcMap {
     "guildRaid/startGuildRaid": {
         request: GuildRaidStartGuildRaidRequest;
         response: GuildRaidStartGuildRaidResponse;
+    };
+    "guildRaid/startGuildRaidTrial": {
+        request: GuildRaidStartGuildRaidTrialRequest;
+        response: GuildRaidStartGuildRaidTrialResponse;
     };
     "guildTower/battle": {
         request: GuildTowerBattleRequest;
@@ -717,6 +991,38 @@ export interface OrtegaRpcMap {
     "item/useAutoBattleRewardItem": {
         request: ItemUseAutoBattleRewardItemRequest;
         response: ItemUseAutoBattleRewardItemResponse;
+    };
+    "legendLeague/buyLegendLeagueIconReward": {
+        request: LegendLeagueBuyLegendLeagueIconRewardRequest;
+        response: LegendLeagueBuyLegendLeagueIconRewardResponse;
+    };
+    "legendLeague/getLegendLeagueIconRewardInfo": {
+        request: LegendLeagueGetLegendLeagueIconRewardInfoRequest;
+        response: LegendLeagueGetLegendLeagueIconRewardInfoResponse;
+    };
+    "levelLink/addExp": {
+        request: LevelLinkAddExpRequest;
+        response: LevelLinkAddExpResponse;
+    };
+    "levelLink/levelUp": {
+        request: LevelLinkLevelUpRequest;
+        response: LevelLinkLevelUpResponse;
+    };
+    "levelLink/resetCoolTime": {
+        request: LevelLinkResetCoolTimeRequest;
+        response: LevelLinkResetCoolTimeResponse;
+    };
+    "levelLink/setMember": {
+        request: LevelLinkSetMemberRequest;
+        response: LevelLinkSetMemberResponse;
+    };
+    "levelLink/sortMember": {
+        request: LevelLinkSortMemberRequest;
+        response: LevelLinkSortMemberResponse;
+    };
+    "levelLink/unSetMember": {
+        request: LevelLinkUnSetMemberRequest;
+        response: LevelLinkUnSetMemberResponse;
     };
     "localGvg/receiveLocalGvgReward": {
         request: LocalGvgReceiveLocalGvgRewardRequest;
@@ -766,6 +1072,58 @@ export interface OrtegaRpcMap {
         request: LoginBonusReceiveSpecialLimitedLoginBonusRequest;
         response: LoginBonusReceiveSpecialLimitedLoginBonusResponse;
     };
+    "luckyChance/GetDetailInfo": {
+        request: LuckyChanceLuckyChanceGetDetailInfoRequest;
+        response: LuckyChanceLuckyChanceGetDetailInfoResponse;
+    };
+    "luckyChance/registerRealPrizeCItemInfo": {
+        request: LuckyChanceRegisterRealPrizeCItemInfoRequest;
+        response: LuckyChanceRegisterRealPrizeCItemInfoResponse;
+    };
+    "luckyChance/SelectButton": {
+        request: LuckyChanceLuckyChanceSelectButtonRequest;
+        response: LuckyChanceLuckyChanceSelectButtonResponse;
+    };
+    "miningQuest/finish": {
+        request: MiningQuestMiningQuestFinishRequest;
+        response: MiningQuestMiningQuestFinishResponse;
+    };
+    "miningQuest/getBenefitInfo": {
+        request: MiningQuestMiningQuestGetBenefitInfoRequest;
+        response: MiningQuestMiningQuestGetBenefitInfoResponse;
+    };
+    "miningQuest/getCurrentParameters": {
+        request: MiningQuestMiningQuestGetCurrentParametersRequest;
+        response: MiningQuestMiningQuestGetCurrentParametersResponse;
+    };
+    "miningQuest/getGradeInfo": {
+        request: MiningQuestMiningQuestGetGradeInfoRequest;
+        response: MiningQuestMiningQuestGetGradeInfoResponse;
+    };
+    "miningQuest/getInfo": {
+        request: MiningQuestMiningQuestGetInfoRequest;
+        response: MiningQuestMiningQuestGetInfoResponse;
+    };
+    "miningQuest/getMaxRewardCountInfo": {
+        request: MiningQuestMiningQuestGetMaxRewardCountInfoRequest;
+        response: MiningQuestMiningQuestGetMaxRewardCountInfoResponse;
+    };
+    "miningQuest/receiveGradeDailyReward": {
+        request: MiningQuestMiningQuestReceiveGradeDailyRewardRequest;
+        response: MiningQuestMiningQuestReceiveGradeDailyRewardResponse;
+    };
+    "miningQuest/reinforcement": {
+        request: MiningQuestMiningQuestReinforcementRequest;
+        response: MiningQuestMiningQuestReinforcementResponse;
+    };
+    "miningQuest/start": {
+        request: MiningQuestMiningQuestStartRequest;
+        response: MiningQuestMiningQuestStartResponse;
+    };
+    "miningQuest/unlockBenefit": {
+        request: MiningQuestMiningQuestUnlockBenefitRequest;
+        response: MiningQuestMiningQuestUnlockBenefitResponse;
+    };
     "mission/getMissionInfo": {
         request: MissionGetMissionInfoRequest;
         response: MissionGetMissionInfoResponse;
@@ -789,6 +1147,14 @@ export interface OrtegaRpcMap {
     "notice/getNoticeInfoList": {
         request: NoticeGetNoticeInfoListRequest;
         response: NoticeGetNoticeInfoListResponse;
+    };
+    "popularityVote/getInfo": {
+        request: PopularityVoteGetInfoRequest;
+        response: PopularityVoteGetInfoResponse;
+    };
+    "popularityVote/rewardVoteItem": {
+        request: PopularityVoteRewardVoteItemRequest;
+        response: PopularityVoteRewardVoteItemResponse;
     };
     "present/deletePresent": {
         request: PresentDeletePresentRequest;
@@ -838,9 +1204,37 @@ export interface OrtegaRpcMap {
         request: RankingReceiveAchieveRankingRewardRequest;
         response: RankingReceiveAchieveRankingRewardResponse;
     };
+    "rentalRaid/getShareRewardInfo": {
+        request: RentalRaidGetShareRewardInfoRequest;
+        response: RentalRaidGetShareRewardInfoResponse;
+    };
+    "rentalRaid/receiveShareReward": {
+        request: RentalRaidReceiveShareRewardRequest;
+        response: RentalRaidReceiveShareRewardResponse;
+    };
+    "shop/bulkBuyProductWithWebCrystal": {
+        request: ShopBulkBuyProductWithWebCrystalRequest;
+        response: ShopBulkBuyProductWithWebCrystalResponse;
+    };
     "shop/buyProduct": {
         request: ShopBuyProductRequest;
         response: ShopBuyProductResponse;
+    };
+    "shop/buyProductWithWebCrystal": {
+        request: ShopBuyProductWithWebCrystalRequest;
+        response: ShopBuyProductWithWebCrystalResponse;
+    };
+    "shop/getBoiPaymentDetailHistory": {
+        request: ShopGetBoiPaymentDetailHistoryRequest;
+        response: ShopGetBoiPaymentDetailHistoryResponse;
+    };
+    "shop/getBoiPaymentHistoryList": {
+        request: ShopGetBoiPaymentHistoryListRequest;
+        response: ShopGetBoiPaymentHistoryListResponse;
+    };
+    "shop/getBoiPointHistoryList": {
+        request: ShopGetBoiPointHistoryListRequest;
+        response: ShopGetBoiPointHistoryListResponse;
     };
     "shop/getList": {
         request: ShopGetListRequest;
@@ -850,9 +1244,25 @@ export interface OrtegaRpcMap {
         request: ShopGetProductListRequest;
         response: ShopGetProductListResponse;
     };
+    "shop/getWebStoreGuidancePanel": {
+        request: ShopGetWebStoreGuidancePanelRequest;
+        response: ShopGetWebStoreGuidancePanelResponse;
+    };
     "shop/receiveReward": {
         request: ShopReceiveRewardRequest;
         response: ShopReceiveRewardResponse;
+    };
+    "shop/registerActionLog": {
+        request: ShopRegisterActionLogRequest;
+        response: ShopRegisterActionLogResponse;
+    };
+    "starsGuidanceTradeShop/exchangeItem": {
+        request: StarsGuidanceTradeShopExchangeItemRequest;
+        response: StarsGuidanceTradeShopExchangeItemResponse;
+    };
+    "starsGuidanceTradeShop/getStarsGuidanceTradeShopInfo": {
+        request: StarsGuidanceTradeShopGetStarsGuidanceTradeShopInfoRequest;
+        response: StarsGuidanceTradeShopGetStarsGuidanceTradeShopInfoResponse;
     };
     "towerBattle/quick": {
         request: TowerBattleTowerBattleQuickRequest;
@@ -874,6 +1284,58 @@ export interface OrtegaRpcMap {
         request: TradeShopResetTabRequest;
         response: TradeShopResetTabResponse;
     };
+    "unionMission/acceptMission": {
+        request: UnionMissionUnionMissionAcceptMissionRequest;
+        response: UnionMissionUnionMissionAcceptMissionResponse;
+    };
+    "unionMission/buyAcceptCount": {
+        request: UnionMissionUnionMissionBuyAcceptCountRequest;
+        response: UnionMissionUnionMissionBuyAcceptCountResponse;
+    };
+    "unionMission/entryUnionMission": {
+        request: UnionMissionEntryUnionMissionRequest;
+        response: UnionMissionEntryUnionMissionResponse;
+    };
+    "unionMission/getInfo": {
+        request: UnionMissionUnionMissionGetInfoRequest;
+        response: UnionMissionUnionMissionGetInfoResponse;
+    };
+    "unionMission/getRanking": {
+        request: UnionMissionUnionMissionGetRankingRequest;
+        response: UnionMissionUnionMissionGetRankingResponse;
+    };
+    "unionMission/receiveIndividualTotalPointReward": {
+        request: UnionMissionUnionMissionReceiveIndividualTotalPointRewardRequest;
+        response: UnionMissionUnionMissionReceiveIndividualTotalPointRewardResponse;
+    };
+    "unionMission/receiveMissionReward": {
+        request: UnionMissionUnionMissionReceiveMissionRewardRequest;
+        response: UnionMissionUnionMissionReceiveMissionRewardResponse;
+    };
+    "unionMission/receiveTotalPointReward": {
+        request: UnionMissionUnionMissionReceiveTotalPointRewardRequest;
+        response: UnionMissionUnionMissionReceiveTotalPointRewardResponse;
+    };
+    "unionMission/refreshPersonalMission": {
+        request: UnionMissionUnionMissionRefreshPersonalMissionRequest;
+        response: UnionMissionUnionMissionRefreshPersonalMissionResponse;
+    };
+    "unionMission/refreshSharedMission": {
+        request: UnionMissionUnionMissionRefreshSharedMissionRequest;
+        response: UnionMissionUnionMissionRefreshSharedMissionResponse;
+    };
+    "unionMission/resetCoolTimeMission": {
+        request: UnionMissionUnionMissionResetCoolTimeMissionRequest;
+        response: UnionMissionUnionMissionResetCoolTimeMissionResponse;
+    };
+    "unionMission/retireMission": {
+        request: UnionMissionUnionMissionRetireMissionRequest;
+        response: UnionMissionUnionMissionRetireMissionResponse;
+    };
+    "unionMission/selectMission": {
+        request: UnionMissionUnionMissionSelectMissionRequest;
+        response: UnionMissionUnionMissionSelectMissionResponse;
+    };
     "user/getMypage": {
         request: UserGetMypageRequest;
         response: UserGetMypageResponse;
@@ -886,9 +1348,21 @@ export interface OrtegaRpcMap {
         request: UserLoginPlayerRequest;
         response: UserLoginPlayerResponse;
     };
+    "user/saveUsedDeck": {
+        request: UserSaveUsedDeckRequest;
+        response: UserSaveUsedDeckResponse;
+    };
     "vip/getDailyGift": {
         request: VipGetDailyGiftRequest;
         response: VipGetDailyGiftResponse;
+    };
+    "webStore/getLoginCampaignInfo": {
+        request: WebStoreLoginCampaignGetLoginCampaignInfoRequest;
+        response: WebStoreLoginCampaignGetLoginCampaignInfoResponse;
+    };
+    "webStore/rewardLoginCampaignItem": {
+        request: WebStoreLoginCampaignRewardLoginCampaignItemRequest;
+        response: WebStoreLoginCampaignRewardLoginCampaignItemResponse;
     };
     "weeklyTopics/getWeeklyTopicsInfo": {
         request: WeeklyTopicsGetWeeklyTopicsInfoRequest;

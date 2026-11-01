@@ -9,6 +9,7 @@ import { EffectType } from "./effectType";
 export class Effect implements IDeepCopy<Effect> {
     effectType: EffectType;
     effectValue: number;
+    effectSubValue: number;
     effectMaxCount: number;
     effectCount: number;
 }

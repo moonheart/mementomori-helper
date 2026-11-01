@@ -19,4 +19,5 @@ export class LuckyChanceMB extends MasterBookBase implements IHasStartEndTimeZon
     limitUserDrawCount: number;
     consumeItem: UserItem;
     canDeletePersonalInfoTime: string;
+    excludeSelectionCharacterIdList: number[];
 }

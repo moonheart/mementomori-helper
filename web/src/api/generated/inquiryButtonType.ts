@@ -8,4 +8,5 @@ export enum InquiryButtonType {
     Url = 1,
     Mail = 2,
     AccountDelete = 3,
+    Precaution = 4,
 }

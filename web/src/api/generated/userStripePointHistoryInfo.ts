@@ -22,4 +22,5 @@ export class UserStripePointHistoryInfo {
     cardSubInfo: string;
     refundDateTime: string;
     chargeBackDateTime: string;
+    isBulkBuy: boolean;
 }

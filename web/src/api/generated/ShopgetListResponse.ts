@@ -5,7 +5,9 @@
 
 import { ApiResponseBase } from "./apiResponseBase";
 import { ShopTabInfo } from "./shopTabInfo";
+import { ShopBannerInfo } from "./shopBannerInfo";
 
 export class ShopGetListResponse extends ApiResponseBase {
     shopTabInfoList: ShopTabInfo[];
+    shopBannerInfo: ShopBannerInfo;
 }

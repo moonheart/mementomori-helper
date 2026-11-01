@@ -7,9 +7,11 @@ import { ApiResponseBase } from "./apiResponseBase";
 import { IUserSyncApiResponse } from "./iUserSyncApiResponse";
 import { BanChatInfo } from "./banChatInfo";
 import { UserSyncData } from "./userSyncData";
+import { GuildSyncData } from "./guildSyncData";
 
 export class UserLoginPlayerResponse extends ApiResponseBase implements IUserSyncApiResponse {
     authTokenOfMagicOnion: string;
     banChatInfo: BanChatInfo;
     userSyncData: UserSyncData;
+    guildSyncData: GuildSyncData;
 }

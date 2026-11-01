@@ -12,6 +12,7 @@ import { LanguageType } from "./languageType";
 import { WarningMessageInfo } from "./warningMessageInfo";
 import { SelectShopProductInfo } from "./selectShopProductInfo";
 import { StripeShopProductInfo } from "./stripeShopProductInfo";
+import { MaintenanceDebugUserInfo } from "./maintenanceDebugUserInfo";
 import { UserSyncData } from "./userSyncData";
 
 export class AuthLoginResponse extends ApiResponseBase implements IUserSyncApiResponse {
@@ -29,5 +30,6 @@ export class AuthLoginResponse extends ApiResponseBase implements IUserSyncApiRe
     selectShopProductInfoDict: { [key: number]: SelectShopProductInfo[]; };
     stripeShopProductInfo: StripeShopProductInfo;
     specialWorldDict: { [key: number]: string; };
+    maintenanceDebugUserInfos: MaintenanceDebugUserInfo[];
     userSyncData: UserSyncData;
 }

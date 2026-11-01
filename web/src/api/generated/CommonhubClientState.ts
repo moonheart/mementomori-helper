@@ -7,7 +7,9 @@ export enum CommonHubClientState {
     Idle = 0,
     Connecting = 1,
     Authenticating = 2,
-    Ready = 3,
-    FailedAuthentication = 4,
-    Disconnected = 5,
+    ReAuthenticating = 3,
+    Ready = 4,
+    FailedAuthentication = 5,
+    FailedReAuthenticating = 6,
+    Disconnected = 7,
 }

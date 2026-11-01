@@ -76,4 +76,5 @@ export enum MissionType {
     PopularityVote = 13,
     BookSort = 14,
     RentalRaid = 15,
+    MiningQuest = 17,
 }

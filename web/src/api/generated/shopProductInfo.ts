@@ -13,6 +13,7 @@ import { ShopProductFirstChargeBonus } from "./shopProductFirstChargeBonus";
 import { ShopProductGrowthPack } from "./shopProductGrowthPack";
 import { ShopProductGuerrillaPack } from "./shopProductGuerrillaPack";
 import { ShopProductMonthlyBoost } from "./shopProductMonthlyBoost";
+import { ShopProductWebStoreGuidancePanel } from "./shopProductWebStoreGuidancePanel";
 import { ShopProductType } from "./shopProductType";
 
 export class ShopProductInfo {
@@ -28,5 +29,6 @@ export class ShopProductInfo {
     shopProductGrowthPack: ShopProductGrowthPack;
     shopProductGuerrillaPack: ShopProductGuerrillaPack;
     shopProductMonthlyBoost: ShopProductMonthlyBoost;
+    shopProductWebStoreGuidancePanel: ShopProductWebStoreGuidancePanel;
     shopProductType: ShopProductType;
 }

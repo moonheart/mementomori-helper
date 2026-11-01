@@ -34,4 +34,5 @@ export enum CommonPurchaseStateType {
     PurchaseStripeWait = 27,
     CancelSessionDialogWait = 28,
     RecoveryPaidSessionWait = 29,
+    ShowWebCrystalPurchaseCompleteDialogWait = 30,
 }

@@ -93,4 +93,9 @@ export enum CommonSeType {
     BookSortUnlockGridCellBig = 20002,
     BookSortPopUpTreasureBox = 20003,
     BookSortMoveUnlockGridItem = 20004,
+    MiningQuestDamage = 21001,
+    MiningQuestCollection = 21002,
+    MiningQuestSpecialAttackCollection = 21003,
+    MiningQuestResultTitleAppear = 21004,
+    MiningQuestResultItemAppear = 21005,
 }

@@ -10,5 +10,6 @@ export class AuthCreateWorldPlayerRequest extends ApiRequestBase implements IHas
     worldId: number;
     comment: string;
     name: string;
+    deepLinkId: number;
     steamTicket: string;
 }

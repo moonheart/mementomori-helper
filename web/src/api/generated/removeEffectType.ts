@@ -6,4 +6,6 @@
 export enum RemoveEffectType {
     TurnCountEnd = 0,
     TurnCountEndAndReceiveDamage = 1,
+    ActionEnd = 2,
+    TurnCountEndAndGranterDead = 3,
 }

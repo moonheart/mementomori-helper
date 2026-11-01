@@ -9,6 +9,7 @@ import { IUserSyncApiResponse } from "./iUserSyncApiResponse";
 import { GuildGvgInfo } from "./guildGvgInfo";
 import { GuildSystemChatOptionInfo } from "./guildSystemChatOptionInfo";
 import { GuildTowerComboData } from "./guildTowerComboData";
+import { UnionMissionClassType } from "./unionMissionClassType";
 import { GuildSyncData } from "./guildSyncData";
 import { UserSyncData } from "./userSyncData";
 
@@ -21,6 +22,9 @@ export class GuildGetGuildBaseInfoResponse extends ApiResponseBase implements IG
     guildTowerCurrentFloor: number;
     guildTowerTodayWinCount: number;
     isRaidOpen: boolean;
+    isUnionMissionMatchingWorld: boolean;
+    isAlreadyEntryUnionMission: boolean;
+    classType: UnionMissionClassType;
     localGuildGvgInfo: GuildGvgInfo;
     guildSyncData: GuildSyncData;
     userSyncData: UserSyncData;

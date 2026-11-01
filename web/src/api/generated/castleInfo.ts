@@ -13,4 +13,5 @@ export class CastleInfo {
     guildId: number;
     gvgCastleState: GvgCastleState;
     utcFallenTimeStamp: number;
+    lastWinPartyKnockOutCount: number;
 }

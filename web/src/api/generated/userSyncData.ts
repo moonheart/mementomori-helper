@@ -20,6 +20,7 @@ import { UserBoxSizeDtoInfo } from "./userBoxSizeDtoInfo";
 import { UserCharacterBookDtoInfo } from "./userCharacterBookDtoInfo";
 import { UserCharacterCollectionDtoInfo } from "./userCharacterCollectionDtoInfo";
 import { UserCharacterDtoInfo } from "./userCharacterDtoInfo";
+import { UserCharacterRankReleaseDtoInfo } from "./userCharacterRankReleaseDtoInfo";
 import { UserDeckDtoInfo } from "./userDeckDtoInfo";
 import { UserEquipmentStatusDtoInfo } from "./userEquipmentStatusDtoInfo";
 import { UserItemDtoInfo } from "./userItemDtoInfo";
@@ -33,6 +34,7 @@ import { GuidanceType } from "./guidanceType";
 import { UserNotificationDtoInfo } from "./userNotificationDtoInfo";
 import { UserOpenContentDtoInfo } from "./userOpenContentDtoInfo";
 import { UserFriendBattleOptionDtoInfo } from "./userFriendBattleOptionDtoInfo";
+import { UserRankUpPrioritySettingDtoInfo } from "./userRankUpPrioritySettingDtoInfo";
 import { UserRecruitGuildMemberSettingDtoInfo } from "./userRecruitGuildMemberSettingDtoInfo";
 import { UserSettingsDtoInfo } from "./userSettingsDtoInfo";
 import { UserShopAchievementPackDtoInfo } from "./userShopAchievementPackDtoInfo";
@@ -71,6 +73,7 @@ export class UserSyncData {
     isValidContractPrivilege: boolean;
     latestAnnounceChatRegistrationLocalTimestamp: number;
     latestGuildSurveyCreationLocalTimestamp: number;
+    guildNoteShareLocalTimestampMap: { [key: number]: number; };
     leadLockEquipmentDialogInfoMap: { [key in LockEquipmentDeckType]?: LeadLockEquipmentDialogInfo; };
     legendLeagueClassType: LegendLeagueClassType;
     localRaidChallengeCount: number;
@@ -87,6 +90,7 @@ export class UserSyncData {
     todayChallengeFriendBattleCount: number;
     shopCurrencyMissionProgressMap: { [key: string]: number; };
     shopProductGuerrillaPackList: ShopProductGuerrillaPack[];
+    totalPoint: number;
     stripePoint: number;
     timeServerId: number;
     treasureChestCeilingCountMap: { [key: number]: number; };
@@ -97,6 +101,7 @@ export class UserSyncData {
     userCharacterBookDtoInfos: UserCharacterBookDtoInfo[];
     userCharacterCollectionDtoInfos: UserCharacterCollectionDtoInfo[];
     userCharacterDtoInfos: UserCharacterDtoInfo[];
+    userCharacterRankReleaseDtoInfos: UserCharacterRankReleaseDtoInfo[];
     userDeckDtoInfos: UserDeckDtoInfo[];
     userEquipmentDtoInfos: UserEquipmentDtoInfo[];
     userEquipmentStatusDtoInfo: UserEquipmentStatusDtoInfo;
@@ -111,6 +116,7 @@ export class UserSyncData {
     userNotificationDtoInfoInfos: UserNotificationDtoInfo[];
     userOpenContentDtoInfos: UserOpenContentDtoInfo[];
     userFriendBattleOptionDtoInfo: UserFriendBattleOptionDtoInfo;
+    userRankUpPrioritySettingDtoInfo: UserRankUpPrioritySettingDtoInfo;
     userRecruitGuildMemberSettingDtoInfo: UserRecruitGuildMemberSettingDtoInfo;
     userSettingsDtoInfoList: UserSettingsDtoInfo[];
     userShopAchievementPackDtoInfos: UserShopAchievementPackDtoInfo[];

@@ -4,7 +4,8 @@
  */
 
 import { ApiRequestBase } from "./apiRequestBase";
+import { LanguageType } from "./languageType";
 
 export class ShopGetListRequest extends ApiRequestBase {
-
+    languageType: LanguageType;
 }

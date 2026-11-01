@@ -10,4 +10,5 @@ export class SearchGuildResultInfo {
     guildInfo: GuildInfo;
     isApplying: boolean;
     playerInfoList: PlayerInfo[];
+    isRecruit: boolean;
 }

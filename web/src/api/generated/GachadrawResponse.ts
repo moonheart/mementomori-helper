@@ -9,6 +9,7 @@ import { GachaResultItem } from "./gachaResultItem";
 import { UserItem } from "./userItem";
 import { GachaCaseInfo } from "./gachaCaseInfo";
 import { GachaDestinyLogInfo } from "./gachaDestinyLogInfo";
+import { GachaStarsGuidanceLogInfo } from "./gachaStarsGuidanceLogInfo";
 import { UserSyncData } from "./userSyncData";
 
 export class GachaDrawResponse extends ApiResponseBase implements IUserSyncApiResponse {
@@ -18,6 +19,7 @@ export class GachaDrawResponse extends ApiResponseBase implements IUserSyncApiRe
     gachaDestinyLogInfoList: GachaDestinyLogInfo[];
     gachaRewardAddItemList: UserItem[];
     gachaRewardItemList: GachaResultItem[];
+    gachaStarsGuidanceLogInfoList: GachaStarsGuidanceLogInfo[];
     isFreeChangeRelicGacha: boolean;
     isGetFirstBonusRelicGacha: boolean;
     isGetSecondBonusRelicGacha: boolean;

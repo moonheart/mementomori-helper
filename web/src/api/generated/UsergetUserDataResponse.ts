@@ -10,5 +10,6 @@ import { UserSyncData } from "./userSyncData";
 export class UserGetUserDataResponse extends ApiResponseBase implements IUserSyncApiResponse {
     isNotClearDungeonBattleMap: boolean;
     gachaSelectListCharacterIds: number[];
+    equipmentReinforcedCrystalDropStartFloor: number;
     userSyncData: UserSyncData;
 }

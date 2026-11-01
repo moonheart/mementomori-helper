@@ -28,4 +28,8 @@ export enum PresentType {
     SurveyReward = 21,
     LuckyChance = 22,
     RentalRaidRankingReward = 23,
+    MiningQuestSeasonGradeReward = 24,
+    WebStorePurchase = 25,
+    UnionMissionPersonalRankingReward = 26,
+    UnionMissionGuildRankingReward = 27,
 }
