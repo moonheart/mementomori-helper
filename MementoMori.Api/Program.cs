@@ -13,8 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 AddUserConfiguration(builder);
 builder.Logging.AddProvider(new MementoMori.Api.Infrastructure.FileLoggerProvider());
 
-// UI language for job logs / API messages: "en" (default) or "zh"
-var uiCulture = System.Globalization.CultureInfo.GetCultureInfo(builder.Configuration["Localization:Culture"] ?? "en");
+// UI language for job logs / API messages: "zh" (default) or "en"
+var uiCulture = System.Globalization.CultureInfo.GetCultureInfo(builder.Configuration["Localization:Culture"] ?? "zh");
 System.Globalization.CultureInfo.DefaultThreadCurrentCulture = uiCulture;
 System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = uiCulture;
 // 游戏文本 (角色名/装备名, 日志里用到) 也跟着这个语言; zh-TW/zh-Hant 用繁体, 其他 zh 用简体

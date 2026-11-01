@@ -124,6 +124,9 @@ public partial class MasterDataService : BackgroundService
             _logger.LogInformation("Master sync completed. Updated: {Updated}, Skipped: {Skipped}", updatedCount, skippedCount);
 
             Masters.LoadAllMasters();
+
+            // 语言包可能刚被覆盖, 让本地化缓存下次请求重新读文件
+            if (updatedCount > 0) LocalizationService.Invalidate();
         }
         catch (Exception ex)
         {

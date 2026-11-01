@@ -41,7 +41,7 @@ public partial class AccountCredentialService
                     CountryCode = "CN",
                     DeviceToken = "",
                     ModelName = "API",
-                    DisplayLanguage = LanguageType.zhTW,
+                    DisplayLanguage = LanguageType.zhCN,
                     OSVersion = "Windows 10",
                     SteamTicket = "",
                     AuthToken = authToken
