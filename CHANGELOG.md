@@ -6,17 +6,90 @@ All notable changes to this project are documented here.
 
 ### 中文
 
-- 默认语言为简体中文：接口在未指定或解析失败时使用 `zhCN`，服务端游戏文本的兜底语言、发给游戏服的展示语言也改为简体中文，前端首次打开同样是简体中文（词条缺失时仍回退到英语）。
-- 接口返回词典时用英语补齐目标语言里缺失或为空的条目，前端 `t()` 也不再命中空字符串；本地化接口按语言的缓存以 Master 文件的修改时间为准，Master 数据更新后自动重读，无需重启。
-- 补齐 `jaJP` / `koKR` / `zhTW` 缺失的约 590 条自定义界面文案，五种语言现在都有完整的 1323 条；同时修掉 7 个在游戏文本里不存在、会直接显示原始 key 的条目。
-- 新增 `scripts/locale-tools.mjs`：检查各语言覆盖率、列出缺失 key、导入/导出待翻译 JSON，并可与 `MementoMoriData/Master` 交叉核对游戏文本。
+- 开发中。
 
 ### English
 
-- Simplified Chinese is now the default language: the API falls back to `zhCN` when the language is missing or unknown, server-side game text and the display language sent to the game server default to Simplified Chinese as well, and the web UI starts in Simplified Chinese (missing keys still fall back to English).
-- Fixed blank entries in some languages: the resources endpoint now fills missing or empty entries with English, and `t()` no longer returns an empty string when a translation is empty. The per-language cache is keyed on the master file's timestamp, so updated master data is picked up without a restart.
-- Completed the ~590 missing `jaJP` / `koKR` / `zhTW` UI strings; all five languages now have the full 1323 keys. Also fixed 7 keys that do not exist in the game data and were rendered as raw keys.
-- Added `scripts/locale-tools.mjs`: coverage report, missing-key listing, pending-translation import/export, and cross-checks against `MementoMoriData/Master`.
+- In development.
+
+## [2.2.2] - 2026-11-01
+
+Compared with v2.2.1.
+
+### 中文
+
+#### 新功能
+
+**幻影神殿（设置 → 社交）**
+
+- 「找不到房间就自己开房单刷」改为开关，**默认关闭**：关闭时等不到房间就放弃（恢复 2.2 之前的行为，小号继续等主号的房间）；打开才会自己开房单刷。
+- 「等待房间时间」改为可配置，默认 10 分钟。
+- 「进房后多久没开战就退出换个房间」改为可配置，默认 3 分钟，账号不会再有卡在死房间里的情况。
+- 「自己开房连输几次就停」改为可配置，默认 3 次，`0` = 不停。
+- 「整个任务最长跑多久」可配置，默认 20 分钟，防止账号卡在任务里。
+- 「等不到房间 / 连败太多时降低一级关卡继续」开关，以及「在同一关卡等多少分钟后降」时间，默认 3 分钟；降低时活动关和普通关都会考虑。
+- 「关卡等级」可手动指定，默认 `0` = 按奖励自动选择；低等级小号可以固定打某个等级，该等级不存在时用最接近的低级。
+
+**Tamamo**
+
+- 支持 tamamo.dev 的账号专用 key（账号菜单 → Issue Dedicated Key → Issue / Reissue → Copy），随请求发送 `X-Api-Auth-Token`，和原有的 `ApiKey` / `X-Auth-Token` 并存。
+- 队伍页的提示从「在 F12 里从 localStorage 复制 token」改为账号菜单的操作步骤，并配上三张示意图（key 已打码），五种语言均已翻译。
+- 专用 key 只显示一次、不过期；重新发行会让旧的失效。
+
+#### 改进
+
+- **默认语言改为简体中文**：之前首次打开是英文，现在界面直接是简体中文；词条缺失时仍回退到英语。
+- **多语言补全**：`jaJP` 591 条、`koKR` 591 条、`zhTW` 593 条此前缺失，只能显示英文；现在五种语言都是完整的 1323 条。
+- 修掉 7 个在游戏文本里根本不存在的 key（`[Loading]`、`[NoData]`、`[GuildDetailDialogTitle]`、`[GuildFameLabel]`、`[GuildTowerMaxFloorLabel]`、`[GuildDescriptionLabel]`、`[CommonReloadButtonLabel]`），之前会把这些原始 key 直接显示在界面上。
+- 语言菜单改为按支持列表生成，顺序为 简体中文 / 繁體中文 / English / 日本語 / 한국어。
+
+#### 修复
+
+- **切换语言后界面立即更新**，不再需要刷新页面：`t` 在语言或词典变化时换新引用，所有订阅它的组件和依赖 `t` 的 memo/effect 自动重算；同时修掉快速连续切换时，先发出的旧语言请求晚到后覆盖新语言的问题。
+- **部分语言显示空白**：游戏文本里有些语言（`zhCN` 430 条、`zhTW` 674 条、`koKR` 696 条、`jaJP` 82 条，其余语言上千条）是空字符串，界面会出现空白；接口现在用英语补齐缺失或为空的条目，前端 `t()` 也不再命中空串。
+- **本地化接口性能**：不再每次请求都重新读取并反序列化 3 万条文本；缓存以 Master 文件的修改时间为准，Master 数据更新后自动重读，不需要重启。
+
+#### 其他
+
+- 新增 `scripts/locale-tools.mjs`（`pnpm locale:check` / `pnpm locale:missing`）：检查各语言覆盖率、列出缺失 key、导入导出待翻译 JSON，并可与游戏 Master 数据交叉核对。
+
+### English
+
+#### New
+
+**Temple of Illusions (Settings → Social)**
+
+- "Host a room and run it solo when no room is found" is now a switch, **off by default**: alts keep waiting to join your main's room like before 2.2, and only host when you turn it on.
+- "Keep looking for a room for (minutes)" is now configurable, default 10.
+- "Leave a room that doesn't start after (minutes)" is now configurable, default 3, so an account no longer sits in a dead room.
+- "Stop after this many losses in a row" is now configurable, default 3, `0` = never.
+- "Stop the whole task after (minutes)" is configurable, default 20, so no account gets stuck.
+- "Try a lower quest instead of stopping" switch, plus "minutes on one quest before trying a lower one" (default 3); both event and normal quests are considered when dropping.
+- "Quest level" can be pinned, default `0` = pick automatically by rewards; useful for low-level alts. If that level does not exist, the closest lower one is used.
+
+**Tamamo**
+
+- Support the per-account dedicated key (account menu → Issue Dedicated Key → Issue / Reissue → Copy), sent as `X-Api-Auth-Token` alongside the existing `ApiKey` / `X-Auth-Token` headers.
+- The team page no longer tells you to dig the token out of localStorage in F12; it now shows the account-menu steps with three screenshots (key blacked out), translated into all five languages.
+- The dedicated key is shown only once and never expires; reissuing cancels the old one.
+
+#### Improvements
+
+- **Simplified Chinese is now the default**: the UI used to start in English; it now starts in Simplified Chinese, with English still used when an entry is missing.
+- **Completed the translations**: 591 `jaJP`, 591 `koKR` and 593 `zhTW` strings were missing and fell back to English; all five languages now define the full 1323 keys.
+- Fixed 7 keys that do not exist in the game data and were rendered as raw text (`[Loading]`, `[NoData]`, `[GuildDetailDialogTitle]`, `[GuildFameLabel]`, `[GuildTowerMaxFloorLabel]`, `[GuildDescriptionLabel]`, `[CommonReloadButtonLabel]`).
+- The language menu is generated from the supported list: Simplified Chinese / Traditional Chinese / English / Japanese / Korean.
+
+#### Fixes
+
+- **Switching the language updates the UI immediately**, with no reload: `t` gets a new identity whenever the language or the dictionary changes, so subscribers and `t`-based memo/effect dependencies recompute. Also fixed a fast switch being overwritten by a late response for the previous language.
+- **Blank labels in some languages**: a number of master entries are empty strings (`zhCN` 430, `zhTW` 674, `koKR` 696, `jaJP` 82, thousands in the other languages), which rendered as blank text. The API now fills missing or empty entries with English, and `t()` no longer returns an empty string.
+- **Localization endpoint performance**: no longer re-reads and deserializes 30k rows on every request. The cache is keyed on the master file's timestamp, so updated master data is picked up without a restart.
+
+#### Other
+
+- Added `scripts/locale-tools.mjs` (`pnpm locale:check` / `pnpm locale:missing`): coverage report, missing-key listing, pending-translation import/export, and cross-checks against the game master data.
+
 
 ## [2.2.1] - 2026-10-31
 
