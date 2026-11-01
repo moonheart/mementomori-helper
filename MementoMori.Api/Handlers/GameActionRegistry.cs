@@ -66,6 +66,7 @@ public static class GameActionRegistry
         typeof(MissionRewardHandler),
         typeof(AutoUseItemsHandler),
         typeof(FreeGachaHandler),
+        typeof(AutoUseItemsHandler), // again on purpose: free gacha can give items that are auto-used
         typeof(CharacterRankUpHandler),
         // Freebies: 只领不花的奖励
         typeof(Freebies.CharacterStoryRewardHandler),
