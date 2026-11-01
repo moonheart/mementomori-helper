@@ -903,6 +903,21 @@
   <data name="BountyTargetItems" xml:space="preserve">
       <value>指定目标道具: {0}</value>
   </data>
+  <data name="DungeonUnequipping" xml:space="preserve">
+    <value>时空洞窟活动: 进入前先卸下 {0} 个角色的装备</value>
+  </data>
+  <data name="DungeonReequipped" xml:space="preserve">
+    <value>时空洞窟活动: 已为 {0} 个角色穿回装备</value>
+  </data>
+  <data name="DungeonAllDown" xml:space="preserve">
+    <value>时空洞窟: 角色全部倒下, 没有可用的恢复道具</value>
+  </data>
+  <data name="DungeonBought" xml:space="preserve">
+    <value>时空洞窟商店: 购买 {0} ×{1}</value>
+  </data>
+  <data name="DungeonGuestJoined" xml:space="preserve">
+    <value>时空洞窟: {0} 加入队伍</value>
+  </data>
   <data name="DungeonAlreadyCleared" xml:space="preserve">
       <value>地下城已通关完毕。</value>
   </data>
