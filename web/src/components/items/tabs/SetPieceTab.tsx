@@ -3,7 +3,7 @@ import { ItemCard } from '../ItemCard';
 import { UserItemDtoInfo, ItemType, EquipmentCompositeMB, EquipmentMB } from '@/api/generated';
 import { getItemName } from '@/lib/itemUtils';
 import { useMasterStore } from '@/store/masterStore';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { EquipmentIconManager } from '@/lib/asset-manager';
 
 interface SetPieceTabProps {
@@ -22,7 +22,7 @@ interface SetPieceItem {
 
 export function SetPieceTab({ items }: SetPieceTabProps) {
     const { getTable } = useMasterStore();
-    const t = useLocalizationStore((state) => state.t);
+    const { t } = useTranslation();
     const [setPieceItems, setSetPieceItems] = useState<SetPieceItem[]>([]);
     const [loading, setLoading] = useState(true);
 

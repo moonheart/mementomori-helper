@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Loader2, Package } from 'lucide-react';
 import { useAccountStore } from '@/store/accountStore';
 import { useMasterStore } from '@/store/masterStore';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { EquipmentTab } from '@/components/items/tabs/EquipmentTab';
 import { ConsumptionTab } from '@/components/items/tabs/ConsumptionTab';
 import { MaterialTab } from '@/components/items/tabs/MaterialTab';
@@ -27,7 +27,7 @@ export function ItemsPage() {
     const { currentAccountId } = useAccountStore();
     const sync = useMasterStore(state => state.sync);
     const getTable = useMasterStore(state => state.getTable);
-    const t = useLocalizationStore((state) => state.t);
+    const { t } = useTranslation();
 
     const loadData = async (isRefresh = false) => {
         try {

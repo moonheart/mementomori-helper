@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import { ortegaApi } from '@/api/ortega-client';
 import { useMasterStore } from '@/store/masterStore';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useAccountStore } from '@/store/accountStore';
 import { useTimeManager } from '@/hooks/useTimeManager';
 import { useItemName } from '@/hooks/useItemName';
@@ -71,7 +71,7 @@ export function TimeSpaceCavePage() {
     const timeManager = useTimeManager();
     const sync = useMasterStore(state => state.sync);
     const getTable = useMasterStore(state => state.getTable);
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     const { getItemName } = useItemName();
 
     // 加载数据
@@ -541,7 +541,7 @@ export function TimeSpaceCavePage() {
                 y: grid.y
             };
         });
-    }, [battleInfo, gridTable]);
+    }, [battleInfo, gridTable, t]);
 
     // 加载中
     if (loading) {

@@ -1,5 +1,5 @@
 import { useMasterStore } from '@/store/masterStore';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useEffect, useState } from 'react';
 import { ActiveSkillMB } from '@/api/generated/activeSkillMB';
 import { PassiveSkillMB } from '@/api/generated/passiveSkillMB';
@@ -8,7 +8,7 @@ import { PassiveSkillMB } from '@/api/generated/passiveSkillMB';
  * 获取主动技能名称
  */
 export function useActiveSkillName(skillId: number | undefined) {
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     const getRecord = useMasterStore(state => state.getRecord);
     const [name, setName] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +39,7 @@ export function useActiveSkillName(skillId: number | undefined) {
  * 获取被动技能名称
  */
 export function usePassiveSkillName(skillId: number | undefined) {
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     const getRecord = useMasterStore(state => state.getRecord);
     const [name, setName] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);

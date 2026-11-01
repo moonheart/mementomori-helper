@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { battleLogApi, BattleLogSummary } from '@/api/battle-log-api';
 import { BattleSimulationResult } from '@/api/generated/battleSimulationResult';
 import { toast } from '@/hooks/use-toast';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface UseBattleLogOptions {
     pageSize?: number;
@@ -10,7 +10,7 @@ interface UseBattleLogOptions {
 
 export function useBattleLog(options: UseBattleLogOptions = {}) {
     const { pageSize = 20 } = options;
-    const t = useLocalizationStore((state) => state.t);
+    const { t } = useTranslation();
 
     const [logs, setLogs] = useState<BattleLogSummary[]>([]);
     const [loading, setLoading] = useState(false);

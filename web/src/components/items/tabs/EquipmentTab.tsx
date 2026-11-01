@@ -5,7 +5,7 @@ import { Sparkles, CircleDot, Package } from 'lucide-react';
 import { UserItemDtoInfo, UserEquipmentDtoInfo, ItemType, EquipmentMB, EquipmentRarityFlags, EquipmentSlotType } from '@/api/generated';
 import { getItemName } from '@/lib/itemUtils';
 import { useMasterStore } from '@/store/masterStore';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { EquipmentIconManager } from '@/lib/asset-manager';
 import { cn } from '@/lib/utils';
 
@@ -124,7 +124,7 @@ function getRarityGradient(rarity: EquipmentRarityFlags): string {
 
 // 已解除封印装备卡片
 function UnsealedEquipmentCard({ item }: { item: UnsealedEquipmentItem }) {
-    const t = useLocalizationStore((state) => state.t);
+    const { t } = useTranslation();
     const equip = item.equipment;
     const master = item.masterData;
     const rarityName = getRarityName(item.rarity);
@@ -242,7 +242,7 @@ function UnsealedEquipmentCard({ item }: { item: UnsealedEquipmentItem }) {
 
 // 未解除封印装备卡片
 function SealedEquipmentCard({ item }: { item: SealedEquipmentItem }) {
-    const t = useLocalizationStore((state) => state.t);
+    const { t } = useTranslation();
     const master = item.masterData;
     const rarityName = getRarityName(item.rarity);
 
@@ -298,7 +298,7 @@ function SealedEquipmentCard({ item }: { item: SealedEquipmentItem }) {
 
 export function EquipmentTab({ items, userEquipments }: EquipmentTabProps) {
     const { getTable } = useMasterStore();
-    const t = useLocalizationStore((state) => state.t);
+    const { t } = useTranslation();
     const [equipmentTable, setEquipmentTable] = useState<Map<number, EquipmentMB> | null>(null);
     const [loading, setLoading] = useState(true);
 

@@ -1,7 +1,7 @@
 import { useMasterStore } from '@/store/masterStore';
 import { EffectGroupMB } from '@/api/generated/effectGroupMB';
 import { EffectGroupIconType } from '@/api/generated/effectGroupIconType';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useEffect, useState } from 'react';
 
 export interface EffectGroupInfo {
@@ -16,7 +16,7 @@ export interface EffectGroupInfo {
  */
 export function useEffectGroupName(effectGroupId: number): EffectGroupInfo {
     const getRecord = useMasterStore(state => state.getRecord);
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     const [info, setInfo] = useState<EffectGroupInfo>({
         name: t('COMMON_EFFECT_FALLBACK', [effectGroupId]),
         iconId: 0,
@@ -55,7 +55,7 @@ export function useEffectGroupName(effectGroupId: number): EffectGroupInfo {
  */
 export function useEffectGroupNames(effectGroupIds: number[]): Map<number, EffectGroupInfo> {
     const getRecord = useMasterStore(state => state.getRecord);
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     const [infos, setInfos] = useState<Map<number, EffectGroupInfo>>(new Map());
 
     useEffect(() => {

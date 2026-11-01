@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useMasterStore } from '@/store/masterStore';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useAccountStore } from '@/store/accountStore';
 import {
     ActiveSkillMB,
@@ -148,7 +148,7 @@ function getEquipmentRarity(rarity: EquipmentRarityFlags): { name: string; cls: 
 }
 
 export function CharacterDetailDialog({ character, open, onOpenChange, lockEquipmentDeckType }: Props) {
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     const getTable = useMasterStore(state => state.getTable);
     const getCurrentUserSyncData = useAccountStore(state => state.getCurrentUserSyncData);
     const [detailInfo, setDetailInfo] = useState<CharacterDetailInfo | null>(null);

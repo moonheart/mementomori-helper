@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAccountStore } from '@/store/accountStore';
 import { ortegaApi } from '@/api/ortega-client';
 import { useMasterStore } from '@/store/masterStore';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { 
     EquipmentMB, 
     EquipmentSetMB, 
@@ -24,7 +24,7 @@ import {
 
 export function EquipmentPage() {
     const { currentAccountId } = useAccountStore();
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     const getTable = useMasterStore(state => state.getTable);
 
     // 状态

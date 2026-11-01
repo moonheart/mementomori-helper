@@ -17,7 +17,7 @@ import { useAccountStore } from '@/store/accountStore';
 import { ortegaApi } from '@/api/ortega-client';
 import { MissionGroupType, MissionStatusType, MissionGetMissionInfoResponse, MissionActivityRewardStatusType, MissionInfo, TotalActivityMedalRewardMB, MissionMB } from '@/api/generated';
 import { useMasterData, useMasterTable } from '@/hooks/useMasterData';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 
 import { MissionRow, UIStoreMission } from '@/components/mission/MissionRow';
 import { mapMissionsFromGroupInfo } from '@/components/mission/mission-utils';
@@ -35,7 +35,7 @@ function MeritRewardCard({
     groupType: MissionGroupType;
     onClaim: (groupType: MissionGroupType, required: number) => void;
 }) {
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     if (meritBoxes.length === 0) return null;
 
     return (
@@ -83,7 +83,7 @@ function MeritRewardCard({
 }
 
 export function MissionsPage() {
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     const { currentAccountId } = useAccountStore();
     const [loading, setLoading] = useState(false);
     const [missionData, setMissionData] = useState<MissionGetMissionInfoResponse | null>(null);

@@ -14,7 +14,6 @@ import { Loader2 } from 'lucide-react';
 import { UserItemDtoInfo, UserItem, ItemMB } from '@/api/generated';
 import { ortegaApi } from '@/api/ortega-client';
 import { useToast } from '@/hooks/use-toast';
-import { useLocalizationStore } from '@/store/localization-store';
 import { useMasterStore } from '@/store/masterStore';
 import { getItemName } from '@/lib/itemUtils';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -38,8 +37,7 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
     const [rewards, setRewards] = useState<RewardItemDisplay[]>([]);
     const [showRewards, setShowRewards] = useState(false);
     const { toast } = useToast();
-    const t = useLocalizationStore((state) => state.t);
-    const { t: translate } = useTranslation();
+    const { t } = useTranslation();
     const getTable = useMasterStore((state) => state.getTable);
 
     const handleUse = async () => {
@@ -47,7 +45,7 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
             toast({
                 variant: 'destructive',
                 title: t('ACCOUNT_ERROR'),
-                description: translate('USE_ITEM_INVALID_COUNT'),
+                description: t('USE_ITEM_INVALID_COUNT'),
             });
             return;
         }
@@ -74,7 +72,7 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
 
             toast({
                 title: t('ACCOUNT_SUCCESS'),
-                description: translate('ITEMS_USE_SUCCESS', [String(useCount), itemName]),
+                description: t('ITEMS_USE_SUCCESS', [String(useCount), itemName]),
             });
 
             // 通知父组件刷新数据
@@ -84,7 +82,7 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
             toast({
                 variant: 'destructive',
                 title: t('ACCOUNT_ERROR'),
-                description: translate('ITEMS_USE_FAILED'),
+                description: t('ITEMS_USE_FAILED'),
             });
         } finally {
             setIsUsing(false);
@@ -117,14 +115,14 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
                         <DialogHeader>
                             <DialogTitle>{t('[ItemBoxItemUseTitle]')}</DialogTitle>
                             <DialogDescription>
-                                {translate('USE_ITEM_SELECT_COUNT', [itemName])}
+                                {t('USE_ITEM_SELECT_COUNT', [itemName])}
                             </DialogDescription>
                         </DialogHeader>
 
                         <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="count" className="text-right">
-                                    {translate('USE_ITEM_QUANTITY')}
+                                    {t('USE_ITEM_QUANTITY')}
                                 </Label>
                                 <div className="col-span-3 space-y-2">
                                     <Input
@@ -137,7 +135,7 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
                                         disabled={isUsing}
                                     />
                                     <p className="text-sm text-muted-foreground">
-                                        {translate('USE_ITEM_OWNED', [String(item.itemCount)])}
+                                        {t('USE_ITEM_OWNED', [String(item.itemCount)])}
                                     </p>
                                 </div>
                             </div>
@@ -150,7 +148,7 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
                                     onClick={() => setUseCount(1)}
                                     disabled={isUsing}
                                 >
-                                    {translate('USE_ITEM_MIN')}
+                                    {t('USE_ITEM_MIN')}
                                 </Button>
                                 <Button
                                     type="button"
@@ -159,7 +157,7 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
                                     onClick={() => setUseCount(Math.max(1, Math.floor(item.itemCount / 2)))}
                                     disabled={isUsing}
                                 >
-                                    {translate('USE_ITEM_HALF')}
+                                    {t('USE_ITEM_HALF')}
                                 </Button>
                                 <Button
                                     type="button"
@@ -168,14 +166,14 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
                                     onClick={() => setUseCount(item.itemCount)}
                                     disabled={isUsing}
                                 >
-                                    {translate('USE_ITEM_MAX')}
+                                    {t('USE_ITEM_MAX')}
                                 </Button>
                             </div>
                         </div>
 
                         <DialogFooter>
                             <Button variant="outline" onClick={handleClose} disabled={isUsing}>
-                                {translate('COMMON_CANCEL')}
+                                {t('COMMON_CANCEL')}
                             </Button>
                             <Button onClick={handleUse} disabled={isUsing}>
                                 {isUsing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -186,9 +184,9 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
                 ) : (
                     <>
                         <DialogHeader>
-                            <DialogTitle>{translate('USE_ITEM_REWARDS_TITLE')}</DialogTitle>
+                            <DialogTitle>{t('USE_ITEM_REWARDS_TITLE')}</DialogTitle>
                             <DialogDescription>
-                                {translate('USE_ITEM_REWARDS_DESC', [String(useCount), itemName])}
+                                {t('USE_ITEM_REWARDS_DESC', [String(useCount), itemName])}
                             </DialogDescription>
                         </DialogHeader>
 
@@ -207,13 +205,13 @@ export function UseItemDialog({ open, onOpenChange, item, itemName, onSuccess }:
                                 </div>
                             ) : (
                                 <div className="text-center py-8 text-muted-foreground">
-                                    {translate('USE_ITEM_NO_REWARDS')}
+                                    {t('USE_ITEM_NO_REWARDS')}
                                 </div>
                             )}
                         </div>
 
                         <DialogFooter>
-                            <Button onClick={handleClose}>{translate('COMMON_CONFIRM')}</Button>
+                            <Button onClick={handleClose}>{t('COMMON_CONFIRM')}</Button>
                         </DialogFooter>
                     </>
                 )}

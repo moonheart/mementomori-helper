@@ -3,7 +3,7 @@ import { ItemCard } from '../ItemCard';
 import { UserItemDtoInfo, ItemType, SphereMB } from '@/api/generated';
 import { getItemName } from '@/lib/itemUtils';
 import { useMasterStore } from '@/store/masterStore';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { SphereIconManager } from '@/lib/asset-manager';
 
 interface SphereTabProps {
@@ -22,7 +22,7 @@ interface SphereItem {
 
 export function SphereTab({ items }: SphereTabProps) {
     const { getTable } = useMasterStore();
-    const t = useLocalizationStore((state) => state.t);
+    const { t } = useTranslation();
     const [sphereItems, setSphereItems] = useState<SphereItem[]>([]);
     const [loading, setLoading] = useState(true);
 

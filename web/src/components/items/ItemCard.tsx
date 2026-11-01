@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Package } from 'lucide-react';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export interface ItemCardProps {
     name: string;
@@ -14,7 +14,7 @@ export interface ItemCardProps {
 }
 
 export function ItemCard({ name, rarity, count, iconUrl, canUse, onUse }: ItemCardProps) {
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     const getRarityColor = (rarityStr: string) => {
         const upper = rarityStr.toUpperCase();
         if (upper.includes('LR')) return 'bg-yellow-100 text-yellow-800 border-yellow-300';

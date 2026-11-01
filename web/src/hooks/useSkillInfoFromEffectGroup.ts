@@ -2,7 +2,7 @@ import { useMasterStore } from '@/store/masterStore';
 import { ActiveSkillMB } from '@/api/generated/activeSkillMB';
 import { PassiveSkillMB } from '@/api/generated/passiveSkillMB';
 import { EffectGroupMB } from '@/api/generated/effectGroupMB';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useEffect, useState, useMemo } from 'react';
 import { AssetManager } from '@/lib/asset-manager';
 
@@ -36,7 +36,7 @@ function isActiveSkill(skillId: number): boolean {
  */
 export function useSkillInfoFromEffectGroup(effectGroupId: number): SkillInfo {
     const getRecord = useMasterStore(state => state.getRecord);
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     
     const [info, setInfo] = useState<SkillInfo>({
         name: t('COMMON_SKILL_FALLBACK', [effectGroupId]),
@@ -111,7 +111,7 @@ export function useSkillInfoFromEffectGroup(effectGroupId: number): SkillInfo {
  */
 export function useSkillInfosFromEffectGroups(effectGroupIds: number[]): Map<number, SkillInfo> {
     const getRecord = useMasterStore(state => state.getRecord);
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     const [infos, setInfos] = useState<Map<number, SkillInfo>>(new Map());
 
     const skillData = useMemo(() => {

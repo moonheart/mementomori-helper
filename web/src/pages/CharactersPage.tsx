@@ -7,7 +7,7 @@ import { LevelLinkPanel } from '@/components/character/LevelLinkPanel';
 import { useAccountStore } from '@/store/accountStore';
 import { ortegaApi } from '@/api/ortega-client';
 import { useMasterStore } from '@/store/masterStore';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { UserCharacterDtoInfo, CharacterRarityFlags, ElementType, JobFlags, CharacterMB } from '@/api/generated';
 import { CharacterDetailDialog } from '@/components/characters/CharacterDetailDialog';
 import type { UICharacter } from '@/components/characters/types';
@@ -16,7 +16,7 @@ import type { UserSyncData } from '@/api/generated/userSyncData';
 
 export function CharactersPage() {
     const { currentAccountId } = useAccountStore();
-    const t = useLocalizationStore(state => state.t);
+    const { t } = useTranslation();
     const getTable = useMasterStore(state => state.getTable);
 
     const [loading, setLoading] = useState(false);

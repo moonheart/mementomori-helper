@@ -3,7 +3,7 @@ import { ItemCard } from '../ItemCard';
 import { UserItemDtoInfo, ItemType, ItemMB, TreasureChestMB, CharacterMB } from '@/api/generated';
 import { getItemName } from '@/lib/itemUtils';
 import { useMasterStore } from '@/store/masterStore';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { ItemIconManager } from '@/lib/asset-manager';
 
 interface ConsumptionTabProps {
@@ -30,7 +30,7 @@ interface ConsumptionItem {
 
 export function ConsumptionTab({ items, onUseItem }: ConsumptionTabProps) {
     const { getTable } = useMasterStore();
-    const t = useLocalizationStore((state) => state.t);
+    const { t } = useTranslation();
     const [consumptionItems, setConsumptionItems] = useState<ConsumptionItem[]>([]);
     const [loading, setLoading] = useState(true);
 
