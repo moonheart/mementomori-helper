@@ -9,7 +9,7 @@
 		BattleChapterClear,
 		NextChapter,
 		BattleSecondContinentChapterClear,
-		BattleThirdAndFourthContinentChapterClear,
+		BattleThirdToFifthContinentChapterClear,
 		CharacterEquip = 3005,
 		GachaCharacterResultOpen = 7002,
 		GachaDestinyResultOpen = 7006,
@@ -29,6 +29,7 @@
 		LuckyChanceResultBlue = 14001,
 		LuckyChanceResultRainbow,
 		MonologueIn = 15001,
-		MonologueOut
+		MonologueOut,
+		MiningQuestSpecialAttack = 16001
 	}
 }

@@ -31,5 +31,6 @@ public enum PurchaseStateType
     RequestStartStripePaymentWait,
     PurchaseStripeWait,
     CancelSessionDialogWait,
-    RecoveryPaidSessionWait
+    RecoveryPaidSessionWait,
+    ShowWebCrystalPurchaseCompleteDialogWait
 }

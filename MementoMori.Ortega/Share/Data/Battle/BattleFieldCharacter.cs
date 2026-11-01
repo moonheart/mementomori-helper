@@ -16,6 +16,8 @@ namespace MementoMori.Ortega.Share.Data.Battle
 
         public CharacterRarityFlags CharacterRarityFlags { get; set; }
 
+        public EquipmentRarityFlags ExclusiveEquipmentRarityFlags { get; set; }
+
         public long EquipmentMaxLevel { get; set; }
 
         public List<UserEquipmentDtoInfo> EquipmentDtoInfos { get; set; }

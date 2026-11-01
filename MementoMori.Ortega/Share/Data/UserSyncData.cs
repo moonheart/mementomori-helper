@@ -58,6 +58,8 @@ public class UserSyncData
 
     public long? LatestGuildSurveyCreationLocalTimestamp { get; set; }
 
+    public Dictionary<long, long> GuildNoteShareLocalTimestampMap { get; set; }
+
     public Dictionary<LockEquipmentDeckType, LeadLockEquipmentDialogInfo> LeadLockEquipmentDialogInfoMap { get; set; }
 
     public LegendLeagueClassType? LegendLeagueClassType { get; set; }

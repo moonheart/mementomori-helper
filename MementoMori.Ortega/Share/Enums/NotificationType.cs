@@ -63,6 +63,14 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("動画を一度も再生していない場合（イベントポータルから遷移される動画）")]
 		PlayVideoFromEventPortal,
 		[Description("人気投票 グループ投票チケットを1枚以上もっているかつ、予選本選いずれかの期間内で、その日一度も投票してない時")]
-		NotPopularityVoteGroupOnDay
+		NotPopularityVoteGroupOnDay,
+		[Description("団結ミッションにエントリー可能な場合")]
+		EntryUnionMissionAvailable,
+		[Description("イベント開催中、かつ、その日に団結ミッション画面に遷移した回数が1回未満の場合")]
+		NotVisitUnionMissionOnDay,
+		[Description("自身がミッション達成済みでポイント受取可能な場合")]
+		ReceivableUnionMissionPoint,
+		[Description("受け取り可能な累計ポイント報酬が存在する場合")]
+		ReceivableUnionMissionReward
 	}
 }

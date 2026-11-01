@@ -9,5 +9,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Notice
         public List<NoticeInfo> NoticeInfoList { get; set; }
 
         public List<NoticeInfo> EventInfoList { get; set; }
+
+        public long DungeonBattleEventTutorialId { get; set; }
+
     }
 }

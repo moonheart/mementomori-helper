@@ -272,6 +272,26 @@ public static class Masters
 
     public static EffectGroupTable EffectGroupTable { get; } = new();
 
+    public static MediaTable MediaTable { get; } = new();
+
+    public static MiningQuestBaseParametersTable MiningQuestBaseParametersTable { get; } = new();
+
+    public static MiningQuestReinforcementTable MiningQuestReinforcementTable { get; } = new();
+
+    public static ShopPointRateTable ShopPointRateTable { get; } = new();
+
+    public static UnionMissionClassTable UnionMissionClassTable { get; } = new();
+
+    public static UnionMissionEventTable UnionMissionEventTable { get; } = new();
+
+    public static UnionMissionTable UnionMissionTable { get; } = new();
+
+    public static UnionMissionRankingRewardTable UnionMissionRankingRewardTable { get; } = new();
+
+    public static UnionMissionRepeatPersonalRewardTable UnionMissionRepeatPersonalRewardTable { get; } = new();
+
+    public static UnionMissionTotalPointRewardTable UnionMissionTotalPointRewardTable { get; } = new();
+
     public static ITable[] GetAllTables()
     {
         return new ITable[]
@@ -408,7 +428,17 @@ public static class Masters
             MusicTable,
             ChatEmoticonTable,
             DownloadRawDataTable,
-            PopularityVoteTable
+            PopularityVoteTable,
+            MediaTable,
+            MiningQuestBaseParametersTable,
+            MiningQuestReinforcementTable,
+            ShopPointRateTable,
+            UnionMissionClassTable,
+            UnionMissionEventTable,
+            UnionMissionTable,
+            UnionMissionRankingRewardTable,
+            UnionMissionRepeatPersonalRewardTable,
+            UnionMissionTotalPointRewardTable
         };
     }
 

@@ -319,6 +319,8 @@ namespace MementoMori.Ortega.Share.Enums.Battle.Skill
 		Silence,
 		[Description("固執")]
 		Stubborn,
+		[Description("通常攻撃不可")]
+		Imprison,
 		[Description("HP回復不可")]
 		HpRecoveryForbidden = 7002,
 		[Description("バフ獲得不可")]

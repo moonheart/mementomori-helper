@@ -28,7 +28,7 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("メール件名キー")]
         public string MailSubjectKey { get; set; }
 
-        [PropertyOrder(6)]
+        [PropertyOrder(7)]
         [Description("タイムサーバーID")]
         public IReadOnlyList<long> TimeServerIds { get; }
 
@@ -37,13 +37,20 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("遷移先URL")]
         public TranslatedText TransferUrl { get; set; }
         
-        [PropertyOrder(7)]
+        [PropertyOrder(8)]
         [Description("デバイスタイプリスト(空いている場合に全体)")]
         public IReadOnlyList<int> DeviceTypes { get; }
 
+        [PropertyOrder(6)]
+        [Description("注意文キー")]
+        public string PrecautionTextKey
+        {
+        	get;
+        }
+
         [SerializationConstructor]
         public InquiryButtonMB(long id, bool? isIgnore, string memo, string buttonTextKey, InquiryButtonType buttonType, string mailSubjectKey, string mailBodyKey, TranslatedText transferUrl,
-            IReadOnlyList<long> timeServerIds, IReadOnlyList<int> deviceTypes)
+            IReadOnlyList<long> timeServerIds, IReadOnlyList<int> deviceTypes, string precautionTextKey)
             : base(id, isIgnore, memo)
         {
             ButtonTextKey = buttonTextKey;
@@ -53,6 +60,7 @@ namespace MementoMori.Ortega.Share.Master.Data
             TransferUrl = transferUrl;
             TimeServerIds = timeServerIds;
             DeviceTypes = deviceTypes;
+            PrecautionTextKey = precautionTextKey;
         }
 
         public InquiryButtonMB() : base(0, false, "")
@@ -63,5 +71,6 @@ namespace MementoMori.Ortega.Share.Master.Data
         {
             return this.TimeServerIds.IsNullOrEmpty<long>() || Enumerable.Contains<long>(this.TimeServerIds, timeServerId) && (this.DeviceTypes.IsNullOrEmpty<int>() || Enumerable.Contains<int>(this.DeviceTypes, (int)deviceType));
         }
+
     }
 }

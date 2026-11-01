@@ -16,6 +16,10 @@ namespace MementoMori.Ortega.Share.Data.Character
 			set;
 		}
 
+		[PropertyOrder(3)]
+		[Description("VoiceId")]
+		public int VoiceId { get; set; }
+
 		[Description("TimelineType")]
 		[PropertyOrder(1)]
 		public TimelineType TimelineType

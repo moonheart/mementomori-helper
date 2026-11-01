@@ -42,6 +42,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("Aギルドの[布告したプレイヤー名]がBギルドの[拠点名]に布告しました！")]
 		DeclareToTargetGuild,
 		[Description("Aギルドの[布告したプレイヤー名]がBギルドの[拠点名]に反撃を宣言しました！")]
-		RecaptureToTargetGuild
+		RecaptureToTargetGuild,
+		[Description("ギルドメンバーの募集期間が終了しました")]
+		ExpireChatRecruitGuildMember
 	}
 }

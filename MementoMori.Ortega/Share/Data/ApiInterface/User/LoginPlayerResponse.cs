@@ -1,5 +1,6 @@
 ﻿using MementoMori.Ortega.Share.Data.Chat;
 using MessagePack;
+using MementoMori.Ortega.Share.Data;
 
 namespace MementoMori.Ortega.Share.Data.ApiInterface.User
 {
@@ -11,6 +12,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.User
         public BanChatInfo BanChatInfo { get; set; }
 
         public UserSyncData UserSyncData { get; set; }
+
+        public GuildSyncData GuildSyncData { get; set; }
 
         public LoginPlayerResponse()
         {

@@ -41,6 +41,18 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("ギルドアンケートの管理")]
 		ManagementGuildSurvey,
 		[Description("他プレイヤーの作成したチャットアナウンス・アンケートの削除")]
-		DeleteNotOwnChatAnnounceAndSurvey
+		DeleteNotOwnChatAnnounceAndSurvey,
+		[Description("ギルド勧誘チャットの投稿")]
+		ChatRecruitGuildMember,
+		[Description("他プレイヤーの作成したギルドノートの削除")]
+		DeleteNotOwnGuildNote,
+		[Description("ギルドノートの管理")]
+		ManagementGuildNote,
+		[Description("ギルドノートの並び替え")]
+		SortGuildNote,
+		[Description("団結ミッションのエントリー")]
+		EntryUnionMission,
+		[Description("団結ミッション共用ミッションの更新")]
+		RefreshUnionSharedMission
 	}
 }

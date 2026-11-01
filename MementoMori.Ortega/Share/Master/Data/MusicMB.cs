@@ -30,20 +30,27 @@ namespace MementoMori.Ortega.Share.Master.Data
 		[Description("歌詞キー")]
 		public string LyricsKey { get; }
 
-		[PropertyOrder(6)]
+		[PropertyOrder(7)]
 		[Description("楽曲パス")]
 		public string MusicPath { get; set; }
 
-		[PropertyOrder(7)]
+		[PropertyOrder(8)]
 		[Description("サムネイルパス")]
 		public string ThumbnailPath { get; set; }
 
-		[PropertyOrder(8)]
+		[PropertyOrder(9)]
 		[Description("専用消費アイテム個数")]
 		public int ConsumeMusicTicketCount { get; set; }
 
+		[PropertyOrder(6)]
+		[Description("検索ワード(JP)")]
+		public IReadOnlyList<string> SearchKeywordsJP
+		{
+			get;
+		}
+
 		[SerializationConstructor]
-		public MusicMB(long id, bool? isIgnore, string memo, string startTime, int order, string nameKey, string singerKey, string lyricsKey, string musicPath, string thumbnailPath, int consumeMusicTicketCount)
+		public MusicMB(long id, bool? isIgnore, string memo, string startTime, int order, string nameKey, string singerKey, string lyricsKey, string musicPath, string thumbnailPath, int consumeMusicTicketCount, IReadOnlyList<string> searchKeywordsJP)
 			: base(id, isIgnore, memo)
 		{
 			StartTime = startTime;
@@ -54,11 +61,13 @@ namespace MementoMori.Ortega.Share.Master.Data
             MusicPath = musicPath;
             ThumbnailPath = thumbnailPath;
             ConsumeMusicTicketCount = consumeMusicTicketCount;
+			SearchKeywordsJP = searchKeywordsJP;
 		}
 
 		public MusicMB():base(0L, null, null)
 		{
 			
 		}
+
 	}
 }

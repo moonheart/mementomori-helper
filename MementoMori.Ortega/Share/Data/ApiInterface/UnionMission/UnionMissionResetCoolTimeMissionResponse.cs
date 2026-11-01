@@ -1,0 +1,14 @@
+﻿using MementoMori.Ortega.Share.Data.UnionMission;
+using MessagePack;
+
+namespace MementoMori.Ortega.Share.Data.ApiInterface.UnionMission;
+
+[MessagePackObject(true)]
+public class UnionMissionResetCoolTimeMissionResponse : ApiResponseBase, IUserSyncApiResponse
+{
+    public List<UnionMissionPanelInfo> SharedMissionPanelList { get; set; }
+
+    public List<UnionMissionPanelInfo> PersonalMissionPanelList { get; set; }
+
+    public UserSyncData UserSyncData { get; set; }
+}

@@ -17,6 +17,8 @@ namespace MementoMori.Ortega.Share.Data.Shop
 
 		public ShopProductType ShopProductType { get; set; }
 
+		public List<BulkShopProductInfo> BulkShopProductInfos { get; set; }
+
 		public string SessionId { get; set; }
 
 		public bool IsStripePaidStatus { get; set; }

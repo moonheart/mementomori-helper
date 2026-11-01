@@ -2,6 +2,7 @@
 using MementoMori.Ortega.Share.Data.Guild;
 using MementoMori.Ortega.Share.Data.GuildTower;
 using MessagePack;
+using MementoMori.Ortega.Share.Enums;
 
 namespace MementoMori.Ortega.Share.Data.ApiInterface.Guild
 {
@@ -23,6 +24,13 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Guild
         public int GuildTowerTodayWinCount { get; set; }
 
         public bool IsRaidOpen { get; set; }
+
+        public bool IsUnionMissionMatchingWorld { get; set; }
+
+        public bool IsAlreadyEntryUnionMission { get; set; }
+
+        public UnionMissionClassType ClassType { get; set; }
+
         public GuildGvgInfo LocalGuildGvgInfo { get; set; }
 
         public GuildSyncData GuildSyncData { get; set; }

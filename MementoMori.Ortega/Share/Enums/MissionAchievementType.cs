@@ -55,6 +55,12 @@ namespace MementoMori.Ortega.Share.Enums
 		ExchangeDungeonBattleBuyCount = 5050100,
 		[Description("ロイヤルショップのダイヤ購入でダイヤを購入した時")]
 		ShopTotalBuyCurrency = 6010100,
+		[Description("クリスタルの消費数")]
+		ShopConsumeWebCrystalCount = 6020100,
+		[Description("Webストアの無料商品の購入回数")]
+		ShopBuyFreeWebStoreProductCount = 6030100,
+		[Description("クリスタルの獲得数")]
+		ShopGetWebCrystalCount = 6040100,
 		[Description("キャラレベルアップ")]
 		CharacterLevelUpCount = 7010100,
 		[Description("レベルリンク達成レベル")]
@@ -113,6 +119,12 @@ namespace MementoMori.Ortega.Share.Enums
 		EquipmentComposeCountSR,
 		[Description("SSRアスタロト武具シリーズ合成回数")]
 		EquipmentComposeCountSSR,
+		[Description("初級封印の宝箱使用回数")]
+		SealedChestBronzeUseCount = 8040100,
+		[Description("中級封印の宝箱使用回数")]
+		SealedChestSilverUseCount = 8040200,
+		[Description("上級封印の宝箱使用回数")]
+		SealedChestGoldUseCount = 8040300,
 		[Description("プレイヤー達成レベル")]
 		AutoBattleMaxPlayerLevel = 9010100,
 		[Description("獲得した合計領民数")]
@@ -261,6 +273,8 @@ namespace MementoMori.Ortega.Share.Enums
 		GachaDrawCount = 15010200,
 		[Description("ダイヤ消費量")]
 		ConsumeCurrencyCount = 15010300,
+		[Description("キャラ・武具ガチャ回数")]
+		GachaCharaOrEquipmentDrawCount = 15010500,
 		[Description("ギルド加入回数")]
 		GuildJoinCount = 16010100,
 		[Description("ギルドログイン回数")]
@@ -322,6 +336,26 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("レンタルレイド 前半レイドステージ制限編成の達成ダメージ")]
 		RentalRaidFirstHalfLimitFormation = 28010100,
 		[Description("レンタルレイド 後半レイドステージ制限編成の達成ダメージ")]
-		RentalRaidSecondHalfLimitFormation = 28010200
+		RentalRaidSecondHalfLimitFormation = 28010200,
+		[Description("湖底の絵画集め プレイ数")]
+		MiningQuestPlayCount = 29010100,
+		[Description("湖底の絵画集め 水霊の雫の獲得数")]
+		MiningQuestGetRewardCount = 29010200,
+		[Description("湖底の絵画集め 水霊の雫の消費数")]
+		MiningQuestConsumeRewardCount = 29010300,
+		[Description("湖底の絵画集め 強化回数")]
+		MiningQuestReinforcementCount = 29010400,
+		[Description("湖底の絵画集め 特殊能力の獲得数")]
+		MiningQuestSpecialReinforcementCount = 29010500,
+		[Description("湖底の絵画集め 回収力")]
+		MiningQuestAttackPower = 29010600,
+		[Description("湖底の絵画集め 回収速度")]
+		MiningQuestAttackFrequency = 29010700,
+		[Description("湖底の絵画集め 回収Lv")]
+		MiningQuestCollectionLevel = 29010800,
+		[Description("湖底の絵画集め 最高スコア")]
+		MiningQuestMaxScore = 29010900,
+		[Description("湖底の絵画集め 階級")]
+		MiningQuestGrade = 29011000
 	}
 }

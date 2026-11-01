@@ -12,5 +12,8 @@ namespace MementoMori.Ortega.Share.Data.Guild
 		public bool IsApplying { get; set; }
 
 		public List<PlayerInfo> PlayerInfoList{ get; set; }
+
+		public bool IsRecruit { get; set; }
+
 	}
 }

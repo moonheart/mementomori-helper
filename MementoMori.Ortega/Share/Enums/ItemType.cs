@@ -115,6 +115,8 @@ namespace MementoMori.Ortega.Share.Enums
         RealPrizeC = 54,
         [Description("マイニングクエストイベント報酬アイテム")]
         MiningQuestEventRewardItem = 56,
+        [Description("団結ミッションチケット")]
+        UnionMissionTicket,
         [Description("Stripeクーポン")]
         StripeCoupon = 1001,
         [Description("Webクリスタル")]

@@ -1,0 +1,45 @@
+﻿using System.ComponentModel;
+
+public enum MiningQuestReinforcementParameterType
+{
+    [Description("None")]
+    None,
+    [Description("攻撃力（加算）")]
+    AttackPowerAddition,
+    [Description("攻撃力（乗算）")]
+    AttackPowerMultiplication,
+    [Description("攻撃頻度（加算）")]
+    AttackFrequency,
+    [Description("攻撃範囲（加算）")]
+    AttackRangeAddition,
+    [Description("攻撃範囲（乗算）")]
+    AttackRangeMultiplication,
+    [Description("移動速度（倍率）")]
+    AttackSpeedRate,
+    [Description("制限時間（加算）")]
+    LimitTimeSeconds,
+    [Description("通貨獲得量（倍率）")]
+    RewardCountRate,
+    [Description("ブロック生成上限（加算）")]
+    BlockGenerateLimit,
+    [Description("各ブロックの抽選比重（加算）")]
+    BlockLotteryWeight,
+    [Description("再生成抽選枠の抽選確率（加算）")]
+    BlockRespawnLotteryProbability,
+    [Description("各抽選枠の生成数（加算）")]
+    BlockRespawnCount,
+    [Description("各ブロックの耐久度（加算）")]
+    BlockHealth,
+    [Description("各ブロックの獲得通貨量（加算）")]
+    BlockRewardCount,
+    [Description("特殊攻撃数（加算）")]
+    SpecialAttackSimultaneousCount,
+    [Description("特殊攻撃範囲（解放段階）")]
+    SpecialAttackRangeStage,
+    [Description("特殊攻撃発生頻度（減算）")]
+    SpecialAttackCoolTimeMillisecondsSubtraction,
+    [Description("獲得上限拡張Lv")]
+    MaxRewardCountLevel,
+    [Description("各ブロックのスコア")]
+    BlockScore
+}

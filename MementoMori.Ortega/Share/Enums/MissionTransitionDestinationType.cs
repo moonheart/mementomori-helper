@@ -35,6 +35,10 @@ namespace MementoMori.Ortega.Share.Enums
 		ExchangeDungeonBattle,
 		[Description("ロイヤルショップ\uff3fダイヤ購入タブ")]
 		Shop = 601,
+		[Description("Webストア説明ダイアログ")]
+		WebStoreGuidance,
+		[Description("Webストア説明ダイアログ")]
+		WebStoreGuidanceFreeProduct,
 		[Description("キャラ画面（所持キャラタブ）")]
 		CharacterList = 701,
 		[Description("キャラ画面（進化タブ）")]
@@ -47,6 +51,8 @@ namespace MementoMori.Ortega.Share.Enums
 		ItemBoxEquipment,
 		[Description("アイテムボックス画面（パーツタブ）")]
 		ItemBoxParts,
+		[Description("アイテムボックス画面（アイテムボックス消費タブ）")]
+		ItemBoxConsumption,
 		[Description("オートバトル")]
 		AutoBattle = 901,
 		[Description("高速バトルダイアログ")]
@@ -98,6 +104,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("動画再生")]
 		PlayVideo = 2701,
 		[Description("レンタルレイド")]
-		RentalRaid = 2801
+		RentalRaid = 2801,
+		[Description("湖底の絵画集め")]
+		MiningQuest = 2901
 	}
 }

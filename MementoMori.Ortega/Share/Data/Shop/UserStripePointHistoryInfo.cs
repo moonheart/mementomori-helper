@@ -36,5 +36,7 @@ namespace MementoMori.Ortega.Share.Data.Shop
 		public string RefundDateTime { get; set; }
 
 		public string ChargeBackDateTime { get; set; }
+
+		public bool IsBulkBuy { get; set; }
 	}
 }

@@ -2,6 +2,7 @@
 using MementoMori.Ortega.Share.Data.Interface;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
+using MementoMori.Ortega.Share.Data.GuildNote;
 
 namespace MementoMori.Ortega.Share.Data.Chat
 {
@@ -19,6 +20,12 @@ namespace MementoMori.Ortega.Share.Data.Chat
 
 		[Key(14)]
 		public ChatMusicPlaylistInfo ChatMusicPlaylistInfo { get; set; }
+
+        [Key(16)]
+        public ChatRecruitGuildMemberInfo ChatRecruitGuildMemberInfo { get; set; }
+
+        [Key(17)]
+        public ChatGuildNoteInfo ChatGuildNoteInfo { get; set; }
 
 		[Key(1)]
 		public ChatType ChatType { get; set; }

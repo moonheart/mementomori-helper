@@ -55,5 +55,9 @@ namespace MementoMori.Ortega.Share.Data.Shop
 
 		[Description("報酬リスト")]
 		public List<ShopItem> UserItemList { get; set; }
+
+		[Description("解放VIPレベル")]
+		public long OpenVipLevel { get; set; }
+
     }
 }

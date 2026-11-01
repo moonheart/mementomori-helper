@@ -14,8 +14,16 @@ namespace MementoMori.Ortega.Share.Data.Character
 		public float SongLyricsStartTime { get; set; }
 
 		[PropertyOrder(2)]
+		[Description("歌詞終了時間（秒）")]
+		public float SongLyricsEndTime { get; set; }
+
+		[PropertyOrder(3)]
 		[Description("歌詞テキストキー")]
 		public string SongLyricsKey { get; set; }
+
+		[PropertyOrder(4)]
+		[Description("朗読テキストタイプ")]
+		public MonologueTextType MonologueTextType { get; set; }
 
 		[PropertyOrder(3)]
 		[Description("朗読テキストタイプ")]

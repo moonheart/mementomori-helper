@@ -16,10 +16,8 @@ namespace MementoMori.Ortega.Share.Enums
 		ContractPrivilege,
 		[Description("月間ブースト")]
 		MonthlyBoost,
-		[Description("課金機能付きミッション")]
-		CurrencyMission,
 		[Description("初課金ボーナス")]
-		FirstChargeBonus,
+		FirstChargeBonus = 8,
 		[Description("達成パック")]
 		AchievementPack,
 		[Description("チャージ特典")]
@@ -30,6 +28,8 @@ namespace MementoMori.Ortega.Share.Enums
 		MissionPass,
 		[Description("Webストア")]
 		WebStore,
+		[Description("WEBストア誘導パネル")]
+		WebStoreGuidancePanel,
 		[Description("全検索")]
 		AllSearch = 99
 	}
