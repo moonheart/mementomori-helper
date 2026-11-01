@@ -278,8 +278,6 @@ export function BookSortDialog({ open, onOpenChange }: BookSortDialogProps) {
                                         items={items}
                                         selectedItemId={selectedItemId}
                                         onSelectItem={setSelectedItemId}
-                                        onOpenDispatch={() => { }} // TODO: Dispatch Dialog
-                                        onOpenShop={() => { }} // TODO: Shop Dialog
                                     />
                                 </div>
                             </div>

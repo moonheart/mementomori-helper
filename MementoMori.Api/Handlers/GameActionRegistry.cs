@@ -66,7 +66,6 @@ public static class GameActionRegistry
         typeof(MissionRewardHandler),
         typeof(AutoUseItemsHandler),
         typeof(FreeGachaHandler),
-        typeof(AutoUseItemsHandler),
         typeof(CharacterRankUpHandler),
         // Freebies: 只领不花的奖励
         typeof(Freebies.CharacterStoryRewardHandler),

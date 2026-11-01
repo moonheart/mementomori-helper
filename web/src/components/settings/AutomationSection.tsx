@@ -71,7 +71,9 @@ export function AutomationSection({ config, onChange, onResetCron }: AutomationS
         const disabledList = config[listKey] || [];
         const isDaily = listKey === 'disabledDailyActions';
         const defaultActions = isDaily
-            ? ['DailyLoginBonus', 'VipDailyGift', 'MonthlyBoost', 'AutoBattleReward', 'FriendPointTransfer', 'PresentReceive', 'EquipmentReinforcement', 'BossQuickBattle', 'InfiniteTower', 'BossHighSpeedBattle', 'GvgReward', 'GuildCheckin', 'GuildRaidBattle', 'GuildTower', 'FriendManage', 'AchievementReward', 'BountyQuestReward', 'BountyQuestDispatch', 'DungeonBattle', 'MissionReward', 'AutoUseItems', 'FreeGacha', 'CharacterRankUp']
+            ? ['DailyLoginBonus', 'VipDailyGift', 'MonthlyBoost', 'AutoBattleReward', 'FriendPointTransfer', 'PresentReceive', 'EquipmentReinforcement', 'BossQuickBattle', 'InfiniteTower', 'BossHighSpeedBattle', 'GvgReward', 'GuildCheckin', 'GuildRaidBattle', 'GuildTower', 'FriendManage', 'AchievementReward', 'BountyQuestReward', 'BountyQuestDispatch', 'DungeonBattle', 'MissionReward', 'AutoUseItems', 'FreeGacha', 'CharacterRankUp',
+                // Freebies: claim-only rewards (character memories can be kept as a diamond reserve by turning it off)
+                'CharacterStoryReward', 'FriendMissionReward', 'PanelBingoReward', 'PopularityVoteReward', 'RentalRaidShareReward', 'EquipmentSynchroMission']
             : ['DailyLoginBonus', 'BountyQuestDispatch', 'PresentReceive', 'AutoBattleReward', 'GuildRaidBattle', 'GuildTower', 'GvgReward', 'FriendPointTransfer', 'BountyQuestReward', 'MissionReward', 'FreeGacha', 'AutoUseItems', 'BookSortAuto'];
 
         return (
