@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Shield, UserPlus, Flag, MessageCircle } from 'lucide-react';
+import { Shield, UserPlus } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -11,6 +11,9 @@ import { CharacterIconManager, AssetManager } from '@/lib/asset-manager';
 import { CharacterMB, ElementType, JobFlags } from '@/api/generated';
 import type { SpecialIconItemMB } from '@/api/generated/specialIconItemMB';
 import { PlayerInfo } from '@/api/generated/playerInfo';
+import { FriendStatusType } from '@/api/generated/friendStatusType';
+import { ortegaApi } from '@/api/ortega-client';
+import { useToast } from '@/hooks/use-toast';
 import type { UICharacter } from '@/components/characters/types';
 import styles from './PlayerInfoDialog.module.css';
 
@@ -37,6 +40,21 @@ export function PlayerInfoDialog({
     const [characterMasterMap, setCharacterMasterMap] = useState<Record<number, CharacterMB>>({});
     const [selectedCharacter, setSelectedCharacter] = useState<UICharacter | null>(null);
     const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+    const { toast } = useToast();
+    const [busy, setBusy] = useState(false);
+
+    const act = async (call: () => Promise<unknown>, labelKey: string) => {
+        setBusy(true);
+        try {
+            await call();
+            toast({ title: t(labelKey) });
+        } catch (error) {
+            console.error('Player action failed:', error);
+            toast({ variant: 'destructive', title: t(labelKey), description: String(error) });
+        } finally {
+            setBusy(false);
+        }
+    };
 
     useEffect(() => {
         let cancelled = false;
@@ -176,9 +194,8 @@ export function PlayerInfoDialog({
                                 <Button
                                     variant="secondary"
                                     className={styles.actionButton}
-                                    onClick={() => {
-                                        // TODO: 接入屏蔽玩家接口
-                                    }}
+                                    disabled={busy}
+                                    onClick={() => act(() => ortegaApi.friend.updateBlockList({ isBlock: true, targetPlayerId: player.playerId }), '[FriendTabBlock]')}
                                 >
                                     <Shield className={styles.actionIcon} />
                                     {t('[FriendTabBlock]')}
@@ -186,32 +203,11 @@ export function PlayerInfoDialog({
                                 <Button
                                     variant="secondary"
                                     className={styles.actionButton}
-                                    onClick={() => {
-                                        // TODO: 接入好友申请接口
-                                    }}
+                                    disabled={busy || player.friendStatus === FriendStatusType.Friend || player.friendStatus === FriendStatusType.Applying}
+                                    onClick={() => act(() => ortegaApi.friend.applyFriend({ isApply: true, targetPlayerId: player.playerId }), '[FriendTabApplying]')}
                                 >
                                     <UserPlus className={styles.actionIcon} />
                                     {t('[FriendTabApplying]')}
-                                </Button>
-                                <Button
-                                    variant="secondary"
-                                    className={styles.actionButton}
-                                    onClick={() => {
-                                        // TODO: 接入举报接口
-                                    }}
-                                >
-                                    <Flag className={styles.actionIcon} />
-                                    {t('[PlayerInformationReportLabel]')}
-                                </Button>
-                                <Button
-                                    variant="secondary"
-                                    className={styles.actionButton}
-                                    onClick={() => {
-                                        // TODO: 接入私信接口
-                                    }}
-                                >
-                                    <MessageCircle className={styles.actionIcon} />
-                                    {t('[PlayerInformationPrivateChatLabel]')}
                                 </Button>
                             </div>
                         </div>
