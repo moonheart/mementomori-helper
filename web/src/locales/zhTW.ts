@@ -790,4 +790,8 @@ export default {
     'AUTO_TOWER_TODAY_CLEAR': '今日已通關: {0} / 10 層',
     'AUTO_TOWER_LOG_TITLE': '執行日誌',
     'AUTO_TOWER_NO_LOGS': '暫無日誌',
+    "TM_KEY_HINT": "取得方法: 在 tamamo.dev 打開選單並登入 (第一次先建立帳號, 會往遊戲內私聊發 4 位驗證碼). 然後再打開選單, 點 Issue Dedicated Key → Issue / Reissue → Copy, 貼到這裡. 只顯示一次, 永不過期; 重新發行會讓舊的失效. 請像密碼一樣保管. 分享通關不需要它.",
+    "TM_KEY_SHOW_STEPS": "查看圖示",
+    "TM_KEY_LABEL": "tamamo.dev 專用 key",
+    "TM_KEY_NEEDED": "要查看其他玩家在目前關卡用的角色, 請填寫 tamamo.dev 的專用 key (在帳號選單裡發行).",
 };

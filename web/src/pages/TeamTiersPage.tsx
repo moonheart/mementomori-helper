@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from '@/hooks/useTranslation';
 import { CharacterIcon } from '@/components/character/CharacterIcon';
 import { autopilotApi, toCharacterInfo, TIERS, type BannerAdvice, type TamamoStageTeams, type TamamoTeam, type TierRow } from '@/api/autopilot-service';
+import { BASE_PATH } from '@/lib/base-path';
 
 // dark: 也要写, 否则深色模式下 Select 自带的 dark:bg-input 会盖掉颜色
 const tierStyle: Record<string, string> = {
@@ -209,6 +210,15 @@ export function TeamTiersPage() {
                                 {t('TM_KEY_HINT')}{' '}
                                 <a href="https://tamamo.dev" target="_blank" rel="noreferrer" className="underline hover:text-foreground">{t('TM_KEY_CHECK')}</a>
                             </p>
+                            <details className="text-xs text-muted-foreground">
+                                <summary className="cursor-pointer hover:text-foreground">{t('TM_KEY_SHOW_STEPS')}</summary>
+                                <div className="mt-2 flex flex-wrap items-start gap-2">
+                                    {['key-1-menu', 'key-2-issue', 'key-3-copy'].map((name, i) => (
+                                        <img key={name} src={`${BASE_PATH}/tamamo/${name}.png`} alt={`${t('TM_KEY_SHOW_STEPS')} ${i + 1}`}
+                                             loading="lazy" className="max-h-56 max-w-full rounded border" />
+                                    ))}
+                                </div>
+                            </details>
                         </form>
                     )}
                     {keyStatus?.hasKey === false ? null : tamamo === undefined ? (

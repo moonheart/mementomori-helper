@@ -790,4 +790,9 @@ export default {
     'AUTO_TOWER_TODAY_CLEAR': '오늘 클리어: {0} / 10 층',
     'AUTO_TOWER_LOG_TITLE': '실행 로그',
     'AUTO_TOWER_NO_LOGS': '로그 없음',
+    "TM_KEY_HINT": "받는 방법: tamamo.dev에서 메뉴를 열고 로그인하세요 (처음이면 계정 생성, 게임 내 개인 채팅으로 4자리 코드가 옵니다). 다시 메뉴를 열고 Issue Dedicated Key → Issue / Reissue → Copy 후 여기에 붙여넣으세요. 한 번만 표시되고 만료되지 않으며, 재발급하면 이전 키는 무효가 됩니다. 비밀번호처럼 관리하세요. 클리어 공유에는 필요 없습니다.",
+    "TM_KEY_SHOW_STEPS": "위치 보기",
+    "TM_KEY_CHECK": "tamamo.dev 열기",
+    "TM_KEY_LABEL": "tamamo.dev 전용 키",
+    "TM_KEY_NEEDED": "현재 스테이지에서 다른 플레이어가 쓰는 캐릭터를 보려면 tamamo.dev 전용 키 (계정 메뉴에서 발급)를 입력하세요.",
 };
