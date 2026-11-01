@@ -918,6 +918,24 @@
   <data name="DungeonGuestJoined" xml:space="preserve">
     <value>时空洞窟: {0} 加入队伍</value>
   </data>
+  <data name="ActionLegendInheritance" xml:space="preserve">
+    <value>圣装继承</value>
+  </data>
+  <data name="ActionMatchlessInheritance" xml:space="preserve">
+    <value>魔装继承</value>
+  </data>
+  <data name="InheritNothing" xml:space="preserve">
+    <value>{0}: 没有可继承的未装备 S 级 1 级装备</value>
+  </data>
+  <data name="InheritNoTarget" xml:space="preserve">
+    <value>没有同部位的 D 级装备可以继承 {0}</value>
+  </data>
+  <data name="InheritDone" xml:space="preserve">
+    <value>继承完成 {0} => {1}</value>
+  </data>
+  <data name="InheritFinished" xml:space="preserve">
+    <value>{0}: 共继承 {1} 件</value>
+  </data>
   <data name="DungeonAlreadyCleared" xml:space="preserve">
       <value>地下城已通关完毕。</value>
   </data>

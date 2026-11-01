@@ -917,6 +917,24 @@
   <data name="DungeonGuestJoined" xml:space="preserve">
     <value>Cave: {0} joined the party</value>
   </data>
+  <data name="ActionLegendInheritance" xml:space="preserve">
+    <value>Legend gear inheritance</value>
+  </data>
+  <data name="ActionMatchlessInheritance" xml:space="preserve">
+    <value>Matchless gear inheritance</value>
+  </data>
+  <data name="InheritNothing" xml:space="preserve">
+    <value>{0}: no unequipped S gear at level 1 to pass on</value>
+  </data>
+  <data name="InheritNoTarget" xml:space="preserve">
+    <value>No D gear of the same slot to receive {0}</value>
+  </data>
+  <data name="InheritDone" xml:space="preserve">
+    <value>Inherited {0} => {1}</value>
+  </data>
+  <data name="InheritFinished" xml:space="preserve">
+    <value>{0}: {1} piece(s) inherited</value>
+  </data>
   <data name="DungeonAlreadyCleared" xml:space="preserve">
       <value>Dungeon already fully cleared.</value>
   </data>
