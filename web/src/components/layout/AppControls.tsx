@@ -2,16 +2,18 @@ import { useState } from 'react';
 import { ChevronDown, Globe, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { useLocalizationStore } from '@/store/localization-store';
+import { useLocalizationStore, SUPPORTED_LANGUAGES } from '@/store/localization-store';
 import { applyTheme, getTheme, type Theme } from '@/lib/theme';
 
-const LANGUAGES = [
-    { code: 'zhCN', label: '简体中文' },
-    { code: 'zhTW', label: '繁體中文' },
-    { code: 'enUS', label: 'English' },
-    { code: 'jaJP', label: '日本語' },
-    { code: 'koKR', label: '한국어' },
-];
+const LANGUAGE_LABELS: Record<string, string> = {
+    enUS: 'English',
+    zhCN: '简体中文',
+    zhTW: '繁體中文',
+    jaJP: '日本語',
+    koKR: '한국어',
+};
+
+const LANGUAGES = SUPPORTED_LANGUAGES.map(code => ({ code, label: LANGUAGE_LABELS[code] ?? code }));
 
 /** 浅色/深色切换 (顶栏和账号页共用) */
 export function ThemeToggle() {

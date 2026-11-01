@@ -18,11 +18,36 @@ interface LocalizationState {
     t: (key: string | undefined | null, params?: unknown[]) => string;
 }
 
+/** 支持的语言 (界面菜单和初始语言都以此为准), 第一个是默认语言 */
+export const SUPPORTED_LANGUAGES = ['zhCN', 'zhTW', 'enUS', 'jaJP', 'koKR'] as const;
+
+/** 默认语言: 没有选择过、或存了个已经不支持的旧值时用它 */
+export const DEFAULT_LANGUAGE = 'zhCN';
+
+/** 词条缺失时的兜底语言 (和默认语言是两回事) */
+export const FALLBACK_LANGUAGE = 'enUS';
+
+function getInitialLanguage(): string {
+    const saved = localStorage.getItem('app_lang');
+    return saved && (SUPPORTED_LANGUAGES as readonly string[]).includes(saved) ? saved : DEFAULT_LANGUAGE;
+}
+
 /**
  * 同一语言只跑一次 sync。
  * setLanguage() 和 App 挂载 effect 会同时触发 sync, 没有缓存时原本会并发下载两份 (~4.8MB)。
  */
 const inFlightSyncs = new Map<string, Promise<void>>();
+
+/**
+ * 取第一个非空值。
+ * 游戏文本里有些语言 (或某些条目) 是空字符串, 直接 ?? 会命中空串, 界面就白了。
+ */
+function pickFirst(...candidates: (string | undefined | null)[]): string | undefined {
+    for (const value of candidates) {
+        if (typeof value === 'string' && value.trim() !== '') return value;
+    }
+    return undefined;
+}
 
 /**
  * 构造翻译函数。
@@ -38,8 +63,11 @@ const buildT = (get: () => LocalizationState) =>
         if (!key) return '';
         const { resources, currentLanguage } = get();
 
-        // 如果资源未加载或找不到 key，尝试本地翻译，如果还找不到返回 key
-        let text = resources?.[key] ?? localTranslations[currentLanguage]?.[key] ?? localTranslations.enUS?.[key] ?? key;
+        // 依次尝试: 服务端词典 -> 内置词典 -> 内置英文词典 -> key
+        // 空字符串视为缺失 (游戏文本里部分语言有空条目), 不然界面会显示空白
+        let text =
+            pickFirst(resources?.[key], localTranslations[currentLanguage]?.[key], localTranslations[FALLBACK_LANGUAGE]?.[key]) ??
+            key;
 
         // 处理 C# 风格的占位符 {0}, {0:D2}, etc.
         if (params && params.length > 0) {
@@ -67,7 +95,7 @@ const buildT = (get: () => LocalizationState) =>
     };
 
 export const useLocalizationStore = create<LocalizationState>((set, get) => ({
-    currentLanguage: localStorage.getItem('app_lang') || 'enUS',
+    currentLanguage: getInitialLanguage(),
     resources: {},
     isLoading: false,
     isSyncing: false,

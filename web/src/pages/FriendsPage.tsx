@@ -108,7 +108,7 @@ export function FriendsPage() {
         return t('FRIENDS_LONG_AGO');
     };
 
-    const getLoadingText = () => t('[Loading]');
+    const getLoadingText = () => t('COMMON_LOADING');
     const getGuildNameText = (guildName?: string | null) => guildName ? `「${guildName}」` : t('[RankingNotGuild]');
     const getPlayerNameText = (player: PlayerInfo) => player.playerName || player.npcNameKey || t('FRIENDS_UNKNOWN_PLAYER');
     const getRetryLaterText = () => t('FRIENDS_RETRY_LATER');
@@ -682,7 +682,7 @@ export function FriendsPage() {
                                 ) : (
                                     <RefreshCw className="mr-2 h-4 w-4" />
                                 )}
-                                {t('[CommonReloadButtonLabel]')}
+                                {t('COMMON_RELOAD')}
                             </Button>
                             {friends.some(f => !f.giftSent) && (
                                 <Button

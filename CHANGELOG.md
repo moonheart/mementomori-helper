@@ -6,11 +6,17 @@ All notable changes to this project are documented here.
 
 ### 中文
 
-- 开发中。
+- 默认语言为简体中文：接口在未指定或解析失败时使用 `zhCN`，服务端游戏文本的兜底语言、发给游戏服的展示语言也改为简体中文，前端首次打开同样是简体中文（词条缺失时仍回退到英语）。
+- 接口返回词典时用英语补齐目标语言里缺失或为空的条目，前端 `t()` 也不再命中空字符串；本地化接口按语言的缓存以 Master 文件的修改时间为准，Master 数据更新后自动重读，无需重启。
+- 补齐 `jaJP` / `koKR` / `zhTW` 缺失的约 590 条自定义界面文案，五种语言现在都有完整的 1323 条；同时修掉 7 个在游戏文本里不存在、会直接显示原始 key 的条目。
+- 新增 `scripts/locale-tools.mjs`：检查各语言覆盖率、列出缺失 key、导入/导出待翻译 JSON，并可与 `MementoMoriData/Master` 交叉核对游戏文本。
 
 ### English
 
-- In development.
+- Simplified Chinese is now the default language: the API falls back to `zhCN` when the language is missing or unknown, server-side game text and the display language sent to the game server default to Simplified Chinese as well, and the web UI starts in Simplified Chinese (missing keys still fall back to English).
+- Fixed blank entries in some languages: the resources endpoint now fills missing or empty entries with English, and `t()` no longer returns an empty string when a translation is empty. The per-language cache is keyed on the master file's timestamp, so updated master data is picked up without a restart.
+- Completed the ~590 missing `jaJP` / `koKR` / `zhTW` UI strings; all five languages now have the full 1323 keys. Also fixed 7 keys that do not exist in the game data and were rendered as raw keys.
+- Added `scripts/locale-tools.mjs`: coverage report, missing-key listing, pending-translation import/export, and cross-checks against `MementoMoriData/Master`.
 
 ## [2.2.1] - 2026-10-31
 

@@ -35,3 +35,4 @@ MementoMori.Api/wwwroot/
 .deploy-host
 /release
 logs/
+.locale-pending/

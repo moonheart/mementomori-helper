@@ -1389,4 +1389,12 @@ export default {
     "ACCOUNT_COPY_ID": "Copy account ID",
     "ACCOUNT_ID_COPIED": "Account ID copied",
     "ACCOUNT_LAST_LOGIN": "Last login {0}",
+
+    // Added by scripts/locale-tools.mjs
+    "CHARACTER_DETAIL_RUNE_ALT": "Rune",
+    "CHARACTER_DETAIL_TAB_SKILLS": "Skills",
+    "COMMON_RELOAD": "Reload",
+    "GUILD_FAME_LABEL": "Guild fame",
+    "GUILD_TOWER_MAX_FLOOR_LABEL": "Max floor",
+    "WF_BTN_RECEIVED": "Received",
 };

@@ -104,7 +104,7 @@ export function PlayerInfoDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className={styles.dialog}>
                 {!player ? (
-                    <div className={styles.empty}>{t('[NoData]')}</div>
+                    <div className={styles.empty}>{t('[CommonNoDataLabel]')}</div>
                 ) : (
                     <div className={styles.body}>
                         <div className={styles.leftPanel}>
@@ -163,13 +163,13 @@ export function PlayerInfoDialog({
                                         </button>
                                     ))}
                                     {!player.deckUserCharacterInfoList?.length && (
-                                        <div className={styles.emptyTeam}>{t('[NoData]')}</div>
+                                        <div className={styles.emptyTeam}>{t('[CommonNoDataLabel]')}</div>
                                     )}
                                 </div>
                             </div>
 
                             <div className={styles.commentSection}>
-                                <div className={styles.commentBox}>{player.comment || t('[NoData]')}</div>
+                                <div className={styles.commentBox}>{player.comment || t('[CommonNoDataLabel]')}</div>
                             </div>
 
                             <div className={styles.actions}>

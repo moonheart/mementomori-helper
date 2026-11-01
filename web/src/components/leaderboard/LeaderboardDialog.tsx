@@ -386,7 +386,7 @@ export function LeaderboardDialog({ open, onOpenChange }: LeaderboardDialogProps
                     {loading ? (
                         <div className="flex h-48 items-center justify-center">
                             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                            <span className="ml-2">{t('[Loading]')}</span>
+                            <span className="ml-2">{t('COMMON_LOADING')}</span>
                         </div>
                     ) : (
                         <div className="space-y-4">
@@ -606,7 +606,7 @@ export function LeaderboardDialog({ open, onOpenChange }: LeaderboardDialogProps
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
-                            <Shield className="h-5 w-5" />{t('[GuildDetailDialogTitle]')}
+                            <Shield className="h-5 w-5" />{t('[DialogGuildDetailTitle]')}
                         </DialogTitle>
                     </DialogHeader>
                     {selectedGuild && (
@@ -632,18 +632,18 @@ export function LeaderboardDialog({ open, onOpenChange }: LeaderboardDialogProps
                                     <span className="font-semibold">{selectedGuild.guildInfo?.guildMemberCount}/50</span>
                                 </div>
                                 <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                                    <span className="text-sm text-muted-foreground">{t('[GuildFameLabel]')}</span>
+                                    <span className="text-sm text-muted-foreground">{t('GUILD_FAME_LABEL')}</span>
                                     <span className="font-semibold">{selectedGuild.guildInfo?.guildFame.toLocaleString()}</span>
                                 </div>
                                 {selectedGuild.guildTowerMaxFloor > 0 && (
                                     <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                                        <span className="text-sm text-muted-foreground">{t('[GuildTowerMaxFloorLabel]')}</span>
+                                        <span className="text-sm text-muted-foreground">{t('GUILD_TOWER_MAX_FLOOR_LABEL')}</span>
                                         <span className="font-semibold">{selectedGuild.guildTowerMaxFloor}</span>
                                     </div>
                                 )}
                                 {selectedGuild.guildInfo?.guildOverView?.guildDescription && (
                                     <div className="p-3 bg-muted rounded-lg">
-                                        <div className="text-sm text-muted-foreground mb-1">{t('[GuildDescriptionLabel]')}</div>
+                                        <div className="text-sm text-muted-foreground mb-1">{t('[CommonExplanationLabel]')}</div>
                                         <div className="text-sm">{selectedGuild.guildInfo.guildOverView.guildDescription}</div>
                                     </div>
                                 )}

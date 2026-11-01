@@ -8,6 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "locale:check": "node ../scripts/locale-tools.mjs check",
+    "locale:missing": "node ../scripts/locale-tools.mjs missing",
     "generate-types": "cd ../MementoMori.Api && dotnet build && dotnet typegen generate && dotnet run --no-build -- --export-rpc"
   },
   "dependencies": {

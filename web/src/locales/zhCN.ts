@@ -1392,4 +1392,13 @@ export default {
     "ACCOUNT_COPY_ID": "复制账号 ID",
     "ACCOUNT_ID_COPIED": "已复制账号 ID",
     "ACCOUNT_LAST_LOGIN": "上次登录 {0}",
+
+    // Added by scripts/locale-tools.mjs
+    "CHARACTER_DETAIL_RUNE_ALT": "符石",
+    "CHARACTER_DETAIL_TAB_SKILLS": "技能",
+    "COMMON_RELOAD": "重新加载",
+    "GUILD_FAME_LABEL": "公会声望",
+    "GUILD_TOWER_MAX_FLOOR_LABEL": "最高层数",
+    "WF_BTN_RECEIVED": "已领取",
+    "WF_DISPATCH_FAILED_DESC": "请稍后再试",
 };
