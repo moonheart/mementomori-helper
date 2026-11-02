@@ -97,6 +97,13 @@ export function AutomationSection({ config, onChange, onResetCron }: AutomationS
         onChange({ ...config, [listKey]: newList });
     };
 
+    // One switch for both jobs, so the raid team can be changed without the bot fighting first
+    const guildRaidOn = !config.disabledDailyActions?.includes('GuildRaidBattle') && !config.disabledHourlyActions?.includes('GuildRaidBattle');
+    const toggleGuildRaid = (on: boolean) => {
+        const set = (list?: string[]) => [...(list ?? []).filter((k) => k !== 'GuildRaidBattle'), ...(on ? [] : ['GuildRaidBattle'])];
+        onChange({ ...config, disabledDailyActions: set(config.disabledDailyActions), disabledHourlyActions: set(config.disabledHourlyActions) });
+    };
+
     const renderActionList = (listKey: 'disabledDailyActions' | 'disabledHourlyActions') => {
         const disabledList = config[listKey] || [];
         const isDaily = listKey === 'disabledDailyActions';
@@ -160,6 +167,10 @@ export function AutomationSection({ config, onChange, onResetCron }: AutomationS
                                     />
                                 </div>
                             ))}
+                            <div className="flex items-center justify-between space-x-2 rounded-lg border p-2">
+                                <Label htmlFor="guildRaidBattle">{t('ACTION_GuildRaidBattle')}</Label>
+                                <Switch id="guildRaidBattle" checked={guildRaidOn} onCheckedChange={toggleGuildRaid} />
+                            </div>
                         </div>
                     </div>
 
