@@ -110,11 +110,18 @@ export function ShopPage() {
         if (!currentAccount) return;
         setLoading(true);
         try {
+            // Only the shop list is required. Everything else is optional so one failing call (weekly topics on an
+            // account where it isn't open yet, a missing master table...) doesn't blank the whole page.
+            const optional = <T,>(promise: Promise<T>, what: string): Promise<T | null> =>
+                promise.catch((error) => {
+                    console.warn(`Shop: ${what} failed to load, continuing without it`, error);
+                    return null;
+                });
             const [tradeShopRes, userRes, weeklyRes, shopData] = await Promise.all([
                 ortegaApi.tradeShop.getList({}),
-                ortegaApi.user.getUserData({}),
-                ortegaApi.weeklyTopics.getWeeklyTopicsInfo({}),
-                settingsApi.getSetting<ShopConfig>(currentAccount.userId, 'shop')
+                optional(ortegaApi.user.getUserData({}), 'user data'),
+                optional(ortegaApi.weeklyTopics.getWeeklyTopicsInfo({}), 'weekly topics'),
+                optional(settingsApi.getSetting<ShopConfig>(currentAccount.userId, 'shop'), 'auto-buy settings')
             ]);
 
             // 加载商店自动购买配置
@@ -126,9 +133,9 @@ export function ShopPage() {
 
             // 加载 Master 数据
             const [tradeShopTabTable, sphereTable, tradeShopSphereTable] = await Promise.all([
-                getTable<TradeShopTabMB>('TradeShopTabTable'),
-                getTable<SphereMB>('SphereTable'),
-                getTable<TradeShopSphereMB>('TradeShopSphereTable')
+                optional(getTable<TradeShopTabMB>('TradeShopTabTable'), 'TradeShopTabTable').then((r) => r ?? []),
+                optional(getTable<SphereMB>('SphereTable'), 'SphereTable').then((r) => r ?? []),
+                optional(getTable<TradeShopSphereMB>('TradeShopSphereTable'), 'TradeShopSphereTable').then((r) => r ?? [])
             ]);
 
             const masterMap: Record<number, TradeShopTabMB> = {};
@@ -148,7 +155,7 @@ export function ShopPage() {
             setTradeShopSphereMap(sphereMap);
 
             // 处理 WeeklyTopics 中的商店数据
-            if (weeklyRes.shopData?.tradeShopItemList) {
+            if (weeklyRes?.shopData?.tradeShopItemList) {
                 const groups: Record<number, TradeShopItem[]> = {};
                 weeklyRes.shopData.tradeShopItemList.forEach(item => {
                     const tabId = Math.floor(item.tradeShopItemId / 10000);
@@ -159,13 +166,13 @@ export function ShopPage() {
                 const weeklyTabs = Object.entries(groups).map(([tabId, items]) => ({
                     tradeShopTabId: parseInt(tabId),
                     tradeShopItems: items,
-                    expirationTimeStamp: weeklyRes.shopData.expirationTimeStamp,
+                    expirationTimeStamp: weeklyRes.shopData!.expirationTimeStamp,
                     lastFreeManualUpdateTime: 0
                 } as TradeShopTabInfo));
                 setWeeklyShopTabs(weeklyTabs);
             }
 
-            const syncData = userRes.userSyncData;
+            const syncData = userRes?.userSyncData;
             if (syncData) {
                 const items = syncData.userItemDtoInfo || [];
                 setUserItems(items);

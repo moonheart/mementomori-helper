@@ -902,6 +902,48 @@
   <data name="BountyTargetItems" xml:space="preserve">
       <value>Target items: {0}</value>
   </data>
+  <data name="DungeonUnequipping" xml:space="preserve">
+    <value>Cave event: taking gear off {0} characters before entering</value>
+  </data>
+  <data name="DungeonReequipped" xml:space="preserve">
+    <value>Cave event: gear back on {0} characters</value>
+  </data>
+  <data name="DungeonAllDown" xml:space="preserve">
+    <value>Cave: every character is down and no recovery items are left to use</value>
+  </data>
+  <data name="DungeonBought" xml:space="preserve">
+    <value>Cave shop: bought {0} ×{1}</value>
+  </data>
+  <data name="DungeonGuestJoined" xml:space="preserve">
+    <value>Cave: {0} joined the party</value>
+  </data>
+  <data name="ActionLegendInheritance" xml:space="preserve">
+    <value>Legend gear inheritance</value>
+  </data>
+  <data name="ActionMatchlessInheritance" xml:space="preserve">
+    <value>Matchless gear inheritance</value>
+  </data>
+  <data name="InheritNothing" xml:space="preserve">
+    <value>{0}: no unequipped S gear at level 1 to pass on</value>
+  </data>
+  <data name="InheritNoTarget" xml:space="preserve">
+    <value>No D gear of the same slot to receive {0}</value>
+  </data>
+  <data name="InheritDone" xml:space="preserve">
+    <value>Inherited {0} => {1}</value>
+  </data>
+  <data name="InheritFinished" xml:space="preserve">
+    <value>{0}: {1} piece(s) inherited</value>
+  </data>
+  <data name="ActionBountyQuestRemake" xml:space="preserve">
+    <value>Reroll bounty quests</value>
+  </data>
+  <data name="BountyRemakeNothing" xml:space="preserve">
+    <value>Bounty quests: nothing left undispatched to reroll</value>
+  </data>
+  <data name="BountyRemakeDone" xml:space="preserve">
+    <value>Bounty quests rerolled</value>
+  </data>
   <data name="DungeonAlreadyCleared" xml:space="preserve">
       <value>Dungeon already fully cleared.</value>
   </data>

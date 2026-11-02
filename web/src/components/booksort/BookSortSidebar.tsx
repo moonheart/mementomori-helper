@@ -50,8 +50,9 @@ interface BookSortSidebarProps {
     items: { id: number, count: number, name: string, desc: string }[];
     selectedItemId: number | null;
     onSelectItem: (id: number) => void;
-    onOpenDispatch: () => void;
-    onOpenShop: () => void;
+    /** Optional: the button only shows once there is something to open. */
+    onOpenDispatch?: () => void;
+    onOpenShop?: () => void;
 }
 
 export function BookSortSidebar({
@@ -108,11 +109,13 @@ export function BookSortSidebar({
                 <CardContent className="p-4 flex-1 flex flex-col gap-4">
 
                     {/* Top Actions */}
-                    <div className="grid grid-cols-3 gap-2 shrink-0">
-                        <Button variant="outline" className="flex flex-col h-auto py-3 gap-1 hover:border-primary/50 hover:bg-primary/5 transition-colors" onClick={onOpenDispatch}>
-                            <Users className="w-5 h-5 text-blue-400" />
-                            <span className="text-xs font-medium">{t('[BookAssistTitle]')}</span>
-                        </Button>
+                    <div className={`grid gap-2 shrink-0 ${onOpenDispatch && onOpenShop ? 'grid-cols-3' : onOpenDispatch || onOpenShop ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                        {onOpenDispatch && (
+                            <Button variant="outline" className="flex flex-col h-auto py-3 gap-1 hover:border-primary/50 hover:bg-primary/5 transition-colors" onClick={onOpenDispatch}>
+                                <Users className="w-5 h-5 text-blue-400" />
+                                <span className="text-xs font-medium">{t('[BookAssistTitle]')}</span>
+                            </Button>
+                        )}
                         <Button variant="outline" className="flex flex-col h-auto py-3 gap-1 hover:border-primary/50 hover:bg-primary/5 transition-colors relative" onClick={() => setShowMissionsDialog(true)}>
                             <CheckSquare className="w-5 h-5 text-green-400" />
                             <span className="text-xs font-medium">{t('[BookSortMissionButtonLabel]')}</span>
@@ -120,10 +123,12 @@ export function BookSortSidebar({
                                 <span className="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full animate-bounce" />
                             )}
                         </Button>
-                        <Button variant="outline" className="flex flex-col h-auto py-3 gap-1 hover:border-primary/50 hover:bg-primary/5 transition-colors" onClick={onOpenShop}>
-                            <Store className="w-5 h-5 text-orange-400" />
-                            <span className="text-xs font-medium">{t('[BookSortShopButtonLabel]')}</span>
-                        </Button>
+                        {onOpenShop && (
+                            <Button variant="outline" className="flex flex-col h-auto py-3 gap-1 hover:border-primary/50 hover:bg-primary/5 transition-colors" onClick={onOpenShop}>
+                                <Store className="w-5 h-5 text-orange-400" />
+                                <span className="text-xs font-medium">{t('[BookSortShopButtonLabel]')}</span>
+                            </Button>
+                        )}
                     </div>
 
                     <div className="text-sm font-semibold tracking-wider text-muted-foreground border-b pb-2">{t('BOOKSORT_CLEANING_ITEMS')}</div>

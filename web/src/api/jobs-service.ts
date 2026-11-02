@@ -12,6 +12,10 @@ export interface PauseState {
 }
 
 export const jobsApi = {
+    /** Runs one action now and waits for it (Cave or inheritance can take minutes, so no timeout). */
+    runAction: async (userId: number, actionKey: string) => {
+        await apiClient.post(`/api/jobs/${userId}/action/${actionKey}`, null, { timeout: 0 });
+    },
     getPause: async (userId: number) => (await apiClient.get<PauseState>(`/api/jobs/${userId}/pause`)).data,
     /** hours 为 null = 一直暂停到手动恢复 */
     pause: async (userId: number, hours: number | null) => {

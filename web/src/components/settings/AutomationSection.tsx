@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { RefreshCw, HelpCircle } from 'lucide-react';
+import { RefreshCw, HelpCircle, Play, Loader2 } from 'lucide-react';
 import { CronPicker } from './CronPicker';
 import { AutoJobModel } from '@/api/generated/autoJobModel';
 import { useLocalizationStore } from '@/store/localization-store';
+import { useAccountStore } from '@/store/accountStore';
+import { jobsApi } from '@/api/jobs-service';
+import { useToast } from '@/hooks/use-toast';
 
 interface AutomationSectionProps {
     config: AutoJobModel;
@@ -37,6 +40,9 @@ const cronItems = [
     { switchKey: 'autoOpenGuildRaid', cronKey: 'guildRaidBossReleaseCron', labelKey: 'AUTO_CRON_OPEN_GUILD_RAID' },
 ] as const;
 
+// Not scheduled; only run from the button (the old version's quick actions)
+const manualActions = ['BountyQuestRemake', 'LegendInheritance', 'MatchlessInheritance'];
+
 // 独立的 Cron 配置（没有对应的开关）
 const standaloneCrons = [
     { key: 'dailyJobCron', labelKey: 'AUTO_STANDALONE_DAILY' },
@@ -45,6 +51,30 @@ const standaloneCrons = [
 
 export function AutomationSection({ config, onChange, onResetCron }: AutomationSectionProps) {
     const { t } = useLocalizationStore();
+    const { currentAccountId } = useAccountStore();
+    const { toast } = useToast();
+    const [running, setRunning] = useState<string | null>(null);
+
+    const runNow = async (actionKey: string) => {
+        if (!currentAccountId || running) return;
+        setRunning(actionKey);
+        try {
+            await jobsApi.runAction(currentAccountId, actionKey);
+            toast({ title: t('AUTO_RUN_NOW_DONE', [t(`ACTION_${actionKey}`)]) });
+        } catch (error) {
+            console.error('Run action failed:', error);
+            toast({ variant: 'destructive', title: t('AUTOMATION_TRIGGER_FAILED'), description: t('AUTOMATION_TRIGGER_FAILED_DESC') });
+        } finally {
+            setRunning(null);
+        }
+    };
+
+    const runButton = (actionKey: string) => (
+        <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" title={t('AUTO_RUN_NOW')}
+            disabled={!currentAccountId || running !== null} onClick={() => runNow(actionKey)}>
+            {running === actionKey ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+        </Button>
+    );
 
     const handleSwitchChange = (key: keyof AutoJobModel, checked: boolean) => {
         onChange({ ...config, [key]: checked });
@@ -71,7 +101,9 @@ export function AutomationSection({ config, onChange, onResetCron }: AutomationS
         const disabledList = config[listKey] || [];
         const isDaily = listKey === 'disabledDailyActions';
         const defaultActions = isDaily
-            ? ['DailyLoginBonus', 'VipDailyGift', 'MonthlyBoost', 'AutoBattleReward', 'FriendPointTransfer', 'PresentReceive', 'EquipmentReinforcement', 'BossQuickBattle', 'InfiniteTower', 'BossHighSpeedBattle', 'GvgReward', 'GuildCheckin', 'GuildRaidBattle', 'GuildTower', 'FriendManage', 'AchievementReward', 'BountyQuestReward', 'BountyQuestDispatch', 'DungeonBattle', 'MissionReward', 'AutoUseItems', 'FreeGacha', 'CharacterRankUp']
+            ? ['DailyLoginBonus', 'VipDailyGift', 'MonthlyBoost', 'AutoBattleReward', 'FriendPointTransfer', 'PresentReceive', 'EquipmentReinforcement', 'BossQuickBattle', 'InfiniteTower', 'BossHighSpeedBattle', 'GvgReward', 'GuildCheckin', 'GuildRaidBattle', 'GuildTower', 'FriendManage', 'AchievementReward', 'BountyQuestReward', 'BountyQuestDispatch', 'DungeonBattle', 'MissionReward', 'AutoUseItems', 'FreeGacha', 'CharacterRankUp',
+                // Freebies: claim-only rewards (character memories can be kept as a diamond reserve by turning it off)
+                'CharacterStoryReward', 'FriendMissionReward', 'PanelBingoReward', 'PopularityVoteReward', 'RentalRaidShareReward', 'EquipmentSynchroMission']
             : ['DailyLoginBonus', 'BountyQuestDispatch', 'PresentReceive', 'AutoBattleReward', 'GuildRaidBattle', 'GuildTower', 'GvgReward', 'FriendPointTransfer', 'BountyQuestReward', 'MissionReward', 'FreeGacha', 'AutoUseItems', 'BookSortAuto'];
 
         return (
@@ -82,11 +114,14 @@ export function AutomationSection({ config, onChange, onResetCron }: AutomationS
                             <Label htmlFor={`${listKey}-${actionKey}`} className="flex flex-col space-y-1">
                                 <span className="text-sm">{t(`ACTION_${actionKey}`)}</span>
                             </Label>
-                            <Switch
-                                id={`${listKey}-${actionKey}`}
-                                checked={!disabledList.includes(actionKey)}
-                                onCheckedChange={(checked) => handleActionToggle(listKey, actionKey, checked)}
-                            />
+                            <div className="flex items-center gap-1">
+                                {runButton(actionKey)}
+                                <Switch
+                                    id={`${listKey}-${actionKey}`}
+                                    checked={!disabledList.includes(actionKey)}
+                                    onCheckedChange={(checked) => handleActionToggle(listKey, actionKey, checked)}
+                                />
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -198,9 +233,10 @@ export function AutomationSection({ config, onChange, onResetCron }: AutomationS
                 </CardHeader>
                 <CardContent>
                     <Tabs defaultValue="daily" className="w-full">
-                        <TabsList className="grid w-full grid-cols-2">
+                        <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="daily">{t('AUTO_DAILY_ACTIONS_TITLE')}</TabsTrigger>
                             <TabsTrigger value="hourly">{t('AUTO_HOURLY_ACTIONS_TITLE')}</TabsTrigger>
+                            <TabsTrigger value="manual">{t('AUTO_MANUAL_ACTIONS_TITLE')}</TabsTrigger>
                         </TabsList>
                         <div className="mt-4">
                             <TabsContent value="daily" className="space-y-4">
@@ -208,6 +244,17 @@ export function AutomationSection({ config, onChange, onResetCron }: AutomationS
                             </TabsContent>
                             <TabsContent value="hourly" className="space-y-4">
                                 {renderActionList('disabledHourlyActions')}
+                            </TabsContent>
+                            <TabsContent value="manual" className="space-y-4">
+                                <p className="text-sm text-muted-foreground">{t('AUTO_MANUAL_ACTIONS_DESC')}</p>
+                                <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                                    {manualActions.map((actionKey) => (
+                                        <div key={actionKey} className="flex items-center justify-between space-x-2 rounded-lg border p-2">
+                                            <span className="text-sm">{t(`ACTION_${actionKey}`)}</span>
+                                            {runButton(actionKey)}
+                                        </div>
+                                    ))}
+                                </div>
                             </TabsContent>
                         </div>
                     </Tabs>
