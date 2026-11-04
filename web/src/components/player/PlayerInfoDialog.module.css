@@ -1,0 +1,228 @@
+.dialog {
+    max-width: 980px;
+    width: 100%;
+    padding: 0;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.title {
+    padding: 16px 24px 0;
+}
+
+.body {
+    display: grid;
+    grid-template-columns: 0.9fr 1.6fr;
+    gap: 20px;
+    padding: 20px 24px 24px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(246, 244, 240, 0.95));
+    align-items: stretch;
+}
+
+.leftPanel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.65);
+    border-radius: 12px;
+    padding: 8px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.portrait {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.portraitFallback {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(120, 120, 120, 0.12), rgba(80, 80, 80, 0.2));
+    border-radius: 10px;
+}
+
+.rightPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.basicInfo {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.nameRow {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+}
+
+.avatarFallback {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(130, 130, 130, 0.18), rgba(70, 70, 70, 0.24));
+}
+
+.infoRowGroup {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.avatarBlock {
+    flex: 0 0 auto;
+}
+
+.infoGrid {
+    flex: 1;
+    width: 100%;
+}
+
+.playerName {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2b2b2b;
+}
+
+.playerId {
+    font-size: 14px;
+    color: #6f6f6f;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 16px;
+}
+
+.infoRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+.infoLabel {
+    font-size: 12px;
+    color: #8b8b8b;
+}
+
+.infoValue {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d1d1d;
+}
+
+.teamSection {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.sectionTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4b4b4b;
+    margin-bottom: 10px;
+}
+
+.teamRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.teamCharacter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 84px;
+    height: 84px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    line-height: 0;
+}
+
+.teamCharacter:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, 0.6);
+    outline-offset: 2px;
+    border-radius: 12px;
+}
+
+.emptyTeam {
+    font-size: 12px;
+    color: #9b9b9b;
+}
+
+.commentSection {
+    padding: 0;
+}
+
+.commentBox {
+    min-height: 72px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #4b4b4b;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+    white-space: pre-wrap;
+}
+
+.actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.actionButton {
+    justify-content: center;
+    gap: 6px;
+    height: 40px;
+    font-size: 14px;
+}
+
+.actionIcon {
+    width: 16px;
+    height: 16px;
+}
+
+.empty {
+    padding: 32px 24px;
+    text-align: center;
+    color: #8b8b8b;
+}
+
+@media (max-width: 960px) {
+    .body {
+        grid-template-columns: 1fr;
+    }
+
+    .leftPanel {
+        min-height: 280px;
+    }
+}

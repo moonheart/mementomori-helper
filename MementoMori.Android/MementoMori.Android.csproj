@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    手机版: 把 MementoMori.Api 原样跑在 app 里 (Kestrel 监听 127.0.0.1), WebView 打开同一个 React 页面.
+    ASP.NET Core 官方不支持 Android (dotnet/aspnetcore#35077, 没有 android 的 runtime pack),
+    所以不走 FrameworkReference, 直接把 SDK 自带的 Microsoft.AspNetCore.App 共享框架 DLL (纯托管) 打进 APK.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>MementoMoriApk</RootNamespace>
+    <ApplicationTitle>MementoMori Helper</ApplicationTitle>
+    <ApplicationId>io.github.moonheart.mementomorihelper</ApplicationId>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
+    <RuntimeIdentifiers>android-arm64;android-x64</RuntimeIdentifiers>
+    <!-- ASP.NET Core / FreeSql / Quartz 大量反射, 不裁剪 -->
+    <PublishTrimmed>false</PublishTrimmed>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <RunAOTCompilation>false</RunAOTCompilation>
+    <!-- 开着的话增量编译后启动会 UnsatisfiedLinkError (n_onCreate) -->
+    <AndroidEnableMarshalMethods>false</AndroidEnableMarshalMethods>
+    <!-- HttpClient 用 .NET 自己的 SocketsHttpHandler, 和桌面版行为一致 (AndroidMessageHandler 连游戏服务器超时) -->
+    <UseNativeHttpHandler>false</UseNativeHttpHandler>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <!-- Api 项目带的 FrameworkReference 不往这里传 (android 没有对应 runtime pack) -->
+    <DisableTransitiveFrameworkReferences>true</DisableTransitiveFrameworkReferences>
+    <ValidateExecutableReferencesMatchSelfContained>false</ValidateExecutableReferencesMatchSelfContained>
+    <AspNetCoreShared>$(NetCoreRoot)shared/Microsoft.AspNetCore.App/$(BundledNETCoreAppPackageVersion)/</AspNetCoreShared>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Api 当普通 net10.0 程序集编译, 不要带上 android 的 RID -->
+    <ProjectReference Include="..\MementoMori.Api\MementoMori.Api.csproj" GlobalPropertiesToRemove="RuntimeIdentifier;SelfContained" />
+    <Reference Include="$(AspNetCoreShared)*.dll" Exclude="$(AspNetCoreShared)aspnetcorev2_inprocess.dll" />
+  </ItemGroup>
+
+  <!-- 前端 (web/dist) 和 appsettings.json 打成 assets, 启动时解压到 app 私有目录当 ContentRoot -->
+  <ItemGroup>
+    <AndroidAsset Include="..\web\dist\**\*" Link="Assets\wwwroot\%(RecursiveDir)%(Filename)%(Extension)" />
+    <AndroidAsset Include="..\MementoMori.Api\appsettings.json" Link="Assets\appsettings.json" />
+  </ItemGroup>
+
+  <Target Name="CheckAspNetCoreShared" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(AspNetCoreShared)')" Text="ASP.NET Core shared framework not found at $(AspNetCoreShared)" />
+    <Error Condition="!Exists('..\web\dist\index.html')" Text="web/dist is missing, build the frontend first (cd web &amp;&amp; pnpm install &amp;&amp; pnpm build)" />
+  </Target>
+</Project>

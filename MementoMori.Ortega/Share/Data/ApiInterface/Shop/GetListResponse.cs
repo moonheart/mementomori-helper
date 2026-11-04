@@ -9,6 +9,8 @@ public class GetListResponse : ApiResponseBase
 {
     public List<ShopTabInfo> ShopTabInfoList{ get; set; }
 
+    public ShopBannerInfo ShopBannerInfo { get; set; }
+
     // public ShopContractPrivilegeData GetContractPrivilegeData()
     // {
     // 	for (;;)

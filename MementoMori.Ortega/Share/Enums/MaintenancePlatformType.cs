@@ -11,7 +11,13 @@ namespace MementoMori.Ortega.Share.Enums
 		AppStore,
 		[Description("グーグルプレイストア")]
 		GooglePlayStore,
+		[Description("Windows")]
+		Win64 = 4,
 		[Description("Dmmストア")]
-		DmmStore = 5
+		DmmStore,
+		[Description("Steam")]
+		Steam,
+		[Description("Apk")]
+		Apk
 	}
 }

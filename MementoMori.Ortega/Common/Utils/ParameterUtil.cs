@@ -45,83 +45,46 @@ namespace MementoMori.Ortega.Common.Utils
 
 		public static string GetBattleParameterValueText(BattleParameterChangeInfo battleParameterChangeInfo)
 		{
-			// if (battleParameterChangeInfo.BattleParameterType )
-			// {
-			// 	
-			// }
-			//
-			// TextResourceTable TextResourceTable;
-			// object[] array;
-			// for (;;)
-			// {
-			// 	ChangeParameterType ChangeParameterType = battleParameterChangeInfo.ChangeParameterType;
-			// 	if ("[BattleParameterPercentFormat]" > (ulong)2L && "[BattleParameterPercentFormat]" > (ulong)1L)
-			// 	{
-			// 		break;
-			// 	}
-			// 	TextResourceTable = Masters.TextResourceTable;
-			// 	array = new object[1];
-			// 	if (array == 0 || array != 0)
-			// 	{
-			// 		goto IL_37;
-			// 	}
-			// }
-			// string text;
-			// return text;
-			// IL_37:
-			// array[0] = array;
-			// string text2 = TextResourceTable.Get("[BattleParameterPercentFormat]", array).FixSeparatorsForLocator();
-			// throw new NullReferenceException();
-			throw new NotImplementedException();
+			return GetBattleParameterValueText(
+				battleParameterChangeInfo.BattleParameterType,
+				battleParameterChangeInfo.ChangeParameterType,
+				battleParameterChangeInfo.Value);
 		}
 
 		public static string GetBattleParameterValueText(BattleParameterType battleParameterType, ChangeParameterType changeParameterType, double value)
 		{
-			
-			// while ("[Ba@"ttleParameterPercentFormat]"" <= (ulong)2L || ""[BattleParameterPercentFormat]"" <= (ulong)1L)
-			// {
-			// 	TextResourceTable TextResourceTable = Masters.TextResourceTable;
-			// 	object[] array = new object[1];
-			// 	if (array == 0 || array != 0)
-			// 	{
-			// 		array[0] = array;
-			// 		return TextResourceTable.Get(""[BattleParameterPercentFormat]"", array).FixSeparatorsForLocator();
-			// 	}
-			// }
-			// string text;
-			// return text;"
-			throw new NotImplementedException();
+			if (!IsPercentFormat(battleParameterType))
+			{
+				return GetBaseParameterValueText(changeParameterType, value);
+			}
 
+			return Masters.TextResourceTable.Get("[BattleParameterPercentFormat]", value * 0.01).FixSeparatorsForLocator();
 		}
 
 		public static string GetBattleParameterValueText(BattleParameterType battleParameterType, long value)
 		{
-			// while ("[BattleParameterPercentFormat]" <= (ulong)2L || "[BattleParameterPercentFormat]" <= (ulong)1L)
-			// {
-			// 	TextResourceTable TextResourceTable = Masters.TextResourceTable;
-			// 	object[] array = new object[1];
-			// 	if (array == 0 || array != 0)
-			// 	{
-			// 		array[0] = array;
-			// 		return TextResourceTable.Get("[BattleParameterPercentFormat]", array).FixSeparatorsForLocator();
-			// 	}
-			// }
-			// return value.ToStringWithComma();
-			throw new NotImplementedException();
+			if (!IsPercentFormat(battleParameterType))
+			{
+				return value.ToStringWithComma();
+			}
 
+			return Masters.TextResourceTable.Get("[BattleParameterPercentFormat]", (double)(int)value * 0.01).FixSeparatorsForLocator();
 		}
 
 		private static bool IsPercentFormat(BattleParameterChangeInfo battleParameterChangeInfo)
 		{
-			if (battleParameterChangeInfo.ChangeParameterType != ChangeParameterType.AdditionPercent)
+			if (battleParameterChangeInfo.ChangeParameterType == ChangeParameterType.AdditionPercent)
 			{
+				return true;
 			}
-			return true;
+
+			return IsPercentFormat(battleParameterChangeInfo.BattleParameterType);
 		}
 
 		private static bool IsPercentFormat(BattleParameterType battleParameterType)
 		{
-			return true;
+			return battleParameterType is >= BattleParameterType.CriticalDamageEnhance and <= BattleParameterType.MagicCriticalDamageRelax
+				|| battleParameterType is >= BattleParameterType.DamageReflect and <= BattleParameterType.HpDrain;
 		}
 	}
 }

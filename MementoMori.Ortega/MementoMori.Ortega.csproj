@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MagicOnion.Client" Version="5.1.8" />
+        <PackageReference Include="MagicOnion.Client" Version="6.1.7" />
         <PackageReference Include="MessagePack" Version="2.5.192" />
         <PackageReference Include="MessagePack.Annotations" Version="2.5.192" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />

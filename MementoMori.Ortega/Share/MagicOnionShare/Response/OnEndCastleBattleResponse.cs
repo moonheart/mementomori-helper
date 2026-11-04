@@ -17,6 +17,9 @@ namespace MementoMori.Ortega.Share.MagicOnionShare.Response
 		[Key(7)]
 		public GvgCastleState GvgCastleState { get; set; }
 
+        [Key(9)]
+        public GvgKnockOutEffectType KnockOutEffectType { get; set; }
+
 		[Key(8)]
 		public int MatchingNumber { get; set; }
 

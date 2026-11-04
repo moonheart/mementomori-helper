@@ -1,4 +1,5 @@
-﻿using MementoMori.Ortega.Common.Enums;
+﻿using System.Collections.Generic;
+using MementoMori.Ortega.Common.Enums;
 using MementoMori.Ortega.Share.Enums;
 using MementoMori.Ortega.Share.Extensions;
 using MementoMori.Ortega.Share.Master.Data;
@@ -10,6 +11,7 @@ namespace MementoMori.Ortega.Share.Master.Table;
 public class TextResourceTable : ITable
 {
     private Dictionary<string, string> _cached = new();
+    public IReadOnlyDictionary<string, string> AllResources => _cached;
     private LanguageType _languageType;
 
     public bool Load()
@@ -17,7 +19,7 @@ public class TextResourceTable : ITable
         _cached ??= new Dictionary<string, string>();
         _cached.Clear();
         var languageType = _languageType;
-        if (languageType == LanguageType.None) languageType = LanguageType.zhTW;
+        if (languageType == LanguageType.None) languageType = LanguageType.zhCN;
 
         var filePath = $"./Master/{GetMasterBookName()}";
         using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
@@ -37,7 +39,7 @@ public class TextResourceTable : ITable
         _cached ??= new Dictionary<string, string>();
         _cached.Clear();
         var languageType = _languageType;
-        if (languageType == LanguageType.None) languageType = LanguageType.zhTW;
+        if (languageType == LanguageType.None) languageType = LanguageType.zhCN;
 
         using (var memoryStream = new MemoryStream(binaryData))
         {
@@ -54,6 +56,18 @@ public class TextResourceTable : ITable
     public string GetMasterBookName()
     {
         return GetMbName(_languageType);
+    }
+
+    /// <summary>
+    /// 读某个语言的全部文本, 不改服务器自己用的语言 (以前前端拉语言包会把全局语言切过去)
+    /// </summary>
+    public Dictionary<string, string> ReadAll(LanguageType languageType)
+    {
+        if (languageType == LanguageType.None) languageType = LanguageType.zhCN;
+        using var fileStream = new FileStream($"./Master/{GetMbName(languageType)}", FileMode.Open, FileAccess.Read);
+        var result = new Dictionary<string, string>();
+        foreach (var textResource in Deserialize(languageType, fileStream)) result[textResource.StringKey] = textResource.Text;
+        return result;
     }
 
     public void SetLanguageType(LanguageType languageType)
@@ -205,7 +219,7 @@ public class TextResourceTable : ITable
     {
         switch (languageType)
         {
-            case LanguageType.None: return MessagePackSerializer.Deserialize<TextResourceZhTwMB[]>(data);
+            case LanguageType.None: return MessagePackSerializer.Deserialize<TextResourceZhCnMB[]>(data);
             case LanguageType.jaJP: return MessagePackSerializer.Deserialize<TextResourceJaJpMB[]>(data);
             case LanguageType.enUS: return MessagePackSerializer.Deserialize<TextResourceEnUsMB[]>(data);
             case LanguageType.koKR: return MessagePackSerializer.Deserialize<TextResourceKoKrMB[]>(data);
@@ -223,11 +237,14 @@ public class TextResourceTable : ITable
         }
     }
 
-    private string GetMbName(LanguageType languageType)
+    /// <summary>
+    /// 语言对应的 Master 文件名 (不带路径)。外部 (如本地化缓存) 需要据此判断文件是否被更新过。
+    /// </summary>
+    public static string GetMbName(LanguageType languageType)
     {
         switch (languageType)
         {
-            case LanguageType.None: return "TextResourceZhTwMB";
+            case LanguageType.None: return "TextResourceZhCnMB";
             case LanguageType.jaJP: return "TextResourceJaJpMB";
             case LanguageType.enUS: return "TextResourceEnUsMB";
             case LanguageType.koKR: return "TextResourceKoKrMB";

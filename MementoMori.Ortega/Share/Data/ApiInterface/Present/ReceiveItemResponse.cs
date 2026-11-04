@@ -2,6 +2,7 @@
 using MementoMori.Ortega.Share.Data.DtoInfo;
 using MementoMori.Ortega.Share.Data.Present;
 using MessagePack;
+using MementoMori.Ortega.Share.Data.WebStore;
 
 namespace MementoMori.Ortega.Share.Data.ApiInterface.Present
 {
@@ -11,6 +12,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Present
         public List<PresentItem> ResultItems { get; set; }
 
         public List<UserPresentDtoInfo> UpsertPresentDtoInfoList { get; set; }
+
+        public List<WebStoreSdkInfo> WebStoreSdkInfoList { get; set; }
 
         public UserSyncData UserSyncData { get; set; }
 

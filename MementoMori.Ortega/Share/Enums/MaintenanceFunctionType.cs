@@ -88,7 +88,7 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("Webストア")]
 		WebStore,
         [Description("お手伝い派遣")]
-        BookSortAssistance = 41,
+        BookSortAssistance,
 		[Description("Webストア(クレジットカード)")]
 		WebStoreCreditCard,
 		[Description("Webストア(Apple Pay)")]
@@ -104,6 +104,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("Webストア(au PAY)")]
 		WebStoreAuPay,
 		[Description("Webストア(ソフトバンクまとめて支払い)")]
-		WebStoreSoftBankPay
+		WebStoreSoftBankPay,
+		[Description("団結ミッション")]
+		UnionMission
 	}
 }

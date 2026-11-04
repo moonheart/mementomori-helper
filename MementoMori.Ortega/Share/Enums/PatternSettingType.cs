@@ -21,6 +21,8 @@ namespace MementoMori.Ortega.Share.Enums
 		[Description("初課金ボーナスのダイヤ購入ボタンの遷移先")]
 		FirstChargeBonusButton,
 		[Description("一週間限定パックの購入期限プッシュ通知")]
-		OneWeekLimitedPackPushNotification
+		OneWeekLimitedPackPushNotification,
+		[Description("WEBストア誘導ダイアログ表示")]
+		WebStoreGuidance
 	}
 }

@@ -15,5 +15,11 @@ namespace MementoMori.Ortega.Network.MagicOnion.Interface
 		void OnReceiveWorldChatLog(OnReceiveWorldChatLogResponse response);
 
 		void OnReceiveMessage(OnReceiveMessageResponse response);
+
+		void OnReceiveBlockChatLog(OnReceiveBlockChatLogResponse response);
+
+		void OnReactChat(OnReactChatResponse response);
+
+		void OnChangeChatOption(OnChangeChatOptionResponse response);
 	}
 }

@@ -44,6 +44,9 @@ namespace MementoMori.Ortega.Share.Data.Shop
         [Description("月間ブースト用データ")]
 		public ShopProductMonthlyBoost ShopProductMonthlyBoost { get; set; }
 
+        [Description("WEBストア誘導パネル用データ")]
+		public ShopProductWebStoreGuidancePanel ShopProductWebStoreGuidancePanel { get; set; }
+
         [Description("商品種別タイプ")]
 		public ShopProductType ShopProductType { get; set; }
 	}

@@ -13,6 +13,7 @@
 		Memory_Loop_SP = 8100,
 		Memory_Out = 9000,
 		Skill = 10000,
+        Skill_SP,
 		Memory_Out_End = 11000,
 		Idle_Action = 12000,
 		Monologue_Loop = 13000

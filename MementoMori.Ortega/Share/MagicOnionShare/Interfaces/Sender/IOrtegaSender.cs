@@ -16,6 +16,8 @@ namespace MementoMori.Ortega.Share.MagicOnionShare.Interfaces.Sender
 
 		Task InviteAsync(InviteRequest request);
 
+		Task InviteRefuseAsync(InviteRefuseRequest request);
+
 		Task JoinFriendRoomAsync(JoinFriendRoomRequest request);
 
 		Task JoinRandomRoomAsync(JoinRandomRoomRequest request);
@@ -60,6 +62,10 @@ namespace MementoMori.Ortega.Share.MagicOnionShare.Interfaces.Sender
 
 		Task LocalGvgCloseMap();
 
+		Task LocalGvgSetCastleMemo(SetCastleMemoRequest request);
+
+		Task LocalGvgResetCastleMemo(ResetCastleMemoRequest request);
+
 		Task GlobalGvgAddCastleParty(AddCastlePartyRequest request);
 
 		Task GlobalGvgOrderCastleParty(OrderCastlePartyRequest request);
@@ -77,5 +83,9 @@ namespace MementoMori.Ortega.Share.MagicOnionShare.Interfaces.Sender
 		Task GlobalGvgOpenMap(OpenMapRequest request);
 
 		Task GlobalGvgCloseMap();
+
+		Task GlobalGvgSetCastleMemo(SetCastleMemoRequest request);
+
+		Task GlobalGvgResetCastleMemo(ResetCastleMemoRequest request);
 	}
 }

@@ -1,0 +1,14 @@
+/**
+ * This is a TypeGen auto-generated file.
+ * Any changes made to this file can be lost when this file is regenerated.
+ */
+
+export class GuildRaidBossInfo {
+    bossGuid: string;
+    name: string;
+    maxHp: number;
+    totalDamage: number;
+    startTimeStamp: number;
+    endTimeStamp: number;
+    currentHp: number;
+}

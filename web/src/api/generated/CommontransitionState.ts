@@ -1,0 +1,41 @@
+/**
+ * This is a TypeGen auto-generated file.
+ * Any changes made to this file can be lost when this file is regenerated.
+ */
+
+export enum CommonTransitionState {
+    None = 0,
+    TitleDownloadAll = 1,
+    TitleSplash = 2,
+    TitleMoveToGuidedWorld = 3,
+    TitleWorldChange = 4,
+    TitleFromEntryPointScene = 5,
+    MyPagePlayTouchAction = 6,
+    MyPagePictureBook = 7,
+    MyPageMission = 8,
+    MyPagePlayerInfo = 9,
+    MyPageMenu = 10,
+    MyPageCommunity = 11,
+    MyPageDeepLink = 12,
+    MyPageGuildRecruitTutorial = 13,
+    MyPageWeeklyTopics = 14,
+    MyPageEventPortal = 15,
+    AutoBattleQuestChangeWithNext = 16,
+    AutoBattleQuestChangeWithTap = 17,
+    AutoBattleQuestInfoFormation = 18,
+    AutoBattleReport = 19,
+    BattleSimulationReplay = 20,
+    CharacterListRankUp = 21,
+    CharacterListEquipmentSynchro = 22,
+    ScenarioGameMode = 23,
+    ScenarioEditorMode = 24,
+    ScenarioDebugMode = 25,
+    TowerBattleFormation = 26,
+    DungeonBattleClear = 27,
+    DungeonBattleOpenFormation = 28,
+    GvgCastleInfo = 29,
+    GvgBattle = 30,
+    GvgMvp = 31,
+    LocalRaidReport = 32,
+    GuildTowerReinforcement = 33,
+}

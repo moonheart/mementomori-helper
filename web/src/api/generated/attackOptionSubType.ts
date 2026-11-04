@@ -1,0 +1,42 @@
+/**
+ * This is a TypeGen auto-generated file.
+ * Any changes made to this file can be lost when this file is regenerated.
+ */
+
+export enum AttackOptionSubType {
+    None = 0,
+    OverTargetHpPercent = 1,
+    UnderTargetHpPercent = 2,
+    OverSelfHpPercent = 3,
+    UnderSelfHpPercent = 4,
+    OverTargetHpPercentThanMe = 5,
+    UnderTargetHpPercentThanMe = 6,
+    OverTargetAttackPowerThanMe = 7,
+    UnderTargetAttackPowerThanMe = 8,
+    OverTargetMuscleThanMe = 9,
+    UnderTargetMuscleThanMe = 10,
+    OverTargetEnergyThanMe = 11,
+    UnderTargetEnergyThanMe = 12,
+    OverTargetIntelligenceThanMe = 13,
+    UnderTargetIntelligenceThanMe = 14,
+    AnyCountTargetEffectType = 15,
+    ZeroCountTargetEffectType = 16,
+    AnyCountTargetEffectGroupId = 17,
+    ZeroCountTargetEffectGroupId = 18,
+    OverTargetBuffCount = 19,
+    UnderTargetBuffCount = 20,
+    OverTargetDeBuffCount = 21,
+    UnderTargetDeBuffCount = 22,
+    OverSelfHitCount = 23,
+    OverSelfCriticalCount = 24,
+    AnyCountSelfEffectType = 25,
+    ZeroCountSelfEffectType = 26,
+    AnyCountSelfEffectGroupId = 27,
+    ZeroCountSelfEffectGroupId = 28,
+    OverSelfBuffCount = 29,
+    UnderSelfBuffCount = 30,
+    OverSelfDeBuffCount = 31,
+    UnderSelfDeBuffCount = 32,
+    TargetJobFlags = 33,
+    TargetElementType = 34,
+}

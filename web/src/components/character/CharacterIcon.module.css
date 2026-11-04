@@ -1,0 +1,85 @@
+.wrapper {
+    display: inline-block;
+}
+
+.icon {
+    width: 128px;
+    height: 128px;
+    position: relative;
+    display: inline-block;
+    transform-origin: top left;
+}
+
+.background {
+    background-size: contain;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 8;
+    background-origin: content-box;
+    background-repeat: no-repeat;
+}
+
+.avatar {
+    background-size: contain;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 9;
+    border-width: 6px;
+    border-color: transparent;
+    background-origin: content-box;
+    background-repeat: no-repeat;
+}
+
+.border {
+    height: 100%;
+    width: 100%;
+    border-image-slice: 20;
+    position: absolute;
+    z-index: 10;
+    border-image-width: auto;
+    border-width: 5px;
+    border-image-outset: 6px;
+}
+
+.level {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 20px;
+    z-index: 11;
+    text-shadow: 0 0 5px black;
+}
+
+.deco {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 11;
+    width: 32px;
+    height: 32px;
+}
+
+.element {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    z-index: 11;
+    width: 34px;
+    height: 34px;
+}
+
+.rarityStarContainer {
+    position: absolute;
+    bottom: -3px;
+    z-index: 11;
+    left: 20px;
+}
+
+.rarityStar {
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    margin: 0 -3px 0 0;
+}

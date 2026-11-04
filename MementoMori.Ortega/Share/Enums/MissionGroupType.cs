@@ -33,6 +33,8 @@ namespace MementoMori.Ortega.Share.Enums
 		BookSort,
 		[Description("レンタルレイド")]
 		RentalRaid,
+		[Description("湖底の絵画集め")]
+		MiningQuest = 17,
 		[Description("デイリー追加報酬")]
 		DailyBonus = 1000
 	}

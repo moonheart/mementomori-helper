@@ -7,6 +7,8 @@ namespace MementoMori.Ortega.Share.Data.PopularityVote
 	{
 		public long EntryCharacterId { get; set; }
 
+		public int GroupId { get; set; }
+
 		public List<long> SubDisplayCharacterIdList { get; set; }
 	}
 }

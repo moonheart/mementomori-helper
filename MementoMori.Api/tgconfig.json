@@ -1,0 +1,30 @@
+{
+    "assemblies": [
+        "bin/Debug/net10.0/MementoMori.Api.dll",
+        "bin/Debug/net10.0/MementoMori.Ortega.dll"
+    ],
+    "generationSpecs": [
+        "MementoMori.Api.TypeGen.OrtegaGenerationSpec"
+    ],
+    "generateFromAssemblies": true,
+    "fileNameConverters": [
+        "PascalCaseToCamelCase",
+        "bin/Debug/net10.0/MementoMori.Api.dll:MementoMori.Api.TypeGen.OrtegaTypeNameConverter"
+    ],
+    "typeNameConverters": [
+        "bin/Debug/net10.0/MementoMori.Api.dll:MementoMori.Api.TypeGen.OrtegaTypeNameConverter"
+    ],
+    "propertyNameConverters": [
+        "PascalCaseToCamelCase"
+    ],
+    "enumValueNameConverters": [],
+    "externalAssemblyPaths": [],
+    "createIndexFile": false,
+    "outputPath": "../web/src/api/generated",
+    "customTypeMappings": {
+        "System.Guid": "string",
+        "System.DateTime": "Date",
+        "System.DateTimeOffset": "Date",
+        "System.TimeSpan": "number"
+    }
+}

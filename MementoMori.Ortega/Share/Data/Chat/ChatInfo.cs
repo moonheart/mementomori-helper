@@ -2,6 +2,7 @@
 using MementoMori.Ortega.Share.Data.Interface;
 using MementoMori.Ortega.Share.Enums;
 using MessagePack;
+using MementoMori.Ortega.Share.Data.GuildNote;
 
 namespace MementoMori.Ortega.Share.Data.Chat
 {
@@ -19,6 +20,12 @@ namespace MementoMori.Ortega.Share.Data.Chat
 
 		[Key(14)]
 		public ChatMusicPlaylistInfo ChatMusicPlaylistInfo { get; set; }
+
+        [Key(16)]
+        public ChatRecruitGuildMemberInfo ChatRecruitGuildMemberInfo { get; set; }
+
+        [Key(17)]
+        public ChatGuildNoteInfo ChatGuildNoteInfo { get; set; }
 
 		[Key(1)]
 		public ChatType ChatType { get; set; }
@@ -56,15 +63,34 @@ namespace MementoMori.Ortega.Share.Data.Chat
 		[Key(12)]
 		public long BalloonItemId { get; set; }
 
-		// public ChatIdentityInfo GetChatIdentityInfo()
-		// {
-		// 	ChatIdentityInfo chatIdentityInfo = new ChatIdentityInfo();
-		// 	long num = this.<PlayerId>k__BackingField;
-		// 	chatIdentityInfo.<SendPlayerId>k__BackingField = num;
-		// 	long num2 = this.<LocalTimeStamp>k__BackingField;
-		// 	chatIdentityInfo.<SendLocalTimestamp>k__BackingField = num2;
-		// 	return chatIdentityInfo;
-		// }
+		public ChatIdentityInfo GetChatIdentityInfo()
+        {
+            return new ChatIdentityInfo()
+            {
+                SendPlayerId = PlayerId,
+                SendLocalTimestamp = LocalTimeStamp,
+            };
+		}
+
+        public bool EqualsChatIdentityInfo(ChatIdentityInfo other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            
+            if (other.SendLocalTimestamp != LocalTimeStamp)
+            {
+                return false;
+            }
+            
+            return other.SendPlayerId == PlayerId;
+        }
+
+        public bool IsSharedInfo()
+        {
+            return ChatBattleInfo != null || ChatMusicPlaylistInfo != null;
+        }
         long IPlayerIconInfo.GetIconId()
         {
             return CharacterId;

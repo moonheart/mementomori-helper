@@ -8,5 +8,6 @@ public enum LuckyChanceInputFormType
     [Description("景品選択")] PrizeSelection,
     [Description("個人情報入力")] InputPersonalInfo,
     [Description("個人情報入力(メアドのみ)")] InputMailAddress,
-    [Description("個人情報登録済み")] RegisteredPersonalInfo
+    [Description("個人情報登録済み")] RegisteredPersonalInfo,
+    [Description("個人情報入力(キャラクター選択あり)")] InputSelectCharacter
 }

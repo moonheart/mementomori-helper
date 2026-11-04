@@ -1,0 +1,12 @@
+/**
+ * This is a TypeGen auto-generated file.
+ * Any changes made to this file can be lost when this file is regenerated.
+ */
+
+import { ApiRequestBase } from "./apiRequestBase";
+import { CharacterSortType } from "./characterSortType";
+
+export class LevelLinkSortMemberRequest extends ApiRequestBase {
+    characterSortType: CharacterSortType;
+    isAscending: boolean;
+}

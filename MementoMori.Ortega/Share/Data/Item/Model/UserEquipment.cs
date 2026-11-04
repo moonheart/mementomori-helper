@@ -146,6 +146,11 @@ namespace MementoMori.Ortega.Share.Data.Item.Model
             return array;
         }
 
+        public bool IsSynchronizedEquipment()
+        {
+            return true;
+        }
+
         public long AdditionalParameterHealth { get; set; }
 
         public long AdditionalParameterIntelligence { get; set; }

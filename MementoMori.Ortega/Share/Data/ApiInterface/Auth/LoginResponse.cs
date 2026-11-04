@@ -36,6 +36,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Auth
         
         public Dictionary<long, string> SpecialWorldDict { get; set; }
 
+        public List<MaintenanceDebugUserInfo> MaintenanceDebugUserInfos { get; set; }
+
         public UserSyncData UserSyncData { get; set; }
     }
 }

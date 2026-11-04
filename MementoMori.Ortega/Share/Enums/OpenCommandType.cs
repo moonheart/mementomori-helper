@@ -181,6 +181,10 @@ namespace MementoMori.Ortega.Share.Enums
 		WebCrystal = 610,
 		[Description("マイニングクエスト")]
 		MiningQuest = 620,
+		[Description("武具強化Lv指定")]
+		EquipmentSpecifyReinforceLevel = 640,
+		[Description("団結ミッション")]
+		UnionMission = 650,
 		[Description("武具固定")]
 		LockEquipment = 1000,
 		[Description("武具固定(ギルドバトル用)")]

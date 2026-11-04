@@ -19,6 +19,8 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Gacha
 
         public List<GachaResultItem> GachaRewardItemList { get; set; }
 
+        public List<GachaStarsGuidanceLogInfo> GachaStarsGuidanceLogInfoList { get; set; }
+
         public bool IsFreeChangeRelicGacha { get; set; }
 
         public bool IsGetFirstBonusRelicGacha { get; set; }

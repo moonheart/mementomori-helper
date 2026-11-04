@@ -5,5 +5,6 @@ namespace MementoMori.Ortega.Share.Data.ApiInterface.Debug
 	[MessagePackObject(true)]
 	public class SetVipLevelResponse : ApiResponseBase
 	{
+		public UserSyncData UserSyncData { get; set; }
 	}
 }

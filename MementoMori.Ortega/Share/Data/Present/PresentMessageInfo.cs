@@ -21,5 +21,14 @@ namespace MementoMori.Ortega.Share.Data.Present
         public string GuildRaidEventNameKey { get; set; }
 
         public string RelatedPlayerName { get; set; }
+
+        public string SerialCode { get; set; }
+
+        public string SerialCodeGroupId { get; set; }
+
+        public int RentalRaidRankingType { get; set; }
+
+        public int MiningQuestGradeType { get; set; }
+
     }
 }

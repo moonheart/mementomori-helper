@@ -7,7 +7,7 @@ namespace MementoMori.Ortega.Share.Data.Battle.Result
     {
         public long StartBattle { get; set; }
 
-        public long EndBattle { get; }
+        public long EndBattle { get; set; }
 
         public long TotalCommand { get; set; }
 

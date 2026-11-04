@@ -11,6 +11,8 @@ namespace MementoMori.Ortega.Share.Data.Battle
 
         public long EffectValue { get; set; }
 
+        public long EffectSubValue { get; set; }
+
         public int EffectMaxCount { get; set; }
 
         public int EffectCount { get; set; }

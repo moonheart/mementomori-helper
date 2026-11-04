@@ -12,5 +12,7 @@ public class CreateWorldPlayerRequest : ApiRequestBase, IHasSteamTicketApiReques
 
     public string Name { get; set; }
 
+    public long DeepLinkId { get; set; }
+
     public string SteamTicket { get; set; }
 }

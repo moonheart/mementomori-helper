@@ -98,5 +98,8 @@ namespace MementoMori.Ortega.Share.Data.Global
 					return string.Empty;
 			}
 		}
+
+		public static readonly IReadOnlyList<LanguageType> SupportedLanguageTypes;
+
 	}
 }

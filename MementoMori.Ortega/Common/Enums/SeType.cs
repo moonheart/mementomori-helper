@@ -90,5 +90,10 @@ public enum SeType
     BookSortUnlockGridCellSingle = 20001,
     BookSortUnlockGridCellBig,
     BookSortPopUpTreasureBox,
-    BookSortMoveUnlockGridItem
+    BookSortMoveUnlockGridItem,
+    MiningQuestDamage = 21001,
+    MiningQuestCollection,
+    MiningQuestSpecialAttackCollection,
+    MiningQuestResultTitleAppear,
+    MiningQuestResultItemAppear
 }

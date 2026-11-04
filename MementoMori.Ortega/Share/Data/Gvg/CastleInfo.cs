@@ -27,6 +27,9 @@ namespace MementoMori.Ortega.Share.Data.Gvg
 		[Key(6)]
 		public long UtcFallenTimeStamp { get; set; }
 
+		[Key(7)]
+		public long LastWinPartyKnockOutCount { get; set; }
+
 		public void Copy(CastleInfo castleInfo)
 		{
             AttackerGuildId = castleInfo.AttackerGuildId;

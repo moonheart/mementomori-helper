@@ -34,7 +34,7 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("専属武具の欠片ID")]
         public long EquipmentCompositeId { get; }
 
-        [PropertyOrder(16)]
+        [PropertyOrder(17)]
         [Description("新キャラ演出メッセージ2キー")]
         public string GachaResultMessage2Key { get; }
 
@@ -50,12 +50,12 @@ namespace MementoMori.Ortega.Share.Master.Data
         [Description("ラメント(US)キー")]
         public string LamentUSKey { get; }
 
-        [PropertyOrder(17)]
+        [PropertyOrder(18)]
         [Description("日本語キャラソン歌詞")]
         public string LyricsJPKey { get; }
 
         [Description("英語キャラソン歌詞")]
-        [PropertyOrder(18)]
+        [PropertyOrder(19)]
         public string LyricsUSKey { get; }
 
         [Description("動画配信サイトURL(JP)")]
@@ -76,6 +76,13 @@ namespace MementoMori.Ortega.Share.Master.Data
         [PropertyOrder(15)]
         public string VocalUSKey { get; }
 
+        [PropertyOrder(16)]
+        [Description("検索ワード(JP)")]
+        public IReadOnlyList<string> SearchKeywordsJP
+        {
+        	get;
+        }
+
         [Description("体重")]
         [PropertyOrder(3)]
         public int Weight { get; }
@@ -83,7 +90,7 @@ namespace MementoMori.Ortega.Share.Master.Data
         [SerializationConstructor]
         public CharacterProfileMB(long id, bool? isIgnore, string memo, int birthday, CharacterBloodType bloodType, string characterVoiceJPKey, string characterVoiceUSKey, long equipmentCompositeId,
             int height, string descriptionKey, string vocalJPKey, string vocalUSKey, string lamentJPKey, string lamentUSKey, int weight, TranslatedText movieJpUrl, TranslatedText movieUsUrl,
-            string gachaResultMessage2Key, string lyricsJPKey, string lyricsUSKey)
+            string gachaResultMessage2Key, string lyricsJPKey, string lyricsUSKey, IReadOnlyList<string> searchKeywordsJP)
             : base(id, isIgnore, memo)
         {
             Birthday = birthday;
@@ -103,10 +110,12 @@ namespace MementoMori.Ortega.Share.Master.Data
             GachaResultMessage2Key = gachaResultMessage2Key;
             LyricsJPKey = lyricsJPKey;
             LyricsUSKey = lyricsUSKey;
+            SearchKeywordsJP = searchKeywordsJP;
         }
 
         public CharacterProfileMB() : base(0L, null, null)
         {
         }
+
     }
 }
