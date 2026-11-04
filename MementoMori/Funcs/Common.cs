@@ -163,7 +163,7 @@ public partial class MementoMoriFuncs : ReactiveObject, IDisposable
         Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [{_lastPlayerDataInfo?.Name}(Lv{_lastPlayerDataInfo?.PlayerRank})] {message}");
         lock (MesssageList)
         {
-            MesssageList.Insert(0, message);
+            MesssageList.Insert(0, $"[{DateTime.Now:HH:mm:ss}] {message}");
             if (MesssageList.Count > 100) MesssageList.RemoveAt(MesssageList.Count - 1);
         }
     }

@@ -1,51 +1,70 @@
-﻿@using System.Collections.ObjectModel
-@using System.Reactive.Concurrency
-@using System.Reactive.Linq
+﻿@using System.Reactive.Linq
 @using DynamicData.Binding
+@using ReactiveUI
+@using MementoMori.Common.Localization
 
 @inherits MementoMori.BlazorShared.Models.AccountComponent
+@implements IDisposable
 
-<MudSimpleTable Elevation="0" Dense="true">
-    <tbody style="max-height: 350px; overflow: auto" class="d-flex flex-column-reverse">
-    @foreach (var msg in _messageList)
+@* 悬浮执行日志, 挂在 MainLayout 里, 所有页面都能看到 *@
+<div class="mm-logdock @(_open ? "open" : "")">
+    <div class="mm-logdock-head" @onclick="() => _open = !_open">
+        <MudIcon Icon="@Icons.Material.Rounded.Terminal" Size="Size.Small"/>
+        <span class="mm-logdock-title">@ResourceStrings.ExecutionOutput</span>
+        <span class="mm-logdock-dot @(Funcs.IsQuickActionExecuting ? "busy" : Funcs.LoginOk ? "ok" : "")"></span>
+        @if (!_open && _messageList.Count > 0)
+        {
+            <span class="mm-logdock-last">@_messageList[0]</span>
+        }
+        <MudSpacer/>
+        @if (_open)
+        {
+            <span @onclick:stopPropagation="true">
+                <MudIconButton Icon="@Icons.Material.Rounded.DeleteSweep" Size="Size.Small" aria-label="Clear" OnClick="Clear"/>
+            </span>
+        }
+        <MudIcon Icon="@(_open ? Icons.Material.Rounded.ExpandMore : Icons.Material.Rounded.ExpandLess)" Size="Size.Small"/>
+    </div>
+    @if (_open)
     {
-        <tr>
-            <td>@msg</td>
-        </tr>
+        <div class="mm-logdock-body">
+            @foreach (var msg in _messageList)
+            {
+                <div class="mm-logdock-line">@msg</div>
+            }
+        </div>
     }
-    </tbody>
-</MudSimpleTable>
+</div>
 
 @code {
+    bool _open;
+    List<string> _messageList = new();
+    IDisposable? _subscription;
 
     protected override async Task AccountChanged()
     {
-        try
-        {
-            _messageList = Funcs.MesssageList.ToList();
-            Funcs.MesssageList.ObserveCollectionChanges().Throttle(TimeSpan.FromMilliseconds(50)).Subscribe(set =>
+        _subscription?.Dispose();
+        _messageList = Snapshot();
+        var funcs = Funcs;
+        _subscription = new System.Reactive.Disposables.CompositeDisposable(
+            funcs.MesssageList.ObserveCollectionChanges().Throttle(TimeSpan.FromMilliseconds(50)).Subscribe(_ =>
             {
-                try
-                {
-                    _messageList = Funcs.MesssageList.ToList();
-                }
-                catch
-                {
-                    return;
-                }
+                _messageList = Snapshot();
                 InvokeAsync(StateHasChanged);
-            });
-            await InvokeAsync(StateHasChanged);
-        }
-        catch
-        {
-    // ignored
-        }
-        finally
-        {
-            @* await InvokeAsync(StateHasChanged); *@
-        }
+            }),
+            funcs.WhenAnyValue(f => f.IsQuickActionExecuting, f => f.LoginOk).Subscribe(_ => InvokeAsync(StateHasChanged)));
+        await InvokeAsync(StateHasChanged);
     }
 
-    private List<string> _messageList = new();
+    List<string> Snapshot()
+    {
+        lock (Funcs.MesssageList) return Funcs.MesssageList.ToList();
+    }
+
+    void Clear()
+    {
+        lock (Funcs.MesssageList) Funcs.MesssageList.Clear();
+    }
+
+    public void Dispose() => _subscription?.Dispose();
 }
