@@ -6,15 +6,17 @@
     <base href="/" />
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
     <link href="_content/MudBlazor.Markdown/MudBlazor.Markdown.min.css" rel="stylesheet" />
-    <link href="_content/MementoMori.BlazorShared/css/site.css" rel="stylesheet" />
+    <link href="_content/MementoMori.BlazorShared/css/site.css?v=@(typeof(App).Assembly.ManifestModule.ModuleVersionId)" rel="stylesheet" />
     <link href="MementoMori.BlazorShared.styles.css" rel="stylesheet" />
     <link href="MementoMori.WebUI.styles.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+    <meta name="theme-color" content="#0e0f17" />
+    <title>Memento Mori Helper</title>
     <HeadOutlet @rendermode="@RenderMode.InteractiveServer" />
 </head>
 <body>
 <Routes @rendermode="@RenderMode.InteractiveServer"/>
-<div style="width:0; height:0">
+<div style="position:absolute; width:0; height:0; overflow:hidden" aria-hidden="true">
         <svg xmlns="http://www.w3.org/2000/svg">
             <filter id="svgTintUR">
                     <feColorMatrix type="matrix" values="0.2784313725490196 0.2784313725490196 0.2784313725490196  0 0 0.00784313725490196 0.00784313725490196 0.00784313725490196  0 0 0 0 0  0 0  0 0 0 1 0" />
@@ -59,9 +61,11 @@
         }
         window.showBattleLog = (log_content) => {
             const iframe = document.querySelector('#log_viewer');
-            iframe.contentWindow.postMessage(new File([log_content], {
+            const send = () => iframe.contentWindow.postMessage(new File([log_content], {
                 type: 'application/json'
             }), 'https://mentemori.icu/');
+            if (iframe.dataset.ready) send();
+            else iframe.addEventListener('load', () => { iframe.dataset.ready = '1'; send(); }, {once: true});
         }
     </script>
 </body>
